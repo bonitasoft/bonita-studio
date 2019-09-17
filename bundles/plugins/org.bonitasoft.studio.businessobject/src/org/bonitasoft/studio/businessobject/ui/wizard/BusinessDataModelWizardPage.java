@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,13 +54,19 @@ import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -67,6 +74,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author Romain Bioteau
@@ -269,24 +277,73 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, SWT.DEFAULT).create());
         viewer.getTree().setLinesVisible(true);
         viewer.getTree().setHeaderVisible(true);
-        ColumnViewerToolTipSupport.enableFor(viewer);
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1));
         viewer.getTree().setLayout(layout);
         viewer.setContentProvider(new BusinessObjectTreeContentProvider());
         selectionObservable = ViewersObservables.observeSingleSelection(viewer);
         createNameColumn(ctx);
-        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
-        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                return fromObject != null;
-            }
-        });
-
+        viewer.setComparator(new ViewerComparator());
+        addDNDSupport();
         businessObjectObserveList = PojoProperties.list("businessObjects").observe(businessObjectModel);
         viewer.setInput(businessObjectModel);
+    }
+
+    private void addDNDSupport() {
+        viewer.addDropSupport(DND.DROP_MOVE | DND.DROP_MOVE | DND.DROP_DEFAULT,
+                new Transfer[] { BusinessObjectTransfer.getInstance() },
+                new DropTargetAdapter() {
+
+                    @Override
+                    public void drop(DropTargetEvent event) {
+                        dragLeave(event);
+                        if (event.data instanceof BusinessObject && event.item != null) {
+                            TreeItem treeItem = (TreeItem) event.item;
+                            BusinessObject bo = (BusinessObject) event.data;
+                            if (treeItem.getParentItem() == null) {
+                                updatePackage(bo, treeItem.getText());
+                            } else {
+                                updatePackage(bo, treeItem.getParentItem().getText());
+                            }
+                        }
+                    }
+
+                });
+
+        viewer.addDragSupport(DND.DROP_MOVE,
+                new Transfer[] { BusinessObjectTransfer.getInstance() },
+                new DragSourceAdapter() {
+
+                    @Override
+                    public void dragStart(DragSourceEvent event) {
+                        if (selectionObservable.getValue() instanceof BusinessObject) {
+                            event.detail = DND.DROP_MOVE;
+                            dragSetData(event);
+                        }
+                    }
+
+                    @Override
+                    public void dragSetData(DragSourceEvent event) {
+                        event.doit = selectionObservable.getValue() != null;
+                        event.data = selectionObservable.getValue();
+                    }
+                });
+    }
+
+    private void updatePackage(BusinessObject bo, String name) {
+        String oldQualifiedName = bo.getQualifiedName();
+        bo.setQualifiedName(String.format("%s.%s", name, bo.getSimpleName()));
+        diffLogger.boRenamed(oldQualifiedName, bo.getQualifiedName());
+        bo.getQueries().stream()
+                .filter(query -> Objects.equals(query.getReturnType(), oldQualifiedName))
+                .forEach(query -> query.setReturnType(bo.getQualifiedName()));
+        Display.getDefault().asyncExec(() -> {
+            Object[] elementsToExpend = viewer.getExpandedElements();
+            viewer.refresh();
+            viewer.setExpandedElements(elementsToExpend);
+            selectionObservable.setValue(bo);
+        });
+
     }
 
     private IConverter toPaneDescripitonlTitle() {
