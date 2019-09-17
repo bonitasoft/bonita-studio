@@ -80,13 +80,6 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.provider.
-     * IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.
-     * studio.model.process. AbstractProcess,
-     * org.bonitasoft.studio.model.configuration.Configuration)
-     */
     @Override
     public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
             final Configuration configuration) {
