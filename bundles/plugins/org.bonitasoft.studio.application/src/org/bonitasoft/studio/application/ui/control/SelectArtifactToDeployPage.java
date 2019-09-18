@@ -61,7 +61,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -92,6 +91,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private static final String DEPLOY_DEFAULT_SELECTION = "deployDefaultSelection";
     private static final String CLEAN_BDM_DEFAULT_SELECTION = "cleanBDMDefaultSelection";
     private static final String VALIDATE_DEFAULT_SELECTION = "RunValidation";
+    private static final String ONLY_LATEST_PROCESS_VERSION_SELECTION = "onlyLatestProcessVersion";
 
     private CheckboxRepositoryTreeViewer fileStoreViewer;
     protected IObservableSet<Object> checkedElementsObservable; // Bounded to the viewer -> doesn't contain filtered elements
@@ -112,6 +112,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private boolean validate = true;
     private Label countArtifactLabel;
     private boolean filtering = false;
+    private boolean latestVersionOnly = true;
 
     public SelectArtifactToDeployPage(RepositoryModel repositoryModel, IEnvironmentProvider environmentProvider) {
         this.repositoryModel = repositoryModel;
@@ -122,17 +123,19 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     public void loadSettings(IDialogSettings settings) {
         IDialogSettings section = settings.getSection(repositoryModel.getName());
         if (section != null && section.getArray(DEPLOY_DEFAULT_SELECTION) != null) {
-            if(defaultSelectedElements == null || defaultSelectedElements.isEmpty()) {
+            if (defaultSelectedElements == null || defaultSelectedElements.isEmpty()) {
                 defaultSelectedElements = fromStrings(section.getArray(DEPLOY_DEFAULT_SELECTION));
             }
             cleanBDM = section.getBoolean(CLEAN_BDM_DEFAULT_SELECTION);
             validate = section.getBoolean(VALIDATE_DEFAULT_SELECTION);
+            latestVersionOnly = section.getBoolean(ONLY_LATEST_PROCESS_VERSION_SELECTION);
         }
-        String activeEnvironment = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
-        environment = environmentProvider.getEnvironment().contains(activeEnvironment) ? activeEnvironment : ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
+        String activeEnvironment = ConfigurationPlugin.getDefault().getPreferenceStore()
+                .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+        environment = environmentProvider.getEnvironment().contains(activeEnvironment) ? activeEnvironment
+                : ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
     }
-    
-    
+
     public void setDefaultSelectedElements(Set<Object> defaultSelectedElements) {
         this.defaultSelectedElements = defaultSelectedElements;
     }
@@ -140,13 +143,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     @Override
     public void saveSettings(IDialogSettings settings) {
         mergeSets();
-        IDialogSettings section =   settings.getSection(repositoryModel.getName());
-        if(section == null) {
+        IDialogSettings section = settings.getSection(repositoryModel.getName());
+        if (section == null) {
             section = settings.addNewSection(repositoryModel.getName());
         }
         section.put(DEPLOY_DEFAULT_SELECTION, stringify(allCheckedElements));
         section.put(CLEAN_BDM_DEFAULT_SELECTION, cleanBDM);
         section.put(VALIDATE_DEFAULT_SELECTION, validate);
+        section.put(ONLY_LATEST_PROCESS_VERSION_SELECTION, latestVersionOnly);
         ConfigurationPlugin.getDefault().getPreferenceStore()
                 .setValue(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION, environment);
     }
@@ -184,12 +188,12 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
-        Composite mainComposite = new Composite(parent, SWT.NONE);
+        Composite mainComposite = new Composite(parent, SWT.INHERIT_FORCE);
         mainComposite.setLayout(GridLayoutFactory.swtDefaults()
                 .create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        Composite viewerAndButtonsComposite = new Composite(mainComposite, SWT.NONE);
+        Composite viewerAndButtonsComposite = new Composite(mainComposite, SWT.INHERIT_FORCE);
         viewerAndButtonsComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1).create());
         viewerAndButtonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -249,12 +253,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         Composite buttonComposite = new Composite(parent, SWT.NONE);
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        new ButtonWidget.Builder()
-                .withLabel(Messages.selectLatestVersion)
-                .fill()
-                .onClick(e -> checkLatestElements())
-                .createIn(buttonComposite);
 
         new ButtonWidget.Builder()
                 .withLabel(Messages.selectAll)
@@ -390,22 +388,29 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void createSearchAndCollapseComposite(DataBindingContext ctx, Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite composite = new Composite(parent, SWT.INHERIT_FORCE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createSearch(ctx, composite);
-        createToolbarComposite(composite);
+        createToolbarComposite(ctx, composite);
     }
 
-    private void createToolbarComposite(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 8, 0).create());
+    private void createToolbarComposite(DataBindingContext ctx, Composite parent) {
+        Composite composite = new Composite(parent, SWT.INHERIT_FORCE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(0, 0, 8, 0).create());
         composite.setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).create());
 
+        Button onlyLatestProcessVersionButton = new Button(composite, SWT.CHECK);
+        onlyLatestProcessVersionButton.setText(Messages.selectLatestVersion);
+
+        ctx.bindValue(WidgetProperties.selection().observe(onlyLatestProcessVersionButton),
+                PojoProperties.value("latestVersionOnly").observe(this));
+
         ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
-        toolBar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_TRANSPARENT));
+
+        new ToolItem(toolBar, SWT.SEPARATOR | SWT.VERTICAL);
 
         ToolItem expandAll = new ToolItem(toolBar, SWT.PUSH);
         expandAll.setImage(Pics.getImage(PicsConstants.expandAll));
@@ -462,8 +467,6 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         cleanDeployOption = new Button(deployOptionGroup, SWT.CHECK);
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
-        
-      
 
         ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
@@ -471,13 +474,13 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         validateProcessOption = new Button(deployOptionGroup, SWT.CHECK);
         validateProcessOption.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         validateProcessOption.setText(Messages.validateProcess);
-        
+
         ControlDecoration controlDecoration = new ControlDecoration(validateProcessOption, SWT.RIGHT);
         controlDecoration.setDescriptionText(Messages.validateHint);
         controlDecoration.setImage(FieldDecorationRegistry.getDefault()
                 .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
         controlDecoration.show();
-     
+
         ctx.bindValue(WidgetProperties.selection().observe(validateProcessOption),
                 PojoProperties.value("validate").observe(this));
     }
@@ -609,14 +612,18 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void checkAllElements() {
-        repositoryModel.getArtifacts().stream()
-                .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
-                .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
-                        ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
-                .forEach(checkedElementsObservable::add);
+        if (latestVersionOnly) {
+            checkLatestElements();
+        } else {
+            repositoryModel.getArtifacts().stream()
+                    .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
+                    .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
+                            ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
+                    .forEach(checkedElementsObservable::add);
 
-        //Only one organization can be selected at a time
-        uniqueOrganizationSelection(getDefaultOrganization());
+            //Only one organization can be selected at a time
+            uniqueOrganizationSelection(getDefaultOrganization());
+        }
     }
 
     private void checkLatestElements() {
@@ -676,6 +683,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     public void setEnvironment(String environment) {
         this.environment = environment;
+    }
+
+    public boolean isLatestVersionOnly() {
+        return latestVersionOnly;
+    }
+
+    public void setLatestVersionOnly(boolean latestVersionOnly) {
+        this.latestVersionOnly = latestVersionOnly;
     }
 
 }
