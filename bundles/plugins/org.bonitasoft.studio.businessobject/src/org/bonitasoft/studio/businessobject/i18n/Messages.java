@@ -390,6 +390,7 @@ public class Messages extends NLS {
     public static String deletePackageConfirm;
     public static String mergePackageConfirmTitle;
     public static String mergePackageConfirm;
+    public static String searchBusinessObject;
 
     private Messages() {
     }

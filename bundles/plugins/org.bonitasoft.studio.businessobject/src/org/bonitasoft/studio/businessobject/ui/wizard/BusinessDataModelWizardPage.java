@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +39,8 @@ import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
+import org.bonitasoft.studio.ui.widget.SearchWidget;
+import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -58,7 +61,9 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -85,13 +90,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     private IObservableList fieldsList;
     private IDiffLogger diffLogger;
-    private IObservableList businessObjectObserveList;
+    private IObservableList<BusinessObject> businessObjectObserveList;
     private IViewerObservableValue selectionObservable;
     private PackageHelper packageHelper;
     private BusinessObjectModel businessObjectModel;
     private TreeViewer viewer;
     private ButtonWidget deleteButton;
     private BusinessObjectNameEditingSupport editingSupport;
+    private List<BusinessObject> boToFilter = new ArrayList<>();
 
     protected BusinessDataModelWizardPage(BusinessObjectModel businessObjectModel, IDiffLogger diffLogger) {
         super(BusinessDataModelWizardPage.class.getName());
@@ -124,6 +130,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         group.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 0).create());
         group.setText(Messages.listOfBusinessObjects);
+        createSearchField(group);
         createButtons(group);
         createBusinessObjectViewer(group, ctx);
         ctx.bindValue(deleteButton.observeEnabled(), new ComputedValue<Boolean>() {
@@ -133,6 +140,31 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 return selectionObservable.getValue() != null;
             }
         });
+    }
+
+    protected void createSearchField(Composite parent) {
+        TextWidget searchWidget = createSearchWidget(parent);
+        IObservableValue<String> searchObservableValue = searchWidget.observeText(SWT.Modify);
+        searchObservableValue.addValueChangeListener(e -> {
+            Display.getDefault().asyncExec(() -> {
+                String search = searchObservableValue.getValue().toLowerCase();
+                boToFilter.clear();
+                businessObjectObserveList.stream()
+                        .filter(bo -> !bo.getSimpleName().toLowerCase().contains(search))
+                        .forEach(boToFilter::add);
+                viewer.refresh();
+            });
+        });
+    }
+
+    protected TextWidget createSearchWidget(Composite parent) {
+        return new SearchWidget.Builder()
+                .labelAbove()
+                .fill()
+                .grabHorizontalSpace()
+                .horizontalSpan(2)
+                .withPlaceholder(Messages.searchBusinessObject)
+                .createIn(parent);
     }
 
     private void createButtons(Composite parent) {
@@ -280,6 +312,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1));
         viewer.getTree().setLayout(layout);
+        viewer.addFilter(createSearchFilter());
         viewer.setContentProvider(new BusinessObjectTreeContentProvider());
         selectionObservable = ViewersObservables.observeSingleSelection(viewer);
         createNameColumn(ctx);
@@ -287,6 +320,20 @@ public class BusinessDataModelWizardPage extends WizardPage {
         addDNDSupport();
         businessObjectObserveList = PojoProperties.list("businessObjects").observe(businessObjectModel);
         viewer.setInput(businessObjectModel);
+    }
+
+    private ViewerFilter createSearchFilter() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof BusinessObject) {
+                    return !boToFilter.contains(element);
+                }
+                return packageHelper.getAllBusinessObjects(businessObjectModel, (String) element)
+                        .stream().anyMatch(bo -> !boToFilter.contains(bo));
+            }
+        };
     }
 
     private void addDNDSupport() {
