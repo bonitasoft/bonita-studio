@@ -200,10 +200,10 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<target>
-								<!-- Configure tomcat bundle resoruce -->
+								<!-- Configure tomcat bundle resource -->
 								<move todir="${tomcat.bundle.dir}">
 									<fileset
-										dir="${tomcat.bundle.dir}/BonitaCommunity-${bundle.version}-tomcat/" />
+										dir="${tomcat.bundle.dir}/BonitaCommunity-${bundle.version}/" />
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
