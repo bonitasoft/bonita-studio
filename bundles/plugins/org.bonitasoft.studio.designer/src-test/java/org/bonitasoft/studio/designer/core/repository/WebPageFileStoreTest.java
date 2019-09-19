@@ -76,6 +76,10 @@ public class WebPageFileStoreTest {
         doReturn(WebPageFileStore.FORM_TYPE).when(form2).getType();
         doReturn(WebPageFileStore.PAGE_TYPE).when(page).getType();
         doReturn(WebPageFileStore.LAYOUT_TYPE).when(layout).getType();
+        doReturn(null).when(form).getDisplayName();
+        doReturn(null).when(form2).getDisplayName();
+        doReturn(null).when(page).getDisplayName();
+        doReturn(null).when(layout).getDisplayName();
 
         assertThat(form.compareTo(page)).isLessThan(0);
         assertThat(form.compareTo(layout)).isLessThan(0);
@@ -89,5 +93,10 @@ public class WebPageFileStoreTest {
         assertThat(layout.compareTo(form)).isGreaterThan(0);
         assertThat(layout.compareTo(page)).isGreaterThan(0);
         assertThat(layout.compareTo(layout)).isEqualTo(0);
+
+        doReturn("B - My form").when(form2).getDisplayName();
+        assertThat(form.compareTo(form2)).isGreaterThan(0);
+        doReturn("A - My form").when(form).getDisplayName();
+        assertThat(form.compareTo(form2)).isLessThan(0);
     }
 }

@@ -198,8 +198,8 @@ public class WebPageFileStore extends InFolderJSONFileStore
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());
         } catch (IOException e) {
-             return ValidationStatus.error(String.format("An error occured while building %s", getName()), e);
-        }catch (CoreException e) {
+            return ValidationStatus.error(String.format("An error occured while building %s", getName()), e);
+        } catch (CoreException e) {
             return e.getStatus();
         }
         return ValidationStatus.ok();
@@ -209,7 +209,12 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public int compareTo(WebPageFileStore o) {
         if (o != null) {
             int res = getPriority().compareTo(o.getPriority());
-            return res != 0 ? res : getName().compareTo(o.getName());
+            if (res != 0) {
+                return res;
+            }
+            String myName = getDisplayName() != null ? getDisplayName() : getName();
+            String otherName = o.getDisplayName() != null ? o.getDisplayName() : o.getName();
+            return myName.compareTo(otherName);
         }
         return 0;
     }
