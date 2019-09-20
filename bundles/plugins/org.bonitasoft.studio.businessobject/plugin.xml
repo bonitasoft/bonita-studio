@@ -31,7 +31,7 @@
                   visible="true">
             </separator>
             <command
-                  commandId="org.bonitasoft.studio.businessobject.importCommand"
+                  commandId="org.bonitasoft.studio.businessobject.command.import"
                   icon="icons/import-bdm.png"
                   id="org.bonitasoft.studio.businessobject.import.menu"
                   style="push">
@@ -107,6 +107,30 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.deploy">
          <command
                commandId="org.bonitasoft.studio.businessobject.cleanDeployCommand"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <test
+                              property="org.bonitasoft.studio.businessobject.isBDMFile">
+                        </test>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
+         <command
+               commandId="org.bonitasoft.studio.businessobject.command.import"
                style="push">
             <visibleWhen
                   checkEnabled="false">

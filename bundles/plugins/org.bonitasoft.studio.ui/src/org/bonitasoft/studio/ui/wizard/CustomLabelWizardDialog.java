@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -53,8 +54,9 @@ public class CustomLabelWizardDialog extends WizardDialog {
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
-        getButton(IDialogConstants.FINISH_ID).setText(finishLabel);
-        getButton(IDialogConstants.FINISH_ID).forceFocus();
+        Button finishButton = getButton(IDialogConstants.FINISH_ID);
+        finishButton.setText(finishLabel);
+        finishButton.forceFocus();
         if (cancelLabel != null) {
             getButton(IDialogConstants.CANCEL_ID).setText(cancelLabel);
             getButton(IDialogConstants.CANCEL_ID).forceFocus();
