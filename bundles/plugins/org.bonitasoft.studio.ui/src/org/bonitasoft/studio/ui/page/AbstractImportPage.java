@@ -47,7 +47,7 @@ public abstract class AbstractImportPage implements ControlSupplier {
     private static final String LAST_IMPORT_PATH = null;
 
     protected final RepositoryAccessor repositoryAccessor;
-    private TextWidget importerWidget;
+    protected TextWidget importerWidget;
     protected String filePath;
     protected IObservableValue<String> filePathObservable;
 

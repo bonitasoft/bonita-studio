@@ -25,12 +25,12 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class ImportBdmContentValidator implements IValidator {
+public class ImportBdmContentValidator implements IValidator<String> {
 
     @Override
-    public IStatus validate(Object value) {
+    public IStatus validate(String value) {
         if (value != null) {
-            File file = new File((String) value);
+            File file = new File(value);
             try (ZipFile zipFile = new ZipFile(file)) {
                 if (!Objects.equals(zipFile.entries().nextElement().getName(), BusinessObjectModelFileStore.BOM_FILENAME)) {
                     return ValidationStatus.error(String.format(Messages.bdmZipInvalid, file.getName()));
