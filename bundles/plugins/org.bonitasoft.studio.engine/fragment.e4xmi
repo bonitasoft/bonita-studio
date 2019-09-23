@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_7vURMMikEeiXpul4PGGc1A">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_8iKqcMikEeiXpul4PGGc1A" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_BoZkcMilEeiXpul4PGGc1A" elementId="org.bonitasoft.studio.engine.deploy.page.command" commandName="%deployPage">
+      <parameters xmi:id="_XP_X8MilEeiXpul4PGGc1A" elementId="name" name="Page file name" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_ASVJYMilEeiXpul4PGGc1A" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_HqpawMilEeiXpul4PGGc1A" elementId="org.bonitasoft.studio.engine.deploy.page.handler" contributionURI="bundleclass://org.bonitasoft.studio.engine/org.bonitasoft.studio.engine.command.DeployPageHandler" command="_BoZkcMilEeiXpul4PGGc1A"/>
+  </fragments>
+</fragment:ModelFragments>

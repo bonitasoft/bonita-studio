@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: UI Designer War Fragment
+Bundle-SymbolicName: org.bonitasoft.studio.designer.war
+Bundle-Version: 7.9.4.qualifier
+Bundle-Vendor: Bonitasoft S.A.
+Fragment-Host: org.bonitasoft.studio.designer;bundle-version="7.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
