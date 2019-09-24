@@ -19,6 +19,7 @@ Export-Package: org.bonitasoft.studio.businessobject,
  org.bonitasoft.studio.businessobject.ui.expression,
  org.bonitasoft.studio.businessobject.ui.handler,
  org.bonitasoft.studio.businessobject.ui.wizard,
+ org.bonitasoft.studio.businessobject.ui.wizard.control,
  org.bonitasoft.studio.businessobject.ui.wizard.editingsupport
 Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.model;bundle-version="1.0.0",

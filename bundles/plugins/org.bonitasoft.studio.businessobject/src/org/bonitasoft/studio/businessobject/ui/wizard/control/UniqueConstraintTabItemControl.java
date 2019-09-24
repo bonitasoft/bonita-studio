@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
+    public static final String CONSTRAINT_VIEWER_ID = "uniqueConstraintsViewerId";
     private static final String DEFAULT_UNIQUE_CONSTRAINT_NAME = "UNIQUE_CONSTRAINT_";
 
     private final IObservableList fieldsList;

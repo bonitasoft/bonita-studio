@@ -36,18 +36,18 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
 
     public static final int MAX_TABLE_NAME_LENGTH = 30;
 
-    private static final String ORG_BONITASOFT_PREFIX = "org.bonitasoft";
-    private static final String COM_BONITASOFT_PREFIX = "com.bonitasoft";
-
     private BusinessObjectModel model;
     private SQLNameValidator sqlNameValidator;
 
     private IObservableValue<Object> selectionObservable;
 
+    private PackageNameValidator packageNameValidator;
+
     public BusinessObjectNameCellEditorValidator(BusinessObjectModel model, IObservableValue<Object> selectionObservable) {
         this.model = model;
         this.selectionObservable = selectionObservable;
         this.sqlNameValidator = new SQLNameValidator(MAX_TABLE_NAME_LENGTH);
+        packageNameValidator = new PackageNameValidator();
     }
 
     @Override
@@ -64,14 +64,7 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
         if (selectionObservable.getValue() instanceof BusinessObject) {
             return validateBoName(value);
         }
-        return validatePackageName(value);
-    }
-
-    private IStatus validatePackageName(String packageName) {
-        if (packageName == null || packageName.isEmpty()) {
-            return ValidationStatus.error(Messages.error_emptyPackageName);
-        }
-        return performValidationsWithFailFast(packageName, this::validateReservedPackages, this::validateReservedPackages);
+        return packageNameValidator.validate(value);
     }
 
     private IStatus validateBoName(String simpleName) {
@@ -91,20 +84,6 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
             }
         }
         return ValidationStatus.ok();
-    }
-
-    protected IStatus validateReservedPackages(String packageName) {
-        if (packageName.startsWith(COM_BONITASOFT_PREFIX + ".") || packageName.toString().equals(COM_BONITASOFT_PREFIX)) {
-            return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, packageName.toString()));
-        }
-        if (packageName.startsWith(ORG_BONITASOFT_PREFIX + ".") || packageName.toString().equals(ORG_BONITASOFT_PREFIX)) {
-            return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, packageName.toString()));
-        }
-        return ValidationStatus.ok();
-    }
-
-    protected IStatus validateJavaPackageName(String packageName) {
-        return JavaConventions.validatePackageName(packageName, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
     }
 
     protected IStatus validateJavaTypeName(String name) {
