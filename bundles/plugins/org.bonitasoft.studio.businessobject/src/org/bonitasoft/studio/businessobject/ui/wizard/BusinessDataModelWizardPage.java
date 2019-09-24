@@ -32,6 +32,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.control.QueriesTabItemCont
 import org.bonitasoft.studio.businessobject.ui.wizard.control.UniqueConstraintTabItemControl;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.BusinessObjectNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.BusinessObjectTreeContentProvider;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.PackageNameValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
 import org.bonitasoft.studio.pics.Pics;
@@ -54,6 +55,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -64,6 +66,7 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -96,6 +99,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private BusinessObjectModel businessObjectModel;
     private TreeViewer viewer;
     private ButtonWidget deleteButton;
+    private ButtonWidget updatePackageButton;
     private BusinessObjectNameEditingSupport editingSupport;
     private List<BusinessObject> boToFilter = new ArrayList<>();
 
@@ -138,6 +142,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
             @Override
             protected Boolean calculate() {
                 return selectionObservable.getValue() != null;
+            }
+        });
+
+        ctx.bindValue(updatePackageButton.observeEnabled(), new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return selectionObservable.getValue() instanceof BusinessObject;
             }
         });
     }
@@ -186,12 +198,31 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 .onClick(e -> addBusinessObject(getSelectedPackage().orElse(PackageHelper.DEFAULT_PACKAGE_NAME)))
                 .createIn(buttonsComposite);
 
+        updatePackageButton = new ButtonWidget.Builder()
+                .withStyle(SWT.FLAT)
+                .withLabel(Messages.updatePackage)
+                .fill()
+                .onClick(e -> updateSelectionPackage())
+                .createIn(buttonsComposite);
+
         deleteButton = new ButtonWidget.Builder()
                 .withStyle(SWT.FLAT)
                 .withLabel(Messages.delete)
                 .fill()
                 .onClick(e -> deleteSelection())
                 .createIn(buttonsComposite);
+    }
+
+    private void updateSelectionPackage() {
+        BusinessObject selectedBo = (BusinessObject) selectionObservable.getValue();
+        InputDialog updatePackageDialog = new InputDialog(Display.getDefault().getActiveShell(),
+                Messages.updatePackageTitle,
+                String.format(Messages.updatePackageMessage, selectedBo.getSimpleName()),
+                packageHelper.getPackageName(selectedBo),
+                new PackageNameValidator());
+        if (updatePackageDialog.open() != Window.CANCEL) {
+            updatePackage(selectedBo, updatePackageDialog.getValue());
+        }
     }
 
     private Optional<String> getSelectedPackage() {

@@ -288,6 +288,17 @@ public class DefineBdmWizardBot extends BotWizardDialog {
     private SWTBotTable getConstraintsTable(String packageName, String businessObject) {
         selectBusinessObject(packageName, businessObject);
         bot.tabItem(Messages.constraints).activate();
+        bot.waitUntil(new ConditionBuilder()
+                .withTest(() -> {
+                    try {
+                        bot.tableInGroup(businessObject);
+                        return true;
+                    } catch (WidgetNotFoundException e) {
+                        return false;
+                    }
+                })
+                .withFailureMessage(() -> "Constraints table viewer not found")
+                .create());
         return bot.tableInGroup(businessObject);
     }
 

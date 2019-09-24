@@ -27,21 +27,6 @@ public class BusinessObjectNameCellEditorValidatorTest {
     }
 
     @Test
-    public void should_validatePackage_returns_an_error_status_for_package_with_reserved_prefix() throws Exception {
-        IStatus status = validator.validateReservedPackages("com.bonitasoft");
-        StatusAssert.assertThat(status).isError();
-
-        status = validator.validateReservedPackages("com.bonitasoft.model");
-        StatusAssert.assertThat(status).isError();
-
-        status = validator.validateReservedPackages("org.bonitasoft");
-        StatusAssert.assertThat(status).isError();
-
-        status = validator.validateReservedPackages("org.bonitasoft.model");
-        StatusAssert.assertThat(status).isError();
-    }
-
-    @Test
     public void should_validatePackage_returns_an_error_status_for_null_or_empty_package() throws Exception {
         IStatus status = validator.validate(null);
         StatusAssert.assertThat(status).isError();

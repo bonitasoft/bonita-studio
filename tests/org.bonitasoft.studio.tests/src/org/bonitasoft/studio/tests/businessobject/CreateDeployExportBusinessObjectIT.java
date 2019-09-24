@@ -89,6 +89,7 @@ public class CreateDeployExportBusinessObjectIT {
         BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
 
         DefineBdmWizardBot bdmWizardBot = workBenchBot.defineBDM();
+
         String packageName = "org.model.test";
         String employeeBo = "Employee";
         bdmWizardBot.addPackage(packageName, employeeBo)
