@@ -494,10 +494,21 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
             <mustBeWritable>yes</mustBeWritable>
             <mustExist>0</mustExist>
             <validationActionList>
-           		 <throwError>
+           		<throwError>
 		            <text>${msg(installdir.must.be.empty.folder)}</text>
 		            <ruleList>
+		            	 <platformTest>
+				              <negate>1</negate>
+				              <type>osx</type>
+                 		</platformTest>
 		             	<fileTest path="${installdir}" condition="is_not_empty"/>
+		            </ruleList>
+		        </throwError>
+		        <throwError>
+		            <text>${msg(installdir.must.be.empty.folder)}</text>
+		            <ruleList>
+		            	<platformTest type="osx" /> 
+		             	<fileTest path="${installdir}/@mac.shortcut.name@" condition="is_not_empty"/>
 		            </ruleList>
 		        </throwError>
 		        <throwError>
