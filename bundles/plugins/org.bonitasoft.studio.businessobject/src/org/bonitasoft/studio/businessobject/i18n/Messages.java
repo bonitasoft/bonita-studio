@@ -394,19 +394,21 @@ public class Messages extends NLS {
     public static String updatePackage;
     public static String updatePackageTitle;
     public static String updatePackageMessage;
-    public static String mergeBdmHelpMessage;
+    public static String importBdmHelpMessage;
     public static String overwriteBdmHelpMessage;
     public static String archiveContentInvalid;
     public static String businessObjectNameDuplicated;
-    public static String mergeCompletedTitle;
-    public static String mergeCompleted;
-    public static String mergeImpossibleTitle;
-    public static String mergeImpossible;
-    public static String mergeOption;
+    public static String smartImportCompletedTitle;
+    public static String smartImportCompleted;
+    public static String smartImportImpossibleTitle;
+    public static String smartImportImpossible;
+    public static String updateModelsHint;
+    public static String importOption;
     public static String overwriteOption;
     public static String importAction;
     public static String importBdmDescription;
     public static String errorOnImport;
+    public static String importingBdm;
 
     private Messages() {
     }

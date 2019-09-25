@@ -58,7 +58,7 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
     }
 
     public boolean shouldBeImported() {
-        return importAction == ImportAction.OVERWRITE;
+        return importAction != ImportAction.KEEP;
     }
 
 }

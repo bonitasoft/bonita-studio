@@ -1,14 +1,21 @@
 package org.bonitasoft.studio.importer.bos.provider;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportAction;
+import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 
 public class ImportActionEditingSupport extends EditingSupport {
@@ -24,6 +31,19 @@ public class ImportActionEditingSupport extends EditingSupport {
         editor.setContentProvider(ArrayContentProvider.getInstance());
         editor.setLabelProvider(new LabelProvider());
         editor.setInput(ImportAction.values());
+        IViewerObservableValue mainSelection = ViewersObservables.observeSingleSelection(viewer);
+        editor.getViewer().addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof ImportAction && Objects.equals((element), ImportAction.SMART_IMPORT)) {
+                    return mainSelection.getValue() instanceof SmartImportFileStoreModel
+                            && ((SmartImportFileStoreModel) mainSelection.getValue()).isSmartImportable();
+                }
+                return true;
+            }
+        });
+        mainSelection.addValueChangeListener(e -> editor.getViewer().refresh()); // trigger the above filter when the selection change -> each element of the main viewer has its available choices
     }
 
     @Override

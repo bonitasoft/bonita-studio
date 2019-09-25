@@ -6,7 +6,7 @@ import org.bonitasoft.studio.assertions.StatusAssert;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 
-public class MergeBdmValidatorTest {
+public class SmartImportBdmValidatorTest {
 
     @Test
     public void should_return_error_if_bo_names_are_duplicated() {
@@ -17,7 +17,7 @@ public class MergeBdmValidatorTest {
         model1.addBusinessObject(bo1);
         model2.addBusinessObject(bo2);
 
-        IStatus status = new MergeBdmValidator(model1).validateCompatibility(model1, model2);
+        IStatus status = new SmartImportBdmValidator().validateCompatibility(model1, model2);
 
         StatusAssert.assertThat(status).isError();
     }
@@ -31,7 +31,7 @@ public class MergeBdmValidatorTest {
         model1.addBusinessObject(bo1);
         model2.addBusinessObject(bo2);
 
-        IStatus status = new MergeBdmValidator(model1).validateCompatibility(model1, model2);
+        IStatus status = new SmartImportBdmValidator().validateCompatibility(model1, model2);
 
         StatusAssert.assertThat(status).isOK();
     }

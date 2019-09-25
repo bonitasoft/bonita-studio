@@ -21,11 +21,12 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
+import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
-import org.bonitasoft.studio.importer.bos.provider.ActionLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
@@ -34,11 +35,13 @@ import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.PathValidator;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -225,7 +228,9 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
         actionColumn.getColumn().setText(Messages.actionColumn);
-        actionColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ActionLabelProvider()));
+        actionColumn.setLabelProvider(new LabelProviderBuilder<AbstractImportModel>()
+                .withTextProvider(this::getActionText)
+                .createColumnLabelProvider());
         actionColumn.setEditingSupport(new ImportActionEditingSupport(viewer));
 
         final Composite buttonsComposite = new Composite(fileTreeGroup, SWT.NONE);
@@ -257,13 +262,23 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         return fileTreeGroup;
     }
 
+    private String getActionText(AbstractImportModel element) {
+        if (element instanceof AbstractFileModel) {
+            AbstractFileModel fileModel = (AbstractFileModel) element;
+            if (fileModel.isConflicting()) {
+                return fileModel.getImportAction().toString();
+            }
+        }
+        return "";
+    }
+
     private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
-        final Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
+        Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
         fileBrowserComposite
                 .setLayout(GridLayoutFactory.fillDefaults().create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final IObservableValue filePathObserveValue = PojoObservables.observeValue(this, "filePath");
+        IObservableValue filePathObserveValue = PojoProperties.value("filePath").observe(this);
         filePathObserveValue.addValueChangeListener(this::parseArchive);
         textWidget = new TextWidget.Builder()
                 .withLabel(Messages.selectFileToImport)

@@ -37,11 +37,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
-public class ImportAndMergeBdmPage extends AbstractImportPage {
+public class SmartImportBdmPage extends AbstractImportPage {
 
     private SelectObservableValue importActionObservable;
 
-    public ImportAndMergeBdmPage(RepositoryAccessor repositoryAccessor) {
+    public SmartImportBdmPage(RepositoryAccessor repositoryAccessor) {
         super(repositoryAccessor);
         importActionObservable = new SelectObservableValue(ImportAction.class);
     }
@@ -55,7 +55,7 @@ public class ImportAndMergeBdmPage extends AbstractImportPage {
 
             super.createControl(composite, wizardContainer, ctx);
             createImportActionGroup(composite);
-            importActionObservable.setValue(ImportAction.MERGE);
+            importActionObservable.setValue(ImportAction.IMPORT);
 
             return composite;
         }
@@ -69,9 +69,9 @@ public class ImportAndMergeBdmPage extends AbstractImportPage {
         importActionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0, 10).create());
         importActionGroup.setText(Messages.importAction);
 
-        Button mergeButton = new Button(importActionGroup, SWT.RADIO);
-        mergeButton.setLayoutData(GridDataFactory.swtDefaults().create());
-        mergeButton.setText(Messages.mergeOption);
+        Button importButton = new Button(importActionGroup, SWT.RADIO);
+        importButton.setLayoutData(GridDataFactory.swtDefaults().create());
+        importButton.setText(Messages.importOption);
 
         Button overwriteButton = new Button(importActionGroup, SWT.RADIO);
         overwriteButton.setLayoutData(GridDataFactory.swtDefaults().create());
@@ -82,14 +82,14 @@ public class ImportAndMergeBdmPage extends AbstractImportPage {
         StackLayout stackLayout = new StackLayout();
         stackComposite.setLayout(stackLayout);
 
-        Composite mergeComposite = createLabelComposite(stackComposite, Messages.mergeBdmHelpMessage);
+        Composite importComposite = createLabelComposite(stackComposite, Messages.importBdmHelpMessage);
         Composite overwriteComposite = createLabelComposite(stackComposite, Messages.overwriteBdmHelpMessage);
 
-        importActionObservable.addOption(ImportAction.MERGE, WidgetProperties.selection().observe(mergeButton));
+        importActionObservable.addOption(ImportAction.IMPORT, WidgetProperties.selection().observe(importButton));
         importActionObservable.addOption(ImportAction.OVERWRITE, WidgetProperties.selection().observe(overwriteButton));
         importActionObservable.addValueChangeListener(e -> {
-            stackLayout.topControl = importActionObservable.getValue() == ImportAction.MERGE
-                    ? mergeComposite
+            stackLayout.topControl = importActionObservable.getValue() == ImportAction.IMPORT
+                    ? importComposite
                     : overwriteComposite;
             stackComposite.layout();
         });
@@ -127,12 +127,12 @@ public class ImportAndMergeBdmPage extends AbstractImportPage {
         return fileStore != null;
     }
 
-    public boolean mergeOnImport() {
-        return importActionObservable.getValue() == ImportAction.MERGE;
+    public boolean performSmartImport() {
+        return importActionObservable.getValue() == ImportAction.IMPORT;
     }
 
 }
 
 enum ImportAction {
-    MERGE, OVERWRITE
+    IMPORT, OVERWRITE
 }

@@ -80,5 +80,6 @@ public class Messages extends NLS {
     public static String containsLegacyFormsWarning;
     public static String projectConnectorToVCS;
     public static String occurrences;
+    public static String smartImportMessage;
 
 }

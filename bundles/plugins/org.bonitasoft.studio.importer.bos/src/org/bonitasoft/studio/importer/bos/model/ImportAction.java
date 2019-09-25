@@ -4,7 +4,7 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 
 public enum ImportAction {
 
-    KEEP(Messages.keepMessage), OVERWRITE(Messages.overwriteMessage);
+    KEEP(Messages.keepMessage), OVERWRITE(Messages.overwriteMessage), SMART_IMPORT(Messages.smartImportMessage);
 
     private String name;
 
