@@ -81,6 +81,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -150,7 +151,7 @@ public class DeployArtifactsHandler {
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
         if (!checkDirtyState(container)) {
-            return ValidationStatus.cancel(Messages.deployCancel);
+            return null;
         }
         try {
             container.run(true, true,
@@ -159,6 +160,9 @@ public class DeployArtifactsHandler {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
                     e.getCause() != null ? e.getCause() : e);
+        }
+        if(status.getSeverity() == IStatus.CANCEL) {
+            openAbortDialog(Display.getDefault().getActiveShell());
         }
         return status.getSeverity() == IStatus.CANCEL ? null : status;
     }
@@ -225,26 +229,26 @@ public class DeployArtifactsHandler {
                 operation.run(monitor);
                 status.add(operation.getStatus());
             }
-            if (status.getSeverity() == IStatus.CANCEL) {
-                return;
-            } else if (!status.isOK()) {
-                return;
+            if (status.isOK()) {
+                GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+                apiSessionOperation.run(monitor);
+                try {
+                    APISession session = apiSessionOperation.getSession();
+                    DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
+                            artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
+                                    .map(TenantArtifact.class::cast).collect(Collectors.toList()),
+                            session, deployOptions);
+                    monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
+                    deployTenantResourcesOperation.run(monitor);
+                    addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
+                    addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
+                } finally {
+                    monitor.done();
+                    apiSessionOperation.logout();
+                }
             }
-            GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
-            apiSessionOperation.run(monitor);
-            try {
-                APISession session = apiSessionOperation.getSession();
-                DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
-                                .map(TenantArtifact.class::cast).collect(Collectors.toList()),
-                        session, deployOptions);
-                monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
-                deployTenantResourcesOperation.run(monitor);
-                addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
-                addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
-            } finally {
-                monitor.done();
-                apiSessionOperation.logout();
+            if(monitor.isCanceled()) {
+                status.add(ValidationStatus.cancel(Messages.abort));
             }
         };
     }
@@ -307,6 +311,11 @@ public class DeployArtifactsHandler {
         } else {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
         }
+    }
+    
+
+    private void openAbortDialog(Shell activeShell) {
+        MessageDialog.openInformation(activeShell, Messages.abort, Messages.deployAborted);
     }
 
     private String errorMessageFromStatus(IStatus status) {
