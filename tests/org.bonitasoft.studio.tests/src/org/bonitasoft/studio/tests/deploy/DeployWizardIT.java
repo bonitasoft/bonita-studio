@@ -116,7 +116,7 @@ public class DeployWizardIT {
 
         botDeployDialog.deploy();
         assertThat(bot.button(IDialogConstants.OPEN_LABEL).isEnabled()).isTrue();
-        assertThat(bot.ccomboBox().getText()).contains("My App -- User");
+        assertThat(bot.ccomboBox().getText()).contains("My App as User");
         bot.button(IDialogConstants.CLOSE_LABEL).click();
 
         checkDeployedContent();
