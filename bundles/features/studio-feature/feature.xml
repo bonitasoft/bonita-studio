@@ -2,7 +2,7 @@
 <feature
       id="studio-feature"
       label="Studio"
-      version="7.9.4.qualifier"
+      version="7.9.5.qualifier"
       provider-name="Bonitasoft S.A.">
 
    <description>
