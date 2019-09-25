@@ -148,7 +148,9 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
 
     @Override
     public StyledString getStyledString() {
-        return new StyledString(getVersion());
+        StyledString styledString = new StyledString(getVersion());
+        styledString.append("  "+ getFileStore().getResource().getName(), StyledString.DECORATIONS_STYLER);
+        return styledString;
     }
 
     @Override
