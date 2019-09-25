@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.ArtifactVersion;
 import org.bonitasoft.studio.application.ui.control.model.BusinessObjectModelArtifact;
 import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
+import org.bonitasoft.studio.application.ui.control.model.ProcessArtifact;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.VersionedArtifact;
@@ -229,7 +231,20 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void updateCount() {
-        countArtifactLabel.setText(String.format(Messages.artifactCounter, allCheckedElements.size()));
+        long checkedArtifacts = allCheckedElements.stream().filter(filterVersionedArtifact()).count();
+        long totalArtifacts = repositoryModel.getArtifacts().stream().filter(artifact -> !(artifact instanceof ProcessArtifact)).count();
+        String text = String.format(Messages.artifactCounter, checkedArtifacts, totalArtifacts);
+        if (checkedArtifacts == totalArtifacts) {
+            text = Messages.allArtifactSelected;
+        } else if (checkedArtifacts == 0) {
+            text = Messages.noArtifactSelected;
+        } 
+        countArtifactLabel.setText(text);
+    }
+
+    private Predicate<? super Object> filterVersionedArtifact() {
+        return artifact -> artifact instanceof VersionedArtifact ? ((VersionedArtifact) artifact).hasSingleVersion()
+                : artifact instanceof Artifact;
     }
 
     private void updateCleanDeployEnablement() {
