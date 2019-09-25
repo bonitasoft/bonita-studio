@@ -113,4 +113,34 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="org.bonitasoft.studio.designer.win32"
+         os="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.designer.linux"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.designer.macosx"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>
