@@ -70,6 +70,7 @@ import com.google.common.base.Joiner;
 
 public class UIDesignerServerManager implements IBonitaProjectListener {
 
+
     private static final String UI_DESIGNER_BASE_NAME = "ui-designer";
     private static UIDesignerServerManager INSTANCE;
     private int port = -1;
@@ -77,6 +78,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private int portalPort = 8080;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
+    private static final String BONITA_REPOSITORY_ORIGIN = "bonita.repository.origin";
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager() {
@@ -113,6 +115,14 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             try {
                 if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
                     WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
+                }
+            } catch (Exception e1) {
+                BonitaStudioLog.error(e1);
+                return;
+            }
+            try {
+                if (!DataRepositoryServerManager.getInstance().isStarted()) {
+                    DataRepositoryServerManager.getInstance().start(monitor);
                 }
             } catch (Exception e1) {
                 BonitaStudioLog.error(e1);
@@ -179,7 +189,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     public Optional<File> getLogFile() {
         final File logDir = logLocation().toFile();
         final List<File> list = Arrays
-                .asList(logDir.listFiles((FilenameFilter) (file, fileName) -> fileName.contains(UI_DESIGNER_BASE_NAME)));
+                .asList(logDir
+                        .listFiles((FilenameFilter) (file, fileName) -> fileName.contains(UI_DESIGNER_BASE_NAME)));
 
         return list.stream()
                 .sorted((file1, file2) -> file1.lastModified() > file2.lastModified()
@@ -200,6 +211,9 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             } catch (Exception e1) {
                 BonitaStudioLog.error(e1);
             }
+        }
+        if (DataRepositoryServerManager.getInstance().isStarted()) {
+            DataRepositoryServerManager.getInstance().stop();
         }
         if (launch != null) {
             try {
@@ -248,6 +262,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
+                String.format("-D%s=http://localhost:%s", BONITA_REPOSITORY_ORIGIN, DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
@@ -293,7 +308,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         if (bundle != null) {
             if (Platform.inDevelopmentMode()) {
                 try {
-                    return new File(new File(FileLocator.getBundleFile(bundle), "lib"), "addons.jar").getCanonicalFile();
+                    return new File(new File(FileLocator.getBundleFile(bundle), "lib"), "addons.jar")
+                            .getCanonicalFile();
                 } catch (IOException e) {
                     BonitaStudioLog.error(e);
                 }

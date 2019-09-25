@@ -40,7 +40,10 @@
         <module>org.bonitasoft.studio.decision.table</module>
         <module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
+		<module>org.bonitasoft.studio.designer.linux</module>
+		<module>org.bonitasoft.studio.designer.macosx</module>
         <module>org.bonitasoft.studio.designer.war</module>
+        <module>org.bonitasoft.studio.designer.win32</module>
         <module>org.bonitasoft.studio.diagram.custom</module>
         <module>org.bonitasoft.studio.document</module>
         <module>org.bonitasoft.studio.engine</module>

@@ -33,6 +33,7 @@ import org.bonitasoft.engine.business.data.generator.filter.OnlyDAOImplementatio
 import org.bonitasoft.engine.business.data.generator.filter.WithoutDAOImplementationFileFilter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -53,6 +54,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
     private static final String BDM_CLIENT = "bdm-client";
     private static final String BDM_DAO = "bdm-dao";
     private static final String MODEL = "model";
+    private static final String FILE_CONTENT = "fileContent";
 
     private final BusinessObjectModelFileStore fileStore;
 
@@ -106,6 +108,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 final Map<String, Object> data = new HashMap<>();
                 data.put(MODEL, model);
                 data.put(BDM_DAO, resources.get(BDM_DAO));
+                data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore()).getConverter().marshall(model)));
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
