@@ -17,10 +17,14 @@ package org.bonitasoft.studio.businessobject.core.operation;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -59,7 +63,11 @@ public class SmartImportBDMOperation implements IRunnableWithStatus {
     }
 
     protected void performImport(BusinessObjectModel currentModel, BusinessObjectModel modelToImport) {
-        currentModel.getBusinessObjects().addAll(modelToImport.getBusinessObjects());
+        List<BusinessObject> businessObjectsToAdd = modelToImport.getBusinessObjects().stream()
+                .filter(boToAdd -> currentModel.getBusinessObjects().stream()
+                        .noneMatch(existingBo -> Objects.equals(boToAdd, existingBo)))
+                .collect(Collectors.toList());
+        currentModel.getBusinessObjects().addAll(businessObjectsToAdd);
     }
 
     @Override

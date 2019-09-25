@@ -63,9 +63,8 @@ public class SmartImportBdmValidator implements ISmartImportableValidator {
     protected IStatus validateCompatibility(BusinessObjectModel model1, BusinessObjectModel model2) {
         List<BusinessObject> duplicatedBo = model1.getBusinessObjects().stream()
                 .filter(boFromModel1 -> {
-                    return model2.getBusinessObjects().stream().anyMatch(boFromModel2 -> {
-                        return Objects.equals(boFromModel1.getSimpleName(), boFromModel2.getSimpleName());
-                    });
+                    return model2.getBusinessObjects().stream()
+                            .anyMatch(boFromModel2 -> areBusinessObjectsConflicting(boFromModel1, boFromModel2));
                 }).collect(Collectors.toList());
         if (!duplicatedBo.isEmpty()) {
             MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, Messages.smartImportImpossible, null);
@@ -77,6 +76,18 @@ public class SmartImportBdmValidator implements ISmartImportableValidator {
             return status;
         }
         return ValidationStatus.ok();
+    }
+
+    /**
+     * @return true if business objects are conflicting.
+     *         Business objects are conflicting if they have the same `simpleName` and if the `BusinessObject` equals method
+     *         doesn't return true.
+     */
+    private boolean areBusinessObjectsConflicting(BusinessObject bo1, BusinessObject bo2) {
+        if (Objects.equals(bo1.getSimpleName(), bo2.getSimpleName())) {
+            return !Objects.equals(bo1, bo2);
+        }
+        return false;
     }
 
 }
