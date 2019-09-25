@@ -64,6 +64,11 @@ public class Messages extends NLS {
     public static String nothingToDeploy;
     public static String applicationWithoutHomepage;
     public static String applicationWithUnknownHomepage;
+    public static String profileNotFound;
+    public static String layoutNotFound;
+    public static String themeNotFound;
+    public static String applicationPageNotFound;
+    public static String appPageTokenNotFound;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

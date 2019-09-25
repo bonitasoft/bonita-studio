@@ -122,7 +122,8 @@ public class DeployedAppContentProvider {
                     .done()).getResult();
             if (!apps.isEmpty()) {
                 Application application = apps.get(0);
-                if (getDefaultUserProfiles(profileAPI, userAPI).stream().map(Profile::getId)
+                if (application.getProfileId() != null && getDefaultUserProfiles(profileAPI, userAPI).stream()
+                        .map(Profile::getId)
                         .anyMatch(application.getProfileId()::equals)) {
                     ApplicationItem applicationItem = new ApplicationItem();
                     applicationItem.setName(application.getDisplayName());

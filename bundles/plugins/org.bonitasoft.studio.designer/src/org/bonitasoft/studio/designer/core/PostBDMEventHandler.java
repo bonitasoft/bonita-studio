@@ -22,7 +22,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -46,7 +45,7 @@ public class PostBDMEventHandler implements EventHandler {
         Map<String, String> content = new HashMap<>();
         content.put("bdmXml", fileContent);
         try {
-            Representation response = new ClientResource(String.format("http://localhost:%s/bdm",
+            new ClientResource(String.format("http://localhost:%s/bdm",
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
                             .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
                                     .post(new JacksonRepresentation<Object>(content));
