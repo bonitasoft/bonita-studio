@@ -212,8 +212,9 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error(e1);
             }
         }
-        if (DataRepositoryServerManager.getInstance().isStarted()) {
-            DataRepositoryServerManager.getInstance().stop();
+        DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
+        if (dataRepositoryServerManager.isStarted()) {
+            dataRepositoryServerManager.stop();
         }
         if (launch != null) {
             try {

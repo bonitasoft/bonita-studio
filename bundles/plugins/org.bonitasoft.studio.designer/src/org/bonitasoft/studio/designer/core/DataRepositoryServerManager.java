@@ -57,7 +57,6 @@ import org.eclipse.jdt.launching.SocketUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.prefs.BackingStoreException;
 
 import com.google.common.base.Joiner;
 
@@ -107,14 +106,6 @@ public class DataRepositoryServerManager {
                         .orElse(false)) {
             monitor.beginTask(Messages.startingDataRepositoryService, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingDataRepositoryService, UIDesignerPlugin.PLUGIN_ID);
-            try {
-                if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
-                    WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
-                }
-            } catch (Exception e1) {
-                BonitaStudioLog.error(e1);
-                return;
-            }
             final ILaunchManager manager = getLaunchManager();
             final ILaunchConfigurationType ltype = manager
                     .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
@@ -168,14 +159,6 @@ public class DataRepositoryServerManager {
     }
 
     public synchronized void stop() {
-        WorkspaceResourceServerManager resourceServer = WorkspaceResourceServerManager.getInstance();
-        if (resourceServer.isRunning()) {
-            try {
-                resourceServer.stop();
-            } catch (Exception e1) {
-                BonitaStudioLog.error(e1);
-            }
-        }
         if (launch != null) {
             try {
                 launch.terminate();
