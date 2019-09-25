@@ -149,7 +149,7 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
-        if (!checkDirtyState()) {
+        if (!checkDirtyState(container)) {
             return ValidationStatus.cancel(Messages.deployCancel);
         }
         try {
@@ -163,7 +163,7 @@ public class DeployArtifactsHandler {
         return status.getSeverity() == IStatus.CANCEL ? null : status;
     }
 
-    private boolean checkDirtyState() {
+    private boolean checkDirtyState(IWizardContainer container) {
         if (PlatformUI.isWorkbenchRunning()
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
@@ -180,7 +180,7 @@ public class DeployArtifactsHandler {
                     return false;
                 } else if (Objects.equals(strategy, SaveStrategy.SAVE)) {
                     try {
-                        PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                        container.run(false, false, monitor -> {
                             monitor.beginTask(Messages.savingEditors, dirtyEditors.size());
                             dirtyEditors.forEach(editor -> {
                                 editor.doSave(monitor);

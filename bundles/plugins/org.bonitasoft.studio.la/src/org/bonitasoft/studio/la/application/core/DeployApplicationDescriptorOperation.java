@@ -18,10 +18,15 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
+import org.bonitasoft.engine.api.ImportError;
+import org.bonitasoft.engine.api.ImportStatus;
 import org.bonitasoft.engine.api.result.StatusCode;
 import org.bonitasoft.engine.business.application.ApplicationImportPolicy;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
@@ -31,6 +36,7 @@ import org.bonitasoft.engine.exception.AlreadyExistsException;
 import org.bonitasoft.engine.exception.ImportException;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -64,11 +70,16 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
 
     protected void deployApplications(IProgressMonitor monitor) {
         try {
-            applicationAPI.importApplications(converter.marshallToXML(applicationNodeContainer),
+            List<ImportStatus> importStatus = applicationAPI.importApplications(
+                    converter.marshallToXML(applicationNodeContainer),
                     ApplicationImportPolicy.FAIL_ON_DUPLICATES);
             monitor.worked(1);
             if (status.isMultiStatus()) {
                 final MultiStatus mStatus = status;
+                importStatus.stream()
+                        .flatMap(s -> s.getErrors().stream()
+                                .map(errorToStatus(displayNameForToken(s.getName(), applicationNodeContainer))))
+                        .forEach(mStatus::add);
                 applicationNodeContainer.getApplications().stream()
                         .map(ApplicationNode::getToken)
                         .map(name -> new Status(IStatus.OK, LivingApplicationPlugin.PLUGIN_ID,
@@ -84,6 +95,37 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
         } finally {
             monitor.done();
         }
+    }
+
+    private String displayNameForToken(String token, ApplicationNodeContainer applicationNodeContainer) {
+        return applicationNodeContainer.getApplications().stream()
+                .filter(node -> Objects.equals(token, node.getToken()))
+                .map(ApplicationNode::getDisplayName)
+                .findFirst()
+                .orElse(token);
+    }
+
+    private Function<? super ImportError, ? extends IStatus> errorToStatus(String applicationDisplayName) {
+        return s -> {
+            switch (s.getType()) {
+                case PROFILE:
+                    return ValidationStatus
+                            .warning(String.format(Messages.profileNotFound, applicationDisplayName, s.getName()));
+                case LAYOUT:
+                    return ValidationStatus
+                            .warning(String.format(Messages.layoutNotFound, applicationDisplayName, s.getName()));
+                case THEME:
+                    return ValidationStatus
+                            .warning(String.format(Messages.themeNotFound, applicationDisplayName, s.getName()));
+                case APPLICATION_PAGE:
+                    return ValidationStatus.warning(
+                            String.format(Messages.appPageTokenNotFound, applicationDisplayName, s.getName()));
+                case PAGE: return ValidationStatus.warning(
+                        String.format(Messages.applicationPageNotFound, applicationDisplayName, s.getName()));
+                default:
+                    return ValidationStatus.error(s.getName());
+            }
+        };
     }
 
     public IStatus deleteBeforeDeploy(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
