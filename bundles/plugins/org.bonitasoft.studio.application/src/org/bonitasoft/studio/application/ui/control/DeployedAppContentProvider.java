@@ -204,7 +204,7 @@ public class DeployedAppContentProvider {
 
         @Override
         public String toString() {
-            return String.format("%s -- %s", getName(), getProfileName());
+            return String.format(Messages.applicationAsDisplayName, getName(), getProfileName());
         }
 
         @Override
