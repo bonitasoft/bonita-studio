@@ -90,9 +90,9 @@ public class DeployWizardIT {
         assertThat(botDeployDialog.isDeployEnabled()).isTrue();
         botDeployDialog.selectLatest();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
-                .getNode("1.0").isChecked()).isFalse();
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
-                .getNode("2.0").isChecked()).isTrue();
+                .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
 
         //Check username validation
         botDeployDialog.setDefaultUser("john.doe");
@@ -128,9 +128,9 @@ public class DeployWizardIT {
                 botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].isChecked())
                         .isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
-                .getNode("1.0").isChecked()).isFalse();
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
-                .getNode("2.0").isChecked()).isTrue();
+                .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
 
         botDeployDialog.cancel();
     }

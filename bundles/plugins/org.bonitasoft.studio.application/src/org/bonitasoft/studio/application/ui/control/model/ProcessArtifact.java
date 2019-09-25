@@ -85,7 +85,11 @@ public class ProcessArtifact implements VersionedArtifact {
 
     @Override
     public StyledString getStyledString() {
-        return new StyledString(getDisplayName());
+        StyledString styledString = new StyledString(getDisplayName());
+        if(hasSingleVersion()) {
+            styledString.append("  "+ ((ProcessVersion) getLatestVersion()).getFileStore().getResource().getName(), StyledString.COUNTER_STYLER);
+        }
+        return styledString;
     }
 
     public ArtifactVersion getLatestVersion() {
