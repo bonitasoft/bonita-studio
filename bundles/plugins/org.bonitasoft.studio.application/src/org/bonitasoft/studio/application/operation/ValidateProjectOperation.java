@@ -17,7 +17,6 @@ package org.bonitasoft.studio.application.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.ApplicationPlugin;
@@ -26,7 +25,6 @@ import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.validation.common.operation.ProcessValidationOperation;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -51,8 +49,9 @@ public class ValidateProjectOperation implements IRunnableWithStatus {
         validationProcessOperation.run(monitor);
         if (monitor.isCanceled()) {
             status.add(Status.CANCEL_STATUS);
-        } else if (Objects.equals(validationProcessOperation.getStatus().getSeverity(), ValidationStatus.ERROR)) {
+        } else if (validationProcessOperation.getStatus().getSeverity() == IStatus.ERROR) {
             status.addAll(validationProcessOperation.getStatus());
+            return;
         }
         List<IValidable> validables = artifactsToValidate.stream()
                 .filter(IValidable.class::isInstance)

@@ -16,12 +16,10 @@ package org.bonitasoft.studio.ui.util;
 
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-/**
- * @author Romain Bioteau
- */
 public class ProcessValidationStatus extends Status {
 
     private final AbstractProcess process;
@@ -37,12 +35,18 @@ public class ProcessValidationStatus extends Status {
     public String getMessage() {
         if (validationStatus.isMultiStatus()) {
             final int issues = countIssues();
-            if (issues == 1) {
-                return String.format("%s %s %s (%s)", issues, Messages.issueFoundIn, process.getName(), process.getVersion());
+            if (process instanceof Pool) {
+                String diagramFileName = process.eResource().getURI().lastSegment();
+                return String.format("%s %s %s %s (%s) ", issues,
+                        issues == 1 ? Messages.issueFoundIn : Messages.issuesFoundIn, process.getName(),
+                        process.getVersion(), diagramFileName);
             }
-            return String.format("%s %s %s (%s)", issues, Messages.issuesFoundIn, process.getName(), process.getVersion());
+            return String.format("%s %s %s (%s)", issues, issues == 1 ? Messages.issueFoundIn : Messages.issuesFoundIn,
+                    process.getName(), process.getVersion());
         }
-        return validationStatus.getSeverity() == IStatus.ERROR ?  String.format("%s %s %s (%s)", 1, Messages.issueFoundIn, process.getName(), process.getVersion()) : String.format("%s (%s)", process.getName(), process.getVersion());
+        return validationStatus.getSeverity() == IStatus.ERROR
+                ? String.format("%s %s %s (%s)", 1, Messages.issueFoundIn, process.getName(), process.getVersion())
+                : String.format("%s (%s)", process.getName(), process.getVersion());
     }
 
     protected int countIssues() {
