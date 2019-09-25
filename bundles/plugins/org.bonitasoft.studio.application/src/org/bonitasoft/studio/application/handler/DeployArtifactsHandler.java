@@ -64,12 +64,15 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
+import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -128,7 +131,7 @@ public class DeployArtifactsHandler {
                 Messages.selectArtifactToDeploy)
                         .open(activeShell, Messages.deploy);
         if (result.isPresent()) {
-            openStatusDialog(activeShell, result.get());
+            openStatusDialog(activeShell, result.get(), repositoryAccessor);
         }
     }
 
@@ -290,14 +293,24 @@ public class DeployArtifactsHandler {
         return options;
     }
 
-    private void openStatusDialog(Shell activeShell, IStatus status) {
+    private void openStatusDialog(Shell activeShell, IStatus status, RepositoryAccessor repositoryAccessor) {
         if (status instanceof MultiStatus) {
             if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
+                String[] buttonLabels = new String[] { IDialogConstants.CLOSE_LABEL };
+                List<ProcessValidationStatus> processValidationStatuses = new ArrayList<>();
+                findProcessValidationStaus(status, processValidationStatuses);
+                if (!processValidationStatuses.isEmpty()) {
+                    buttonLabels = new String[] { org.bonitasoft.studio.importer.i18n.Messages.seeDetails,
+                            IDialogConstants.CLOSE_LABEL };
+                }
                 MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus,
                         errorMessageFromStatus(status),
-                        new String[] { IDialogConstants.CLOSE_LABEL }, (MultiStatus) status);
+                        buttonLabels,
+                        (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
-                multiStatusDialog.open();
+                if (multiStatusDialog.open() == 0 /* index of seeDetails button */) {
+                    openDiagrams(processValidationStatuses,repositoryAccessor);
+                }
             } else {
                 try {
                     openSuccessDialog(activeShell, status);
@@ -316,6 +329,31 @@ public class DeployArtifactsHandler {
 
     private void openAbortDialog(Shell activeShell) {
         MessageDialog.openInformation(activeShell, Messages.abort, Messages.deployAborted);
+    }
+
+    private void openDiagrams(List<ProcessValidationStatus> processValidationStatuses,
+            RepositoryAccessor repositoryAccessor) {
+        DiagramRepositoryStore diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        processValidationStatuses.stream()
+                .map(s -> s.getProcess().eResource())
+                .map(resource -> diagramStore.getChild(resource.getURI().lastSegment(), false))
+                .filter(Objects::nonNull)
+                .distinct()
+                .forEach(fStore -> {
+                    if (!fStore.isOpened()) {
+                        fStore.open();
+                    }
+                });
+        RunProcessesValidationOperation.showValidationPart();
+    }
+
+    private void findProcessValidationStaus(IStatus status, List<ProcessValidationStatus> result) {
+        if (status instanceof ProcessValidationStatus && status.getSeverity() == IStatus.ERROR) {
+            result.add((ProcessValidationStatus) status);
+        }
+        for (IStatus child : status.getChildren()) {
+            findProcessValidationStaus(child, result);
+        }
     }
 
     private String errorMessageFromStatus(IStatus status) {

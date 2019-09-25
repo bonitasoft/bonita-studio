@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.validation.common.ValidationCommonPlugin;
@@ -61,7 +62,21 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         listOfProcessesToValidate.stream().forEach( process -> {
             if(!monitor.isCanceled()) {
                 monitor.setTaskName(Messages.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
-                status.add(new ProcessValidationStatus(process,validator.validate(process, monitor)));
+                ProcessValidationStatus processValidationStatus = new ProcessValidationStatus(process,validator.validate(process, monitor));
+                status.add(processValidationStatus);
+                if(processValidationStatus.getSeverity() == IStatus.ERROR) {
+                    final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
+                            new BatchValidationOperation(
+                                    new OffscreenEditPartFactory(
+                                            org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                                    new ValidationMarkerProvider()));
+                    validationAction.addProcess(process);
+                    try {
+                        validationAction.run(monitor);
+                    } catch (InvocationTargetException | InterruptedException e) {
+                       BonitaStudioLog.error(e);
+                    }
+                }
             }
         });
     }
