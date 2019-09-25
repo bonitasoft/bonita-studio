@@ -132,7 +132,6 @@ public class Messages extends NLS {
     public static String youCanOpenApp;
     public static String artifactCounter;
     public static String pagesAndLayouts;
-    public static String deployCancel;
     public static String saveOpenedEditorsTitle;
     public static String saveOpenedEditors;
     public static String savingEditors;
@@ -140,6 +139,8 @@ public class Messages extends NLS {
     public static String deploying;
     public static String deployStatusWithUnresolvedProcessesMessage;
     public static String validateHint;
+    public static String deployAborted;
+    public static String abort;
     public static String applicationAsDisplayName;
     public static String allArtifactSelected;
     public static String noArtifactSelected;
