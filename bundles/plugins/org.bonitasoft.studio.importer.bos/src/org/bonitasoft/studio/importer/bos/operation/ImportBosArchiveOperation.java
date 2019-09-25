@@ -153,10 +153,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         try (ZipFile zipFile = bosArchive.getZipFile();) {
             repositoryFileStore = unit.doImport(zipFile,
                     monitor);
-            if (repositoryFileStore == null && unit instanceof ImportFileStoreModel
-                    && ((ImportFileStoreModel) unit).getFileName().endsWith(".proc")) {
+            if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel)) {
                 status.add(ValidationStatus
-                        .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName())));
+                        .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName()))); // TODO The ImportFileStoreModel should have a status ...
             }
             if (repositoryFileStore != null) {
                 importedFileStores.add(repositoryFileStore);
@@ -263,7 +262,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             return status;
         }
         return validationStatus;
-
     }
 
     public List<IRepositoryFileStore> getFileStoresToOpen() {

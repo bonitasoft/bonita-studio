@@ -13,6 +13,7 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
         super(filePath, parent);
     }
 
+    // for test purpose
     public ImportFileStoreModel(String filePath, ImportStoreModel parent, ConflictStatus status) {
         super(filePath, parent, status);
     }
@@ -37,6 +38,5 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
     public String getName() {
         return getText();
     }
-
 
 }

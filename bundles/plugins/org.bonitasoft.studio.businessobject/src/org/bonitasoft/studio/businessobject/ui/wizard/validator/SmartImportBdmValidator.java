@@ -14,30 +14,50 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FileUtils;
+import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.eclipse.core.databinding.validation.IValidator;
+import org.bonitasoft.studio.common.repository.model.ISmartImportableValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.xml.sax.SAXException;
 
-public class MergeBdmValidator implements IValidator<BusinessObjectModel> {
+public class SmartImportBdmValidator implements ISmartImportableValidator {
 
     private BusinessObjectModel currentModel;
+    private BusinessObjectModelConverter converter;
 
-    public MergeBdmValidator(BusinessObjectModel currentModel) {
-        this.currentModel = currentModel;
+    public SmartImportBdmValidator(BusinessObjectModelFileStore fileStore) {
+        this.currentModel = fileStore.getContent();
+        converter = ((BusinessObjectModelRepositoryStore) fileStore.getParentStore()).getConverter();
+    }
+
+    // For test purpose
+    protected SmartImportBdmValidator() {
     }
 
     @Override
-    public IStatus validate(BusinessObjectModel value) {
-        return validateCompatibility(currentModel, value);
+    public IStatus validate(File value) {
+        try {
+            BusinessObjectModel modelToImport = converter.unmarshall(FileUtils.readFileToByteArray(value));
+            return validateCompatibility(currentModel, modelToImport);
+        } catch (JAXBException | IOException | SAXException e) {
+            return ValidationStatus.error(Messages.archiveContentInvalid, e);
+        }
     }
 
     protected IStatus validateCompatibility(BusinessObjectModel model1, BusinessObjectModel model2) {
@@ -48,7 +68,7 @@ public class MergeBdmValidator implements IValidator<BusinessObjectModel> {
                     });
                 }).collect(Collectors.toList());
         if (!duplicatedBo.isEmpty()) {
-            MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, "", null);
+            MultiStatus status = new MultiStatus(BusinessObjectPlugin.PLUGIN_ID, 0, Messages.smartImportImpossible, null);
             duplicatedBo.stream()
                     .map(BusinessObject::getSimpleName)
                     .map(name -> String.format(Messages.businessObjectNameDuplicated, name))

@@ -86,10 +86,11 @@ public class ImportBosHandler {
 
     protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store, Shell activeShell,
             String repositoryName) {
-       if(new BosImportStatusDialogHandler(operation.getStatus(), store).open(activeShell) != IDialogConstants.PROCEED_ID) {
-           operation.openFilesToOpen();
-           PlatformUtil.openIntroIfNoOtherEditorOpen();
-       }
+        if (new BosImportStatusDialogHandler(operation.getStatus(), store)
+                .open(activeShell) != IDialogConstants.PROCEED_ID) {
+            operation.openFilesToOpen();
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
+        }
     }
 
     protected Repository getTargetRepository(RepositoryAccessor repositoryAccessor) {

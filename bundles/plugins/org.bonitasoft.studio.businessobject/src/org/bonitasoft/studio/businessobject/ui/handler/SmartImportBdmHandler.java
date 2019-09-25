@@ -19,20 +19,19 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import javax.inject.Named;
 import javax.xml.bind.JAXBException;
 
-import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.apache.commons.io.FileUtils;
+import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.businessobject.ui.wizard.ImportAndMergeBdmPage;
-import org.bonitasoft.studio.businessobject.ui.wizard.validator.MergeBdmValidator;
+import org.bonitasoft.studio.businessobject.ui.wizard.SmartImportBdmPage;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -46,33 +45,35 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.xml.sax.SAXException;
 
-public class ImportBdmHandler {
+public class SmartImportBdmHandler {
 
-    private boolean mergeOnImport = false;
+    private boolean smartImport = false;
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
-        ImportAndMergeBdmPage page = new ImportAndMergeBdmPage(repositoryAccessor);
+        SmartImportBdmPage page = new SmartImportBdmPage(repositoryAccessor);
         Optional<IStatus> status = createWizard(newWizard(), page, repositoryAccessor).open(activeShell,
                 Messages.importButtonLabel);
         if (status.isPresent()) {
             IStatus s = status.get();
             if (s.isOK()) {
                 MessageDialog.openInformation(activeShell,
-                        mergeOnImport ? Messages.mergeCompletedTitle : Messages.bdmImportedTitle,
-                        mergeOnImport ? Messages.mergeCompleted : Messages.bdmImported);
+                        smartImport ? Messages.smartImportCompletedTitle : Messages.bdmImportedTitle,
+                        smartImport ? Messages.smartImportCompleted : Messages.bdmImported);
             } else if (s.isMultiStatus()) {
-                new MultiStatusDialog(activeShell, Messages.mergeImpossibleTitle, Messages.mergeImpossible,
+                new MultiStatusDialog(activeShell, Messages.smartImportImpossibleTitle,
+                        String.format("%s\n%s", Messages.smartImportImpossible, Messages.updateModelsHint),
                         new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) s).open();
             } else {
-                MessageDialog.openError(activeShell, Messages.mergeImpossibleTitle, s.getMessage());
+                MessageDialog.openError(activeShell, Messages.smartImportImpossibleTitle, s.getMessage());
             }
         }
     }
 
-    private WizardBuilder<IStatus> createWizard(WizardBuilder<IStatus> builder, ImportAndMergeBdmPage page,
+    private WizardBuilder<IStatus> createWizard(WizardBuilder<IStatus> builder, SmartImportBdmPage page,
             RepositoryAccessor repositoryAccessor) {
         return builder
                 .withTitle(Messages.importBdm)
@@ -84,51 +85,38 @@ public class ImportBdmHandler {
                 .onFinish(container -> Optional.ofNullable(performFinish(repositoryAccessor, page)));
     }
 
-    private IStatus performFinish(RepositoryAccessor repositoryAccessor, ImportAndMergeBdmPage page) {
-        mergeOnImport = page.mergeOnImport();
+    private IStatus performFinish(RepositoryAccessor repositoryAccessor, SmartImportBdmPage page) {
+        smartImport = page.performSmartImport();
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         try {
-            BusinessObjectModel newModel = retrieveModelToMerge(repositoryStore.getConverter(), page.getFilePath());
+            File fileToMerge = ZipUtil.unzip(new File(page.getFilePath()))
+                    .resolve(BusinessObjectModelFileStore.BOM_FILENAME)
+                    .toFile();
             if (fileStore == null) {
                 fileStore = (BusinessObjectModelFileStore) repositoryStore
                         .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
-            } else if (mergeOnImport) {
-                return validateAndMerge(fileStore, newModel);
+            } else if (smartImport) {
+                IStatus status = new SmartImportBdmValidator(fileStore).validate(fileToMerge);
+                if (!status.isOK()) {
+                    return status;
+                }
+
+                try {
+                    SmartImportBDMOperation operation = new SmartImportBDMOperation(fileStore, fileToMerge);
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+                    return operation.getStatus();
+                } catch (InvocationTargetException | InterruptedException e) {
+                    return ValidationStatus.error(e.getMessage(), e.getCause());
+                }
             }
-            save(fileStore, newModel);
+            fileStore.save(repositoryStore.getConverter().unmarshall(FileUtils.readFileToByteArray(fileToMerge)));
             return ValidationStatus.ok();
         } catch (IOException | JAXBException | SAXException e) {
             BonitaStudioLog.error(e);
             return ValidationStatus.error(Messages.archiveContentInvalid);
         }
-    }
-
-    private IStatus validateAndMerge(BusinessObjectModelFileStore fileStore, BusinessObjectModel modelToMerge) {
-        BusinessObjectModel currentModel = fileStore.getContent();
-        IStatus status = new MergeBdmValidator(currentModel).validate(modelToMerge);
-        if (!status.isOK()) {
-            return status;
-        }
-        performMerge(currentModel, modelToMerge);
-        save(fileStore, currentModel);
-        return ValidationStatus.ok();
-    }
-
-    private void save(BusinessObjectModelFileStore fileStore, BusinessObjectModel model) {
-        fileStore.save(model);
-    }
-
-    protected void performMerge(BusinessObjectModel currentModel, BusinessObjectModel modelToMerge) {
-        currentModel.getBusinessObjects().addAll(modelToMerge.getBusinessObjects());
-    }
-
-    private BusinessObjectModel retrieveModelToMerge(BusinessObjectModelConverter converter, String pathToArchive)
-            throws IOException, JAXBException, SAXException {
-        Path path = ZipUtil.unzip(new File(pathToArchive));
-        return converter.unmarshall(Files.readAllBytes(path.resolve("bom.xml")));
-
     }
 
 }

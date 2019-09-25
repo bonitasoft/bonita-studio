@@ -1,5 +1,8 @@
 package org.bonitasoft.studio.importer.bos;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,7 +16,6 @@ public class BosArchiveImporterPlugin extends AbstractUIPlugin {
 
     // The shared instance
     private static BosArchiveImporterPlugin plugin;
-
 
     /**
      * The constructor
@@ -48,6 +50,28 @@ public class BosArchiveImporterPlugin extends AbstractUIPlugin {
      */
     public static BosArchiveImporterPlugin getDefault() {
         return plugin;
+    }
+
+    public static Image getImage(final String imageName) {
+        final ImageRegistry reg = getDefault().getImageRegistry();
+
+        Image result = reg.get(imageName);
+
+        if (result != null && !result.isDisposed()) {//prevent from bad dispose
+            return result;
+        }
+
+        final ImageDescriptor descriptor = ImageDescriptor.createFromURL(getDefault().getBundle().getResource(imageName));
+        if (descriptor != null) {
+            result = descriptor.createImage();
+        }
+
+        reg.remove(imageName);
+        if (result != null) {
+            reg.put(imageName, result);
+        }
+
+        return result;
     }
 
 }

@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ISmartImportable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -128,8 +129,8 @@ public class BosArchive {
             Set<String> resourcesToOpen, boolean directStoreChild, ImportArchiveModel archiveModel) {
         if (segments.size() == 1
                 && directStoreChild) { // File
-            final ImportFileStoreModel file = new ImportFileStoreModel(Joiner.on('/').join(concat(parentSegments, segments)),
-                    store);
+            String filePath = Joiner.on('/').join(concat(parentSegments, segments));
+            ImportFileStoreModel file = createImportModelFileStore(store, segments.get(0), filePath);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
                 if (isDiagram(file)) {
@@ -169,6 +170,16 @@ public class BosArchive {
                     Lists.newArrayList(folderParentSegments),
                     resourcesToOpen, false, archiveModel);
         }
+    }
+
+    private ImportFileStoreModel createImportModelFileStore(AbstractFolderModel parentStore, String fileName,
+            String filePath) {
+        Optional<IRepositoryFileStore> fileStore = parentStore.getParentRepositoryStore()
+                .map(repositoryStore -> repositoryStore.getChild(fileName, true));
+        if (fileStore.isPresent() && (fileStore.get() instanceof ISmartImportable)) {
+            return new SmartImportFileStoreModel(this, filePath, parentStore, fileStore.get());
+        }
+        return new ImportFileStoreModel(filePath, parentStore);
     }
 
     private boolean isFragment(ImportFileModel file) {

@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -31,13 +32,17 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
+import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
+import org.bonitasoft.studio.common.repository.model.ISmartImportable;
+import org.bonitasoft.studio.common.repository.model.ISmartImportableValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -60,7 +65,7 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
+public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements ISmartImportable {
 
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
@@ -245,10 +250,11 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
         Object cleanBDM = options.containsKey(DeployOptions.CLEAN_BDM) ? false : options.get(DeployOptions.CLEAN_BDM);
-        if(!(cleanBDM instanceof Boolean)) {
-            return new Status(IStatus.ERROR, 
-                    BusinessObjectPlugin.PLUGIN_ID, 
-                    String.format("Invalid option type for %s. Expected a Boolean value but found a %s",DeployOptions.CLEAN_BDM, cleanBDM.getClass()));
+        if (!(cleanBDM instanceof Boolean)) {
+            return new Status(IStatus.ERROR,
+                    BusinessObjectPlugin.PLUGIN_ID,
+                    String.format("Invalid option type for %s. Expected a Boolean value but found a %s",
+                            DeployOptions.CLEAN_BDM, cleanBDM.getClass()));
         }
         DeployBDMOperation deployBDMOperation = new DeployBDMOperation(this, (boolean) cleanBDM).reuseSession(session);
         try {
@@ -259,6 +265,25 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore {
             return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM", e);
         }
         return ValidationStatus.info(Messages.businessDataModelDeployed);
+    }
+
+    @Override
+    public IStatus smartImport(IProgressMonitor monitor, File fileToMerge) {
+        try {
+            SmartImportBDMOperation operation = new SmartImportBDMOperation(this, fileToMerge);
+            operation.run(monitor);
+            return operation.getStatus();
+        } catch (InvocationTargetException | InterruptedException e) {
+            return ValidationStatus.error(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public <T> T getAdapter(Class<T> adapter) {
+        if (Objects.equals(ISmartImportableValidator.class, adapter)) {
+            return (T) new SmartImportBdmValidator(this);
+        }
+        return super.getAdapter(adapter);
     }
 
 }

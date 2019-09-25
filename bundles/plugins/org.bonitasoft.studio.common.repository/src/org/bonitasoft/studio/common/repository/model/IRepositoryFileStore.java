@@ -18,13 +18,14 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryFileStore extends IDisplayable {
+public interface IRepositoryFileStore extends IDisplayable, IAdaptable {
 
     String getName();
 
@@ -63,5 +64,10 @@ public interface IRepositoryFileStore extends IDisplayable {
     byte[] toByteArray() throws IOException;
 
     boolean canBeDeleted();
+
+    @Override
+    default <T> T getAdapter(Class<T> adapter) {
+        return null;
+    }
 
 }
