@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.provider.TypedLabelProvider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -43,6 +44,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     private int finishId;
     private int level = STATUS_LEVEL.get(IStatus.OK);
     private static final Map<Integer, Integer> STATUS_LEVEL = new HashMap<>();
+    public static final int SEE_DETAILS_ID = 8;
 
     static {
         STATUS_LEVEL.put(IStatus.CANCEL, 0);
@@ -73,10 +75,15 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         this.canFinish = canFinish;
         this.finishId = finishId;
     }
-
+    
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
-        Button button = super.createButton(parent, id, label, defaultButton);
+        Button button = null;
+        if(Messages.seeDetails.equals(label)) {
+            button = super.createButton(parent, SEE_DETAILS_ID, label, defaultButton);
+        }else {
+            button = super.createButton(parent, id, label, defaultButton);
+        }
         if (finishId == id && canFinish != null) {
             button.setEnabled(canFinish.test(status));
         }
@@ -123,6 +130,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             }
         };
     }
+    
 
     @Override
     protected ViewerComparator getComparator() {
