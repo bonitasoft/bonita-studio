@@ -29,6 +29,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -68,6 +70,15 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
                 .withTooltipProvider(typedLabelProvider::getToolTipText)
                 .createColumnLabelProvider());
 
+        problemsViewer.getTable().getShell().addControlListener(new ControlAdapter() {
+            
+            @Override
+            public void controlResized(ControlEvent e) {
+                tableViewerColumn.getColumn().pack();
+            }
+            
+        });
+        
         problemsViewer.setInput(input);
         ColumnViewerToolTipSupport.enableFor(problemsViewer);
 

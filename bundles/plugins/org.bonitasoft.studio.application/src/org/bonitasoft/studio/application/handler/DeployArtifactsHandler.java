@@ -97,6 +97,7 @@ public class DeployArtifactsHandler {
     private RepositoryModel repositoryModel;
     private List<IRepositoryFileStore> defaultSelection;
     private final static List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
+
     static {
         REPO_STORE_DEPLOY_ORDER.add("organizations");
         REPO_STORE_DEPLOY_ORDER.add("profiles");
@@ -300,7 +301,7 @@ public class DeployArtifactsHandler {
                 List<ProcessValidationStatus> processValidationStatuses = new ArrayList<>();
                 findProcessValidationStaus(status, processValidationStatuses);
                 if (!processValidationStatuses.isEmpty()) {
-                    buttonLabels = new String[] { org.bonitasoft.studio.importer.i18n.Messages.seeDetails,
+                    buttonLabels = new String[] { org.bonitasoft.studio.ui.i18n.Messages.seeDetails,
                             IDialogConstants.CLOSE_LABEL };
                 }
                 MultiStatusDialog multiStatusDialog = new MultiStatusDialog(activeShell, Messages.deployStatus,
@@ -308,7 +309,7 @@ public class DeployArtifactsHandler {
                         buttonLabels,
                         (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
-                if (multiStatusDialog.open() == 0 /* index of seeDetails button */) {
+                if (multiStatusDialog.open() == MultiStatusDialog.SEE_DETAILS_ID) {
                     openDiagrams(processValidationStatuses,repositoryAccessor);
                 }
             } else {

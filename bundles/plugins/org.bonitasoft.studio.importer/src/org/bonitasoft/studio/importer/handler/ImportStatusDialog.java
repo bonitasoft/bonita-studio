@@ -70,7 +70,7 @@ public class ImportStatusDialog extends MessageDialog {
     protected static String[] getLabels(final boolean canOpen, IStatus status) {
         List<String> buttons =new ArrayList<>();
         if(canOpen) {
-            buttons.add(Messages.seeDetails);
+            buttons.add(org.bonitasoft.studio.ui.i18n.Messages.seeDetails);
         } 
         if(status.getSeverity() != IStatus.ERROR) {
             buttons.add(Messages.deploy);
@@ -148,7 +148,7 @@ public class ImportStatusDialog extends MessageDialog {
 
     @Override
     protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
-        if (Messages.seeDetails.equals(label)) {
+        if (org.bonitasoft.studio.ui.i18n.Messages.seeDetails.equals(label)) {
             return super.createButton(parent, IDialogConstants.OPEN_ID, label, defaultButton);
         }
         if (Messages.deploy.equals(label)) {
