@@ -49,9 +49,15 @@ public class ComboWidget extends EditableControlWidget {
                 control.setItems(items);
             }
             if (ctx != null && modelObservable != null) {
-                control.bindControl(ctx, control.observeComboText(), modelObservable, targetToModelStrategy,
+                control.bindControl(ctx,
+                        delay.map(time -> control.observeComboText(time))
+                                .orElse(control.observeComboText()),
+                        modelObservable,
+                        targetToModelStrategy,
                         modelToTargetStrategy);
-                validator.ifPresent(v -> control.bindValidator(ctx, control.observeComboText(),
+                validator.ifPresent(v -> control.bindValidator(ctx,
+                        delay.map(time -> control.observeComboText(time))
+                                .orElse(control.observeComboText(SWT.Modify)),
                         modelObservable,
                         v));
             }
@@ -71,6 +77,10 @@ public class ComboWidget extends EditableControlWidget {
 
     public ISWTObservableValue observeComboText() {
         return WidgetProperties.text().observe(combo);
+    }
+    
+    public ISWTObservableValue observeComboText(int delay) {
+        return WidgetProperties.text().observeDelayed(delay,combo);
     }
 
     @Override

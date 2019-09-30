@@ -44,6 +44,7 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
     protected String id;
     protected Optional<FormToolkit> toolkit = Optional.empty();
     protected Optional<IValidator> validator = Optional.empty();
+    protected Optional<Integer> delay = Optional.empty();
 
     /**
      * Adds a text label next to the control.
@@ -264,6 +265,11 @@ public abstract class ControlWidgetBuilder<T, W extends ControlWidget> {
      */
     public T withModelToTargetStrategy(UpdateValueStrategyFactory modelToTargetStrategyFactory) {
         this.modelToTargetStrategy = modelToTargetStrategyFactory.create();
+        return (T) this;
+    }
+    
+    public T withDelay(int delay) {
+        this.delay = Optional.of(delay);
         return (T) this;
     }
 

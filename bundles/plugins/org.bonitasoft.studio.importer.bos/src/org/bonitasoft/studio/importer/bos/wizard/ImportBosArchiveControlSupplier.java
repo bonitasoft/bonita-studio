@@ -26,6 +26,7 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
@@ -48,6 +49,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -62,6 +64,9 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -99,7 +104,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     protected ConflictStatus archiveStatus;
     private IObservableValue archiveStatusObservable;
     protected final ExceptionDialogHandler exceptionDialogHandler;
-    private DataBindingContext ctx;
+    private IObservableValue filePathObserveValue;
+    private URLTempPath urlTempPath;
 
     public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
             ExceptionDialogHandler exceptionDialogHandler) {
@@ -120,12 +126,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
         this.wizardContainer = container;
-        this.ctx = ctx;
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 25).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-        final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), mainComposite);
+        final LocalResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(),
+                mainComposite);
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         this.successColor = resourceManager.createColor(ColorConstants.SUCCESS_RGB);
         doCreateFileBrowser(mainComposite, ctx);
@@ -134,8 +140,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         treeSection.setVisible(filePath != null);
         textWidget.addTextListener(SWT.Modify, e -> {
-            treeSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty()
-                    && new File(textWidget.getText()).exists());
+            treeSection.setVisible(textWidget.getText() != null && !textWidget.getText().isEmpty());
             treeSection.layout();
         });
 
@@ -187,7 +192,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     }
 
     protected IStatus archiveStatusValidator(Object value) {
-        return Objects.equals(value, ConflictStatus.SAME_CONTENT) ? ValidationStatus.error("Archive content already exists.")
+        return Objects.equals(value, ConflictStatus.SAME_CONTENT)
+                ? ValidationStatus.error("Archive content already exists.")
                 : ValidationStatus.ok();
     }
 
@@ -275,28 +281,53 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
         Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
         fileBrowserComposite
-                .setLayout(GridLayoutFactory.fillDefaults().create());
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        IObservableValue filePathObserveValue = PojoProperties.value("filePath").observe(this);
+        filePathObserveValue = PojoProperties.value("filePath").observe(this);
         filePathObserveValue.addValueChangeListener(this::parseArchive);
         textWidget = new TextWidget.Builder()
-                .withLabel(Messages.selectFileToImport)
+                .withLabel(Messages.selectLocation)
                 .grabHorizontalSpace()
                 .fill()
                 .alignMiddle()
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
-                                .havingValidators(getEmptyInputValidator(""), getPathValidator()).create()))
+                                .havingValidators(getEmptyInputValidator("")).create()))
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
                 .readOnly()
-                .withButton(Messages.browseButton_label)
+                .withButton(Messages.browseLocalButton_label)
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
+       
+
+        Composite textContainer = adaptLayout(textWidget.getControl());
+        
+        Button fetchURL = new Button(textContainer, SWT.FLAT);
+        fetchURL.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
+        fetchURL.setText(Messages.fetchRemote);
+        fetchURL.addListener(SWT.Selection, event -> {
+           FetchRemoteURLDialog fetchRemoteURLDialog = new FetchRemoteURLDialog(Display.getDefault().getActiveShell());
+            if (fetchRemoteURLDialog.open() == IDialogConstants.OK_ID) {
+                updateFilePath(fetchRemoteURLDialog.getUrl());
+            }
+        });
         textWidget.focusButton();
         return parent;
+    }
+
+    private Composite adaptLayout(Control control) {
+        Composite textContainer = control.getParent();
+        GridLayout layout = (GridLayout) textContainer.getLayout();
+        layout.numColumns = layout.numColumns + 1;
+        GridData gridLayoutData = (GridData) textContainer.getChildren()[0].getLayoutData();
+        gridLayoutData.horizontalSpan = 4;
+        
+        gridLayoutData = (GridData) textContainer.getChildren()[3].getLayoutData();
+        gridLayoutData.horizontalSpan = 4;
+        return textContainer;
     }
 
     protected void browseFile(Event e) {
@@ -313,10 +344,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         textWidget.getParent().getParent().layout();
         if (new File(filePath).exists()) {
             savePath(filePath);
-        } else {
-            descriptionLabel.setText("");
-            viewer.setInput(null);
-        }
+        } 
     }
 
     private EmptyInputValidator getEmptyInputValidator(String inputName) {
@@ -329,7 +357,22 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     protected void parseArchive(ValueChangeEvent e) {
         Optional.ofNullable((String) e.diff.getNewValue()).ifPresent(filePath -> {
-            final File myFile = new File(filePath);
+            File myFile = new File(filePath);
+            if(urlTempPath != null && urlTempPath.getTmpPath().toFile().exists()) {
+                urlTempPath.getTmpPath().toFile().delete();
+                urlTempPath = null;
+            }
+            if (!myFile.exists()) {
+                FetchRemoteBosArchiveOperation operation = new FetchRemoteBosArchiveOperation(filePath);
+                try {
+                    wizardContainer.run(true, false, operation);
+                } catch (InvocationTargetException | InterruptedException ex) {
+                    exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                            Messages.errorOccuredWhileParsingBosArchive, ex);
+                }
+                urlTempPath = operation.getURLTempPath();
+                myFile = urlTempPath.getTmpPath().toFile();
+            }
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
                 importActionSelector.setArchiveModel(archiveModel);
@@ -337,6 +380,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 openTree();
             }
         });
+    }
+    
+    public boolean shouldDeleteTempFile() {
+        return urlTempPath != null &&  urlTempPath.getTmpPath().toFile().exists();
     }
 
     protected ImportArchiveModel parseArchive(String path) {

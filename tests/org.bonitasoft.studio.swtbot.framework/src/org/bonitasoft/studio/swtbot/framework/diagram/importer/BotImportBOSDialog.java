@@ -37,7 +37,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public BotImportBOSDialog setArchive(URL bosURLInClasspath) throws IOException {
-        final SWTBotText pathText = bot.textWithLabel(Messages.selectFileToImport);
+        final SWTBotText pathText = bot.textWithLabel(Messages.selectLocation);
         Display.getDefault().syncExec(() -> {
             try {
                 pathText.widget.setText(toAbsoluteFilePath(bosURLInClasspath));
