@@ -33,7 +33,7 @@ public class Messages extends NLS {
     public static String errorWhileImporting_title;
     public static String importFileTitle;
     public static String importFileDescription;
-    public static String selectFileToImport;
+    public static String selectLocation;
     public static String browseButton_label;
     public static String invalidFilePath;
     public static String importProcessTitle;
@@ -72,7 +72,7 @@ public class Messages extends NLS {
     public static String workspaceTips;
     public static String importWorkspaceOverwriteBehavior;
     public static String moreInfo;
-    public static String bdmDeployedInfo;
+    public static String bdmImportedInfo;
     public static String legacyFormsNotImported;
     public static String formsRemovedFromStudio;
     public static String legacyFormsNotImportedFromWorkspace;
@@ -81,5 +81,16 @@ public class Messages extends NLS {
     public static String projectConnectorToVCS;
     public static String occurrences;
     public static String smartImportMessage;
+    public static String browseLocalButton_label;
+    public static String fetchRemote;
+    public static String fetchRemoteDialogTitle;
+    public static String enterAValidURL;
+    public static String invalidContentType;
+    public static String cannotRetrieveContentType;
+    public static String onlyHTTPUrlSupported;
+    public static String invalidURL;
+    public static String downloadingRemoteBosArchive;
+    public static String url;
+    public static String invalidBosArchiveType;
 
 }

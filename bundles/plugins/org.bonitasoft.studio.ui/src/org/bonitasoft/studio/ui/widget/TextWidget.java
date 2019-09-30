@@ -59,7 +59,6 @@ public class TextWidget extends EditableControlWidget {
         protected Optional<String> placeholder = Optional.empty();
         protected Optional<String> labelButton = Optional.empty();
         protected Optional<Listener> buttonListner = Optional.empty();
-        protected Optional<Integer> delay = Optional.empty();
         protected boolean transactionalEdit = false;
         private BiConsumer<String, String> onEdit;
         private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
@@ -108,11 +107,6 @@ public class TextWidget extends EditableControlWidget {
          */
         public Builder onClickButton(Listener listener) {
             this.buttonListner = Optional.ofNullable(listener);
-            return this;
-        }
-
-        public Builder withDelay(int delay) {
-            this.delay = Optional.of(delay);
             return this;
         }
 

@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Optional;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 
@@ -77,4 +79,5 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
         this.useNativeRender = true;
         return (T) this;
     }
+    
 }

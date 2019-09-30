@@ -50,7 +50,7 @@ public class ImportBosHandler {
 
         try {
             archiveModel
-                    .ifPresent(model -> importArchive(activeShell, model, new File(bosArchiveControlSupplier.getFilePath()),
+                    .ifPresent(model -> importArchive(activeShell, model, bosArchiveControlSupplier,
                             repositoryAccessor));
         } catch (final Throwable t) {
             exceptionDialogHandler.openErrorDialog(activeShell, Messages.errorWhileImporting_message, t);
@@ -62,16 +62,21 @@ public class ImportBosHandler {
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
     }
 
-    protected void importArchive(Shell activeShell, ImportArchiveModel model, File archive,
+    protected void importArchive(Shell activeShell, ImportArchiveModel model, ImportBosArchiveControlSupplier bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
-        final ImportBosArchiveOperation operation = createImportOperation(model, archive, progressManager,
+        File archiveFile = new File(bosArchiveControlSupplier.getFilePath());
+        final ImportBosArchiveOperation operation = createImportOperation(model, archiveFile, progressManager,
                 repositoryAccessor);
         operation.setCurrentRepository(getTargetRepository(repositoryAccessor));
         try {
             progressManager.run(true, false, operation);
         } catch (final InvocationTargetException | InterruptedException e) {
             throw new RuntimeException(e);
+        }finally {
+            if(bosArchiveControlSupplier.shouldDeleteTempFile()) {
+                archiveFile.delete();
+            }
         }
 
         activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation,

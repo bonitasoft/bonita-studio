@@ -35,7 +35,7 @@ public class BDMBosImporterStatusProvider implements BosImporterStatusProvider {
                 .stream()
                 .filter(BusinessObjectModelFileStore.class::isInstance)
                 .findFirst()
-                .map(fs -> ValidationStatus.info(Messages.bdmDeployedInfo))
+                .map(fs -> ValidationStatus.info(Messages.bdmImportedInfo))
                 .ifPresent(statusBuilder::addStatus);
         return statusBuilder;
     }
