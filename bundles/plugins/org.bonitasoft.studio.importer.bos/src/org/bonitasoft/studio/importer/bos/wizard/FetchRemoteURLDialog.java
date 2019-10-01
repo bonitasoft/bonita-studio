@@ -16,7 +16,6 @@ package org.bonitasoft.studio.importer.bos.wizard;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,6 +27,7 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -43,8 +43,6 @@ import org.eclipse.swt.widgets.Shell;
 
 public class FetchRemoteURLDialog extends Dialog {
 
-    private static final String FILENAME_PARAM = "filename=";
-    private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
     private static final String BOS_FILE_EXTENSION = ".bos";
     private static final String APPLICATION_CONTENT_TYPE = "application";
     private static final String LOCATION_HEADER = "Location";
@@ -145,11 +143,7 @@ public class FetchRemoteURLDialog extends Dialog {
                     return ValidationStatus.error(contentType != null
                             ? String.format(Messages.invalidContentType, contentType) : Messages.cannotRetrieveContentType);
                 }
-                String headerField = ((HttpURLConnection)connection).getHeaderField(CONTENT_DISPOSITION_HEADER);
-                String filename = new File(url.getFile()).getName();
-                if( headerField != null && !headerField.isEmpty() && headerField.contains(FILENAME_PARAM)) {
-                    filename = headerField.split("=")[1];
-                }
+                String filename = FetchRemoteBosArchiveOperation.getFilename((HttpURLConnection) connection);
                 if(!filename.toLowerCase().endsWith(BOS_FILE_EXTENSION)) {
                     return ValidationStatus.error(Messages.invalidBosArchiveType);
                 }

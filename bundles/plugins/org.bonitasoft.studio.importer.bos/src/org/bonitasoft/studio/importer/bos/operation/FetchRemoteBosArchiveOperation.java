@@ -36,7 +36,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
 
     private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
-    private static final CharSequence FILENAME_PARAM = "filename=";
+    private static final String FILENAME_PARAM = "filename=";
     private URLTempPath ulrTempPath;
     private String url;
 
@@ -60,7 +60,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
             try (ReadableByteChannel readableByteChannel = Channels.newChannel(remoteURL.openStream());
                     FileOutputStream fileOutputStream = new FileOutputStream(tempFile.toFile());
                     FileChannel fileChannel = fileOutputStream.getChannel()) {
-                long chunkSize = 100;
+                long chunkSize = 500;
                 int position = 0;
                 monitor.beginTask(Messages.downloadingRemoteBosArchive, (int) completeFileSize);
                 while (position < completeFileSize) {
@@ -79,11 +79,17 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private String getFilename(HttpURLConnection httpConnection) {
+    public static String getFilename(HttpURLConnection httpConnection) {
         String headerField = httpConnection.getHeaderField(CONTENT_DISPOSITION_HEADER);
         String filename = new File(httpConnection.getURL().getFile()).getName();
-        if( headerField != null && !headerField.isEmpty() && headerField.contains(FILENAME_PARAM)) {
-            filename = headerField.split("=")[1];
+        if (headerField != null && !headerField.isEmpty() && headerField.contains(FILENAME_PARAM)) {
+            filename = headerField.split(FILENAME_PARAM)[1];
+            if (filename.startsWith("\"") && filename.startsWith("\"")) {
+                filename = filename.substring(1, filename.length() - 1);
+            }
+            if (filename.startsWith("'") && filename.startsWith("'")) {
+                filename = filename.substring(1, filename.length() - 1);
+            }
         }
         return filename;
     }
