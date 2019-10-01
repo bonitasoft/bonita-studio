@@ -134,7 +134,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 mainComposite);
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         this.successColor = resourceManager.createColor(ColorConstants.SUCCESS_RGB);
-        doCreateFileBrowser(mainComposite, ctx);
+        doFileLocationBrowser(mainComposite, ctx);
         doCreateAdditionalControl(mainComposite, ctx);
         doCreateFileTree(mainComposite, ctx);
 
@@ -278,7 +278,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         return "";
     }
 
-    private Composite doCreateFileBrowser(Composite parent, DataBindingContext dbc) {
+    private Composite doFileLocationBrowser(Composite parent, DataBindingContext dbc) {
         Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
         fileBrowserComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -305,7 +305,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         Composite textContainer = adaptLayout(textWidget.getControl());
         
-        Button fetchURL = new Button(textContainer, SWT.FLAT);
+        Button fetchURL = new Button(textContainer, SWT.PUSH);
         fetchURL.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         fetchURL.setText(Messages.fetchRemote);
         fetchURL.addListener(SWT.Selection, event -> {
