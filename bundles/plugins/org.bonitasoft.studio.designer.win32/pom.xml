@@ -45,7 +45,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.web</groupId>
 									<artifactId>bonita-data-repository</artifactId>
-									<version>${engine.version}</version>
+									<version>${business.data.repository.version}</version>
 									<classifier>win</classifier>
 									<type>zip</type>
 									<overWrite>true</overWrite>

@@ -18,11 +18,8 @@ import java.io.File;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IInputValidator;
 
@@ -43,25 +40,17 @@ public class RepositoryNameValidator implements IInputValidator, IValidator {
         if (getRepositoryManager().getRepository(newText) != null) {
             return String.format(Messages.projectAlreadyExist, newText);
         }
-        try {
-            getRepositoryManager().getCurrentRepository()
-                    .getProject()
-                    .getWorkspace()
-                    .getRoot().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-            if (Stream.of(getRepositoryManager().getCurrentRepository()
-                    .getProject()
-                    .getWorkspace()
-                    .getRoot()
-                    .getLocation()
-                    .toFile()
-                    .listFiles())
-                    .map(File::getName)
-                    .map(String::toLowerCase)
-                    .anyMatch(newText.toLowerCase()::equals)) {
-                return String.format(Messages.projectAlreadyExist, newText);
-            }
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
+        if (Stream.of(getRepositoryManager().getCurrentRepository()
+                .getProject()
+                .getWorkspace()
+                .getRoot()
+                .getLocation()
+                .toFile()
+                .listFiles())
+                .map(File::getName)
+                .map(String::toLowerCase)
+                .anyMatch(newText.toLowerCase()::equals)) {
+            return String.format(Messages.projectAlreadyExist, newText);
         }
         return null;
     }
