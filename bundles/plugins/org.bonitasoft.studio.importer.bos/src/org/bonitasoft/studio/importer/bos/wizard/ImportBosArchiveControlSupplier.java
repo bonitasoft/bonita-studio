@@ -289,7 +289,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
                 .readOnly()
-                .withButton(Messages.browseLocalButton_label)
+                .withButton(Messages.browseButton_label)
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
        
