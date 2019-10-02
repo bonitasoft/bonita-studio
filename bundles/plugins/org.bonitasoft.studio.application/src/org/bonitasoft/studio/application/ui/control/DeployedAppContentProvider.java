@@ -20,8 +20,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,6 +50,12 @@ import org.eclipse.core.runtime.IStatus;
 
 public class DeployedAppContentProvider {
 
+    private static final Set<String> DEFAULT_PROFILES_NAMES = new HashSet<>();
+    static {
+        DEFAULT_PROFILES_NAMES.add("User");
+        DEFAULT_PROFILES_NAMES.add("Process manager");
+        DEFAULT_PROFILES_NAMES.add("Administrator");
+    }
     private String selection;
     private List<ApplicationItem> applications;
 
@@ -62,9 +71,14 @@ public class DeployedAppContentProvider {
 
     private Collection<? extends ApplicationItem> portalApplications(ProfileAPI profileAPI, UserAPI userAPI) {
         return getDefaultUserProfiles(profileAPI, userAPI).stream()
+                .filter(defaultProfileFilter())
                 .map(profile -> createPortalApplication(profile))
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<? super Profile> defaultProfileFilter() {
+        return profile -> DEFAULT_PROFILES_NAMES.contains(profile.getName());
     }
 
     private ApplicationItem createPortalApplication(Profile profile) {
