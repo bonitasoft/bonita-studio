@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -50,6 +51,10 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         Assert.isNotNull(input);
         if (input.isEmpty()) {
             return super.createCustomArea(parent);
+        }
+        if(messageLabel != null) {
+            GridData layoutData = (GridData) messageLabel.getLayoutData();
+            layoutData.verticalAlignment = SWT.CENTER;
         }
         TableViewer problemsViewer = new TableViewer(parent,
                 SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
