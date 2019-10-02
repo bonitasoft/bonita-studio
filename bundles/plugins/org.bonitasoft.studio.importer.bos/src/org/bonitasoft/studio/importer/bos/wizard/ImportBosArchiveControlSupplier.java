@@ -41,15 +41,13 @@ import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -64,9 +62,6 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -119,10 +114,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         this.filePath = filePath;
     }
 
-    /**
-     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite,
-     *      org.eclipse.core.databinding.DataBindingContext)
-     */
     @Override
     public Control createControl(Composite parent, IWizardContainer container, DataBindingContext ctx) {
         this.wizardContainer = container;
@@ -183,9 +174,9 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         treeSection.addExpansionListener(new UpdateLayoutListener(parent));
         treeSection.setExpanded(false);
         descriptionLabel = new Label(treeSection, SWT.WRAP);
-        archiveStatusObservable = PojoObservables.observeValue(this, "archiveStatus");
+        archiveStatusObservable = PojoProperties.value("archiveStatus").observe(this);
 
-        ctx.bindValue(SWTObservables.observeText(descriptionLabel), archiveStatusObservable,
+        ctx.bindValue(WidgetProperties.text().observe(descriptionLabel), archiveStatusObservable,
                 neverUpdateValueStrategy().create(), updateValueStrategy().withValidator(this::archiveStatusValidator)
                         .withConverter(createArchiveStatusConverter()).create());
         treeSection.setDescriptionControl(descriptionLabel);
@@ -302,32 +293,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
        
-
-        Composite textContainer = adaptLayout(textWidget.getControl());
-        
-        Button fetchURL = new Button(textContainer, SWT.PUSH);
-        fetchURL.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
-        fetchURL.setText(Messages.fetchRemote);
-        fetchURL.addListener(SWT.Selection, event -> {
-           FetchRemoteURLDialog fetchRemoteURLDialog = new FetchRemoteURLDialog(Display.getDefault().getActiveShell());
-            if (fetchRemoteURLDialog.open() == IDialogConstants.OK_ID) {
-                updateFilePath(fetchRemoteURLDialog.getUrl());
-            }
-        });
         textWidget.focusButton();
         return parent;
-    }
-
-    private Composite adaptLayout(Control control) {
-        Composite textContainer = control.getParent();
-        GridLayout layout = (GridLayout) textContainer.getLayout();
-        layout.numColumns = layout.numColumns + 1;
-        GridData gridLayoutData = (GridData) textContainer.getChildren()[0].getLayoutData();
-        gridLayoutData.horizontalSpan = 4;
-        
-        gridLayoutData = (GridData) textContainer.getChildren()[3].getLayoutData();
-        gridLayoutData.horizontalSpan = 4;
-        return textContainer;
     }
 
     protected void browseFile(Event e) {
