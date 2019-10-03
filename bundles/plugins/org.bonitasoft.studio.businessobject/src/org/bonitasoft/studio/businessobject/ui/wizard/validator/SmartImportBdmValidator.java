@@ -28,22 +28,21 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.repository.model.ISmartImportableValidator;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.xml.sax.SAXException;
 
-public class SmartImportBdmValidator implements ISmartImportableValidator {
+public class SmartImportBdmValidator implements IValidator<File> {
 
     private BusinessObjectModel currentModel;
     private BusinessObjectModelConverter converter;
 
-    public SmartImportBdmValidator(BusinessObjectModelFileStore fileStore) {
-        this.currentModel = fileStore.getContent();
-        converter = ((BusinessObjectModelRepositoryStore) fileStore.getParentStore()).getConverter();
+    public SmartImportBdmValidator(BusinessObjectModelFileStore fileStore, BusinessObjectModelConverter converter) {
+        this.converter = converter;
+        this.currentModel = fileStore != null ? fileStore.getContent() : new BusinessObjectModel();
     }
 
     // For test purpose
@@ -80,12 +79,11 @@ public class SmartImportBdmValidator implements ISmartImportableValidator {
 
     /**
      * @return true if business objects are conflicting.
-     *         Business objects are conflicting if they have the same `simpleName` and if the `BusinessObject` equals method
-     *         doesn't return true.
+     *         Business objects are conflicting if they have the same `simpleName` but are not in the same package.
      */
     private boolean areBusinessObjectsConflicting(BusinessObject bo1, BusinessObject bo2) {
         if (Objects.equals(bo1.getSimpleName(), bo2.getSimpleName())) {
-            return !Objects.equals(bo1, bo2);
+            return !Objects.equals(bo1.getQualifiedName(), bo2.getQualifiedName());
         }
         return false;
     }

@@ -23,10 +23,10 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.ISmartImportable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -177,7 +177,7 @@ public class BosArchive {
         Optional<IRepositoryFileStore> fileStore = parentStore.getParentRepositoryStore()
                 .map(repositoryStore -> repositoryStore.getChild(fileName, true));
         if (fileStore.isPresent() && (fileStore.get() instanceof ISmartImportable)) {
-            return new SmartImportFileStoreModel(this, filePath, parentStore, fileStore.get());
+            return new SmartImportFileStoreModel(this, filePath, parentStore, (ISmartImportable) fileStore.get());
         }
         return new ImportFileStoreModel(filePath, parentStore);
     }

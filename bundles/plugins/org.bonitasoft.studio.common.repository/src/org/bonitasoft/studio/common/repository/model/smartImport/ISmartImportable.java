@@ -12,20 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository.model;
+package org.bonitasoft.studio.common.repository.model.smartImport;
 
-import java.io.File;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * A SmartImportable artifact is able to be imported `smartly`:
  * new elements are imported, identical existing elements are not overwritten and user choice is required for conflicting
  * elements
  */
-public interface ISmartImportable {
-
-    public IStatus smartImport(IProgressMonitor monitor, File fileToImport);
+public interface ISmartImportable extends IAdaptable {
 
 }

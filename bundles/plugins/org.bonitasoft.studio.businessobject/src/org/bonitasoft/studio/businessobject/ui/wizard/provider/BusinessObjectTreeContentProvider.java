@@ -29,7 +29,7 @@ public class BusinessObjectTreeContentProvider implements ITreeContentProvider {
     private PackageHelper packageHelper;
 
     public BusinessObjectTreeContentProvider() {
-        packageHelper = new PackageHelper();
+        packageHelper = PackageHelper.getInstance();
     }
 
     @Override

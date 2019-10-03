@@ -2,9 +2,9 @@ package org.bonitasoft.studio.importer.bos.provider;
 
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
-import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;

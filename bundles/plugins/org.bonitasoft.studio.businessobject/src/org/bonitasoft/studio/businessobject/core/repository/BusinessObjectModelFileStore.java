@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -32,8 +31,8 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
-import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -41,9 +40,8 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
-import org.bonitasoft.studio.common.repository.model.ISmartImportable;
-import org.bonitasoft.studio.common.repository.model.ISmartImportableValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -268,22 +266,15 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     @Override
-    public IStatus smartImport(IProgressMonitor monitor, File fileToMerge) {
-        try {
-            SmartImportBDMOperation operation = new SmartImportBDMOperation(this, fileToMerge);
-            operation.run(monitor);
-            return operation.getStatus();
-        } catch (InvocationTargetException | InterruptedException e) {
-            return ValidationStatus.error(e.getMessage(), e.getCause());
-        }
-    }
-
-    @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (Objects.equals(ISmartImportableValidator.class, adapter)) {
-            return (T) new SmartImportBdmValidator(this);
+        if (adapter.isAssignableFrom(BusinessObjectModelFileStore.class)) {
+            return (T) this;
         }
-        return super.getAdapter(adapter);
+        if (adapter.isAssignableFrom(SmartImportBdmModel.class)) {
+            return (T) new SmartImportBdmModel(this, getConverter(), new SmartImportBdmValidator(this, getConverter()),
+                    false);
+        }
+        return null;
     }
 
 }

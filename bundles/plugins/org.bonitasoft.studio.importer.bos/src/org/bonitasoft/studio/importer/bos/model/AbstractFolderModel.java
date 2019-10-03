@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
+
 public abstract class AbstractFolderModel extends AbstractImportModel implements IPresentable {
 
     private final List<AbstractFolderModel> folders = new ArrayList<>();

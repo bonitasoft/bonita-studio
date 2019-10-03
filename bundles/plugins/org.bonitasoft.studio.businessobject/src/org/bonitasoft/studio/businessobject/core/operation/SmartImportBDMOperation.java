@@ -14,60 +14,54 @@
  */
 package org.bonitasoft.studio.businessobject.core.operation;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.xml.bind.JAXBException;
-
-import org.apache.commons.io.FileUtils;
-import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.xml.sax.SAXException;
 
 public class SmartImportBDMOperation implements IRunnableWithStatus {
 
     private BusinessObjectModelFileStore fileStore;
-    private File fileToImport;
+    private SmartImportBdmModel modelToImport;
     private IStatus status = ValidationStatus.ok();
+    private PackageHelper packageHelper = PackageHelper.getInstance();
 
-    public SmartImportBDMOperation(BusinessObjectModelFileStore fileStore, File fileToImport) {
+    public SmartImportBDMOperation(BusinessObjectModelFileStore fileStore, SmartImportBdmModel modelToImport) {
         this.fileStore = fileStore;
-        this.fileToImport = fileToImport;
+        this.modelToImport = modelToImport;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        try {
-            monitor.beginTask(Messages.importingBdm, IProgressMonitor.UNKNOWN);
-            BusinessObjectModel modelToImport = ((BusinessObjectModelRepositoryStore) fileStore.getParentStore())
-                    .getConverter()
-                    .unmarshall(FileUtils.readFileToByteArray(fileToImport));
-            BusinessObjectModel currentModel = fileStore.getContent();
-            performImport(currentModel, modelToImport);
-            fileStore.save(currentModel);
-            monitor.done();
-        } catch (JAXBException | IOException | SAXException e) {
-            status = ValidationStatus.error(Messages.archiveContentInvalid, e);
-        }
+        monitor.beginTask(Messages.importingBdm, IProgressMonitor.UNKNOWN);
+        BusinessObjectModel currentModel = fileStore.getContent();
+        performImport(currentModel);
+        fileStore.save(currentModel);
+        monitor.done();
     }
 
-    protected void performImport(BusinessObjectModel currentModel, BusinessObjectModel modelToImport) {
-        List<BusinessObject> businessObjectsToAdd = modelToImport.getBusinessObjects().stream()
-                .filter(boToAdd -> currentModel.getBusinessObjects().stream()
-                        .noneMatch(existingBo -> Objects.equals(boToAdd, existingBo)))
+    protected void performImport(BusinessObjectModel currentModel) {
+        List<String> packageToOverwrite = modelToImport.getSmartImportableUnits().stream()
+                .filter(unit -> Objects.equals(ConflictStatus.CONFLICTING, unit.getConflictStatus()))
+                .filter(unit -> Objects.equals(unit.getImportAction(), ImportAction.OVERWRITE))
+                .map(SmartImportableUnit::getName)
                 .collect(Collectors.toList());
-        currentModel.getBusinessObjects().addAll(businessObjectsToAdd);
+        currentModel.getBusinessObjects()
+                .removeIf(existingBo -> packageToOverwrite.contains(packageHelper.getPackageName(existingBo)));
+        currentModel.getBusinessObjects().addAll(modelToImport.getBusinessObjectsToImport());
     }
 
     @Override

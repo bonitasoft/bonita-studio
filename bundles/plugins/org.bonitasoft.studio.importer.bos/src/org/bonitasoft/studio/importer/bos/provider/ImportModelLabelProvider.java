@@ -5,11 +5,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.IPresentable;
 import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler.ConflictStyler;

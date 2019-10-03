@@ -10,10 +10,11 @@ import org.junit.Test;
 
 public class PackageHelperTest {
 
+    PackageHelper helper = PackageHelper.getInstance();
+
     @Test
     public void should_retrieve_package() {
         BusinessObject bo = new BusinessObject("com.company.model.MyObject");
-        PackageHelper helper = new PackageHelper();
         String packageName = helper.getPackageName(bo);
         assertThat(packageName).isEqualTo("com.company.model");
     }
@@ -28,7 +29,6 @@ public class PackageHelperTest {
         model.addBusinessObject(bo2);
         model.addBusinessObject(bo3);
 
-        PackageHelper helper = new PackageHelper();
         List<String> allPackages = helper.getAllPackages(model);
         assertThat(allPackages).hasSize(2);
         assertThat(allPackages).containsExactlyInAnyOrder("com.company.model", "com.company.model.bis");
@@ -40,7 +40,6 @@ public class PackageHelperTest {
         BusinessObjectModel model = new BusinessObjectModel();
         model.addBusinessObject(bo1);
 
-        PackageHelper helper = new PackageHelper();
         assertThat(helper.packageAlreadyExists(model, "com.company.model")).isTrue();
         assertThat(helper.packageAlreadyExists(model, "com.company.model.bis")).isFalse();
     }
@@ -51,7 +50,6 @@ public class PackageHelperTest {
         BusinessObjectModel model = new BusinessObjectModel();
         model.addBusinessObject(bo1);
 
-        PackageHelper helper = new PackageHelper();
         String nextPackageName = helper.getNextPackageName(model);
         assertThat(nextPackageName).isEqualTo("com.company.model1");
     }
@@ -66,7 +64,6 @@ public class PackageHelperTest {
         model.addBusinessObject(bo2);
         model.addBusinessObject(bo3);
 
-        PackageHelper helper = new PackageHelper();
         List<BusinessObject> businessObjects = helper.getAllBusinessObjects(model, "com.company.model");
         assertThat(businessObjects).containsExactlyInAnyOrder(bo1, bo2);
     }

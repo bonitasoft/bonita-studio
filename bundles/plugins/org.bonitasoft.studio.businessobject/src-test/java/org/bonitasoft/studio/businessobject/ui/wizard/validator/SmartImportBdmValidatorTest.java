@@ -10,7 +10,7 @@ import org.junit.Test;
 public class SmartImportBdmValidatorTest {
 
     @Test
-    public void should_return_error_if_bo_are_duplicated_in_different_packages() {
+    public void should_return_error_if_bo_are_conflicting_in_different_packages() {
         BusinessObjectModel model1 = new BusinessObjectModel();
         BusinessObjectModel model2 = new BusinessObjectModel();
         BusinessObject bo1 = new BusinessObject("com.company.Person");
@@ -26,7 +26,7 @@ public class SmartImportBdmValidatorTest {
     }
 
     @Test
-    public void should_return_error_if_bo_are_conflicting() {
+    public void should_return_ok_if_bo_are_conflicting_in_same_package() {
         BusinessObjectModel model1 = new BusinessObjectModel();
         BusinessObjectModel model2 = new BusinessObjectModel();
         BusinessObject bo1 = new BusinessObject("com.company.Person");
@@ -38,7 +38,7 @@ public class SmartImportBdmValidatorTest {
 
         IStatus status = new SmartImportBdmValidator().validateCompatibility(model1, model2);
 
-        StatusAssert.assertThat(status).isError();
+        StatusAssert.assertThat(status).isOK();
     }
 
     @Test

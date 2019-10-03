@@ -2,6 +2,8 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.util.zip.ZipFile;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.CoreException;
