@@ -22,6 +22,7 @@ import java.net.URL;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
+import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
 import org.bonitasoft.studio.common.DateUtil;
@@ -131,6 +132,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             }
         }
     }
+
+    private static final String FIRST_STARTUP = "firstStartup";
 
     private IProgressMonitor monitor;
 
@@ -416,10 +419,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void initXMLandHTMLValidationPreferences() {
-        IEclipsePreferences xmlNode = new DefaultScope().getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        IEclipsePreferences xmlNode = DefaultScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
         xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
 
-        IEclipsePreferences htmlNode = new DefaultScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        IEclipsePreferences htmlNode = DefaultScope.INSTANCE.getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, -1);
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, -1);
@@ -558,6 +561,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
+        ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
+        if(isFirstStartup()) {
+            new OpenReleaseNoteHandler().openBrowser();
+        }
+        ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
+    }
+
+    private boolean isFirstStartup() {
+        return ApplicationPlugin.getDefault().getPreferenceStore().getBoolean(FIRST_STARTUP);
     }
 
     private void preLoad() {

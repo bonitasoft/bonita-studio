@@ -22,28 +22,48 @@ import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
+import org.eclipse.ui.internal.browser.Trace;
+import org.eclipse.ui.internal.browser.WebBrowserPreference;
+import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
+import org.eclipse.ui.internal.browser.WebBrowserView;
 
-/**
- * @author Romain Bioteau
- */
+
 public class OpenBrowserOperation implements Runnable {
 
     protected static final String TYPE_ID = "org.bonitasoft.studio.browser"; //$NON-NLS-1$
     private final URL url;
     private ExternalBrowserInstance externalBrowser;
+    private boolean useInternalBrowser = false;
+    private String name;
+    private String id;
 
     public OpenBrowserOperation(final URL url) {
         this.url = url;
     }
 
-    public void setExternalBrowser(final ExternalBrowserInstance externalBrowser) {
+    public OpenBrowserOperation withExternalBrowser(final ExternalBrowserInstance externalBrowser) {
         this.externalBrowser = externalBrowser;
+        return this;
+    }
+
+    public OpenBrowserOperation withInteralBrowser(String id) {
+        this.useInternalBrowser = true;
+        this.id = id;
+        return this;
+    }
+    
+    public OpenBrowserOperation withName(String name) {
+        this.name = name;
+        return this;
     }
 
     public void execute() {
@@ -51,14 +71,42 @@ public class OpenBrowserOperation implements Runnable {
     }
 
     protected void openBrowser() throws PartInitException {
-        if (browserIsSet()) {
-            IWebBrowser browser = externalBrowser;
+        IWebBrowser browser = null;
+        WebBrowserUtil.isInternalBrowserOperational = null;
+        if (useInternalBrowser &&
+                PlatformUI.getWorkbench().getBrowserSupport().isInternalWebBrowserAvailable()) {
+            IWorkbenchWindow workbenchWindow = WebBrowserUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
+            final IWorkbenchPage page = workbenchWindow.getActivePage();
+                try {
+                    WebBrowserView view = null;
+                  IViewReference findViewReference = page.findViewReference(WebBrowserView.WEB_BROWSER_VIEW_ID, WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW));
+                  if(findViewReference == null) {
+                      view = (WebBrowserView)page.showView(WebBrowserView.WEB_BROWSER_VIEW_ID, WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW), IWorkbenchPage.VIEW_CREATE);
+                  }else {
+                      view = (WebBrowserView) findViewReference.getView(true);
+                  }
+                    if (name != null && name.length() > 0) {
+                        view.setBrowserViewName(name);
+                    }
+                    if (view!=null) {
+                        view.setURL(url.toExternalForm());
+                    }
+                } catch (Exception e) {
+                    Trace.trace(Trace.SEVERE, "Error opening Web browser", e); //$NON-NLS-1$
+                }
+        } else if (browserIsSet()) {
+            browser = externalBrowser;
             if (browser == null) {
-                browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,
+                browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(
+                        IWorkbenchBrowserSupport.AS_EDITOR,
                         TYPE_ID, "", ""); //$NON-NLS-1$
             }
+        }
+        if (browser != null) {
             browser.openURL(url);
         }
+        WebBrowserUtil.isInternalBrowserOperational = false;
+        WebBrowserPreference.setBrowserChoice(WebBrowserPreference.EXTERNAL);
     }
 
     protected boolean browserIsSet() {
