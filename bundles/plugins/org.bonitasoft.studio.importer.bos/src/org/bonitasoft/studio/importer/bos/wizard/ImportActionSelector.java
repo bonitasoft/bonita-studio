@@ -16,9 +16,9 @@ package org.bonitasoft.studio.importer.bos.wizard;
 
 import static java.util.Objects.requireNonNull;
 
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
-import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Event;

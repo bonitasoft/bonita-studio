@@ -25,7 +25,19 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 
 public class PackageHelper {
 
+    public static PackageHelper INSTANCE;
     public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
+
+    private PackageHelper() {
+
+    }
+
+    public static PackageHelper getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new PackageHelper();
+        }
+        return INSTANCE;
+    }
 
     public String getPackageName(BusinessObject bo) {
         return NamingUtils.getPackageName(bo.getQualifiedName());

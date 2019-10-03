@@ -12,12 +12,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository.model;
+package org.bonitasoft.studio.businessobject.model;
 
-import java.io.File;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 
-import org.eclipse.core.databinding.validation.IValidator;
+public class SmartImportBusinessObjectModel extends SmartImportableUnit {
 
-public interface ISmartImportableValidator extends IValidator<File> {
+    private BusinessObject businessObject;
+
+    public SmartImportBusinessObjectModel(SmartImportPackageModel parent, BusinessObject businessObject) {
+        super(parent);
+        this.businessObject = businessObject;
+    }
+
+    @Override
+    public String getName() {
+        return businessObject.getSimpleName();
+    }
+
+    public BusinessObject getBusinessObject() {
+        return businessObject;
+    }
 
 }

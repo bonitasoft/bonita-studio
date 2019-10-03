@@ -26,6 +26,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -35,8 +37,6 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
-import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.eclipse.core.resources.IFolder;
@@ -203,6 +203,6 @@ public class ImportConflictsCheckerTest {
     }
 
     private File loadFile(String filePath) throws UnsupportedEncodingException {
-        return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(),"UTF-8"));
+        return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(), "UTF-8"));
     }
 }

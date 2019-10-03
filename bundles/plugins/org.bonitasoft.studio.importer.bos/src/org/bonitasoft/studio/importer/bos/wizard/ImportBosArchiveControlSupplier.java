@@ -18,13 +18,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;

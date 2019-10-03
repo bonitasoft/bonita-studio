@@ -47,8 +47,6 @@ public class Messages extends NLS {
     public static String analyseBosArchive;
     public static String importBosArchive;
     public static String importBosArchiveTitle;
-    public static String overwriteMessage;
-    public static String keepMessage;
     public static String parsingArchive;
     public static String retrivingDataToImport;
     public static String importing;

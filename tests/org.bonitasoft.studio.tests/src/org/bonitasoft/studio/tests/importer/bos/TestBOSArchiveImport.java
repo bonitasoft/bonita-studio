@@ -22,13 +22,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
-import org.bonitasoft.studio.importer.bos.model.ImportAction;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;

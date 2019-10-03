@@ -12,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.eclipse.jface.viewers.StyledString;

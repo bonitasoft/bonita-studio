@@ -2,6 +2,7 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.jface.dialogs.Dialog;

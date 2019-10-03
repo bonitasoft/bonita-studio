@@ -75,7 +75,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
         this.businessObjectModel = businessObjectModel;
         this.selectionObservable = selectionObservable;
         this.cellEditor = createCellEditor();
-        this.packageHelper = new PackageHelper();
+        this.packageHelper = PackageHelper.getInstance();
     }
 
     private CellEditor createCellEditor() {

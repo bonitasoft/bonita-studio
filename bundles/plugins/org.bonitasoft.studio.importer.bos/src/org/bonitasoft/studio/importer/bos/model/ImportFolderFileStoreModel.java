@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipFile;
 
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -21,7 +22,6 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
     public Image getImage() {
         return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
     }
-
 
     @Override
     public IRepositoryFileStore doImport(ZipFile archive, IProgressMonitor monitor) {

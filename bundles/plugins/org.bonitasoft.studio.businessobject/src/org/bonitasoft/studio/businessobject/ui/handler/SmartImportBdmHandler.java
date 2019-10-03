@@ -31,18 +31,14 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.SmartImportBdmPage;
-import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -63,12 +59,8 @@ public class SmartImportBdmHandler {
                 MessageDialog.openInformation(activeShell,
                         smartImport ? Messages.smartImportCompletedTitle : Messages.bdmImportedTitle,
                         smartImport ? Messages.smartImportCompleted : Messages.bdmImported);
-            } else if (s.isMultiStatus()) {
-                new MultiStatusDialog(activeShell, Messages.smartImportImpossibleTitle,
-                        String.format("%s\n%s", Messages.smartImportImpossible, Messages.updateModelsHint),
-                        new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) s).open();
             } else {
-                MessageDialog.openError(activeShell, Messages.smartImportImpossibleTitle, s.getMessage());
+                MessageDialog.openError(activeShell, Messages.ImportError, s.getMessage());
             }
         }
     }
@@ -77,6 +69,7 @@ public class SmartImportBdmHandler {
             RepositoryAccessor repositoryAccessor) {
         return builder
                 .withTitle(Messages.importBdm)
+                .withSize(800, 600)
                 .needProgress()
                 .havingPage(newPage()
                         .withTitle(Messages.importBdm)
@@ -86,32 +79,27 @@ public class SmartImportBdmHandler {
     }
 
     private IStatus performFinish(RepositoryAccessor repositoryAccessor, SmartImportBdmPage page) {
-        smartImport = page.performSmartImport();
+        smartImport = page.canPerformSmartImport();
         BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (fileStore == null) {
+            fileStore = (BusinessObjectModelFileStore) repositoryStore
+                    .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
+        } else if (smartImport) {
+            try {
+                SmartImportBDMOperation operation = new SmartImportBDMOperation(fileStore, page.getImportBdmModel());
+                PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
+                return operation.getStatus();
+            } catch (InvocationTargetException | InterruptedException e) {
+                return ValidationStatus.error(e.getMessage(), e.getCause());
+            }
+        }
         try {
-            File fileToMerge = ZipUtil.unzip(new File(page.getFilePath()))
+            File fileToImport = ZipUtil.unzip(new File(page.getFilePath()))
                     .resolve(BusinessObjectModelFileStore.BOM_FILENAME)
                     .toFile();
-            if (fileStore == null) {
-                fileStore = (BusinessObjectModelFileStore) repositoryStore
-                        .createRepositoryFileStore(BusinessObjectModelFileStore.BOM_FILENAME);
-            } else if (smartImport) {
-                IStatus status = new SmartImportBdmValidator(fileStore).validate(fileToMerge);
-                if (!status.isOK()) {
-                    return status;
-                }
-
-                try {
-                    SmartImportBDMOperation operation = new SmartImportBDMOperation(fileStore, fileToMerge);
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
-                    return operation.getStatus();
-                } catch (InvocationTargetException | InterruptedException e) {
-                    return ValidationStatus.error(e.getMessage(), e.getCause());
-                }
-            }
-            fileStore.save(repositoryStore.getConverter().unmarshall(FileUtils.readFileToByteArray(fileToMerge)));
+            fileStore.save(repositoryStore.getConverter().unmarshall(FileUtils.readFileToByteArray(fileToImport)));
             return ValidationStatus.ok();
         } catch (IOException | JAXBException | SAXException e) {
             BonitaStudioLog.error(e);

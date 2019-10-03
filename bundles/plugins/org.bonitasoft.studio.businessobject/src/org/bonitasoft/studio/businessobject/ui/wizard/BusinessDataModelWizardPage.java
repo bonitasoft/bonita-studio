@@ -107,7 +107,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         super(BusinessDataModelWizardPage.class.getName());
         this.businessObjectModel = businessObjectModel;
         this.diffLogger = diffLogger;
-        packageHelper = new PackageHelper();
+        packageHelper = PackageHelper.getInstance();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.importer.bos.model;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;

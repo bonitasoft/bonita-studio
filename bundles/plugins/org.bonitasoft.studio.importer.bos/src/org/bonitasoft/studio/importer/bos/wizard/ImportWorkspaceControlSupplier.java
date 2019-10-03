@@ -16,10 +16,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-import org.bonitasoft.studio.importer.bos.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.model.ImportRepositoryModel;
 import org.bonitasoft.studio.importer.bos.model.ImportWorkspaceModel;
 import org.bonitasoft.studio.importer.bos.operation.ScanWorkspaceOperation;

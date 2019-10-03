@@ -20,36 +20,39 @@ import java.util.Objects;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
-import org.bonitasoft.studio.common.repository.model.ISmartImportable;
-import org.bonitasoft.studio.common.repository.model.ISmartImportableValidator;
+import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableModel;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 
 public class SmartImportFileStoreModel extends ImportFileStoreModel {
 
-    private IRepositoryFileStore conflictingFileStore;
+    private ISmartImportable currentFileStore;
     private boolean smartImportable = false;
     private BosArchive bosArchive;
+    private SmartImportableModel smartImportableModel;
 
     public SmartImportFileStoreModel(BosArchive bosArchive, String filePath, AbstractFolderModel parent,
-            IRepositoryFileStore conflictingFileStore) {
+            ISmartImportable currentFileStore) {
         super(filePath, parent);
         this.bosArchive = bosArchive;
-        this.conflictingFileStore = conflictingFileStore;
+        this.currentFileStore = currentFileStore;
     }
 
     @Override
     public void setStatus(ConflictStatus status) {
         super.setStatus(status);
         if (Objects.equals(status, ConflictStatus.CONFLICTING)) {
-            ISmartImportableValidator validator = conflictingFileStore.getAdapter(ISmartImportableValidator.class);
-            if (validator != null) {
+            smartImportableModel = currentFileStore.getAdapter(SmartImportableModel.class);
+            if (smartImportableModel != null) {
                 try (ZipFile zipFile = bosArchive.getZipFile()) {
                     File file = toFile(zipFile);
-                    if (validator.validate(file).isOK()) {
+                    if (smartImportableModel.validateSmartImportable(file).isOK()) {
+                        smartImportableModel.buildSmartImportModel(file);
                         importAction = ImportAction.SMART_IMPORT;
                         smartImportable = true;
                     }
@@ -72,14 +75,10 @@ public class SmartImportFileStoreModel extends ImportFileStoreModel {
 
     @Override
     public IRepositoryFileStore doImport(ZipFile archive, IProgressMonitor monitor) {
-        if (smartImportable && Objects.equals(importAction, ImportAction.SMART_IMPORT)) {
-            try {
-                File fileToMerge = toFile(archive);
-                IStatus importStatus = ((ISmartImportable) conflictingFileStore).smartImport(monitor, fileToMerge);
-                return importStatus.isOK() ? conflictingFileStore : null;
-            } catch (IOException e) {
-                new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
-            }
+        if (smartImportable && Objects.equals(importAction, ImportAction.SMART_IMPORT) && smartImportableModel != null) {
+            return smartImportableModel.performSmartImport(monitor).isOK()
+                    ? smartImportableModel.getAdapter(IRepositoryFileStore.class)
+                    : null;
         }
         return super.doImport(archive, monitor);
     }

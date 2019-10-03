@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Bonitasoft S.A.
+ * Copyright (C) 2019 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,24 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import java.util.Objects;
+
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class ImportBdmConflictValidator implements IValidator {
-
-    private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore;
-
-    public ImportBdmConflictValidator(BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore) {
-        this.repositoryStore = repositoryStore;
-    }
+public class SmartImportBdmModelValidator implements IValidator<SmartImportBdmModel> {
 
     @Override
-    public IStatus validate(Object value) {
-        if (repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) != null) {
-            return ValidationStatus.warning(Messages.bdmWillBeOverwritten);
+    public IStatus validate(SmartImportBdmModel model) {
+        if (model == null || model.getSmartImportableUnits().isEmpty()) {
+            return ValidationStatus.error(Messages.nothingToImport);
+        }
+        if (Objects.equals(model.getConflictStatus(), ConflictStatus.SAME_CONTENT)) {
+            return ValidationStatus.error(Messages.globalSkipped);
         }
         return ValidationStatus.ok();
     }

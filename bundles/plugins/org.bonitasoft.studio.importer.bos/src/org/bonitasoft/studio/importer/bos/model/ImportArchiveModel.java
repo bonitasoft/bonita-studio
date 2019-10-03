@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;

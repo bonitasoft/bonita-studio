@@ -285,5 +285,8 @@ public class Messages extends NLS {
     public static String moreDetails;
     public static String reviewTypeChangesMessageRefactoring;
     public static String deprecatedLegacyMode;
+    public static String keepAction;
+    public static String overwriteAction;
+    public static String smartImportAction;
 
 }
