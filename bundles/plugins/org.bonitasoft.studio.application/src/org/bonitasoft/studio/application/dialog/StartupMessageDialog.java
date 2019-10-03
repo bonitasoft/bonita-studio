@@ -84,7 +84,7 @@ public class StartupMessageDialog extends MessageDialogWithPrompt {
 
             startMessage = new Link(composite, SWT.WRAP | SWT.NO_FOCUS);
             startMessage
-                    .setText(String.format(Messages.startDialogMsg, Messages.releaseNote, Messages._6xFormsDontWorkAnymore));
+                    .setText(String.format(Messages.startDialogMsg, Messages._6xFormsDontWorkAnymore));
             GridDataFactory
                     .fillDefaults()
                     .span(2, 1)

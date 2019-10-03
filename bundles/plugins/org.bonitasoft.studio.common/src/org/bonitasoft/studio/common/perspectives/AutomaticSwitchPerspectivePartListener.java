@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.perspectives;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
@@ -57,9 +56,6 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
             try {
                 final String activePerspective = getActivePerspectiveId(part);
                 if (part != null && "org.eclipse.e4.ui.compatibility.editor".equals(part.getElementId())) {
-                    if (PlatformUtil.isIntroOpen()) {
-                        PlatformUtil.closeIntro();
-                    }
                     final CompatibilityEditor compatibilityEditor = (CompatibilityEditor) part.getObject();
                     if (compatibilityEditor != null && activePerspective != null) {
                         final String id = BonitaPerspectivesUtils.getPerspectiveId(compatibilityEditor.getEditor());

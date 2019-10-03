@@ -336,6 +336,10 @@
                   label="%online_documentation"
                   style="push">
             </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.command.releaseNote"
+                  style="push">
+            </command>
             <separator
                   name="org.bonitasoft.studio.application.help.separator4"
                   visible="true">
