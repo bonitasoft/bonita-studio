@@ -24,16 +24,24 @@ import org.eclipse.e4.core.di.annotations.Execute;
 
 public class OpenReleaseNoteHandler {
 
+    private boolean bringPartToTop = true;
+
     @Execute
     public void openBrowser() {
         try {
             new OpenBrowserOperation(new URL(String.format(
                     "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=696&bos_redirect_product=bos&bos_redirect_major_version=%s",
-                    ProductVersion.majorVersion()))).withInteralBrowser("org.bonitasoft.studio.browser.release.note")
-                            .withName(String.format("%s Release notes", ProductVersion.CURRENT_VERSION)).execute();
+                    ProductVersion.majorVersion())))
+                            .withInteralBrowser("org.bonitasoft.studio.browser.release.note", bringPartToTop)
+                            .withName(String.format("%s Release notes", ProductVersion.CURRENT_VERSION))
+                            .execute();
         } catch (MalformedURLException e) {
             BonitaStudioLog.error(e);
         }
     }
 
+    public OpenReleaseNoteHandler setFocus(boolean bringPartToTop) {
+        this.bringPartToTop = bringPartToTop;
+        return this;
+    }
 }

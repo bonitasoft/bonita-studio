@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
@@ -68,6 +69,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
+    private static final String BDM_DELETED_TOPIC = "bdm/deleted";
 
     private static final String DEFINE_BDM_COMMAND_ID = "org.bonitasoft.studio.businessobject.manage";
 
@@ -137,6 +139,11 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         }
         super.doDelete();
         cachedBusinessObjectModel.clear();
+        eventBroker().send(BDM_DELETED_TOPIC, null);
+    }
+    
+    protected IEventBroker eventBroker() {
+        return PlatformUI.getWorkbench().getService(IEventBroker.class);
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {

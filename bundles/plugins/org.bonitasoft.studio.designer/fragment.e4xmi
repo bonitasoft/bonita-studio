@@ -12,5 +12,6 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Wqw2sN7FEemI48Tl55MWKg" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_Yhfu0N7FEemI48Tl55MWKg" elementId="org.bonitasoft.studio.designer.publish.bdm.addon" contributionURI="bundleclass://org.bonitasoft.studio.designer/org.bonitasoft.studio.designer.core.PostBDMEventHandler"/>
+    <elements xsi:type="application:Addon" xmi:id="_pciOEOXgEemuI-_n3ashoA" elementId="org.bonitasoft.studio.designer.delete.bdm.addon" contributionURI="bundleclass://org.bonitasoft.studio.designer/org.bonitasoft.studio.designer.core.DeleteBDMEventHandler"/>
   </fragments>
 </fragment:ModelFragments>
