@@ -45,6 +45,7 @@ public class OpenBrowserOperation implements Runnable {
     private boolean useInternalBrowser = false;
     private String name;
     private String id;
+    private boolean bringPartToTop = true;
 
     public OpenBrowserOperation(final URL url) {
         this.url = url;
@@ -55,8 +56,9 @@ public class OpenBrowserOperation implements Runnable {
         return this;
     }
 
-    public OpenBrowserOperation withInteralBrowser(String id) {
+    public OpenBrowserOperation withInteralBrowser(String id, boolean bringPartToTop) {
         this.useInternalBrowser = true;
+        this.bringPartToTop = bringPartToTop;
         this.id = id;
         return this;
     }
@@ -90,6 +92,9 @@ public class OpenBrowserOperation implements Runnable {
                     }
                     if (view!=null) {
                         view.setURL(url.toExternalForm());
+                        if(bringPartToTop) {
+                            page.bringToTop(view);
+                        }
                     }
                 } catch (Exception e) {
                     Trace.trace(Trace.SEVERE, "Error opening Web browser", e); //$NON-NLS-1$

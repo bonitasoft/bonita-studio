@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -220,10 +219,6 @@ public class DeployBDMOperation implements IRunnableWithProgress {
 
     protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {
         return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
-    }
-
-    protected IEventBroker eventBroker() {
-        return PlatformUI.getWorkbench().getService(IEventBroker.class);
     }
 
     protected void removeDependency() {
