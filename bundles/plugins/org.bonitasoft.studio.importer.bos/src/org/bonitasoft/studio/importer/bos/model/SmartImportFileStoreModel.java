@@ -16,6 +16,8 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipFile;
 
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableModel;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Display;
@@ -81,6 +84,12 @@ public class SmartImportFileStoreModel extends ImportFileStoreModel {
                     : null;
         }
         return super.doImport(archive, monitor);
+    }
+
+    public List<SmartImportableUnit> getChildren() {
+        return smartImportableModel != null
+                ? smartImportableModel.getSmartImportableUnits()
+                : Collections.emptyList();
     }
 
 }

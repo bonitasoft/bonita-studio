@@ -97,7 +97,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
     private void createPackageModels(BusinessObjectModel currentModel, BusinessObjectModel modelToMerge) {
         PackageHelper packageHelper = PackageHelper.getInstance();
         packageHelper.getAllPackages(modelToMerge).stream()
-                .map(SmartImportPackageModel::new)
+                .map(packageName -> new SmartImportPackageModel(this, packageName))
                 .peek(packageModel -> buildImportPackageModel(currentModel, modelToMerge, packageHelper, packageModel))
                 .forEach(getSmartImportableUnits()::add);
         if (currentModel != null && includeCurrentModel) {
@@ -115,7 +115,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
     }
 
     private void createExistingPackage(List<BusinessObject> businessObjects, String packageName) {
-        SmartImportPackageModel importPackageModel = new SmartImportPackageModel(packageName);
+        SmartImportPackageModel importPackageModel = new SmartImportPackageModel(this, packageName);
         completePackageWithExistingBo(businessObjects, importPackageModel);
         getSmartImportableUnits().add(importPackageModel);
     }
@@ -126,7 +126,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
                     .filter(bo -> packageModel.getSmartImportableUnits().stream()
                             .map(SmartImportableUnit::getName)
                             .noneMatch(bo.getSimpleName()::equals))
-                    .map(bo -> new SmartImportBusinessObjectModel(packageModel, bo))
+                    .map(bo -> new SmartImportBusinessObjectModel(this, packageModel, bo))
                     .peek(boModel -> boModel.setConflictStatus(ConflictStatus.SAME_CONTENT))
                     .forEach(packageModel.getSmartImportableUnits()::add);
         }
@@ -172,7 +172,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
     protected SmartImportBusinessObjectModel createImportBusinessObjectModel(SmartImportPackageModel parent,
             List<BusinessObject> currentBusinessObjects,
             BusinessObject newBusinessObject) {
-        SmartImportBusinessObjectModel importBusinessObjectModel = new SmartImportBusinessObjectModel(parent,
+        SmartImportBusinessObjectModel importBusinessObjectModel = new SmartImportBusinessObjectModel(this, parent,
                 newBusinessObject);
         importBusinessObjectModel.setConflictStatus(computeConflictStatus(currentBusinessObjects, newBusinessObject));
         return importBusinessObjectModel;

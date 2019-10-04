@@ -21,8 +21,9 @@ public class SmartImportBusinessObjectModel extends SmartImportableUnit {
 
     private BusinessObject businessObject;
 
-    public SmartImportBusinessObjectModel(SmartImportPackageModel parent, BusinessObject businessObject) {
-        super(parent);
+    public SmartImportBusinessObjectModel(SmartImportBdmModel model, SmartImportPackageModel parent,
+            BusinessObject businessObject) {
+        super(parent, model);
         this.businessObject = businessObject;
     }
 

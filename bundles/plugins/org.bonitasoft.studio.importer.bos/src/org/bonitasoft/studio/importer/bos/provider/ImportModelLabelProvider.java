@@ -4,13 +4,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.repository.model.IPresentable;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
-import org.bonitasoft.studio.importer.bos.model.IPresentable;
 import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler.ConflictStyler;
 import org.bonitasoft.studio.pics.Pics;
@@ -42,14 +44,12 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
 
     @Override
     public StyledString getStyledText(Object element) {
-        final String name = getText(element);
-        final StyledString styledString = new StyledString(name);
-        if (element instanceof AbstractFileModel
-                && ((AbstractFileModel) element).getStatus() == ConflictStatus.CONFLICTING) {
+        String name = getText(element);
+        StyledString styledString = new StyledString(name);
+        if (hasStatus(element, ConflictStatus.CONFLICTING)) {
             styledString.setStyle(START_OFFSET, name.length(), conflictStyler);
         }
-        if (element instanceof AbstractFileModel
-                && ((AbstractFileModel) element).getStatus() == ConflictStatus.SAME_CONTENT) {
+        if (hasStatus(element, ConflictStatus.SAME_CONTENT)) {
             styledString.append(String.format(" (%s)", Messages.skipped));
             styledString.setStyle(START_OFFSET, styledString.length(), sameContentStyler);
         }
@@ -58,6 +58,16 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
             styledString.append(String.format(" (%s)", Messages.legacyFormsNotImported));
         }
         return styledString;
+    }
+
+    public boolean hasStatus(Object element, ConflictStatus status) {
+        if (element instanceof AbstractFileModel) {
+            return Objects.equals(((AbstractFileModel) element).getStatus(), status);
+        }
+        if (element instanceof SmartImportableUnit) {
+            return Objects.equals(((SmartImportableUnit) element).getConflictStatus(), status);
+        }
+        return false;
     }
 
     @Override

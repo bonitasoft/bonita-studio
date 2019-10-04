@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -31,6 +32,7 @@ public class ImportActionEditingSupport extends EditingSupport {
         editor.setContentProvider(ArrayContentProvider.getInstance());
         editor.setLabelProvider(new LabelProvider());
         editor.setInput(ImportAction.values());
+        editor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().forceFocus());
         IViewerObservableValue mainSelection = ViewersObservables.observeSingleSelection(viewer);
         editor.getViewer().addFilter(new ViewerFilter() {
 
@@ -53,8 +55,13 @@ public class ImportActionEditingSupport extends EditingSupport {
 
     @Override
     protected boolean canEdit(Object element) {
-        return element instanceof AbstractFileModel
-                && ((AbstractFileModel) element).getStatus() == ConflictStatus.CONFLICTING;
+        if (element instanceof AbstractFileModel) {
+            return ((AbstractFileModel) element).getStatus() == ConflictStatus.CONFLICTING;
+        }
+        if (element instanceof SmartImportableUnit) {
+            return Objects.equals(((SmartImportableUnit) element).getConflictStatus(), ConflictStatus.CONFLICTING);
+        }
+        return false;
     }
 
     @Override
@@ -62,14 +69,23 @@ public class ImportActionEditingSupport extends EditingSupport {
         if (element instanceof AbstractFileModel) {
             return ((AbstractFileModel) element).getImportAction();
         }
+        if (element instanceof SmartImportableUnit) {
+            return ((SmartImportableUnit) element).getImportAction();
+        }
         return ImportAction.OVERWRITE;
     }
 
     @Override
     protected void setValue(Object element, Object value) {
         if (element instanceof AbstractFileModel) {
-            ((AbstractFileModel) element)
-                    .setImportAction((ImportAction) value);
+            ((AbstractFileModel) element).setImportAction((ImportAction) value);
+        }
+        if (element instanceof SmartImportableUnit) {
+            ((SmartImportableUnit) element).setImportAction((ImportAction) value);
+        }
+        if (element instanceof SmartImportFileStoreModel) {
+            viewer.refresh(element); // hide or display children depending on the action
+        } else {
             viewer.update(element, null);
         }
     }

@@ -1,10 +1,13 @@
 package org.bonitasoft.studio.importer.bos.provider;
 
-import java.util.stream.Collectors;
+import java.util.Objects;
 
+import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.eclipse.jface.viewers.ILazyTreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -29,7 +32,12 @@ public class ArchiveTreeContentProvider implements ILazyTreeContentProvider {
 
     @Override
     public Object getParent(Object element) {
-        return ((AbstractImportModel) element).getParent().orElse(null);
+        if (element instanceof AbstractImportModel) {
+            return ((AbstractImportModel) element).getParent().orElse(null);
+        } else if (element instanceof SmartImportableUnit) {
+            return ((SmartImportableUnit) element).getParentModel();
+        }
+        return null;
     }
 
     @Override
@@ -38,6 +46,9 @@ public class ArchiveTreeContentProvider implements ILazyTreeContentProvider {
             viewer.setChildCount(element, childCount((ImportArchiveModel) element));
         } else if (element instanceof AbstractFolderModel) {
             viewer.setChildCount(element, childCount((AbstractFolderModel) element));
+        } else if (element instanceof SmartImportFileStoreModel
+                && ((SmartImportFileStoreModel) element).isSmartImportable()) {
+            viewer.setChildCount(element, childCount((SmartImportFileStoreModel) element));
         }
     }
 
@@ -49,16 +60,25 @@ public class ArchiveTreeContentProvider implements ILazyTreeContentProvider {
         return element.getChildren().length;
     }
 
+    private int childCount(SmartImportFileStoreModel element) {
+        return Objects.equals(element.getImportAction(), ImportAction.SMART_IMPORT)
+                ? element.getChildren().size()
+                : 0;
+    }
+
     @Override
     public void updateElement(Object parent, int index) {
         if (parent instanceof AbstractFolderModel) {
-            final Object child = getChild((AbstractFolderModel) parent, index);
+            Object child = getChild((AbstractFolderModel) parent, index);
             viewer.replace(parent, index, child);
             updateChildCount(child, -1);
         } else if (parent instanceof ImportArchiveModel) {
-            final Object child = getChild((ImportArchiveModel) parent, index);
+            Object child = getChild((ImportArchiveModel) parent, index);
             viewer.replace(parent, index, child);
             updateChildCount(child, -1);
+        } else if (parent instanceof SmartImportFileStoreModel) {
+            Object child = getChild((SmartImportFileStoreModel) parent, index);
+            viewer.replace(parent, index, child);
         }
     }
 
@@ -68,5 +88,9 @@ public class ArchiveTreeContentProvider implements ILazyTreeContentProvider {
 
     private Object getChild(AbstractFolderModel parent, int index) {
         return parent.getChildren()[index];
+    }
+
+    private Object getChild(SmartImportFileStoreModel parent, int index) {
+        return parent.getChildren().get(index);
     }
 }
