@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Customization of the generated model.edit
+Bundle-SymbolicName: org.bonitasoft.studio.model.edit.custom;singleton:=true
+Bundle-Version: 7.10.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.emf.edit,
+ org.bonitasoft.studio.model.edit,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.common.repository,
+ org.eclipse.ui,
+ org.bonitasoft.studio.pics,
+ org.eclipse.jdt.core,
+ org.eclipse.emf.edit.ui,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
+Export-Package: org.bonitasoft.studio.model.edit.custom.decision,org.b
+ onitasoft.studio.model.edit.custom.process
+Bundle-Activator: org.bonitasoft.studio.model.edit.custom.EMFEditCustomPlugin
+Bundle-ActivationPolicy: lazy
