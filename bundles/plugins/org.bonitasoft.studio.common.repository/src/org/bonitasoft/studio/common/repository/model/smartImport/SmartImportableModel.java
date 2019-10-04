@@ -20,14 +20,16 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.graphics.Image;
 
-public abstract class SmartImportableModel implements IAdaptable {
+public abstract class SmartImportableModel implements IAdaptable, IPresentable {
 
     protected ISmartImportable current;
     private IValidator<File> validator;
@@ -80,6 +82,16 @@ public abstract class SmartImportableModel implements IAdaptable {
         if (adapter.isAssignableFrom(IRepositoryFileStore.class)) {
             return current.getAdapter(adapter);
         }
+        return null;
+    }
+
+    @Override
+    public String getText() {
+        return current.getAdapter(IRepositoryFileStore.class).getDisplayName();
+    }
+
+    @Override
+    public Image getImage() {
         return null;
     }
 

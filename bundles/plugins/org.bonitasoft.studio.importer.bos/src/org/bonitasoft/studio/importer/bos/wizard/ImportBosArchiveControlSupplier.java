@@ -19,13 +19,15 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
-import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
@@ -225,7 +227,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
         actionColumn.getColumn().setText(Messages.actionColumn);
-        actionColumn.setLabelProvider(new LabelProviderBuilder<AbstractImportModel>()
+        actionColumn.setLabelProvider(new LabelProviderBuilder<>()
                 .withTextProvider(this::getActionText)
                 .createColumnLabelProvider());
         actionColumn.setEditingSupport(new ImportActionEditingSupport(viewer));
@@ -259,11 +261,16 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         return fileTreeGroup;
     }
 
-    private String getActionText(AbstractImportModel element) {
+    private String getActionText(Object element) {
         if (element instanceof AbstractFileModel) {
             AbstractFileModel fileModel = (AbstractFileModel) element;
             if (fileModel.isConflicting()) {
                 return fileModel.getImportAction().toString();
+            }
+        } else if (element instanceof SmartImportableUnit) {
+            SmartImportableUnit unit = (SmartImportableUnit) element;
+            if (unit.getImportAction() != null && Objects.equals(unit.getConflictStatus(), ConflictStatus.CONFLICTING)) {
+                return unit.getImportAction().toString();
             }
         }
         return "";
@@ -292,7 +299,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 .withButton(Messages.browseButton_label)
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
-       
+
         textWidget.focusButton();
         return parent;
     }
@@ -311,7 +318,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         textWidget.getParent().getParent().layout();
         if (new File(filePath).exists()) {
             savePath(filePath);
-        } 
+        }
     }
 
     private EmptyInputValidator getEmptyInputValidator(String inputName) {
@@ -325,7 +332,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     protected void parseArchive(ValueChangeEvent e) {
         Optional.ofNullable((String) e.diff.getNewValue()).ifPresent(filePath -> {
             File myFile = new File(filePath);
-            if(urlTempPath != null && urlTempPath.getTmpPath().toFile().exists()) {
+            if (urlTempPath != null && urlTempPath.getTmpPath().toFile().exists()) {
                 urlTempPath.getTmpPath().toFile().delete();
                 urlTempPath = null;
             }
@@ -348,9 +355,9 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             }
         });
     }
-    
+
     public boolean shouldDeleteTempFile() {
-        return urlTempPath != null &&  urlTempPath.getTmpPath().toFile().exists();
+        return urlTempPath != null && urlTempPath.getTmpPath().toFile().exists();
     }
 
     protected ImportArchiveModel parseArchive(String path) {
@@ -379,6 +386,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 provider.updateElement(archiveModel, i);
                 if (item.getData() instanceof AbstractFolderModel
                         && ((AbstractFolderModel) item.getData()).isConflicting()) {
+                    openItem(item);
+                }
+                if (item.getData() instanceof SmartImportFileStoreModel
+                        && Objects.equals(((SmartImportFileStoreModel) item.getData()).getImportAction(),
+                                ImportAction.SMART_IMPORT)
+                        && ((SmartImportFileStoreModel) item.getData()).isConflicting()) {
                     openItem(item);
                 }
             }

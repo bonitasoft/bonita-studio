@@ -13,18 +13,21 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.IPresentable;
+import org.eclipse.swt.graphics.Image;
 
-public abstract class SmartImportableUnit {
+public abstract class SmartImportableUnit implements IPresentable {
 
     private ImportAction importAction = ImportAction.OVERWRITE;
     private ConflictStatus conflictStatus = ConflictStatus.NONE;
     private List<SmartImportableUnit> smartImportableUnits = new ArrayList<>();
     private SmartImportableUnit parent;
+    private SmartImportableModel parentModel;
 
-    public SmartImportableUnit() {
+    public SmartImportableUnit(SmartImportableModel parentModel) {
     }
 
-    public SmartImportableUnit(SmartImportableUnit parent) {
+    public SmartImportableUnit(SmartImportableUnit parent, SmartImportableModel parentModel) {
         this.parent = parent;
     }
 
@@ -67,6 +70,19 @@ public abstract class SmartImportableUnit {
         return parent;
     }
 
+    public SmartImportableModel getParentModel() {
+        return parentModel;
+    }
+
     public abstract String getName();
 
+    @Override
+    public String getText() {
+        return getName();
+    }
+
+    @Override
+    public Image getImage() {
+        return null;
+    }
 }

@@ -26,7 +26,8 @@ public class SmartImportPackageModel extends SmartImportableUnit {
 
     private String packageName;
 
-    public SmartImportPackageModel(String packageName) {
+    public SmartImportPackageModel(SmartImportBdmModel model, String packageName) {
+        super(model);
         this.packageName = packageName;
     }
 
