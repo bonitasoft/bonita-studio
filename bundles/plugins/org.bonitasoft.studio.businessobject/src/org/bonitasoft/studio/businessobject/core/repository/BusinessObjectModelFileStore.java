@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -139,11 +140,14 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         }
         super.doDelete();
         cachedBusinessObjectModel.clear();
-        eventBroker().send(BDM_DELETED_TOPIC, null);
+        eventBroker().ifPresent(broker -> broker.send(BDM_DELETED_TOPIC, null));
     }
-    
-    protected IEventBroker eventBroker() {
-        return PlatformUI.getWorkbench().getService(IEventBroker.class);
+
+    protected Optional<IEventBroker> eventBroker() {
+        if (PlatformUI.isWorkbenchRunning()) {
+            return Optional.of(PlatformUI.getWorkbench().getService(IEventBroker.class));
+        }
+        return Optional.empty();
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {
