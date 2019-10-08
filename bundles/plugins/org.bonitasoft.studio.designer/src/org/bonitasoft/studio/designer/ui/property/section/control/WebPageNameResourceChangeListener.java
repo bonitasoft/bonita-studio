@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -69,15 +70,16 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
         return delta -> {
             String name = delta.getResource().getName();
             WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+            WebPageFileStore pageFileStore = repositoryStore.getChild(name, false);
             if (( delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
                     && repositoryStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
                     && delta.getResource() instanceof IFolder
                     && delta.getResource().isSynchronized(IResource.DEPTH_INFINITE)
-                    && repositoryStore.getChild(name, true) != null) {
+                    && pageFileStore != null) {
                 IFile indexJsonFile = retrieveIndexJsonFile(repositoryStore);
                 try (InputStream is = indexJsonFile.getContents()) {
                     JSONObject jsonObject = new JSONObject(IoUtils.toString(is));
-                    updateMatchingFormMapping(mainProcess, jsonObject, name);
+                    updateMatchingFormMapping(mainProcess, jsonObject, pageFileStore.getDisplayName());
                 } catch (IOException | JSONException e) {
                     throw new RuntimeException(e);
                 }

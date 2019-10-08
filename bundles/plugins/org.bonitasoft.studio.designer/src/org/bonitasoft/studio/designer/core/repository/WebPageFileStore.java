@@ -19,10 +19,14 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -31,6 +35,7 @@ import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -50,7 +55,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 import com.google.common.io.ByteSource;
 
@@ -62,6 +70,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     private static final String ID_TYPE = "type";
     public static final String DISPLAY_NAME_KEY = "displayName";
     private static final String DESCRIPTION_KEY = "description";
+    private static final String EXTENSION_RESOURCE_PREFIX = "|extension/";
 
     public static final String LAYOUT_TYPE = "layout";
     public static final String PAGE_TYPE = "page";
@@ -230,6 +239,37 @@ public class WebPageFileStore extends InFolderJSONFileStore
             default:
                 return 3;
         }
+    }
+
+    public Collection<String> getPageResources() {
+        try {
+            ClientResource clientResource = new ClientResource(
+                    PageDesignerURLFactory.INSTANCE.resources(getId()).toURI());
+            clientResource.getLogger().setLevel(Level.OFF);
+            final Representation representation = clientResource.get();
+            return representation != null ? parseExtensionResources( representation.getText() ) : Collections.emptyList();
+        } catch (URISyntaxException | IOException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+    
+    private Collection<String> parseExtensionResources(String resources) {
+        Set<String> result = new HashSet<>();
+        if (resources != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(resources);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Object resource = jsonArray.get(i);
+                    if (resource.toString().contains(EXTENSION_RESOURCE_PREFIX)) {
+                        result.add(resource.toString());
+                    }
+                }
+            } catch (JSONException e) {
+                return result;
+            }
+        }
+        return result;
     }
 
 }
