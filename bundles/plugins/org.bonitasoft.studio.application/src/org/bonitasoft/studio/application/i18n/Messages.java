@@ -144,6 +144,7 @@ public class Messages extends NLS {
     public static String applicationAsDisplayName;
     public static String allArtifactSelected;
     public static String noArtifactSelected;
+    public static String environmentTootltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

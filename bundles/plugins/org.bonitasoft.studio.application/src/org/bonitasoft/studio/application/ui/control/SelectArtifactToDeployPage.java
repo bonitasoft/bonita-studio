@@ -34,6 +34,7 @@ import org.bonitasoft.studio.application.ui.control.model.ArtifactVersion;
 import org.bonitasoft.studio.application.ui.control.model.BusinessObjectModelArtifact;
 import org.bonitasoft.studio.application.ui.control.model.OrganizationArtifact;
 import org.bonitasoft.studio.application.ui.control.model.ProcessArtifact;
+import org.bonitasoft.studio.application.ui.control.model.ProcessVersion;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.VersionedArtifact;
@@ -115,6 +116,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private Label countArtifactLabel;
     private boolean filtering = false;
     private boolean latestVersionOnly = true;
+    private ComboWidget environmentComboWidget;
 
     public SelectArtifactToDeployPage(RepositoryModel repositoryModel, IEnvironmentProvider environmentProvider) {
         this.repositoryModel = repositoryModel;
@@ -215,13 +217,30 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 mergeSets();
                 updateCleanDeployEnablement();
                 updateUserProposals();
+                updateEnvironmentEnablement();
             }
         });
         mergeSets();
         updateUserProposals();
         updateCleanDeployEnablement();
+        updateEnvironmentEnablement();
 
         return mainComposite;
+    }
+
+    private void updateEnvironmentEnablement() {
+        if (environmentComboWidget != null) {
+            setWidgetEnabled(environmentComboWidget.getControl().getParent(),
+                    allCheckedElements.stream().anyMatch(isProcessArtifact().or(isProcessVersion())));
+        }
+    }
+
+    private Predicate<? super Object> isProcessArtifact() {
+        return ProcessArtifact.class::isInstance;
+    }
+
+    private Predicate<? super Object> isProcessVersion() {
+        return ProcessVersion.class::isInstance;
     }
 
     private void createArtifactCounter(Composite parent) {
@@ -232,13 +251,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private void updateCount() {
         long checkedArtifacts = allCheckedElements.stream().filter(filterVersionedArtifact()).count();
-        long totalArtifacts = repositoryModel.getArtifacts().stream().filter(artifact -> !(artifact instanceof ProcessArtifact)).count();
+        long totalArtifacts = repositoryModel.getArtifacts().stream()
+                .filter(artifact -> !(artifact instanceof ProcessArtifact)).count();
         String text = String.format(Messages.artifactCounter, checkedArtifacts, totalArtifacts);
         if (checkedArtifacts == totalArtifacts) {
             text = Messages.allArtifactSelected;
         } else if (checkedArtifacts == 0) {
             text = Messages.noArtifactSelected;
-        } 
+        }
         countArtifactLabel.setText(text);
     }
 
@@ -465,7 +485,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         deployOptionGroup.setText(Messages.deployOptions);
 
         if (!environmentProvider.getEnvironment().isEmpty()) {
-            new ComboWidget.Builder()
+            environmentComboWidget = new ComboWidget.Builder()
                     .withLabel(Messages.environment)
                     .labelAbove()
                     .widthHint(400)
@@ -475,6 +495,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                     .bindTo(PojoProperties.value("environment").observe(this))
                     .inContext(ctx)
                     .createIn(deployOptionGroup);
+
+            ControlDecoration controlDecoration = new ControlDecoration(
+                    environmentComboWidget.getControl().getParent().getChildren()[0], SWT.RIGHT);
+            controlDecoration.setDescriptionText(Messages.environmentTootltip);
+            controlDecoration.setMarginWidth(5);
+            controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                    .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+            controlDecoration.show();
         }
 
         createDefaultUserTextWidget(ctx, deployOptionGroup);
@@ -531,11 +559,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void updateUserProposals() {
         usernameObservable.setValue("");
         Organization selectedOrganization = getSelectedOrganization();
-        if (selectedOrganization == null) {
+        if(selectedOrganization == null && getDefaultOrganization() != null) {
+            selectedOrganization = ((OrganizationArtifact) getDefaultOrganization()).getModel();
+        }
+        if( selectedOrganization == null) {
             setWidgetEnabled(defaultUserTextWidget, false);
             return;
         }
-        String[] proposals = usernames();
+        String[] proposals = usernames(selectedOrganization);
         boolean enableDefaultUser = proposals != null && proposals.length > 0;
         setWidgetEnabled(defaultUserTextWidget, enableDefaultUser);
         usernameProposalProvider.setProposals(proposals);
@@ -564,13 +595,17 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private IStatus userExistsInOrganization(Object user) {
-        if (getSelectedOrganization() != null) {
+        Organization selectedOrganization = getSelectedOrganization();
+        if (selectedOrganization == null && getDefaultOrganization() != null) {
+            selectedOrganization = ((OrganizationArtifact) getDefaultOrganization()).getModel();
+        }
+        if (selectedOrganization != null) {
             IStatus status = new EmptyInputValidator(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)
                     .validate(user);
             if (!status.isOK()) {
                 return status;
             }
-            if (Stream.of(usernames()).noneMatch(user::equals)) {
+            if (Stream.of(usernames(selectedOrganization)).noneMatch(user::equals)) {
                 return ValidationStatus
                         .error(Messages.bind(org.bonitasoft.studio.actors.i18n.Messages.UserDoesntExistError, user));
             }
@@ -578,8 +613,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         return ValidationStatus.ok();
     }
 
-    private String[] usernames() {
-        Organization selectedOrganization = getSelectedOrganization();
+    private String[] usernames(Organization selectedOrganization) {
         return selectedOrganization == null
                 ? new String[0]
                 : selectedOrganization

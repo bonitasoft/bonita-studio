@@ -101,7 +101,7 @@ public class DeployWizardIT {
         assertThat(botDeployDialog.isDeployEnabled()).isTrue();
 
         botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].uncheck();
-        assertThat(botDeployDialog.isDefaultUserEnabled()).isFalse();
+        assertThat(botDeployDialog.isDefaultUserEnabled()).isTrue();
 
         long timeout = SWTBotPreferences.TIMEOUT;
         try {
