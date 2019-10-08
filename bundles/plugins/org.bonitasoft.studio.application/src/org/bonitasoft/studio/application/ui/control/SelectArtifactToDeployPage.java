@@ -264,7 +264,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private Predicate<? super Object> filterVersionedArtifact() {
         return artifact -> artifact instanceof VersionedArtifact ? ((VersionedArtifact) artifact).hasSingleVersion()
-                : artifact instanceof Artifact;
+                : artifact instanceof ArtifactVersion ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : artifact instanceof Artifact;
     }
 
     private void updateCleanDeployEnablement() {
@@ -273,9 +273,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     protected void mergeSets() {
-        checkedElementsObservable.stream()
+        allCheckedElements.addAll(checkedElementsObservable.stream()
                 .filter(object -> object instanceof Artifact)
-                .forEach(allCheckedElements::add);
+                .collect(Collectors.toSet()));
         List<Object> toRemove = allCheckedElements.stream()
                 .filter(fileStore -> !checkedElementsObservable.contains(fileStore)
                         && !toFilter.contains(fileStore))
@@ -559,10 +559,10 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     private void updateUserProposals() {
         usernameObservable.setValue("");
         Organization selectedOrganization = getSelectedOrganization();
-        if(selectedOrganization == null && getDefaultOrganization() != null) {
+        if (selectedOrganization == null && getDefaultOrganization() != null) {
             selectedOrganization = ((OrganizationArtifact) getDefaultOrganization()).getModel();
         }
-        if( selectedOrganization == null) {
+        if (selectedOrganization == null) {
             setWidgetEnabled(defaultUserTextWidget, false);
             return;
         }
@@ -636,9 +636,9 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             updateArtifactsToFilter(searchValue);
             fileStoreViewer.refresh();
             checkedElementsObservable.clear();
-            allCheckedElements.stream()
+            checkedElementsObservable.addAll(allCheckedElements.stream()
                     .filter(fileStore -> !toFilter.contains(fileStore))
-                    .forEach(checkedElementsObservable::add);
+                    .collect(Collectors.toList()));
             filtering = false;
         });
     }
@@ -653,8 +653,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private void defaultSelection() {
         if (defaultSelectedElements != null && !defaultSelectedElements.isEmpty()) {
-            defaultSelectedElements.stream()
-                    .forEach(checkedElementsObservable::add);
+            checkedElementsObservable.addAll(defaultSelectedElements);
         } else {
             checkAllElements();
         }
@@ -664,31 +663,29 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         if (latestVersionOnly) {
             checkLatestElements();
         } else {
-            repositoryModel.getArtifacts().stream()
-                    .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
+            checkedElementsObservable.addAll(repositoryModel.getArtifacts().stream()
+                    //Only one organization can be selected at a time
+                    .filter(artifact -> OrganizationArtifact.class.isInstance(artifact)
+                            ? Objects.equals(getDefaultOrganization(), artifact) : true)
                     .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
                             ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
-                    .forEach(checkedElementsObservable::add);
-
-            //Only one organization can be selected at a time
-            uniqueOrganizationSelection(getDefaultOrganization());
+                    .collect(Collectors.toList()));
         }
     }
 
     private void checkLatestElements() {
         checkedElementsObservable.clear();
-        repositoryModel.getArtifacts().stream()
-                .filter(artifact -> !OrganizationArtifact.class.isInstance(artifact))
+        checkedElementsObservable.addAll(repositoryModel.getArtifacts().stream()
+                //Only one organization can be selected at a time
+                .filter(artifact -> OrganizationArtifact.class.isInstance(artifact)
+                        ? Objects.equals(getDefaultOrganization(), artifact) : true)
                 .filter(artifact -> VersionedArtifact.class.isInstance(artifact)
                         ? ((VersionedArtifact) artifact).hasSingleVersion() : true)
                 .filter(artifact -> ArtifactVersion.class.isInstance(artifact)
                         ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : true)
                 .filter(artifact -> ArtifactVersion.class.isInstance(artifact) ? ((ArtifactVersion) artifact).isLatest()
                         : true)
-                .forEach(checkedElementsObservable::add);
-
-        //Only one organization can be selected at a time
-        uniqueOrganizationSelection(getDefaultOrganization());
+                .collect(Collectors.toList()));
     }
 
     public Collection<Artifact> getSelectedArtifacts() {
@@ -699,6 +696,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                         && ((VersionedArtifact) artifact).hasSingleVersion()
                                 ? ((VersionedArtifact) artifact).getLatestVersion()
                                 : artifact)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
