@@ -102,7 +102,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
             final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId, true);
             if (webPageFileStore != null) {
                 editingDomain.getCommandStack().execute(new UpdateFormMappingCommand(editingDomain, (FormMapping) context,
-                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getName(), newPageId)));
+                        ExpressionHelper.createFormReferenceExpression(webPageFileStore.getCustomPageName(), newPageId)));
             }
         }
     }
