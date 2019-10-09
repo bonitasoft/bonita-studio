@@ -78,7 +78,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private int portalPort = 8080;
     private static final String BONITA_CLIENT_HOME = "bonita.client.home";
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
-    private static final String BONITA_REPOSITORY_ORIGIN = "bonita.repository.origin";
+    private static final String BONITA_DATA_REPOSITORY_ORIGIN = "bonita.data.repository.origin";
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager() {
@@ -263,7 +263,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
-                String.format("-D%s=http://localhost:%s", BONITA_REPOSITORY_ORIGIN, DataRepositoryServerManager.getInstance().getPort()),
+                String.format("-D%s=http://localhost:%s", BONITA_DATA_REPOSITORY_ORIGIN, DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
