@@ -24,7 +24,11 @@ import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IPageChangeProvider;
+import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -107,6 +111,19 @@ public class WizardBuilder<T> {
                     return false;
                 }
             }
+
+            @Override
+            public void setContainer(IWizardContainer wizardContainer) {
+                super.setContainer(wizardContainer);
+                if (wizardContainer instanceof IPageChangeProvider) {
+                    IWizardPage startingPage = getStartingPage();
+                    if (startingPage instanceof IPageChangedListener) {
+                        ((IPageChangeProvider) wizardContainer)
+                                .addPageChangedListener((IPageChangedListener) startingPage);
+                    }
+                }
+            }
+
         };
         pages.stream().forEachOrdered(page -> wizard.addPage(page.asPage()));
         wizard.setNeedsProgressMonitor(needProgress);

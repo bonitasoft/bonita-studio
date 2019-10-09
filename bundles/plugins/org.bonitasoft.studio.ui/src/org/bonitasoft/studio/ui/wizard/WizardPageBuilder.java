@@ -19,6 +19,8 @@ import java.util.function.Supplier;
 
 import org.bonitasoft.studio.ui.databinding.NoMessageWizardPageSupport;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -76,17 +78,7 @@ public class WizardPageBuilder {
      * Create an instance of {@link WizardPage} for this {@link WizardPageBuilder}
      */
     public WizardPage asPage() {
-        final WizardPage page = new WizardPage(title) {
-
-            @Override
-            public void createControl(Composite parent) {
-                final DataBindingContext ctx = context.orElse(new DataBindingContext());
-                NoMessageWizardPageSupport.create(this, ctx);
-                controlSupplier.loadSettings(getDialogSettings());
-                setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
-            }
-
-        };
+        final WizardPage page = new InternalWizardPage(title);
         page.setTitle(title);
         page.setDescription(description);
         return page;
@@ -94,6 +86,26 @@ public class WizardPageBuilder {
 
     public ControlSupplier getControlSupplier() {
         return controlSupplier;
+    }
+    
+    class InternalWizardPage extends WizardPage implements IPageChangedListener {
+
+        protected InternalWizardPage(String title) {
+            super(title);
+        }
+        
+        @Override
+        public void createControl(Composite parent) {
+            final DataBindingContext ctx = context.orElse(new DataBindingContext());
+            NoMessageWizardPageSupport.create(this, ctx);
+            controlSupplier.loadSettings(getDialogSettings());
+            setControl(controlSupplier.createControl(parent, getWizard().getContainer(), ctx));
+        }
+
+        @Override
+        public void pageChanged(PageChangedEvent event) {
+            controlSupplier.pageChanged(event);
+        }
     }
 
 }

@@ -37,6 +37,8 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
 
     private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
     private static final String FILENAME_PARAM = "filename=";
+    private static final String LOCATION_HEADER = "Location";
+
     private URLTempPath ulrTempPath;
     private String url;
 
@@ -48,8 +50,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         HttpURLConnection httpConnection = null;
         try {
-            URL remoteURL = new URL(url);
-            httpConnection = (HttpURLConnection) (remoteURL.openConnection());
+            httpConnection = handleRedirection((HttpURLConnection) (new URL(url).openConnection()));
             double completeFileSize = httpConnection.getContentLength();
             Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
             Path tempFile = tempDir.resolve(getFilename(httpConnection));
@@ -57,7 +58,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
                 tempFile.toFile().delete();
             }
             tempFile = Files.createFile(tempFile);
-            try (ReadableByteChannel readableByteChannel = Channels.newChannel(remoteURL.openStream());
+            try (ReadableByteChannel readableByteChannel = Channels.newChannel(httpConnection.getURL().openStream());
                     FileOutputStream fileOutputStream = new FileOutputStream(tempFile.toFile());
                     FileChannel fileChannel = fileOutputStream.getChannel()) {
                 long chunkSize = 500;
@@ -69,7 +70,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
                 }
             }
             httpConnection.disconnect();
-            ulrTempPath = new URLTempPath(remoteURL, tempFile);
+            ulrTempPath = new URLTempPath(httpConnection.getURL(), tempFile);
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -77,6 +78,26 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
                 httpConnection.disconnect();
             }
         }
+    }
+
+    public static HttpURLConnection handleRedirection(HttpURLConnection connection) throws IOException {
+        if (isRedirect(connection.getResponseCode())) {
+            String newUrl = connection.getHeaderField(LOCATION_HEADER);
+            URL url = new URL(newUrl);
+            return (HttpURLConnection) url.openConnection();
+        }
+        return connection;
+    }
+
+    private static boolean isRedirect(int statusCode) {
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+            if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP
+                    || statusCode == HttpURLConnection.HTTP_MOVED_PERM
+                    || statusCode == HttpURLConnection.HTTP_SEE_OTHER) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String getFilename(HttpURLConnection httpConnection) {
