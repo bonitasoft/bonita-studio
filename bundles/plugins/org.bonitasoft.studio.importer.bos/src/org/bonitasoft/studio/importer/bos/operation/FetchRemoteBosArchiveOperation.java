@@ -48,6 +48,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        monitor.beginTask(Messages.downloadingRemoteBosArchive, IProgressMonitor.UNKNOWN);
         HttpURLConnection httpConnection = null;
         try {
             httpConnection = handleRedirection((HttpURLConnection) (new URL(url).openConnection()));
