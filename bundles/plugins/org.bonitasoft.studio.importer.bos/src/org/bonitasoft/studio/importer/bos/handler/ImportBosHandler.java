@@ -36,7 +36,7 @@ public class ImportBosHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName") String projectName) {
         final ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier(
-                repositoryAccessor, exceptionDialogHandler, file, projectName);
+                repositoryAccessor, exceptionDialogHandler, file, projectName == null ? repositoryAccessor.getCurrentRepository().getName() : projectName);
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
                 .needProgress()
