@@ -31,6 +31,18 @@
                   visible="true">
             </separator>
             <command
+                  commandId="org.bonitasoft.studio.businessobject.deployCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.businessobject.cleanDeployCommand"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.businessobject.separator1"
+                  visible="true">
+            </separator>
+            <command
                   commandId="org.bonitasoft.studio.businessobject.command.import"
                   icon="icons/import-bdm.png"
                   id="org.bonitasoft.studio.businessobject.import.menu"
