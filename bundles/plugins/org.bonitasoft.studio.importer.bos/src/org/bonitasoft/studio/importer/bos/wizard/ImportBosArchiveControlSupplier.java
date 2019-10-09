@@ -50,6 +50,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -137,22 +138,30 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             treeSection.layout();
         });
 
-        if (filePath != null) {
-            File myFile = new File(filePath);
-            archiveModel = parseArchive(myFile.getAbsolutePath());
-            if (archiveModel != null) {
-                textWidget
-                        .setMessage(String.format("%s %s (%s)",
-                                Messages.bosArchiveName,
-                                myFile.getName(),
-                                archiveModel.getBosArchive().getVersion()));
-                importActionSelector.setArchiveModel(archiveModel);
-                viewer.setInput(archiveModel);
-                openTree();
-            }
-        }
-
         return mainComposite;
+    }
+
+    @Override
+    public void pageChanged(PageChangedEvent event) {
+        if (filePath != null) {
+            Display.getDefault().asyncExec(() -> {
+                File myFile = new File(filePath);
+                if (!myFile.exists()) {
+                    myFile = fetchArchive(filePath);
+                }
+                archiveModel = parseArchive(myFile.getAbsolutePath());
+                if (archiveModel != null) {
+                    textWidget
+                            .setMessage(String.format("%s %s (%s)",
+                                    Messages.bosArchiveName,
+                                    myFile.getName(),
+                                    archiveModel.getBosArchive().getVersion()));
+                    importActionSelector.setArchiveModel(archiveModel);
+                    viewer.setInput(archiveModel);
+                    openTree();
+                }
+            });
+        }
     }
 
     protected void doCreateAdditionalControl(Composite mainComposite, DataBindingContext ctx) {
@@ -269,7 +278,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             }
         } else if (element instanceof SmartImportableUnit) {
             SmartImportableUnit unit = (SmartImportableUnit) element;
-            if (unit.getImportAction() != null && Objects.equals(unit.getConflictStatus(), ConflictStatus.CONFLICTING)) {
+            if (unit.getImportAction() != null
+                    && Objects.equals(unit.getConflictStatus(), ConflictStatus.CONFLICTING)) {
                 return unit.getImportAction().toString();
             }
         }
@@ -337,15 +347,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 urlTempPath = null;
             }
             if (!myFile.exists()) {
-                FetchRemoteBosArchiveOperation operation = new FetchRemoteBosArchiveOperation(filePath);
-                try {
-                    wizardContainer.run(true, false, operation);
-                } catch (InvocationTargetException | InterruptedException ex) {
-                    exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
-                            Messages.errorOccuredWhileParsingBosArchive, ex);
-                }
-                urlTempPath = operation.getURLTempPath();
-                myFile = urlTempPath.getTmpPath().toFile();
+                myFile = fetchArchive(filePath);
             }
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
@@ -354,6 +356,20 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 openTree();
             }
         });
+    }
+
+    private File fetchArchive(String filePath) {
+        File myFile;
+        FetchRemoteBosArchiveOperation operation = new FetchRemoteBosArchiveOperation(filePath);
+        try {
+            wizardContainer.run(true, false, operation);
+        } catch (InvocationTargetException | InterruptedException ex) {
+            exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                    Messages.errorOccuredWhileParsingBosArchive, ex);
+        }
+        urlTempPath = operation.getURLTempPath();
+        myFile = urlTempPath.getTmpPath().toFile();
+        return myFile;
     }
 
     public boolean shouldDeleteTempFile() {

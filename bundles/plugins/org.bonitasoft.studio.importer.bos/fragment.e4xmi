@@ -3,6 +3,7 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_juvI4NQuEeafpJHNDSpq0Q" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_onx7cNQuEeafpJHNDSpq0Q" elementId="org.bonitasoft.studio.importer.bos.command" commandName="%importBosCommandLabel">
       <parameters xmi:id="_IHZ8wHMeEemzZOLXgtIFrw" elementId="org.bonitasoft.studio.importer.bos.commandparameter.file" name="file"/>
+      <parameters xmi:id="_d3-tAOnWEemm8d2CZqPvKg" elementId="org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName" name="Target project name"/>
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_r91rAFAyEeefQ_E99kZKIw" elementId="org.bonitasoft.studio.importer.workspace.command" commandName="%importWorkspaceCommandLabel"/>
   </fragments>
