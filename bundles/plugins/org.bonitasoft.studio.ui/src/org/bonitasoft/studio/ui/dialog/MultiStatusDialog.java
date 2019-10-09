@@ -145,6 +145,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
                 .flatMap(Collection::stream)
                 .filter(s -> STATUS_LEVEL.get(s.getSeverity()) <= level)
                 .sorted(new StatusSeverityComparator())
+                .distinct()
                 .collect(Collectors.toList());
     }
 

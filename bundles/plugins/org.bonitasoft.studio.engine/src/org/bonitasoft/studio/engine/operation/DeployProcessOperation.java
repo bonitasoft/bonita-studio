@@ -34,7 +34,6 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.bpm.process.ProcessDeployException;
 import org.bonitasoft.engine.bpm.process.ProcessEnablementException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -52,10 +51,13 @@ import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.ui.util.StatusCollectors;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
@@ -78,11 +80,11 @@ public class DeployProcessOperation {
 
     private boolean disablePopup;
 
-    private IStatus status = ValidationStatus.ok();
+    private MultiStatus status = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
 
     public void addProcessToDeploy(final AbstractProcess process) {
         Assert.isTrue(!(process instanceof MainProcess), "process can't be a MainProcess");
-        if (!processes.contains(process)) {
+        if (process != null && !processes.contains(process)) {
             processes.add(process);
         }
     }
@@ -105,24 +107,28 @@ public class DeployProcessOperation {
     public IStatus run(final IProgressMonitor monitor) {
         Assert.isTrue(!processes.isEmpty());
         try {
-            status = undeploy(processes, monitor);
+            status.addAll(undeploy(processes, monitor));
         } catch (final Exception e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            status = ValidationStatus.error(Messages.undeploymentFailedMessage, e);
+            return ValidationStatus.error(Messages.undeploymentFailedMessage, e);
         }
-        if (!status.isOK()) {
+        if (hasErrors(status)) {
             return status;
         }
         try {
-            status = deploy(monitor);
-            if (status.isOK()) {
-                status = enable(monitor);
+            status.addAll(deploy(monitor));
+            if (!hasErrors(status)) {
+                status.addAll(enable(monitor));
             }
         } catch (Exception e) {
             BonitaStudioLog.error(e);
-            status = ValidationStatus.error(Messages.deploymentFailedMessage, e);
+            return ValidationStatus.error(Messages.deploymentFailedMessage, e);
         }
         return status;
+    }
+
+    private boolean hasErrors(IStatus status) {
+        return status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.CANCEL;
     }
 
     private IStatus enable(final IProgressMonitor monitor) {
@@ -144,12 +150,12 @@ public class DeployProcessOperation {
     }
 
     protected IStatus deploy(final IProgressMonitor monitor) {
+        MultiStatus multiStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
         try {
-            IStatus status = Status.OK_STATUS;
             for (final AbstractProcess process : processes) {
-                status = deployProcess(process, monitor);
-                if (status.getSeverity() != IStatus.OK) {
-                    return status;
+                multiStatus.addAll(deployProcess(process, monitor));
+                if (hasErrors(multiStatus)) {
+                    return multiStatus;
                 }
             }
         } catch (final Exception e) {
@@ -159,22 +165,24 @@ public class DeployProcessOperation {
             }
             return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.deploymentFailedMessage, e);
         }
-
-        return Status.OK_STATUS;
+        return multiStatus;
     }
 
     private IStatus deployProcess(final AbstractProcess process, final IProgressMonitor monitor) {
         monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
         BusinessArchive bar;
+        IStatus deployStatus = Status.OK_STATUS;
         try {
             bar = BarExporter.getInstance().createBusinessArchive(addDefaultFormMapping(process), configurationId);
-        } catch (final BarCreationException bce) {
-            if (process != null) {
-                BonitaStudioLog.log(String.format("Error when trying to create bar for process %s (%s)", process.getName(),
-                        process.getVersion()));
-                BonitaStudioLog.error(bce, EnginePlugin.PLUGIN_ID);
+            deployStatus = validateBarContent(bar);
+            if (hasErrors(deployStatus)) {
+                return deployStatus;
             }
-            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, bce.getDetails(), bce);
+        } catch (final BarCreationException bce) {
+            String message = String.format("Error when trying to create bar for process %s (%s)", process.getName(),
+                    process.getVersion());
+            BonitaStudioLog.error(bce, message);
+            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, message, bce);
         }
         ProcessDefinition def = null;
         APISession session = null;
@@ -182,20 +190,11 @@ public class DeployProcessOperation {
             session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             def = processApi.deploy(bar);
-        } catch (final ProcessDeployException e) {
-            if (process != null) {
-                BonitaStudioLog.log(String.format("Error when trying to deploy process %s (%s)", process.getName(),
-                        process.getVersion()));
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
-        } catch (final Exception e1) {
-            if (process != null) {
-                BonitaStudioLog.error("Error when trying to deploy the process named: " + process.getName(),
-                        EnginePlugin.PLUGIN_ID);
-            }
-            BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
-            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e1.getMessage(), e1);
+        } catch (final Exception e) {
+            String message = String.format("Error when trying to deploy process %s (%s)", process.getName(),
+                    process.getVersion());
+            BonitaStudioLog.error(e, message);
+            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, message, e);
         } finally {
             removeDefaultFormMapping(process);
             if (session != null) {
@@ -203,7 +202,16 @@ public class DeployProcessOperation {
             }
         }
         processIdsMap.put(process, def.getId());
-        return Status.OK_STATUS;
+        return deployStatus;
+    }
+
+    protected IStatus validateBarContent(BusinessArchive bar) {
+        return getValidators().stream().map(validator -> validator.validate(bar))
+                .collect(StatusCollectors.toMultiStatus());
+    }
+
+    protected List<IValidator<BusinessArchive>> getValidators() {
+        return BusinessArchiveValidatorProvider.getInstance().getValidators();
     }
 
     private AbstractProcess addDefaultFormMapping(final AbstractProcess process) {
@@ -243,7 +251,8 @@ public class DeployProcessOperation {
             public boolean apply(final FormMapping input) {
                 return input.getType() == FormMappingType.INTERNAL
                         && !input.getTargetForm().hasContent()
-                        && !input.eContainmentFeature().equals(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
+                        && !input.eContainmentFeature()
+                                .equals(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
             }
         };
     }
@@ -309,7 +318,8 @@ public class DeployProcessOperation {
 
             @Override
             public void run() {
-                problemResolutionResult = createProcessEnablementProblemsDialog(process, processResolutionProblems).open();
+                problemResolutionResult = createProcessEnablementProblemsDialog(process, processResolutionProblems)
+                        .open();
             }
 
         });

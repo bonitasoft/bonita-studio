@@ -34,6 +34,7 @@ import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -41,12 +42,14 @@ import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvide
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -68,7 +71,9 @@ public class DeployDiagramHandler {
         boolean shouldDisablePopup = shouldDisablePopup(disablePopup);
         String configurationId = retrieveDefaultConfiguration();
         DiagramFileStore diagramFileStore = retrieveDiagram(repositoryAccessor, fileName);
-        List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses().stream().filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process))).collect(Collectors.toList()) : diagramFileStore.getProcesses();
+        List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses().stream()
+                .filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process)))
+                .collect(Collectors.toList()) : diagramFileStore.getProcesses();
         IStatus validationStatus = ValidationStatus.ok();
         if (validateDiagram == null || Boolean.valueOf(validateDiagram)) {
             validationStatus = validateDiagram(processes);
@@ -80,7 +85,7 @@ public class DeployDiagramHandler {
             processes.forEach(deployOperation::addProcessToDeploy);
             if (!shouldDisablePopup) {
                 runInJob(diagramFileStore, deployOperation);
-            }else {
+            } else {
                 deployOperation.run(Repository.NULL_PROGRESS_MONITOR);
                 return deployOperation.getStatus();
             }
@@ -118,6 +123,14 @@ public class DeployDiagramHandler {
         switch (deployStatus.getSeverity()) {
             case IStatus.OK:
                 MessageDialog.openInformation(shell, Messages.deployDoneTitle, Messages.deployDoneMessage);
+                break;
+            case IStatus.WARNING:
+                if(deployStatus instanceof MultiStatus) {
+                    new MultiStatusDialog(shell, Messages.deployDoneTitle, Messages.deployWithWarningMessage,
+                            new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) deployStatus).open();
+                }else {
+                    MessageDialog.openWarning(shell, Messages.deployDoneTitle, deployStatus.getMessage());
+                }
                 break;
             case IStatus.CANCEL:
                 break;
