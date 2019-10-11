@@ -78,7 +78,8 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        processConfStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
 
         String destFilePath = null;
         if (event != null) {
@@ -116,7 +117,8 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         }
 
         final MainProcess mainProcess = ModelHelper.getMainProcess(diagram.resolveSemanticElement());
-        DiagramFileStore diagramFile = (DiagramFileStore) diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess), true);
+        DiagramFileStore diagramFile = (DiagramFileStore) diagramStore
+                .getChild(NamingUtils.toDiagramFilename(mainProcess), true);
         Assert.isNotNull(diagramFile, "Diagram not found in repository");
 
         final String archiveName = mainProcess.getName() + "_" + mainProcess.getVersion();
@@ -129,21 +131,19 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         } catch (IOException e1) {
             throw new ExecutionException(e1.getMessage());
         }
-        if (mainProcess.isEnableValidation()) {
-            for (final AbstractProcess process : diagramFile.getProcesses()) {
-                try {
-                    String processUUID = ModelHelper.getEObjectID(process);
-                    IRepositoryFileStore file = processConfStore
-                            .getChild(processUUID + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
-                    file.export(tmpDir.getAbsolutePath());
+        for (final AbstractProcess process : diagramFile.getProcesses()) {
+            try {
+                String processUUID = ModelHelper.getEObjectID(process);
+                IRepositoryFileStore file = processConfStore
+                        .getChild(processUUID + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
+                file.export(tmpDir.getAbsolutePath());
 
-                    final File targetBarFile = new File(tmpDir, process.getName() + "--" + process.getVersion() + ".bar");
-                    targetBarFile.delete();
-                    BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process, configurationId);
-                    BusinessArchiveFactory.writeBusinessArchiveToFile(bar, targetBarFile);
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                }
+                final File targetBarFile = new File(tmpDir, process.getName() + "--" + process.getVersion() + ".bar");
+                targetBarFile.delete();
+                BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process, configurationId);
+                BusinessArchiveFactory.writeBusinessArchiveToFile(bar, targetBarFile);
+            } catch (Exception e) {
+                BonitaStudioLog.error(e);
             }
         }
         final File targetFile = new File(outputDir, archiveName + ".zip");

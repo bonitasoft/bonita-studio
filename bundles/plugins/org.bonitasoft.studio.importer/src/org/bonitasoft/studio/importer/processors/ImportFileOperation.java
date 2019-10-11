@@ -31,7 +31,7 @@ import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.i18n.Messages;
-import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

@@ -35,8 +35,7 @@ import org.bonitasoft.studio.engine.operation.RunOperationExecutionContext;
 import org.bonitasoft.studio.engine.operation.RunProcessOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -52,7 +51,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler {
 
@@ -74,36 +72,33 @@ public class RunProcessCommand extends AbstractHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
-        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
         if (executableProcesses.isEmpty()) {
             MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.noProcessToRunTitle,
                     Messages.noProcessToRun);
             return ValidationStatus.cancel(Messages.noProcessToRunTitle);
         }
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
-            final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
-            final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
-                    new BatchValidationOperation(
-                            new OffscreenEditPartFactory(
-                                    org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                            new ValidationMarkerProvider()));
-            validationOperation.addProcesses(processes);
-            try {
-                if (runSynchronously) {
-                    validationOperation.run(Repository.NULL_PROGRESS_MONITOR);
-                } else {
-                    service.run(true, false, validationOperation);
-                }
-            } catch (final InvocationTargetException e) {
-                throw new ExecutionException("Error occured during validation", e);
-            } catch (final InterruptedException e) {
-                //Continue
+        final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
+        final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
+                new BatchValidationOperation(
+                        new OffscreenEditPartFactory(
+                                org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                        new ValidationMarkerProvider()));
+        validationOperation.addProcesses(processes);
+        try {
+            if (runSynchronously) {
+                validationOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            } else {
+                new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true, false,
+                        validationOperation);
             }
-            if (!validationOperation.displayConfirmationDialog()) {
-                return null;
-            }
+        } catch (final InvocationTargetException e) {
+            throw new ExecutionException("Error occured during validation", e);
+        } catch (final InterruptedException e) {
+            //Continue
+        }
+        if (!validationOperation.displayConfirmationDialog()) {
+            return null;
         }
 
         final RunOperationExecutionContext executionContext = new RunOperationExecutionContext(configurationId);
@@ -176,7 +171,8 @@ public class RunProcessCommand extends AbstractHandler {
                     .filter(DiagramFileStore.class::isInstance).isPresent();
             if (diagramSelectedInExplorer) {
                 return true;
-            } else if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+            } else if (PlatformUI.isWorkbenchRunning()
+                    && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
                 final MainProcess process = ProcessSelector.getProcessInEditor();
                 return process != null && process.isEnableValidation();
             }

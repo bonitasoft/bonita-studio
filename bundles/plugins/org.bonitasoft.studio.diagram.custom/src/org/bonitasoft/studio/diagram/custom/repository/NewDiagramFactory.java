@@ -272,7 +272,7 @@ public class NewDiagramFactory {
         mainProcess.setVersion(BASE_VERSION);
         mainProcess.setBonitaVersion(ProductVersion.CURRENT_VERSION);
         mainProcess.setBonitaModelVersion(modelVersion);
-        mainProcess.setEnableValidation(preferenceStore.getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION));
+        mainProcess.setEnableValidation(true);
         mainProcess.setConfigId(getConfigurationId(mainProcess));
         ModelHelper.addDataTypes(mainProcess);
         domainElements.put(MainProcess.class, mainProcess);

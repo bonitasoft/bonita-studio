@@ -21,36 +21,24 @@ package org.bonitasoft.studio.properties.sections.diagram;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.properties.sections.general.ActivateValidationPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.DescriptionGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.ProcessElementNameContribution;
 import org.bonitasoft.studio.properties.sections.general.VersionGridPropertySectionContribution;
 
-/**
- * @author Romain Bioteau
- *
- */
+
 public class DiagramSection extends ExtensibleGridPropertySection {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
-	 */
-	@Override
+    @Override
 	protected void addContributions() {
 		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
 		addContribution(new VersionGridPropertySectionContribution());
 		addContribution(new DescriptionGridPropertySectionContribution());
-		addContribution(new ActivateValidationPropertySectionContribution()) ;
 	}
-
-	
 
 	@Override
 	public String getSectionDescription() {
 		return Messages.diagramSectionDescription;
 	}
 
-	
-	
 
 }

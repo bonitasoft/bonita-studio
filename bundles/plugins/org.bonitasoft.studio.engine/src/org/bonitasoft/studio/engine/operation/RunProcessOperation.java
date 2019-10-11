@@ -34,11 +34,14 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -95,8 +98,12 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         final StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
                         sb.append(":\n");
                         sb.append(status.getMessage());
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
-                                sb.toString(), status, IStatus.ERROR | IStatus.WARNING).open();
+                        if(status instanceof MultiStatus) {
+                            new MultiStatusDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage, new String[] {IDialogConstants.OK_LABEL}, (MultiStatus) status).open();
+                        }else{
+                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
+                                    sb.toString(), status, IStatus.ERROR | IStatus.WARNING).open();
+                        }
                     }
                 });
             }

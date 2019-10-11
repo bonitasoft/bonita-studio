@@ -22,7 +22,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.handler.DefaultImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.handler.ImportStatusDialogHandler;
-import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

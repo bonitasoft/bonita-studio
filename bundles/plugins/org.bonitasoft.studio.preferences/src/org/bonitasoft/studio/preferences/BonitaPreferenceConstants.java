@@ -153,10 +153,8 @@ public interface BonitaPreferenceConstants {
     public static String PREF_MARGIN_RIGHT = "print.margin.right"; //$NON-NLS-1$
     // END PRINTING PREFERENCES
 
-    public static final String PREF_ENABLE_VALIDATION = "org.bonitasoft.studio.enableValidation";
     public static final String DEFAULT_USERXP_THEME = "defaultUserXPTheme";
     public static final String DEFAULT_APPLICATION_THEME = "defaultAppliXPTheme";
-    public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
     public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
     public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
     public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
