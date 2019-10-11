@@ -32,9 +32,8 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
+import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -53,7 +52,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 public class DeployDiagramHandler {
 
@@ -98,15 +96,14 @@ public class DeployDiagramHandler {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                deployOperation.run(monitor);
-                return deployOperation.getStatus();
+                return deployOperation.run(monitor);
             }
         };
         deployJob.addJobChangeListener(new JobChangeAdapter() {
 
             @Override
             public void done(IJobChangeEvent event) {
-                Display.getDefault().syncExec(() -> displayDeployResult(deployOperation));
+                Display.getDefault().syncExec(() -> displayDeployResult(event.getResult()));
             }
         });
         deployJob.setUser(true);
@@ -117,18 +114,17 @@ public class DeployDiagramHandler {
         return disablePopup == null || Boolean.valueOf(disablePopup);
     }
 
-    private void displayDeployResult(DeployProcessOperation deployOperation) {
-        IStatus deployStatus = deployOperation.getStatus();
+    private void displayDeployResult(IStatus deployStatus) {
         Shell shell = Display.getDefault().getActiveShell();
         switch (deployStatus.getSeverity()) {
             case IStatus.OK:
                 MessageDialog.openInformation(shell, Messages.deployDoneTitle, Messages.deployDoneMessage);
                 break;
             case IStatus.WARNING:
-                if(deployStatus instanceof MultiStatus) {
+                if (deployStatus instanceof MultiStatus) {
                     new MultiStatusDialog(shell, Messages.deployDoneTitle, Messages.deployWithWarningMessage,
                             new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) deployStatus).open();
-                }else {
+                } else {
                     MessageDialog.openWarning(shell, Messages.deployDoneTitle, deployStatus.getMessage());
                 }
                 break;
@@ -145,24 +141,21 @@ public class DeployDiagramHandler {
     }
 
     private IStatus validateDiagram(List<AbstractProcess> processes) {
-        if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
-            RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
-                    new BatchValidationOperation(
-                            new OffscreenEditPartFactory(
-                                    org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                            new ValidationMarkerProvider()));
-            validationOperation.addProcesses(processes);
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, validationOperation);
-            } catch (InvocationTargetException | InterruptedException e) {
-                return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
-            }
-            return validationOperation.displayConfirmationDialog()
-                    ? ValidationStatus.ok()
-                    : ValidationStatus.cancel("");
+        RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
+                new BatchValidationOperation(
+                        new OffscreenEditPartFactory(
+                                org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                        new ValidationMarkerProvider()));
+        validationOperation.addProcesses(processes);
+        try {
+            new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true, false,
+                    validationOperation);
+        } catch (InvocationTargetException | InterruptedException e) {
+            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
         }
-        return ValidationStatus.ok();
+        return validationOperation.displayConfirmationDialog()
+                ? ValidationStatus.ok()
+                : ValidationStatus.cancel("");
     }
 
     protected String retrieveDefaultConfiguration() {

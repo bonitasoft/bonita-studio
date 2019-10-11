@@ -45,7 +45,7 @@ import org.bonitasoft.studio.importer.bos.model.ImportableUnit;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
 import org.bonitasoft.studio.importer.bos.validator.ValidationException;
-import org.bonitasoft.studio.importer.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

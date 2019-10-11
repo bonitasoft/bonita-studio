@@ -118,7 +118,11 @@ public class DeployProcessOperation {
         try {
             status.addAll(deploy(monitor));
             if (!hasErrors(status)) {
-                status.addAll(enable(monitor));
+                IStatus enablementStatus = enable(monitor);
+                if(enablementStatus.getSeverity() == IStatus.CANCEL) {
+                    return enablementStatus;
+                }
+                status.addAll(enablementStatus);
             }
         } catch (Exception e) {
             BonitaStudioLog.error(e);

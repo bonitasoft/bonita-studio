@@ -12,9 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer.ui.dialog;
+package org.bonitasoft.studio.ui.dialog;
 
-import org.bonitasoft.studio.importer.i18n.Messages;
+import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,9 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 
-/**
- * @author Romain Bioteau
- */
+
 public class SkippableProgressMonitorJobsDialog extends ProgressMonitorJobsDialog {
 
     private Button skipButton;
@@ -43,14 +41,11 @@ public class SkippableProgressMonitorJobsDialog extends ProgressMonitorJobsDialo
                 false);
         skipButton.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 cancelPressed();
             }
+            
         });
         skipButton.setCursor(arrowCursor);
         skipButton.setVisible(enableDetailsButton);
@@ -68,8 +63,9 @@ public class SkippableProgressMonitorJobsDialog extends ProgressMonitorJobsDialo
         close();
     }
 
-    public void canBeSkipped() {
+    public SkippableProgressMonitorJobsDialog canBeSkipped() {
         enableDetails(true);
+        return this;
     }
 
     @Override
