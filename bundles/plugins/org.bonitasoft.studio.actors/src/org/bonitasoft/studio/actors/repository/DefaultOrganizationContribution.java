@@ -144,7 +144,7 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         defaultUsers.add(
                 createUser(mr, "patrick.gardenier", "Patrick", "Gardenier", "bpm", "PatrickGardenier@acme.com",
                         "zachary.williamson", "Financial controller"));
-        defaultUsers.add(createUser(mrs, "virginie.jomphe", "Virgine", "Jomphe", "bpm", "VirginieJomphe@acme.com",
+        defaultUsers.add(createUser(mrs, "virginie.jomphe", "Virginie", "Jomphe", "bpm", "VirginieJomphe@acme.com",
                 "zachary.williamson", "Accountant"));
         defaultUsers.add(createUser(mr, "thorsten.hartmann", "Thorsten", "Hartmann", "bpm", "ThorstenHartmann@acme.com",
                 "zachary.williamson",
