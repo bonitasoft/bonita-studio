@@ -14,7 +14,7 @@
 		<tychoExtrasVersion>1.3.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>${project.version}</bundle.version>
-		<ui.designer.version>1.9.62</ui.designer.version>
+		<ui.designer.version>1.9.63</ui.designer.version>
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
