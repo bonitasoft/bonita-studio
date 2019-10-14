@@ -27,13 +27,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.wizard.URLTempPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
-public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
+public class FetchRemoteBosArchiveOperation implements IRunnableWithStatus {
 
     private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
     private static final String FILENAME_PARAM = "filename=";
@@ -41,6 +43,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
 
     private URLTempPath ulrTempPath;
     private String url;
+    private IStatus status = Status.OK_STATUS;
 
     public FetchRemoteBosArchiveOperation(String url) {
         this.url = url;
@@ -73,7 +76,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
             httpConnection.disconnect();
             ulrTempPath = new URLTempPath(httpConnection.getURL(), tempFile);
         } catch (IOException e) {
-            BonitaStudioLog.error(e);
+           status = new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, e.getLocalizedMessage(),e);
         } finally {
             if (httpConnection != null) {
                 httpConnection.disconnect();
@@ -118,6 +121,11 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithProgress {
 
     public URLTempPath getURLTempPath() {
         return ulrTempPath;
+    }
+
+    @Override
+    public IStatus getStatus() {
+        return status;
     }
 
 }

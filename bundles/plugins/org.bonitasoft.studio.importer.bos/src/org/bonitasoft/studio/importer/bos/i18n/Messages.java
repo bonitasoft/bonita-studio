@@ -90,5 +90,6 @@ public class Messages extends NLS {
     public static String downloadingRemoteBosArchive;
     public static String url;
     public static String invalidBosArchiveType;
+    public static String cannotImportRemoteArchive;
 
 }
