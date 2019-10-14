@@ -147,7 +147,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             Display.getDefault().asyncExec(() -> {
                 File myFile = new File(filePath);
                 if (!myFile.exists()) {
-                    myFile = fetchArchive(filePath);
+                    try {
+                        myFile = fetchArchive(filePath);
+                    } catch (FetchRemoteBosArchiveException e) {
+                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,e.getLocalizedMessage())));
+                        return;
+                    }
                 }
                 archiveModel = parseArchive(myFile.getAbsolutePath());
                 if (archiveModel != null) {
@@ -347,7 +352,12 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 urlTempPath = null;
             }
             if (!myFile.exists()) {
-                myFile = fetchArchive(filePath);
+                try {
+                    myFile = fetchArchive(filePath);
+                } catch (FetchRemoteBosArchiveException ex) {
+                    textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,ex.getLocalizedMessage())));
+                    return;
+                }
             }
             archiveModel = parseArchive(myFile.getAbsolutePath());
             if (archiveModel != null) {
@@ -358,7 +368,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         });
     }
 
-    private File fetchArchive(String filePath) {
+    private File fetchArchive(String filePath) throws FetchRemoteBosArchiveException {
         File myFile;
         FetchRemoteBosArchiveOperation operation = new FetchRemoteBosArchiveOperation(filePath);
         try {
@@ -366,6 +376,9 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         } catch (InvocationTargetException | InterruptedException ex) {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, ex);
+        }
+        if(!operation.getStatus().isOK()) {
+            throw new FetchRemoteBosArchiveException(operation.getStatus().getException());
         }
         urlTempPath = operation.getURLTempPath();
         myFile = urlTempPath.getTmpPath().toFile();
