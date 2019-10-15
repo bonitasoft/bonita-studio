@@ -64,14 +64,6 @@ public class Messages extends NLS {
 
     public static String exitWarningMessage;
 
-    public static String startDialogTitle;
-    public static String doNotShowMeAgain;
-    public static String startDialogMsg;
-    public static String startDialogDetails;
-    public static String releaseNote;
-    public static String letsStart;
-    public static String _6xFormsDontWorkAnymore;
-
     public static String NewButtonTooltip;
     public static String NewButtonLabel;
 

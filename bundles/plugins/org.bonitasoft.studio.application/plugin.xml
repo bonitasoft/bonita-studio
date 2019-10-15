@@ -1038,13 +1038,7 @@
    <extension
          point="org.bonitasoft.studio.common.poststartup">
       <contribution
-            class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor">
-      </contribution>
-      <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
-      </contribution>
-      <contribution
-            class="org.bonitasoft.studio.application.contribution.StartupDialogContribution">
       </contribution>
    </extension>
    <extension
@@ -1132,13 +1126,6 @@
             schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+R">
       </key>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.application.prestartup">
-      <contribution
-            class="org.bonitasoft.studio.application.contribution.UpdateRSSContribution"
-            priority="5">
-      </contribution>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
