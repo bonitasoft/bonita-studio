@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <introContent>
-    <page id="root" content="welcome-dynamique.html"/>
+    <page id="root" content="welcome.html"/>
     <page id="eXchange" url="http://www.bonitasoft.org/exchange/index.php?browser=studio"/>
 </introContent>

@@ -103,7 +103,9 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
 
     @Override
     public boolean performCancel() {
-        PlatformUtil.openIntroIfNoOtherEditorOpen();
+        if(!PlatformUtil.isIntroOpen() || getDiagramRepositoryStore().getChildren().isEmpty()) {
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
+        }
         return super.performCancel();
     }
 

@@ -34,6 +34,12 @@ public class CommandExecutor {
         }
         throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
     }
+    
+    public boolean canExecute(String command, Map<String, Object> parameters) {
+        initServices();
+        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
+        return eHandlerService.canExecute(parameterizedCommand);
+    }
 
     protected void initServices() {
         if (eCommandService == null || eHandlerService == null) {
