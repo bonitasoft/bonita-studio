@@ -18,6 +18,7 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -31,11 +32,12 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.Trace;
+import org.eclipse.ui.internal.browser.WebBrowserEditor;
+import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.eclipse.ui.internal.browser.WebBrowserPreference;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.browser.WebBrowserView;
-
 
 public class OpenBrowserOperation implements Runnable {
 
@@ -62,7 +64,7 @@ public class OpenBrowserOperation implements Runnable {
         this.id = id;
         return this;
     }
-    
+
     public OpenBrowserOperation withName(String name) {
         this.name = name;
         return this;
@@ -77,28 +79,18 @@ public class OpenBrowserOperation implements Runnable {
         WebBrowserUtil.isInternalBrowserOperational = null;
         if (useInternalBrowser &&
                 PlatformUI.getWorkbench().getBrowserSupport().isInternalWebBrowserAvailable()) {
-            IWorkbenchWindow workbenchWindow = WebBrowserUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
+            IWorkbenchWindow workbenchWindow = WebBrowserUIPlugin.getInstance().getWorkbench()
+                    .getActiveWorkbenchWindow();
             final IWorkbenchPage page = workbenchWindow.getActivePage();
-                try {
-                    WebBrowserView view = null;
-                  IViewReference findViewReference = page.findViewReference(WebBrowserView.WEB_BROWSER_VIEW_ID, WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW));
-                  if(findViewReference == null) {
-                      view = (WebBrowserView)page.showView(WebBrowserView.WEB_BROWSER_VIEW_ID, WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW), IWorkbenchPage.VIEW_CREATE);
-                  }else {
-                      view = (WebBrowserView) findViewReference.getView(true);
-                  }
-                    if (name != null && name.length() > 0) {
-                        view.setBrowserViewName(name);
-                    }
-                    if (view!=null) {
-                        view.setURL(url.toExternalForm());
-                        if(bringPartToTop) {
-                            page.bringToTop(view);
-                        }
-                    }
-                } catch (Exception e) {
-                    Trace.trace(Trace.SEVERE, "Error opening Web browser", e); //$NON-NLS-1$
+            try {
+                if (PlatformUtil.isIntroOpen()) {
+                    openAsView(page);
+                } else {
+                    openAsEditor(page);
                 }
+            } catch (Exception e) {
+                Trace.trace(Trace.SEVERE, "Error opening Web browser", e); //$NON-NLS-1$
+            }
         } else if (browserIsSet()) {
             browser = externalBrowser;
             if (browser == null) {
@@ -112,6 +104,33 @@ public class OpenBrowserOperation implements Runnable {
         }
         WebBrowserUtil.isInternalBrowserOperational = false;
         WebBrowserPreference.setBrowserChoice(WebBrowserPreference.EXTERNAL);
+    }
+
+    private void openAsEditor(IWorkbenchPage page) throws PartInitException {
+        WebBrowserEditorInput editorInput = new WebBrowserEditorInput(url, IWorkbenchBrowserSupport.AS_EDITOR, id);
+        page.openEditor(editorInput, WebBrowserEditor.WEB_BROWSER_EDITOR_ID, true);
+    }
+
+    private void openAsView(IWorkbenchPage page) throws PartInitException {
+        WebBrowserView view = null;
+        IViewReference findViewReference = page.findViewReference(WebBrowserView.WEB_BROWSER_VIEW_ID,
+                WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW));
+        if (findViewReference == null) {
+            view = (WebBrowserView) page.showView(WebBrowserView.WEB_BROWSER_VIEW_ID,
+                    WebBrowserUtil.encodeStyle(id, IWorkbenchBrowserSupport.AS_VIEW),
+                    IWorkbenchPage.VIEW_CREATE);
+        } else {
+            view = (WebBrowserView) findViewReference.getView(true);
+        }
+        if (name != null && name.length() > 0) {
+            view.setBrowserViewName(name);
+        }
+        if (view != null) {
+            view.setURL(url.toExternalForm());
+            if (bringPartToTop) {
+                page.bringToTop(view);
+            }
+        }
     }
 
     protected boolean browserIsSet() {

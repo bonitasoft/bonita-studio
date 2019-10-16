@@ -218,7 +218,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.bonitasoft.studio.businessobject.ui.handler.ImportBusinessDataModelHandler"
+            class="org.bonitasoft.studio.businessobject.ui.handler.SmartImportBdmHandler"
             commandId="org.bonitasoft.studio.application.import">
          <activeWhen>
             <with

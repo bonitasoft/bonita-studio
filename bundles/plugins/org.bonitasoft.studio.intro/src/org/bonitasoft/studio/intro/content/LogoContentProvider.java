@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.intro.content.actions.OpenInExternalBrowserIntroAction;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -52,7 +53,8 @@ public class LogoContentProvider implements DOMContentProvider {
 
     private String redirectUrl(String id, String currentVersion) throws UnsupportedEncodingException {
         return String.format(
-                "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&url=%s",
+                "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=%s&url=%s",
+                OpenInExternalBrowserIntroAction.class.getName(),
                 URLEncoder.encode(String.format(
                         "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&&bos_redirect_product=bos&bos_redirect_major_version=%s&currentVersion&bos_redirect_minor_version=0",
                         id, currentVersion), "UTF-8"));
