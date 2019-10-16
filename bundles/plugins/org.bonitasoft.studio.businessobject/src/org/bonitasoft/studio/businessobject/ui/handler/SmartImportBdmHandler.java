@@ -35,19 +35,29 @@ import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.xml.sax.SAXException;
 
-public class SmartImportBdmHandler {
+public class SmartImportBdmHandler extends AbstractHandler {
 
     private boolean smartImport = false;
 
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        execute(Display.getDefault().getActiveShell(), new RepositoryAccessor().init());
+        return null;
+    }
+    
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
         SmartImportBdmPage page = new SmartImportBdmPage(repositoryAccessor);
@@ -106,5 +116,6 @@ public class SmartImportBdmHandler {
             return ValidationStatus.error(Messages.archiveContentInvalid);
         }
     }
+
 
 }
