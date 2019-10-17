@@ -74,12 +74,13 @@ public class SmartImportBdmModel extends SmartImportableModel {
         }
     }
 
-    public List<BusinessObject> getBusinessObjectsToImport() {
+    public List<BusinessObject> getBusinessObjectsToImport(List<String> overwrittenPackages) {
         return getSmartImportableUnits().stream()
                 .map(SmartImportPackageModel.class::cast)
                 .filter(packageUnit -> !Objects.equals(ConflictStatus.SAME_CONTENT, packageUnit.getConflictStatus()))
                 .filter(packageUnit -> Objects.equals(ImportAction.OVERWRITE, packageUnit.getImportAction()))
-                .map(SmartImportPackageModel::getBusinessObjectsToImport)
+                .map(packageModel -> packageModel
+                        .getBusinessObjectsToImport(overwrittenPackages.contains(packageModel.getName())))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }

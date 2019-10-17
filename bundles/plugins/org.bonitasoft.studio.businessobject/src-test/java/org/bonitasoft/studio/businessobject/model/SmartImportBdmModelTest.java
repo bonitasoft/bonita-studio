@@ -266,12 +266,20 @@ public class SmartImportBdmModelTest {
         SmartImportBdmModel model = new SmartImportBdmModel(fileStore, converter, null);
         model.buildSmartImportModel(importedFile);
 
+        assertThat(model.getBusinessObjectsToImport(Arrays.asList(IMPORTED_PACKAGE_1, IMPORTED_PACKAGE_2)))
+                .containsExactlyInAnyOrder(importedBdm.getBusinessObjects().toArray(new BusinessObject[0]));
+
+        BusinessObject expectedResult = importedBdm.getBusinessObjects().stream()
+                .filter(importedBo -> Objects.equals(importedBo.getSimpleName(), IMPORTED_BO_2)).findFirst().get();
+
+        assertThat(model.getBusinessObjectsToImport(Arrays.asList(IMPORTED_PACKAGE_2)))
+                .containsExactlyInAnyOrder(importedBdm.getBusinessObjects().toArray(new BusinessObject[0]));
+
         model.getSmartImportableUnits().stream()
                 .filter(packageUnit -> Objects.equals(packageUnit.getName(), IMPORTED_PACKAGE_1))
                 .forEach(packageUnit -> packageUnit.setImportAction(ImportAction.KEEP));
-        BusinessObject expectedResult = importedBdm.getBusinessObjects().stream()
-                .filter(importedBo -> Objects.equals(importedBo.getSimpleName(), IMPORTED_BO_2)).findFirst().get();
-        assertThat(model.getBusinessObjectsToImport()).containsExactly(expectedResult);
+        assertThat(model.getBusinessObjectsToImport(Arrays.asList(IMPORTED_PACKAGE_1, IMPORTED_PACKAGE_2)))
+                .containsExactly(expectedResult);
     }
 
     @Test

@@ -61,7 +61,7 @@ public class SmartImportBDMOperation implements IRunnableWithStatus {
                 .collect(Collectors.toList());
         currentModel.getBusinessObjects()
                 .removeIf(existingBo -> packageToOverwrite.contains(packageHelper.getPackageName(existingBo)));
-        currentModel.getBusinessObjects().addAll(modelToImport.getBusinessObjectsToImport());
+        currentModel.getBusinessObjects().addAll(modelToImport.getBusinessObjectsToImport(packageToOverwrite));
     }
 
     @Override
