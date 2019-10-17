@@ -30,7 +30,8 @@ public class SmartImportPackageModelTest {
         modelSameContent.setConflictStatus(ConflictStatus.SAME_CONTENT);
 
         packageModel.getSmartImportableUnits().addAll(Arrays.asList(modelConflicting, modelNone, modelSameContent));
-        assertThat(packageModel.getBusinessObjectsToImport()).containsExactlyInAnyOrder(boConflicting, boNone);
+        assertThat(packageModel.getBusinessObjectsToImport()).containsExactlyInAnyOrder(boConflicting, boNone,
+                boSameContent);
     }
 
 }

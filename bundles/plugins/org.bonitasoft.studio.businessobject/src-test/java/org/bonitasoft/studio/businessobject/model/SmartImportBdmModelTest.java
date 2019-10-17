@@ -117,6 +117,11 @@ public class SmartImportBdmModelTest {
     @Test
     public void should_build_model_when_models_are_identical() throws Exception {
         BusinessObjectModel existingBdm = createImportedBdm();
+        BusinessObject bo4 = BusinessObjectBuilder.aBO(String.format("%s.%s", IMPORTED_PACKAGE_1, "bo4"))
+                .withField(SimpleFieldBuilder.aStringField(IMPORTED_FIELD_1).build())
+                .build();
+        existingBdm.getBusinessObjects().add(bo4);
+
         BusinessObjectModelFileStore fileStore = mock(BusinessObjectModelFileStore.class);
         when(fileStore.getContent()).thenReturn(existingBdm);
         when(fileStore.getAdapter(BusinessObjectModelFileStore.class)).thenReturn(fileStore);
@@ -136,12 +141,12 @@ public class SmartImportBdmModelTest {
         assertThat(model.getSmartImportableUnits())
                 .extracting(SmartImportableUnit::getImportAction)
                 .allMatch(ImportAction.OVERWRITE::equals);
-        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits).hasSize(3);
+        assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits).hasSize(4);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
                 .allMatch(SmartImportBusinessObjectModel.class::isInstance);
         assertThat(model.getSmartImportableUnits()).flatExtracting(SmartImportableUnit::getSmartImportableUnits)
                 .extracting(SmartImportableUnit::getName)
-                .containsExactlyInAnyOrder(IMPORTED_BO_1, IMPORTED_BO_2, IMPORTED_BO_3);
+                .containsExactlyInAnyOrder(IMPORTED_BO_1, IMPORTED_BO_2, IMPORTED_BO_3, "bo4");
     }
 
     @Test
@@ -293,16 +298,23 @@ public class SmartImportBdmModelTest {
         assertThat(package1.getConflictStatus()).isEqualTo(ConflictStatus.CONFLICTING);
         assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getName)
                 .containsExactlyInAnyOrder(IMPORTED_BO_1, IMPORTED_BO_3);
+        assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getConflictStatus)
+                .containsExactlyInAnyOrder(ConflictStatus.CONFLICTING, ConflictStatus.NONE);
 
         package1.setImportAction(ImportAction.KEEP);
         model.updateSmartImportPackageModel((SmartImportPackageModel) package1);
         assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getName)
                 .containsExactlyInAnyOrder(IMPORTED_BO_1, "OtherBusinessOject");
+        assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getConflictStatus)
+                .containsExactlyInAnyOrder(ConflictStatus.CONFLICTING, ConflictStatus.SAME_CONTENT);
 
         package1.setImportAction(ImportAction.OVERWRITE);
         model.updateSmartImportPackageModel((SmartImportPackageModel) package1);
         assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getName)
                 .containsExactlyInAnyOrder(IMPORTED_BO_1, IMPORTED_BO_3);
+        assertThat(package1.getSmartImportableUnits()).extracting(SmartImportableUnit::getConflictStatus)
+                .containsExactlyInAnyOrder(ConflictStatus.CONFLICTING, ConflictStatus.NONE);
+
     }
 
     private BusinessObjectModel createImportedBdm() {
