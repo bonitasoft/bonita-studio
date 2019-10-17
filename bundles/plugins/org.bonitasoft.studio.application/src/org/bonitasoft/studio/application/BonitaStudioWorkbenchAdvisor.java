@@ -563,7 +563,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 ApplicationPlugin.PLUGIN_ID);
         ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
         if(isFirstStartup()) {
-            new OpenReleaseNoteHandler().setFocus(false).openBrowser();
+            new OpenReleaseNoteHandler().setFocus(false).asView().openBrowser();
         }
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
     }

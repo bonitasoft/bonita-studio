@@ -18,7 +18,6 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -48,6 +47,7 @@ public class OpenBrowserOperation implements Runnable {
     private String name;
     private String id;
     private boolean bringPartToTop = true;
+    private boolean openAsView;
 
     public OpenBrowserOperation(final URL url) {
         this.url = url;
@@ -83,7 +83,7 @@ public class OpenBrowserOperation implements Runnable {
                     .getActiveWorkbenchWindow();
             final IWorkbenchPage page = workbenchWindow.getActivePage();
             try {
-                if (PlatformUtil.isIntroOpen()) {
+                if (openAsView) {
                     openAsView(page);
                 } else {
                     openAsEditor(page);
@@ -159,6 +159,11 @@ public class OpenBrowserOperation implements Runnable {
         } catch (final PartInitException e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    public OpenBrowserOperation asView(boolean openAsView) {
+        this.openAsView = openAsView;
+        return this;
     }
 
 }
