@@ -121,7 +121,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
     }
 
     private void completePackageWithExistingBo(List<BusinessObject> businessObjects, SmartImportPackageModel packageModel) {
-        if (packageModel.getConflictStatus() == ConflictStatus.NONE) {
+        if (packageModel.getConflictStatus() != ConflictStatus.CONFLICTING) {
             businessObjects.stream()
                     .filter(bo -> packageModel.getSmartImportableUnits().stream()
                             .map(SmartImportableUnit::getName)
@@ -157,6 +157,9 @@ public class SmartImportBdmModel extends SmartImportableModel {
             buildImportPackageModel(currentModel, modelToMerge, PackageHelper.getInstance(), packageModel);
         } else {
             buildImportPackageModel(modelToMerge, currentModel, PackageHelper.getInstance(), packageModel);
+            packageModel.getSmartImportableUnits().stream()
+                    .filter(objectModel -> Objects.equals(objectModel.getConflictStatus(), ConflictStatus.NONE))
+                    .forEach(objectModel -> objectModel.setConflictStatus(ConflictStatus.SAME_CONTENT));
         }
     }
 
