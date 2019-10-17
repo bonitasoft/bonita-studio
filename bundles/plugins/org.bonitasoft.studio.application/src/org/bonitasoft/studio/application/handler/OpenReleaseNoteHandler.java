@@ -19,12 +19,15 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.ui.PlatformUI;
 
 public class OpenReleaseNoteHandler {
 
     private boolean bringPartToTop = true;
+    private boolean openAsView = false;
 
     @Execute
     public void openBrowser() {
@@ -32,6 +35,7 @@ public class OpenReleaseNoteHandler {
             new OpenBrowserOperation(new URL(String.format(
                     "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=696&bos_redirect_product=bos&bos_redirect_major_version=%s",
                     ProductVersion.majorVersion())))
+                            .asView(openAsView || PlatformUtil.isIntroOpen())
                             .withInteralBrowser("org.bonitasoft.studio.browser.release.note", bringPartToTop)
                             .withName(String.format("%s Release notes", ProductVersion.CURRENT_VERSION))
                             .execute();
@@ -42,6 +46,11 @@ public class OpenReleaseNoteHandler {
 
     public OpenReleaseNoteHandler setFocus(boolean bringPartToTop) {
         this.bringPartToTop = bringPartToTop;
+        return this;
+    }
+    
+    public OpenReleaseNoteHandler asView() {
+        this.openAsView = true;
         return this;
     }
 }
