@@ -15,9 +15,11 @@
 package org.bonitasoft.studio.businessobject.model;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 
 public class SmartImportPackageModel extends SmartImportableUnit {
@@ -34,9 +36,12 @@ public class SmartImportPackageModel extends SmartImportableUnit {
         return packageName;
     }
 
-    public List<BusinessObject> getBusinessObjectsToImport() {
+    public List<BusinessObject> getBusinessObjectsToImport(boolean includeAlreadyPresent) {
         return getSmartImportableUnits().stream()
                 .map(SmartImportBusinessObjectModel.class::cast)
+                .filter(boModel -> includeAlreadyPresent
+                        ? true
+                        : !Objects.equals(boModel.getConflictStatus(), ConflictStatus.SAME_CONTENT))
                 .map(SmartImportBusinessObjectModel::getBusinessObject)
                 .collect(Collectors.toList());
     }
