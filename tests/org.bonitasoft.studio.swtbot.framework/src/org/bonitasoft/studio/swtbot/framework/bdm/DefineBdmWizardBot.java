@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.bdm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.BusinessDataModelWizardPag
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -169,15 +172,13 @@ public class DefineBdmWizardBot extends BotWizardDialog {
         SWTBotShell activeShell = bot.activeShell();
         SWTBotTable constraintsTable = getConstraintsTable(packageName, businessObject);
         constraintsTable.getTableItem(constraintName).click(1);
-        bot.waitUntilWidgetAppears(new ConditionBuilder()
-                .withTest(() -> {
-                    try {
-                        bot.button("...");
-                        return true;
-                    } catch (WidgetNotFoundException e) {
-                        return false;
-                    }
-                }).create());
+        bot.waitUntil(new AssertionCondition() {
+            
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(bot.button("...")).isNotNull();
+            }
+        }, 10000);
         bot.button("...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.selectUniqueConstraintFieldsTitle));
         Arrays.asList(selectFields).forEach(field -> bot.table().getTableItem(field).check());
