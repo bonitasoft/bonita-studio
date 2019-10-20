@@ -60,6 +60,7 @@ public class ExecuteCommandContentProvider implements DOMContentProvider {
         if (parameters != null) {
             actionLink = actionLink.concat(parameters.entrySet()
                     .stream()
+                    .filter(entry -> entry.getValue() != null)
                     .map(entry -> String.format("&%s=%s", entry.getKey(), entry.getValue()))
                     .collect(Collectors.joining()));
         }
