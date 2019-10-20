@@ -78,6 +78,13 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
+        try {
+            CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("user-application-link",
+                    "org.bonitasoft.studio.importer.bos.command", Messages.importUserApplication,
+                    buildImportParameters("713", null)));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
 
         CONTENT_PROVIDERS.add(new SectionTitleContentProvider("design-title", Messages.design));
         CONTENT_PROVIDERS.add(new SectionTitleContentProvider("recent-title", Messages.recent));

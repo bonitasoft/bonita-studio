@@ -47,5 +47,6 @@ public class Messages extends NLS {
     public static String help;
     public static String importLabel;
     public static String reportAnIssue;
+    public static String importUserApplication;
 
 }
