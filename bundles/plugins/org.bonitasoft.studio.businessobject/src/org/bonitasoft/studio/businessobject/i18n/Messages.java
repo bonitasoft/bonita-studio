@@ -418,6 +418,10 @@ public class Messages extends NLS {
     public static String nothingToImport;
     public static String previewDesc;
     public static String importActionName;
+    public static String businessObjectAlreadyPresent;
+    public static String packageAlreadyPresent;
+    public static String importBusinessObjectTooltip;
+    public static String importPackageTooltip;
 
     private Messages() {
     }
