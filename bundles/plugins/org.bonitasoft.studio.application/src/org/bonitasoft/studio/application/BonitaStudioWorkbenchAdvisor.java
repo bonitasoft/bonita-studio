@@ -76,7 +76,9 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -563,6 +565,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 ApplicationPlugin.PLUGIN_ID);
         ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
         if(isFirstStartup()) {
+            WorkbenchPlugin.getDefault().getPreferenceStore().setDefault(IPreferenceConstants.RUN_IN_BACKGROUND, Boolean.FALSE);
             new OpenReleaseNoteHandler().setFocus(false).asView().openBrowser();
         }
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
