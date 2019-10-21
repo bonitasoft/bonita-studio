@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="conditionModel" nsURI="http://www.bonitasoft.org/studio/condition/ConditionModel"
+    nsPrefix="conditionModel">
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Compare">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="op" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Unary_Operation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression_Double" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression_Integer" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression_String" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression_ProcessRef" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression_Boolean" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Less_Equals" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Less" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Greater_Equals" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Greater" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Not_Equals" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Equals" eSuperTypes="#//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_Unary" eSuperTypes="#//Unary_Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation_NotUnary" eSuperTypes="#//Unary_Operation"/>
+</ecore:EPackage>
