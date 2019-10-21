@@ -131,7 +131,7 @@ public class PortConfigurator {
 
     protected boolean isPortInUse(final int port) {
         try {
-            return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port) || SocketUtil.isPortInUse(port);
+            return SocketUtil.isPortInUse(InetAddress.getByName(null), port) || SocketUtil.isPortInUse(port);
         } catch (UnknownHostException e) {
             return SocketUtil.isPortInUse(port);
         }

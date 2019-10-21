@@ -17,6 +17,8 @@ package org.bonitasoft.studio.designer.core;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
@@ -64,8 +66,8 @@ public class WorkspaceSystemProperties {
         return aSystemProperty(REPOSITORY_WIDGETS_PROPERTIES, webWidgetRepository.getResource().getLocation().toFile());
     }
 
-    public String getRestAPIURL(final int port) {
-        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://localhost:%s/api/workspace", port));
+    public String getRestAPIURL(final int port) throws UnknownHostException {
+        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://%s:%s/api/workspace", InetAddress.getByName(null).getHostAddress(), port));
     }
 
     public String activateSpringProfile(final String... profiles) {

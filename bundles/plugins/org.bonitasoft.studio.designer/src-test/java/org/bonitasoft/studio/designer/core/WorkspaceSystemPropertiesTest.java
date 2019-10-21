@@ -20,6 +20,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.net.InetAddress;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
@@ -146,7 +147,7 @@ public class WorkspaceSystemPropertiesTest {
     @Test
     public void should_getRestAPIURL_return_the_rest_resource_server_url() throws Exception {
         assertThat(workspaceSystemProperties.getRestAPIURL(6666)).isEqualTo(
-                "-Dworkspace.api.rest.url=http://localhost:6666/api/workspace");
+                String.format("-Dworkspace.api.rest.url=http://%s:6666/api/workspace",InetAddress.getByName(null).getHostAddress()));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -117,7 +117,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.web.tooling</groupId>
 									<artifactId>studio-watchdog</artifactId>
-									<version>${watchdog.version}</version>
+									<version>${project.version}</version>
 									<type>war</type>
 								</artifactItem>
 							</artifactItems>
