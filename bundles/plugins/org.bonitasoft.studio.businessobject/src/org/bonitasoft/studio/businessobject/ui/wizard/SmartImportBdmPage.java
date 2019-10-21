@@ -306,8 +306,14 @@ public class SmartImportBdmPage extends AbstractImportPage {
             return element instanceof SmartImportBusinessObjectModel
                     ? String.format(Messages.businessObjectNameDuplicated, element.getName())
                     : Messages.conflictingSinglePackage;
+        } else if (isSameContent(element)) {
+            return element instanceof SmartImportBusinessObjectModel
+                    ? String.format(Messages.businessObjectAlreadyPresent, element.getName())
+                    : String.format(Messages.packageAlreadyPresent, element.getName());
         }
-        return null;
+        return element instanceof SmartImportBusinessObjectModel
+                ? String.format(Messages.importBusinessObjectTooltip, element.getName())
+                : String.format(Messages.importPackageTooltip, element.getName());
     }
 
     private boolean isConflictingThroughPackages(SmartImportableUnit element) {
