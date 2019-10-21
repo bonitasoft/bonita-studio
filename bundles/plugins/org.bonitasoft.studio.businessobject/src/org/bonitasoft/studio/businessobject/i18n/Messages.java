@@ -397,8 +397,6 @@ public class Messages extends NLS {
     public static String overwriteBdmHelpMessage;
     public static String archiveContentInvalid;
     public static String businessObjectNameDuplicated;
-    public static String smartImportCompletedTitle;
-    public static String smartImportCompleted;
     public static String importAction;
     public static String importBdmDescription;
     public static String errorOnImport;

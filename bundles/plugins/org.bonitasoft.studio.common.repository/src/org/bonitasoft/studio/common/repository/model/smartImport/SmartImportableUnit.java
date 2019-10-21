@@ -25,10 +25,12 @@ public abstract class SmartImportableUnit implements IPresentable {
     private SmartImportableModel parentModel;
 
     public SmartImportableUnit(SmartImportableModel parentModel) {
+        this.parentModel = parentModel;
     }
 
     public SmartImportableUnit(SmartImportableUnit parent, SmartImportableModel parentModel) {
         this.parent = parent;
+        this.parentModel = parentModel;
     }
 
     public void setConflictStatus(ConflictStatus conflictStatus) {

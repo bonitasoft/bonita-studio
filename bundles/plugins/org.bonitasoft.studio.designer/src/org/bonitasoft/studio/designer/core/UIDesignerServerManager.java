@@ -70,7 +70,6 @@ import com.google.common.base.Joiner;
 
 public class UIDesignerServerManager implements IBonitaProjectListener {
 
-
     private static final String UI_DESIGNER_BASE_NAME = "ui-designer";
     private static UIDesignerServerManager INSTANCE;
     private int port = -1;
@@ -263,7 +262,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
-                String.format("-D%s=http://localhost:%s", BONITA_DATA_REPOSITORY_ORIGIN, DataRepositoryServerManager.getInstance().getPort()),
+                String.format("-D%s=http://localhost:%s", BONITA_DATA_REPOSITORY_ORIGIN,
+                        DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
