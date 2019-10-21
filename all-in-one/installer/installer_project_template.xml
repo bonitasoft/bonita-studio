@@ -525,6 +525,27 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
 		        </throwError>
 	       </validationActionList>
         </directoryParameter>
+        <parameterGroup>
+          <name>antivirusPage</name>
+          <title>${msg(antivirus.detected.title)}</title>
+          <explanation></explanation>
+          <insertAfter>installation</insertAfter>
+          <parameterList>
+            <linkParameter>
+              <name>visitMicrosoftSuuport</name>
+              <description>${msg(visit.microsoft.website)}</description>
+              <explanation>${msg(antivirus.detected.message)}</explanation>
+              <clickedActionList>
+                <launchBrowser>
+                  <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=714&amp;bos_redirect_product=bos&amp;bos_version=${product_version}</url>
+                </launchBrowser>
+              </clickedActionList>
+            </linkParameter>
+         </parameterList>
+          <ruleList>
+            <antivirusTest type="enabled" />
+          </ruleList>
+        </parameterGroup>
     </parameterList>
     <preUninstallationActionList>
         <deleteFile>
