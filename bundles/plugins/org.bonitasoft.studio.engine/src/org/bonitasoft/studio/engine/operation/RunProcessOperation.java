@@ -60,7 +60,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
     private final ProcessSelector processSelector;
     private final RunOperationExecutionContext executionContext;
 
-    public RunProcessOperation(final RunOperationExecutionContext executionContext, final ProcessSelector processSelector) {
+    public RunProcessOperation(final RunOperationExecutionContext executionContext,
+            final ProcessSelector processSelector) {
         this.executionContext = executionContext;
         this.processSelector = processSelector;
     }
@@ -98,10 +99,13 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         final StringBuilder sb = new StringBuilder(Messages.deploymentFailedMessage);
                         sb.append(":\n");
                         sb.append(status.getMessage());
-                        if(status instanceof MultiStatus) {
-                            new MultiStatusDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage, new String[] {IDialogConstants.OK_LABEL}, (MultiStatus) status).open();
-                        }else{
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage,
+                        if (status instanceof MultiStatus) {
+                            new MultiStatusDialog(Display.getDefault().getActiveShell(),
+                                    Messages.deploymentFailedMessage, Messages.deploymentFailedMessage,
+                                    new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status).open();
+                        } else {
+                            new BonitaErrorDialog(Display.getDefault().getActiveShell(),
+                                    Messages.deploymentFailedMessage,
                                     sb.toString(), status, IStatus.ERROR | IStatus.WARNING).open();
                         }
                     }
@@ -180,7 +184,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
     }
 
-    private void redirectToPortalTaskList(final String togglePreference, final String shellTitle, final String message) {
+    private void redirectToPortalTaskList(final String togglePreference, final String shellTitle,
+            final String message) {
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
@@ -207,8 +212,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         return !FormMappingType.NONE.equals(processToRun.getFormMapping().getType());
     }
 
-    private Status openConsole() {
-        Status status = null;
+    private IStatus openConsole() {
         final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         final Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole");
         try {
@@ -217,16 +221,11 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, ex.getMessage(), ex);
             BonitaStudioLog.error(ex);
         }
-        return status;
+        return Status.OK_STATUS;
     }
 
     private boolean hasInitiator(final AbstractProcess p) {
-        for (final Actor a : p.getActors()) {
-            if (a.isInitiator()) {
-                return true;
-            }
-        }
-        return false;
+        return p.getActors().stream().anyMatch(Actor::isInitiator);
     }
 
     public IStatus getStatus() {
