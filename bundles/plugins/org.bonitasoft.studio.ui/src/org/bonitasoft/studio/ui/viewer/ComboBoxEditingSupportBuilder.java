@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -39,6 +40,7 @@ public class ComboBoxEditingSupportBuilder<T, U> {
     private Optional<Function<T, U>> valueProvider = Optional.empty();
     private Optional<BiConsumer<T, U>> valueUpdater = Optional.empty();
     private Object input;
+    private Optional<String> data = Optional.empty();
 
     public ComboBoxEditingSupportBuilder(ColumnViewer viewer) {
         this.viewer = viewer;
@@ -76,10 +78,16 @@ public class ComboBoxEditingSupportBuilder<T, U> {
         return this;
     }
 
+    public ComboBoxEditingSupportBuilder<T, U> withData(String data) {
+        this.data = Optional.ofNullable(data);
+        return this;
+    }
+
     public EditingSupport create() {
         editor.setContentProvider(contentProvider.orElse(ArrayContentProvider.getInstance()));
         editor.setLabelProvider(labelProvider.orElse(new LabelProvider()));
         editor.setInput(input);
+        data.ifPresent(d -> editor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, d));
         return new EditingSupport(viewer) {
 
             @Override

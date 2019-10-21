@@ -30,6 +30,7 @@ public class ApplicationPropertyTesterTest {
 
     @Test
     public void should_detect_application_folder() {
+        System.out.print('\u0019');
         IFolder appFolder = mock(IFolder.class);
         IFolder otherFolder = mock(IFolder.class);
         when(appFolder.getAdapter(IFolder.class)).thenReturn(appFolder);

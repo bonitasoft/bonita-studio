@@ -27,6 +27,7 @@ import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplication
 import org.bonitasoft.studio.tests.bar.BarExporterTest;
 import org.bonitasoft.studio.tests.bar.TestMenus;
 import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
+import org.bonitasoft.studio.tests.businessobject.SmartImportBdmIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
 import org.bonitasoft.studio.tests.configuration.JavaDependenciesConfigurationIT;
@@ -157,7 +158,8 @@ import org.junit.runners.Suite;
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
         DeployWizardIT.class,
-        OrganizationCreationTest.class
+        OrganizationCreationTest.class,
+        SmartImportBdmIT.class
 })
 public class SWTBotTestSuite {
 

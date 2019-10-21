@@ -57,7 +57,7 @@ public class SmartImportBdmHandler extends AbstractHandler {
         execute(Display.getDefault().getActiveShell(), new RepositoryAccessor().init());
         return null;
     }
-    
+
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
         SmartImportBdmPage page = new SmartImportBdmPage(repositoryAccessor);
@@ -66,9 +66,7 @@ public class SmartImportBdmHandler extends AbstractHandler {
         if (status.isPresent()) {
             IStatus s = status.get();
             if (s.isOK()) {
-                MessageDialog.openInformation(activeShell,
-                        smartImport ? Messages.smartImportCompletedTitle : Messages.bdmImportedTitle,
-                        smartImport ? Messages.smartImportCompleted : Messages.bdmImported);
+                MessageDialog.openInformation(activeShell, Messages.bdmImportedTitle, Messages.bdmImported);
             } else {
                 MessageDialog.openError(activeShell, Messages.ImportError, s.getMessage());
             }
@@ -116,6 +114,5 @@ public class SmartImportBdmHandler extends AbstractHandler {
             return ValidationStatus.error(Messages.archiveContentInvalid);
         }
     }
-
 
 }

@@ -78,6 +78,8 @@ import org.eclipse.swt.widgets.Display;
 
 public class SmartImportBdmPage extends AbstractImportPage {
 
+    public static final String IMPORT_ACTION_COMBO_EDITOR_ID = "importBdmActionComboId";
+
     private BusinessObjectModelFileStore bdmFileStore;
     protected IObservableValue<SmartImportBdmModel> importBdmModelObservable = new WritableValue<>();
     private TreeViewer viewer;
@@ -243,6 +245,7 @@ public class SmartImportBdmPage extends AbstractImportPage {
                             viewer.refresh(element);
                         })
                         .withInput(new ImportAction[] { ImportAction.OVERWRITE, ImportAction.KEEP })
+                        .withData(IMPORT_ACTION_COMBO_EDITOR_ID)
                         .create());
     }
 
@@ -294,7 +297,8 @@ public class SmartImportBdmPage extends AbstractImportPage {
     }
 
     private String tooltipProvider(SmartImportableUnit element) {
-        if (importBdmModelObservable.getValue() instanceof OverwriteImportBdmModel && isConflicting(element)) {
+        if (importBdmModelObservable.getValue() instanceof OverwriteImportBdmModel
+                && isConflictingThroughPackages(element)) {
             return element instanceof SmartImportBusinessObjectModel
                     ? String.format(Messages.businessObjectInSeveralPackages, element.getName())
                     : Messages.conflictingMultiPackage;
@@ -304,6 +308,14 @@ public class SmartImportBdmPage extends AbstractImportPage {
                     : Messages.conflictingSinglePackage;
         }
         return null;
+    }
+
+    private boolean isConflictingThroughPackages(SmartImportableUnit element) {
+        if (element instanceof SmartImportPackageModel) {
+            return ((SmartImportPackageModel) element).getSmartImportableUnits().stream()
+                    .anyMatch(this::isConflictingThroughPackages);
+        }
+        return ((SmartImportBusinessObjectModel) element).isConflictingThroughPackages();
     }
 
     protected void parseInput() {

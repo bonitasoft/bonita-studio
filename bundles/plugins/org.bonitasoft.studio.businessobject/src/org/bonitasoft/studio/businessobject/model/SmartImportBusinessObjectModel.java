@@ -14,7 +14,11 @@
  */
 package org.bonitasoft.studio.businessobject.model;
 
+import java.util.Objects;
+
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.helper.PackageHelper;
+import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 
 public class SmartImportBusinessObjectModel extends SmartImportableUnit {
@@ -34,6 +38,17 @@ public class SmartImportBusinessObjectModel extends SmartImportableUnit {
 
     public BusinessObject getBusinessObject() {
         return businessObject;
+    }
+
+    public boolean isConflictingThroughPackages() {
+        if (Objects.equals(getConflictStatus(), ConflictStatus.CONFLICTING)) {
+            String packageName = getParent().getName();
+            PackageHelper packageHelper = PackageHelper.getInstance();
+            return ((SmartImportBdmModel) getParentModel()).retrieveCurrentModel().getBusinessObjects().stream()
+                    .filter(bo -> Objects.equals(bo.getSimpleName(), getName()))
+                    .anyMatch(bo -> !Objects.equals(packageHelper.getPackageName(bo), packageName));
+        }
+        return false;
     }
 
 }
