@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.designer.core;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,12 +47,13 @@ public class PostBDMEventHandler implements EventHandler {
         Map<String, String> content = new HashMap<>();
         content.put("bdmXml", fileContent);
         try {
-            new ClientResource(String.format("http://localhost:%s/bdm",
+            new ClientResource(String.format("http://%s:%s/bdm",
+                    InetAddress.getByName(null).getHostAddress(),
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
                             .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
                                     .post(new JacksonRepresentation<Object>(content));
             BonitaStudioLog.info("BDM has been publish into Data Repository service", UIDesignerPlugin.PLUGIN_ID);
-        } catch (ResourceException e) {
+        } catch (ResourceException | UnknownHostException e) {
             BonitaStudioLog.error("An error occured while publishing the BDM into Data Repository service", e);
         }
         

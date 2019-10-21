@@ -87,7 +87,7 @@ public class WatchdogManager {
 
         private boolean portIsUsed() {
             try {
-                return SocketUtil.isPortInUse(InetAddress.getByName("localhost"), WATCHDOG_PORT)
+                return SocketUtil.isPortInUse(InetAddress.getByName(null), WATCHDOG_PORT)
                         || SocketUtil.isPortInUse(WATCHDOG_PORT);
             } catch (UnknownHostException e) {
                 return SocketUtil.isPortInUse(WATCHDOG_PORT);
@@ -99,7 +99,7 @@ public class WatchdogManager {
         }
 
         protected ServerSocket createServerSocket() throws IOException, UnknownHostException {
-            return new ServerSocket(WATCHDOG_PORT, 0, InetAddress.getByName("localhost"));
+            return new ServerSocket(WATCHDOG_PORT, 0, InetAddress.getByName(null));
         }
     }
 

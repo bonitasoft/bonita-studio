@@ -261,9 +261,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
-                String.format("-D%s=http://localhost:%s", PORTAL_BASE_URL, portalPort),
-                String.format("-D%s=http://localhost:%s", BONITA_DATA_REPOSITORY_ORIGIN,
-                        DataRepositoryServerManager.getInstance().getPort()),
+                String.format("-D%s=http://%s:%s", PORTAL_BASE_URL, InetAddress.getByName(null).getHostAddress(),portalPort),
+                String.format("-D%s=http://%s:%s", BONITA_DATA_REPOSITORY_ORIGIN, InetAddress.getByName(null).getHostAddress(), DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
@@ -278,7 +277,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     private static boolean isPortInUse(int port) {
         try {
-            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName("localhost"), port)
+            return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(InetAddress.getByName(null), port)
                     || org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
         } catch (UnknownHostException e) {
             return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);

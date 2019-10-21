@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.designer.core;
 
+import java.net.InetAddress;
 import java.util.logging.Level;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -30,7 +31,7 @@ public class WorkspaceResourceServerManager {
     public synchronized void start(final int port) throws Exception {
         if (component == null || !component.isStarted()) {
             component = new Component();
-            server = component.getServers().add(Protocol.HTTP, port);
+            server = component.getServers().add(Protocol.HTTP, InetAddress.getByName(null).getHostAddress(), port);
             component.getDefaultHost().attach("/api", new WorkspaceApplication());
 
             BonitaStudioLog.debug("Starting RESTLET server on port " + port + "...", UIDesignerPlugin.PLUGIN_ID);

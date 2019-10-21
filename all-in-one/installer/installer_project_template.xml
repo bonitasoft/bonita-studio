@@ -29,7 +29,6 @@
             <path>@slide3@</path>
         </slideShowImage>
     </slideShowImageList>
-    <requestedExecutionLevel>asInvoker</requestedExecutionLevel>
     <singleInstanceCheck>1</singleInstanceCheck>
     <overrideGtkButtonText>1</overrideGtkButtonText>
     <compressionAlgorithm>zip</compressionAlgorithm>
@@ -153,6 +152,28 @@
         </setInstallerVariable>
     </preInstallationActionList>
     <postInstallationActionList>
+        <runProgram>
+            <program>cmd</program>
+            <programArguments>/C netsh advfirewall firewall add rule name="${windowsExecName}" dir=in action=allow program="${installdir}\${windowsExecName}"</programArguments>
+            <progressText>Configuring Windows Firewall...</progressText>
+            <ruleList>
+                <firewallTest>
+                    <type>enabled</type>
+                </firewallTest>
+                <platformTest type="windows" />
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>cmd</program>
+            <programArguments>/C netsh advfirewall firewall add rule name="OpenJDK Platform binary" dir=in action=allow program="${installdir}\jre\bin\javaw.exe"</programArguments>
+            <progressText>Configuring Windows Firewall...</progressText>
+            <ruleList>
+                <firewallTest>
+                    <type>enabled</type>
+                </firewallTest>
+                <platformTest type="windows" />
+            </ruleList>
+        </runProgram>
         <setInstallerVariable persist="1">
           <name>ini_file</name>
           <value>${installdir}/configuration/config.ini</value>

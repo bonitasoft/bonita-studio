@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.bonitasoft.studio.designer.core;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.annotation.PostConstruct;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -37,12 +40,13 @@ public class DeleteBDMEventHandler implements EventHandler {
 
     private void execute(final Event event) {
         try {
-            new ClientResource(String.format("http://localhost:%s/bdm",
+            new ClientResource(String.format("http://%s:%s/bdm",
+                    InetAddress.getByName(null).getHostAddress(),
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
                             .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
                                     .delete();
             BonitaStudioLog.info("BDM has been deleted from the Data Repository service", UIDesignerPlugin.PLUGIN_ID);
-        } catch (ResourceException e) {
+        } catch (ResourceException | UnknownHostException e) {
             BonitaStudioLog.error("An error occured while deleting the BDM from the Data Repository service", e);
         }
         
