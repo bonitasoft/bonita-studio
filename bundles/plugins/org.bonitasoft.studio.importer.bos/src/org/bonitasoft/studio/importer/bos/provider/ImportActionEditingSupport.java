@@ -45,7 +45,11 @@ public class ImportActionEditingSupport extends EditingSupport {
                 return true;
             }
         });
-        mainSelection.addValueChangeListener(e -> editor.getViewer().refresh()); // trigger the above filter when the selection change -> each element of the main viewer has its available choices
+        mainSelection.addValueChangeListener(e -> {
+            if (mainSelection.getValue() != null) {
+                editor.getViewer().refresh();
+            }
+        }); // trigger the above filter when the selection change -> each element of the main viewer has its available choices
     }
 
     @Override
