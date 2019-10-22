@@ -99,6 +99,7 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
 
@@ -294,6 +295,8 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 addAdditionalPage(p);
             }
             addOuputPage(definition);
+        }else {
+            selectionPage.addConnectorDefinitionFilter(new DeprecatedConnectorViewerFilter());
         }
 
     }

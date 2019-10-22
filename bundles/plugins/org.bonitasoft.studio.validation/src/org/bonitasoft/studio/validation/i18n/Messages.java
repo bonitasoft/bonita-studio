@@ -233,7 +233,8 @@ public class Messages extends NLS {
     public static String conflictingQueryNamesInBusinessObject;
     public static String Validation_jasperConnectorRemoved;
     public static String invalidColumnUsageInTaskName;
-
+    public static String deprecatedConnectorDefinition;
+    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
