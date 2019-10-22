@@ -37,6 +37,7 @@ import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ContentViewer;
@@ -77,6 +78,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     private Button onlyCustomCheckbox;
     private final DefinitionResourceProvider messageProvider;
     protected final List<ConnectorDefinition> definitions;
+    private List<ViewerFilter> filters = new ArrayList<>();
     private final ViewerFilter customConnectorFilter = new ViewerFilter() {
 
         @Override
@@ -91,6 +93,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
             return false;
         }
     };
+
 
     public AbstractDefinitionSelectionImpementationWizardPage(final ConnectorImplementation implementation,
             final List<ConnectorImplementation> existingImpl, final List<ConnectorDefinition> definitions,
@@ -312,6 +315,13 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                 return element instanceof ConnectorDefinition;
             }
         });
+        
+        
+        for(ViewerFilter filter : filters) {
+            explorer.addRightTreeFilter(filter);
+            explorer.addLeftTreeFilter(filter);
+        }
+        
         explorer.setLeftHeader(Messages.categoriesLabel);
         explorer.setRightHeader(getRightHeaderMessage());
         explorer.setInput(new Object());
@@ -412,5 +422,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
     public ConnectorDefinition getSelectedConnectorDefinition() {
         return selectedDefinition;
+    }
+
+    public void addConnectorDefinitionFilter(ViewerFilter deprecatedConnectorFilter) {
+        filters .add(deprecatedConnectorFilter);
     }
 }

@@ -1126,6 +1126,22 @@
            class="ContractInput:http://www.bonitasoft.org/ns/studio/process">
      </target>
   </constraint>
+  <constraint
+        class="org.bonitasoft.studio.validation.constraints.process.DeprecatedConnectorConstraint"
+        id="org.bonitasoft.studio.validation.constraints.deprecated.connector"
+        isEnabledByDefault="true"
+        lang="java"
+        mode="Batch"
+        name="Connector deprecation constraint"
+        severity="WARNING"
+        statusCode="1">
+     <message>
+        {0}
+     </message>
+     <target
+           class="Connector:http://www.bonitasoft.org/ns/studio/process">
+     </target>
+  </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
