@@ -88,16 +88,6 @@
                  visible="true">
            </separator>
            <command
-                 commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
-                 disabledIcon="icons/export_disabled.png"
-                 icon="icons/export.png"
-                 style="push">
-           </command>
-           <separator
-                 name="org.bonitasoft.studio.engine.separator2"
-                 visible="true">
-           </separator>
-           <command
                  commandId="org.bonitasoft.studio.engine.resetServerCommand"
                  icon="icons/reset_server.png"
                  style="push">
@@ -147,6 +137,15 @@
                </with>
             </visibleWhen>
         </menu>
+     </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="menu:org.bonitasoft.studio.exporter.exportAs?before=org.bonitasoft.studio.exporter.exportAsBPMN">
+        <command
+              commandId="org.bonitasoft.studio.engine.exportAsBarCommand"
+              label="%exportAsBar"
+              style="push">
+        </command>
      </menuContribution>
   </extension>
   <extension
