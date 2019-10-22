@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui for Groovy Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.groovy.ui;singleton:=true
-Bundle-Version: 7.10.0.qualifier
+Bundle-Version: 7.11.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
