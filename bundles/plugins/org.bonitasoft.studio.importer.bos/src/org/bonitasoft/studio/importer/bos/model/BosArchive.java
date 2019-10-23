@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -98,7 +99,8 @@ public class BosArchive {
         final String entryName = entry.getName();
         final List<String> segments = Splitter.on('/').splitToList(entryName);
         segments.stream()
-                .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent() || isLegacyFormRepo(segment))
+                .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent()
+                        || isLegacyFormRepo(segment))
                 .forEach(segment -> handleSegment(archiveModel, segment, segments, repository, resourcesToOpen));
     }
 
@@ -115,7 +117,8 @@ public class BosArchive {
             final ImportStoreModel store = new ImportStoreModel(Joiner.on('/').join(parentSegments),
                     (IRepositoryStore<IRepositoryFileStore>) repositoryStoreByName.get());
 
-            parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments, resourcesToOpen,
+            parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments,
+                    resourcesToOpen,
                     true, archiveModel);
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
@@ -143,7 +146,8 @@ public class BosArchive {
                 store.addFile(file);
             }
         } else if (segments.size() == 1 && !directStoreChild) {
-            final ImportFileModel file = new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)), store);
+            final ImportFileModel file = new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)),
+                    store);
             if (shouldReadNameInJSON(store, file)) {
                 final String name = extractNameFromJSON(file);
                 file.setDisplayName(String.format("%s (%s)", name, file.getFileName()));
@@ -261,11 +265,10 @@ public class BosArchive {
     private IStatus validateArchiveCompatibility() throws IOException {
         final Properties manifest = readManifest();
         String version = manifest.getProperty(VERSION);
-        this.version = version;
-        if (version.contains("-")) {
-            version = version.split("-")[0];
-        }
-        if (!canImport(version)) {
+        DefaultArtifactVersion defaultArtifactVersion = new DefaultArtifactVersion(version);
+        this.version = String.format("%s.%s.%s", defaultArtifactVersion.getMajorVersion(),
+                defaultArtifactVersion.getMinorVersion(), defaultArtifactVersion.getIncrementalVersion());
+        if (!canImport(this.version)) {
             return ValidationStatus
                     .error(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
         }
@@ -290,7 +293,8 @@ public class BosArchive {
 
     private Optional<Properties> loadManifestProperties(ZipEntry manifestEntry) {
         final Properties properties = new Properties();
-        try (ZipFile zipFile = new ZipFile(archiveFile); InputStream inputStream = zipFile.getInputStream(manifestEntry)) {
+        try (ZipFile zipFile = new ZipFile(archiveFile);
+                InputStream inputStream = zipFile.getInputStream(manifestEntry)) {
             properties.load(inputStream);
         } catch (final IOException e) {
             BonitaStudioLog.error("Failed to load manifest fron archive", e);
