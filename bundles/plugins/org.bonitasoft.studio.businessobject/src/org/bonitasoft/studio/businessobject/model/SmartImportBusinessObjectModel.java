@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 
@@ -49,6 +50,21 @@ public class SmartImportBusinessObjectModel extends SmartImportableUnit {
                     .anyMatch(bo -> !Objects.equals(packageHelper.getPackageName(bo), packageName));
         }
         return false;
+    }
+
+    @Override
+    public String getToolTipText() {
+        if (getParentModel() instanceof OverwriteImportBdmModel && isConflictingThroughPackages()) {
+            return String.format(Messages.businessObjectInSeveralPackages, getName());
+        }
+        switch (getConflictStatus()) {
+            case CONFLICTING:
+                return String.format(Messages.businessObjectNameDuplicated, getName());
+            case SAME_CONTENT:
+                return String.format(Messages.businessObjectAlreadyPresent, getName());
+            default:
+                return String.format(Messages.importBusinessObjectTooltip, getName());
+        }
     }
 
 }

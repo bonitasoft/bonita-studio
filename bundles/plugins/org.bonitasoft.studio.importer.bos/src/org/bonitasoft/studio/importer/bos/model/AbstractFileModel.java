@@ -4,11 +4,10 @@ import static java.util.Objects.requireNonNull;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.swt.graphics.Image;
 
-public abstract class AbstractFileModel extends AbstractImportModel implements IPresentable {
+public abstract class AbstractFileModel extends AbstractImportModel {
 
     protected ImportAction importAction = ImportAction.OVERWRITE;
     private final String fileName;

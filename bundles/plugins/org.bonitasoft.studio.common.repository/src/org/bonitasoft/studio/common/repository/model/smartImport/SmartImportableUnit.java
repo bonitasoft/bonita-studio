@@ -78,6 +78,8 @@ public abstract class SmartImportableUnit implements IPresentable {
 
     public abstract String getName();
 
+    public abstract String getToolTipText();
+
     @Override
     public String getText() {
         return getName();

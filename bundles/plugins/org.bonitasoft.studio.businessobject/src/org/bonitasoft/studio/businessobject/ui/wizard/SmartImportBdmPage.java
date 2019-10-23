@@ -27,7 +27,6 @@ import org.bonitasoft.studio.businessobject.core.repository.CustomBusinessObject
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.OverwriteImportBdmModel;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
-import org.bonitasoft.studio.businessobject.model.SmartImportBusinessObjectModel;
 import org.bonitasoft.studio.businessobject.model.SmartImportPackageModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.SmartImportBdmTreeContentProvider;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.ImportBdmContentValidator;
@@ -254,7 +253,7 @@ public class SmartImportBdmPage extends AbstractImportPage {
         modelColumn.getColumn().setText(Messages.businessDataModelPreview);
         modelColumn.setLabelProvider(new LabelProviderBuilder<SmartImportableUnit>()
                 .withStyledStringProvider(this::styledStringProvider)
-                .withTooltipProvider(this::tooltipProvider)
+                .withTooltipProvider(SmartImportableUnit::getToolTipText)
                 .createStyledCellLabelProvider());
     }
 
@@ -294,34 +293,6 @@ public class SmartImportBdmPage extends AbstractImportPage {
             Color sameContentColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
             grayStyler = new StylerBuilder().withColor(sameContentColor).create();
         }
-    }
-
-    private String tooltipProvider(SmartImportableUnit element) {
-        if (importBdmModelObservable.getValue() instanceof OverwriteImportBdmModel
-                && isConflictingThroughPackages(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectInSeveralPackages, element.getName())
-                    : Messages.conflictingMultiPackage;
-        } else if (isConflicting(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectNameDuplicated, element.getName())
-                    : Messages.conflictingSinglePackage;
-        } else if (isSameContent(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectAlreadyPresent, element.getName())
-                    : String.format(Messages.packageAlreadyPresent, element.getName());
-        }
-        return element instanceof SmartImportBusinessObjectModel
-                ? String.format(Messages.importBusinessObjectTooltip, element.getName())
-                : String.format(Messages.importPackageTooltip, element.getName());
-    }
-
-    private boolean isConflictingThroughPackages(SmartImportableUnit element) {
-        if (element instanceof SmartImportPackageModel) {
-            return ((SmartImportPackageModel) element).getSmartImportableUnits().stream()
-                    .anyMatch(this::isConflictingThroughPackages);
-        }
-        return ((SmartImportBusinessObjectModel) element).isConflictingThroughPackages();
     }
 
     protected void parseInput() {

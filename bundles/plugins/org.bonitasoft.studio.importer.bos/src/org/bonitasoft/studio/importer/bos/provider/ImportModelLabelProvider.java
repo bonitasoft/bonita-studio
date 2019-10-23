@@ -129,10 +129,22 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
     @Override
     public String getToolTipText(Object element) {
         if (element instanceof AbstractImportModel) {
-            IStatus validationStatus = ((AbstractImportModel) element).getValidationStatus();
+            AbstractImportModel importModel = (AbstractImportModel) element;
+            IStatus validationStatus = importModel.getValidationStatus();
             if (!validationStatus.isOK()) {
                 return validationStatus.getMessage();
             }
+            if (element instanceof AbstractFileModel) {
+                if (importModel.isConflicting()) {
+                    return String.format(Messages.conflictingArtifactTooltip, importModel.getText());
+                }
+                if (importModel.hasSameContent()) {
+                    return String.format(Messages.identicalArtifactTooltip, importModel.getText());
+                }
+                return String.format(Messages.importedArtifactTooltip, importModel.getText());
+            }
+        } else if (element instanceof SmartImportableUnit) {
+            return ((SmartImportableUnit) element).getToolTipText();
         }
         return null;
     }
