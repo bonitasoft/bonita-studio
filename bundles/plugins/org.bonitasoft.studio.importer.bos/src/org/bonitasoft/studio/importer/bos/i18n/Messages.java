@@ -91,5 +91,8 @@ public class Messages extends NLS {
     public static String url;
     public static String invalidBosArchiveType;
     public static String cannotImportRemoteArchive;
+    public static String conflictingArtifactTooltip;
+    public static String identicalArtifactTooltip;
+    public static String importedArtifactTooltip;
 
 }
