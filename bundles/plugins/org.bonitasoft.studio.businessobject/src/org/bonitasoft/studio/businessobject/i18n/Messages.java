@@ -394,7 +394,6 @@ public class Messages extends NLS {
     public static String updatePackage;
     public static String updatePackageTitle;
     public static String updatePackageMessage;
-    public static String overwriteBdmHelpMessage;
     public static String archiveContentInvalid;
     public static String businessObjectNameDuplicated;
     public static String importAction;
