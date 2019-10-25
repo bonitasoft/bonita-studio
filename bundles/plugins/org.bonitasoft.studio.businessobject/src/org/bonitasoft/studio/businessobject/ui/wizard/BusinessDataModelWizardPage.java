@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
+import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.control.AttributesTabItemControl;
@@ -32,9 +33,12 @@ import org.bonitasoft.studio.businessobject.ui.wizard.control.QueriesTabItemCont
 import org.bonitasoft.studio.businessobject.ui.wizard.control.UniqueConstraintTabItemControl;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.BusinessObjectNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.BusinessObjectTreeContentProvider;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.PackageNameValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -50,6 +54,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -102,11 +107,18 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private ButtonWidget updatePackageButton;
     private BusinessObjectNameEditingSupport editingSupport;
     private List<BusinessObject> boToFilter = new ArrayList<>();
+    private BDMArtifactDescriptor artifactDescriptor;
+    private IWorkspace workspace;
 
-    protected BusinessDataModelWizardPage(BusinessObjectModel businessObjectModel, IDiffLogger diffLogger) {
+    protected BusinessDataModelWizardPage(BusinessObjectModel businessObjectModel,
+            BDMArtifactDescriptor artifactDescriptor,
+            IDiffLogger diffLogger,
+            IWorkspace workspace) {
         super(BusinessDataModelWizardPage.class.getName());
         this.businessObjectModel = businessObjectModel;
+        this.artifactDescriptor = artifactDescriptor;
         this.diffLogger = diffLogger;
+        this.workspace = workspace;
         packageHelper = PackageHelper.getInstance();
     }
 
@@ -121,7 +133,10 @@ public class BusinessDataModelWizardPage extends WizardPage {
         createBusinessObjectDefinitionGroup(mainComposite, ctx);
         createSeparator(mainComposite);
         createBusinessObjectEditionGroup(mainComposite, ctx);
-        createMavenArtifactPropertiesGroup(mainComposite, ctx);
+
+        if (!PlatformUtil.isACommunityBonitaProduct()) {
+            createMavenArtifactPropertiesGroup(mainComposite, ctx);
+        }
 
         if (!businessObjectModel.getBusinessObjects().isEmpty()) {
             selectionObservable.setValue(businessObjectModel.getBusinessObjects().get(0));
@@ -143,13 +158,23 @@ public class BusinessDataModelWizardPage extends WizardPage {
         new TextWidget.Builder()
                 .withLabel(Messages.groupId)
                 .labelAbove()
-                .widthHint(300)
+                .widthHint(350)
+                .bindTo(PojoProperties.value("groupId").observe(artifactDescriptor))
+                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withValidator(new GroupIdValidator(workspace))
+                        .create())
+                .inContext(ctx)
                 .createIn(group);
 
         new TextWidget.Builder()
                 .withLabel(Messages.version)
                 .labelAbove()
-                .widthHint(100)
+                .widthHint(200)
+                .bindTo(PojoProperties.value("version").observe(artifactDescriptor))
+                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withValidator(new EmptyInputValidator(Messages.version))
+                        .create())
+                .inContext(ctx)
                 .createIn(group);
     }
 

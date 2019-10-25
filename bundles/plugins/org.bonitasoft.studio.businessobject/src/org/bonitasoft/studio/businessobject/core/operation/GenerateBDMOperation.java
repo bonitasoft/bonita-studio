@@ -55,6 +55,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
     private static final String BDM_DAO = "bdm-dao";
     private static final String MODEL = "model";
     private static final String FILE_CONTENT = "fileContent";
+    private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
 
     private final BusinessObjectModelFileStore fileStore;
 
@@ -64,10 +65,6 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
         this.fileStore = fileStore;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         synchronized (generationLock) {
@@ -108,6 +105,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 final Map<String, Object> data = new HashMap<>();
                 data.put(MODEL, model);
                 data.put(BDM_DAO, resources.get(BDM_DAO));
+                data.put(BDM_ARTIFACT_DESCRIPTOR,fileStore.loadArtifactDescriptor());
                 data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore()).getConverter().marshall(model)));
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
             } catch (final Exception e) {
