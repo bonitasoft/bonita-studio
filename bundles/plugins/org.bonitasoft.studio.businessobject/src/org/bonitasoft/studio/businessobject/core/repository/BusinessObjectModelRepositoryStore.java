@@ -152,6 +152,15 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         } else {
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
+        if (fileStore instanceof BusinessObjectModelFileStore) {
+            try {
+                BDMArtifactDescriptor descriptor = ((BusinessObjectModelFileStore) fileStore).loadArtifactDescriptor();
+                ((BusinessObjectModelFileStore) fileStore).saveArtifactDescriptor(descriptor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error("Failed to import Business data model artifact descriptor", e);
+            }
+        }
+
         generateJar(fileStore);
         return fileStore;
     }

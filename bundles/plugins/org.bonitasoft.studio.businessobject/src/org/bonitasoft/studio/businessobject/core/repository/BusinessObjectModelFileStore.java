@@ -21,9 +21,11 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -35,6 +37,7 @@ import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -50,6 +53,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -71,8 +75,10 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
     private static final String BDM_DELETED_TOPIC = "bdm/deleted";
+    public static final String BDM_ARTIFACT_DESCRIPTOR = ".artifact-descriptor.properties";
 
     private static final String DEFINE_BDM_COMMAND_ID = "org.bonitasoft.studio.businessobject.manage";
+    private static final String DEFAULT_GROUP_ID = "com.company.model";
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
 
@@ -100,6 +106,16 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             BonitaStudioLog.error(e);
         }
         return null;
+    }
+    
+    @Override
+    public Set<IResource> getRelatedResources() {
+        Set<IResource> resources = new HashSet<IResource>();
+        IFile artifactDecriptorFile = getArtifactDecriptorFile();
+        if(artifactDecriptorFile.exists()) {
+            resources.add(getArtifactDecriptorFile());
+        }
+        return resources;
     }
 
     protected BusinessObjectModelConverter getConverter() {
@@ -131,6 +147,33 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         }
     }
 
+    public void saveArtifactDescriptor(BDMArtifactDescriptor descriptor) throws CoreException {
+        descriptor.save(getArtifactDecriptorFile());
+    }
+
+    private IFile getArtifactDecriptorFile() {
+        return getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
+    }
+
+    public BDMArtifactDescriptor loadArtifactDescriptor() throws CoreException {
+        IFile descriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
+        if (!descriptor.exists()) {
+            BDMArtifactDescriptor defautDescriptor = new BDMArtifactDescriptor();
+            String groupId = DEFAULT_GROUP_ID;
+            BusinessObjectModel businessObjectModel = getContent();
+            if (businessObjectModel != null && !businessObjectModel.getBusinessObjectsClassNames().isEmpty()) {
+                groupId = NamingUtils
+                        .getPackageName(businessObjectModel.getBusinessObjectsClassNames().iterator().next());
+            }
+            defautDescriptor.setGroupId(groupId);
+            defautDescriptor.setVersion("1.0.0");
+            saveArtifactDescriptor(defautDescriptor);
+            return defautDescriptor;
+        }
+        return new BDMArtifactDescriptor()
+                .load(descriptor.getLocation().toFile());
+    }
+
     @Override
     protected void doDelete() {
         final DependencyRepositoryStore depStore = getDependencyRepositoryStore();
@@ -138,9 +181,21 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         if (depJar != null) {
             depJar.delete();
         }
+        deleteArtifactDescriptor();
         super.doDelete();
         cachedBusinessObjectModel.clear();
         eventBroker().ifPresent(broker -> broker.send(BDM_DELETED_TOPIC, null));
+    }
+
+    public void deleteArtifactDescriptor() {
+        IFile artifactDescriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
+        if (artifactDescriptor.exists()) {
+            try {
+                artifactDescriptor.delete(true, Repository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     protected Optional<IEventBroker> eventBroker() {
@@ -271,7 +326,8 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             deployBDMOperation.run(monitor);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM", e);
+            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM",
+                    e);
         }
         return ValidationStatus.info(Messages.businessDataModelDeployed);
     }

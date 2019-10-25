@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -42,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -93,6 +95,7 @@ public class BusinessObjectModelFileStoreTest {
         doReturn(new BusinessObjectModelConverter()).when(fileStoreUnderTest).getConverter();
         doReturn(iResource).when(fileStoreUnderTest).getResource();
         doReturn(bdm).when(fileStoreUnderTest).getContent();
+        doNothing().when(fileStoreUnderTest).deleteArtifactDescriptor();
     }
 
     @Test
@@ -136,6 +139,7 @@ public class BusinessObjectModelFileStoreTest {
         when(depStore.getChild(anyString(), any(Boolean.class))).thenReturn(depFileStore);
         fileStoreUnderTest.doDelete();
         verify(depFileStore).delete();
+        verify(fileStoreUnderTest).deleteArtifactDescriptor();
     }
 
     @Test
