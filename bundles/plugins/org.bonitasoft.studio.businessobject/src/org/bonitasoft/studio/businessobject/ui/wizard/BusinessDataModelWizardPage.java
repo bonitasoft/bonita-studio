@@ -531,6 +531,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         column.getColumn().setText(Messages.name);
         column.setLabelProvider(new LabelProviderBuilder<>()
                 .withTextProvider(this::getElementName)
+                .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
         editingSupport = new BusinessObjectNameEditingSupport(businessObjectModel, selectionObservable, viewer, ctx,
                 diffLogger);

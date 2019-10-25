@@ -3,27 +3,18 @@ package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 public class BusinessObjectNameCellEditorValidatorTest {
 
-    @Rule
-    public RealmWithDisplay displayRule = new RealmWithDisplay();
-
     BusinessObjectNameCellEditorValidator validator;
-    IObservableValue<Object> selectionObservable;
 
     @Before
     public void init() {
         BusinessObjectModel model = new BusinessObjectModel();
-        selectionObservable = new WritableValue<>();
-        validator = new BusinessObjectNameCellEditorValidator(model, selectionObservable);
+        validator = new BusinessObjectNameCellEditorValidator(model, null);
     }
 
     @Test
@@ -66,9 +57,7 @@ public class BusinessObjectNameCellEditorValidatorTest {
         BusinessObjectModel model = new BusinessObjectModel();
         model.addBusinessObject(bo1);
         model.addBusinessObject(bo2);
-        validator = new BusinessObjectNameCellEditorValidator(model, selectionObservable);
-
-        selectionObservable.setValue(bo1);
+        validator = new BusinessObjectNameCellEditorValidator(model, bo1);
         IStatus status = validator.validateUniqueness("myObject1");
         StatusAssert.assertThat(status).isOK();
         status = validator.validateUniqueness("myObject2");

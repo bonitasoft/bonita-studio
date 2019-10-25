@@ -25,6 +25,7 @@ import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectNameCellEditorValidator;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.BusinessObjectPackageNameCellEditorValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -63,6 +64,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     private PackageHelper packageHelper;
     private TreeViewer viewer;
     private ISWTObservableValue editionGroupTextObservable;
+    private BusinessObject businessObject;
 
     public BusinessObjectNameEditingSupport(BusinessObjectModel businessObjectModel,
             IViewerObservableValue selectionObservable, TreeViewer viewer,
@@ -91,13 +93,14 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
         return cellEditor;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected IObservableValue doCreateElementObservable(final Object element, ViewerCell cell) {
         if (element instanceof BusinessObject) {
+            businessObject = (BusinessObject) element;
             IObservableValue qualifiedNameObservable = PojoProperties.value("qualifiedName").observe(element);
             qualifiedNameObservable.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
             qualifiedNameObservable.addValueChangeListener(e -> {
-                BusinessObject businessObject = (BusinessObject) selectionObservable.getValue();
                 String oldName = (String) e.diff.getOldValue();
                 String newName = (String) e.diff.getNewValue();
                 diffLogger.boRenamed(oldName, newName);
@@ -117,7 +120,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
             String newPackageName = e.diff.getNewValue();
             updatePackageName(oldPackageName, newPackageName);
         });
-        return packageNameObservable; // TODO package -> ya sans doute juste besoin de creer une writable value, de mettre un value change dessus et de faire la logique dans le value change ici.
+        return packageNameObservable;
     }
 
     @Override
@@ -127,7 +130,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
 
     @Override
     protected Binding createBinding(IObservableValue target, IObservableValue model) {
-        return isBusinessObject()
+        return selectionObservable.getValue() instanceof BusinessObject
                 ? createBindingForBusinessObjectEdition(target, model)
                 : createBindingForPackageObjectEdition(target, model);
     }
@@ -135,7 +138,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     private Binding createBindingForPackageObjectEdition(IObservableValue target, IObservableValue model) {
         UpdateValueStrategy targetToModel = UpdateStrategyFactory.convertUpdateValueStrategy().create();
         targetToModel.setAfterGetValidator(
-                new BusinessObjectNameCellEditorValidator(businessObjectModel, selectionObservable));
+                new BusinessObjectPackageNameCellEditorValidator());
         UpdateValueStrategy modelToTarget = UpdateStrategyFactory.updateValueStrategy().create();
         return ctx.bindValue(target, model, targetToModel, modelToTarget);
     }
@@ -148,8 +151,8 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
                         .withConvertFunction(this::toNewQualifiedName)
                         .create())
                 .create();
-        targetToModel
-                .setAfterGetValidator(new BusinessObjectNameCellEditorValidator(businessObjectModel, selectionObservable));
+        targetToModel.setAfterGetValidator(new BusinessObjectNameCellEditorValidator(businessObjectModel,
+                (BusinessObject) selectionObservable.getValue()));
         UpdateValueStrategy modelToTarget = UpdateStrategyFactory.updateValueStrategy()
                 .withConverter(ConverterBuilder.<String, String> newConverter()
                         .fromType(String.class)
@@ -161,18 +164,11 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     }
 
     private String toNewQualifiedName(String newSimpleName) {
-        BusinessObject bo = (BusinessObject) selectionObservable.getValue();
-        String packageName = packageHelper.getPackageName(bo);
-        String newQualifiedName = String.format("%s.%s", packageName, newSimpleName);
-        return newQualifiedName;
+        return String.format("%s.%s", packageHelper.getPackageName(businessObject), newSimpleName);
     }
 
-    private String toSimpleName(String qualifiedName) {
-        return NamingUtils.getSimpleName(qualifiedName);
-    }
-
-    private boolean isBusinessObject() {
-        return selectionObservable.getValue() instanceof BusinessObject;
+    private String toSimpleName(String businessObjectQualifiedName) {
+        return NamingUtils.getSimpleName(businessObjectQualifiedName);
     }
 
     private void updatePackageName(String oldPackageName, String newPackageName) {
@@ -188,13 +184,12 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
                             updateBusinessObjectName(bo, oldQualifiedName, newQualifiedName);
                         });
                 Display.getDefault().asyncExec(() -> {
-                    List<Object> elementsToExpend = new ArrayList();
+                    List<Object> elementsToExpend = new ArrayList<>();
                     for (Object o : viewer.getExpandedElements()) {
                         Object toExpend = Objects.equals(o, oldPackageName) ? newPackageName : o;
                         elementsToExpend.add(toExpend);
                     }
                     viewer.refresh();
-                    selectionObservable.setValue(newPackageName);
                     viewer.setExpandedElements(elementsToExpend.toArray());
                 });
             }
