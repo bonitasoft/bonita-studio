@@ -121,12 +121,36 @@ public class BusinessDataModelWizardPage extends WizardPage {
         createBusinessObjectDefinitionGroup(mainComposite, ctx);
         createSeparator(mainComposite);
         createBusinessObjectEditionGroup(mainComposite, ctx);
+        createMavenArtifactPropertiesGroup(mainComposite, ctx);
 
         if (!businessObjectModel.getBusinessObjects().isEmpty()) {
             selectionObservable.setValue(businessObjectModel.getBusinessObjects().get(0));
         }
         WizardPageSupport.create(this, ctx);
         setControl(mainComposite);
+    }
+
+    private void createMavenArtifactPropertiesGroup(Composite parent, DataBindingContext ctx) {
+        Group group = new Group(parent, SWT.NONE);
+        group.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, false).create());
+        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(20, 10).create());
+        group.setText(Messages.mavenArtifactProperties);
+
+        Label hint = new Label(group, SWT.WRAP);
+        hint.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+        hint.setText(Messages.mavenArtifactPropertiesHint);
+
+        new TextWidget.Builder()
+                .withLabel(Messages.groupId)
+                .labelAbove()
+                .widthHint(300)
+                .createIn(group);
+
+        new TextWidget.Builder()
+                .withLabel(Messages.version)
+                .labelAbove()
+                .widthHint(100)
+                .createIn(group);
     }
 
     private void createBusinessObjectDefinitionGroup(Composite mainComposite, DataBindingContext ctx) {
