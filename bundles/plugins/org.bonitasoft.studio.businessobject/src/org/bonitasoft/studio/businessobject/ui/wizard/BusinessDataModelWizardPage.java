@@ -375,6 +375,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         addDNDSupport();
         businessObjectObserveList = PojoProperties.list("businessObjects").observe(businessObjectModel);
         viewer.setInput(businessObjectModel);
+        viewer.getTree().setFocus();
     }
 
     private ViewerFilter createSearchFilter() {
