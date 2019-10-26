@@ -28,7 +28,7 @@ public abstract class AbstractFileModel extends AbstractImportModel {
     }
 
     public ImportAction getImportAction() {
-        return isArtifactDescriptor() ? ImportAction.KEEP : importAction;
+        return isArtifactDescriptor() && isConflicting() ? ImportAction.KEEP : importAction;
     }
 
     public String getFileName() {
@@ -69,6 +69,8 @@ public abstract class AbstractFileModel extends AbstractImportModel {
     public void setStatus(ConflictStatus status) {
         if(!isArtifactDescriptor()) {
             super.setStatus(status);
+        }else {
+            this.status = status;
         }
     }
 
