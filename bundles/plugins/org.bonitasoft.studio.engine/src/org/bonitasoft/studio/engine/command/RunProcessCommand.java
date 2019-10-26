@@ -165,7 +165,7 @@ public class RunProcessCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository()) {
+        if (RepositoryManager.getInstance().hasActiveRepository() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             boolean diagramSelectedInExplorer = fileStoreFinder
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
                     .filter(DiagramFileStore.class::isInstance).isPresent();
