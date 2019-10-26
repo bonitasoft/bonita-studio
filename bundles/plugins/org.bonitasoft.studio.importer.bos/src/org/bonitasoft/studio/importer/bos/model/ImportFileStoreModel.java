@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.importer.bos.model;
 
+import java.util.Objects;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;

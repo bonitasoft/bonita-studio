@@ -147,32 +147,19 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
     private void createMavenArtifactPropertiesGroup(Composite parent, DataBindingContext ctx) {
         Group group = new Group(parent, SWT.NONE);
-        group.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, false).create());
+        group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(20, 10).create());
         group.setText(Messages.mavenArtifactProperties);
-
-        Label hint = new Label(group, SWT.WRAP);
-        hint.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
-        hint.setText(Messages.mavenArtifactPropertiesHint);
 
         new TextWidget.Builder()
                 .withLabel(Messages.groupId)
                 .labelAbove()
-                .widthHint(350)
+                .fill()
+                .withTootltip(Messages.mavenArtifactPropertiesHint)
+                .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("groupId").observe(artifactDescriptor))
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withValidator(new GroupIdValidator(workspace))
-                        .create())
-                .inContext(ctx)
-                .createIn(group);
-
-        new TextWidget.Builder()
-                .withLabel(Messages.version)
-                .labelAbove()
-                .widthHint(200)
-                .bindTo(PojoProperties.value("version").observe(artifactDescriptor))
-                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
-                        .withValidator(new EmptyInputValidator(Messages.version))
                         .create())
                 .inContext(ctx)
                 .createIn(group);

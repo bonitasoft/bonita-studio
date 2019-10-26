@@ -2,6 +2,8 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -26,7 +28,7 @@ public abstract class AbstractFileModel extends AbstractImportModel {
     }
 
     public ImportAction getImportAction() {
-        return importAction;
+        return isArtifactDescriptor() ? ImportAction.KEEP : importAction;
     }
 
     public String getFileName() {
@@ -61,6 +63,22 @@ public abstract class AbstractFileModel extends AbstractImportModel {
 
     public boolean shouldBeImported() {
         return importAction != ImportAction.KEEP;
+    }
+    
+    @Override
+    public void setStatus(ConflictStatus status) {
+        if(!isArtifactDescriptor()) {
+            super.setStatus(status);
+        }
+    }
+
+    @Override
+    public ConflictStatus getStatus() {
+        return isArtifactDescriptor() ? ConflictStatus.NONE : super.getStatus();
+    }
+
+    public boolean isArtifactDescriptor() {
+        return Objects.equals(getFileName(), ".artifact-descriptor.properties");
     }
 
 }
