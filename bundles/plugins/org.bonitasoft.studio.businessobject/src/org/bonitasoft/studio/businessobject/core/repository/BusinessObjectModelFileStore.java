@@ -166,7 +166,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
                         .getPackageName(businessObjectModel.getBusinessObjectsClassNames().iterator().next());
             }
             defautDescriptor.setGroupId(groupId);
-            defautDescriptor.setVersion("1.0.0");
             saveArtifactDescriptor(defautDescriptor);
             return defautDescriptor;
         }

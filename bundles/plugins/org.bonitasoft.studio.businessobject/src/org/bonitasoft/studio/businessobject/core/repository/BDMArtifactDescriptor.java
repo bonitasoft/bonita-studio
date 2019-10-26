@@ -33,9 +33,8 @@ import org.eclipse.core.runtime.Status;
 public class BDMArtifactDescriptor {
 
     private static final String GROUP_ID_PROPERTY = "groupId";
-    private static final String VERSION_PROPERTY = "version";
+    
     private String groupId;
-    private String version;
 
     public String getGroupId() {
         return groupId;
@@ -46,11 +45,7 @@ public class BDMArtifactDescriptor {
     }
 
     public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+        return "1.0.0";
     }
 
     public BDMArtifactDescriptor load(File descriptorPropertyFile) throws CoreException {
@@ -62,7 +57,6 @@ public class BDMArtifactDescriptor {
                     "Failed to load BDM artifact descriptor", e));
         }
         setGroupId(checkMandatoryProperty(descriptorPropertyFile, GROUP_ID_PROPERTY, properties));
-        setVersion(checkMandatoryProperty(descriptorPropertyFile, VERSION_PROPERTY, properties));
         return this;
     }
 
@@ -77,7 +71,6 @@ public class BDMArtifactDescriptor {
 
     public void save(IFile descriptorPropertyFile) throws CoreException {
         Properties properties = new Properties();
-        properties.setProperty(VERSION_PROPERTY, getVersion());
         properties.setProperty(GROUP_ID_PROPERTY, getGroupId());
         try (OutputStream out = new FileOutputStream(descriptorPropertyFile.getLocation().toFile())) {
             properties.store(out, null);

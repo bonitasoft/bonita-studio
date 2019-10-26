@@ -53,6 +53,7 @@ public abstract class AbstractFolderModel extends AbstractImportModel {
         return Stream.concat(getFolders().stream(),
                 getFiles()
                         .stream()
+                        .filter(file -> !file.isArtifactDescriptor())
                         .sorted(conflictingFirst()))
                 .toArray();
     }
