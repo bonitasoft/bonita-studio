@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -233,6 +234,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                     } catch (final FileNotFoundException e) {
                         BonitaStudioLog.error(e);
                     } finally {
+                        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
                         copyIs.close();
                         try {
                             r.delete(Collections.EMPTY_MAP);
