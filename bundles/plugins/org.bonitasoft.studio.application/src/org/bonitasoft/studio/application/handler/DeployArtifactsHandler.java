@@ -64,6 +64,7 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
@@ -80,6 +81,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -337,14 +339,12 @@ public class DeployArtifactsHandler {
         DiagramRepositoryStore diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         processValidationStatuses.stream()
                 .map(s -> s.getProcess().eResource())
-                .map(resource -> diagramStore.getChild(resource.getURI().lastSegment(), false))
+                .map(resource -> diagramStore.getChild(URI.decode(resource.getURI().lastSegment()), false))
                 .filter(Objects::nonNull)
                 .distinct()
-                .forEach(fStore -> {
-                    if (!fStore.isOpened()) {
-                        fStore.open();
-                    }
-                });
+                .filter(fStore -> !fStore.isOpened())
+                .forEach(DiagramFileStore::open);
+        
         RunProcessesValidationOperation.showValidationPart();
     }
 

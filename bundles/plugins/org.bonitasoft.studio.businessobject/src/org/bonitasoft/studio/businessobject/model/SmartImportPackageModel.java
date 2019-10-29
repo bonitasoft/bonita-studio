@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 
@@ -44,6 +45,27 @@ public class SmartImportPackageModel extends SmartImportableUnit {
                         : !Objects.equals(boModel.getConflictStatus(), ConflictStatus.SAME_CONTENT))
                 .map(SmartImportBusinessObjectModel::getBusinessObject)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isConflictingThroughPackages() {
+        return getSmartImportableUnits().stream()
+                .map(SmartImportBusinessObjectModel.class::cast)
+                .anyMatch(SmartImportBusinessObjectModel::isConflictingThroughPackages);
+    }
+
+    @Override
+    public String getToolTipText() {
+        if (getParentModel() instanceof OverwriteImportBdmModel && isConflictingThroughPackages()) {
+            return Messages.conflictingMultiPackage;
+        }
+        switch (getConflictStatus()) {
+            case CONFLICTING:
+                return Messages.conflictingSinglePackage;
+            case SAME_CONTENT:
+                return String.format(Messages.packageAlreadyPresent, getName());
+            default:
+                return String.format(Messages.importPackageTooltip, getName());
+        }
     }
 
 }

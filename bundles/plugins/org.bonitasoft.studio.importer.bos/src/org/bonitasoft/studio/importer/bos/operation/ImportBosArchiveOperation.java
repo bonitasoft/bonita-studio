@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -131,13 +132,31 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     private void doImport(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
         monitor.beginTask(Messages.importBosArchive,
                 (int) importArchiveModel.getStores().stream().flatMap(ImportStoreModel::importableUnits).count());
-        importArchiveModel.getStores().stream().flatMap(ImportStoreModel::importableUnits)
+        importArchiveModel.getStores().stream().sorted(srcStoresFirst()).flatMap(ImportStoreModel::importableUnits)
                 .forEach(unit -> {
                     monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
                     importUnit(unit, importArchiveModel.getBosArchive(), monitor);
                     monitor.worked(1);
                 });
         migrateUID(monitor);
+    }
+
+    private Comparator<? super ImportStoreModel> srcStoresFirst() {
+        return (f1, f2) -> {
+            if(f1.getFolderName().startsWith("src")) {
+                return -1;
+            }
+            if(f2.getFolderName().startsWith("src")) {
+                return 1;
+            }
+            if(f1.getFolderName().equals("diagrams")) {
+                return 1;
+            }
+            if(f2.getFolderName().equals("diagrams")) {
+                return -1;
+            }
+            return f1.getFolderName().compareTo(f2.getFolderName());
+        };
     }
 
     protected void migrateUID(IProgressMonitor monitor) {

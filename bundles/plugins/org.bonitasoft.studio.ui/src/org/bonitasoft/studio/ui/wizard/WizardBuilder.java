@@ -144,6 +144,12 @@ public class WizardBuilder<T> {
             @Override
             protected Point getInitialSize() {
                 final Point initialSize = super.getInitialSize();
+                if(initialSize.x > width) {
+                    width = initialSize.x;
+                }
+                if(initialSize. y > height) {
+                    height = initialSize.y;
+                }
                 final Point size = new Point(width == SWT.DEFAULT ? initialSize.x : width,
                         height == SWT.DEFAULT ? initialSize.y : height);
                 size.y = size.y + convertHeightInCharsToPixels(nbLine);

@@ -24,6 +24,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
+import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.control.AttributesTabItemControl;
@@ -32,10 +33,14 @@ import org.bonitasoft.studio.businessobject.ui.wizard.control.QueriesTabItemCont
 import org.bonitasoft.studio.businessobject.ui.wizard.control.UniqueConstraintTabItemControl;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.BusinessObjectNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.provider.BusinessObjectTreeContentProvider;
+import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.PackageNameValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -50,6 +55,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -69,6 +75,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -76,6 +83,7 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -102,11 +110,18 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private ButtonWidget updatePackageButton;
     private BusinessObjectNameEditingSupport editingSupport;
     private List<BusinessObject> boToFilter = new ArrayList<>();
+    private BDMArtifactDescriptor artifactDescriptor;
+    private IWorkspace workspace;
 
-    protected BusinessDataModelWizardPage(BusinessObjectModel businessObjectModel, IDiffLogger diffLogger) {
+    protected BusinessDataModelWizardPage(BusinessObjectModel businessObjectModel,
+            BDMArtifactDescriptor artifactDescriptor,
+            IDiffLogger diffLogger,
+            IWorkspace workspace) {
         super(BusinessDataModelWizardPage.class.getName());
         this.businessObjectModel = businessObjectModel;
+        this.artifactDescriptor = artifactDescriptor;
         this.diffLogger = diffLogger;
+        this.workspace = workspace;
         packageHelper = PackageHelper.getInstance();
     }
 
@@ -122,11 +137,35 @@ public class BusinessDataModelWizardPage extends WizardPage {
         createSeparator(mainComposite);
         createBusinessObjectEditionGroup(mainComposite, ctx);
 
+        if (!PlatformUtil.isACommunityBonitaProduct()) {
+            createMavenArtifactPropertiesGroup(mainComposite, ctx);
+        }
+
         if (!businessObjectModel.getBusinessObjects().isEmpty()) {
             selectionObservable.setValue(businessObjectModel.getBusinessObjects().get(0));
         }
         WizardPageSupport.create(this, ctx);
         setControl(mainComposite);
+    }
+
+    private void createMavenArtifactPropertiesGroup(Composite parent, DataBindingContext ctx) {
+        Group group = new Group(parent, SWT.NONE);
+        group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(20, 10).create());
+        group.setText(Messages.mavenArtifactProperties);
+
+        new TextWidget.Builder()
+                .withLabel(Messages.groupId)
+                .labelAbove()
+                .fill()
+                .withTootltip(Messages.mavenArtifactPropertiesHint)
+                .grabHorizontalSpace()
+                .bindTo(PojoProperties.value("groupId").observe(artifactDescriptor))
+                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                        .withValidator(new GroupIdValidator(workspace))
+                        .create())
+                .inContext(ctx)
+                .createIn(group);
     }
 
     private void createBusinessObjectDefinitionGroup(Composite mainComposite, DataBindingContext ctx) {
@@ -216,10 +255,20 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private void updateSelectionPackage() {
         BusinessObject selectedBo = (BusinessObject) selectionObservable.getValue();
         InputDialog updatePackageDialog = new InputDialog(Display.getDefault().getActiveShell(),
-                Messages.updatePackageTitle,
+                String.format(Messages.updatePackageTitle, selectedBo.getSimpleName()),
                 String.format(Messages.updatePackageMessage, selectedBo.getSimpleName()),
                 packageHelper.getPackageName(selectedBo),
-                new PackageNameValidator());
+                new PackageNameValidator()) {
+
+            @Override
+            public void setErrorMessage(String errorMessage) {
+                if(errorMessage == null) {
+                    errorMessage = Messages.changePackageTip;
+                }
+                super.setErrorMessage(errorMessage);
+                
+            }
+        };
         if (updatePackageDialog.open() != Window.CANCEL) {
             updatePackage(selectedBo, updatePackageDialog.getValue());
         }
@@ -277,7 +326,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
     }
 
-    private void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    private void createAttributeTabItem(final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             TabFolder tabFolder) {
         final TabItem attributeItem = new TabItem(tabFolder, SWT.NONE);
         attributeItem.setText(Messages.attributes);
@@ -286,12 +336,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
                         diffLogger));
     }
 
-    private void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    private void createConstraintsTabItem(final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             TabFolder tabFolder) {
         final TabItem constraintsTabItem = new TabItem(tabFolder, SWT.NONE);
         constraintsTabItem.setText(Messages.constraints);
         constraintsTabItem.setControl(
-                new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+                new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList,
+                        businessObjectModel));
     }
 
     private void createIndexesTabItem(DataBindingContext ctx, IViewerObservableValue viewerObservableValue,
@@ -351,6 +403,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         addDNDSupport();
         businessObjectObserveList = PojoProperties.list("businessObjects").observe(businessObjectModel);
         viewer.setInput(businessObjectModel);
+        viewer.getTree().setFocus();
     }
 
     private ViewerFilter createSearchFilter() {
@@ -481,6 +534,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         column.getColumn().setText(Messages.name);
         column.setLabelProvider(new LabelProviderBuilder<>()
                 .withTextProvider(this::getElementName)
+                .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
         editingSupport = new BusinessObjectNameEditingSupport(businessObjectModel, selectionObservable, viewer, ctx,
                 diffLogger);

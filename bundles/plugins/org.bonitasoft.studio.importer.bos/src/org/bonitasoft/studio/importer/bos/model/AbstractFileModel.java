@@ -2,13 +2,14 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.swt.graphics.Image;
 
-public abstract class AbstractFileModel extends AbstractImportModel implements IPresentable {
+public abstract class AbstractFileModel extends AbstractImportModel {
 
     protected ImportAction importAction = ImportAction.OVERWRITE;
     private final String fileName;
@@ -27,7 +28,7 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
     }
 
     public ImportAction getImportAction() {
-        return importAction;
+        return isArtifactDescriptor() && isConflicting() ? ImportAction.KEEP : importAction;
     }
 
     public String getFileName() {
@@ -62,6 +63,24 @@ public abstract class AbstractFileModel extends AbstractImportModel implements I
 
     public boolean shouldBeImported() {
         return importAction != ImportAction.KEEP;
+    }
+    
+    @Override
+    public void setStatus(ConflictStatus status) {
+        if(!isArtifactDescriptor()) {
+            super.setStatus(status);
+        }else {
+            this.status = status;
+        }
+    }
+
+    @Override
+    public ConflictStatus getStatus() {
+        return isArtifactDescriptor() ? ConflictStatus.NONE : super.getStatus();
+    }
+
+    public boolean isArtifactDescriptor() {
+        return Objects.equals(getFileName(), ".artifact-descriptor.properties");
     }
 
 }

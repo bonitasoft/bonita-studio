@@ -100,7 +100,7 @@ public class ExportBosArchiveOperation {
             status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
             return status;
         }
-
+        
         status = op.getStatus();
         return status;
     }
@@ -183,6 +183,7 @@ public class ExportBosArchiveOperation {
         if (resource instanceof IFile) {
             resourcesToExport.add(resource);
         } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isBuildOutputFolder(resource)) {
+            resource.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
             for (final IResource r : ((IFolder) resource).members()) {
                 addChildrenFile(r, resourcesToExport);
             }

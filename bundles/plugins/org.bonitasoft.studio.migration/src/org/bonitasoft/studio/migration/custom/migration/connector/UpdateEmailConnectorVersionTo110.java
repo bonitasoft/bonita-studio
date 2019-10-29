@@ -37,11 +37,12 @@ public class UpdateEmailConnectorVersionTo110 extends UpdateConnectorDefinitionM
 
     @Override
     protected boolean shouldUpdateVersion(final String defId) {
-        return EMAIL_CONNECTOR_DEFINITION.equals(defId);
+        return Objects.equals(EMAIL_CONNECTOR_DEFINITION, defId);
     }
 
     @Override
     protected void updateConfiguration(Instance connectorConfigInstance, Model model) {
+        super.updateConfiguration(connectorConfigInstance, model);
         List<Instance> parameters = connectorConfigInstance.get("parameters");
         parameters.stream()
                 .filter(p -> Objects.equals(p.get("key"), "from") && p.get("expression") != null)

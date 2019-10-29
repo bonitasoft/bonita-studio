@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -69,6 +71,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -421,10 +424,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void initXMLandHTMLValidationPreferences() {
-        IEclipsePreferences xmlNode = DefaultScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        IEclipsePreferences xmlNode = DefaultScope.INSTANCE
+                .getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
         xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
 
-        IEclipsePreferences htmlNode = DefaultScope.INSTANCE.getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
+        IEclipsePreferences htmlNode = DefaultScope.INSTANCE
+                .getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, -1);
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, -1);
@@ -444,8 +449,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void executeContributions() {
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        "org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
         IPostInitRepositoryJobContribution contrib = null;
         for (final IConfigurationElement elem : elements) {
             try {
@@ -522,6 +528,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public boolean preShutdown() {
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage();
+        Stream.of(activePage.getViewReferences())
+                .filter(vr -> Objects.equals("org.eclipse.ui.browser.view", vr.getId()))
+                .forEach(vr -> activePage.hideView(vr));
         Job.getJobManager().cancel(StartEngineJob.FAMILY);
         final boolean returnValue = super.preShutdown();
         if (returnValue) {
@@ -543,8 +554,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
         for (final IConfigurationElement elem : elements) {
 
             final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
@@ -564,8 +576,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
         ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
-        if(isFirstStartup()) {
-            WorkbenchPlugin.getDefault().getPreferenceStore().setDefault(IPreferenceConstants.RUN_IN_BACKGROUND, Boolean.FALSE);
+        if (isFirstStartup()) {
+            WorkbenchPlugin.getDefault().getPreferenceStore().setDefault(IPreferenceConstants.RUN_IN_BACKGROUND,
+                    Boolean.FALSE);
             new OpenReleaseNoteHandler().setFocus(false).asView().openBrowser();
         }
         ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
@@ -585,7 +598,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         final SVGFigure svgFigure = new SVGFigure();
         try {
             final File iconsFolder = new File(
-                    FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons")).getFile());
+                    FileLocator.toFileURL(Platform.getBundle("org.bonitasoft.studio.pics").getResource("icons"))
+                            .getFile());
             initSVGFigure(svgFigure, iconsFolder, "figures");
             initSVGFigure(svgFigure, iconsFolder, "decoration", "svg");
         } catch (final IOException e) {
@@ -596,8 +610,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private void initSVGFigure(final SVGFigure svgFigure, final File iconsFolder, final String... pathToFolder) {
         for (final String filename : new File(iconsFolder, Joiner.on(File.separatorChar).join(pathToFolder)).list()) {
             if (filename.endsWith(".svgz")) {
-                svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder)
-                        + "/" + filename);
+                svgFigure
+                        .setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/" + Joiner.on("/").join(pathToFolder)
+                                + "/" + filename);
             }
         }
     }
