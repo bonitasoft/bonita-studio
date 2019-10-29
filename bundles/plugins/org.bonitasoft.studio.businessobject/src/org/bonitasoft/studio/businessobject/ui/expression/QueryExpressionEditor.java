@@ -298,7 +298,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
             @Override
             public String getText(final Object element) {
                 if (element instanceof BusinessObjectExpressionQuery) {
-                    return NamingUtils.getSimpleName(((BusinessObjectExpressionQuery) element).getQualifiedName());
+                    return ((BusinessObjectExpressionQuery) element).getQualifiedName();
                 }
                 return super.getText(element);
             }

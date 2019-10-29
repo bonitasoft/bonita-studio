@@ -426,7 +426,9 @@ public class Messages extends NLS {
     public static String version;
     public static String mavenArtifactPropertiesHint;
     public static String groupIdCannotContainsSpace;
-
+    public static String objectAlreadyExistsInAnotherPackage;
+    public static String conflictingWithSameObject;
+    public static String changePackageTip;
 
     private Messages() {
     }
