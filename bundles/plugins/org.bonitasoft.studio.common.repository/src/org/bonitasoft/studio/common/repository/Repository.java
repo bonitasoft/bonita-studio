@@ -329,7 +329,9 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                         .getWorkbench().getActiveWorkbenchWindow();
                 if (activeWorkbenchWindow != null
                         && activeWorkbenchWindow.getActivePage() != null) {
-                    activeWorkbenchWindow.getActivePage().closeAllEditors(true);
+                    if(!activeWorkbenchWindow.getActivePage().closeAllEditors(false)) {
+                        return;
+                    }
                 }
                 while (activeWorkbenchWindow.getActivePage().getActiveEditor() != null
                         && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {

@@ -282,7 +282,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
             @Override
             public String getText(final Object element) {
                 if (element instanceof BusinessObject) {
-                    return NamingUtils.getSimpleName(((BusinessObject) element).getQualifiedName());
+                    return ((BusinessObject) element).getQualifiedName();
                 }
                 return super.getText(element);
             }

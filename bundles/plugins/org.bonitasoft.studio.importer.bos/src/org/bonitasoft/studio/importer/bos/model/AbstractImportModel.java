@@ -5,12 +5,13 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
+import org.bonitasoft.studio.common.repository.model.IPresentable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public abstract class AbstractImportModel {
+public abstract class AbstractImportModel implements IPresentable {
 
     protected ConflictStatus status = ConflictStatus.NONE;
     protected Optional<AbstractFolderModel> parent;

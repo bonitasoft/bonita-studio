@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.dependencies.ui.dialog;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -65,7 +66,7 @@ public class ManageConnectorJarDialog extends Dialog {
 	private ViewerFilter searchFilter;
 	protected CheckboxTableViewer languageViewer;
 
-	protected Set<IRepositoryFileStore> selectedJars ;
+	protected Set<IRepositoryFileStore> selectedJars = new HashSet<>();
 	private ViewerFilter filter;
 	private String title;
 	private String infoLabel;

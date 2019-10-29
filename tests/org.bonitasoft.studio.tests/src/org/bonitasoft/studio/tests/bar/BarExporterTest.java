@@ -87,7 +87,7 @@ public class BarExporterTest {
         bot.waitUntil(BonitaBPMConditions.noPopupActive());
 
         // Menu Server > Build...
-        bot.menu("File").menu("Export as").menu("Business Archive (.bar)...").click();
+        bot.menu("Server").menu("Build...").click();
 
         // shell 'Build'
         final SWTBotShell shell = bot.shell(Messages.buildTitle);

@@ -27,7 +27,7 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
                     try {
                         return store.importArchiveData(
                                 new ImportArchiveData(archive, archive.getEntry(path),
-                                        importAction == ImportAction.OVERWRITE),
+                                        getImportAction() == ImportAction.OVERWRITE),
                                 monitor);
                     } catch (final CoreException e) {
                         throw new RuntimeException(e);

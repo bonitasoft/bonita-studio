@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.handler;
 
@@ -24,24 +22,23 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class TestConnectorHandler extends AbstractHandler {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
     public IRunnableWithProgress execute(ExecutionEvent event) throws ExecutionException {
-        ConnectorImplementation implementation =  (ConnectorImplementation) event.getParameters().get("IMPLEMENTATION") ;
-        ConnectorConfiguration configuration =  (ConnectorConfiguration) event.getParameters().get("CONFIGURATION") ;
+        ConnectorImplementation implementation = (ConnectorImplementation) event.getParameters().get("IMPLEMENTATION");
+        ConnectorConfiguration configuration = (ConnectorConfiguration) event.getParameters().get("CONFIGURATION");
 
-        final TestConnectorOperation operation = new TestConnectorOperation() ;
-        operation.setImplementation(implementation) ;
-        operation.setConnectorConfiguration(configuration) ;
+        final TestConnectorOperation operation = new TestConnectorOperation();
+        operation.setImplementation(implementation);
+        operation.setConnectorConfiguration(configuration);
 
         return operation;
     }

@@ -20,7 +20,8 @@ Export-Package: org.bonitasoft.studio.businessobject,
  org.bonitasoft.studio.businessobject.ui.handler,
  org.bonitasoft.studio.businessobject.ui.wizard,
  org.bonitasoft.studio.businessobject.ui.wizard.control,
- org.bonitasoft.studio.businessobject.ui.wizard.editingsupport
+ org.bonitasoft.studio.businessobject.ui.wizard.editingsupport,
+ org.bonitasoft.studio.businessobject.ui.wizard.validator
 Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",
@@ -73,7 +74,8 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.eclipse.e4.ui.services,
  org.eclipse.gef,
  org.restlet,
- org.restlet.ext.jackson
+ org.restlet.ext.jackson,
+ org.eclipse.m2e.core.ui;bundle-version="1.10.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.activation;version="1.1.0",

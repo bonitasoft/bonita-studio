@@ -77,7 +77,8 @@ public class ManageBusinessObjectHandler implements Runnable {
     }
 
     protected ManageBusinessDataModelWizard createWizard() {
-        return new ManageBusinessDataModelWizard(getFileStore(), new NullDiffLogger(), this);
+        return new ManageBusinessDataModelWizard(getFileStore(), new NullDiffLogger(), repositoryAccessor.getWorkspace(),
+                this);
     }
 
     protected BusinessObjectModelFileStore getFileStore() {

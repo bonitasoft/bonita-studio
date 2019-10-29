@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -152,6 +153,15 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         } else {
             fileStore = superDoImportInputStream(fileName, inputStream);
         }
+        if (fileStore instanceof BusinessObjectModelFileStore) {
+            try {
+                BDMArtifactDescriptor descriptor = ((BusinessObjectModelFileStore) fileStore).loadArtifactDescriptor();
+                ((BusinessObjectModelFileStore) fileStore).saveArtifactDescriptor(descriptor);
+            } catch (CoreException e) {
+                BonitaStudioLog.error("Failed to import Business data model artifact descriptor", e);
+            }
+        }
+
         generateJar(fileStore);
         return fileStore;
     }
@@ -293,6 +303,9 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     @Override
     public F getChild(String fileName, boolean force) {
+        if(Objects.equals(fileName, BusinessObjectModelFileStore.BDM_ARTIFACT_DESCRIPTOR)) {
+            return null;
+        }
         return (F) super.getChild(fileName, force);
     }
 

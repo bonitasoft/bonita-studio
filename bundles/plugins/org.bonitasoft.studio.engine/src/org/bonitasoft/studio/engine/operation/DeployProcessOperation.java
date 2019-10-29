@@ -107,7 +107,7 @@ public class DeployProcessOperation {
     public IStatus run(final IProgressMonitor monitor) {
         Assert.isTrue(!processes.isEmpty());
         try {
-            status.addAll(undeploy(processes, monitor));
+            status.add(undeploy(processes, monitor));
         } catch (final Exception e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             return ValidationStatus.error(Messages.undeploymentFailedMessage, e);
@@ -116,13 +116,13 @@ public class DeployProcessOperation {
             return status;
         }
         try {
-            status.addAll(deploy(monitor));
+            status.add(deploy(monitor));
             if (!hasErrors(status)) {
                 IStatus enablementStatus = enable(monitor);
                 if(enablementStatus.getSeverity() == IStatus.CANCEL) {
                     return enablementStatus;
                 }
-                status.addAll(enablementStatus);
+                status.add(enablementStatus);
             }
         } catch (Exception e) {
             BonitaStudioLog.error(e);
@@ -157,7 +157,7 @@ public class DeployProcessOperation {
         MultiStatus multiStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, -1, null, null);
         try {
             for (final AbstractProcess process : processes) {
-                multiStatus.addAll(deployProcess(process, monitor));
+                multiStatus.add(deployProcess(process, monitor));
                 if (hasErrors(multiStatus)) {
                     return multiStatus;
                 }
