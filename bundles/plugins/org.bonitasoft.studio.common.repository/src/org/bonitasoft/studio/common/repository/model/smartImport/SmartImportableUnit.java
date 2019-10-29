@@ -23,6 +23,7 @@ public abstract class SmartImportableUnit implements IPresentable {
     private List<SmartImportableUnit> smartImportableUnits = new ArrayList<>();
     private SmartImportableUnit parent;
     private SmartImportableModel parentModel;
+    private String conflictingObjectName;
 
     public SmartImportableUnit(SmartImportableModel parentModel) {
         this.parentModel = parentModel;
@@ -35,6 +36,14 @@ public abstract class SmartImportableUnit implements IPresentable {
 
     public void setConflictStatus(ConflictStatus conflictStatus) {
         this.conflictStatus = conflictStatus;
+    }
+    
+    public void setConflictingObjectName(String conflictingObjectName) {
+        this.conflictingObjectName = conflictingObjectName;
+    }
+    
+    public String getConflictingObjectName() {
+        return conflictingObjectName;
     }
 
     public ConflictStatus getConflictStatus() {

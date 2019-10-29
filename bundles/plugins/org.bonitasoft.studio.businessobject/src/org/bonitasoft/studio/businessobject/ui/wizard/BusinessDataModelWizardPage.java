@@ -40,6 +40,7 @@ import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextPrope
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -74,6 +75,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -81,6 +83,7 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -252,10 +255,20 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private void updateSelectionPackage() {
         BusinessObject selectedBo = (BusinessObject) selectionObservable.getValue();
         InputDialog updatePackageDialog = new InputDialog(Display.getDefault().getActiveShell(),
-                Messages.updatePackageTitle,
+                String.format(Messages.updatePackageTitle, selectedBo.getSimpleName()),
                 String.format(Messages.updatePackageMessage, selectedBo.getSimpleName()),
                 packageHelper.getPackageName(selectedBo),
-                new PackageNameValidator());
+                new PackageNameValidator()) {
+
+            @Override
+            public void setErrorMessage(String errorMessage) {
+                if(errorMessage == null) {
+                    errorMessage = Messages.changePackageTip;
+                }
+                super.setErrorMessage(errorMessage);
+                
+            }
+        };
         if (updatePackageDialog.open() != Window.CANCEL) {
             updatePackage(selectedBo, updatePackageDialog.getValue());
         }
@@ -313,7 +326,8 @@ public class BusinessDataModelWizardPage extends WizardPage {
         queriesItem.setControl(new QueriesTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList));
     }
 
-    private void createAttributeTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    private void createAttributeTabItem(final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             TabFolder tabFolder) {
         final TabItem attributeItem = new TabItem(tabFolder, SWT.NONE);
         attributeItem.setText(Messages.attributes);
@@ -322,12 +336,14 @@ public class BusinessDataModelWizardPage extends WizardPage {
                         diffLogger));
     }
 
-    private void createConstraintsTabItem(final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+    private void createConstraintsTabItem(final DataBindingContext ctx,
+            final IViewerObservableValue viewerObservableValue,
             TabFolder tabFolder) {
         final TabItem constraintsTabItem = new TabItem(tabFolder, SWT.NONE);
         constraintsTabItem.setText(Messages.constraints);
         constraintsTabItem.setControl(
-                new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList, businessObjectModel));
+                new UniqueConstraintTabItemControl(tabFolder, ctx, viewerObservableValue, fieldsList,
+                        businessObjectModel));
     }
 
     private void createIndexesTabItem(DataBindingContext ctx, IViewerObservableValue viewerObservableValue,

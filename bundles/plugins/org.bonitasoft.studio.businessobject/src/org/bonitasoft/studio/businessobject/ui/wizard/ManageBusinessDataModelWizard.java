@@ -128,12 +128,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
                 confirm = confirmDialog.getReturnCode() == Dialog.OK;
             }
             if (confirm && validateAndSaveBDM()) {
-                try {
-                    fStore.saveArtifactDescriptor(artifactDescriptor);
-                    return installBDM();
-                } catch (CoreException e) {
-                    throw new RuntimeException("An error occured while saving BDM artifact descriptor", e);
-                }
+                return installBDM();
             }
         }
         return false;
@@ -198,6 +193,11 @@ public class ManageBusinessDataModelWizard extends Wizard {
     protected void save(final IProgressMonitor monitor) {
         monitor.setTaskName(Messages.saving);
         fStore.save(businessObjectModel);
+        try {
+            fStore.saveArtifactDescriptor(artifactDescriptor);
+        } catch (CoreException e) {
+            throw new RuntimeException("An error occured while saving BDM artifact descriptor", e);
+        }
     }
 
     protected boolean installBDM() {
