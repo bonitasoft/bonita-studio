@@ -21,7 +21,6 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -39,15 +38,13 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
     private BusinessObjectModel model;
     private SQLNameValidator sqlNameValidator;
 
-    private IObservableValue<Object> selectionObservable;
+    private BusinessObject businessObject;
 
-    private PackageNameValidator packageNameValidator;
-
-    public BusinessObjectNameCellEditorValidator(BusinessObjectModel model, IObservableValue<Object> selectionObservable) {
+    public BusinessObjectNameCellEditorValidator(BusinessObjectModel model,
+            BusinessObject businessObject) {
         this.model = model;
-        this.selectionObservable = selectionObservable;
+        this.businessObject = businessObject;
         this.sqlNameValidator = new SQLNameValidator(MAX_TABLE_NAME_LENGTH);
-        packageNameValidator = new PackageNameValidator();
     }
 
     @Override
@@ -61,10 +58,7 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
 
     @Override
     public IStatus validate(String value) {
-        if (selectionObservable.getValue() instanceof BusinessObject) {
-            return validateBoName(value);
-        }
-        return packageNameValidator.validate(value);
+        return validateBoName(value);
     }
 
     private IStatus validateBoName(String simpleName) {
@@ -115,7 +109,7 @@ public class BusinessObjectNameCellEditorValidator implements ICellEditorValidat
     }
 
     protected IStatus validateUniqueness(String name) {
-        int max = Objects.equals(((BusinessObject) selectionObservable.getValue()).getSimpleName(), name) ? 1 : 0;
+        int max = Objects.equals(businessObject.getSimpleName(), name) ? 1 : 0;
         if (model.getBusinessObjects().stream()
                 .filter(otherBo -> Objects.equals(name, otherBo.getSimpleName()))
                 .count() > max) {

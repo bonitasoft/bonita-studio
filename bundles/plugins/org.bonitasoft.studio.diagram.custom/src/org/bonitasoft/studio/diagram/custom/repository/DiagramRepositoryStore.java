@@ -431,6 +431,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     @Override
     protected InputStream handlePreImport(final String fileName,
             final InputStream inputStream) throws MigrationException, IOException {
+        
+        DiagramFileStore fileStore = getChild(fileName, false);
+        Display.getDefault().syncExec(() ->  {
+            if(fileStore != null && fileStore.isOpened()) {
+                fileStore.close();
+            }
+        });
+       
         CopyInputStream copyIs = null;
         Resource diagramResource = null;
         try {

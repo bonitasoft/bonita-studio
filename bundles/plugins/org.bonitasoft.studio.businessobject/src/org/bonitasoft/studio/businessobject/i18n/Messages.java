@@ -394,7 +394,6 @@ public class Messages extends NLS {
     public static String updatePackage;
     public static String updatePackageTitle;
     public static String updatePackageMessage;
-    public static String overwriteBdmHelpMessage;
     public static String archiveContentInvalid;
     public static String businessObjectNameDuplicated;
     public static String importAction;
@@ -422,6 +421,14 @@ public class Messages extends NLS {
     public static String packageAlreadyPresent;
     public static String importBusinessObjectTooltip;
     public static String importPackageTooltip;
+    public static String mavenArtifactProperties;
+    public static String groupId;
+    public static String version;
+    public static String mavenArtifactPropertiesHint;
+    public static String groupIdCannotContainsSpace;
+    public static String objectAlreadyExistsInAnotherPackage;
+    public static String conflictingWithSameObject;
+    public static String changePackageTip;
 
     private Messages() {
     }

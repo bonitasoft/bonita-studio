@@ -29,6 +29,7 @@ import org.bonitasoft.studio.businessobject.core.difflog.IDiffLogger;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMStackTraceResolver;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
+import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.status.BusinessDataModelStatusMapper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -38,6 +39,8 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -72,14 +75,24 @@ public class ManageBusinessDataModelWizard extends Wizard {
 
     private Runnable deployFinishRunnable;
 
+    private BDMArtifactDescriptor artifactDescriptor;
+
+    private IWorkspace workspace;
+
     public ManageBusinessDataModelWizard(final BusinessObjectModelFileStore fStore, IDiffLogger diffLogger,
-            Runnable deployFinishRunnable) {
+            IWorkspace workspace, Runnable deployFinishRunnable) {
         this.fStore = fStore;
+        this.workspace = workspace;
         this.deployFinishRunnable = deployFinishRunnable;
         businessObjectModel = fStore.getContent();
         if (businessObjectModel == null) {
             newBdm = true;
             businessObjectModel = new BusinessObjectModel();
+        }
+        try {
+            artifactDescriptor = fStore.loadArtifactDescriptor();
+        } catch (CoreException e) {
+            throw new RuntimeException("An error occured while loading BDM artifact descriptor", e);
         }
         this.diffLogger = diffLogger;
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -93,16 +106,12 @@ public class ManageBusinessDataModelWizard extends Wizard {
      */
     @Override
     public void addPages() {
-        page = new BusinessDataModelWizardPage(businessObjectModel, diffLogger);
+        page = new BusinessDataModelWizardPage(businessObjectModel, artifactDescriptor, diffLogger, workspace);
         page.setTitle(Messages.manageBusinessDataModelTitle);
         page.setDescription(Messages.manageBusinessDataModelDesc);
         addPage(page);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         if (businessObjectModel != null) {
@@ -184,6 +193,11 @@ public class ManageBusinessDataModelWizard extends Wizard {
     protected void save(final IProgressMonitor monitor) {
         monitor.setTaskName(Messages.saving);
         fStore.save(businessObjectModel);
+        try {
+            fStore.saveArtifactDescriptor(artifactDescriptor);
+        } catch (CoreException e) {
+            throw new RuntimeException("An error occured while saving BDM artifact descriptor", e);
+        }
     }
 
     protected boolean installBDM() {
@@ -226,7 +240,8 @@ public class ManageBusinessDataModelWizard extends Wizard {
     }
 
     protected IStatus runDeployBDM(IProgressMonitor monitor) {
-        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fStore, getPreferenceStore().getBoolean( EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL));
+        DeployBDMOperation deployBDMOperation = new DeployBDMOperation(fStore,
+                getPreferenceStore().getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL));
         try {
             deployBDMOperation.run(monitor);
         } catch (InvocationTargetException e) {

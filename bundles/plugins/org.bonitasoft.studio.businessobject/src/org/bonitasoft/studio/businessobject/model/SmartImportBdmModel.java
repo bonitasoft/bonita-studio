@@ -107,7 +107,8 @@ public class SmartImportBdmModel extends SmartImportableModel {
                         .filter(unit -> Objects.equals(unit.getName(), packageName)).findFirst();
                 List<BusinessObject> businessObjects = packageHelper.getAllBusinessObjects(currentModel, packageName);
                 if (packageAlreadyCreated.isPresent()) {
-                    completePackageWithExistingBo(businessObjects, (SmartImportPackageModel) packageAlreadyCreated.get());
+                    completePackageWithExistingBo(businessObjects,
+                            (SmartImportPackageModel) packageAlreadyCreated.get());
                 } else {
                     createExistingPackage(businessObjects, packageName);
                 }
@@ -121,7 +122,8 @@ public class SmartImportBdmModel extends SmartImportableModel {
         getSmartImportableUnits().add(importPackageModel);
     }
 
-    private void completePackageWithExistingBo(List<BusinessObject> businessObjects, SmartImportPackageModel packageModel) {
+    private void completePackageWithExistingBo(List<BusinessObject> businessObjects,
+            SmartImportPackageModel packageModel) {
         if (packageModel.getConflictStatus() != ConflictStatus.CONFLICTING) {
             businessObjects.stream()
                     .filter(bo -> packageModel.getSmartImportableUnits().stream()
@@ -136,7 +138,8 @@ public class SmartImportBdmModel extends SmartImportableModel {
     protected void buildImportPackageModel(BusinessObjectModel currentModel,
             BusinessObjectModel modelToMerge, PackageHelper packageHelper, SmartImportPackageModel importPackageModel) {
         String packageName = importPackageModel.getName();
-        List<BusinessObject> potentialConflictingBusinessObjects = retrievePotentialConflictingBusinessObjects(currentModel,
+        List<BusinessObject> potentialConflictingBusinessObjects = retrievePotentialConflictingBusinessObjects(
+                currentModel,
                 packageHelper,
                 packageName);
         List<BusinessObject> newBusinessObjects = packageHelper.getAllBusinessObjects(modelToMerge, packageName);
@@ -178,25 +181,31 @@ public class SmartImportBdmModel extends SmartImportableModel {
             BusinessObject newBusinessObject) {
         SmartImportBusinessObjectModel importBusinessObjectModel = new SmartImportBusinessObjectModel(this, parent,
                 newBusinessObject);
-        importBusinessObjectModel.setConflictStatus(computeConflictStatus(currentBusinessObjects, newBusinessObject));
+        ConflictResult conflictResult = computeConflictStatus(currentBusinessObjects, newBusinessObject);
+        importBusinessObjectModel.setConflictStatus(conflictResult.getStatus());
+        importBusinessObjectModel.setConflictingObjectName(conflictResult.getConflictingObjectName());
         return importBusinessObjectModel;
     }
 
-    protected ConflictStatus computeConflictStatus(List<BusinessObject> currentBusinessObjects,
+    protected ConflictResult computeConflictStatus(List<BusinessObject> currentBusinessObjects,
             BusinessObject newBusinessObject) {
-        boolean conflicting = currentBusinessObjects.stream().anyMatch(existingBusinessObject -> {
+        Optional<String> conflictingObjectName = currentBusinessObjects.stream().map(existingBusinessObject -> {
             if (Objects.equals(existingBusinessObject.getSimpleName(), newBusinessObject.getSimpleName())) {
-                return !Objects.equals(existingBusinessObject, newBusinessObject);
+                if (!Objects.equals(existingBusinessObject, newBusinessObject)) {
+                    return existingBusinessObject.getQualifiedName();
+                }
             }
-            return false;
-        });
-        if (conflicting) {
-            return ConflictStatus.CONFLICTING;
+            return null;
+        })
+                .filter(Objects::nonNull)
+                .findFirst();
+        if (conflictingObjectName.isPresent()) {
+            return new ConflictResult(ConflictStatus.CONFLICTING, conflictingObjectName.get());
         }
         return currentBusinessObjects.stream()
                 .anyMatch(existingBusinessObject -> Objects.equals(existingBusinessObject, newBusinessObject))
-                        ? ConflictStatus.SAME_CONTENT
-                        : ConflictStatus.NONE;
+                        ? new ConflictResult(ConflictStatus.SAME_CONTENT)
+                        : new ConflictResult(ConflictStatus.NONE);
     }
 
     @Override
@@ -208,6 +217,29 @@ public class SmartImportBdmModel extends SmartImportableModel {
             return operation.getStatus();
         } catch (InvocationTargetException | InterruptedException e) {
             return ValidationStatus.error(e.getMessage(), e.getCause());
+        }
+    }
+
+    class ConflictResult {
+
+        private ConflictStatus status;
+        private String conflictingObjectName;
+
+        ConflictResult(ConflictStatus status, String conflictingObjectName) {
+            this.status = status;
+            this.conflictingObjectName = conflictingObjectName;
+        }
+
+        ConflictResult(ConflictStatus status) {
+            this.status = status;
+        }
+
+        public ConflictStatus getStatus() {
+            return status;
+        }
+
+        public String getConflictingObjectName() {
+            return conflictingObjectName;
         }
     }
 

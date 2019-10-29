@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.connectors.operation;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -88,12 +93,15 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -104,6 +112,8 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -120,7 +130,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String, Serializable>>();
     private final Map<String, Serializable> outputValues = new HashMap<String, Serializable>();
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
-    private Set<IRepositoryFileStore> additionalJars;
+    private Set<IRepositoryFileStore> additionalJars = new HashSet<>();
     private final List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
     private final Map<String, org.bonitasoft.studio.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.studio.model.expression.Expression>();
     private IStatus status;
@@ -138,10 +148,13 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
         if (!invalidExpressionForTest.isEmpty()) {
             final StringBuilder sb = new StringBuilder(Messages.unsuportedExpressionTypeForTesting);
-            for (final Entry<String, org.bonitasoft.studio.model.expression.Expression> e : invalidExpressionForTest.entrySet()) {
+            for (final Entry<String, org.bonitasoft.studio.model.expression.Expression> e : invalidExpressionForTest
+                    .entrySet()) {
                 sb.append("\n");
-                if (ExpressionConstants.PATTERN_TYPE.equals(e.getValue().getType()) || ExpressionConstants.SCRIPT_TYPE.equals(e.getValue().getType())) {
-                    sb.append("-" + Messages.bind(Messages.unresolvedPatternOrScriptExpression, "'" + e.getKey() + "'"));
+                if (ExpressionConstants.PATTERN_TYPE.equals(e.getValue().getType())
+                        || ExpressionConstants.SCRIPT_TYPE.equals(e.getValue().getType())) {
+                    sb.append(
+                            "-" + Messages.bind(Messages.unresolvedPatternOrScriptExpression, "'" + e.getKey() + "'"));
                 } else {
                     sb.append("-" + Messages.bind(Messages.unresolvedExpression, "'" + e.getKey() + "'"));
                 }
@@ -153,6 +166,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         APISession session = null;
         ProcessAPI processApi = null;
         long procId = -1;
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        URLClassLoader projectClassloader = null;
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
@@ -163,14 +178,17 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             configuration.setName("TestConnectorConfiguration");
             new ConfigurationSynchronizer(proc, configuration).synchronize();
             configureProcess(configuration, implementation);
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration);
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,
+                    configuration);
 
             undeployProcess(proc, processApi);
             final ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
             processApi.enableProcess(procId);
-
-            result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters,
+            projectClassloader = createProjectClassloader(monitor);
+            Thread.currentThread().setContextClassLoader(projectClassloader);
+            result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(),
+                    implementation.getDefinitionVersion(), inputParameters,
                     inputValues, outputOperations, outputValues, procId);
             status = Status.OK_STATUS;
         } catch (final Exception e) {
@@ -178,6 +196,16 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             status = new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, e.getMessage(), e);
             throw new InvocationTargetException(e);
         } finally {
+            if (cl != null) {
+                Thread.currentThread().setContextClassLoader(cl);
+            }
+            if (projectClassloader != null) {
+                try {
+                    projectClassloader.close();
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
             if (processApi != null && procId != -1) {
                 try {
                     processApi.disableProcess(procId);
@@ -192,6 +220,49 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
+    private URLClassLoader createProjectClassloader(final IProgressMonitor monitor) {
+        final List<URL> jars = new ArrayList<>();
+        try {
+            // Synchronize with build jobs
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+
+            IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+            final String workspacePath = project.getLocation().toFile().getParent();
+            final String outputPath = workspacePath + javaProject.getOutputLocation().toString();
+            jars.add(new File(outputPath).toURI().toURL());
+            for (final IClasspathEntry entry : javaProject.getRawClasspath()) {
+                if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+                    File jar = entry.getPath().toFile();
+                    if (!jar.exists()) { // jar location relative to project
+                        jar = new File(workspacePath + File.separator + jar);
+                    }
+                    if (shouldAddJarToClasspath(jar)) {
+                        jars.add(jar.toURI().toURL());
+                    }
+                }
+            }
+            final IFolder folder = project.getFolder("lib");
+            for (final IResource member : folder.members()) {
+                if (Objects.equals(member.getFileExtension(), "jar")) {
+                    if (shouldAddJarToClasspath(member.getLocation().toFile())) {
+                        jars.add(member.getLocation().toFile().toURI().toURL());
+                    }
+
+                }
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return new URLClassLoader(jars.toArray(new URL[jars.size()]), BusinessArchive.class.getClassLoader());
+    }
+
+    private boolean shouldAddJarToClasspath(File jar) {
+        return implementation.getJarDependencies() != null && implementation.getJarDependencies().getJarDependency().contains(jar.getName()) || additionalJars.stream()
+                .map(IRepositoryFileStore::getName).anyMatch(jarName -> Objects.equals(jarName, jar.getName()));
+    }
+
     private void configureProcess(final Configuration configuration, final ConnectorImplementation implem) {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance().getRepositoryStore(
                 DatabaseConnectorPropertiesRepositoryStore.class);
@@ -202,7 +273,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         if (file != null) {
             driver = file.getDefault();
             if (driver != null) {
-                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject()
+                        .getFolder("lib");
                 if (libFolder.getFile(driver).exists()) {
                     addDriver = true;
                 } else {
@@ -220,21 +292,24 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                     association.setImplementationVersion(implem.getImplementationVersion());
                     final CompoundCommand cc = new CompoundCommand();
                     final AdapterFactoryEditingDomain domain = createEditingDomain();
-                    CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, implem, cc, domain, addDriver);
+                    CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association,
+                            implem, cc, domain, addDriver);
                     domain.getCommandStack().execute(cc);
                     break;
                 }
             }
         }
         //Add jars from managed jars to dependency list of the process used to test the connector
-        if (additionalJars != null) {
+        if (!additionalJars.isEmpty()) {
             for (final FragmentContainer fc : configuration.getProcessDependencies()) {
                 if (FragmentTypes.OTHER.equals(fc.getId())) {
-                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject()
+                            .getFolder("lib");
                     if (libFolder.exists()) {
                         try {
                             for (final IResource f : libFolder.members()) {
-                                if (f instanceof IFile && ((IFile) f).getFileExtension() != null && ((IFile) f).getFileExtension().equalsIgnoreCase("jar")
+                                if (f instanceof IFile && ((IFile) f).getFileExtension() != null
+                                        && ((IFile) f).getFileExtension().equalsIgnoreCase("jar")
                                         && isSelectedJar(((IFile) f).getName())) {
                                     final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
                                     fragment.setExported(true);
@@ -243,7 +318,9 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                                     fragment.setType(FragmentTypes.JAR);
                                     final AdapterFactoryEditingDomain domain = createEditingDomain();
                                     domain.getCommandStack().execute(
-                                            AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+                                            AddCommand.create(domain, fc,
+                                                    ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
+                                                    fragment));
                                 }
                             }
                         } catch (final CoreException e) {
@@ -265,7 +342,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     private AdapterFactoryEditingDomain createEditingDomain() {
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
@@ -275,8 +353,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         final BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        final AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
+        final AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack,
+                new HashMap<Resource, Boolean>());
+        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf",
+                new ConfigurationResourceFactoryImpl());
         return editingDomain;
     }
 
@@ -340,16 +420,19 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         this.implementation = implementation;
     }
 
-    protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,
+    protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi)
+            throws InvalidSessionException,
             ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
         final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
         if (nbDeployedProcesses > 0) {
-            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses,
+            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0,
+                    (int) nbDeployedProcesses,
                     ProcessDeploymentInfoCriterion.DEFAULT);
             for (final ProcessDeploymentInfo info : processes) {
                 if (info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())) {
                     try {
-                        if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED) {
+                        if (processApi.getProcessDeploymentInfo(info.getProcessId())
+                                .getActivationState() == ActivationState.ENABLED) {
                             processApi.disableProcess(info.getProcessId());
                         }
                     } catch (final ProcessActivationException e) {
@@ -361,12 +444,15 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    public static Set<String> checkImplementationDependencies(final ConnectorImplementation implementation, final IProgressMonitor monitor) {
+    public static Set<String> checkImplementationDependencies(final ConnectorImplementation implementation,
+            final IProgressMonitor monitor) {
         final Set<String> dependencies = new HashSet<String>();
         if (!implementation.getJarDependencies().getJarDependency().isEmpty()) {
-            final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+            final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
             final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(
-                    RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle());
+                    RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),
+                    ConnectorPlugin.getDefault().getBundle());
             for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
                 dependencies.add(jarName);
                 if (depStore.getChild(jarName, true) == null) {
@@ -402,7 +488,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     protected void detectInvalidExpressions(final ConnectorParameter parameter) {
-        final List<org.bonitasoft.studio.model.expression.Expression> expressions = ModelHelper.getAllItemsOfType(parameter,
+        final List<org.bonitasoft.studio.model.expression.Expression> expressions = ModelHelper.getAllItemsOfType(
+                parameter,
                 ExpressionPackage.Literals.EXPRESSION);
         for (final org.bonitasoft.studio.model.expression.Expression e : expressions) {
             if (ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
