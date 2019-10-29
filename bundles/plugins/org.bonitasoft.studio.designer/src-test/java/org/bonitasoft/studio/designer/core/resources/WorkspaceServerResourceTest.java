@@ -132,6 +132,7 @@ public class WorkspaceServerResourceTest {
         workspaceServerResource.doInit();
 
         workspaceServerResource.dispatch("a/file/path");
+        Thread.sleep(200);
         verify(repositoryNotifier).dispatch(WorkspaceAPIEvent.PRE_OPEN, fileStore);
     }
 

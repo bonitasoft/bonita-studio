@@ -121,17 +121,17 @@ public class SmartImportBdmIT {
 
         SWTBotTreeItem treeItem = importTree.getTreeItem(HUMAN_PACKAGE);
         treeItem.expand();
-        bot.waitUntil(importBot.treeNodeAvailable(treeItem, PERSON_BO));
+        bot.waitUntil(importBot.treeNodeAvailable(treeItem, String.format(org.bonitasoft.studio.businessobject.i18n.Messages.conflictingWithSameObject, PERSON_BO)));
         bot.waitUntil(importBot.treeNodeNotAvailable(treeItem, String.format("%s (%s)", ADDRESS_BO, Messages.skipped)));
 
         assertThat(treeItem.cell(1)).isEqualTo(ImportAction.OVERWRITE.toString());
 
         importBot.setImportAction(HUMAN_PACKAGE, ImportAction.KEEP.toString());
-        bot.waitUntil(importBot.treeNodeAvailable(treeItem, PERSON_BO));
+        bot.waitUntil(importBot.treeNodeAvailable(treeItem, String.format(org.bonitasoft.studio.businessobject.i18n.Messages.conflictingWithSameObject, PERSON_BO)));
         bot.waitUntil(importBot.treeNodeAvailable(treeItem, String.format("%s (%s)", ADDRESS_BO, Messages.skipped)));
 
         importBot.setImportAction(HUMAN_PACKAGE, ImportAction.OVERWRITE.toString());
-        bot.waitUntil(importBot.treeNodeAvailable(treeItem, PERSON_BO));
+        bot.waitUntil(importBot.treeNodeAvailable(treeItem, String.format(org.bonitasoft.studio.businessobject.i18n.Messages.conflictingWithSameObject, PERSON_BO)));
         bot.waitUntil(importBot.treeNodeNotAvailable(treeItem, String.format("%s (%s)", ADDRESS_BO, Messages.skipped)));
 
         importBot.doImport();
@@ -158,8 +158,8 @@ public class SmartImportBdmIT {
         businessTreeItem.expand();
         personTreeItem.expand();
 
-        bot.waitUntil(importBot.treeNodeAvailable(businessTreeItem, LOAN_BO));
-        bot.waitUntil(importBot.treeNodeAvailable(personTreeItem, PERSON_BO));
+        bot.waitUntil(importBot.treeNodeAvailable(businessTreeItem, String.format(org.bonitasoft.studio.businessobject.i18n.Messages.conflictingWithSameObject, LOAN_BO)));
+        bot.waitUntil(importBot.treeNodeAvailable(personTreeItem, String.format(org.bonitasoft.studio.businessobject.i18n.Messages.objectAlreadyExistsInAnotherPackage, PERSON_BO, "com.company.human")));
 
         importBot.doImport();
 

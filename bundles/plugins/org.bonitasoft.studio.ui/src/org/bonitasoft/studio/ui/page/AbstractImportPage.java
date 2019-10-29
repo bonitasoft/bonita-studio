@@ -59,7 +59,7 @@ public abstract class AbstractImportPage implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         final Composite importerComposite = new Composite(parent, SWT.NONE);
-        importerComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        importerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 0).create());
         importerComposite.setLayoutData(GridDataFactory.fillDefaults().create());
         importerWidget = new TextWidget.Builder()
                 .withLabel(Messages.importLabel)

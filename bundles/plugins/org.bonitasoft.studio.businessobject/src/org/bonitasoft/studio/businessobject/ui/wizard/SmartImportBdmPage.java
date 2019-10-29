@@ -33,6 +33,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.provider.SmartImportBdmTre
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.ImportBdmContentValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmModelValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
@@ -75,6 +76,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 
 public class SmartImportBdmPage extends AbstractImportPage {
 
@@ -123,18 +125,30 @@ public class SmartImportBdmPage extends AbstractImportPage {
 
     private Composite createImportComposite(Composite parent) {
         Composite composite = new Composite(parent, SWT.None);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 5).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createHeader(composite);
-        createMergeViewer(composite);
+        
+        
+        Composite viewerComposite = new Composite(composite, SWT.None);
+        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        
+        CLabel previewDescLabel = new CLabel(viewerComposite, SWT.None);
+        previewDescLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        Image icon = JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+        previewDescLabel.setImage(icon);
+        previewDescLabel.setText(Messages.previewDesc);
+        
+        createMergeViewer(viewerComposite);
 
         return composite;
     }
 
     private void createHeader(Composite parent) {
-        Composite composite = new Composite(parent, SWT.None);
-        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
+        Group composite = new Group(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).extendedMargins(0, 0, -5, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         CLabel warning = new CLabel(composite, SWT.WRAP);
@@ -215,13 +229,6 @@ public class SmartImportBdmPage extends AbstractImportPage {
         IViewerObservableValue singleSelectionObservable = ViewerProperties.singleSelection().observe(viewer);
         viewer.addDoubleClickListener(e -> viewer.setExpandedState(singleSelectionObservable.getValue(),
                 !viewer.getExpandedState(singleSelectionObservable.getValue())));
-
-        CLabel previewDescLabel = new CLabel(composite, SWT.None);
-        previewDescLabel.setLayoutData(GridDataFactory.fillDefaults().create());
-        Image icon = JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
-        previewDescLabel.setImage(icon);
-        previewDescLabel.setText(Messages.previewDesc);
-
         return composite;
     }
 
@@ -254,7 +261,7 @@ public class SmartImportBdmPage extends AbstractImportPage {
         modelColumn.getColumn().setText(Messages.businessDataModelPreview);
         modelColumn.setLabelProvider(new LabelProviderBuilder<SmartImportableUnit>()
                 .withStyledStringProvider(this::styledStringProvider)
-                .withTooltipProvider(this::tooltipProvider)
+                .withTooltipProvider(SmartImportableUnit::getToolTipText)
                 .createStyledCellLabelProvider());
     }
 
@@ -275,6 +282,13 @@ public class SmartImportBdmPage extends AbstractImportPage {
     private StyledString styledStringProvider(SmartImportableUnit element) {
         initStylers();
         if (isConflicting(element)) {
+            if(element instanceof SmartImportBusinessObjectModel ) {
+                if(!Objects.equals(((SmartImportBusinessObjectModel) element).getBusinessObject().getQualifiedName(),element.getConflictingObjectName())){
+                    return new StyledString(String.format(Messages.objectAlreadyExistsInAnotherPackage, element.getName(), NamingUtils.getPackageName(element.getConflictingObjectName())), conflictingStyler);
+                }else {
+                    return new StyledString(String.format(Messages.conflictingWithSameObject, element.getName()), conflictingStyler);
+                }
+            }
             return new StyledString(element.getName(), conflictingStyler);
         }
         if (isSameContent(element)) {
@@ -294,34 +308,6 @@ public class SmartImportBdmPage extends AbstractImportPage {
             Color sameContentColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
             grayStyler = new StylerBuilder().withColor(sameContentColor).create();
         }
-    }
-
-    private String tooltipProvider(SmartImportableUnit element) {
-        if (importBdmModelObservable.getValue() instanceof OverwriteImportBdmModel
-                && isConflictingThroughPackages(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectInSeveralPackages, element.getName())
-                    : Messages.conflictingMultiPackage;
-        } else if (isConflicting(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectNameDuplicated, element.getName())
-                    : Messages.conflictingSinglePackage;
-        } else if (isSameContent(element)) {
-            return element instanceof SmartImportBusinessObjectModel
-                    ? String.format(Messages.businessObjectAlreadyPresent, element.getName())
-                    : String.format(Messages.packageAlreadyPresent, element.getName());
-        }
-        return element instanceof SmartImportBusinessObjectModel
-                ? String.format(Messages.importBusinessObjectTooltip, element.getName())
-                : String.format(Messages.importPackageTooltip, element.getName());
-    }
-
-    private boolean isConflictingThroughPackages(SmartImportableUnit element) {
-        if (element instanceof SmartImportPackageModel) {
-            return ((SmartImportPackageModel) element).getSmartImportableUnits().stream()
-                    .anyMatch(this::isConflictingThroughPackages);
-        }
-        return ((SmartImportBusinessObjectModel) element).isConflictingThroughPackages();
     }
 
     protected void parseInput() {
