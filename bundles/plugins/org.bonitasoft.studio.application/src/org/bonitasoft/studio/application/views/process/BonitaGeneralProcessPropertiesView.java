@@ -21,7 +21,6 @@ import org.bonitasoft.studio.application.views.BonitaPropertiesView;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.diagram.custom.part.BonitaGeneralProcessPropertiesBrowserPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 
