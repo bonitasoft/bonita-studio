@@ -44,9 +44,8 @@ public class BonitaGeneralProcessPropertiesView extends BonitaPropertiesView {
 	
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec rec) {
-	    IPropertySheetPage page = (IPropertySheetPage) rec.page;
-	    if(page instanceof PropertySheetPage) {
-	        PropertySheetPage propertySheetPage = (PropertySheetPage) page;
+	    if(rec.page instanceof PropertySheetPage) {
+	        PropertySheetPage propertySheetPage = (PropertySheetPage) rec.page;
 	        if(propertySheetPage.getSite() == null || propertySheetPage.getSite().getWorkbenchWindow() == null || propertySheetPage.getSite().getWorkbenchWindow().getSelectionService() == null){
 	            return;
 	        }
