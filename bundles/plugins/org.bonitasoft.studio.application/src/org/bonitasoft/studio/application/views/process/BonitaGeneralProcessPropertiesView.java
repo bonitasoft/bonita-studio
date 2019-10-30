@@ -20,6 +20,9 @@ package org.bonitasoft.studio.application.views.process;
 import org.bonitasoft.studio.application.views.BonitaPropertiesView;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.diagram.custom.part.BonitaGeneralProcessPropertiesBrowserPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 
 /**
@@ -37,6 +40,18 @@ public class BonitaGeneralProcessPropertiesView extends BonitaPropertiesView {
 	protected BonitaPropertiesBrowserPage getBonitaPropertiesBrowserPage(
 			ITabbedPropertySheetPageContributor part) {
 		return new BonitaGeneralProcessPropertiesBrowserPage(part);
+	}
+	
+	@Override
+	protected void doDestroyPage(IWorkbenchPart part, PageRec rec) {
+	    IPropertySheetPage page = (IPropertySheetPage) rec.page;
+	    if(page instanceof PropertySheetPage) {
+	        PropertySheetPage propertySheetPage = (PropertySheetPage) page;
+	        if(propertySheetPage.getSite() == null || propertySheetPage.getSite().getWorkbenchWindow() == null || propertySheetPage.getSite().getWorkbenchWindow().getSelectionService() == null){
+	            return;
+	        }
+	    }
+	    super.doDestroyPage(part, rec);
 	}
 
 }
