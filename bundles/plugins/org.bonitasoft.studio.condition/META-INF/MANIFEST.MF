@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.condition
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 7.10.0.qualifier
+Bundle-Version: 7.10.0.beta-02
 Bundle-SymbolicName: org.bonitasoft.studio.condition; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
