@@ -78,18 +78,7 @@ public class Messages extends NLS {
     public static String containsLegacyFormsWarning;
     public static String projectConnectorToVCS;
     public static String occurrences;
-    public static String smartImportMessage;
-    public static String browseLocalButton_label;
-    public static String fetchRemote;
-    public static String fetchRemoteDialogTitle;
-    public static String enterAValidURL;
-    public static String invalidContentType;
-    public static String cannotRetrieveContentType;
-    public static String onlyHTTPUrlSupported;
-    public static String invalidURL;
     public static String downloadingRemoteBosArchive;
-    public static String url;
-    public static String invalidBosArchiveType;
     public static String cannotImportRemoteArchive;
     public static String conflictingArtifactTooltip;
     public static String identicalArtifactTooltip;
