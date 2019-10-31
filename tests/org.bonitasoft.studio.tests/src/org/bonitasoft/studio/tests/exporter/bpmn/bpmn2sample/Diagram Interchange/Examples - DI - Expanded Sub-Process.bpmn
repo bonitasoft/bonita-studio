@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1275488530530" targetNamespace="http://www.trisotech.com/definitions/_1275488530530" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:process isExecutable="false" id="_6">
+        <semantic:startEvent name="StartEvent" id="StartEvent_StartEvent">
+            <semantic:outgoing>SequenceFlow_a</semantic:outgoing>
+        </semantic:startEvent>
+        <semantic:subProcess triggeredByEvent="false" completionQuantity="1" isForCompensation="false" startQuantity="1" name="SubProcess" id="SubProcess_SubProcess">
+            <semantic:incoming>SequenceFlow_a</semantic:incoming>
+            <semantic:outgoing>SequenceFlow_d</semantic:outgoing>
+            <semantic:startEvent name="SubProcessStart" id="StartEvent_SubProcessStart">
+                <semantic:outgoing>SequenceFlow_b</semantic:outgoing>
+            </semantic:startEvent>
+            <semantic:task completionQuantity="1" isForCompensation="false" startQuantity="1" name="Activity" id="Activity_Activity">
+                <semantic:incoming>SequenceFlow_b</semantic:incoming>
+                <semantic:outgoing>SequenceFlow_c</semantic:outgoing>
+            </semantic:task>
+            <semantic:endEvent name="SubProcessEnd" id="EndEvent_SubProcessEnd">
+                <semantic:incoming>SequenceFlow_c</semantic:incoming>
+            </semantic:endEvent>
+            <semantic:sequenceFlow sourceRef="StartEvent_SubProcessStart" targetRef="Activity_Activity" name="b" id="SequenceFlow_b"/>
+            <semantic:sequenceFlow sourceRef="Activity_Activity" targetRef="EndEvent_SubProcessEnd" name="c" id="SequenceFlow_c"/>
+        </semantic:subProcess>
+        <semantic:endEvent name="EndEvent" id="EndEvent_EndEvent">
+            <semantic:incoming>SequenceFlow_d</semantic:incoming>
+        </semantic:endEvent>
+        <semantic:sequenceFlow sourceRef="StartEvent_StartEvent" targetRef="SubProcess_SubProcess" name="a" id="SequenceFlow_a"/>
+        <semantic:sequenceFlow sourceRef="SubProcess_SubProcess" targetRef="EndEvent_EndEvent" name="d" id="SequenceFlow_d"/>
+    </semantic:process>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="Expanded Sub-Process" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="_6">
+            <bpmndi:BPMNShape bpmnElement="StartEvent_StartEvent" id="Trisotech.Visio__6_StartEvent_StartEvent">
+                <dc:Bounds height="30.0" width="30.0" x="120.0" y="225.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SubProcess_SubProcess" isExpanded="true" id="Trisotech.Visio__6_SubProcess_SubProcess">
+                <dc:Bounds height="168.0" width="348.0" x="192.0" y="156.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="StartEvent_SubProcessStart" id="Trisotech.Visio__6_StartEvent_SubProcessStart">
+                <dc:Bounds height="30.0" width="30.0" x="228.0" y="225.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Activity_Activity" id="Trisotech.Visio__6_Activity_Activity">
+                <dc:Bounds height="68.0" width="83.0" x="324.0" y="206.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_SubProcessEnd" id="Trisotech.Visio__6_EndEvent_SubProcessEnd">
+                <dc:Bounds height="32.0" width="32.0" x="468.0" y="224.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_EndEvent" id="Trisotech.Visio__6_EndEvent_EndEvent">
+                <dc:Bounds height="32.0" width="32.0" x="604.0" y="224.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_b" id="Trisotech.Visio__6_SequenceFlow_b">
+                <di:waypoint x="258.0" y="240.0"/>
+                <di:waypoint x="324.0" y="240.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_d" id="Trisotech.Visio__6_SequenceFlow_d">
+                <di:waypoint x="540.0" y="240.0"/>
+                <di:waypoint x="604.0" y="240.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_a" id="Trisotech.Visio__6_SequenceFlow_a">
+                <di:waypoint x="150.0" y="240.0"/>
+                <di:waypoint x="192.0" y="240.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_c" id="Trisotech.Visio__6_SequenceFlow_c">
+                <di:waypoint x="407.0" y="240.0"/>
+                <di:waypoint x="468.0" y="240.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+
