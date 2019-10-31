@@ -14,6 +14,10 @@
  */
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,11 +40,11 @@ import org.bonitasoft.studio.businessobject.ui.wizard.provider.BusinessObjectTre
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.PackageNameValidator;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.databinding.observables.GroupTextProperty;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -75,7 +79,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -83,10 +86,10 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -98,6 +101,16 @@ import org.eclipse.swt.widgets.TreeItem;
 public class BusinessDataModelWizardPage extends WizardPage {
 
     public static final String DEFAULT_BUSINESS_OBJECT_NAME = "BusinessObject";
+    public static URI BDM_HELP_URI;
+    static {
+        try {
+            BDM_HELP_URI = new URI(String.format(
+                    "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=717&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                    ProductVersion.majorVersion()));
+        } catch (URISyntaxException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 
     private IObservableList fieldsList;
     private IDiffLogger diffLogger;
@@ -133,6 +146,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(10, 10, 10, 0).spacing(1, 5).create());
 
+        createBdmDocumentationLink(mainComposite);
         createBusinessObjectDefinitionGroup(mainComposite, ctx);
         createSeparator(mainComposite);
         createBusinessObjectEditionGroup(mainComposite, ctx);
@@ -146,6 +160,19 @@ public class BusinessDataModelWizardPage extends WizardPage {
         }
         WizardPageSupport.create(this, ctx);
         setControl(mainComposite);
+    }
+
+    private void createBdmDocumentationLink(Composite parent) {
+        Link link = new Link(parent, SWT.NONE);
+        link.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
+        link.setText(Messages.bdmDocumentationLink);
+        link.addListener(SWT.Selection, e -> {
+            try {
+                Desktop.getDesktop().browse(BDM_HELP_URI);
+            } catch (IOException e1) {
+                BonitaStudioLog.error(e1);
+            }
+        });
     }
 
     private void createMavenArtifactPropertiesGroup(Composite parent, DataBindingContext ctx) {
@@ -262,11 +289,11 @@ public class BusinessDataModelWizardPage extends WizardPage {
 
             @Override
             public void setErrorMessage(String errorMessage) {
-                if(errorMessage == null) {
+                if (errorMessage == null) {
                     errorMessage = Messages.changePackageTip;
                 }
                 super.setErrorMessage(errorMessage);
-                
+
             }
         };
         if (updatePackageDialog.open() != Window.CANCEL) {

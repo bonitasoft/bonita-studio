@@ -75,9 +75,6 @@ public class Messages extends NLS {
     public static String exportFailedTitle;
     public static String javaDependencies;
     public static String javaDependenciesConfigurationDescription;
-    public static String defaultUser;
-    public static String customUser;
-    public static String defaultUserMessage;
     public static String unknownUser;
 
 }

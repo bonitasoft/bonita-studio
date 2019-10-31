@@ -429,6 +429,7 @@ public class Messages extends NLS {
     public static String objectAlreadyExistsInAnotherPackage;
     public static String conflictingWithSameObject;
     public static String changePackageTip;
+    public static String bdmDocumentationLink;
 
     private Messages() {
     }
