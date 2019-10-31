@@ -312,7 +312,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         GenerateBDMOperation generateBDMOperation = new GenerateBDMOperation(this);
-        Object cleanBDM = options.containsKey(DeployOptions.CLEAN_BDM) ? false : options.get(DeployOptions.CLEAN_BDM);
+        Object cleanBDM = options.containsKey(DeployOptions.CLEAN_BDM) ? options.get(DeployOptions.CLEAN_BDM) : false;
         if (!(cleanBDM instanceof Boolean)) {
             return new Status(IStatus.ERROR,
                     BusinessObjectPlugin.PLUGIN_ID,
