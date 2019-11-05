@@ -1190,7 +1190,7 @@
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.DeployCoolbarItem"
-            toolbarPosition="11">
+            toolbarPosition="10">
       </coolbarItem>
    </extension>
    <extension
@@ -1491,7 +1491,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.bonitasoft.studio.application.command.deployArtifacts"
-            icon="icons/rocket16.png">
+            icon="icons/deploy16.png">
       </image>
    </extension>
 
