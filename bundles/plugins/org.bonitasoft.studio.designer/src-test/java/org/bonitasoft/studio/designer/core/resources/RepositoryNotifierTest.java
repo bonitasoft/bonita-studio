@@ -70,14 +70,6 @@ public class RepositoryNotifierTest {
     }
 
     @Test
-    public void should_notifyFileStoreEvent_when_dispatching_a_postSave_event() throws Exception {
-        repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_SAVE, fileStore);
-
-        verify(store).refresh();
-        verify(repository).handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
-    }
-
-    @Test
     public void should_notifyFileStoreEvent_when_dispatching_a_postClose_event() throws Exception {
         repositoryNotifier.dispatch(WorkspaceAPIEvent.POST_CLOSE, fileStore);
 
