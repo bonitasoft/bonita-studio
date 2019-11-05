@@ -39,7 +39,7 @@ public class DeployCoolbarItem extends ContributionItem
     private ToolItem item;
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.application.command.deployArtifacts");
     }
 
@@ -60,9 +60,9 @@ public class DeployCoolbarItem extends ContributionItem
         item.setToolTipText(Messages.DeployButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage("rocket48.png",ApplicationPlugin.getDefault()));
+            item.setImage(Pics.getImage("deploy48.png", ApplicationPlugin.getDefault()));
         } else {
-            item.setImage(Pics.getImage("rocket16.png",ApplicationPlugin.getDefault()));
+            item.setImage(Pics.getImage("deploy24.png", ApplicationPlugin.getDefault()));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
