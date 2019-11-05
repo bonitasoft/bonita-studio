@@ -19,6 +19,11 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * @author Romain Bioteau
@@ -68,8 +73,15 @@ public class RepositoryNotifier {
 
     public void postSave(final IRepositoryFileStore fileStore) {
         if (fileStore != null) {
-            fileStore.getParentStore().refresh();
-            AbstractFileStore.refreshExplorerView();
+            new WorkspaceJob("Post save refresh") {
+                
+                @Override
+                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                    fileStore.getParentStore().refresh();
+                    AbstractFileStore.refreshExplorerView();
+                    return Status.OK_STATUS;
+                }
+            }.schedule();
             repository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
         }
     }
