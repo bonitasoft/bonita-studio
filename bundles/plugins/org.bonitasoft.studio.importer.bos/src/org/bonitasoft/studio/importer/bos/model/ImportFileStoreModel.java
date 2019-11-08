@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.importer.bos.model;
 
+import java.util.Objects;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
@@ -34,6 +35,15 @@ public class ImportFileStoreModel extends AbstractFileModel implements Importabl
                     }
                 })
                 .orElse(null);
+    }
+    
+    public boolean isStoreResource() {
+        int lastIndexOf = getName().lastIndexOf(".");
+        if(lastIndexOf != -1 &&  getName().length() > lastIndexOf + 1 &&  getParentRepositoryStore().isPresent()) {
+            String fileExtension = getName().substring(lastIndexOf+1,getName().length());
+            return getParentRepositoryStore().get().getCompatibleExtensions().stream().anyMatch( supportedExtension -> Objects.equals(fileExtension.toLowerCase(),supportedExtension.toLowerCase()));
+        }
+        return false;
     }
 
     @Override
