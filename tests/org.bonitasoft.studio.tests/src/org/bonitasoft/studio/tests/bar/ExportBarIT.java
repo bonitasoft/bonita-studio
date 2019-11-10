@@ -44,9 +44,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.wiring.BundleWiring;
 
 /**
  * @author Romain Bioteau
@@ -114,17 +111,7 @@ public class ExportBarIT {
 
         //Given
         final File generatedBarFile = exportBarOperation.getGeneratedBars().get(0);
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        BusinessArchive businessArchive = null;
-        try {
-            Bundle bundle = FrameworkUtil.getBundle(JAXBContext.class);
-            ClassLoader bundleClassloader = bundle.adapt(BundleWiring.class).getClassLoader();
-            //Due to some issue with tycho-surefire-plugin we need to set the proper context classloader
-            Thread.currentThread().setContextClassLoader(bundleClassloader);
-            businessArchive = readBusinessArchive(generatedBarFile);
-        } finally {
-            Thread.currentThread().setContextClassLoader(contextClassLoader);
-        }
+        BusinessArchive businessArchive = readBusinessArchive(generatedBarFile);
         assertThat(businessArchive).isNotNull();
 
         //Expect

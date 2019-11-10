@@ -41,7 +41,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
 
     private static final String XML_EXTENSION = "xml";
 
-    private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new CustomApplicationNodeContainerConverter();
+    private final ApplicationNodeContainerConverter applicationNodeContainerConverter = new ApplicationNodeContainerConverter();
 
     public ApplicationNodeContainerConverter getConverter() {
         return applicationNodeContainerConverter;
