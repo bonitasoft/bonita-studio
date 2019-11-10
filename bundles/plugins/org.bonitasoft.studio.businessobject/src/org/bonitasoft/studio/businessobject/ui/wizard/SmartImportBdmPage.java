@@ -23,7 +23,6 @@ import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.core.repository.CustomBusinessObjectModelConverter;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.OverwriteImportBdmModel;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
@@ -93,7 +92,7 @@ public class SmartImportBdmPage extends AbstractImportPage {
     public SmartImportBdmPage(RepositoryAccessor repositoryAccessor) {
         super(repositoryAccessor);
         bdmFileStore = getBdmFileStore();
-        converter = new CustomBusinessObjectModelConverter();
+        converter = new BusinessObjectModelConverter();
     }
 
     @Override

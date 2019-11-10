@@ -179,7 +179,6 @@
 		<unit id="org.apache.lucene.misc" version="7.5.0.v20181003-1532"/>
 		<unit id="org.apache.lucene.queryparser" version="7.5.0.v20181003-1532"/>
 		<unit id="javax.activation" version="1.1.0.v201211130549"/>
-		<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
 		<unit id="org.eclipse.epp.package.javascript.feature.feature.group" version="4.10.0.20181214-0600"/>
 		<unit id="org.eclipse.team.svn.feature.group" version="4.0.5.I20170425-1700"/>
 		<unit id="org.eclipse.team.svn.m2e.feature.group" version="4.0.0.I20160226-1700"/>

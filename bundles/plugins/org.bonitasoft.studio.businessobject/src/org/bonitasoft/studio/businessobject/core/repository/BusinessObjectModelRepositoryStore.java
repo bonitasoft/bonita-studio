@@ -83,7 +83,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
 
-    private BusinessObjectModelConverter converter = new CustomBusinessObjectModelConverter();
+    private BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
 
     static {
         extensions.add(BDM_TYPE_EXTENSION);

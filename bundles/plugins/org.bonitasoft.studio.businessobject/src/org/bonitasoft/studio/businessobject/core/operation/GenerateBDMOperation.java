@@ -83,12 +83,6 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             try {
                 final Map<String, byte[]> resources = new HashMap<>();
-                Bundle bundle = FrameworkUtil.getBundle(GenerateBDMOperation.class);
-                ClassLoader bundleClassloader = bundle.adapt(BundleWiring.class).getClassLoader();
-                //Due to some issue with tycho-surefire-plugin we need to set the proper context classloader
-                //before invoking the code generation
-                Thread.currentThread().setContextClassLoader(bundleClassloader);
-               
                 JDTCompiler compiler = new JDTCompiler();
                 // Build jar with Model
                 ResourcesLoader bundleResourcesLoader = new ResourcesLoader();
@@ -110,8 +104,6 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
-            }finally {
-                Thread.currentThread().setContextClassLoader(contextClassLoader);
             }
         } else {
             removeDependency();

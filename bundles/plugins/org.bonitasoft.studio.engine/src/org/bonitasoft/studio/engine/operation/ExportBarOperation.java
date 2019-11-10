@@ -115,19 +115,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
                 IProgressMonitor.UNKNOWN);
         try {
             final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId);
-            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            try {
-                Bundle bundle = FrameworkUtil.getBundle(JAXBContext.class);
-                if(bundle != null ) {
-                    ClassLoader bundleClassloader = bundle.adapt(BundleWiring.class).getClassLoader();
-                    //Due to some issue with tycho-surefire-plugin we need to set the proper context classloader
-                    Thread.currentThread().setContextClassLoader(bundleClassloader);
-                }
-                writeBusinessArchiveToFile(outputFile, bar);
-            } finally {
-                Thread.currentThread().setContextClassLoader(contextClassLoader);
-            }
-
+            writeBusinessArchiveToFile(outputFile, bar);
             generatedBars.add(outputFile);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
