@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.emf.edapt.migration/generated-src"
+    editDirectory="/org.eclipse.emf.edapt.migration.edit/generated-src" editorDirectory="/org.eclipse.emf.edapt.migration.editor/generated-src"
+    modelPluginID="org.eclipse.emf.edapt.migration" templateDirectory="" modelName="Migration"
+    modelPluginClass="org.eclipse.emf.edapt.spi.migration.MigrationPlugin" editPluginClass="org.eclipse.emf.edapt.spi.migration.provider.MigrationEditPlugin"
+    editorPluginClass="org.eclipse.emf.edapt.spi.migration.presentation.MigrationEditorPlugin"
+    rootExtendsInterface="" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
+    copyrightFields="false" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>model.ecore</foreignModel>
+  <genPackages prefix="Migration" basePackage="org.eclipse.emf.edapt.spi" disposableProviderFactory="true"
+      multipleEditorPages="false" generateModelWizard="false" ecorePackage="model.ecore#/">
+    <genDataTypes ecoreDataType="model.ecore#//Set">
+      <genTypeParameters ecoreTypeParameter="model.ecore#//Set/E"/>
+    </genDataTypes>
+    <genDataTypes ecoreDataType="model.ecore#//DiagnosticChain"/>
+    <genDataTypes ecoreDataType="model.ecore#//URI"/>
+    <genDataTypes ecoreDataType="model.ecore#//DiagnosticException"/>
+    <genDataTypes ecoreDataType="model.ecore#//MigrationException"/>
+    <genClasses ecoreClass="model.ecore#//Repository">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Repository/model"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Repository/metamodel"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//Model">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//Model/metamodel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Model/types"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Model/reflection"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Model/resources"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//Model/repository"/>
+      <genOperations ecoreOperation="model.ecore#//Model/getAllInstances">
+        <genParameters ecoreParameter="model.ecore#//Model/getAllInstances/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/getAllInstances.1">
+        <genParameters ecoreParameter="model.ecore#//Model/getAllInstances.1/className"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/getInstances">
+        <genParameters ecoreParameter="model.ecore#//Model/getInstances/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/getInstances.1">
+        <genParameters ecoreParameter="model.ecore#//Model/getInstances.1/className"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/getType">
+        <genParameters ecoreParameter="model.ecore#//Model/getType/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/createExtentMap"/>
+      <genOperations ecoreOperation="model.ecore#//Model/newInstance">
+        <genParameters ecoreParameter="model.ecore#//Model/newInstance/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/newInstance.1">
+        <genParameters ecoreParameter="model.ecore#//Model/newInstance.1/className"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/delete">
+        <genParameters ecoreParameter="model.ecore#//Model/delete/instance"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Model/validate"/>
+      <genOperations ecoreOperation="model.ecore#//Model/checkConformance"/>
+      <genOperations ecoreOperation="model.ecore#//Model/commit"/>
+      <genOperations ecoreOperation="model.ecore#//Model/newResource">
+        <genParameters ecoreParameter="model.ecore#//Model/newResource/uri"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//ModelResource">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ModelResource/rootInstances"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ModelResource/model"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//Type">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//Type/eClass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Type/instances"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//Type/model"/>
+      <genOperations ecoreOperation="model.ecore#//Type/newInstance"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//Instance">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Instance/slots"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//Instance/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//Instance/references"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Instance/uri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Instance/uuid"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/getSlot">
+        <genParameters ecoreParameter="model.ecore#//Instance/getSlot/feature"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/get">
+        <genParameters ecoreParameter="model.ecore#//Instance/get/feature"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//Instance/get/V"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/get.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/get.1/featureName"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//Instance/get.1/V"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getInverse">
+        <genParameters ecoreParameter="model.ecore#//Instance/getInverse/reference"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getInverse.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/getInverse.1/referenceName"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getEClass"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/isSet">
+        <genParameters ecoreParameter="model.ecore#//Instance/isSet/feature"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/set">
+        <genParameters ecoreParameter="model.ecore#//Instance/set/feature"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/set/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/set.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/set.1/featureName"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/set.1/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/unset">
+        <genParameters ecoreParameter="model.ecore#//Instance/unset/feature"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//Instance/unset/V"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/add">
+        <genParameters ecoreParameter="model.ecore#//Instance/add/feature"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add/index"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/add.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/add.1/feature"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add.1/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/add.2">
+        <genParameters ecoreParameter="model.ecore#//Instance/add.2/featureName"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add.2/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/add.3">
+        <genParameters ecoreParameter="model.ecore#//Instance/add.3/featureName"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add.3/index"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/add.3/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/remove">
+        <genParameters ecoreParameter="model.ecore#//Instance/remove/feature"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/remove/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/remove.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/remove.1/feature"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/remove.1/index"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/remove.2">
+        <genParameters ecoreParameter="model.ecore#//Instance/remove.2/featureName"/>
+        <genParameters ecoreParameter="model.ecore#//Instance/remove.2/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/migrate">
+        <genParameters ecoreParameter="model.ecore#//Instance/migrate/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/migrate.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/migrate.1/className"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/instanceOf">
+        <genParameters ecoreParameter="model.ecore#//Instance/instanceOf/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/instanceOf.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/instanceOf.1/className"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getContainer"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/getContents"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/getContainerReference"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/getResource"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/isProxy"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/copy"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/getLink">
+        <genParameters ecoreParameter="model.ecore#//Instance/getLink/referenceName"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getLinks">
+        <genParameters ecoreParameter="model.ecore#//Instance/getLinks/referenceName"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getLink.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/getLink.1/reference"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/getLinks.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/getLinks.1/reference"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/validate"/>
+      <genOperations ecoreOperation="model.ecore#//Instance/validate.1">
+        <genParameters ecoreParameter="model.ecore#//Instance/validate.1/chain"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Instance/evaluate">
+        <genParameters ecoreParameter="model.ecore#//Instance/evaluate/expression"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//Instance/evaluate/V"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//Slot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//Slot/instance"/>
+      <genOperations ecoreOperation="model.ecore#//Slot/getEFeature"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//AttributeSlot">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//AttributeSlot/eAttribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//AttributeSlot/values"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//ReferenceSlot">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ReferenceSlot/eReference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ReferenceSlot/values"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//Metamodel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//Metamodel/resources"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//Metamodel/repository"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//Metamodel/defaultPackage"/>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEPackage">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEPackage/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEClassifier">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEClassifier/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEFeature">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEFeature/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEClass">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEClass/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEReference">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEReference/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEAttribute">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEAttribute/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEDataType">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEDataType/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getElement">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getElement/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/validate"/>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEPackages"/>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/setDefaultPackage">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/setDefaultPackage/packageName"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEEnum">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEEnum/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEEnumLiteral">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEEnumLiteral/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/delete">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/delete/metamodelElement"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getInverse">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getInverse/metamodelElement"/>
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getInverse/reference"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//Metamodel/getInverse/V"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getESubTypes">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getESubTypes/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/getEAllSubTypes">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/getEAllSubTypes/eClass"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Metamodel/setEOpposite">
+        <genParameters ecoreParameter="model.ecore#//Metamodel/setEOpposite/reference"/>
+        <genParameters ecoreParameter="model.ecore#//Metamodel/setEOpposite/opposite"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//MetamodelResource">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//MetamodelResource/rootPackages"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//MetamodelResource/metamodel"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//AbstractResource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//AbstractResource/uri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//AbstractResource/encoding"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
