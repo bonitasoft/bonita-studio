@@ -65,6 +65,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -86,6 +87,7 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -287,15 +289,18 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 packageHelper.getPackageName(selectedBo),
                 new PackageNameValidator()) {
 
-            @Override
-            public void setErrorMessage(String errorMessage) {
-                if (errorMessage == null) {
-                    errorMessage = Messages.changePackageTip;
-                }
-                super.setErrorMessage(errorMessage);
-
-            }
-        };
+                    @Override
+                    public void setErrorMessage(String errorMessage) {
+                        if (errorMessage == null) {
+                            errorMessage = Messages.changePackageTip;
+                        }
+                        super.setErrorMessage(errorMessage);
+                        Control button = getButton(IDialogConstants.OK_ID);
+                        if (button != null) {
+                            button.setEnabled(errorMessage == null || Objects.equals(errorMessage,Messages.changePackageTip));
+                        }
+                    }
+                };
         if (updatePackageDialog.open() != Window.CANCEL) {
             updatePackage(selectedBo, updatePackageDialog.getValue());
         }

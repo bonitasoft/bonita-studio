@@ -508,6 +508,9 @@
                <target
                      class="BoundaryEvent:http://www.bonitasoft.org/ns/studio/process">
                </target>
+                 <target
+                     class="SubProcessEvent:http://www.bonitasoft.org/ns/studio/process">
+               </target>
             </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.CatchMessageEventConstraint"

@@ -92,6 +92,7 @@ public class ConnectorBarResourceProviderTest {
     public void should_add_implementation_jar_in_bar_resource_from_source() throws Exception {
         final ConnectorBarResourceProvider provider = spy(new ConnectorBarResourceProvider(repositoryAccessor));
         doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(), any(PackageFileStore.class));
+        doReturn(true).when(provider).classInSourceProject("org.test.MyConnector");
         when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
                 "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
