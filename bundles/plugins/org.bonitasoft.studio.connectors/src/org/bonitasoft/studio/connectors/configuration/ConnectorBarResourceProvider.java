@@ -58,6 +58,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.jdt.core.JavaModelException;
 
 /**
  * @author Romain Bioteau
@@ -96,15 +97,23 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
             final String implId = association.getImplementationId();
             final String implVersion = association.getImplementationVersion();
 
-            final EMFFileStore implementationFileStore = (EMFFileStore) implStore.getImplementationFileStore(implId, implVersion);
+            final EMFFileStore implementationFileStore = (EMFFileStore) implStore.getImplementationFileStore(implId,
+                    implVersion);
             if (implementationFileStore == null) {
-                throw new FileNotFoundException(String.format("%s (%s) not found in repository", association.getImplementationId(),
-                        association.getImplementationVersion()));
+                throw new FileNotFoundException(
+                        String.format("%s (%s) not found in repository", association.getImplementationId(),
+                                association.getImplementationVersion()));
             }
             addImplementation(builder, connectorImplementationFilename, implementationFileStore, configuration);
 
-            final ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore.getContent();
-            addProcessDependencies(builder, configuration, resources, connectorImplementation, implementationFileStore.canBeShared());
+            final ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore
+                    .getContent();
+            try {
+                addProcessDependencies(builder, configuration, resources, connectorImplementation,
+                        implementationFileStore.canBeShared());
+            } catch (JavaModelException e) {
+                throw new InvocationTargetException(e);
+            }
         }
 
         for (final BarResource barResource : resources) {
@@ -124,22 +133,29 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         return repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class);
     }
 
-    protected void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration, final List<BarResource> resources,
-            final ConnectorImplementation implementation, final boolean customImpl) throws InvocationTargetException, InterruptedException, IOException {
-        final DependencyRepositoryStore dependencyStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
+    protected void addProcessDependencies(final BusinessArchiveBuilder builder, final Configuration configuration,
+            final List<BarResource> resources,
+            final ConnectorImplementation implementation, final boolean customImpl)
+            throws InvocationTargetException, InterruptedException, IOException, JavaModelException {
+        final DependencyRepositoryStore dependencyStore = repositoryAccessor
+                .getRepositoryStore(DependencyRepositoryStore.class);
         final java.util.Optional<FragmentContainer> fragmentContainer = configuration.getProcessDependencies().stream()
                 .filter(fc -> fc.getId().equals(getFragmentType())).findFirst();
         if (fragmentContainer.isPresent()) {
-            final java.util.Optional<FragmentContainer> implementationContainer = fragmentContainer.get().getChildren().stream()
-                    .filter(fragment -> Objects.equals(fragment.getId(), NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
-                            implementation.getImplementationVersion(),
-                            false)))
+            final java.util.Optional<FragmentContainer> implementationContainer = fragmentContainer.get().getChildren()
+                    .stream()
+                    .filter(fragment -> Objects.equals(fragment.getId(),
+                            NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                                    implementation.getImplementationVersion(),
+                                    false)))
                     .findFirst();
-         
+
             if (implementationContainer.isPresent()) {
-                for (final Fragment fragment : implementationContainer.get().getFragments().stream().filter(fragment -> fragment.isExported())
+                for (final Fragment fragment : implementationContainer.get().getFragments().stream()
+                        .filter(fragment -> fragment.isExported())
                         .collect(Collectors.toList())) {
-                    if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation).equals(fragment.getValue())) { //Generate jar from source file
+                    if (customImpl && NamingUtils.toConnectorImplementationJarName(implementation)
+                            .equals(fragment.getValue())) { //Generate jar from source file
                         addImplementationJar(builder, implementation);
                     }
                     final IRepositoryFileStore jarFile = dependencyStore.getChild(fragment.getValue(), true);
@@ -151,15 +167,17 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         }
     }
 
-    protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore, final String jarName) throws IOException {
+    protected void addResource(final List<BarResource> resources, final DependencyRepositoryStore libStore,
+            final String jarName) throws IOException {
         final IRepositoryFileStore jarFileStore = libStore.getChild(jarName, true);
         if (jarFileStore != null) {
             resources.add(new BarResource(jarFileStore.getName(), jarFileStore.toByteArray()));
         }
     }
 
-    private boolean addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) throws InvocationTargetException,
-            InterruptedException, IOException {
+    private boolean addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl)
+            throws InvocationTargetException,
+            InterruptedException, IOException, JavaModelException {
         final SourceRepositoryStore<?> sourceStore = getSourceStore();
         final String connectorJarName = NamingUtils.toConnectorImplementationJarName(impl);
         final String qualifiedClassName = impl.getImplementationClassname();
@@ -171,16 +189,24 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         if (file == null) {
             return false;
         }
-        final File tmpFile = exportJar(connectorJarName, file);
-        try {
-            builder.addClasspathResource(new BarResource(connectorJarName, toByteArray(tmpFile)));
-        } finally {
-            tmpFile.delete();
+        if (classInSourceProject(qualifiedClassName)) {
+            final File tmpFile = exportJar(connectorJarName, file);
+            try {
+                builder.addClasspathResource(new BarResource(connectorJarName, toByteArray(tmpFile)));
+            } finally {
+                tmpFile.delete();
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
-    protected File exportJar(final String connectorJarName, final PackageFileStore file) throws InvocationTargetException, InterruptedException {
+    protected boolean classInSourceProject(final String qualifiedClassName) throws JavaModelException {
+        return repositoryAccessor.getCurrentRepository().getJavaProject().findType(qualifiedClassName) != null;
+    }
+
+    protected File exportJar(final String connectorJarName, final PackageFileStore file)
+            throws InvocationTargetException, InterruptedException {
         final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
         tmpFile.delete();
         file.exportAsJar(tmpFile.getAbsolutePath(), false);
@@ -198,13 +224,15 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                 newBarResource(connectorImplementationFilename, implementationFileStore, configuration));
     }
 
-    protected BarResource newBarResource(final String connectorImplementationFilename, final EMFFileStore implementationFileStore,
+    protected BarResource newBarResource(final String connectorImplementationFilename,
+            final EMFFileStore implementationFileStore,
             final Configuration configuration) throws UnsupportedEncodingException, IOException {
         return new BarResource(connectorImplementationFilename,
                 toXMLString(implemetationWithSelfDep(implementationFileStore, configuration)).getBytes("UTF-8"));
     }
 
-    protected ConnectorImplementation implemetationWithSelfDep(final EMFFileStore implementationFileStore, final Configuration configuration)
+    protected ConnectorImplementation implemetationWithSelfDep(final EMFFileStore implementationFileStore,
+            final Configuration configuration)
             throws IOException {
         final ConnectorImplementation content = (ConnectorImplementation) implementationFileStore.getContent();
         final ConnectorImplementation connectorImplementation = EcoreUtil.copy(content);
@@ -229,7 +257,8 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         final Map<Object, Object> options = resource.getDefaultSaveOptions();
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         try {
-            return xmlProcessor.saveToString(resource, options).replace("implementation:ConnectorImplementation", "implementation:connectorImplementation");
+            return xmlProcessor.saveToString(resource, options).replace("implementation:ConnectorImplementation",
+                    "implementation:connectorImplementation");
         } finally {
             if (resource != null) {
                 resource.delete(options);
@@ -240,13 +269,16 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     private boolean selfDependenciesIsExported(Configuration configuration, ConnectorImplementation implementation) {
         final java.util.Optional<FragmentContainer> connectorContainer = configuration.getProcessDependencies().stream()
                 .filter(fragment -> Objects.equals(fragment.getId(), getFragmentType())).findFirst();
-        final java.util.Optional<FragmentContainer> implementationContainer = connectorContainer.get().getChildren().stream()
-                .filter(fragment -> Objects.equals(fragment.getId(), NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
-                        implementation.getImplementationVersion(), false))).findAny();
+        final java.util.Optional<FragmentContainer> implementationContainer = connectorContainer.get().getChildren()
+                .stream()
+                .filter(fragment -> Objects.equals(fragment.getId(),
+                        NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                                implementation.getImplementationVersion(), false)))
+                .findAny();
         return implementationContainer.get().getFragments().stream()
-                .filter(fragment -> Objects.equals(fragment.getValue(), NamingUtils.toConnectorImplementationJarName(implementation)))
+                .filter(fragment -> Objects.equals(fragment.getValue(),
+                        NamingUtils.toConnectorImplementationJarName(implementation)))
                 .filter(fragment -> fragment.isExported()).findFirst().isPresent();
     }
-
 
 }

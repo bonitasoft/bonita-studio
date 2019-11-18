@@ -122,7 +122,8 @@ public class RunProcessCommand extends AbstractHandler {
                         } catch (InvocationTargetException | InterruptedException e) {
                             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
                         }
-                        return runProcessOperation.getStatus();
+                        //Run status has already been reported in RunProcessOperation operation
+                        return Status.OK_STATUS;
                     }
                 };
                 job.setUser(true);

@@ -90,14 +90,8 @@ public class WorkspaceServerResource extends ServerResource {
     @Post("text/plain")
     public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException {
         checkArgument(!isNullOrEmpty(filePath), "filePath is null or empty");
-        new Thread(() -> {
-            final IRepositoryFileStore fileStore = toFileStore(filePath);
-            try {
-                repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), fileStore);
-            } catch (LockedResourceException | ResourceNotFoundException e) {
-               throw new RuntimeException(e);
-            }
-        }, String.format("Refresh %s",filePath)).start();
+        final IRepositoryFileStore fileStore = toFileStore(filePath);
+        repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), fileStore);
     }
 
     @Get
