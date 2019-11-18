@@ -172,7 +172,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         try (ZipFile zipFile = bosArchive.getZipFile();) {
             repositoryFileStore = unit.doImport(zipFile,
                     monitor);
-            if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel)) {
+            if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel) && ((ImportFileStoreModel) unit).isStoreResource()) {
                 status.add(ValidationStatus
                         .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName()))); // TODO The ImportFileStoreModel should have a status ...
             }

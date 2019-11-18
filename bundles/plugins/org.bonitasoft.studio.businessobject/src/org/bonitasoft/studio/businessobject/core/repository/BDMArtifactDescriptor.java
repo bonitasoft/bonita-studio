@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.Status;
 public class BDMArtifactDescriptor {
 
     private static final String GROUP_ID_PROPERTY = "groupId";
-    
+
     private String groupId;
 
     public String getGroupId() {
@@ -70,7 +70,7 @@ public class BDMArtifactDescriptor {
     }
 
     public void save(IFile descriptorPropertyFile) throws CoreException {
-        Properties properties = new Properties();
+        Properties properties = new PropertiesWithoutComment();
         properties.setProperty(GROUP_ID_PROPERTY, getGroupId());
         try (OutputStream out = new FileOutputStream(descriptorPropertyFile.getLocation().toFile())) {
             properties.store(out, null);
@@ -80,4 +80,5 @@ public class BDMArtifactDescriptor {
         }
         descriptorPropertyFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
+
 }

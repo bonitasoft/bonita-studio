@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.groovy.contentassist;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
@@ -21,44 +22,45 @@ import org.eclipse.ui.IEditorPart;
 
 public class ExtendedJavaContentAssistInvocationContext extends JavaContentAssistInvocationContext {
 
-	private Map<String, ScriptVariable> context;
+    private Map<String, ScriptVariable> context;
 
-	private Document tmpDocument;
+    private Document tmpDocument;
 
-	private int offset;
+    private int offset;
 
-	public ExtendedJavaContentAssistInvocationContext(final ITextViewer viewer, final int offset,
-			final IEditorPart editor) {
-		super(viewer, offset, editor);
-	}
+    public ExtendedJavaContentAssistInvocationContext(final ITextViewer viewer, final int offset,
+            final IEditorPart editor) {
+        super(viewer, offset, editor);
+        this.context = new HashMap<>();
+    }
 
-	public ExtendedJavaContentAssistInvocationContext(IEditorPart editor, ITextViewer viewer, int offset,
-			Document tmpDocument, int tmpOffset, Map<String, ScriptVariable> context) {
-		super(viewer, tmpOffset, editor);
-		this.offset = offset;
-		this.context = context;
-		this.tmpDocument = tmpDocument;
-	}
+    public ExtendedJavaContentAssistInvocationContext(IEditorPart editor, ITextViewer viewer, int offset,
+            Document tmpDocument, int tmpOffset, Map<String, ScriptVariable> context) {
+        super(viewer, tmpOffset, editor);
+        this.offset = offset;
+        this.context = context;
+        this.tmpDocument = tmpDocument;
+    }
 
-	@Override
-	public IDocument getDocument() {
-		if (tmpDocument != null) {
-			return tmpDocument;
-		}
-		return super.getDocument();
-	}
+    @Override
+    public IDocument getDocument() {
+        if (tmpDocument != null) {
+            return tmpDocument;
+        }
+        return super.getDocument();
+    }
 
-	public int getOffset() {
-		return offset;
-	}
-	
-	@Override
-	public ICompilationUnit getCompilationUnit() {
-	    ICompilationUnit compilationUnit = super.getCompilationUnit();
-	    if(compilationUnit instanceof BonitaScriptGroovyCompilationUnit) {
-	        ((BonitaScriptGroovyCompilationUnit) compilationUnit).setContext(context);
-	    }
-	    return compilationUnit;
-	}
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public ICompilationUnit getCompilationUnit() {
+        ICompilationUnit compilationUnit = super.getCompilationUnit();
+        if (compilationUnit instanceof BonitaScriptGroovyCompilationUnit) {
+            ((BonitaScriptGroovyCompilationUnit) compilationUnit).setContext(context);
+        }
+        return compilationUnit;
+    }
 
 }
