@@ -35,7 +35,6 @@ import org.bonitasoft.engine.bpm.process.impl.GatewayDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.IntermediateCatchEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.IntermediateThrowEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.MultiInstanceLoopCharacteristicsBuilder;
-import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ReceiveTaskDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.SendTaskDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.StartEventDefinitionBuilder;
@@ -161,7 +160,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
             message = senTask.getEvents().get(0);
             targetProcess = EngineExpressionUtil.createExpression(message.getTargetProcessExpression());
         }
-        final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder) builder).addSendTask(senTask.getName(),
+        final SendTaskDefinitionBuilder taskBuilder = builder.addSendTask(senTask.getName(),
                 message.getName(), targetProcess);
         if (message != null) {
             taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
