@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +38,7 @@ public class UniqueFlowElementAndBoundaryIdConstraint extends AbstractLiveValida
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
         final EObject eObj = ctx.getTarget();
-        if (eObj instanceof FlowElement || eObj instanceof BoundaryEvent) {
+        if (eObj instanceof FlowElement || eObj instanceof BoundaryEvent || eObj instanceof SubProcessEvent) {
             //check that there is no other elements with the same name
             final Container parentProcess = ModelHelper.getParentProcess(eObj);
             if (parentProcess != null) {
@@ -50,6 +51,8 @@ public class UniqueFlowElementAndBoundaryIdConstraint extends AbstractLiveValida
                         elements.addAll(((Activity) flowElement).getBoundaryIntermediateEvents());
                     }
                 }
+                List<SubProcessEvent> subprocessEvents = ModelHelper.getAllElementOfTypeIn(parentProcess, SubProcessEvent.class);
+                elements.addAll(subprocessEvents);
                 final String elementName = el.getName();
                 for (final Element e : elements) {
                     if (!e.equals(el) && e.getName().equalsIgnoreCase(elementName)) {

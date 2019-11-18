@@ -92,23 +92,23 @@ public class UndeployProcessOperation {
                 return undeployAll(monitor);
             } catch (final Exception e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.undeploymentFailedMessage, e);
+                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, String.format(Messages.undeploymentFailedMessage+": %s",e.getMessage()), e);
             }
         } else {
             Assert.isTrue(!processes.isEmpty());
-            try {
-                return undeploy(monitor);
-            } catch (final Exception e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, Messages.undeploymentFailedMessage, e);
-            }
+            return undeploy(monitor);
         }
 
     }
 
-    protected IStatus undeploy(final IProgressMonitor monitor) throws Exception {
+    protected IStatus undeploy(final IProgressMonitor monitor) {
         for (final AbstractProcess process : processes) {
-            undeployProcess(process, monitor);
+            try {
+                undeployProcess(process, monitor);
+            } catch (Exception e) {
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+                return new Status(Status.ERROR, EnginePlugin.PLUGIN_ID, String.format("%s (%s): %s",process.getName(),process.getVersion(),e.getMessage()), e);
+            }
         }
         return Status.OK_STATUS;
     }

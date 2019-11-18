@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
@@ -49,7 +50,6 @@ public class ProvidedContentFilter extends ViewerFilter {
         HIDDEN_RESOURCES.add(Path.fromOSString("web_widgets/.metadata"));
         HIDDEN_RESOURCES.add(Path.fromOSString("web_pages/.metadata"));
         HIDDEN_RESOURCES.add(Path.fromOSString("web_fragments/.metadata"));
-        HIDDEN_RESOURCES.add(Path.fromOSString("target"));
     }
 
     @Override
@@ -86,8 +86,13 @@ public class ProvidedContentFilter extends ViewerFilter {
             } catch (IOException | CoreException e) {
                 BonitaStudioLog.error(e);
             }
-            return ((IResource) element).getProject().isOpen()
-                    && !HIDDEN_RESOURCES.contains(((IResource) element).getProjectRelativePath());
+            IProject project = ((IResource) element).getProject();
+            try {
+                return (project.isOpen() && !project.hasNature(BonitaProjectNature.NATURE_ID)) || (project.isOpen()
+                        && !HIDDEN_RESOURCES.contains(((IResource) element).getProjectRelativePath()));
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         return true;
     }

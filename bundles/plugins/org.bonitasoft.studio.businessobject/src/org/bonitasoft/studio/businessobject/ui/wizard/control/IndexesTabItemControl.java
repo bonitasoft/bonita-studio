@@ -26,14 +26,15 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.IndexFieldsEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.IndexNameEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.ListChangeEvent;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -100,27 +101,20 @@ public class IndexesTabItemControl extends AbstractTabItemControl {
         tableLayout.addColumnData(new ColumnWeightData(2));
         indexesTableViewer.getTable().setLayout(tableLayout);
 
-        UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
-        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
+        ctx.bindValue(WidgetProperties.enabled().observe(indexesTableViewer.getTable()), viewerObservableValue, null,
+                UpdateStrategyFactory.updateValueStrategy().withConverter(ConverterBuilder.<Object, Boolean> newConverter()
+                        .fromType(Object.class)
+                        .toType(Boolean.class)
+                        .withConvertFunction(o -> o instanceof BusinessObject)
+                        .create())
+                        .create());
+
+        IViewerObservableValue selection = ViewersObservables.observeSingleSelection(indexesTableViewer);
+        ctx.bindValue(WidgetProperties.enabled().observe(deleteButton), new ComputedValue<Boolean>() {
 
             @Override
-            public Object convert(final Object fromObject) {
-                return fromObject instanceof BusinessObject;
-            }
-        });
-        ctx.bindValue(SWTObservables.observeEnabled(indexesTableViewer.getTable()), viewerObservableValue, null,
-                enableStrategy);
-
-        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables
-                .observeSingleSelection(indexesTableViewer);
-        ctx.bindValue(SWTObservables.observeEnabled(deleteButton), constaintObserveSingleSelection, null, enableStrategy);
-
-        enableStrategy = new UpdateValueStrategy();
-        enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                return fromObject instanceof List && !((List<?>) fromObject).isEmpty();
+            protected Boolean calculate() {
+                return selection.getValue() != null;
             }
         });
 

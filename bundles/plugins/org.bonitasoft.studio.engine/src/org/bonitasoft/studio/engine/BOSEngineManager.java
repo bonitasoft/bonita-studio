@@ -345,7 +345,7 @@ public class BOSEngineManager {
         String username = configuration.getUsername();
         String password = retrieveUserPasswordFromActiveOrga(username)
                 .orElseThrow(() -> new Exception(
-                        String.format("Enable to retrieve the password of %s in the active organization.",
+                        String.format("Unable to retrieve the password of %s in the active organization.",
                                 username)));
         try {
             session = BOSEngineManager.getInstance().loginTenant(username, password,
@@ -381,7 +381,7 @@ public class BOSEngineManager {
             final Map<Long, Map<String, byte[]>> clientTenantConfigurations = platformAPI.getClientTenantConfigurations();
             final Map<String, byte[]> resources = clientTenantConfigurations.get(DEFAULT_TENANT_ID);
             if (!resources.containsKey(resourceName)) {
-                throw new FileNotFoundException(String.format("Resource %s does not esists in database.", resourceName));
+                throw new FileNotFoundException(String.format("Resource %s does not exist in database.", resourceName));
             }
             return resources.get(resourceName);
         } finally {
