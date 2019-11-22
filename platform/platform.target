@@ -219,6 +219,27 @@
 		<unit id="org.eclipse.jgit.lfs.feature.group" version="5.3.0.201903130848-r"/>
 		<unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.5.0"/>
 	</location>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<unit id="de.jcup.asciidoctor.converter.feature.group" version="1.0.3"/>
+		<unit id="de.jcup.asciidoctoreditor.feature.group" version="2.0.3"/>
+		<repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor/"/>
+	</location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <repository location="https://dl.bintray.com/de-jcup/yamleditor"/>
+        <unit id="de.jcup.yamleditor.feature.group" version="1.6.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <repository location="https://nodeclipse.github.io/updates/markdown/"/>
+        <unit id="markdown.editor.feature.feature.group" version="1.2.0.201501260515"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <repository location="http://dl.bintray.com/satyagraha/generic/2.0.1/"/>
+        <unit id="code.satyagraha.gfm.viewer.feature.feature.group" version="2.0.1"/>
+    </location>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+		<unit id="net.sourceforge.plantuml.lib.feature.feature.group" version="1.2019.0"/>
+		<repository location="http://hallvard.github.io/plantuml"/>
+	</location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 </target>
