@@ -544,5 +544,21 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+    <includes
+         id="de.jcup.asciidoctor.converter"
+         version="0.0.0"/>
+
+   <includes
+         id="de.jcup.asciidoctoreditor"
+         version="0.0.0"/>
+
+   <includes
+         id="markdown.editor.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="de.jcup.yamleditor"
+         version="0.0.0"/>
 
 </feature>
