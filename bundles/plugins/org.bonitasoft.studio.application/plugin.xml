@@ -38,15 +38,6 @@
          </run>
       </application>
    </extension>
-      <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="*">
-         <hiddenMenuItem
-               id="org.eclipse.ui.run">
-         </hiddenMenuItem>
-      </perspectiveExtension>
-   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -996,6 +987,12 @@
                   value="org.bonitasoft.studio.team.compare.perspective">
             </equals>
          </with>
+           <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.perspective.markdownEditor">
+            </equals>
+         </with>
          </or>
       </definition>
       <definition
@@ -1468,6 +1465,16 @@
             id="org.bonitasoft.studio.perspective.welcomePage"
             name="No editor opened perspective">
       </perspective>
+      <perspective
+            class="org.bonitasoft.studio.application.perspective.TextEditorPerspectiveFactory"
+            id="org.bonitasoft.studio.perspective.textEditor"
+            name="Text Perspective">
+      </perspective>
+      <perspective
+            class="org.bonitasoft.studio.application.perspective.MarkdownEditorPerspectiveFactory"
+            id="org.bonitasoft.studio.perspective.markdownEditor"
+            name="Markdown Editor Perspective">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -1484,6 +1491,9 @@
          </hiddenMenuItem>
          <hiddenMenuItem
                id="org.eclipse.jdt.ui.source.menu">
+         </hiddenMenuItem>
+         <hiddenMenuItem
+               id="org.eclipse.ui.run">
          </hiddenMenuItem>
       </perspectiveExtension>
    </extension>
