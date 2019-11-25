@@ -7,13 +7,14 @@
         <artifactId>bundles</artifactId>
         <version>7.11.0-SNAPSHOT</version>
     </parent>
-    <name>Bonita BPM Studio Community Plugins</name>
+    <name>Bonita Studio Community Plugins</name>
     <groupId>org.bonitasoft.studio.bundles</groupId>
     <artifactId>plugins</artifactId>
     <packaging>pom</packaging>
 
 
     <modules>
+        <module>bonita-asciidoc-templating</module>
      	<module>bonita-business-data-generator</module>
      	<module>bonita-studio-watchdog</module>
         <module>org.bonitasoft.studio-models</module>
@@ -99,7 +100,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>test</id>
+                        <id>default-test</id>
                         <phase>test</phase>
                         <configuration>
                             <systemProperties>
@@ -121,7 +122,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>compiletests</id>
+                        <id>default-testCompile</id>
                         <phase>test-compile</phase>
                         <goals>
                             <goal>testCompile</goal>
