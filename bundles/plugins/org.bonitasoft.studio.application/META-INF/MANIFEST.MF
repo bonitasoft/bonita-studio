@@ -68,7 +68,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.actors;bundle-version="7.10.0",
  org.eclipse.core.databinding.property;bundle-version="1.6.300",
  org.bonitasoft.studio.configuration;bundle-version="7.10.0",
- org.eclipse.m2e.maven.runtime
+ org.eclipse.m2e.maven.runtime,
+ winterwell.markdown;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

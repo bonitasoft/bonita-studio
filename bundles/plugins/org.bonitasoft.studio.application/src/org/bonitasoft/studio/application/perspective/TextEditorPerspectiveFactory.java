@@ -12,13 +12,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.perspectives;
+package org.bonitasoft.studio.application.perspective;
 
+import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
+
+import winterwell.markdown.editors.MarkdownEditor;
 
 
 public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
@@ -32,12 +36,22 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
         final IFolderLayout leftView = layout.createFolder(
                 "leftView", IPageLayout.LEFT, getExplorerViewRatio(), editorArea);
         leftView.addView("org.bonitasoft.studio.application.project.explorer");
+        
+        final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
+        if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
+            bottomfolder.addView("org.eclipse.egit.ui.StagingView");
+            bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
+        }
+        bottomfolder.addView("org.eclipse.ui.views.ProblemView");
+        
+        final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
+        rightFolder.addView(IPageLayout.ID_OUTLINE);
     }
 
 
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return (part instanceof TextEditor || part instanceof WebBrowserEditor)
+        return !(part instanceof MarkdownEditor) && (part instanceof TextEditor || part instanceof WebBrowserEditor)
                 && !isInsideprojectWithREStApiExtensionNature(part);
     }
 

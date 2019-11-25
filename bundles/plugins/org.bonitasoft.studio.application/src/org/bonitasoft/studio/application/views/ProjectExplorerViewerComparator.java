@@ -19,7 +19,7 @@ import org.eclipse.jdt.ui.JavaElementComparator;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-public class ProjectExplorerViewerComparator extends ViewerComparator {
+public class ProjectExplorerViewerComparator extends JavaElementComparator {
 
     private ViewerComparator defaultSorter = new JavaElementComparator();
     private FileStoreFinder fileStoreFinder = new FileStoreFinder();
@@ -48,6 +48,8 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
         REPO_STORE_ORDER.put("src-customTypes", 26);
         REPO_STORE_ORDER.put("environements", 27);
         REPO_STORE_ORDER.put("src-groovy", 28);
+        REPO_STORE_ORDER.put("attachments", 29);
+        REPO_STORE_ORDER.put("lib", 30);
     }
 
     @Override
@@ -90,8 +92,10 @@ public class ProjectExplorerViewerComparator extends ViewerComparator {
         IRepositoryStore store = element instanceof IRepositoryStore
                 ? (IRepositoryStore) element
                 : RepositoryManager.getInstance().getRepositoryStore(element).orElse(null);
-        if (store != null) {
-            Integer rank = REPO_STORE_ORDER.get(store.getResource().getName());
+       IResource resource = element instanceof IFolder ? (IFolder) element : null;
+        if (store != null || resource != null) {
+            resource = store != null ? store.getResource() : resource;
+            Integer rank = REPO_STORE_ORDER.get(resource.getName());
             if (rank != null) {
                 return -100 + rank;
             }

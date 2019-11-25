@@ -47,7 +47,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.validation;bundle-version="1.2.701"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.common.repository,
+Export-Package: org.bonitasoft.asciidoc.templating,
+ org.bonitasoft.asciidoc.templating.model,
+ org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.job,
  org.bonitasoft.studio.common.repository.extension,
@@ -63,7 +65,7 @@ Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.ui,
  org.bonitasoft.studio.common.repository.ui.viewer,
  org.bonitasoft.studio.common.repository.ui.wizard
-Bundle-ClassPath: lib/nlcl.jar,
+Bundle-ClassPath: lib/bonita-asciidoc-templating.jar,
  .
 Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.bpm.bar,
