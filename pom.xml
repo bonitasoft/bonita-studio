@@ -19,7 +19,7 @@
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
-        <tomcat.version>8.5.40</tomcat.version>
+		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.0.8</image-overlay-plugin.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -127,7 +127,7 @@
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
-					<version>${tycho.version}</version>
+					<version>${tychoVersion}</version>
 					<configuration>
 						<useUIHarness>false</useUIHarness>
 					</configuration>
@@ -141,6 +141,15 @@
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
 					<version>1.5.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tychoVersion}</version>
+					<configuration>
+						<compilerArgument>-warn:+discouraged,forbidden</compilerArgument>
+						<useProjectSettings>false</useProjectSettings>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
@@ -209,7 +218,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

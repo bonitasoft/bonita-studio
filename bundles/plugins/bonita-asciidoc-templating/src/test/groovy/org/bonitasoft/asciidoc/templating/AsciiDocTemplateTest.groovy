@@ -50,7 +50,7 @@ class AsciiDocTemplateTest extends Specification {
         def tplConfig = new TemplateConfiguration()
         tplConfig.baseTemplateClass = AsciiDocTemplate
         def engine = new MarkupTemplateEngine(tplConfig);
-        def template = engine.createTemplate("""table([], [['A.row1.longer', 'A.row2'],['B.row1', 'B.row2 | escaped piped']])""")
+        def template = engine.createTemplate("""table([], [['A.row1.longer', 'A.row2'],['B.row1', 'B.row2 | escaped pipe']])""")
         
         when:
         def out = new StringWriter()
@@ -59,8 +59,8 @@ class AsciiDocTemplateTest extends Specification {
         then:
         out.toString() == '''*
                             *|===
-                            *|A.row1.longer|B.row1                
-                            *|A.row2       |B.row2 \\| escaped piped
+                            *|A.row1.longer|B.row1               
+                            *|A.row2       |B.row2 \\| escaped pipe
                             *|===
                             *'''.stripMargin('*')
     }

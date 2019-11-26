@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import org.bonitasoft.asciidoc.templating.model.Project;
+import org.bonitasoft.asciidoc.templating.model.Project.ProjectBuilder;
 
 public interface IProjectDocumentationContextProvider {
 
-    Project.ProjectBuilder addToProjectContext(Project.ProjectBuilder projectBuilder);
-    
+    ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder);
+
 }

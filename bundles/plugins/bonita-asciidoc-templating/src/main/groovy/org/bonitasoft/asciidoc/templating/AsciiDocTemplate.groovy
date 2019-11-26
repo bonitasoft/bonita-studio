@@ -72,8 +72,8 @@ abstract class AsciiDocTemplate extends BaseTemplate {
     }
 
     def section(int level = 1, Object content) {
-        yieldUnescaped """|${ '='*level } ${content?.toString()}
-                          |""".stripMargin()
+        yieldUnescaped "${ '='*level } ${content?.toString()}"
+	newLine()
     }
 
     def author(String author) {
@@ -98,8 +98,16 @@ abstract class AsciiDocTemplate extends BaseTemplate {
      * @param defaultValue the value for this varaible
      */
     def var(Object varName, Object defaultValue = '') {
-        yieldUnescaped """|:${varName?.toString()}: ${defaultValue?.toString()}
-                          |""".stripMargin()
+        yieldUnescaped ":${varName?.toString()}: ${defaultValue?.toString()}"
+	newLine()
+    }
+    
+    
+    /**
+     * Write text into the asciidoc document.
+     */
+    def write(Object content) {
+        yieldUnescaped content?.toString().split('\n').collect{ it?.toString().stripIndent() }.join('\n')
     }
 
     @Override
@@ -115,6 +123,7 @@ abstract class AsciiDocTemplate extends BaseTemplate {
 
     @Override
     public Object methodMissing(String tagName, Object args) throws IOException {
-       throw new RuntimeException("Undefined method '$tagName' with args $args")
+        throw new RuntimeException("Undefined method '$tagName' with args $args")
     }
+
 }

@@ -16,6 +16,8 @@ package org.bonitasoft.asciidoc.templating
 
 import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.Project
+import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
+import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
@@ -23,37 +25,30 @@ import net.bytebuddy.matcher.HasSuperTypeMatcher
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class MasterTemplateTest extends Specification {
-    
+class BusinessDataModelTemplateTest extends Specification {
+
     @Rule
     TemporaryFolder temporaryFolder
-    
-    def "should generate master template with proper header variables"() {
+
+    def "should generate bdm template"() {
         given:
         def engine = new TemplateEngine(templateFolder())
-        def outputFile = temporaryFolder.newFile("master.adoc");
-        def project = new Project(name: "Test Project", version: "0.0.1", bonitaVersion: '7.11')
-        
+        def outputFile = temporaryFolder.newFile("bdm.adoc");
+        def bdm = new BusinessDataModel(businessObjects: [
+            new BusinessObject(name: 'Employee', packageName: 'org.bonitasoft.model',description: 'A simple description')
+        ])
+
         when:
-        engine.run("master_template.tpl", outputFile, [project:project])
-        
+        engine.run("bdm/businessDataModel_template.tpl", outputFile, [businessDataModel:bdm])
+
         then:
         def asciiDocContent = outputFile.text
-        asciiDocContent.contains('= Test Project')
-        asciiDocContent.contains('Generated with Bonita')
-        asciiDocContent.contains(':revision: v0.0.1')
-        asciiDocContent.contains(':date: {docdate}')
-        asciiDocContent.contains(':toc:')
-        asciiDocContent.contains(':toc-title: Table of contents')
-        asciiDocContent.contains(':toclevels: 2')
-        asciiDocContent.contains(':bonita-version: 7.11')
-        asciiDocContent.contains(':imagesdir: ./doc/images')
-        asciiDocContent.contains(':sectnums: numbered')
-        asciiDocContent.contains(':sectanchors:')
+        asciiDocContent.contains('== Business Data Model')
+        asciiDocContent.contains('=== Employee')
+        asciiDocContent.contains('A simple description')
     }
-    
+
     def File templateFolder() {
-        new File(MasterTemplateTest.getResource("/templates").getFile())
+        new File(BusinessDataModelTemplateTest.getResource("/templates").getFile())
     }
-    
 }

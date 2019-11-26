@@ -12,4 +12,9 @@ var 'imagesdir', './doc/images'
 var 'sectnums', 'numbered'
 var 'sectanchors'
 
-newLine
+newLine()
+
+
+if (project.businessDataModel) {
+    layout 'bdm/businessDataModel_template.tpl', businessDataModel:project.businessDataModel
+}

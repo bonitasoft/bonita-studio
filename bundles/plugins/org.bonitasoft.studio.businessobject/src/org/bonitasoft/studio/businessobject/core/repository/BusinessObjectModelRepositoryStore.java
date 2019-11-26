@@ -32,17 +32,21 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import org.bonitasoft.asciidoc.templating.model.Project.ProjectBuilder;
+import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.dao.BusinessObjectDAO;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.converter.DocumentationBusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IProjectDocumentationContextProvider;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -73,7 +77,8 @@ import com.google.common.io.Files;
  * @author Romain Bioteau
  */
 public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
-        extends AbstractRepositoryStore<AbstractBDMFileStore> implements IBonitaProjectListener {
+        extends AbstractRepositoryStore<AbstractBDMFileStore>
+        implements IBonitaProjectListener, IProjectDocumentationContextProvider {
 
     private static final String STORE_NAME = "bdm";
 
@@ -303,7 +308,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     @Override
     public F getChild(String fileName, boolean force) {
-        if(Objects.equals(fileName, BusinessObjectModelFileStore.BDM_ARTIFACT_DESCRIPTOR)) {
+        if (Objects.equals(fileName, BusinessObjectModelFileStore.BDM_ARTIFACT_DESCRIPTOR)) {
             return null;
         }
         return (F) super.getChild(fileName, force);
@@ -329,6 +334,17 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     @Override
     public void projectClosed(Repository repository, IProgressMonitor monitor) {
         //Nothing to do
+    }
+
+    @Override
+    public ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder) {
+        BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) getChild("bom.xml", false);
+        if (bdmFileStore != null) {
+            BusinessDataModel bdm = new DocumentationBusinessDataModelConverter()
+                    .toDocumentationBusinessdataModel(bdmFileStore.getContent());
+            projectBuilder.businessDataModel(bdm);
+        }
+        return projectBuilder;
     }
 
 }

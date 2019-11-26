@@ -107,12 +107,12 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         }
         return null;
     }
-    
+
     @Override
     public Set<IResource> getRelatedResources() {
-        Set<IResource> resources = new HashSet<IResource>();
+        Set<IResource> resources = new HashSet<>();
         IFile artifactDecriptorFile = getArtifactDecriptorFile();
-        if(artifactDecriptorFile.exists()) {
+        if (artifactDecriptorFile.exists()) {
             resources.add(getArtifactDecriptorFile());
         }
         return resources;

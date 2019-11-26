@@ -20,39 +20,44 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
 import groovy.text.markup.MarkupTemplateEngine
 import groovy.text.markup.TemplateConfiguration
 import groovy.transform.CompileStatic
-import groovy.transform.TypeChecked
 
 @CompileStatic
 class TemplateEngine {
-    
+
     Locale locale
     File templateDir
-    
+
     def TemplateEngine(File templateDir) {
         this.templateDir = templateDir
     }
-    
+
     def TemplateEngine(File templateDir, Locale locale) {
         this.templateDir = templateDir
         this.locale = locale
     }
-    
-    def run(String templatePath, File outputFile, Project project) {
+
+    def run(String templatePath, File outputFile, Map context) {
         def config = new TemplateConfiguration()
         config.locale = locale ?: Locale.getDefault()
         config.setBaseTemplateClass(AsciiDocTemplate)
         def templateEngine = new MarkupTemplateEngine(TemplateEngine.getClassLoader(), templateDir, config)
         def compilerConfig = templateEngine.getCompilerConfiguration()
         compilerConfig
-            .addCompilationCustomizers(new ImportCustomizer()
-                .addStarImports('org.bonitasoft.asciidoc.templating.model')
+                .addCompilationCustomizers(new ImportCustomizer()
+                .addStarImports('org.bonitasoft.asciidoc.templating.model','org.bonitasoft.asciidoc.templating.model.bdm')
                 .addImports('groovy.transform.Field'))
-          
-       def template = templateEngine.createTypeCheckedModelTemplateByPath(templatePath, [project:'org.bonitasoft.asciidoc.templating.model.Project'])
-        
+
+        def template = templateEngine.createTypeCheckedModelTemplateByPath(templatePath, modelTypes())
+
         outputFile.withWriter { out ->
-            template.make([project:project]).writeTo(out)
+            template.make(context).writeTo(out)
         }
     }
     
+    def Map<String,String> modelTypes() {
+        [
+         project:'org.bonitasoft.asciidoc.templating.model.Project',
+         businessDataModel:'org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel'
+        ]
+    }
 }
