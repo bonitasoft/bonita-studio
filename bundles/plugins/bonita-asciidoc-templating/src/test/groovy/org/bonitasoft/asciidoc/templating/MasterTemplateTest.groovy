@@ -28,7 +28,7 @@ class MasterTemplateTest extends Specification {
     @Rule
     TemporaryFolder temporaryFolder
     
-    def "should generate master template with proper header variables"() {
+    def "should generate master template with default header variables"() {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("master.adoc");
@@ -41,8 +41,7 @@ class MasterTemplateTest extends Specification {
         def asciiDocContent = outputFile.text
         asciiDocContent.contains('= Test Project')
         asciiDocContent.contains('Generated with Bonita')
-        asciiDocContent.contains(':revision: v0.0.1')
-        asciiDocContent.contains(':date: {docdate}')
+        asciiDocContent.contains('v0.0.1, {docdate}')
         asciiDocContent.contains(':toc:')
         asciiDocContent.contains(':toc-title: Table of contents')
         asciiDocContent.contains(':toclevels: 2')
@@ -50,6 +49,25 @@ class MasterTemplateTest extends Specification {
         asciiDocContent.contains(':imagesdir: ./doc/images')
         asciiDocContent.contains(':sectnums: numbered')
         asciiDocContent.contains(':sectanchors:')
+    }
+    
+    def "should generate master template with specific author"() {
+	given:
+	def engine = new TemplateEngine(templateFolder())
+	def outputFile = temporaryFolder.newFile("master.adoc");
+	def project = new Project(name: "Test Project", 
+	    version: "0.0.1", 
+	    bonitaVersion: '7.11',
+	    author: 'Romain Bioteau',
+	    email: 'romain.bioteau@bonitasoft.com')
+	
+	when:
+	engine.run("master_template.tpl", outputFile, [project:project])
+	
+	then:
+	def asciiDocContent = outputFile.text
+	asciiDocContent.contains('Romain Bioteau <romain.bioteau@bonitasoft.com>')
+
     }
     
     def File templateFolder() {
