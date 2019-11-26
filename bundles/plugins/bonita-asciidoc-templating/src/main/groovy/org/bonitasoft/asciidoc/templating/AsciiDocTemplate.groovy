@@ -76,22 +76,6 @@ abstract class AsciiDocTemplate extends BaseTemplate {
 	newLine()
     }
 
-    def author(String author) {
-        var('author', author)
-    }
-
-    def date(String date) {
-        var('date', date)
-    }
-
-    def revision(String revision) {
-        var('revision', revision)
-    }
-
-    def email(String email) {
-        var('Email', "<$email>")
-    }
-
     /**
      * Inject a variable declaration in the asciidoc document (eg: :myVar: someValue)
      * @param varName the name of the variable

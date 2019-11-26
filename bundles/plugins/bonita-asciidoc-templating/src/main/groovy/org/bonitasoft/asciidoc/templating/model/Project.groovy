@@ -41,6 +41,16 @@ class Project {
      * The bonita version used when generating the documentation
      */
     String bonitaVersion
+    
+    /**
+     * The document author
+     */
+    String author = 'Generated with Bonita'
+    
+    /**
+     * The document author's email
+     */
+    String email
 
     /**
      * The Business Data Model of the current project. 

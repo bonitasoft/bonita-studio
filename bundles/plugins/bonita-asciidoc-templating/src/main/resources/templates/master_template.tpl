@@ -1,9 +1,10 @@
 @Field Project project
 
 section 1, project.name
-author 'Generated with Bonita'
-revision "v$project.version"
-date '{docdate}'
+write "$project.author${project.email ? " <$project.email>": ''}"
+newLine()
+write "v$project.version, {docdate}"
+newLine()
 var 'toc'
 var 'toc-title', 'Table of contents'
 var 'toclevels', 2
