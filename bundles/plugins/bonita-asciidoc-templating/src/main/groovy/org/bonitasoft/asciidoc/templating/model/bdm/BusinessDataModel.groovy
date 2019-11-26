@@ -12,39 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating.model
-
-import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
+package org.bonitasoft.asciidoc.templating.model.bdm
 
 import groovy.transform.Canonical
 import groovy.transform.builder.Builder
 
 /**
- * Root element of a Bonita Project. The Project model holds all injectable information
- * that can be used when generating a project asciidoc document.
+ * Business Data Model of a Bonita project.
  */
 @Canonical
 @Builder
-class Project {
+class BusinessDataModel {
 
     /**
-     * The name of the current project
+     * The Business Objects of the Business Data Model
      */
-    String name
-
-    /**
-     * The version of the current project
-     */
-    String version
-
-    /**
-     * The bonita version used when generating the documentation
-     */
-    String bonitaVersion
-
-    /**
-     * The Business Data Model of the current project. 
-     * Can be null.
-     */
-    BusinessDataModel businessDataModel
+    BusinessObject[] businessObjects
 }

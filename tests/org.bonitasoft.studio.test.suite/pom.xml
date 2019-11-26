@@ -68,7 +68,6 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-surefire-plugin</artifactId>
-                <version>${tychoVersion}</version>
                 <configuration>
                     <useUIThread>true</useUIThread>
                     <useUIHarness>true</useUIHarness>
