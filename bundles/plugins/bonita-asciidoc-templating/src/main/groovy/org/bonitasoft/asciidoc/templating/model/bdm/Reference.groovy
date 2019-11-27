@@ -18,44 +18,44 @@ import groovy.transform.Canonical
 import groovy.transform.builder.Builder
 
 /**
- * Business Data Model of a Bonita project.
+ * Business Object relation.
  */
 @Canonical
 @Builder
-class BusinessObject {
+class Relation {
 
     /**
-     * The name of the Business Object
+     * The name of the relation
      */
     String name
 
     /**
-     * The package of the Business Object
-     */
-    String packageName
-
-    /**
-     * The description of the Business Object
+     * The description of the relation
      */
     String description
 
     /**
-     * The list of attributes of the Business Object
+     * The type of relation
      */
-    Attribute[] attributes
+    String type
 
     /**
-     * The list of relations of the Business Object
+     * The relation type of relation, either a COMPOSITION or an AGGREGATION
      */
-    Relation[] relations
+    String relationType
 
     /**
-     * The list of custom queries of the Business Object
+     * Whether the relation is mandatory (NOT NULL)
      */
-    Query[] customQueries
+    boolean mandatory
 
     /**
-     * The list of default queries of the Business Object
+     * Whether the relation is lazy
      */
-    Query[] defaultQueries
+    boolean lazy
+    
+    /**
+     * Whether the relation is multiple
+     */
+    boolean isMultiple
 }

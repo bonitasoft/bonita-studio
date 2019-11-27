@@ -10,12 +10,10 @@ import org.junit.Test;
 
 public class PackageHelperTest {
 
-    PackageHelper helper = PackageHelper.getInstance();
-
     @Test
     public void should_retrieve_package() {
         BusinessObject bo = new BusinessObject("com.company.model.MyObject");
-        String packageName = helper.getPackageName(bo);
+        String packageName = PackageHelper.getPackageName(bo);
         assertThat(packageName).isEqualTo("com.company.model");
     }
 
@@ -29,7 +27,7 @@ public class PackageHelperTest {
         model.addBusinessObject(bo2);
         model.addBusinessObject(bo3);
 
-        List<String> allPackages = helper.getAllPackages(model);
+        List<String> allPackages = PackageHelper.getAllPackages(model);
         assertThat(allPackages).hasSize(2);
         assertThat(allPackages).containsExactlyInAnyOrder("com.company.model", "com.company.model.bis");
     }
@@ -40,8 +38,8 @@ public class PackageHelperTest {
         BusinessObjectModel model = new BusinessObjectModel();
         model.addBusinessObject(bo1);
 
-        assertThat(helper.packageAlreadyExists(model, "com.company.model")).isTrue();
-        assertThat(helper.packageAlreadyExists(model, "com.company.model.bis")).isFalse();
+        assertThat(PackageHelper.packageAlreadyExists(model, "com.company.model")).isTrue();
+        assertThat(PackageHelper.packageAlreadyExists(model, "com.company.model.bis")).isFalse();
     }
 
     @Test
@@ -50,7 +48,7 @@ public class PackageHelperTest {
         BusinessObjectModel model = new BusinessObjectModel();
         model.addBusinessObject(bo1);
 
-        String nextPackageName = helper.getNextPackageName(model);
+        String nextPackageName = PackageHelper.getNextPackageName(model);
         assertThat(nextPackageName).isEqualTo("com.company.model1");
     }
 
@@ -64,7 +62,7 @@ public class PackageHelperTest {
         model.addBusinessObject(bo2);
         model.addBusinessObject(bo3);
 
-        List<BusinessObject> businessObjects = helper.getAllBusinessObjects(model, "com.company.model");
+        List<BusinessObject> businessObjects = PackageHelper.getAllBusinessObjects(model, "com.company.model");
         assertThat(businessObjects).containsExactlyInAnyOrder(bo1, bo2);
     }
 }

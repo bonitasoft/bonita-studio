@@ -1,7 +1,7 @@
 @Field Project project
 
 section 1, project.name
-write "$project.author${project.email ? " <$project.email>": ''}"
+write "${project.author ?: 'Generated with Bonita' }${project.email ? " <$project.email>": ''}"
 newLine()
 write "v$project.version, {docdate}"
 newLine()
@@ -17,5 +17,5 @@ newLine()
 
 
 if (project.businessDataModel) {
-    layout 'bdm/businessDataModel_template.tpl', businessDataModel:project.businessDataModel
+    layout 'bdm/bdm_template.tpl', businessDataModel:project.businessDataModel
 }

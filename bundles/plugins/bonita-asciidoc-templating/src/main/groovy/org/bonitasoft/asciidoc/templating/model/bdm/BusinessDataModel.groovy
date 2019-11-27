@@ -25,7 +25,7 @@ import groovy.transform.builder.Builder
 class BusinessDataModel {
 
     /**
-     * The Business Objects of the Business Data Model
+     * The list of packages of the Business Data Model
      */
-    BusinessObject[] businessObjects
+    Package[] packages
 }

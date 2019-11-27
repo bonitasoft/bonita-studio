@@ -18,44 +18,35 @@ import groovy.transform.Canonical
 import groovy.transform.builder.Builder
 
 /**
- * Business Data Model of a Bonita project.
+ * Business Object query.
  */
 @Canonical
 @Builder
-class BusinessObject {
+class Query {
 
     /**
-     * The name of the Business Object
+     * The name of the query
      */
     String name
 
     /**
-     * The package of the Business Object
-     */
-    String packageName
-
-    /**
-     * The description of the Business Object
+     * The description of the query
      */
     String description
 
     /**
-     * The list of attributes of the Business Object
+     * The returnType of the query
      */
-    Attribute[] attributes
-
+    String returnType
+    
     /**
-     * The list of relations of the Business Object
+     * The JPQL source code of the query
      */
-    Relation[] relations
-
+    String sourceCode
+    
     /**
-     * The list of custom queries of the Business Object
+     * The list of query parameters
      */
-    Query[] customQueries
+    QueryParameter[] parameters
 
-    /**
-     * The list of default queries of the Business Object
-     */
-    Query[] defaultQueries
 }

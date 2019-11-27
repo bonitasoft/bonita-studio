@@ -118,7 +118,6 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private IDiffLogger diffLogger;
     private IObservableList<BusinessObject> businessObjectObserveList;
     private IViewerObservableValue selectionObservable;
-    private PackageHelper packageHelper;
     private BusinessObjectModel businessObjectModel;
     private TreeViewer viewer;
     private ButtonWidget deleteButton;
@@ -137,7 +136,6 @@ public class BusinessDataModelWizardPage extends WizardPage {
         this.artifactDescriptor = artifactDescriptor;
         this.diffLogger = diffLogger;
         this.workspace = workspace;
-        packageHelper = PackageHelper.getInstance();
     }
 
     @Override
@@ -286,7 +284,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
         InputDialog updatePackageDialog = new InputDialog(Display.getDefault().getActiveShell(),
                 String.format(Messages.updatePackageTitle, selectedBo.getSimpleName()),
                 String.format(Messages.updatePackageMessage, selectedBo.getSimpleName()),
-                packageHelper.getPackageName(selectedBo),
+                PackageHelper.getPackageName(selectedBo),
                 new PackageNameValidator()) {
 
                     @Override
@@ -311,13 +309,13 @@ public class BusinessDataModelWizardPage extends WizardPage {
         if (selection instanceof String) {
             return Optional.of((String) selection);
         } else if (selection instanceof BusinessObject) {
-            return Optional.of(packageHelper.getPackageName((BusinessObject) selection));
+            return Optional.of(PackageHelper.getPackageName((BusinessObject) selection));
         }
         return Optional.empty();
     }
 
     private void addPackage() {
-        String newPackageName = packageHelper.getNextPackageName(businessObjectModel);
+        String newPackageName = PackageHelper.getNextPackageName(businessObjectModel);
         addBusinessObject(newPackageName);
     }
 
@@ -446,7 +444,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 if (element instanceof BusinessObject) {
                     return !boToFilter.contains(element);
                 }
-                return packageHelper.getAllBusinessObjects(businessObjectModel, (String) element)
+                return PackageHelper.getAllBusinessObjects(businessObjectModel, (String) element)
                         .stream().anyMatch(bo -> !boToFilter.contains(bo));
             }
         };
@@ -544,7 +542,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
     private void deletePackage(String packageName) {
         if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deletePackageConfirmTitle,
                 String.format(Messages.deletePackageConfirm, packageName))) {
-            packageHelper.getAllBusinessObjects(businessObjectModel, packageName).stream()
+            PackageHelper.getAllBusinessObjects(businessObjectModel, packageName).stream()
                     .peek(businessObjectObserveList::remove)
                     .map(BusinessObject::getQualifiedName)
                     .forEach(diffLogger::boRemoved);

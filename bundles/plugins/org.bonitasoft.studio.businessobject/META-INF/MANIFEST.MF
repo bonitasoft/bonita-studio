@@ -75,7 +75,8 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.eclipse.gef,
  org.restlet,
  org.restlet.ext.jackson,
- org.eclipse.m2e.core.ui;bundle-version="1.10.0"
+ org.eclipse.m2e.core.ui;bundle-version="1.10.0",
+ org.codehaus.groovy;bundle-version="2.4.16"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.activation;version="1.1.0",

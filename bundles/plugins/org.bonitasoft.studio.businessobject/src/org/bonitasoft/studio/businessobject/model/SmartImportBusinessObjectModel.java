@@ -44,10 +44,9 @@ public class SmartImportBusinessObjectModel extends SmartImportableUnit {
     public boolean isConflictingThroughPackages() {
         if (Objects.equals(getConflictStatus(), ConflictStatus.CONFLICTING)) {
             String packageName = getParent().getName();
-            PackageHelper packageHelper = PackageHelper.getInstance();
             return ((SmartImportBdmModel) getParentModel()).retrieveCurrentModel().getBusinessObjects().stream()
                     .filter(bo -> Objects.equals(bo.getSimpleName(), getName()))
-                    .anyMatch(bo -> !Objects.equals(packageHelper.getPackageName(bo), packageName));
+                    .anyMatch(bo -> !Objects.equals(PackageHelper.getPackageName(bo), packageName));
         }
         return false;
     }

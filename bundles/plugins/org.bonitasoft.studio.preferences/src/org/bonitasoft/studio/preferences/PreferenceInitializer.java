@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -28,6 +29,8 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
 
@@ -40,6 +43,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
     @Override
     public void initializeDefaultPreferences() {
+        initializeWorkbenchPreferences();
         final IPreferenceStore store = getBonitaPreferenceStore();
         final IPreferenceStore webStore = getWebBrowserPreferenceStore();
         setUTF8DefaultEncoding();
@@ -67,6 +71,14 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+    }
+
+    protected void initializeWorkbenchPreferences() {
+        IScopeContext context = DefaultScope.INSTANCE;
+        IEclipsePreferences node = context.getNode(WorkbenchPlugin
+                .getDefault().getBundle().getSymbolicName());
+
+        node.putBoolean(IPreferenceConstants.RUN_IN_BACKGROUND, false);
     }
 
     protected IPreferenceStore getJDTPreferenceStore() {

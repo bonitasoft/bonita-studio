@@ -63,5 +63,6 @@ public class PreferenceInitializerTest {
         doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
         doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
         doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
+        doNothing().when(preferenceInitializer).initializeWorkbenchPreferences();
     }
 }

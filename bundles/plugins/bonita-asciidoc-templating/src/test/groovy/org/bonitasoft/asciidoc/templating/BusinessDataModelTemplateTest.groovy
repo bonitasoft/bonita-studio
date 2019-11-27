@@ -14,16 +14,13 @@
  */
 package org.bonitasoft.asciidoc.templating
 
-import org.bonitasoft.asciidoc.templating.TemplateEngine
-import org.bonitasoft.asciidoc.templating.model.Project
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
+import org.bonitasoft.asciidoc.templating.model.bdm.Package
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
-import net.bytebuddy.matcher.HasSuperTypeMatcher
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class BusinessDataModelTemplateTest extends Specification {
 
@@ -34,18 +31,29 @@ class BusinessDataModelTemplateTest extends Specification {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("bdm.adoc");
-        def bdm = new BusinessDataModel(businessObjects: [
-            new BusinessObject(name: 'Employee', packageName: 'org.bonitasoft.model',description: 'A simple description')
+        def bdm = new BusinessDataModel(packages: [
+            new Package(name: 'org.bonitasoft.model',
+            businessObjects : [
+                new BusinessObject(name: 'Employee', 
+                                   description: 'A simple description')
+            ])
         ])
 
         when:
-        engine.run("bdm/businessDataModel_template.tpl", outputFile, [businessDataModel:bdm])
+        engine.run("bdm/bdm_template.tpl", outputFile, [businessDataModel:bdm])
 
         then:
-        def asciiDocContent = outputFile.text
-        asciiDocContent.contains('== Business Data Model')
-        asciiDocContent.contains('=== Employee')
-        asciiDocContent.contains('A simple description')
+        outputFile.text == '''|== Business Data Model
+                              |
+                              |image::bdm.svg[]
+                              |
+                              |=== Package org.bonitasoft.model
+                              |
+                              |==== Employee
+                              |
+                              |A simple description
+                              |
+                              |'''.stripMargin().replace('\n', System.lineSeparator())
     }
 
     def File templateFolder() {

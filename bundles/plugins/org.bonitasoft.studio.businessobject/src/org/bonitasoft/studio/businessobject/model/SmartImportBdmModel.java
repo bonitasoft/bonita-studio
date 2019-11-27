@@ -96,16 +96,15 @@ public class SmartImportBdmModel extends SmartImportableModel {
     }
 
     private void createPackageModels(BusinessObjectModel currentModel, BusinessObjectModel modelToMerge) {
-        PackageHelper packageHelper = PackageHelper.getInstance();
-        packageHelper.getAllPackages(modelToMerge).stream()
+        PackageHelper.getAllPackages(modelToMerge).stream()
                 .map(packageName -> new SmartImportPackageModel(this, packageName))
-                .peek(packageModel -> buildImportPackageModel(currentModel, modelToMerge, packageHelper, packageModel))
+                .peek(packageModel -> buildImportPackageModel(currentModel, modelToMerge, packageModel))
                 .forEach(getSmartImportableUnits()::add);
         if (currentModel != null && includeCurrentModel) {
-            packageHelper.getAllPackages(currentModel).forEach(packageName -> {
+            PackageHelper.getAllPackages(currentModel).forEach(packageName -> {
                 Optional<SmartImportableUnit> packageAlreadyCreated = getSmartImportableUnits().stream()
                         .filter(unit -> Objects.equals(unit.getName(), packageName)).findFirst();
-                List<BusinessObject> businessObjects = packageHelper.getAllBusinessObjects(currentModel, packageName);
+                List<BusinessObject> businessObjects = PackageHelper.getAllBusinessObjects(currentModel, packageName);
                 if (packageAlreadyCreated.isPresent()) {
                     completePackageWithExistingBo(businessObjects,
                             (SmartImportPackageModel) packageAlreadyCreated.get());
@@ -136,13 +135,12 @@ public class SmartImportBdmModel extends SmartImportableModel {
     }
 
     protected void buildImportPackageModel(BusinessObjectModel currentModel,
-            BusinessObjectModel modelToMerge, PackageHelper packageHelper, SmartImportPackageModel importPackageModel) {
+            BusinessObjectModel modelToMerge, SmartImportPackageModel importPackageModel) {
         String packageName = importPackageModel.getName();
         List<BusinessObject> potentialConflictingBusinessObjects = retrievePotentialConflictingBusinessObjects(
                 currentModel,
-                packageHelper,
                 packageName);
-        List<BusinessObject> newBusinessObjects = packageHelper.getAllBusinessObjects(modelToMerge, packageName);
+        List<BusinessObject> newBusinessObjects = PackageHelper.getAllBusinessObjects(modelToMerge, packageName);
         newBusinessObjects.stream()
                 .map(newBusinessObject -> createImportBusinessObjectModel(importPackageModel,
                         potentialConflictingBusinessObjects,
@@ -158,9 +156,9 @@ public class SmartImportBdmModel extends SmartImportableModel {
         BusinessObjectModel currentModel = retrieveCurrentModel();
         packageModel.getSmartImportableUnits().clear();
         if (Objects.equals(packageModel.getImportAction(), ImportAction.OVERWRITE)) {
-            buildImportPackageModel(currentModel, modelToMerge, PackageHelper.getInstance(), packageModel);
+            buildImportPackageModel(currentModel, modelToMerge, packageModel);
         } else {
-            buildImportPackageModel(modelToMerge, currentModel, PackageHelper.getInstance(), packageModel);
+            buildImportPackageModel(modelToMerge, currentModel, packageModel);
             packageModel.getSmartImportableUnits().stream()
                     .filter(objectModel -> Objects.equals(objectModel.getConflictStatus(), ConflictStatus.NONE))
                     .forEach(objectModel -> objectModel.setConflictStatus(ConflictStatus.SAME_CONTENT));
@@ -168,10 +166,9 @@ public class SmartImportBdmModel extends SmartImportableModel {
     }
 
     protected List<BusinessObject> retrievePotentialConflictingBusinessObjects(BusinessObjectModel currentModel,
-            PackageHelper packageHelper,
             String packageName) {
         List<BusinessObject> currentBusinessObjects = currentModel != null
-                ? packageHelper.getAllBusinessObjects(currentModel, packageName)
+                ? PackageHelper.getAllBusinessObjects(currentModel, packageName)
                 : Collections.emptyList();
         return currentBusinessObjects;
     }

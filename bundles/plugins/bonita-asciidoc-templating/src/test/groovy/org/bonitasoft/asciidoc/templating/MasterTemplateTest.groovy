@@ -14,64 +14,70 @@
  */
 package org.bonitasoft.asciidoc.templating
 
-import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.Project
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
-import net.bytebuddy.matcher.HasSuperTypeMatcher
 import spock.lang.Specification
-import spock.lang.Unroll
 
 class MasterTemplateTest extends Specification {
-    
+
     @Rule
     TemporaryFolder temporaryFolder
-    
+
     def "should generate master template with default header variables"() {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("master.adoc");
         def project = new Project(name: "Test Project", version: "0.0.1", bonitaVersion: '7.11')
-        
+
         when:
         engine.run("master_template.tpl", outputFile, [project:project])
-        
-        then:
-        def asciiDocContent = outputFile.text
-        asciiDocContent.contains('= Test Project')
-        asciiDocContent.contains('Generated with Bonita')
-        asciiDocContent.contains('v0.0.1, {docdate}')
-        asciiDocContent.contains(':toc:')
-        asciiDocContent.contains(':toc-title: Table of contents')
-        asciiDocContent.contains(':toclevels: 2')
-        asciiDocContent.contains(':bonita-version: 7.11')
-        asciiDocContent.contains(':imagesdir: ./doc/images')
-        asciiDocContent.contains(':sectnums: numbered')
-        asciiDocContent.contains(':sectanchors:')
-    }
-    
-    def "should generate master template with specific author"() {
-	given:
-	def engine = new TemplateEngine(templateFolder())
-	def outputFile = temporaryFolder.newFile("master.adoc");
-	def project = new Project(name: "Test Project", 
-	    version: "0.0.1", 
-	    bonitaVersion: '7.11',
-	    author: 'Romain Bioteau',
-	    email: 'romain.bioteau@bonitasoft.com')
-	
-	when:
-	engine.run("master_template.tpl", outputFile, [project:project])
-	
-	then:
-	def asciiDocContent = outputFile.text
-	asciiDocContent.contains('Romain Bioteau <romain.bioteau@bonitasoft.com>')
 
+        then:
+        outputFile.text == '''|= Test Project
+                              |Generated with Bonita
+                              |v0.0.1, {docdate}
+                              |:toc:
+                              |:toc-title: Table of contents
+                              |:toclevels: 2
+                              |:bonita-version: 7.11
+                              |:imagesdir: ./doc/images
+                              |:sectnums: numbered
+                              |:sectanchors:
+                              |
+                              |'''.stripMargin().replace('\n', System.lineSeparator())
     }
-    
+
+    def "should generate master template with specific author"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("master.adoc");
+        def project = new Project(name: "Test Project",
+                                    version: "0.0.1",
+                                    bonitaVersion: '7.11',
+                                    author: 'Romain Bioteau',
+                                    email: 'romain.bioteau@bonitasoft.com')
+
+        when:
+        engine.run("master_template.tpl", outputFile, [project:project])
+
+        then:
+        outputFile.text == '''|= Test Project
+                              |Romain Bioteau <romain.bioteau@bonitasoft.com>
+                              |v0.0.1, {docdate}
+                              |:toc:
+                              |:toc-title: Table of contents
+                              |:toclevels: 2
+                              |:bonita-version: 7.11
+                              |:imagesdir: ./doc/images
+                              |:sectnums: numbered
+                              |:sectanchors:
+                              |
+                              |'''.stripMargin().replace('\n', System.lineSeparator())
+    }
+
     def File templateFolder() {
         new File(MasterTemplateTest.getResource("/templates").getFile())
     }
-    
 }
