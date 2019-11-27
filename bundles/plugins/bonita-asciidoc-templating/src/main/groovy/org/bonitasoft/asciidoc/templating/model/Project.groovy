@@ -45,7 +45,7 @@ class Project {
     /**
      * The document author
      */
-    String author = 'Generated with Bonita'
+    String author
     
     /**
      * The document author's email

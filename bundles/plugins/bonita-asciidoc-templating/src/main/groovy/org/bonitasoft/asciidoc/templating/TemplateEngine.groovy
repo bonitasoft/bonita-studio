@@ -39,6 +39,7 @@ class TemplateEngine {
     def run(String templatePath, File outputFile, Map context) {
         def config = new TemplateConfiguration()
         config.locale = locale ?: Locale.getDefault()
+        config.setNewLineString(System.lineSeparator())
         config.setBaseTemplateClass(AsciiDocTemplate)
         def templateEngine = new MarkupTemplateEngine(TemplateEngine.getClassLoader(), templateDir, config)
         def compilerConfig = templateEngine.getCompilerConfiguration()

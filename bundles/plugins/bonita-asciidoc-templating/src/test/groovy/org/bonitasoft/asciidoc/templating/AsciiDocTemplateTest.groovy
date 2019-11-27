@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.asciidoc.templating;
 
-import org.bonitasoft.asciidoc.templating.AsciiDocTemplate
-
 import groovy.text.markup.MarkupTemplateEngine
 import groovy.text.markup.TemplateConfiguration
 import spock.lang.Specification

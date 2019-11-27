@@ -61,7 +61,6 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     private CellEditor cellEditor;
     private DataBindingContext ctx;
     private BusinessObjectModel businessObjectModel;
-    private PackageHelper packageHelper;
     private TreeViewer viewer;
     private ISWTObservableValue editionGroupTextObservable;
     private BusinessObject businessObject;
@@ -77,7 +76,6 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
         this.businessObjectModel = businessObjectModel;
         this.selectionObservable = selectionObservable;
         this.cellEditor = createCellEditor();
-        this.packageHelper = PackageHelper.getInstance();
     }
 
     private CellEditor createCellEditor() {
@@ -164,7 +162,7 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
     }
 
     private String toNewQualifiedName(String newSimpleName) {
-        return String.format("%s.%s", packageHelper.getPackageName(businessObject), newSimpleName);
+        return String.format("%s.%s", PackageHelper.getPackageName(businessObject), newSimpleName);
     }
 
     private String toSimpleName(String businessObjectQualifiedName) {
@@ -173,9 +171,9 @@ public class BusinessObjectNameEditingSupport extends ObservableValueEditingSupp
 
     private void updatePackageName(String oldPackageName, String newPackageName) {
         if (!Objects.equals(oldPackageName, newPackageName)) {
-            if (!packageHelper.packageAlreadyExists(businessObjectModel, newPackageName)
+            if (!PackageHelper.packageAlreadyExists(businessObjectModel, newPackageName)
                     || confirmMergePackage(oldPackageName, newPackageName)) {
-                List<BusinessObject> businessObjects = packageHelper.getAllBusinessObjects(businessObjectModel,
+                List<BusinessObject> businessObjects = PackageHelper.getAllBusinessObjects(businessObjectModel,
                         oldPackageName);
                 businessObjects.stream()
                         .forEach(bo -> {

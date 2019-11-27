@@ -15,6 +15,7 @@
 package org.bonitasoft.asciidoc.templating
 
 import groovy.text.markup.BaseTemplate
+import groovy.text.markup.DelegatingIndentWriter
 import groovy.transform.CompileStatic
 import groovy.transform.InheritConstructors
 
@@ -73,7 +74,7 @@ abstract class AsciiDocTemplate extends BaseTemplate {
 
     def section(int level = 1, Object content) {
         yieldUnescaped "${ '='*level } ${content?.toString()}"
-	newLine()
+        newLine()
     }
 
     /**
@@ -82,8 +83,8 @@ abstract class AsciiDocTemplate extends BaseTemplate {
      * @param defaultValue the value for this varaible
      */
     def var(Object varName, Object defaultValue = '') {
-        yieldUnescaped ":${varName?.toString()}: ${defaultValue?.toString()}"
-	newLine()
+        yieldUnescaped ":${varName?.toString()}:${defaultValue? " $defaultValue" : ''}"
+        newLine()
     }
     
     
@@ -92,6 +93,14 @@ abstract class AsciiDocTemplate extends BaseTemplate {
      */
     def write(Object content) {
         yieldUnescaped content?.toString().split('\n').collect{ it?.toString().stripIndent() }.join('\n')
+    }
+    
+    def writeIndent(int indentCount = 1, Object content) throws IOException {
+        if (getOut() instanceof DelegatingIndentWriter) {
+            indentCount.times { ((DelegatingIndentWriter)getOut()).writeIndent() }
+        }
+        indentCount.times { yieldUnescaped DelegatingIndentWriter.SPACES }
+        write content
     }
 
     @Override

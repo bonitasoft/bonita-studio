@@ -25,41 +25,33 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 
 public class PackageHelper {
 
-    public static PackageHelper INSTANCE;
     public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
 
     private PackageHelper() {
 
     }
 
-    public static PackageHelper getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PackageHelper();
-        }
-        return INSTANCE;
-    }
-
-    public String getPackageName(BusinessObject bo) {
+    public static String getPackageName(BusinessObject bo) {
         return NamingUtils.getPackageName(bo.getQualifiedName());
     }
 
-    public List<String> getAllPackages(BusinessObjectModel model) {
+    public static List<String> getAllPackages(BusinessObjectModel model) {
         return model.getBusinessObjects().stream()
-                .map(this::getPackageName)
+                .map(PackageHelper::getPackageName)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    public boolean packageAlreadyExists(BusinessObjectModel model, String packageName) {
+    public static boolean packageAlreadyExists(BusinessObjectModel model, String packageName) {
         return getAllPackages(model).contains(packageName);
     }
 
-    public String getNextPackageName(BusinessObjectModel model) {
+    public static String getNextPackageName(BusinessObjectModel model) {
         List<String> allPackages = getAllPackages(model);
         return StringIncrementer.getNextIncrement(DEFAULT_PACKAGE_NAME, allPackages);
     }
 
-    public List<BusinessObject> getAllBusinessObjects(BusinessObjectModel model, String packageName) {
+    public static List<BusinessObject> getAllBusinessObjects(BusinessObjectModel model, String packageName) {
         return model.getBusinessObjects().stream()
                 .filter(bo -> Objects.equals(getPackageName(bo), packageName))
                 .collect(Collectors.toList());

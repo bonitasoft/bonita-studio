@@ -26,11 +26,6 @@ import org.eclipse.jface.viewers.Viewer;
 public class BusinessObjectTreeContentProvider implements ITreeContentProvider {
 
     private BusinessObjectModel input;
-    private PackageHelper packageHelper;
-
-    public BusinessObjectTreeContentProvider() {
-        packageHelper = PackageHelper.getInstance();
-    }
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -40,7 +35,7 @@ public class BusinessObjectTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof BusinessObjectModel) {
-            return packageHelper.getAllPackages((BusinessObjectModel) inputElement).toArray();
+            return PackageHelper.getAllPackages((BusinessObjectModel) inputElement).toArray();
         }
         return null;
     }
@@ -49,7 +44,7 @@ public class BusinessObjectTreeContentProvider implements ITreeContentProvider {
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof String) {
             return input.getBusinessObjects().stream()
-                    .filter(bo -> Objects.equals(packageHelper.getPackageName(bo), parentElement))
+                    .filter(bo -> Objects.equals(PackageHelper.getPackageName(bo), parentElement))
                     .collect(Collectors.toList()).toArray();
         }
         return null;
@@ -58,7 +53,7 @@ public class BusinessObjectTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object getParent(Object element) {
         if (element instanceof BusinessObject) {
-            return packageHelper.getPackageName((BusinessObject) element);
+            return PackageHelper.getPackageName((BusinessObject) element);
         }
         return null;
     }

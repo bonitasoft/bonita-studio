@@ -37,7 +37,6 @@ public class SmartImportBDMOperation implements IRunnableWithStatus {
     private BusinessObjectModelFileStore fileStore;
     private SmartImportBdmModel modelToImport;
     private IStatus status = ValidationStatus.ok();
-    private PackageHelper packageHelper = PackageHelper.getInstance();
 
     public SmartImportBDMOperation(BusinessObjectModelFileStore fileStore, SmartImportBdmModel modelToImport) {
         this.fileStore = fileStore;
@@ -60,7 +59,7 @@ public class SmartImportBDMOperation implements IRunnableWithStatus {
                 .map(SmartImportableUnit::getName)
                 .collect(Collectors.toList());
         currentModel.getBusinessObjects()
-                .removeIf(existingBo -> packageToOverwrite.contains(packageHelper.getPackageName(existingBo)));
+                .removeIf(existingBo -> packageToOverwrite.contains(PackageHelper.getPackageName(existingBo)));
         currentModel.getBusinessObjects().addAll(modelToImport.getBusinessObjectsToImport(packageToOverwrite));
     }
 

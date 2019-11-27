@@ -36,8 +36,7 @@ public class OverwriteImportBdmModel extends SmartImportBdmModel {
     }
 
     @Override
-    protected List<BusinessObject> retrievePotentialConflictingBusinessObjects(BusinessObjectModel currentModel,
-            PackageHelper packageHelper, String packageName) {
+    protected List<BusinessObject> retrievePotentialConflictingBusinessObjects(BusinessObjectModel currentModel, String packageName) {
         return currentModel.getBusinessObjects();
     }
 
