@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.asciidoc.templating;
 
+import org.codehaus.groovy.control.customizers.ImportCustomizer
+import org.codehaus.groovy.control.customizers.builder.ImportCustomizerFactory
+
 import groovy.text.markup.MarkupTemplateEngine
 import groovy.text.markup.TemplateConfiguration
 import spock.lang.Specification
@@ -22,54 +25,13 @@ import spock.lang.Unroll
 
 class AsciiDocTemplateTest extends Specification {
 
-    def "should generate a formatted asciidoc table with headers"(){
-        given:
-        def tplConfig = new TemplateConfiguration()
-        tplConfig.baseTemplateClass = AsciiDocTemplate
-        def engine = new MarkupTemplateEngine(tplConfig);
-        def template = engine.createTemplate("""table(['Header A', 'Header B'], [['A.row1', 'A.row2'],['B.row1', 'B.row2']])""")
-        
-        when:
-        def out = new StringWriter()
-        template.make().writeTo(out)
-
-        then:
-        out.toString() == '''*[options="header"]
-                            *|===
-                            *|Header A|Header B
-                            *|A.row1  |B.row1  
-                            *|A.row2  |B.row2  
-                            *|===
-                            *'''.stripMargin('*')
-    }
-    
-    def "should generate a formatted asciidoc table without headers"(){
-        given:
-        def tplConfig = new TemplateConfiguration()
-        tplConfig.baseTemplateClass = AsciiDocTemplate
-        def engine = new MarkupTemplateEngine(tplConfig);
-        def template = engine.createTemplate("""table([], [['A.row1.longer', 'A.row2'],['B.row1', 'B.row2 | escaped pipe']])""")
-        
-        when:
-        def out = new StringWriter()
-        template.make().writeTo(out)
-
-        then:
-        out.toString() == '''*
-                            *|===
-                            *|A.row1.longer|B.row1               
-                            *|A.row2       |B.row2 \\| escaped pipe
-                            *|===
-                            *'''.stripMargin('*')
-    }
-
     @Unroll
     def "should #qualifiedName have #simpleName simple name"(String qualifiedName, String simpleName){
         given:
         def tplConfig = new TemplateConfiguration()
         tplConfig.baseTemplateClass = AsciiDocTemplate
         def engine = new MarkupTemplateEngine(tplConfig);
-      
+
         expect:
         def template = engine.createTemplate('')
         def out = new StringWriter()
@@ -82,6 +44,5 @@ class AsciiDocTemplateTest extends Specification {
         'Employee'                | 'Employee'
         ''                        | ''
         null                      | null
-       
     }
 }

@@ -30,14 +30,14 @@ import org.bonitasoft.studio.common.NamingUtils;
 public class DocumentationBusinessDataModelConverter {
 
     public BusinessDataModel toDocumentationBusinessdataModel(BusinessObjectModel businessDataModel) {
-        BusinessDataModel bdm = new BusinessDataModel();
-        bdm.setPackages(businessDataModel.getBusinessObjects().stream()
+        return BusinessDataModel.builder()
+            .packages(businessDataModel.getBusinessObjects().stream()
                 .map(PackageHelper::getPackageName)
                 .distinct()
                 .map(Package::new)
                 .peek(pckg -> addBusinessObjectToPackage(pckg, businessDataModel))
-                .toArray(Package[]::new));
-        return bdm;
+                .toArray(Package[]::new))
+            .build();
     }
 
     private void addBusinessObjectToPackage(Package pckg, BusinessObjectModel bom) {
@@ -62,18 +62,24 @@ public class DocumentationBusinessDataModelConverter {
 
     private Query[] convertQueries(List<org.bonitasoft.engine.bdm.model.Query> queries, BusinessObject object) {
         return queries.stream()
-                .map(q -> new Query(q.getName(), null, convertToSimpleType(q.getReturnType(),object), q.getContent(),
-                        convertQueryParameters(q, object)))
+                .map(q -> Query.builder().name(q.getName())
+                        .returnType(convertToSimpleType(q.getReturnType(),object))
+                        .sourceCode(q.getContent())
+                        .parameters( convertQueryParameters(q, object))
+                        .build())
                 .toArray(Query[]::new);
     }
 
     private QueryParameter[] convertQueryParameters(org.bonitasoft.engine.bdm.model.Query q, BusinessObject object) {
         List<QueryParameter> parameters = q.getQueryParameters().stream()
-                .map(p -> new QueryParameter(p.getName(), convertToSimpleType(p.getClassName(), object)))
+                .map(p -> QueryParameter.builder()
+                            .name(p.getName())
+                            .type(convertToSimpleType(p.getClassName(), object))
+                            .build())
                 .collect(Collectors.toList());
         if (q.hasMultipleResults()) {
-            parameters.add(new QueryParameter("startIndex", "int"));
-            parameters.add(new QueryParameter("maxResults", "int"));
+            parameters.add(QueryParameter.builder().name("startIndex").type("int").build());
+            parameters.add(QueryParameter.builder().name("maxResults").type("int").build());
         }
         return parameters.stream().toArray(QueryParameter[]::new);
     }
@@ -89,12 +95,18 @@ public class DocumentationBusinessDataModelConverter {
         List<Attribute> attributes = businessObject.getFields().stream()
                 .filter(SimpleField.class::isInstance)
                 .map(SimpleField.class::cast)
-                .map(f -> new Attribute(f.getName(), null,
-                        f.isCollection() ? String.format("List<%s>", f.getType().getClazz().getSimpleName())
-                                : f.getType().getClazz().getSimpleName(),
-                        !f.isNullable()))
+                .map(f -> Attribute.builder()
+                            .name(f.getName())
+                            .type(f.getType().getClazz().getSimpleName())
+                            .multiple(f.isCollection())
+                            .mandatory(!f.isNullable())
+                            .build())
                 .collect(Collectors.toList());
-        attributes.add(0, new Attribute(Field.PERSISTENCE_ID, null, Long.class.getSimpleName(), true));
+        attributes.add(0, Attribute.builder()
+                .name(Field.PERSISTENCE_ID)
+                .type(Long.class.getSimpleName())
+                .mandatory(true)
+                .build());
         return attributes.stream().toArray(Attribute[]::new);
     }
 
@@ -102,7 +114,14 @@ public class DocumentationBusinessDataModelConverter {
         return businessObject.getFields().stream()
                 .filter(RelationField.class::isInstance)
                 .map(RelationField.class::cast)
-                .map(f -> new Relation(f.getName(), null, f.getReference().getSimpleName(), f.getType().toString(), !f.isNullable(), f.isLazy(), f.isCollection()))
+                .map(f -> Relation.builder()
+                            .name(f.getName())
+                            .type(f.getReference().getSimpleName())
+                            .relationType(f.getType().toString())
+                            .mandatory(!f.isNullable())
+                            .multiple(f.isCollection())
+                            .lazy(f.isLazy())
+                            .build())
                 .toArray(Relation[]::new);
     }
 

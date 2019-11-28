@@ -20,6 +20,8 @@ businessDataModel.packages.each { Package pckg ->
         newLine()
         write object.description ?: "_No description available_"
         2.times { newLine() }
+        
+        if(object.attributes || object.relations) layout 'bdm/bdm_attributes_template.tpl', businessObject: object
     }
 
 }

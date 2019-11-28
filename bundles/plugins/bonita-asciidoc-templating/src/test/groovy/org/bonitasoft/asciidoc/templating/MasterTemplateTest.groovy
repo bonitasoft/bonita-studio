@@ -40,7 +40,7 @@ class MasterTemplateTest extends Specification {
                               |v0.0.1, {docdate}
                               |:toc:
                               |:toc-title: Table of contents
-                              |:toclevels: 2
+                              |:toclevels: 3
                               |:bonita-version: 7.11
                               |:imagesdir: ./doc/images
                               |:sectnums: numbered
@@ -68,7 +68,7 @@ class MasterTemplateTest extends Specification {
                               |v0.0.1, {docdate}
                               |:toc:
                               |:toc-title: Table of contents
-                              |:toclevels: 2
+                              |:toclevels: 3
                               |:bonita-version: 7.11
                               |:imagesdir: ./doc/images
                               |:sectnums: numbered

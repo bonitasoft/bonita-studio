@@ -12,45 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating.model.bdm
-
-import groovy.transform.Canonical
-import groovy.transform.builder.Builder
+package org.bonitasoft.asciidoc.templating
 
 /**
- * Business Object attribute.
+ * Represent a table header (column name). The ratio represent the column size ratio for this column.
  */
-@Canonical
-@Builder
-class Attribute {
-
-    /**
-     * The name of the attribute
-     */
+class TableHeader {
+    
     String name
-    
-    /**
-     * The label used in user interfaces for this attrubute
-     */
-    String label
 
-    /**
-     * The description of the attribute
-     */
-    String description
-
-    /**
-     * The type of the attribute
-     */
-    String type
-
-    /**
-     * Whether the attribute is mandatory (NOT NULL)
-     */
-    boolean mandatory
-    
-    /**
-     * Whether the attribute is multiple
-     */
-    boolean multiple
 }
