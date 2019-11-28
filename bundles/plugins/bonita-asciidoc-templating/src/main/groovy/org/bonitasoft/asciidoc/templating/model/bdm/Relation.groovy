@@ -28,6 +28,11 @@ class Relation {
      * The name of the relation
      */
     String name
+    
+    /**
+     * The label used in user interfaces for this relation
+     */
+    String label
 
     /**
      * The description of the relation
@@ -57,5 +62,5 @@ class Relation {
     /**
      * Whether the relation is multiple
      */
-    boolean isMultiple
+    boolean multiple
 }

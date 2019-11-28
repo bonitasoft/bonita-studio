@@ -42,7 +42,7 @@ class BDMDiagramTemplateTest extends Specification {
                                    description: 'A simple description',
                                    attributes: [new Attribute(name: 'persistenceId', type: 'Long'),
                                                 new Attribute(name: 'firstName', type: 'String')],
-                                   relations: [new Relation(name: 'addresses', relationType: 'COMPOSITION', type: 'Address', isMultiple: true)],
+                                   relations: [new Relation(name: 'addresses', relationType: 'COMPOSITION', type: 'Address', multiple: true)],
                                    customQueries: [new Query(name: 'findByNearestAddress', returnType: 'Employee', parameters: [new QueryParameter(name: 'location', type: 'Double')])])
             ])
         ])

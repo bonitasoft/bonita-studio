@@ -42,20 +42,20 @@ class BusinessObject {
     /**
      * The list of attributes of the Business Object
      */
-    Attribute[] attributes
+    Attribute[] attributes = []
 
     /**
      * The list of relations of the Business Object
      */
-    Relation[] relations
+    Relation[] relations = []
 
     /**
      * The list of custom queries of the Business Object
      */
-    Query[] customQueries
+    Query[] customQueries = []
 
     /**
      * The list of default queries of the Business Object
      */
-    Query[] defaultQueries
+    Query[] defaultQueries = []
 }

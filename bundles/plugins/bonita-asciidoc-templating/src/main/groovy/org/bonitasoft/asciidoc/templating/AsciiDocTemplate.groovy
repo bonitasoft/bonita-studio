@@ -21,37 +21,7 @@ import groovy.transform.InheritConstructors
 
 @CompileStatic
 @InheritConstructors
-abstract class AsciiDocTemplate extends BaseTemplate {
-
-    /**
-     * Generate an asciidoc table
-     * @param headers the list of headers for this table eg: ['Key','Value']
-     * @param content the content values of the table as a list of list eg: [['keyRow1Col1','keyRow2Col1'],['valueRow1Col1','valueRow2Col1'],...]
-     * @return a string representing an asciidoc table
-     */
-    def AsciiDocTemplate table(List<String> headers, List<List<String>> content) {
-        def tableContent = """*${headers ? '[options="header"]' : ''}
-                          *|===
-                          *""".stripMargin('*')
-
-        if(headers) {
-            def headerTable = headers.withIndex().collect { String header, int index ->  cellPadding(header,content[index],header.length()) }.join("|")
-            tableContent = tableContent + '|' + headerTable + '\n'
-        }
-        if(!headers) {
-            headers = content.collect { '' }
-        }
-        content[0].withIndex().collect { String v, int rowIndex ->
-            def row = content.withIndex().collect{ List<String> rows, int index ->  cellPadding( rows[rowIndex], content[index] , headers[index].length())}.join("|")
-            tableContent = tableContent + """*|$row
-                                             *""".stripMargin('*')
-        }
-
-        tableContent = tableContent + '''*|===
-                                         *'''.stripMargin('*')
-        yieldUnescaped tableContent.toString()
-        return this
-    }
+abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacters {
 
     /**
      * Strips the package name of a qualifiedName
@@ -62,18 +32,13 @@ abstract class AsciiDocTemplate extends BaseTemplate {
         qualifiedName?.contains('.') ? qualifiedName.split("\\.").inject("") { s1, s2 ->  s2 } : qualifiedName
     }
 
-    private static String cellPadding(Object value, List values, int minSize) {
-        def int valueSize = value.toString().trim().length()
-        def int maxValue = [
-            values.collect{ it.toString().trim().length() }.max(),
-            minSize
-        ].max()
-        def int paddingSize = maxValue - valueSize
-        "$value${' '*paddingSize}".replace('|','\\|')
-    }
-
-    def section(int level = 1, Object content) {
-        yieldUnescaped "${ '='*level } ${content?.toString()}"
+    /**
+     * Write an Asciidoc section title in the document
+     * @param level, the section level
+     * @param title, the section title
+     */
+    def section(int level = 1, Object title) {
+        yieldUnescaped "${ '='*level } ${title?.toString()}"
         newLine()
     }
 
@@ -90,17 +55,33 @@ abstract class AsciiDocTemplate extends BaseTemplate {
     
     /**
      * Write text into the asciidoc document.
+     * @param boolean keepIndent, optional, false by default. When false each indented line of the text parameter is stripped. When true, indent is left as is.
+     * @param Object text, the text to inject in the document
      */
-    def write(Object content) {
-        yieldUnescaped content?.toString().split('\n').collect{ it?.toString().stripIndent() }.join('\n')
+    def write(boolean keepIndent = false, Object text) {
+        if(keepIndent) {
+            yieldUnescaped text
+        }else {
+            boolean endsWithNewLine = text?.toString()?.endsWith(System.lineSeparator())
+            def lineCount = text?.toString().split(System.lineSeparator()).length
+            text?.toString().eachLine{ String line, int lineNumber ->
+                   yieldUnescaped line.stripIndent()
+                   def lastLine =  lineNumber+1 == lineCount
+                   if(!lastLine || (lastLine && endsWithNewLine)) {
+                       newLine()
+                   }
+            }
+        }
     }
     
-    def writeIndent(int indentCount = 1, Object content) throws IOException {
-        if (getOut() instanceof DelegatingIndentWriter) {
-            indentCount.times { ((DelegatingIndentWriter)getOut()).writeIndent() }
-        }
+    /**
+     * Write text into the asciidoc document with an indent
+     * @param int indentCount, optional, 1 by default (1 indent = 4 spaces). The number of indent used as prefix
+     * @param Object text, the text to inject in the document
+     */
+    def writeIndent(int indentCount = 1, Object text) throws IOException {
         indentCount.times { yieldUnescaped DelegatingIndentWriter.SPACES }
-        write content
+        write text
     }
 
     @Override
@@ -118,5 +99,5 @@ abstract class AsciiDocTemplate extends BaseTemplate {
     public Object methodMissing(String tagName, Object args) throws IOException {
         throw new RuntimeException("Undefined method '$tagName' with args $args")
     }
-
+   
 }

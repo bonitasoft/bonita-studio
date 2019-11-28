@@ -39,26 +39,21 @@ class TemplateEngine {
     def run(String templatePath, File outputFile, Map context) {
         def config = new TemplateConfiguration()
         config.locale = locale ?: Locale.getDefault()
-        config.setNewLineString(System.lineSeparator())
         config.setBaseTemplateClass(AsciiDocTemplate)
         def templateEngine = new MarkupTemplateEngine(TemplateEngine.getClassLoader(), templateDir, config)
         def compilerConfig = templateEngine.getCompilerConfiguration()
         compilerConfig
                 .addCompilationCustomizers(new ImportCustomizer()
-                .addStarImports('org.bonitasoft.asciidoc.templating.model','org.bonitasoft.asciidoc.templating.model.bdm')
+                .addStarImports('org.bonitasoft.asciidoc.templating.model',
+                    'org.bonitasoft.asciidoc.templating.model.bdm',
+                    'org.bonitasoft.asciidoc.templating')
                 .addImports('groovy.transform.Field'))
 
-        def template = templateEngine.createTypeCheckedModelTemplateByPath(templatePath, modelTypes())
+        def template = templateEngine.createTemplateByPath(templatePath)
 
         outputFile.withWriter { out ->
             template.make(context).writeTo(out)
         }
     }
     
-    def Map<String,String> modelTypes() {
-        [
-         project:'org.bonitasoft.asciidoc.templating.model.Project',
-         businessDataModel:'org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel'
-        ]
-    }
 }

@@ -24,7 +24,7 @@ businessDataModel.packages.each{ Package pckg ->
         newLine()
 
         businessObject.attributes.each{ Attribute attribute ->
-            writeIndent 2, "+$attribute.name : $attribute.type"
+            writeIndent 2, "+$attribute.name : ${attribute.multiple ? "List<$attribute.type>" : attribute.type}"
             newLine()
         }
 
@@ -42,7 +42,7 @@ businessDataModel.packages.each{ Package pckg ->
         writeIndent '}'
         2.times { newLine() }
         businessObject.relations.each { Relation relation ->
-            writeIndent "$businessObject.name  ${relation.relationType == 'COMPOSITION' ? '"composed of"' :  '"references"'} ${relation.relationType == 'COMPOSITION' ? '*' :  'o'}-- ${relation.isMultiple ? '"*"' : ''} $relation.type : $relation.name"
+            writeIndent "$businessObject.name  ${relation.relationType == 'COMPOSITION' ? '"composed of"' :  '"references"'} ${relation.relationType == 'COMPOSITION' ? '*' :  'o'}-- ${relation.multiple ? '"*"' : ''} $relation.type : $relation.name"
             newLine()
         }
     }

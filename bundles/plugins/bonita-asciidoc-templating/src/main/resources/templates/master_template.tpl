@@ -7,7 +7,7 @@ write "v$project.version, {docdate}"
 newLine()
 var 'toc'
 var 'toc-title', 'Table of contents'
-var 'toclevels', 2
+var 'toclevels', 3
 var 'bonita-version', project.bonitaVersion
 var 'imagesdir', './doc/images'
 var 'sectnums', 'numbered'
