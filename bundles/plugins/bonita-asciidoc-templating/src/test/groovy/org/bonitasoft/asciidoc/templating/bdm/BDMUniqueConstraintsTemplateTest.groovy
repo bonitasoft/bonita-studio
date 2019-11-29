@@ -12,8 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating
+package org.bonitasoft.asciidoc.templating.bdm
 
+import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.bdm.Attribute
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
@@ -21,12 +22,13 @@ import org.bonitasoft.asciidoc.templating.model.bdm.Package
 import org.bonitasoft.asciidoc.templating.model.bdm.Query
 import org.bonitasoft.asciidoc.templating.model.bdm.QueryParameter
 import org.bonitasoft.asciidoc.templating.model.bdm.Relation
+import org.bonitasoft.asciidoc.templating.model.bdm.UniqueConstraint
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
 import spock.lang.Specification
 
-class BDMQueriesTemplateTest extends Specification {
+class BDMUniqueConstraintsTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
@@ -35,34 +37,26 @@ class BDMQueriesTemplateTest extends Specification {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("bdm_queries.adoc");
-        def businessObject =  new BusinessObject(customQueries: [
-                                                    new Query(name: 'findByNearestAddress', returnType: 'Employee', parameters: [
-                                                                    new QueryParameter(name: 'location', type: 'Double'),
-                                                                    new QueryParameter(name: 'lastUpdated', type: 'Date')
-                                                                ])
+        def businessObject =  new BusinessObject(name: 'Employee',
+                                                uniqueConstraints: [
+                                                    new UniqueConstraint(name: 'uniqueFirstAndLastName', description: 'I am a constraint description', attributes: [ 'firstName', 'lastName' ])
                                                 ])
 
 
         when:
-        engine.run("bdm/bdm_queries_template.tpl", outputFile, [businessObject:businessObject])
+        engine.run("bdm/bdm_constraints_template.tpl", outputFile, [businessObject:businessObject])
 
         then:
-        outputFile.text == '''*===== Queries
+        outputFile.text == '''*===== Unique constraints
                               *
-                              *====== findByNearestAddress
+                              *====== uniqueFirstAndLastName [<<Employee.firstName>>, <<Employee.lastName>>]
                               *
-                              *_No description available_
-                              *[grid=cols, options="header",cols="1e,1a"]
-                              *|===
-                              *|Return type|Parameters            
-                              *|Employee   |location (_Double_) + 
-                              *             lastUpdated (_Date_)
-                              *|===
+                              *I am a constraint description
                               *
                               *'''.stripMargin('*').replace("\n", System.lineSeparator())
     }
 
     def File templateFolder() {
-        new File(BDMQueriesTemplateTest.getResource("/templates").getFile())
+        new File(BDMUniqueConstraintsTemplateTest.getResource("/templates").getFile())
     }
 }

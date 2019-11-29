@@ -12,8 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating
+package org.bonitasoft.asciidoc.templating.bdm
 
+import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.bdm.Attribute
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
