@@ -12,8 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating
+package org.bonitasoft.asciidoc.templating.bdm
 
+import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
 import org.bonitasoft.asciidoc.templating.model.bdm.Package
@@ -22,7 +23,7 @@ import org.junit.rules.TemporaryFolder
 
 import spock.lang.Specification
 
-class BusinessDataModelTemplateTest extends Specification {
+class BDMTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
@@ -57,6 +58,6 @@ class BusinessDataModelTemplateTest extends Specification {
     }
 
     def File templateFolder() {
-        new File(BusinessDataModelTemplateTest.getResource("/templates").getFile())
+        new File(BDMTemplateTest.getResource("/templates").getFile())
     }
 }
