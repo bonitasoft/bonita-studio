@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.asciidoc.templating.model.bdm.Attribute;
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel;
+import org.bonitasoft.asciidoc.templating.model.bdm.Index;
 import org.bonitasoft.asciidoc.templating.model.bdm.Package;
 import org.bonitasoft.asciidoc.templating.model.bdm.Query;
 import org.bonitasoft.asciidoc.templating.model.bdm.QueryParameter;
 import org.bonitasoft.asciidoc.templating.model.bdm.Relation;
+import org.bonitasoft.asciidoc.templating.model.bdm.UniqueConstraint;
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -31,13 +33,13 @@ public class DocumentationBusinessDataModelConverter {
 
     public BusinessDataModel toDocumentationBusinessdataModel(BusinessObjectModel businessDataModel) {
         return BusinessDataModel.builder()
-            .packages(businessDataModel.getBusinessObjects().stream()
-                .map(PackageHelper::getPackageName)
-                .distinct()
-                .map(Package::new)
-                .peek(pckg -> addBusinessObjectToPackage(pckg, businessDataModel))
-                .toArray(Package[]::new))
-            .build();
+                .packages(businessDataModel.getBusinessObjects().stream()
+                        .map(PackageHelper::getPackageName)
+                        .distinct()
+                        .map(Package::new)
+                        .peek(pckg -> addBusinessObjectToPackage(pckg, businessDataModel))
+                        .toArray(Package[]::new))
+                .build();
     }
 
     private void addBusinessObjectToPackage(Package pckg, BusinessObjectModel bom) {
@@ -57,15 +59,37 @@ public class DocumentationBusinessDataModelConverter {
                 .customQueries(convertQueries(businessObject.getQueries(), businessObject))
                 .defaultQueries(convertQueries(BDMQueryUtil.createProvidedQueriesForBusinessObject(businessObject),
                         businessObject))
+                .uniqueConstraints(convertUniqueConstraints(businessObject.getUniqueConstraints()))
+                .indexes(convertIndexes(businessObject.getIndexes()))
                 .build();
+    }
+
+    private UniqueConstraint[] convertUniqueConstraints(
+            List<org.bonitasoft.engine.bdm.model.UniqueConstraint> uniqueConstraints) {
+        return uniqueConstraints.stream()
+                .map(c -> UniqueConstraint.builder()
+                        .name(c.getName())
+                        .attributes(c.getFieldNames().toArray(new String[] {}))
+                        .build())
+                .toArray(UniqueConstraint[]::new);
+    }
+
+    private Index[] convertIndexes(
+            List<org.bonitasoft.engine.bdm.model.Index> indexes) {
+        return indexes.stream()
+                .map(index -> Index.builder()
+                        .name(index.getName())
+                        .attributes(index.getFieldNames().toArray(new String[] {}))
+                        .build())
+                .toArray(Index[]::new);
     }
 
     private Query[] convertQueries(List<org.bonitasoft.engine.bdm.model.Query> queries, BusinessObject object) {
         return queries.stream()
                 .map(q -> Query.builder().name(q.getName())
-                        .returnType(convertToSimpleType(q.getReturnType(),object))
+                        .returnType(convertToSimpleType(q.getReturnType(), object))
                         .sourceCode(q.getContent())
-                        .parameters( convertQueryParameters(q, object))
+                        .parameters(convertQueryParameters(q, object))
                         .build())
                 .toArray(Query[]::new);
     }
@@ -73,9 +97,9 @@ public class DocumentationBusinessDataModelConverter {
     private QueryParameter[] convertQueryParameters(org.bonitasoft.engine.bdm.model.Query q, BusinessObject object) {
         List<QueryParameter> parameters = q.getQueryParameters().stream()
                 .map(p -> QueryParameter.builder()
-                            .name(p.getName())
-                            .type(convertToSimpleType(p.getClassName(), object))
-                            .build())
+                        .name(p.getName())
+                        .type(convertToSimpleType(p.getClassName(), object))
+                        .build())
                 .collect(Collectors.toList());
         if (q.hasMultipleResults()) {
             parameters.add(QueryParameter.builder().name("startIndex").type("int").build());
@@ -96,11 +120,11 @@ public class DocumentationBusinessDataModelConverter {
                 .filter(SimpleField.class::isInstance)
                 .map(SimpleField.class::cast)
                 .map(f -> Attribute.builder()
-                            .name(f.getName())
-                            .type(f.getType().getClazz().getSimpleName())
-                            .multiple(f.isCollection())
-                            .mandatory(!f.isNullable())
-                            .build())
+                        .name(f.getName())
+                        .type(f.getType().getClazz().getSimpleName())
+                        .multiple(f.isCollection())
+                        .mandatory(!f.isNullable())
+                        .build())
                 .collect(Collectors.toList());
         attributes.add(0, Attribute.builder()
                 .name(Field.PERSISTENCE_ID)
@@ -115,13 +139,13 @@ public class DocumentationBusinessDataModelConverter {
                 .filter(RelationField.class::isInstance)
                 .map(RelationField.class::cast)
                 .map(f -> Relation.builder()
-                            .name(f.getName())
-                            .type(f.getReference().getSimpleName())
-                            .relationType(f.getType().toString())
-                            .mandatory(!f.isNullable())
-                            .multiple(f.isCollection())
-                            .lazy(f.isLazy())
-                            .build())
+                        .name(f.getName())
+                        .type(f.getReference().getSimpleName())
+                        .relationType(f.getType().toString())
+                        .mandatory(!f.isNullable())
+                        .multiple(f.isCollection())
+                        .lazy(f.isLazy())
+                        .build())
                 .toArray(Relation[]::new);
     }
 

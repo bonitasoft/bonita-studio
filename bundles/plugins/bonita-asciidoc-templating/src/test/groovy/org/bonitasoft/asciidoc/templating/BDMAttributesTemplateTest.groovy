@@ -57,11 +57,11 @@ class BDMAttributesTemplateTest extends Specification {
                               *
                               *[grid=cols, options="header",cols="1,1e,3a"]
                               *|===
-                              *|Name              |Type         |Description                                                           
-                              *|persistenceId*    |Long         |                                                                      
-                              *|firstName         |String       |*Label:* First name + 
-                              *                                  The first name of the employee, must not be greater than 75 characters
-                              *|&#x25c6; addresses|List<Address>|Employee addresses                                                    
+                              *|Name                                                  |Type         |Description                                                           
+                              *|[[Employee.persistenceId,persistenceId]]persistenceId*|Long         |                                                                      
+                              *|[[Employee.firstName,firstName]]firstName             |String       |*Label:* First name + 
+                              *                                                                      The first name of the employee, must not be greater than 75 characters
+                              *|[[Employee.addresses,addresses]]&#x25c6; addresses    |List<Address>|Employee addresses                                                    
                               *|===
                               *
                               *'''.stripMargin('*').replace("\n", System.lineSeparator())
