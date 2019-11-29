@@ -22,6 +22,7 @@ businessDataModel.packages.each { Package pckg ->
         2.times { newLine() }
         
         if(object.attributes || object.relations) layout 'bdm/bdm_attributes_template.tpl', businessObject: object
+        if(object.customQueries) layout 'bdm/bdm_queries_template.tpl', businessObject: object
     }
 
 }
