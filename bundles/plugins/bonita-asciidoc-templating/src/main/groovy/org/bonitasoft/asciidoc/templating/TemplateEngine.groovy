@@ -46,6 +46,7 @@ class TemplateEngine {
                 .addCompilationCustomizers(new ImportCustomizer()
                 .addStarImports('org.bonitasoft.asciidoc.templating.model',
                     'org.bonitasoft.asciidoc.templating.model.bdm',
+                    'org.bonitasoft.asciidoc.templating.model.process',
                     'org.bonitasoft.asciidoc.templating')
                 .addImports('groovy.transform.Field'))
 
