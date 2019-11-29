@@ -15,7 +15,7 @@
 package org.bonitasoft.asciidoc.templating.model
 
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
-
+import org.bonitasoft.asciidoc.templating.model.process.Diagram
 import groovy.transform.Canonical
 import groovy.transform.builder.Builder
 
@@ -57,4 +57,15 @@ class Project {
      * Can be null.
      */
     BusinessDataModel businessDataModel
+    
+    /**
+     * The list of diagrams of the current project
+     */
+    Diagram[] diagrams = []
+    
+    /**
+     * The default image folder path
+     * Use in asciidoc header for :imagedir: variable and for generated images location
+     */
+    String imageFolderPath = 'doc/images'
 }

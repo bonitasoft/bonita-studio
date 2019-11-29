@@ -23,7 +23,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -438,5 +437,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     @Override
     public StyledString getStyledString() {
         return new StyledString(getDisplayName());
+    }
+    
+    protected IRepository getRepository() {
+        return repository;
     }
 }

@@ -28,7 +28,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edapt.migration;bundle-version="0.3.0";visibility:=reexport,
  org.eclipse.emf.edapt.history;bundle-version="0.3.0";visibility:=reexport,
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
- org.codehaus.groovy.eclipse.core,
  org.junit;bundle-version="4.8.2";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.ltk.core.refactoring;bundle-version="3.5.201",
@@ -44,12 +43,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.commands,
  org.eclipse.jdt.core.manipulation,
  org.eclipse.debug.core;bundle-version="3.13.100",
- org.eclipse.wst.validation;bundle-version="1.2.701"
+ org.eclipse.wst.validation;bundle-version="1.2.701",
+ org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.asciidoc.templating,
  org.bonitasoft.asciidoc.templating.model,
  org.bonitasoft.asciidoc.templating.model.bdm,
+ org.bonitasoft.asciidoc.templating.model.process,
  org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.job,
