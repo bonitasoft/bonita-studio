@@ -18,54 +18,24 @@ import groovy.transform.Canonical
 import groovy.transform.builder.Builder
 
 /**
- * Business Data Model of a Bonita project.
+ * Business Object index.
  */
 @Canonical
 @Builder
-class BusinessObject {
+class Index {
 
     /**
-     * The name of the Business Object
+     * The name of the index
      */
     String name
-
+    
     /**
-     * The package of the Business Object
-     */
-    String packageName
-
-    /**
-     * The description of the Business Object
+     * The description of the index
      */
     String description
 
     /**
-     * The list of attributes of the Business Object
+     * The attributes composing the index
      */
-    Attribute[] attributes = []
-
-    /**
-     * The list of relations of the Business Object
-     */
-    Relation[] relations = []
-
-    /**
-     * The list of custom queries of the Business Object
-     */
-    Query[] customQueries = []
-
-    /**
-     * The list of default queries of the Business Object
-     */
-    Query[] defaultQueries = []
-    
-    /**
-     * The list of unique constraints of the Business Object
-     */
-    UniqueConstraint[] uniqueConstraints = []
-    
-    /**
-     * The list of indexes of the Business Object
-     */
-    Index[] indexes = []
+    String[] attributes
 }
