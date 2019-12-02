@@ -21,10 +21,19 @@ import groovy.transform.builder.Builder
 @Builder
 class Parameter {
     
+    /**
+     * The name of the parameter
+     */
     String name
     
-    String description
+    /**
+     * The description of the parameter
+     */
+    String description = ""
     
+    /**
+     * The type of the parameter
+     */
     String type
     
 }

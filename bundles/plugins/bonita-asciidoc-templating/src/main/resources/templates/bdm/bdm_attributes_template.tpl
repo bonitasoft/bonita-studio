@@ -10,7 +10,7 @@ def allFields = []
 allFields.addAll(businessObject.attributes as List)
 allFields.addAll(businessObject.relations  as List)
 
-def nameColumn = allFields.collect { "${crossRefId(businessObject, it.name)}${it.hasProperty('relationType') ? "${relationSymbol(it.relationType)} " : ''}$it.name${it.mandatory ? '*' : ''}" }
+def nameColumn = allFields.collect { "${crossRefId("${businessObject.name}.${it.name}", it.name)}${it.hasProperty('relationType') ? "${relationSymbol(it.relationType)} " : ''}$it.name${it.mandatory ? '*' : ''}" }
 def typeColumn = allFields.collect { it.multiple ? "List<$it.type>" : it.type}
 def descriptionColumn = allFields.collect { it.label ? "*Label:* $it.label + "+System.lineSeparator()+  it.description : it.description ?: '' }
 
@@ -23,8 +23,4 @@ newLine()
 
 def String relationSymbol(Object relationType) {
     relationType == 'COMPOSITION' ? BLACK_DIAMOND : WHITE_DIAMOND
-}
-
-def String crossRefId(Object businessObject, Object attributeName) {
-    "[[${businessObject.name}.${attributeName},${attributeName}]]"
 }

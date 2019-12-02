@@ -23,12 +23,12 @@ class Document {
     
     String name
     
-    String description
+    String description = ""
     
     boolean multiple
     
-    String initialValue
+    String initialValue = ""
     
-    String mimeType
+    String mimeType = ""
     
 }

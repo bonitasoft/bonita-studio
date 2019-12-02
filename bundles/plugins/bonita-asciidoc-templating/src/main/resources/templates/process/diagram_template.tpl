@@ -14,3 +14,5 @@ write "image::diagrams/$diagram.name-${diagram.version}.png[]"
 
 2.times { newLine() }
 
+diagram.processes.each { layout 'process/process_template.tpl', process:it }
+

@@ -16,15 +16,23 @@ package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.util.function.Function;
 
+import org.bonitasoft.asciidoc.templating.model.process.Data;
 import org.bonitasoft.asciidoc.templating.model.process.Diagram;
+import org.bonitasoft.asciidoc.templating.model.process.Document;
+import org.bonitasoft.asciidoc.templating.model.process.Parameter;
+import org.bonitasoft.asciidoc.templating.model.process.Process;
+import org.bonitasoft.studio.common.DataUtil;
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Display;
 
-
 public class DocumentationDiagramConverter implements Function<MainProcess, Diagram> {
-    
-    
+
     private IFolder targetFolder;
 
     public DocumentationDiagramConverter(IFolder targetFolder) {
@@ -33,14 +41,105 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
 
     @Override
     public Diagram apply(MainProcess mainProcess) {
-        GenerateDiagramImagesJob generateDiagramImagesJob = new GenerateDiagramImagesJob(Display.getDefault(), mainProcess, targetFolder);
+        GenerateDiagramImagesJob generateDiagramImagesJob = new GenerateDiagramImagesJob(Display.getDefault(),
+                mainProcess, targetFolder);
         generateDiagramImagesJob.setUser(false);
         generateDiagramImagesJob.schedule();
         return Diagram.builder()
-            .name(mainProcess.getName())
-            .version(mainProcess.getVersion())
-            .description(mainProcess.getDocumentation())
-            .build();
+                .name(mainProcess.getName())
+                .version(mainProcess.getVersion())
+                .description(thisOrEmpty(mainProcess.getDocumentation()))
+                .processes(convertProcesses(mainProcess))
+                .build();
+    }
+
+    private static String thisOrEmpty(String value) {
+        return value == null ? "" : value;
+    }
+
+    private Process[] convertProcesses(MainProcess mainProcess) {
+        return ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class).stream()
+                .map(pool -> createProcess(pool))
+                .toArray(Process[]::new);
+    }
+
+    private Process createProcess(Pool pool) {
+        return Process.builder()
+                .name(pool.getName())
+                .displayName(pool.getDisplayName())
+                .version(pool.getVersion())
+                .description(thisOrEmpty(pool.getDocumentation()))
+                .parameters(convertParameters(pool))
+                .documents(convertDocuments(pool))
+                .globalVariables(convertVariables(pool))
+                .build();
+    }
+
+    private Data[] convertVariables(Pool pool) {
+        return pool.getData().stream()
+                .map(this::createData)
+                .toArray(Data[]::new);
+    }
+
+    private Document[] convertDocuments(Pool pool) {
+        return pool.getDocuments().stream()
+                .map(this::createDocument)
+                .toArray(Document[]::new);
+    }
+
+    private Parameter[] convertParameters(Pool pool) {
+        return pool.getParameters().stream()
+                .map(this::createParameter)
+                .toArray(Parameter[]::new);
+    }
+
+    private Parameter createParameter(org.bonitasoft.studio.model.parameter.Parameter parameter) {
+        return Parameter.builder()
+                .name(parameter.getName())
+                .type(NamingUtils.getSimpleName(parameter.getTypeClassname()))
+                .description(thisOrEmpty(parameter.getDescription()))
+                .build();
+    }
+
+    private Document createDocument(org.bonitasoft.studio.model.process.Document document) {
+        return Document.builder()
+                .name(document.getName())
+                .multiple(document.isMultiple())
+                .description(thisOrEmpty(document.getDocumentation()))
+                .initialValue(getDocumentInitialValue(document))
+                .mimeType(document.getMimeType() != null && document.getMimeType().hasContent() ? document.getMimeType().getContent() : "")
+                .build();
+    }
+    
+    private Data createData(org.bonitasoft.studio.model.process.Data data) {
+        return Data.builder()
+                .name(data.getName())
+                .type(DataUtil.getDisplayTypeName(data))
+                .description(thisOrEmpty(data.getDocumentation()))
+                .defaultValue(createExpression(data.getDefaultValue()))
+                .build();
+    }
+
+    private org.bonitasoft.asciidoc.templating.model.process.Expression createExpression(Expression defaultValue) {
+        return org.bonitasoft.asciidoc.templating.model.process.Expression.builder()
+                .name(defaultValue.getName())
+                .content(defaultValue.getContent())
+                .returnType(NamingUtils.getSimpleName(defaultValue.getReturnType()))
+                .type(defaultValue.getType())
+                .build();
+    }
+
+    private String getDocumentInitialValue(org.bonitasoft.studio.model.process.Document document) {
+        if (document.isMultiple() && document.getInitialMultipleContent().hasContent()) {
+            return document.getInitialMultipleContent().getContent();
+        } else if (document.getDocumentType() == DocumentType.EXTERNAL && document.getUrl().hasContent()) {
+            return document.getUrl().getContent();
+        } else if (document.getDocumentType() == DocumentType.INTERNAL) {
+            return document.getDefaultValueIdOfDocumentStore();
+        } else if (document.getDocumentType() == DocumentType.CONTRACT && document.getContractInput() != null) {
+            return document.getContractInput().getName();
+        }
+        return "";
     }
 
 }
