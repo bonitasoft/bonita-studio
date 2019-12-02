@@ -21,11 +21,24 @@ import groovy.transform.builder.Builder
 @Builder
 class Diagram {
     
+    /**
+     * The name of the diagram
+     */
     String name
     
+    
+    /**
+     * The version of the diagram
+     */
     String version
     
-    String description
+    /**
+     * The description of the diagram
+     */
+    String description = ""
     
+    /**
+     * The list of processes of the diagram
+     */
     Process[] processes
 }

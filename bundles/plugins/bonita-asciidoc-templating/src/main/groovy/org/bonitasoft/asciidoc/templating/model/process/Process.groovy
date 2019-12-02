@@ -20,18 +20,44 @@ import groovy.transform.builder.Builder
 @Canonical
 @Builder
 class Process {
-    
+
+    /**
+     * The name of the process
+     */
     String name
-    
+
+    /**
+     * The display name of the process
+     */
+    String displayName
+
+    /**
+     * The version of the process
+     */
     String version
-    
-    String description
-    
+
+    /**
+     * The description of the process
+     */
+    String description = ""
+
+    /**
+     * The list of lanes of the process
+     */
     Lane[] lanes = []
-    
+
+    /**
+     * The list of global variables of the process
+     */
     Data[] globalVariables = []
-    
+
+    /**
+     * The list of parameters of the process
+     */
     Parameter[] parameters = []
-    
+
+    /**
+     * The list of documents of the process
+     */
     Document[] documents = []
 }

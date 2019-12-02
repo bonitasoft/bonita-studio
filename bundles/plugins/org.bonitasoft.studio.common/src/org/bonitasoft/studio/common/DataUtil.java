@@ -32,10 +32,6 @@ import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.XMLType;
 
-/**
- * @author Romain Bioteau
- * 
- */
 public class DataUtil {
 
     public static String getTechnicalTypeFor(Data data) {
@@ -65,5 +61,35 @@ public class DataUtil {
             return String.class.getName();
         }
         return null;
+    }
+    
+    public static String getDisplayTypeName(Data data) {
+        DataType type = data.getDataType();
+        String typeName = null ;
+        if (data instanceof JavaObjectData) {
+            typeName = NamingUtils.getSimpleName(((JavaObjectData) data).getClassName());
+        } else if (type instanceof DateType) {
+            typeName = Date.class.getSimpleName();
+        } else if (type instanceof StringType) {
+            typeName = String.class.getSimpleName();
+        } else if (type instanceof IntegerType) {
+            typeName = Integer.class.getSimpleName();
+        } else if (type instanceof FloatType) {
+            typeName = Float.class.getSimpleName();
+        } else if (type instanceof LongType) {
+            typeName = Long.class.getSimpleName();
+        } else if (type instanceof DoubleType) {
+            typeName = Double.class.getSimpleName();
+        } else if (type instanceof BooleanType) {
+            typeName = Boolean.class.getSimpleName();
+        } else if (type instanceof EnumType) {
+            typeName = String.class.getSimpleName();
+        } else if (type instanceof XMLType) {
+            typeName = String.class.getSimpleName();
+        }
+        if (data.isMultiple()) {
+            return String.format("List<%s>", typeName);
+        }
+        return typeName;
     }
 }

@@ -83,6 +83,16 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
         indentCount.times { yieldUnescaped DelegatingIndentWriter.SPACES }
         write text
     }
+    
+    /**
+     * Asciidoc inlined cross reference tag
+     * @param id, the id of the cross reference
+     * @param xRefLabel, the label used when referencing this id
+     * @return
+     */
+    def String crossRefId(Object id, Object xRefLabel) {
+        "[[$id,$xRefLabel]]"
+    }
 
     @Override
     public BaseTemplate comment(Object cs) throws IOException {
