@@ -47,7 +47,8 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
      * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+            final Configuration configuration) {
         final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
 
         final ConnectorDefRepositoryStore connectorDefSotre = RepositoryManager.getInstance().getRepositoryStore(
@@ -66,13 +67,15 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                 final String defVersion = mapping.getDefinitionVersion();
                 final ConnectorDefinition def = connectorDefSotre.getDefinition(defId, defVersion, existingDefinitions);
                 if (def != null) {
-                    final IRepositoryFileStore definition = ((IRepositoryStore<? extends IRepositoryFileStore>) connectorDefSotre).getChild(URI.decode(def
-                            .eResource().getURI().lastSegment()), true);
+                    final IRepositoryFileStore definition = ((IRepositoryStore<? extends IRepositoryFileStore>) connectorDefSotre)
+                            .getChild(URI.decode(def
+                                    .eResource().getURI().lastSegment()), true);
                     if (definition != null && definition.canBeShared()) {
                         files.add(definition);
 
                         try {
-                            for (final String jarName : ((ConnectorDefinition) definition.getContent()).getJarDependency()) {
+                            for (final String jarName : ((ConnectorDefinition) definition.getContent())
+                                    .getJarDependency()) {
                                 final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
                                 if (jarFile != null) {
                                     files.add(jarFile);
@@ -82,36 +85,40 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                             BonitaStudioLog.error("Failed read connector definition content", e);
                         }
                     }
-                }
 
-                final String implId = mapping.getImplementationId();
-                final String implVersion = mapping.getImplementationVersion();
-                if (implId == null ){
-                   MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.noImplementationFoundErrorTitle, Messages.bind(Messages.noImplementationFoundErrorMessage, def.getId()));
-                   return null;
-                }
-                final IRepositoryFileStore implementation = connectorImplStore.getImplementationFileStore(implId, implVersion);
-                if (implementation != null && implementation.canBeShared()) {
-                    files.add(implementation);
-                    try {
-                        final ConnectorImplementation impl = (ConnectorImplementation) implementation.getContent();
-                        final String className = impl.getImplementationClassname();
-                        final String packageName = className.substring(0, className.lastIndexOf("."));
-                        final IRepositoryFileStore packageFileStore = connectorSourceStore.getChild(packageName, true);
-                        if (packageFileStore != null) {
-                            files.add(packageFileStore);
-                        }
-
-                        for (final String jarName : impl.getJarDependencies().getJarDependency()) {
-                            final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
-                            if (jarFile != null) {
-                                files.add(jarFile);
-                            }
-                        }
-                    } catch (final ReadFileStoreException e) {
-                        BonitaStudioLog.error("Failed read connector implementation content", e);
+                    final String implId = mapping.getImplementationId();
+                    final String implVersion = mapping.getImplementationVersion();
+                    if (implId == null) {
+                        MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                Messages.noImplementationFoundErrorTitle,
+                                Messages.bind(Messages.noImplementationFoundErrorMessage, def.getId()));
+                        return null;
                     }
+                    final IRepositoryFileStore implementation = connectorImplStore.getImplementationFileStore(implId,
+                            implVersion);
+                    if (implementation != null && implementation.canBeShared()) {
+                        files.add(implementation);
+                        try {
+                            final ConnectorImplementation impl = (ConnectorImplementation) implementation.getContent();
+                            final String className = impl.getImplementationClassname();
+                            final String packageName = className.substring(0, className.lastIndexOf("."));
+                            final IRepositoryFileStore packageFileStore = connectorSourceStore.getChild(packageName,
+                                    true);
+                            if (packageFileStore != null) {
+                                files.add(packageFileStore);
+                            }
 
+                            for (final String jarName : impl.getJarDependencies().getJarDependency()) {
+                                final IRepositoryFileStore jarFile = depStore.getChild(jarName, true);
+                                if (jarFile != null) {
+                                    files.add(jarFile);
+                                }
+                            }
+                        } catch (final ReadFileStoreException e) {
+                            BonitaStudioLog.error("Failed read connector implementation content", e);
+                        }
+
+                    }
                 }
             }
         }
