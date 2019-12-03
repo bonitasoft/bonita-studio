@@ -12,13 +12,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.asciidoc.templating
+package org.bonitasoft.asciidoc.templating.model.process
 
-/**
- * Represent a table header (column name). The ratio represent the column size ratio for this column.
- */
-class TableHeader {
+import groovy.transform.Canonical
+import groovy.transform.builder.Builder
+
+@Canonical
+@Builder
+class ActorFilter {
     
+    /**
+     * The name of the actor filter
+     */
     String name
-
+    
+    /**
+     * The definition name of the actor filter
+     */
+    String definitionName
+    
+    /**
+     * The definition id of the actor filter
+     */
+    String definitionId
+    
+    /**
+     * The definition version of the actor filter
+     */
+    String definitionVersion
+    
+    /**
+     * The description of the actor filter
+     */
+    String description = ""
+    
 }

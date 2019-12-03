@@ -18,8 +18,11 @@ import org.bonitasoft.asciidoc.templating.TemplateEngine
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
 import org.bonitasoft.asciidoc.templating.model.bdm.Package
+import org.bonitasoft.asciidoc.templating.model.process.Actor
+import org.bonitasoft.asciidoc.templating.model.process.ActorFilter
 import org.bonitasoft.asciidoc.templating.model.process.Diagram
 import org.bonitasoft.asciidoc.templating.model.process.Document
+import org.bonitasoft.asciidoc.templating.model.process.Lane
 import org.bonitasoft.asciidoc.templating.model.process.Parameter
 import org.bonitasoft.asciidoc.templating.model.process.Process
 import org.junit.Rule
@@ -71,14 +74,15 @@ class ProcessTemplateTest extends Specification {
                               *
                               *image::processes/MyProcess-1.0.png[]
                               *
-                              *===== Parameters
+                              *===== icon:gear[] Parameters
                               *
-                              *[grid=cols, options="header",cols="1,1e,3a"]
+                              *[grid=cols, options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name        |Type  |Description              
                               *|smtpHost    |String|Email smtp server address
                               *|smtpPassword|String|                         
                               *|===
+                              *
                               *'''.stripMargin('*').replace('\n', System.lineSeparator())
     }
     
@@ -101,14 +105,76 @@ class ProcessTemplateTest extends Specification {
                               *
                               *image::processes/MyProcess-1.0.png[]
                               *
-                              *===== Documents
+                              *===== icon:file[] Documents
                               *
-                              *[grid=cols, options="header",cols="1,1,3a"]
+                              *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
                               *|===
-                              *|Name                                      |Multiple|Description              
-                              *|[[doc.contractDoc,contractDoc]]contractDoc|false   |The contract to be signed
-                              *|[[doc.photos,photos]]photos               |true    |                         
+                              *|Name                                                               |Description              
+                              *|[[myprocess.doc.contractdoc,contractDoc]]contractDoc               |The contract to be signed
+                              *|[[myprocess.doc.photos,photos]]photos icon:files-o[title="Mutiple"]|                         
                               *|===
+                              *
+                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+    }
+    
+    def "should generate process actors table"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("process.adoc");
+        def process = new Process(name: 'MyProcess', version: '1.0', actors: [
+                new Actor(name: 'Customer Service', description: 'The customer service actor'),
+                new Actor(name: 'Customer', initiator: true)
+            ])
+
+        when:
+        engine.run("process/process_template.tpl", outputFile, [process:process])
+
+        then:
+        outputFile.text == '''*==== MyProcess (1.0)
+                              *
+                              *_No description available_
+                              *
+                              *image::processes/MyProcess-1.0.png[]
+                              *
+                              *===== icon:users[] Actors
+                              *
+                              *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
+                              *|===
+                              *|Name                                                                                       |Description               
+                              *|[[myprocess.actor.customer-service,Customer Service]]Customer Service                      |The customer service actor
+                              *|[[myprocess.actor.customer,Customer]]Customer icon:play-circle-o[title="Process initiator"]|                          
+                              *|===
+                              *
+                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+    }
+    
+    def "should generate process lanes section"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("process.adoc");
+        def process = new Process(name: 'MyProcess', version: '1.0', lanes: [
+                new Lane(name: 'My Lane', actor: 'Employee', actorFilter: new ActorFilter(name: 'ransomUser', definitionName: 'Single user'))
+                ])
+
+        when:
+        engine.run("process/process_template.tpl", outputFile, [process:process])
+
+        then:
+        outputFile.text == '''*==== MyProcess (1.0)
+                              *
+                              *_No description available_
+                              *
+                              *image::processes/MyProcess-1.0.png[]
+                              *
+                              *===== image:icons/Lane.png[] Lanes
+                              *
+                              *====== My Lane (<<myprocess.actor.employee>> actor)
+                              *
+                              *_No description available_
+                              *
+                              *icon:filter[] *Actor filter:* ransomUser (Single user) + 
+                              *_No description available_
+                              *
                               *'''.stripMargin('*').replace('\n', System.lineSeparator())
     }
 

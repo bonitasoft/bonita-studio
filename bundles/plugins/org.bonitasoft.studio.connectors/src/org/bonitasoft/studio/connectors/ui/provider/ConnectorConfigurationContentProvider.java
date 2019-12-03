@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
@@ -120,7 +120,7 @@ ITreeContentProvider {
 					}
 				} else {
 					if (def.getCategory().isEmpty()
-							&& cat.getId().equals(Messages.uncategorized)) {//FIXME category id is nls string????
+							&& cat.getId().equals(org.bonitasoft.studio.common.repository.Messages.uncategorized)) {//FIXME category id is nls string????
                         result.addAll(connectorConfStore.getConnectorConfigurationsFor(def.getId(), def.getVersion()));
 					}
 					for (final Category c : def.getCategory()) {

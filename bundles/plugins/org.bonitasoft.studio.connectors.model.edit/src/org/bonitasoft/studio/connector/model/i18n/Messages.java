@@ -60,7 +60,6 @@ public class Messages extends NLS {
     public static String testConfiguration;
     public static String name;
     public static String categoriesLabel;
-    public static String uncategorized;
     public static String newCategory;
     public static String remove;
     public static String categoryId;
@@ -125,7 +124,6 @@ public class Messages extends NLS {
     public static String browse;
     public static String selectAImplWarning;
     public static String description;
-    public static String unloadable;
     public static String alreadyExistsForAnotherImplementation;
     public static String scriptEditorWidgetLabel;
     public static String interpreter;

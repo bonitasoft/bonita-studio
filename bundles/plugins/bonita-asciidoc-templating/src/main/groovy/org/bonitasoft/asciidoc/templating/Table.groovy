@@ -21,15 +21,46 @@ package org.bonitasoft.asciidoc.templating
  */
 class Table {
 
+    /**
+     * The list of column names. Must be used when header is true.
+     */
     List<String> columnName;
+    /**
+     * The list of column values.
+     */
     List<List<String>> columms;
     /**
      * Describe how the table border are rendered
-     * Possible values are: 'all', 'rows', 'cols' or 'none'
+     * Possible values are: 'all', 'rows', 'cols' and 'none'
+     * Default is 'cols'
      */
     String gridStyle = 'cols'
+    /**
+     * Describe how the table border are rendered
+     * Possible values are: 'even', 'odd', 'hover' (html only), 'all' and 'none'
+     * Default is 'even'
+     */
+    String stripes = 'even'
+    /**
+     * Describe how the table frame border are rendered
+     * Possible values are: 'all', 'topbot', 'sides' and 'none'
+     * Default is 'topbot'
+     */
+    String frame = 'topbot'
+    /**
+     * Whether a header row should rendered
+     * Default is true
+     */
     boolean header = true
+    /**
+     * Whether a footer row should rendered
+     * Default is false
+     */
     boolean footer = false
+    /**
+     * Disables explicit column widths
+     * Default is false
+     */
     boolean autowidth = false
     /**
      * Configure the columns format (size, style, alignment...)
@@ -68,7 +99,7 @@ class Table {
         if(footer) options << 'footer'
         if(autowidth) options << 'autowidth'
         
-        def tableContent = """*[grid=$gridStyle, options="${options.join(',')}",cols="${columnsFormat.join(',')}"]
+        def tableContent = """*[grid=$gridStyle, options="${options.join(',')}",cols="${columnsFormat.join(',')}",stripes=$stripes,frame=$frame]
                           *|===
                           *""".stripMargin('*')
 

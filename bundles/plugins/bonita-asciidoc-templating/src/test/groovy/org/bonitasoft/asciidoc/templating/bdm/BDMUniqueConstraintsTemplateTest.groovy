@@ -47,7 +47,7 @@ class BDMUniqueConstraintsTemplateTest extends Specification {
         engine.run("bdm/bdm_constraints_template.tpl", outputFile, [businessObject:businessObject])
 
         then:
-        outputFile.text == '''*===== Unique constraints
+        outputFile.text == '''*===== icon:link[] Unique constraints
                               *
                               *====== uniqueFirstAndLastName [<<Employee.firstName>>, <<Employee.lastName>>]
                               *

@@ -2,7 +2,7 @@ package bdm
 
 @Field BusinessObject businessObject 
 
-section 5, 'Attributes'
+section 5, 'icon:list[] Attributes'
 
 newLine()
 
@@ -10,7 +10,7 @@ def allFields = []
 allFields.addAll(businessObject.attributes as List)
 allFields.addAll(businessObject.relations  as List)
 
-def nameColumn = allFields.collect { "${crossRefId("${businessObject.name}.${it.name}", it.name)}${it.hasProperty('relationType') ? "${relationSymbol(it.relationType)} " : ''}$it.name${it.mandatory ? '*' : ''}" }
+def nameColumn = allFields.collect { "${new AttributeXRef(businessObject : businessObject, attributeName : it.name).inlinedRefTag()}${it.hasProperty('relationType') ? "${relationSymbol(it.relationType)} " : ''}$it.name${it.mandatory ? '*' : ''}" }
 def typeColumn = allFields.collect { it.multiple ? "List<$it.type>" : it.type}
 def descriptionColumn = allFields.collect { it.label ? "*Label:* $it.label + "+System.lineSeparator()+  it.description : it.description ?: '' }
 

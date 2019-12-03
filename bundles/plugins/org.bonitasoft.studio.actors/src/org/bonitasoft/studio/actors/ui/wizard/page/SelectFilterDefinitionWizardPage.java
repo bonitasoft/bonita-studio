@@ -17,11 +17,11 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.studio.model.process.Connector;

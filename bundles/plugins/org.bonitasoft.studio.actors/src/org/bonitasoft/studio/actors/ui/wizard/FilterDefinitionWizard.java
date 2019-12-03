@@ -19,9 +19,9 @@ package org.bonitasoft.studio.actors.ui.wizard;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 
 
 /**

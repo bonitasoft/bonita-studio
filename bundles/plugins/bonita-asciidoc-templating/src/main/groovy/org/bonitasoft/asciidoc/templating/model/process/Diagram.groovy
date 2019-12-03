@@ -40,5 +40,5 @@ class Diagram {
     /**
      * The list of processes of the diagram
      */
-    Process[] processes
+    Process[] processes = []
 }

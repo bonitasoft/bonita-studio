@@ -52,7 +52,7 @@ class TemplateEngine {
 
         def template = templateEngine.createTemplateByPath(templatePath)
 
-        outputFile.withWriter { out ->
+        outputFile.withWriter('UTF-8'){ out ->
             template.make(context).writeTo(out)
         }
     }

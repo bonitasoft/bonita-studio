@@ -60,4 +60,14 @@ class Process {
      * The list of documents of the process
      */
     Document[] documents = []
+    
+    /**
+     * The list of actors of the process
+     */
+    Actor[] actors = []
+    
+    /**
+     * The list of flow elements of the process
+     */
+    FlowElement[] flowElements = []
 }

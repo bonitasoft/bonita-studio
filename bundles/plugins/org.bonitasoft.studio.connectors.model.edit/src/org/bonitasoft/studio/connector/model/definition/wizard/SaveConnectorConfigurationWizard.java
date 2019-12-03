@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.util.EcoreUtil;

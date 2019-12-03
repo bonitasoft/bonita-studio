@@ -14,16 +14,21 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
+import java.util.Locale;
 import java.util.function.Function;
 
+import org.bonitasoft.asciidoc.templating.model.process.Actor;
+import org.bonitasoft.asciidoc.templating.model.process.ActorFilter;
 import org.bonitasoft.asciidoc.templating.model.process.Data;
 import org.bonitasoft.asciidoc.templating.model.process.Diagram;
 import org.bonitasoft.asciidoc.templating.model.process.Document;
+import org.bonitasoft.asciidoc.templating.model.process.Lane;
 import org.bonitasoft.asciidoc.templating.model.process.Parameter;
 import org.bonitasoft.asciidoc.templating.model.process.Process;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -34,9 +39,11 @@ import org.eclipse.swt.widgets.Display;
 public class DocumentationDiagramConverter implements Function<MainProcess, Diagram> {
 
     private IFolder targetFolder;
+    private ILocalizedResourceProvider localizedResourceProvider;
 
-    public DocumentationDiagramConverter(IFolder targetFolder) {
+    public DocumentationDiagramConverter(IFolder targetFolder, ILocalizedResourceProvider localizedResourceProvider) {
         this.targetFolder = targetFolder;
+        this.localizedResourceProvider = localizedResourceProvider;
     }
 
     @Override
@@ -72,7 +79,21 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .parameters(convertParameters(pool))
                 .documents(convertDocuments(pool))
                 .globalVariables(convertVariables(pool))
+                .actors(convertActors(pool))
+                .lanes(convertLanes(pool))
                 .build();
+    }
+    
+    private Lane[] convertLanes(Pool pool) {
+        return ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.Lane.class).stream()
+                .map(this::createLane)
+                .toArray(Lane[]::new);
+    }
+
+    private Actor[] convertActors(Pool pool) {
+        return pool.getActors().stream()
+                .map(this::createActor)
+                .toArray(Actor[]::new);
     }
 
     private Data[] convertVariables(Pool pool) {
@@ -91,6 +112,33 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
         return pool.getParameters().stream()
                 .map(this::createParameter)
                 .toArray(Parameter[]::new);
+    }
+    
+    private Lane createLane(org.bonitasoft.studio.model.process.Lane lane) {
+        return Lane.builder()
+                .name(lane.getName())
+                .description(thisOrEmpty(lane.getDocumentation()))
+                .actor(lane.getActor() != null ? lane.getActor().getName() : "")
+                .actorFilter(!lane.getFilters().isEmpty() ? createActorFilter(lane.getFilters().get(0)) : null)
+                .build();
+    }
+    
+    private ActorFilter createActorFilter(org.bonitasoft.studio.model.process.ActorFilter actorFilter) {
+        return ActorFilter.builder()
+                .name(actorFilter.getName())
+                .description(actorFilter.getDocumentation())
+                .definitionName(localizedResourceProvider.getActorFilterDefinitionName(actorFilter.getDefinitionId(), actorFilter.getDefinitionVersion()))
+                .definitionId(actorFilter.getDefinitionId())
+                .definitionVersion(actorFilter.getDefinitionVersion())
+                .build();
+    }
+
+    private Actor createActor(org.bonitasoft.studio.model.process.Actor actor) {
+        return Actor.builder()
+                .name(actor.getName())
+                .description(thisOrEmpty(actor.getDocumentation()))
+                .initiator(actor.isInitiator())
+                .build();
     }
 
     private Parameter createParameter(org.bonitasoft.studio.model.parameter.Parameter parameter) {

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
@@ -29,7 +30,6 @@ import org.bonitasoft.studio.connector.model.definition.dialog.SelectPageWidgetD
 import org.bonitasoft.studio.connector.model.definition.dialog.WidgetLabelProvider;
 import org.bonitasoft.studio.connector.model.definition.provider.ConnectorDefinitionItemProviderAdapterFactory;
 import org.bonitasoft.studio.connector.model.definition.wizard.support.WidgetInputNameEditingSupport;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;

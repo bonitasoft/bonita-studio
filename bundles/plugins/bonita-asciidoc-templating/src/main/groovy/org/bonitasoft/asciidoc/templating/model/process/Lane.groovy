@@ -21,9 +21,24 @@ import groovy.transform.builder.Builder
 @Builder
 class Lane {
     
+    /**
+     * The name of the lane
+     */
     String name
     
+    /**
+     * The description of the lane
+     */
     String description
     
-    FlowElement[] flowElements = []
+    /**
+     * The actor assigned to this lane
+     */
+    String actor
+    
+    /**
+     * The actor filter configured for this lane actor
+     */
+    ActorFilter actorFilter
+    
 }

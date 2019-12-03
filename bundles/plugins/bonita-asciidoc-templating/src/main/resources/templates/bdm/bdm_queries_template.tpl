@@ -4,7 +4,7 @@ package bdm
 
 def keepIndent = true
 
-section 5, 'Queries'
+section 5, 'icon:search[] Queries'
 
 newLine()
 
