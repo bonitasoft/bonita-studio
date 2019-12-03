@@ -16,9 +16,9 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
-import org.bonitasoft.studio.ui.editors.FilteredXMLEditor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class FindOpenedEditorHandler {
 
@@ -35,7 +35,7 @@ public class FindOpenedEditorHandler {
     }
 
     protected boolean validateEditorInstance(IEditorPart editor) {
-        return editor instanceof FilteredXMLEditor;
+        return editor instanceof XMLMultiPageEditorPart;
     }
 
 }
