@@ -8,9 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.application.views;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.ui.internal.IObjectContributor;
 import org.eclipse.ui.internal.ObjectActionContributor;
@@ -71,8 +73,9 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     @Override
     public void registerContributor(IObjectContributor contributor, String targetType) {
         if (contributor instanceof ObjectActionContributor) {
-            String id = ((ObjectActionContributor) contributor).getAdapter(IConfigurationElement.class).getAttribute("id");
-            if (getIncludedActions().stream().anyMatch(include ->  id.matches(include))) {
+            String id = ((ObjectActionContributor) contributor).getAdapter(IConfigurationElement.class)
+                    .getAttribute("id");
+            if (getIncludedActions().stream().anyMatch(include -> id.matches(include))) {
                 if (getExcludedActions().stream().noneMatch(exclude -> id.matches(exclude))) {
                     super.registerContributor(contributor, targetType);
                 }
@@ -83,6 +86,15 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     public static CustomObjectActionContributorManager getManager() {
         if (sharedInstance == null) {
             sharedInstance = new CustomObjectActionContributorManager();
+            //We need to filter editor context menu to remove some dangerous actions like Run As, Debug As...
+            //This is the most straightforward approach I found. It will be filtered for all editors
+            try {
+                Field sharedInstanceField = ObjectActionContributorManager.class.getDeclaredField("sharedInstance");
+                sharedInstanceField.setAccessible(true);
+                sharedInstanceField.set(null, sharedInstance);
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         return sharedInstance;
     }

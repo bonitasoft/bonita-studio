@@ -17,10 +17,10 @@ package org.bonitasoft.studio.la.application.ui;
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.ui.editors.FilteredXMLEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
@@ -42,7 +42,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return part instanceof FilteredXMLEditor;
+        return part instanceof XMLMultiPageEditorPart;
     }
 
     @Override
