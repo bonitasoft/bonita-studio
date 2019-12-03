@@ -17,9 +17,9 @@ package org.bonitasoft.studio.actors.ui.wizard.page;
 import java.util.List;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;

@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.connector.model.definition;
+package org.bonitasoft.studio.common.repository.model;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 
 /**
  * @author Romain Bioteau

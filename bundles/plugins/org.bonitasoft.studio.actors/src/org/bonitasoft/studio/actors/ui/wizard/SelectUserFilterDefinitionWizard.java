@@ -23,8 +23,8 @@ import org.bonitasoft.studio.actors.ui.wizard.page.SelectUserFilterDefinitionWiz
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;

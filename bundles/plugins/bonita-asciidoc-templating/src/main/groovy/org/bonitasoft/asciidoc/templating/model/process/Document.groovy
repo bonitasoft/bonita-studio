@@ -21,14 +21,29 @@ import groovy.transform.builder.Builder
 @Builder
 class Document {
     
+    /**
+     * The name of the document
+     */
     String name
     
+    /**
+     * The description of the document
+     */
     String description = ""
     
+    /**
+     * Whether this document is multiple
+     */
     boolean multiple
     
+    /**
+     * The initial value used for this document, can be an URL, file name or a contract input name.
+     */
     String initialValue = ""
     
+    /**
+     * The expected mime-type of the document (Optional)
+     */
     String mimeType = ""
     
 }

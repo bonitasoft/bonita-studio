@@ -91,6 +91,9 @@ public final class Messages extends NLS {
     public static String rename;
     public static String renameProject;
 
+    public static String unloadable;
+    public static String uncategorized;
+
     private Messages() {
         // Do not instantiate
     }

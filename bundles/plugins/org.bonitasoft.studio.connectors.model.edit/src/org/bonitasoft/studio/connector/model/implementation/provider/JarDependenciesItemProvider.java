@@ -11,15 +11,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
-
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.JarDependencies;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;

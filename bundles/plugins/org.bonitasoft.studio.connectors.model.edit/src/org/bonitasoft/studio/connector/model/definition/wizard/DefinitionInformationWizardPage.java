@@ -28,12 +28,12 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.definition.dialog.NewCategoryDialog;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
@@ -299,7 +299,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return element instanceof Category && !Messages.uncategorized.equals(((Category) element).getId());
+                return element instanceof Category && !org.bonitasoft.studio.common.repository.Messages.uncategorized.equals(((Category) element).getId());
             }
         });
         categoryViewer.setContentProvider(new DefinitionCategoryContentProvider());

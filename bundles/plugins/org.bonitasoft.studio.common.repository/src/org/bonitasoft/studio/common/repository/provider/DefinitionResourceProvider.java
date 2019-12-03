@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.connector.model.i18n;
+package org.bonitasoft.studio.common.repository.provider;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -40,14 +40,15 @@ import javax.imageio.ImageIO;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -149,7 +150,7 @@ public class DefinitionResourceProvider {
         throw new SWTError(SWT.ERROR_THREAD_INVALID_ACCESS);
     }
 
-    private ResourceBundle getResourceBundle(final ConnectorDefinition definition,
+    public ResourceBundle getResourceBundle(final ConnectorDefinition definition,
             final Locale locale) {
         if (definition == null || definition.eResource() == null) {
             return null;

@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.connector.model.i18n.Messages;
+import org.bonitasoft.studio.common.repository.Messages;
 
 /**
  * @author Romain Bioteau

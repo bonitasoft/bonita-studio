@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.connector.model.implementation.UnloadableConnectorImplementation;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;

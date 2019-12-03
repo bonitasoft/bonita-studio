@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;

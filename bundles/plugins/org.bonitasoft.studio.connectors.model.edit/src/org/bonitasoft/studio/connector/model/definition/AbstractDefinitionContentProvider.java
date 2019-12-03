@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
-import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -108,7 +108,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
                     }
                 } else {
                     if (def.getCategory().isEmpty()
-                            && cat.getId().equals(Messages.uncategorized)) {//FIXME category id is nls string????
+                            && cat.getId().equals(org.bonitasoft.studio.common.repository.Messages.uncategorized)) {//FIXME category id is nls string????
                         result.add(def);
                     }
                     for (final Category c : def.getCategory()) {

@@ -6,14 +6,14 @@ import org.bonitasoft.asciidoc.templating.model.bdm.UniqueConstraint
 
 def keepIndent = true
 
-section 5, 'Unique constraints'
+section 5, 'icon:link[] Unique constraints'
 
 newLine()
 
 
 businessObject.uniqueConstraints.each { UniqueConstraint constraint ->
     
-    section 6, "$constraint.name [${constraint.attributes.collect { "<<${businessObject.name}.$it>>" }.join(', ')}]"
+    section 6, "$constraint.name [${constraint.attributes.collect { new AttributeXRef(businessObject : businessObject, attributeName : it).refLink() }.join(', ')}]"
     
     newLine()
    

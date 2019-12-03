@@ -48,12 +48,12 @@ class BDMQueriesTemplateTest extends Specification {
         engine.run("bdm/bdm_queries_template.tpl", outputFile, [businessObject:businessObject])
 
         then:
-        outputFile.text == '''*===== Queries
+        outputFile.text == '''*===== icon:search[] Queries
                               *
                               *====== findByNearestAddress
                               *
                               *_No description available_
-                              *[grid=cols, options="header",cols="1e,1a"]
+                              *[grid=cols, options="header",cols="1e,1a",stripes=even,frame=topbot]
                               *|===
                               *|Return type|Parameters            
                               *|Employee   |location (_Double_) + 

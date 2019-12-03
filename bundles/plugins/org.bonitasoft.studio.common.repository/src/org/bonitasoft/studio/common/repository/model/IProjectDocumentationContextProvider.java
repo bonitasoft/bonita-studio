@@ -18,6 +18,6 @@ import org.bonitasoft.asciidoc.templating.model.Project.ProjectBuilder;
 
 public interface IProjectDocumentationContextProvider {
 
-    ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder);
+    ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder, ILocalizedResourceProvider localizedResourceProvider);
 
 }

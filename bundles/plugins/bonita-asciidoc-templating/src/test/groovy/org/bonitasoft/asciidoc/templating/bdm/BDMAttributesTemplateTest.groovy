@@ -54,9 +54,9 @@ class BDMAttributesTemplateTest extends Specification {
         engine.run("bdm/bdm_attributes_template.tpl", outputFile, [businessObject:businessObject])
 
         then:
-        outputFile.text == '''*===== Attributes
+        outputFile.text == '''*===== icon:list[] Attributes
                               *
-                              *[grid=cols, options="header",cols="1,1e,3a"]
+                              *[grid=cols, options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name                                                  |Type         |Description                                                           
                               *|[[Employee.persistenceId,persistenceId]]persistenceId*|Long         |                                                                      

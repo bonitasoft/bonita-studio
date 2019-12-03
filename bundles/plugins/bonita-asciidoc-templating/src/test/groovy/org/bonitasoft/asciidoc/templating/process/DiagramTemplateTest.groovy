@@ -19,6 +19,7 @@ import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
 import org.bonitasoft.asciidoc.templating.model.bdm.Package
 import org.bonitasoft.asciidoc.templating.model.process.Diagram
+import org.bonitasoft.asciidoc.templating.model.process.Process
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
@@ -33,6 +34,25 @@ class DiagramTemplateTest extends Specification {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("diagram.adoc");
+        def diagram = new Diagram(name: 'My Diagram', version: '1.0', description: 'Some simple description', processes: [new Process(),new Process()])
+
+        when:
+        engine.run("process/diagram_template.tpl", outputFile, [diagram:diagram])
+
+        then:
+        outputFile.text.startsWith('''|=== My Diagram (1.0)
+                              |
+                              |Some simple description
+                              |
+                              |image::diagrams/My Diagram-1.0.png[]
+                              |
+                              |'''.stripMargin().replace('\n', System.lineSeparator()))
+    }
+    
+    def "should not include diagram image if diagram has only one process"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("diagram.adoc");
         def diagram = new Diagram(name: 'My Diagram', version: '1.0', description: 'Some simple description')
 
         when:
@@ -42,8 +62,6 @@ class DiagramTemplateTest extends Specification {
         outputFile.text == '''|=== My Diagram (1.0)
                               |
                               |Some simple description
-                              |
-                              |image::diagrams/My Diagram-1.0.png[]
                               |
                               |'''.stripMargin().replace('\n', System.lineSeparator())
     }

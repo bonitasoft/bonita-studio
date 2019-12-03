@@ -46,6 +46,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.common.repository.model.IProjectDocumentationContextProvider;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -337,7 +338,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder) {
+    public ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder, ILocalizedResourceProvider localizedResourceProvider) {
         BusinessObjectModelFileStore bdmFileStore = (BusinessObjectModelFileStore) getChild("bom.xml", false);
         if (bdmFileStore != null) {
             BusinessDataModel bdm = new DocumentationBusinessDataModelConverter()
