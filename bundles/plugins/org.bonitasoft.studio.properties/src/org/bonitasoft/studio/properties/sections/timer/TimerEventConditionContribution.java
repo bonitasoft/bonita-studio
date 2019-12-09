@@ -19,6 +19,7 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -28,13 +29,13 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -54,84 +55,88 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
 
     private AbstractTimerEvent eObject;
 
-    private GridData gd;
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+	    ExtensibleGridPropertySection extensibleGridPropertySection) {
+	this.widgetFactory = widgetFactory;
 
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-        this.widgetFactory = widgetFactory;
+	Composite container = widgetFactory.createPlainComposite(composite, SWT.NONE);
+	container.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(1, 1, 3, 3).numColumns(2).create());
+	container.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).create());
 
-        composite.setLayout(new GridLayout(2, false));
-
-        conditionViewer = new Text(composite, SWT.BORDER | SWT.NO_FOCUS | SWT.READ_ONLY);
-        gd = new GridData();
-        gd.widthHint = 150;
-        conditionViewer.setLayoutData(gd);
-        createEditConditionButton(composite);
+	conditionViewer = new Text(container,
+		GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.NO_FOCUS | SWT.READ_ONLY));
+	if (!GTKStyleHandler.isGTK3()) {
+	    widgetFactory.adapt(conditionViewer, true, true);
+	}
+	conditionViewer.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
+	createEditConditionButton(container);
     }
 
     private Button createEditConditionButton(final Composite parent) {
-        final Button addData = widgetFactory.createButton(parent, Messages.editCondition, SWT.FLAT);
-        addData.addSelectionListener(new SelectionListener() {
+	final Button addData = widgetFactory.createButton(parent, Messages.editCondition, SWT.FLAT);
+	addData.addSelectionListener(new SelectionListener() {
 
-            public void widgetSelected(SelectionEvent e) {
-                WizardDialog wizardDialog = new WizardDialog(parent.getShell(), new EditTimerConditionWizard(eObject, editingDomain,
-                        TimerEventConditionContribution.this));
-                wizardDialog.open();
-            }
+	    public void widgetSelected(SelectionEvent e) {
+		WizardDialog wizardDialog = new WizardDialog(parent.getShell(),
+			new EditTimerConditionWizard(eObject, editingDomain, TimerEventConditionContribution.this));
+		wizardDialog.open();
+	    }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+	    public void widgetDefaultSelected(SelectionEvent e) {
 
-            }
-        });
-        return addData;
+	    }
+	});
+	return addData;
     }
 
     public void dispose() {
     }
 
     public String getLabel() {
-        return Messages.timerCondition;
+	return Messages.timerCondition;
     }
 
     public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof AbstractTimerEvent;
+	return eObject instanceof AbstractTimerEvent;
     }
 
     public void refresh() {
-        Expression condition = eObject.getCondition();
-        if (condition != null) {
-            String conditionLabel = groovyToLabel(condition);
-            conditionViewer.setText(conditionLabel != null ? conditionLabel : "");
+	Expression condition = eObject.getCondition();
+	if (condition != null) {
+	    String conditionLabel = groovyToLabel(condition);
+	    conditionViewer.setText(conditionLabel != null ? conditionLabel : "");
 
-            DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if (editor != null) {
-                EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
-                if (ep != null) {
-                    if (!ep.getChildren().isEmpty()) {
-                        ((LabelEditPart) ep.getChildren().get(0)).refresh();
-                    }
-                }
-            }
-        }
+	    DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		    .getActiveEditor();
+	    if (editor != null) {
+		EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
+		if (ep != null) {
+		    if (!ep.getChildren().isEmpty()) {
+			((LabelEditPart) ep.getChildren().get(0)).refresh();
+		    }
+		}
+	    }
+	}
     }
 
     private String groovyToLabel(Expression condition) {
-        String conditionLabel;
-        if (DateUtil.isDate(condition.getContent())) {
-            conditionLabel = DateUtil.getDisplayDate(condition.getContent());
-        } else if (DateUtil.isDuration(condition.getContent())) {
-            conditionLabel = DateUtil.getDisplayDuration(condition.getContent());
-        } else {
-            conditionLabel = condition.getName();
-        }
-        return conditionLabel;
+	String conditionLabel;
+	if (DateUtil.isDate(condition.getContent())) {
+	    conditionLabel = DateUtil.getDisplayDate(condition.getContent());
+	} else if (DateUtil.isDuration(condition.getContent())) {
+	    conditionLabel = DateUtil.getDisplayDuration(condition.getContent());
+	} else {
+	    conditionLabel = condition.getName();
+	}
+	return conditionLabel;
     }
 
     public void setEObject(EObject object) {
-        eObject = (AbstractTimerEvent) object;
+	eObject = (AbstractTimerEvent) object;
     }
 
     public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-        this.editingDomain = editingDomain;
+	this.editingDomain = editingDomain;
     }
 
     public void setSelection(ISelection selection) {

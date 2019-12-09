@@ -33,37 +33,27 @@ import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-/**
- * @author Mickael Istria
- *
- */
 public class DynamicLabelPropertySectionContribution extends AbstractPropertySectionContribution {
 
     private ExpressionViewer expressionViewer;
     private EMFDataBindingContext dataBindingContext;
     private final static int MAX_LENGTH = 255;
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
+
     @Override
     public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
-        composite.setLayout(new GridLayout(1, true));
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-        final CLabel label = widgetFactory.createCLabel(composite, Messages.bind(Messages.warningDisplayLabelMaxLength, MAX_LENGTH, MAX_LENGTH));
-        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        label.setLayout(GridLayoutFactory.fillDefaults().spacing(0,10).create());
-        label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+	GridData gd = (GridData) composite.getLayoutData();
+	gd.grabExcessHorizontalSpace = true;
+	ControlDecoration controlDecoration = new ControlDecoration(composite.getChildren()[0], SWT.RIGHT);
+        controlDecoration.setDescriptionText(Messages.bind(Messages.warningDisplayLabelMaxLength, MAX_LENGTH, MAX_LENGTH));
+        controlDecoration.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_LABEL);
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
@@ -97,7 +87,6 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, eObject, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_LABEL, selection)) ;
             }
             dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(expressionViewer), EMFEditProperties.value(editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_LABEL).observe(eObject));
-            //expressionViewer.setSelection(new StructuredSelection(selection)) ;
         }
     }
 

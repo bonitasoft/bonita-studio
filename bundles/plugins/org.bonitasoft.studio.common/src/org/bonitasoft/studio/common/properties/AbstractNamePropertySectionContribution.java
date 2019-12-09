@@ -25,13 +25,13 @@ import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -60,33 +60,17 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     /** Create the Data binding */
     protected abstract void createBinding(EMFDataBindingContext context);
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof Element && !(eObject instanceof MessageFlow) && !(eObject instanceof TextAnnotation);
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution#refresh()
-     */
     @Override
     public void refresh() {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution
-     * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
-     */
+
     @Override
     public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
@@ -107,33 +91,22 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
-     */
     @Override
     public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection page) {
 
         context = new EMFDataBindingContext();
 
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        final GridLayout rl = new GridLayout(3, false);
-        composite.setLayout(rl);
+        Composite container = widgetFactory.createPlainComposite(composite,SWT.NONE);
+        container.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(1, 1, 3, 3).numColumns(useEditButton() ? 2 : 1).create());
+        container.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).create());
+       
 
-        text = new Text(composite, GTKStyleHandler.removeBorderFlag(SWT.BORDER));
+        text = new Text(container, GTKStyleHandler.removeBorderFlag(SWT.BORDER));
         if (!GTKStyleHandler.isGTK3()) {
             widgetFactory.adapt(text, true, true);
         }
-
-        final GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
-        rd.widthHint = 250;
-
-        rd.grabExcessVerticalSpace = true;
-        text.setLayoutData(rd);
+        text.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(250, SWT.DEFAULT).create());
         text.setText(element.getName());
         if (useEditButton()) {
             text.setEnabled(false);
@@ -141,7 +114,7 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         if (!(element instanceof SequenceFlow)) {
 
             if (useEditButton()) {
-                final Button editDiagramNameButton = widgetFactory.createButton(composite, Messages.edit, SWT.FLAT);
+                final Button editDiagramNameButton = widgetFactory.createButton(container, Messages.edit, SWT.FLAT);
                 editDiagramNameButton.addSelectionListener(new SelectionAdapter() {
 
                     @Override

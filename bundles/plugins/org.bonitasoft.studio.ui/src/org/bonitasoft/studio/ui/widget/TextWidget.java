@@ -56,127 +56,97 @@ public class TextWidget extends EditableControlWidget {
 
     public static class Builder extends EditableControlWidgetBuilder<Builder, TextWidget> {
 
-        protected Optional<String> placeholder = Optional.empty();
-        protected Optional<String> labelButton = Optional.empty();
-        protected Optional<Listener> buttonListner = Optional.empty();
-        protected boolean transactionalEdit = false;
-        private BiConsumer<String, String> onEdit;
-        private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
-        private Optional<String> tooltip = Optional.empty();
-        protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
+	protected Optional<String> placeholder = Optional.empty();
+	protected Optional<String> labelButton = Optional.empty();
+	protected Optional<Listener> buttonListner = Optional.empty();
+	protected boolean transactionalEdit = false;
+	private BiConsumer<String, String> onEdit;
+	private Optional<IContentProposalProvider> proposalProvider = Optional.empty();
+	private Optional<String> tooltip = Optional.empty();
+	protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
 
-        public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
-            this.editableStrategy = Optional.ofNullable(viewerObservableValue);
-            return this;
-        }
+	public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
+	    this.editableStrategy = Optional.ofNullable(viewerObservableValue);
+	    return this;
+	}
 
-        /**
-         * Adds a placeholder to the resulting {@link Text}
-         */
-        public Builder withPlaceholder(String placeholder) {
-            this.placeholder = Optional.ofNullable(placeholder);
-            return this;
-        }
+	/**
+	 * Adds a placeholder to the resulting {@link Text}
+	 */
+	public Builder withPlaceholder(String placeholder) {
+	    this.placeholder = Optional.ofNullable(placeholder);
+	    return this;
+	}
 
-        public Builder withTootltip(String tooltip) {
-            this.tooltip = Optional.ofNullable(tooltip);
-            return this;
-        }
+	public Builder withTootltip(String tooltip) {
+	    this.tooltip = Optional.ofNullable(tooltip);
+	    return this;
+	}
 
-        /**
-         * Create a button after the Text, with a label
-         */
-        public Builder withButton(String labelButton) {
-            this.labelButton = Optional.ofNullable(labelButton);
-            return this;
-        }
+	/**
+	 * Create a button after the Text, with a label
+	 */
+	public Builder withButton(String labelButton) {
+	    this.labelButton = Optional.ofNullable(labelButton);
+	    return this;
+	}
 
-        public Builder transactionalEdit() {
-            this.transactionalEdit = true;
-            return this;
-        }
+	public Builder transactionalEdit() {
+	    this.transactionalEdit = true;
+	    return this;
+	}
 
-        public Builder transactionalEdit(BiConsumer<String /* old value */, String /* new value */> onEdit) {
-            this.transactionalEdit = true;
-            this.onEdit = onEdit;
-            return this;
-        }
+	public Builder transactionalEdit(BiConsumer<String /* old value */, String /* new value */> onEdit) {
+	    this.transactionalEdit = true;
+	    this.onEdit = onEdit;
+	    return this;
+	}
 
-        /**
-         * add an onClick action to the button
-         */
-        public Builder onClickButton(Listener listener) {
-            this.buttonListner = Optional.ofNullable(listener);
-            return this;
-        }
+	/**
+	 * add an onClick action to the button
+	 */
+	public Builder onClickButton(Listener listener) {
+	    this.buttonListner = Optional.ofNullable(listener);
+	    return this;
+	}
 
-        public Builder withProposalProvider(IContentProposalProvider proposalProvider) {
-            this.proposalProvider = Optional.of(proposalProvider);
-            return this;
-        }
+	public Builder withProposalProvider(IContentProposalProvider proposalProvider) {
+	    this.proposalProvider = Optional.of(proposalProvider);
+	    return this;
+	}
 
-        @Override
-        public TextWidget createIn(Composite container) {
-            if (transactionalEdit && targetToModelStrategy == null) {
-                throw new IllegalStateException("A target to model strategy is required with transactionalEdit");
-            }
-            if (transactionalEdit
-                    && targetToModelStrategy.getUpdatePolicy() != UpdateValueStrategy.POLICY_CONVERT) {
-                throw new IllegalStateException(
-                        "Target to model strategy must have a POLICY_CONVERT strategy with transactionalEdit");
-            }
-            final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3()) ? new NativeTextWidget(container,
-                    id,
-                    labelAbove,
-                    horizontalLabelAlignment,
-                    verticalLabelAlignment,
-                    labelWidth,
-                    readOnly,
-                    label,
-                    message,
-                    labelButton,
-                    transactionalEdit,
-                    onEdit,
-                    toolkit,
-                    proposalProvider,
-                    editableStrategy,
-                    Optional.ofNullable(ctx))
-                    : new TextWidget(container,
-                            id,
-                            labelAbove,
-                            horizontalLabelAlignment,
-                            verticalLabelAlignment,
-                            labelWidth,
-                            readOnly,
-                            label,
-                            message,
-                            labelButton,
-                            transactionalEdit,
-                            onEdit,
-                            toolkit,
-                            proposalProvider,
-                            editableStrategy,
-                            Optional.ofNullable(ctx));
-            control.init();
-            control.setLayoutData(layoutData != null ? layoutData : gridData);
-            buttonListner.ifPresent(control::onClickButton);
-            placeholder.ifPresent(control::setPlaceholder);
-            tooltip.ifPresent(control::setTooltip);
-            if (ctx != null && modelObservable != null) {
-                control.bindControl(ctx,
-                        delay.map(time -> control.observeText(time, SWT.Modify))
-                                .orElse(control.observeText(SWT.Modify)),
-                        modelObservable,
-                        targetToModelStrategy,
-                        modelToTargetStrategy);
-                validator.ifPresent(v -> control.bindValidator(ctx,
-                        delay.map(time -> control.observeText(time, SWT.Modify))
-                                .orElse(control.observeText(SWT.Modify)),
-                        modelObservable,
-                        v));
-            }
-            return control;
-        }
+	@Override
+	public TextWidget createIn(Composite container) {
+	    if (transactionalEdit && targetToModelStrategy == null) {
+		throw new IllegalStateException("A target to model strategy is required with transactionalEdit");
+	    }
+	    if (transactionalEdit && targetToModelStrategy.getUpdatePolicy() != UpdateValueStrategy.POLICY_CONVERT) {
+		throw new IllegalStateException(
+			"Target to model strategy must have a POLICY_CONVERT strategy with transactionalEdit");
+	    }
+	    final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3())
+		    ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
+			    labelWidth, readOnly, label, message, labelButton, transactionalEdit, onEdit, toolkit,
+			    proposalProvider, editableStrategy, Optional.ofNullable(ctx))
+		    : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
+			    labelWidth, readOnly, label, message, labelButton, transactionalEdit, onEdit, toolkit,
+			    proposalProvider, editableStrategy, Optional.ofNullable(ctx));
+	    control.init();
+	    control.setLayoutData(layoutData != null ? layoutData : gridData);
+	    buttonListner.ifPresent(control::onClickButton);
+	    placeholder.ifPresent(control::setPlaceholder);
+	    tooltip.ifPresent(control::setTooltip);
+	    if (ctx != null && modelObservable != null) {
+		control.bindControl(ctx,
+			delay.map(time -> control.observeText(time, SWT.Modify))
+				.orElse(control.observeText(SWT.Modify)),
+			modelObservable, targetToModelStrategy, modelToTargetStrategy);
+		validator.ifPresent(
+			v -> control.bindValidator(ctx, delay.map(time -> control.observeText(time, SWT.Modify))
+				.orElse(control.observeText(SWT.Modify)), modelObservable, v));
+	    }
+	    return control;
+	}
 
     }
 
@@ -192,312 +162,296 @@ public class TextWidget extends EditableControlWidget {
     private Optional<DataBindingContext> ctx;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
-            int verticalLabelAlignment,
-            int labelWidth, boolean readOnly, String label, String message, Optional<String> labelButton,
-            boolean transactionalEdit, BiConsumer<String, String> onEdit, Optional<FormToolkit> toolkit,
-            Optional<IContentProposalProvider> proposalProvider, Optional<ComputedValue<Boolean>> enableStrategy,
-            Optional<DataBindingContext> ctx) {
-        super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message,
-                labelButton,
-                toolkit);
-        this.transactionalEdit = transactionalEdit;
-        this.onEdit = Optional.ofNullable(onEdit);
-        this.proposalProvider = proposalProvider;
-        this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
-        this.enableStrategy = enableStrategy;
-        this.ctx = ctx;
+	    int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
+	    Optional<String> labelButton, boolean transactionalEdit, BiConsumer<String, String> onEdit,
+	    Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
+	    Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx) {
+	super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
+		message, labelButton, toolkit);
+	this.transactionalEdit = transactionalEdit;
+	this.onEdit = Optional.ofNullable(onEdit);
+	this.proposalProvider = proposalProvider;
+	this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
+	this.enableStrategy = enableStrategy;
+	this.ctx = ctx;
     }
 
     @Override
     protected int numColumn() {
-        return buttonLabel.isPresent() || transactionalEdit ? 3 : 2;
+	return buttonLabel.isPresent() || transactionalEdit ? 3 : 2;
     }
 
     @Override
     protected int horizontalSpacing() {
-        if (labelAbove && transactionalEdit) {
-            return 1;
-        }
-        return super.horizontalSpacing();
+	if (labelAbove && transactionalEdit) {
+	    return 1;
+	}
+	return super.horizontalSpacing();
     }
 
     public ISWTObservableValue observeText(int event) {
-        return WidgetProperties.text(event).observe(text);
+	return WidgetProperties.text(event).observe(text);
     }
 
     public ISWTObservableValue observeText(int delay, int event) {
-        return WidgetProperties.text(event).observeDelayed(delay, text);
+	return WidgetProperties.text(event).observeDelayed(delay, text);
     }
 
     public void setPlaceholder(String placeholder) {
-        text.setMessage(placeholder);
+	text.setMessage(placeholder);
     }
 
     public void setTooltip(String tooltip) {
-        ControlDecoration controlDecoration = null;
-        if (label.isPresent()) {
-            controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT);
-        } else {
-            controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT);
-        }
-        controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
-        controlDecoration.setShowOnlyOnFocus(false);
-        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
-                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
-        controlDecoration.setDescriptionText(tooltip);
+	ControlDecoration controlDecoration = null;
+	if (label.isPresent()) {
+	    controlDecoration = new ControlDecoration(label.get(), SWT.RIGHT);
+	} else {
+	    controlDecoration = new ControlDecoration(text, SWT.TOP | SWT.LEFT);
+	}
+	controlDecoration.setMarginWidth(labelAbove ? 5 : 2);
+	controlDecoration.setShowOnlyOnFocus(false);
+	controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+		.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+	controlDecoration.setDescriptionText(tooltip);
     }
 
     public void onClickButton(Listener listener) {
-        if (listener != null) {
-            button.ifPresent(b -> b.addListener(SWT.Selection, listener));
-        }
+	if (listener != null) {
+	    button.ifPresent(b -> b.addListener(SWT.Selection, listener));
+	}
     }
 
     public void focusButton() {
-        button.ifPresent(Button::setFocus);
+	button.ifPresent(Button::setFocus);
     }
 
     public void focusText() {
-        this.text.setFocus();
+	this.text.setFocus();
     }
 
     public String getText() {
-        return text.getText();
+	return text.getText();
     }
 
     public TextWidget setLabelColor(Color color) {
-        label.ifPresent(label -> label.setForeground(color));
-        return this;
+	label.ifPresent(label -> label.setForeground(color));
+	return this;
     }
 
     @Override
     protected Color selectedBorderColor(Control container) {
-        return editing ? editingColor : super.selectedBorderColor(container);
+	return editing ? editingColor : super.selectedBorderColor(container);
     }
 
     @Override
     protected Control createControl() {
-        final Composite textContainer = new Composite(this, SWT.NONE);
-        textContainer
-                .setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).spacing(0, 0)
-                        .create());
-        textContainer.setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment()).grab(true, grabVerticalSpace())
-                        .span(labelAbove ? 2 : 1, 1)
-                        .create());
-        readOnly = readOnly || transactionalEdit;
-        configureBackground(textContainer);
+	final Composite textContainer = new Composite(this, SWT.NONE);
+	textContainer.setLayout(GridLayoutFactory.fillDefaults().margins(1, 3).spacing(0, 0).create());
+	textContainer.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())
+		.grab(true, grabVerticalSpace()).span(labelAbove ? 2 : 1, 1).create());
+	readOnly = readOnly || transactionalEdit;
+	configureBackground(textContainer);
 
-        textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
+	textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
 
-        text = newText(textContainer);
-        text.setData(SWTBOT_WIDGET_ID_KEY, id);
-        configureBackground(text);
+	text = newText(textContainer);
+	text.setData(SWTBOT_WIDGET_ID_KEY, id);
+	configureBackground(text);
 
-        enableStrategy.ifPresent(strategy -> ctx.orElse(new DataBindingContext())
-                .bindValue(WidgetProperties.editable().observe(text), strategy));
+	toolkit.ifPresent(toolkit -> toolkit.adapt(text, true, true));
 
-        proposalProvider.ifPresent(provider -> {
-            final TextContentAdapter controlContentAdapter = new TextContentAdapter();
-            final CustomContentProposalAdapter proposalAdapter = new CustomContentProposalAdapter(text,
-                    controlContentAdapter,
-                    provider,
-                    null,
-                    null);
-            proposalAdapter.setPropagateKeys(true);
-            proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-            proposalAdapter.setAutoActivationDelay(0);
-            text.addListener(SWT.FocusIn, e -> openProposalPopup(proposalAdapter));
-        });
+	enableStrategy.ifPresent(strategy -> ctx.orElse(new DataBindingContext())
+		.bindValue(WidgetProperties.editable().observe(text), strategy));
 
-        text.addListener(SWT.FocusIn, event -> redraw(textContainer));
-        text.addListener(SWT.FocusOut, event -> redraw(textContainer));
+	proposalProvider.ifPresent(provider -> {
+	    final TextContentAdapter controlContentAdapter = new TextContentAdapter();
+	    final CustomContentProposalAdapter proposalAdapter = new CustomContentProposalAdapter(text,
+		    controlContentAdapter, provider, null, null);
+	    proposalAdapter.setPropagateKeys(true);
+	    proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+	    proposalAdapter.setAutoActivationDelay(0);
+	    text.addListener(SWT.FocusIn, e -> openProposalPopup(proposalAdapter));
+	});
 
-        if (transactionalEdit) {
-            final ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
-            toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
-            if (toolkit.isPresent()) {
-                toolkit.get().adapt(toolBar, true, true);
-            }
-            createEditItem(toolBar);
-            text.addListener(SWT.FocusOut, event -> {
-                if (Objects.equals(event.widget, text)) {
-                    cancel(toolBar);
-                }
-            });
-            text.addTraverseListener(new TraverseListener() {
+	text.addListener(SWT.FocusIn, event -> redraw(textContainer));
+	text.addListener(SWT.FocusOut, event -> redraw(textContainer));
 
-                @Override
-                public void keyTraversed(TraverseEvent e) {
-                    if (editing && e.character == SWT.CR) {
-                        accept(toolBar);
-                        e.doit = false;
-                    }
-                }
-            });
-        }
+	if (transactionalEdit) {
+	    final ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
+	    toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
+	    toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
+	    createEditItem(toolBar);
+	    text.addListener(SWT.FocusOut, event -> {
+		if (Objects.equals(event.widget, text)) {
+		    cancel(toolBar);
+		}
+	    });
+	    text.addTraverseListener(new TraverseListener() {
 
-        button = buttonLabel.map(label -> {
-            final Button b = new Button(this, SWT.PUSH);
-            b.setText(label);
-            return b;
-        });
-        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())::applyTo);
-        return textContainer;
+		@Override
+		public void keyTraversed(TraverseEvent e) {
+		    if (editing && e.character == SWT.CR) {
+			accept(toolBar);
+			e.doit = false;
+		    }
+		}
+	    });
+	}
+
+	button = buttonLabel.map(label -> {
+	    final Button b = new Button(this, SWT.PUSH);
+	    b.setText(label);
+	    toolkit.ifPresent(toolkit -> toolkit.adapt(b, true, true));
+	    return b;
+	});
+	button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())::applyTo);
+	return textContainer;
     }
 
     private void openProposalPopup(CustomContentProposalAdapter proposalAdapter) {
-        text.getDisplay().asyncExec(() -> {
-            if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()) {
-                if (text.getText() == null || text.getText().isEmpty()) {
-                    proposalAdapter.openProposalPopup();
-                }
-            }
-        });
+	text.getDisplay().asyncExec(() -> {
+	    if (!text.isDisposed() && proposalAdapter != null && !proposalAdapter.isProposalPopupOpen()) {
+		if (text.getText() == null || text.getText().isEmpty()) {
+		    proposalAdapter.openProposalPopup();
+		}
+	    }
+	});
     }
 
     protected int verticalAlignment() {
-        return SWT.CENTER;
+	return SWT.CENTER;
     }
 
     protected boolean grabVerticalSpace() {
-        return false;
+	return false;
     }
 
     protected void createEditItem(final ToolBar toolBar) {
-        final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
-        editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.ui.widget.textWidget.editButton");
-        editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
-        editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
-        editButton.setToolTipText(Messages.edit);
-        editButton.addListener(SWT.Selection, editListener(toolBar));
+	final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
+	editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+		"org.bonitasoft.studio.ui.widget.textWidget.editButton");
+	editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
+	editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
+	editButton.setToolTipText(Messages.edit);
+	editButton.addListener(SWT.Selection, editListener(toolBar));
     }
 
     private Listener editListener(ToolBar toolBar) {
-        return event -> edit(toolBar);
+	return event -> edit(toolBar);
     }
 
     private void edit(ToolBar toolBar) {
-        Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
-        updateEditableState(true);
+	Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
+	updateEditableState(true);
 
-        final ToolItem cancelButton = new ToolItem(toolBar, SWT.FLAT);
-        cancelButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "error.png").createImage());
-        cancelButton.setToolTipText(Messages.revertEdit);
-        cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
-        cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
+	final ToolItem cancelButton = new ToolItem(toolBar, SWT.FLAT);
+	cancelButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "error.png").createImage());
+	cancelButton.setToolTipText(Messages.revertEdit);
+	cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
+	cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
 
-        okButton = new ToolItem(toolBar, SWT.FLAT);
-        okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
-        okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
-        okButton.setToolTipText(Messages.applyEdit);
-        okButton.addListener(SWT.Selection, okListener(toolBar));
-        okButton.addListener(SWT.Dispose, event -> okButton.getImage().dispose());
+	okButton = new ToolItem(toolBar, SWT.FLAT);
+	okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+		"org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
+	okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
+	okButton.setToolTipText(Messages.applyEdit);
+	okButton.addListener(SWT.Selection, okListener(toolBar));
+	okButton.addListener(SWT.Dispose, event -> okButton.getImage().dispose());
 
-        toolBar.getParent().layout();
+	toolBar.getParent().layout();
 
-        text.setFocus();
+	text.setFocus();
     }
 
     private Listener cancelListener(ToolBar toolBar) {
-        return event -> cancel(toolBar);
+	return event -> cancel(toolBar);
     }
 
     private void cancel(ToolBar toolBar) {
-        if (editing) {
-            getValueBinding().updateModelToTarget();
-            getValueBinding().validateTargetToModel();
-            updateEditableState(false);
-            Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
-            createEditItem(toolBar);
-            toolBar.getParent().layout();
-        }
+	if (editing) {
+	    getValueBinding().updateModelToTarget();
+	    getValueBinding().validateTargetToModel();
+	    updateEditableState(false);
+	    Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
+	    createEditItem(toolBar);
+	    toolBar.getParent().layout();
+	}
     }
 
     private Listener okListener(ToolBar toolBar) {
-        return event -> accept(toolBar);
+	return event -> accept(toolBar);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#messageDecoratorVerticalIndent()
-     */
     @Override
     protected int messageDecoratorVerticalIndent() {
-        return transactionalEdit ? -4 : super.messageDecoratorVerticalIndent();
+	return transactionalEdit ? -4 : super.messageDecoratorVerticalIndent();
     }
 
     @Override
     protected int messageLabelHorizontalSpan(boolean labelAbove) {
-        return buttonLabel.isPresent() || transactionalEdit ? horizontalSpanWithButton(labelAbove) : 1;
+	return buttonLabel.isPresent() || transactionalEdit ? horizontalSpanWithButton(labelAbove) : 1;
     }
 
     private void accept(ToolBar toolBar) {
-        if (editing) {
-            final Binding binding = getValueBinding();
-            final String oldValue = (String) ((IObservableValue) binding.getModel()).getValue();
-            binding.updateTargetToModel();
-            final String newValue = (String) ((IObservableValue) binding.getModel()).getValue();
-            if (onEdit.isPresent()) {
-                onEdit.get().accept(oldValue, newValue);
-            }
-            updateEditableState(false);
-            Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
-            createEditItem(toolBar);
-            toolBar.getParent().layout();
-        }
+	if (editing) {
+	    final Binding binding = getValueBinding();
+	    final String oldValue = (String) ((IObservableValue) binding.getModel()).getValue();
+	    binding.updateTargetToModel();
+	    final String newValue = (String) ((IObservableValue) binding.getModel()).getValue();
+	    if (onEdit.isPresent()) {
+		onEdit.get().accept(oldValue, newValue);
+	    }
+	    updateEditableState(false);
+	    Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
+	    createEditItem(toolBar);
+	    toolBar.getParent().layout();
+	}
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#statusChanged(org.eclipse.core.runtime.IStatus)
-     */
+
     @Override
     protected void statusChanged(IStatus status) {
-        super.statusChanged(status);
-        if (transactionalEdit && editing && okButton != null && !okButton.isDisposed()) {
-            okButton.setEnabled(!Objects.equals(status.getSeverity(), IStatus.ERROR));
-        }
+	super.statusChanged(status);
+	if (transactionalEdit && editing && okButton != null && !okButton.isDisposed()) {
+	    okButton.setEnabled(!Objects.equals(status.getSeverity(), IStatus.ERROR));
+	}
     }
 
     private void updateEditableState(boolean editable) {
-        readOnly = !editable;
-        configureBackground(text);
-        configureBackground(text.getParent());
-        editing = editable;
+	readOnly = !editable;
+	configureBackground(text);
+	configureBackground(text.getParent());
+	editing = editable;
     }
 
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SINGLE);
-        newText.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
-        return newText;
+	final Text newText = new Text(textContainer, SWT.SINGLE);
+	newText.setLayoutData(
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
+	return newText;
     }
 
     public void addTextListener(int eventType, Listener listener) {
-        text.addListener(eventType, listener);
+	text.addListener(eventType, listener);
     }
 
     protected void configureBackground(Control control) {
-        final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-        final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-        if (toolkit.isPresent()) {
-            if (control instanceof Composite) {
-                toolkit.get().adapt((Composite) control);
-            } else {
-                toolkit.get().adapt(control, true, true);
-            }
-        }
-        control.setBackground(readOnly ? backgroundColor : whiteColor);
-        control.setEnabled(!readOnly);
+	final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+	final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+	if (toolkit.isPresent()) {
+	    if (control instanceof Composite) {
+		toolkit.get().adapt((Composite) control);
+	    } else {
+		toolkit.get().adapt(control, true, true);
+	    }
+	}
+	control.setBackground(readOnly ? backgroundColor : whiteColor);
+	control.setEnabled(!readOnly);
     }
 
     public TextWidget setText(String text) {
-        this.text.setText(text);
-        return this;
+	this.text.setText(text);
+	return this;
     }
 
 }

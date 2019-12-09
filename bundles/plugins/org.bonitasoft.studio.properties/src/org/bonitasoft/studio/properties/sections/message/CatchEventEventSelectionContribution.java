@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -49,8 +50,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -85,28 +84,12 @@ public class CatchEventEventSelectionContribution implements
         }
     };
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.
-     * widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
-     * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
     @Override
     public void createControl(final Composite composite,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
-
-        final GridLayout layout = new GridLayout(2, false);
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL));
-
         combo = new ComboViewer(composite, SWT.NONE);
-        final GridData gd = new GridData(GridData.FILL);
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.widthHint = 200;
-        combo.getControl().setLayoutData(gd);
+        combo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         combo.setLabelProvider(new EventLabelProvider());
         combo.setContentProvider(ArrayContentProvider.getInstance());
         combo.addFilter(new ViewerFilter() {

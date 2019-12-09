@@ -21,100 +21,62 @@ import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
  */
-public class CatchLinkEventSectionContribution implements
-        IExtensibleGridPropertySectionContribution {
+public class CatchLinkEventSectionContribution implements IExtensibleGridPropertySectionContribution {
 
     private CatchLinkEvent catchLinkElement;
     private ListViewer list;
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
     @Override
-    public void createControl(final Composite composite,
-            final TabbedPropertySheetWidgetFactory widgetFactory,
-            final ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
+	    final ExtensibleGridPropertySection extensibleGridPropertySection) {
+	list = new ListViewer(composite, SWT.BORDER | SWT.V_SCROLL);
+	list.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(200, 55).grab(true, false).create());
+	list.setLabelProvider(new LinkLabelProvider());
+	list.setContentProvider(ArrayContentProvider.getInstance());
 
-        final GridLayout layout = new GridLayout(2, false);
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL));
-
-        list = new ListViewer(composite, SWT.BORDER | SWT.V_SCROLL);
-        final GridData gd = new GridData(GridData.FILL);
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.widthHint = 200;
-        gd.heightHint = 75;
-        list.getControl().setLayoutData(gd);
-        list.setLabelProvider(new LinkLabelProvider());
-        list.setContentProvider(ArrayContentProvider.getInstance());
-
-        list.setInput(catchLinkElement.getFrom());
-
+	list.setInput(catchLinkElement.getFrom());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-     */
     @Override
     public void dispose() {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
-     */
     @Override
     public String getLabel() {
-        return Messages.fromLinksLabel;
+	return Messages.fromLinksLabel;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
-        return eObject instanceof CatchLinkEvent;
+	return eObject instanceof CatchLinkEvent;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
-     */
     @Override
     public void refresh() {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public void setEObject(final EObject object) {
-        catchLinkElement = (CatchLinkEvent) object;
+	catchLinkElement = (CatchLinkEvent) object;
     }
 
     /*
      * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain
-     * )
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
+     * transaction.TransactionalEditingDomain )
      */
     @Override
     public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
@@ -122,7 +84,10 @@ public class CatchLinkEventSectionContribution implements
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
+     * viewers.ISelection)
      */
     @Override
     public void setSelection(final ISelection selection) {

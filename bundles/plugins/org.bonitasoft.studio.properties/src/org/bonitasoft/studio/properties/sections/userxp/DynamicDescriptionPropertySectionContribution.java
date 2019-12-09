@@ -33,9 +33,9 @@ import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -54,10 +54,8 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
     public void createControl(final Composite composite,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
-        composite.setLayout(new GridLayout(1, true));
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_DESCRIPTION);
-        expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+        expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
         expressionViewer.setExpressionNameResolver(new DefaultExpressionNameResolver("dynamicDescription"));
@@ -80,7 +78,6 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, eObject, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_DESCRIPTION, selection)) ;
             }
             dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(expressionViewer), EMFEditProperties.value(editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_DESCRIPTION).observe(eObject));
-            //expressionViewer.setSelection(new StructuredSelection(selection)) ;
         }
     }
 

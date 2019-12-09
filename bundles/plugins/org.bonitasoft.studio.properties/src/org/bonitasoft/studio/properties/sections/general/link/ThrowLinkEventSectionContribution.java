@@ -32,12 +32,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -52,26 +51,12 @@ public class ThrowLinkEventSectionContribution implements
     private DataBindingContext context;
     private TransactionalEditingDomain editingDomain;
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
     @Override
     public void createControl(final Composite composite,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
-
-        final GridLayout layout = new GridLayout(2, false);
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL));
-
         combo = new ComboViewer(composite, SWT.READ_ONLY);
-        final GridData gd = new GridData(GridData.FILL);
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.widthHint = 200;
-        combo.getControl().setLayoutData(gd);
+        combo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
         combo.setLabelProvider(new LinkLabelProvider());
         combo.setContentProvider(ArrayContentProvider.getInstance());
 
