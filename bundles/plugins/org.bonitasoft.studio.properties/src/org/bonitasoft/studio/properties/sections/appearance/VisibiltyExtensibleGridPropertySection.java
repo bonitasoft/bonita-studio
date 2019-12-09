@@ -18,32 +18,30 @@
 package org.bonitasoft.studio.properties.sections.appearance;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class VisibiltyExtensibleGridPropertySection extends
-		ExtensibleGridPropertySection {
+public class VisibiltyExtensibleGridPropertySection extends ExtensibleGridPropertySection {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
-	 */
-	@Override
-	protected void addContributions() {
-		addContribution(new ShowLabelContribution(this)) ;
-		//addContribution(new ShowLabelOrConditionContribution(this)) ;
-		addContribution(new AutomaticOrManualTransitionContribution(this)) ;
-	}
+    @Override
+    protected void addContributions() {
+	addContribution(new ShowLabelContribution(this));
+	addContribution(new AutomaticOrManualTransitionContribution(this));
+    }
 
-
-
-	@Override
-	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
+    @Override
+    public String getSectionDescription() {
+	return null;
+    }
+    
+    protected Layout getLayout() {
+	final GridLayout layout = new GridLayout(1, false);
+	layout.verticalSpacing = 5;
+	return layout;
+    }
 
 }

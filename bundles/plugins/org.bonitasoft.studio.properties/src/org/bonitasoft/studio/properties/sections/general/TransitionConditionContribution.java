@@ -35,8 +35,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.SourceElement;
-import org.bonitasoft.studio.model.process.TargetElement;
-import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
@@ -63,6 +61,7 @@ import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelection;
@@ -102,16 +101,17 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
         this.widgetFactory = widgetFactory;
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 5).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
+        mainComposite.setLayout(GridLayoutFactory.swtDefaults().create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(400, SWT.DEFAULT).create());
         defaultCheckBox = widgetFactory.createButton(mainComposite, Messages.defaultFlowLabel, SWT.CHECK);
         defaultCheckBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Composite radioComposite = widgetFactory.createComposite(mainComposite);
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
-        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).extendedMargins(0, 0, 5, 0).create());
 
+        widgetFactory.createLabel(radioComposite, Messages.connectionConnection);
+        
         useExpressionCondition = widgetFactory.createButton(radioComposite, Messages.useExpression, SWT.RADIO);
         useDecisionTable = widgetFactory.createButton(radioComposite, Messages.useDecisionTable, SWT.RADIO);
 
@@ -133,7 +133,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
         final Composite client = widgetFactory.createComposite(parent);
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        client.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
         conditionViewer = new ExpressionViewer(client, SWT.BORDER, widgetFactory, editingDomain,
                 ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
@@ -154,8 +154,7 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
         conditionViewer.setContext(transition);
         conditionViewer.setInput(transition);
         conditionViewer.getControl().setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).hint(350, SWT.DEFAULT)
-                        .create());
+                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
         return client;
     }
@@ -262,22 +261,11 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution#getLabel()
-     */
     @Override
     public String getLabel() {
-        return Messages.connectionConnection;
+        return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public boolean isRelevantFor(final EObject eObject) {
         if (eObject instanceof SequenceFlow) {
@@ -290,22 +278,11 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution#refresh()
-     */
     @Override
     public void refresh() {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #setEObject(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public void setEObject(final EObject object) {
         transition = (SequenceFlow) object;
@@ -485,32 +462,16 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
-     */
     @Override
     public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #setSelection(org.eclipse.jface.viewers.ISelection)
-     */
     @Override
     public void setSelection(final ISelection selection) {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-     */
     @Override
     public void dispose() {
         if (color != null && !color.isDisposed()) {

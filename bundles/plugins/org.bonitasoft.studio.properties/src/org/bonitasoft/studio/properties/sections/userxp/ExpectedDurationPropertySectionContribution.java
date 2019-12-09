@@ -38,7 +38,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -59,13 +58,6 @@ public class ExpectedDurationPropertySectionContribution implements IExtensibleG
         this.selectionProvider = selectionProvider;
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public boolean isRelevantFor(EObject eObject) {
         return eObject instanceof Task
@@ -73,44 +65,21 @@ public class ExpectedDurationPropertySectionContribution implements IExtensibleG
                 && !(eObject instanceof SendTask);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution#refresh()
-     */
     @Override
     public void refresh() {
     	
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution
-     * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
-     */
     @Override
     public void setEditingDomain(TransactionalEditingDomain editingDomain) {
         
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
-     */
     @Override
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection page) {
         context = new EMFDataBindingContext();
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        composite.setLayout(GridLayoutFactory.fillDefaults().create());
         final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER , widgetFactory);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         viewer.setMessage(Messages.dueDateCalculationHint);

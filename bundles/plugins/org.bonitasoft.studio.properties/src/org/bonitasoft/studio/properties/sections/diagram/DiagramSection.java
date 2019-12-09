@@ -15,30 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-package org.bonitasoft.studio.properties.sections.diagram;
 
+package org.bonitasoft.studio.properties.sections.diagram;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.DescriptionGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.ProcessElementNameContribution;
 import org.bonitasoft.studio.properties.sections.general.VersionGridPropertySectionContribution;
-
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Layout;
 
 public class DiagramSection extends ExtensibleGridPropertySection {
 
     @Override
-	protected void addContributions() {
-		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
-		addContribution(new VersionGridPropertySectionContribution());
-		addContribution(new DescriptionGridPropertySectionContribution());
-	}
+    protected void addContributions() {
+	addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
+	addContribution(new DescriptionGridPropertySectionContribution(2));
+	addContribution(new VersionGridPropertySectionContribution());
+    }
 
-	@Override
-	public String getSectionDescription() {
-		return Messages.diagramSectionDescription;
-	}
+    @Override
+    public String getSectionDescription() {
+	return Messages.diagramSectionDescription;
+    }
 
+    @Override
+    protected Layout getLayout() {
+	final GridLayout layout = new GridLayout(2, false);
+	layout.verticalSpacing = 0;
+	layout.horizontalSpacing = 10;
+	return layout;
+    }
 
 }

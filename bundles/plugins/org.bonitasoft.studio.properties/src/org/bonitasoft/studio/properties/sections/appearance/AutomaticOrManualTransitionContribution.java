@@ -49,12 +49,12 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -91,13 +91,14 @@ public class AutomaticOrManualTransitionContribution implements IExtensibleGridP
     @Override
     public void createControl(final Composite mainComposite, TabbedPropertySheetWidgetFactory widgetFactory,
             ExtensibleGridPropertySection extensibleGridPropertySection) {
-        mainComposite.setLayout(new RowLayout());
         /* Create a checkbox to select name or condition to display on diagram */
-        automaticOrManulRoutingButton = widgetFactory.createButton(mainComposite, "", SWT.CHECK); //$NON-NLS-1$
+        automaticOrManulRoutingButton = widgetFactory.createButton(mainComposite, Messages.avoidElement, SWT.CHECK); //$NON-NLS-1$
+        automaticOrManulRoutingButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         automaticOrManulRoutingButton.setSelection(automatic);
 
-        ControlDecoration cd = new ControlDecoration(automaticOrManulRoutingButton, SWT.LEFT);
+        ControlDecoration cd = new ControlDecoration(automaticOrManulRoutingButton, SWT.RIGHT);
         cd.setImage(Pics.getImage(PicsConstants.hint));
+        cd.setMarginWidth(3);
         cd.setShowOnlyOnFocus(false);
         cd.setDescriptionText(Messages.avoidElementHint);
         automaticOrManulRoutingButton.addSelectionListener(new SelectionAdapter() {
@@ -172,24 +173,11 @@ public class AutomaticOrManualTransitionContribution implements IExtensibleGridP
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution#getLabel()
-     */
     @Override
     public String getLabel() {
-        return Messages.avoidElement;
+        return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution
-     * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public boolean isRelevantFor(EObject eObject) {
         return eObject instanceof SequenceFlow || eObject instanceof MessageFlow || eObject instanceof TextAnnotationAttachment;

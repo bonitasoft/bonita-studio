@@ -58,7 +58,6 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -76,234 +75,182 @@ public class ErrorEventSectionContribution extends AbstractPropertySectionContri
     private ControlDecoration hint;
     private final DiagramRepositoryStore diagramStore;
 
-    public ErrorEventSectionContribution(){
-        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
+    public ErrorEventSectionContribution() {
+	diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+		.getRepositoryStore(DiagramRepositoryStore.class);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution
-     * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
     public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof ErrorEvent;
+	return eObject instanceof ErrorEvent;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution#refresh()
-     */
     public void refresh() {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution#getLabel()
-     */
     public String getLabel() {
-        if(eObject instanceof EndErrorEvent){
-            return Messages.endErrorEvent_error;
-        } else {
-            return Messages.errorEvent_error;
-        }
+	if (eObject instanceof EndErrorEvent) {
+	    return Messages.endErrorEvent_error;
+	} else {
+	    return Messages.errorEvent_error;
+	}
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution
-     * #createControl(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
-     * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-        composite.setLayout(new GridLayout(1, false));
-        // widgetFactory.createLabel(composite, Messages.name);
-        // nameCombo = widgetFactory.createCCombo(composite);
-        // widgetFactory.createLabel(composite, Messages.errorEvent_errorCode);
-        codeCombo = new Combo(composite, SWT.NONE);
-        codeCombo.setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).create());
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+	    ExtensibleGridPropertySection extensibleGridPropertySection) {
+	codeCombo = new Combo(composite, SWT.NONE);
+	codeCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        controlDecoration = new ControlDecoration(codeCombo, SWT.RIGHT | SWT.TOP);
-        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-        controlDecoration.setImage(fieldDecoration.getImage());
-        controlDecoration.setDescriptionText(Messages.mustBeSet);
-        controlDecoration.hide();
-        hint = new ControlDecoration(codeCombo, SWT.LEFT | SWT.TOP);
-        hint.setImage(Pics.getImage(PicsConstants.hint));
-
+	controlDecoration = new ControlDecoration(codeCombo, SWT.RIGHT | SWT.TOP);
+	FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+		.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+	controlDecoration.setImage(fieldDecoration.getImage());
+	controlDecoration.setDescriptionText(Messages.mustBeSet);
+	controlDecoration.hide();
+	
+	hint = new ControlDecoration(composite.getChildren()[0], SWT.RIGHT);
+	hint.setImage(Pics.getImage(PicsConstants.hint));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bonitasoft.studio.common.properties.
-     * IExtensibleGridPropertySectionContribution#dispose()
-     */
     public void dispose() {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution
-     * #setEObject(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public void setEObject(EObject object) {
-        super.setEObject(object);
+	super.setEObject(object);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution
-     * #setSelection(org.eclipse.jface.viewers.ISelection)
-     */
     @Override
     public void setSelection(ISelection selection) {
-        super.setSelection(selection);
-        bindEObject();
+	super.setSelection(selection);
+	bindEObject();
     }
 
-    /**
-     * 
-     */
     private void bindEObject() {
-        if (codeCombo != null && !codeCombo.isDisposed()) {
-            if (context != null) {
-                context.dispose();
-            }
-            codeCombo.removeAll();
+	if (codeCombo != null && !codeCombo.isDisposed()) {
+	    if (context != null) {
+		context.dispose();
+	    }
+	    codeCombo.removeAll();
 
-            populateCombo();
-            context = new EMFDataBindingContext();
-            if (eObject instanceof EndErrorEvent) {
+	    populateCombo();
+	    context = new EMFDataBindingContext();
+	    if (eObject instanceof EndErrorEvent) {
 
-                hint.setDescriptionText(Messages.errorEvent_errorCodeHint);
-                context.bindValue(SWTObservables.observeText(codeCombo), EMFEditObservables.observeValue(editingDomain, eObject,
-                        ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE), new UpdateValueStrategy().setAfterGetValidator(new WrappingValidator(
-                                controlDecoration, new IValidator() {
+		hint.setDescriptionText(Messages.errorEvent_errorCodeHint);
+		context.bindValue(SWTObservables.observeText(codeCombo),
+			EMFEditObservables.observeValue(editingDomain, eObject,
+				ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE),
+			new UpdateValueStrategy()
+				.setAfterGetValidator(new WrappingValidator(controlDecoration, new IValidator() {
 
-                                    public IStatus validate(Object value) {
-                                        if (value instanceof String && ((String) value).length() > 0) {
-                                            return Status.OK_STATUS;
-                                        } else {
-                                            return Status.CANCEL_STATUS;
-                                        }
-                                    }
-                                },true)), null);
-            } else {
+				    public IStatus validate(Object value) {
+					if (value instanceof String && ((String) value).length() > 0) {
+					    return Status.OK_STATUS;
+					} else {
+					    return Status.CANCEL_STATUS;
+					}
+				    }
+				}, true)),
+			null);
+	    } else {
+		hint.setDescriptionText(Messages.errorEvent_errorCodeCatchHint);
+		controlDecoration.hide();
+		context.bindValue(SWTObservables.observeText(codeCombo), EMFEditObservables.observeValue(editingDomain,
+			eObject, ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE));
+	    }
 
-                hint.setDescriptionText(Messages.errorEvent_errorCodeCatchHint);
-                controlDecoration.hide();
-                context.bindValue(SWTObservables.observeText(codeCombo), EMFEditObservables.observeValue(editingDomain, eObject,
-                        ProcessPackage.Literals.ERROR_EVENT__ERROR_CODE));
-            }
-
-        }
+	}
     }
 
     /**
      * Populate the combo with existing named error.
      */
     protected void populateCombo() {
-        EObject parent = eObject.eContainer();
-        Set<String> namedErrorsAvailable = new TreeSet<String>();
-        if(parent instanceof ConnectableElement){
-            /*Search in connectors*/
-            ConnectableElement activity = (ConnectableElement) parent;
-            for(Connector connector : activity.getConnectors()){
-                String namedError = connector.getNamedError();
-                if(namedError != null && namedError.length() != 0){
-                    namedErrorsAvailable.add(namedError);
-                }
-            }
-        }
-        /*on subprocess search also end error event in subprocess*/
-        if(parent instanceof CallActivity){
+	EObject parent = eObject.eContainer();
+	Set<String> namedErrorsAvailable = new TreeSet<String>();
+	if (parent instanceof ConnectableElement) {
+	    /* Search in connectors */
+	    ConnectableElement activity = (ConnectableElement) parent;
+	    for (Connector connector : activity.getConnectors()) {
+		String namedError = connector.getNamedError();
+		if (namedError != null && namedError.length() != 0) {
+		    namedErrorsAvailable.add(namedError);
+		}
+	    }
+	}
+	/* on subprocess search also end error event in subprocess */
+	if (parent instanceof CallActivity) {
 
-            CallActivity subProcess = (CallActivity) parent;
-            final Expression calledProcessName = subProcess.getCalledActivityName();
-            String subprocessName = null ;
-            if(calledProcessName != null
-                    && calledProcessName.getContent() != null
-                    && calledProcessName.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
-                subprocessName = calledProcessName.getContent() ;
-            }
-            final Expression calledProcessVersion = subProcess.getCalledActivityVersion();
-            String subprocessVersion = null ;
-            if(calledProcessVersion != null
-                    && calledProcessVersion.getContent() != null
-                    && calledProcessVersion.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
-                subprocessVersion = calledProcessVersion.getContent() ;
-            }
-            if(subprocessName != null){
-                AbstractProcess relatedProcess = ModelHelper.findProcess(subprocessName, subprocessVersion, diagramStore.getAllProcesses());
-                if(relatedProcess != null){
-                    List<EClass> types = new ArrayList<EClass>();
-                    types.add(ProcessPackage.Literals.END_ERROR_EVENT);
-                    List<Element> elements = new ArrayList<Element>();
-                    ModelHelper.findAllElements(relatedProcess, elements, types);
-                    for (Element element : elements) {
-                        EndErrorEvent endErrorEvent = (EndErrorEvent)element;
-                        String errorCode = endErrorEvent.getErrorCode();
-                        if(errorCode != null){
-                            namedErrorsAvailable.add(errorCode);
-                        }
-                    }
-                }
-            }
-        }
+	    CallActivity subProcess = (CallActivity) parent;
+	    final Expression calledProcessName = subProcess.getCalledActivityName();
+	    String subprocessName = null;
+	    if (calledProcessName != null && calledProcessName.getContent() != null
+		    && calledProcessName.getType().equals(ExpressionConstants.CONSTANT_TYPE)) {
+		subprocessName = calledProcessName.getContent();
+	    }
+	    final Expression calledProcessVersion = subProcess.getCalledActivityVersion();
+	    String subprocessVersion = null;
+	    if (calledProcessVersion != null && calledProcessVersion.getContent() != null
+		    && calledProcessVersion.getType().equals(ExpressionConstants.CONSTANT_TYPE)) {
+		subprocessVersion = calledProcessVersion.getContent();
+	    }
+	    if (subprocessName != null) {
+		AbstractProcess relatedProcess = ModelHelper.findProcess(subprocessName, subprocessVersion,
+			diagramStore.getAllProcesses());
+		if (relatedProcess != null) {
+		    List<EClass> types = new ArrayList<EClass>();
+		    types.add(ProcessPackage.Literals.END_ERROR_EVENT);
+		    List<Element> elements = new ArrayList<Element>();
+		    ModelHelper.findAllElements(relatedProcess, elements, types);
+		    for (Element element : elements) {
+			EndErrorEvent endErrorEvent = (EndErrorEvent) element;
+			String errorCode = endErrorEvent.getErrorCode();
+			if (errorCode != null) {
+			    namedErrorsAvailable.add(errorCode);
+			}
+		    }
+		}
+	    }
+	}
 
-        if(parent instanceof SubProcessEvent){
-            SubProcessEvent subProcess = (SubProcessEvent) parent;
-            AbstractProcess relatedProcess = ModelHelper.getParentProcess(subProcess) ;
-            if(relatedProcess != null){
-                List<EClass> types = new ArrayList<EClass>();
-                types.add(ProcessPackage.Literals.END_ERROR_EVENT);
-                List<Element> elements = new ArrayList<Element>();
-                ModelHelper.findAllElements(relatedProcess, elements, types);
-                for (Element element : elements) {
-                    EndErrorEvent endErrorEvent = (EndErrorEvent)element;
-                    String errorCode = endErrorEvent.getErrorCode();
-                    if(errorCode != null){
-                        namedErrorsAvailable.add(errorCode);
-                    }
-                }
+	if (parent instanceof SubProcessEvent) {
+	    SubProcessEvent subProcess = (SubProcessEvent) parent;
+	    AbstractProcess relatedProcess = ModelHelper.getParentProcess(subProcess);
+	    if (relatedProcess != null) {
+		List<EClass> types = new ArrayList<EClass>();
+		types.add(ProcessPackage.Literals.END_ERROR_EVENT);
+		List<Element> elements = new ArrayList<Element>();
+		ModelHelper.findAllElements(relatedProcess, elements, types);
+		for (Element element : elements) {
+		    EndErrorEvent endErrorEvent = (EndErrorEvent) element;
+		    String errorCode = endErrorEvent.getErrorCode();
+		    if (errorCode != null) {
+			namedErrorsAvailable.add(errorCode);
+		    }
+		}
 
-                /*Search in connectors*/
-                types.clear() ;
-                types.add(ProcessPackage.Literals.CONNECTABLE_ELEMENT);
-                elements.clear() ;
-                ModelHelper.findAllElements(relatedProcess, elements, types);
-                for (Element element : elements) {
-                    ConnectableElement activity = (ConnectableElement) element;
-                    for(Connector connector : activity.getConnectors()){
-                        String namedError = connector.getNamedError();
-                        if(namedError != null && namedError.length() != 0){
-                            namedErrorsAvailable.add(namedError);
-                        }
-                    }
-                }
+		/* Search in connectors */
+		types.clear();
+		types.add(ProcessPackage.Literals.CONNECTABLE_ELEMENT);
+		elements.clear();
+		ModelHelper.findAllElements(relatedProcess, elements, types);
+		for (Element element : elements) {
+		    ConnectableElement activity = (ConnectableElement) element;
+		    for (Connector connector : activity.getConnectors()) {
+			String namedError = connector.getNamedError();
+			if (namedError != null && namedError.length() != 0) {
+			    namedErrorsAvailable.add(namedError);
+			}
+		    }
+		}
 
+	    }
+	}
 
-            }
-        }
-
-        for (String string : namedErrorsAvailable) {
-            codeCombo.add(string);
-        }
+	for (String string : namedErrorsAvailable) {
+	    codeCombo.add(string);
+	}
     }
 
 }

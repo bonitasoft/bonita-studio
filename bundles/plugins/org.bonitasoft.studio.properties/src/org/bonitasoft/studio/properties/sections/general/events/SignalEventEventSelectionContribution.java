@@ -45,149 +45,102 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-/**
- * @author Romain Bioteau
- * 
- */
 public class SignalEventEventSelectionContribution extends AbstractPropertySectionContribution {
 
-	private Combo combo;
-	private DataBindingContext context;
-	private ControlDecoration controlDecoration;
-	private ControlDecoration hint;
+    private Combo combo;
+    private DataBindingContext context;
+    private ControlDecoration controlDecoration;
+    private ControlDecoration hint;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution
-	 * #createControl(org.eclipse.swt.widgets.Composite,
-	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
-	 * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-	 */
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-		GridLayout layout = new GridLayout(2, false);
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL));
-		combo = new Combo(composite, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL);
-		gd.grabExcessHorizontalSpace = true;
-		gd.horizontalAlignment = SWT.FILL;
-		gd.widthHint = 200;
-		combo.setLayoutData(gd);
-		
-		controlDecoration = new ControlDecoration(combo, SWT.RIGHT | SWT.TOP);
-		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-		controlDecoration.setImage(fieldDecoration.getImage());
-		controlDecoration.setDescriptionText(Messages.mustBeSet);
-		controlDecoration.hide();
-		hint = new ControlDecoration(combo, SWT.LEFT | SWT.TOP);
-		hint.setImage(Pics.getImage(PicsConstants.hint));
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+	    ExtensibleGridPropertySection extensibleGridPropertySection) {
+	combo = new Combo(composite, SWT.NONE);
+	combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+	controlDecoration = new ControlDecoration(combo, SWT.RIGHT | SWT.TOP);
+	FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+		.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+	controlDecoration.setImage(fieldDecoration.getImage());
+	controlDecoration.setDescriptionText(Messages.mustBeSet);
+	controlDecoration.hide();
+	hint = new ControlDecoration(combo, SWT.LEFT | SWT.TOP);
+	hint.setImage(Pics.getImage(PicsConstants.hint));
+    }
+
+    public void dispose() {
+	if (context != null) {
+	    context.dispose();
 	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution#dispose()
-	 */
-	public void dispose() {
-		if (context != null) {
-			context.dispose();
+    public String getLabel() {
+	return Messages.selectSignalEventLabel;
+    }
+
+    public boolean isRelevantFor(EObject eObject) {
+	return eObject instanceof SignalEvent;
+    }
+
+    public void refresh() {
+
+    }
+
+    public void setSelection(ISelection selection) {
+	super.setSelection(selection);
+	bindEObject();
+    }
+
+    private void bindEObject() {
+	if (combo != null && !combo.isDisposed()) {
+	    if (context != null) {
+		context.dispose();
+	    }
+	    context = new EMFDataBindingContext();
+
+	    List<Element> elements = ModelHelper.getAllItemsOfType(ModelHelper.getMainProcess(eObject),
+		    ProcessPackage.Literals.THROW_SIGNAL_EVENT);
+	    List<String> codes = new ArrayList<String>();
+	    for (Element element : elements) {
+		if (((SignalEvent) element).getSignalCode() != null
+			&& ((SignalEvent) element).getSignalCode().length() > 0
+			&& !codes.contains(((SignalEvent) element).getSignalCode())) {
+		    codes.add(((SignalEvent) element).getSignalCode());
 		}
-	}
+	    }
+	    Collections.sort(codes);
+	    combo.removeAll();
+	    for (String code : codes) {
+		combo.add(code);
+	    }
+	    context.bindValue(SWTObservables.observeText(combo),
+		    EMFEditObservables.observeValue(editingDomain, eObject,
+			    ProcessPackage.Literals.SIGNAL_EVENT__SIGNAL_CODE),
+		    new UpdateValueStrategy()
+			    .setAfterGetValidator(new WrappingValidator(controlDecoration, new IValidator() {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution#getLabel()
-	 */
-	public String getLabel() {
-		return Messages.selectSignalEventLabel;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution
-	 * #isRelevantFor(org.eclipse.emf.ecore.EObject)
-	 */
-	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof SignalEvent;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution#refresh()
-	 */
-	public void refresh() {
-		
-	}
-
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.bonitasoft.studio.common.properties.
-	 * IExtensibleGridPropertySectionContribution
-	 * #setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	public void setSelection(ISelection selection) {
-		super.setSelection(selection);
-		bindEObject();
-	}
-	
-	private void bindEObject() {
-		if (combo != null && !combo.isDisposed()) {
-			if (context != null) {
-				context.dispose();
-			}
-			context = new EMFDataBindingContext();
-
-			List<Element> elements = ModelHelper.getAllItemsOfType(ModelHelper.getMainProcess(eObject),ProcessPackage.Literals.THROW_SIGNAL_EVENT);
-			List<String> codes = new ArrayList<String>();
-			for (Element element : elements) {
-				if(((SignalEvent) element).getSignalCode() != null && ((SignalEvent) element).getSignalCode().length()>0 && !codes.contains(((SignalEvent) element).getSignalCode()) ) {
-					codes.add(((SignalEvent) element).getSignalCode());
+				public IStatus validate(Object value) {
+				    if (value instanceof String && ((String) value).length() > 0) {
+					return Status.OK_STATUS;
+				    } else {
+					return Status.CANCEL_STATUS;
+				    }
 				}
-			}
-			Collections.sort(codes);
-			combo.removeAll();
-			for (String code : codes) {
-				combo.add(code);
-			}
-			context.bindValue(SWTObservables.observeText(combo), EMFEditObservables.observeValue(editingDomain, eObject,
-					ProcessPackage.Literals.SIGNAL_EVENT__SIGNAL_CODE), new UpdateValueStrategy().setAfterGetValidator(new WrappingValidator(
-							controlDecoration, new IValidator() {
-								
-								public IStatus validate(Object value) {
-									if (value instanceof String && ((String) value).length() > 0) {
-										return Status.OK_STATUS;
-									} else {
-										return Status.CANCEL_STATUS;
-									}
-								}
-							},true)), null);
-			
-			if (eObject instanceof CatchSignalEvent) {
-				hint.setDescriptionText(Messages.signalEvent_catchHint);
-			} else {
-				hint.setDescriptionText(Messages.signalEvent_throwHint);
-			}
-		}
+			    }, true)),
+		    null);
+
+	    if (eObject instanceof CatchSignalEvent) {
+		hint.setDescriptionText(Messages.signalEvent_catchHint);
+	    } else {
+		hint.setDescriptionText(Messages.signalEvent_throwHint);
+	    }
 	}
+    }
 
 }

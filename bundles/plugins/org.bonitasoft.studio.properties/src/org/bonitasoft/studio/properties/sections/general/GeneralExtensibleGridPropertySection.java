@@ -27,22 +27,20 @@ import org.bonitasoft.studio.properties.sections.general.link.ThrowLinkEventSect
 import org.bonitasoft.studio.properties.sections.general.task.TaskPriorityPropertySection;
 import org.bonitasoft.studio.properties.sections.message.CatchEventEventSelectionContribution;
 import org.bonitasoft.studio.properties.sections.timer.TimerEventConditionContribution;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author Mickael Istria
  */
 public class GeneralExtensibleGridPropertySection extends ExtensibleGridPropertySection {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
-     */
     @Override
     protected void addContributions() {
         addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage()));
         addContribution(new MessageFlowContribution());
+        addContribution(new DescriptionGridPropertySectionContribution(5));
         addContribution(new VersionGridPropertySectionContribution());
-        addContribution(new DescriptionGridPropertySectionContribution());
         addContribution(new TextAnnotationTextPropertySectionContribution());
         addContribution(new CatchLinkEventSectionContribution());
         addContribution(new ThrowLinkEventSectionContribution());
@@ -62,8 +60,14 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
         addContribution(gatewayTypeContrib);
         addContribution(new TaskPriorityPropertySection());
         addContribution(new ErrorEventSectionContribution());
-
     }
+    
+    protected Layout getLayout() {
+   	final GridLayout layout = new GridLayout(2, false);
+   	layout.verticalSpacing = 2;
+   	layout.horizontalSpacing = 10;
+   	return layout;
+       }
 
     @Override
     public String getSectionDescription() {

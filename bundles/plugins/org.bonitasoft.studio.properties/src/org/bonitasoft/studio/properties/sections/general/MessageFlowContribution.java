@@ -31,14 +31,13 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -73,13 +72,8 @@ public class MessageFlowContribution implements IExtensibleGridPropertySectionCo
     @Override
     public void createControl(final Composite mainComposite, TabbedPropertySheetWidgetFactory widgetFactory,
             ExtensibleGridPropertySection extensibleGridPropertySection) {
-
-
-        mainComposite.setLayout(new RowLayout());
-
-        RowData rd = new RowData(100, 25);
         chooseEventCombo = new ComboViewer(mainComposite, SWT.READ_ONLY);
-        chooseEventCombo.getCombo().setLayoutData(rd);
+        chooseEventCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(true, false).create());
         chooseEventCombo.setContentProvider(new EMFListFeatureTreeContentProvider(ProcessPackage.Literals.THROW_MESSAGE_EVENT__EVENTS));
         chooseEventCombo.setLabelProvider(new EMFFeatureLabelProvider(ProcessPackage.Literals.ELEMENT__NAME));
         chooseEventCombo.setInput(messageFlow.getSource());

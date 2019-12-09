@@ -21,23 +21,22 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 
@@ -50,24 +49,23 @@ public class VersionGridPropertySectionContribution implements IExtensibleGridPr
 
     @Override
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        composite.setLayout(GridLayoutFactory.fillDefaults().create());
         context = new EMFDataBindingContext();
 
         UpdateValueStrategy versionUpdate = new UpdateValueStrategy();
         versionUpdate.setAfterGetValidator(new EmptyInputValidator(Messages.GeneralSection_Version));
         versionUpdate.setBeforeSetValidator(new UTF8InputValidator(Messages.GeneralSection_Version));
 
-        new TextWidget.Builder()
-                .widthHint(100)
-                .inContext(context)
-                .withDelay(400)
-                .bindTo(EMFEditObservables.observeValue(editingDomain, process,
-                        ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION))
-                .withTargetToModelStrategy(versionUpdate)
-                .readOnly(process instanceof MainProcess || process instanceof Pool)
-                .adapt(widgetFactory)
-                .createIn(composite);
+        Text text = new Text(composite, GTKStyleHandler.removeBorderFlag(SWT.BORDER));
+        text.setLayoutData(GridDataFactory.swtDefaults().hint(160, SWT.DEFAULT).grab(false, false).create());
+        if (!GTKStyleHandler.isGTK3()) {
+            widgetFactory.adapt(text, true, true);
+        }
+        text.setEnabled(false);
+        
+        context.bindValue(WidgetProperties.text(SWT.Modify).observe(text),
+        	EMFEditObservables.observeValue(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION), 
+        	versionUpdate, 
+        	null);
     }
 
     @Override

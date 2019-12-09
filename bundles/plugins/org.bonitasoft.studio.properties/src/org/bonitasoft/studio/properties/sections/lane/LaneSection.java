@@ -15,31 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package org.bonitasoft.studio.properties.sections.lane;
 
 import org.bonitasoft.studio.common.properties.DescriptionPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Layout;
 
-/**
- * @author Romain Bioteau
- *
- */
 public class LaneSection extends ExtensibleGridPropertySection {
 
+    @Override
+    protected void addContributions() {
+	addContribution(new LaneNameSectionContribution(getTabbedPropertySheetPage(), this));
+	addContribution(new DescriptionPropertySectionContribution(1));
+    }
 
-	@Override
-	protected void addContributions() {
-		addContribution(new LaneNameSectionContribution(getTabbedPropertySheetPage(),this));
-		addContribution(new DescriptionPropertySectionContribution());
-	}
+    @Override
+    protected Layout getLayout() {
+	final GridLayout layout = new GridLayout(3, false);
+	layout.verticalSpacing = 10;
+	layout.horizontalSpacing = 10;
+	return layout;
+    }
 
-	
-	@Override
-	public String getSectionDescription() {
-		return org.bonitasoft.studio.properties.i18n.Messages.laneSectionDescription;
-	}
-
-	
+    @Override
+    public String getSectionDescription() {
+	return org.bonitasoft.studio.properties.i18n.Messages.laneSectionDescription;
+    }
 
 }

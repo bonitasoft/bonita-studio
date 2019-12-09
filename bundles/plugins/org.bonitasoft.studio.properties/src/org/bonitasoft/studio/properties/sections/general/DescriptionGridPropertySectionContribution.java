@@ -23,21 +23,13 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.eclipse.emf.ecore.EObject;
 
-/**
- * @author Mickael Istria
- * @author Aurelien Pupier : refactored
- * 
- */
 public class DescriptionGridPropertySectionContribution extends DescriptionPropertySectionContribution {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
-	 */
-	public void setEObject(EObject object) {
-		if(object instanceof Lane){
-			this.element = ModelHelper.getParentProcess(object);
-		}else{
-			this.element = (Element)object;
-		}
-	}
+    public DescriptionGridPropertySectionContribution(int vSpan) {
+	super(vSpan);
+    }
+
+    public void setEObject(EObject object) {
+	this.element = object instanceof Lane ? ModelHelper.getParentProcess(object) : (Element) object;
+    }
 }

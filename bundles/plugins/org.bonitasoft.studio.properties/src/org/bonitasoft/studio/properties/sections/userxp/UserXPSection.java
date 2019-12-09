@@ -21,32 +21,29 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Layout;
 
-
-/**
- * @author Mickael Istria
- *
- */
 public class UserXPSection extends ExtensibleGridPropertySection {
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
-     */
     @Override
     protected void addContributions() {
-        addContribution(new DynamicLabelPropertySectionContribution());
-        addContribution(new DynamicDescriptionPropertySectionContribution());
-        addContribution(new StepSummarySectionContribution());
-        addContribution(ContextInjectionFactory.make(ExpectedDurationPropertySectionContribution.class, EclipseContextFactory.create()));
+	addContribution(new DynamicLabelPropertySectionContribution());
+	addContribution(new DynamicDescriptionPropertySectionContribution());
+	addContribution(new StepSummarySectionContribution());
+	addContribution(ContextInjectionFactory.make(ExpectedDurationPropertySectionContribution.class,
+		EclipseContextFactory.create()));
     }
 
-	
-
-	@Override
-	public String getSectionDescription() {
-		return Messages.userXPSectionDescription;
-	}
-
-
+    @Override
+    public String getSectionDescription() {
+	return Messages.userXPSectionDescription;
+    }
+    
+    protected Layout getLayout() {
+	final GridLayout layout = new GridLayout(2, true);
+	layout.verticalSpacing = 5;
+	return layout;
+    }
 
 }

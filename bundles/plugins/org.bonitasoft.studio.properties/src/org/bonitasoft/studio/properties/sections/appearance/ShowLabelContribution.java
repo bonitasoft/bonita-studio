@@ -35,11 +35,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ToggleConnectionLabelsRequest;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -67,10 +67,8 @@ public class ShowLabelContribution implements IExtensibleGridPropertySectionCont
     @Override
     public void createControl(final Composite mainComposite, TabbedPropertySheetWidgetFactory widgetFactory,
             ExtensibleGridPropertySection extensibleGridPropertySection) {
-        /* Create a checkbox to select name or condition to display on diagram */
-        mainComposite.setLayout(new RowLayout()) ;
-        showLabelButton = widgetFactory.createButton(mainComposite, "", SWT.CHECK);
-
+        showLabelButton = widgetFactory.createButton(mainComposite, Messages.showLabel, SWT.CHECK);
+        showLabelButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         showLabelButton.addSelectionListener(new SelectionListener() {
 
             @Override
@@ -139,15 +137,9 @@ public class ShowLabelContribution implements IExtensibleGridPropertySectionCont
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.bonitasoft.studio.properties.sections.general.
-     * IExtenstibleGridPropertySectionContribution#getLabel()
-     */
     @Override
     public String getLabel() {
-        return Messages.showLabel;
+        return null;
     }
 
     /*

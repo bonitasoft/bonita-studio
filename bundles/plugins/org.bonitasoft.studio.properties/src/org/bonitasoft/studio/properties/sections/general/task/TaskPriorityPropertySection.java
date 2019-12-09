@@ -30,6 +30,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,107 +48,131 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class TaskPriorityPropertySection implements IExtensibleGridPropertySectionContribution {
 
-	protected Task task;
-	private TransactionalEditingDomain editDomain;
-	private final NotificationListener notificationListener = new NotificationListener() {
+    protected Task task;
+    private TransactionalEditingDomain editDomain;
+    private final NotificationListener notificationListener = new NotificationListener() {
 
-		public void notifyChanged(Notification notification) {
-			refreshWidget() ;
+	public void notifyChanged(Notification notification) {
+	    refreshWidget();
+	}
+    };
+    private ComboViewer combo;
+
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+	    ExtensibleGridPropertySection extensibleGridPropertySection) {
+	combo = new ComboViewer(composite);
+	combo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+	combo.setContentProvider(new ArrayContentProvider());
+	combo.setLabelProvider(new PriorityLabelProvider());
+	Object[] input = new Object[TaskPriority.values().length];
+	for (int i = 0; i < TaskPriority.values().length; i++) {
+	    input[i] = i;
+	}
+	combo.setInput(input);
+	combo.setSelection(new StructuredSelection(task.getPriority()));
+
+	combo.addPostSelectionChangedListener(new ISelectionChangedListener() {
+	    public void selectionChanged(SelectionChangedEvent event) {
+		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+		if (!selection.isEmpty()) {
+		    Command setCommand = new SetCommand(editDomain, task, ProcessPackage.Literals.TASK__PRIORITY,
+			    selection.getFirstElement());
+		    editDomain.getCommandStack().execute(setCommand);
 		}
-	};
-	private ComboViewer combo;
+	    }
+	});
+    }
 
-
-	/* (non-Javadoc)Human
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-	 */
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-		composite.setLayout(new RowLayout());
-		combo = new ComboViewer(composite);
-		combo.setContentProvider(new ArrayContentProvider());
-		combo.setLabelProvider(new PriorityLabelProvider());
-		Object[] input = new Object[TaskPriority.values().length] ;
-		for(int i = 0 ; i< TaskPriority.values().length ; i++){
-			input[i] = i ;
-		}
-		combo.setInput(input);
-		combo.setSelection(new StructuredSelection(task.getPriority()));
-
-		combo.addPostSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				if (! selection.isEmpty()) {
-					Command setCommand = new SetCommand(editDomain, task, ProcessPackage.Literals.TASK__PRIORITY, selection.getFirstElement());
-					editDomain.getCommandStack().execute(setCommand);
-				}
-			}
-		});
+    protected void refreshWidget() {
+	if (combo != null && !combo.getCombo().isDisposed()) {
+	    combo.setSelection(new StructuredSelection(task.getPriority()));
 	}
 
-	protected void refreshWidget() {
-		if(combo != null && !combo.getCombo().isDisposed()){
-			combo.setSelection(new StructuredSelection(task.getPriority()));
-		}
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#dispose()
+     */
+    public void dispose() {
+	if (editDomain != null) {
+	    DiagramEventBroker.getInstance(editDomain).removeNotificationListener(task, notificationListener);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-	 */
-	public void dispose() {
-		if(editDomain != null){
-			DiagramEventBroker.getInstance(editDomain).removeNotificationListener(task,notificationListener);
-		}
-		if(combo != null && combo.getCombo() != null) {
-			combo.getCombo().dispose();
-		}
+	if (combo != null && combo.getCombo() != null) {
+	    combo.getCombo().dispose();
 	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
-	 */
-	public String getLabel() {
-		return Messages.priority;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#getLabel()
+     */
+    public String getLabel() {
+	return Messages.priority;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.
+     * ecore.EObject)
+     */
+    public boolean isRelevantFor(EObject eObject) {
+	return eObject instanceof Task;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#refresh()
+     */
+    public void refresh() {
+	// TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.
+     * EObject)
+     */
+    public void setEObject(EObject object) {
+	task = (Task) object;
+	if (editDomain != null) {
+	    DiagramEventBroker.getInstance(editDomain).addNotificationListener(task,
+		    ProcessPackage.eINSTANCE.getTask_Priority(), notificationListener);
 	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
-	 */
-	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof Task;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.
+     * transaction.TransactionalEditingDomain)
+     */
+    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	editDomain = editingDomain;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
-	 */
-	public void refresh() {
-		// TODO Auto-generated method stub
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bonitasoft.studio.common.properties.
+     * IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.
+     * viewers.ISelection)
+     */
+    public void setSelection(ISelection selection) {
+	// TODO Auto-generated method stub
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
-	 */
-	public void setEObject(EObject object) {
-		task = (Task)object;
-		if(editDomain != null){
-			DiagramEventBroker.getInstance(editDomain).addNotificationListener(task,ProcessPackage.eINSTANCE.getTask_Priority(),notificationListener);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
-	 */
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-		editDomain = editingDomain;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	public void setSelection(ISelection selection) {
-		// TODO Auto-generated method stub
-
-	}
+    }
 
 }

@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,7 +40,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -92,12 +92,9 @@ public class ActivityTypeSelectionGridPropertySectionContribution implements IEx
         }
     }
 
-    /**
-     * @param aTabbedPropertySheetPage
-     * @param parent
-     */
     private void createActivitySelectionCombo(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory) {
         combo = new ComboViewer(parent, SWT.READ_ONLY);
+        combo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         combo.setContentProvider(new ArrayContentProvider());
         combo.setLabelProvider(new LabelProvider());
         combo.setInput(new String[]{ACTIVITY_TYPE__TASK,ACTIVITY_TYPE__SYSTEM,ACTIVITY_TYPE__CALL_ACTVITY,ACTIVITY_TYPE__RECEIVE_TASK,ACTIVITY_TYPE__SEND_TASK,ACTIVITY_TYPE__SERVICE_TASK,ACTIVITY_TYPE__SCRIPT_TASK});
@@ -160,7 +157,6 @@ public class ActivityTypeSelectionGridPropertySectionContribution implements IEx
      */
     @Override
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
-        composite.setLayout(new RowLayout());
         createActivitySelectionCombo(composite, widgetFactory);
     }
 
