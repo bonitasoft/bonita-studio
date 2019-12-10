@@ -31,6 +31,10 @@ class BDMQueriesTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate business object queries in a table"() {
         given:
@@ -60,7 +64,7 @@ class BDMQueriesTemplateTest extends Specification {
                               *             lastUpdated (_Date_)
                               *|===
                               *
-                              *'''.stripMargin('*').replace("\n", System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
 
     def File templateFolder() {

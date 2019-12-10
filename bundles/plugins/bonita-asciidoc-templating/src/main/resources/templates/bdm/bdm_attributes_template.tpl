@@ -1,8 +1,9 @@
 package bdm
 
-@Field BusinessObject businessObject 
+@Field BusinessObject businessObject
+@Field ResourceBundle messages
 
-section 5, 'icon:list[] Attributes'
+section 5, "icon:list[] ${messages.getString('attributes')}"
 
 newLine()
 
@@ -15,7 +16,7 @@ def typeColumn = allFields.collect { it.multiple ? "List<$it.type>" : it.type}
 def descriptionColumn = allFields.collect { it.label ? "*Label:* $it.label + "+System.lineSeparator()+  it.description : it.description ?: '' }
 
 def keepIndent = true
-write  keepIndent, new Table(columnName : ['Name', 'Type', 'Description'],
+write  keepIndent, new Table(columnName : [messages.getString('name'), messages.getString('type'), messages.getString('description')],
                 columnsFormat: ['1','1e','3a'],
                 columms : [nameColumn, typeColumn, descriptionColumn])
 

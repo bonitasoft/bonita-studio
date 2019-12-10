@@ -24,6 +24,10 @@ class MasterTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate master template with default header variables"() {
         given:
@@ -46,7 +50,7 @@ class MasterTemplateTest extends Specification {
                               |:sectnums: numbered
                               |:sectanchors:
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator())
+                              |'''.stripMargin().denormalize()
     }
 
     def "should generate master template with specific author"() {
@@ -74,7 +78,7 @@ class MasterTemplateTest extends Specification {
                               |:sectnums: numbered
                               |:sectanchors:
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator())
+                              |'''.stripMargin().denormalize()
     }
 
     def File templateFolder() {

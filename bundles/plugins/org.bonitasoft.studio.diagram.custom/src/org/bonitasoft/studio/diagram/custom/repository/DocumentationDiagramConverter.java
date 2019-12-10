@@ -14,26 +14,33 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
-import java.util.Locale;
 import java.util.function.Function;
 
 import org.bonitasoft.asciidoc.templating.model.process.Actor;
 import org.bonitasoft.asciidoc.templating.model.process.ActorFilter;
 import org.bonitasoft.asciidoc.templating.model.process.Data;
+import org.bonitasoft.asciidoc.templating.model.process.DecisionTable;
 import org.bonitasoft.asciidoc.templating.model.process.Diagram;
 import org.bonitasoft.asciidoc.templating.model.process.Document;
+import org.bonitasoft.asciidoc.templating.model.process.FlowElement;
 import org.bonitasoft.asciidoc.templating.model.process.Lane;
 import org.bonitasoft.asciidoc.templating.model.process.Parameter;
 import org.bonitasoft.asciidoc.templating.model.process.Process;
+import org.bonitasoft.asciidoc.templating.model.process.SequenceFlow;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
+import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Display;
 
 public class DocumentationDiagramConverter implements Function<MainProcess, Diagram> {
@@ -81,9 +88,16 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .globalVariables(convertVariables(pool))
                 .actors(convertActors(pool))
                 .lanes(convertLanes(pool))
+                .flowElements(convertFlowElements(pool))
                 .build();
     }
     
+    private FlowElement[] convertFlowElements(Pool pool) {
+	 return ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.FlowElement.class).stream()
+	                .map(this::createFlowElement)
+	                .toArray(FlowElement[]::new);
+    }
+
     private Lane[] convertLanes(Pool pool) {
         return ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.Lane.class).stream()
                 .map(this::createLane)
@@ -114,6 +128,67 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .toArray(Parameter[]::new);
     }
     
+    private FlowElement createFlowElement(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+        return FlowElement.builder()
+                .name(flowElement.getName())
+                .description(thisOrEmpty(flowElement.getDocumentation()))
+                .bpmnType(flowElement.eClass().getName())
+                .incomings(convertSequenceFlows(flowElement.getIncoming()))
+                .outgoings(convertSequenceFlows(flowElement.getOutgoing()))
+                .process(ModelHelper.getParentPool(flowElement).getName())
+                .lane(ModelHelper.getParentLane(flowElement) != null ? ModelHelper.getParentLane(flowElement).getName() : null)
+                .build();
+    }
+    
+    private SequenceFlow[] convertSequenceFlows(EList<Connection> incomingsConnection) {
+	return incomingsConnection.stream()
+		.filter(org.bonitasoft.studio.model.process.SequenceFlow.class::isInstance)
+		.map(org.bonitasoft.studio.model.process.SequenceFlow.class::cast)
+		.map(this::createSequenceFlow)
+		.toArray(SequenceFlow[]::new);
+    }
+    
+    private SequenceFlow createSequenceFlow(org.bonitasoft.studio.model.process.SequenceFlow sequenceFlow) {
+        return SequenceFlow.builder()
+                .name(sequenceFlow.getName())
+                .description(thisOrEmpty(sequenceFlow.getDocumentation()))
+                .defaultFlow(sequenceFlow.isIsDefault())
+                .source(sequenceFlow.getSource().getName())
+                .target(sequenceFlow.getTarget().getName())
+                .condition(createExpression(sequenceFlow.getCondition()))
+                .useDecisionTable(sequenceFlow.getConditionType() == SequenceFlowConditionType.DECISION_TABLE)
+                .decisionTable(convertDecisionTable(sequenceFlow.getDecisionTable()))
+                .build();
+    }
+
+    private DecisionTable convertDecisionTable(
+	    org.bonitasoft.studio.model.process.decision.DecisionTable decisionTable) {
+	return DecisionTable.builder()
+		.lines(convertDecisionTableLines(decisionTable.getLines()))
+		.defaultTakeTransition(decisionTable.getDefaultAction() instanceof TakeTransitionAction && ((TakeTransitionAction)decisionTable.getDefaultAction()).isTakeTransition())
+		.build();
+    }
+
+    private org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine[] convertDecisionTableLines(EList<DecisionTableLine> lines) {
+	return lines.stream()
+		.map(this::createDecisionTableLine)
+		.toArray(org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine[]::new);
+    }
+    
+    private org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine createDecisionTableLine(DecisionTableLine line) {
+	return org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine.builder()
+		.conditions(convertConditions(line.getConditions()))
+		.takeTransition(line.getAction() instanceof TakeTransitionAction && ((TakeTransitionAction)line.getAction()).isTakeTransition())
+		.build();
+    }
+
+    private org.bonitasoft.asciidoc.templating.model.process.Expression[] convertConditions(
+	    EList<Expression> conditions) {
+	return conditions.stream()
+		.map(this::createExpression)
+		.toArray(org.bonitasoft.asciidoc.templating.model.process.Expression[]::new);
+    }
+
     private Lane createLane(org.bonitasoft.studio.model.process.Lane lane) {
         return Lane.builder()
                 .name(lane.getName())
@@ -168,12 +243,12 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .build();
     }
 
-    private org.bonitasoft.asciidoc.templating.model.process.Expression createExpression(Expression defaultValue) {
+    private org.bonitasoft.asciidoc.templating.model.process.Expression createExpression(Expression expression) {
         return org.bonitasoft.asciidoc.templating.model.process.Expression.builder()
-                .name(defaultValue.getName())
-                .content(defaultValue.getContent())
-                .returnType(NamingUtils.getSimpleName(defaultValue.getReturnType()))
-                .type(defaultValue.getType())
+                .name(expression.getName())
+                .content(expression.getContent())
+                .returnType(NamingUtils.getSimpleName(expression.getReturnType()))
+                .type(expression.getType())
                 .build();
     }
 

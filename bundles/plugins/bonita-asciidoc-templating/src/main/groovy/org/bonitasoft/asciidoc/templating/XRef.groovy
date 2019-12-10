@@ -1,5 +1,7 @@
 package org.bonitasoft.asciidoc.templating
 
+import java.text.Normalizer
+
 import groovy.transform.CompileStatic
 
 abstract class XRef {
@@ -8,14 +10,14 @@ abstract class XRef {
      * @return an Asciidoc inlined cross reference tag
      */
     def String inlinedRefTag() {
-        "[[${getId()},${getLabel()}]]"
+        "[[${getId()}]]"
     }
 
     /**
      * @return an Asciidoc cross reference link
      */
     def String refLink() {
-        "<<${getId()}>>"
+        "<<${getId()},${getLabel()}>>"
     }
 
     /**
@@ -29,17 +31,33 @@ abstract class XRef {
     def abstract String getLabel()
 
     protected def String crossRefId(String id) {
-        replaceSpaces(id.toLowerCase())
+        normalize(id.toLowerCase())
     }
 
-    private def String replaceSpaces(String value) {
+    private def String normalize(String value) {
+	def normalized = Normalizer
+        	.normalize(value, Normalizer.Form.NFD)
+        	.replaceAll("[^\\p{ASCII}]", "")
+	
         def replacements = {
             if(it == ' ') {
                 '-'
+            }else if(it == '?' 
+		|| it == '*' 
+		||  it == '\\' 
+		||  it == '$' 
+		||  it == '!' 
+		||  it == '|' 
+		||  it == ';'
+		||  it == '%'
+		||  it == '"'
+		||  it == '\''
+		||  it == '`' ) {
+                ''
             }else {
                 null
             }
         }
-        value.collectReplacements(replacements)
+        normalized.collectReplacements(replacements)
     }
 }

@@ -124,7 +124,7 @@ class Table {
         }
     
         tableContent = tableContent + '*|===' + System.lineSeparator()
-        tableContent.stripMargin('*').replace('\n', System.lineSeparator()).toString()
+        tableContent.stripMargin('*').denormalize().toString()
     }
 }
 

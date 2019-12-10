@@ -25,11 +25,16 @@ class SequenceFlow {
 
     String description
 
-    FlowElement source
+    String source
 
-    FlowElement target
+    String target
 
     boolean defaultFlow
-
+    
     Expression condition
+    
+    boolean useDecisionTable
+    
+    DecisionTable decisionTable
+    
 }

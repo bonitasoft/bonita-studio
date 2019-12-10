@@ -31,6 +31,10 @@ class BDMAttributesTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate business object attributes in a table"() {
         given:
@@ -58,14 +62,14 @@ class BDMAttributesTemplateTest extends Specification {
                               *
                               *[grid=cols, options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
-                              *|Name                                                  |Type         |Description                                                           
-                              *|[[Employee.persistenceId,persistenceId]]persistenceId*|Long         |                                                                      
-                              *|[[Employee.firstName,firstName]]firstName             |String       |*Label:* First name + 
-                              *                                                                      The first name of the employee, must not be greater than 75 characters
-                              *|[[Employee.addresses,addresses]]&#x25c6; addresses    |List<Address>|Employee addresses                                                    
+                              *|Name                                    |Type         |Description                                                           
+                              *|[[Employee.persistenceId]]persistenceId*|Long         |                                                                      
+                              *|[[Employee.firstName]]firstName         |String       |*Label:* First name + 
+                              *                                                        The first name of the employee, must not be greater than 75 characters
+                              *|[[Employee.addresses]]&#x25c6; addresses|List<Address>|Employee addresses                                                    
                               *|===
                               *
-                              *'''.stripMargin('*').replace("\n", System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
 
     def File templateFolder() {

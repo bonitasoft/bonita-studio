@@ -1,6 +1,7 @@
 package bdm
 
 @Field BusinessDataModel businessDataModel
+@Field ResourceBundle messages
 
 section 2,'Business Data Model'
 
@@ -18,12 +19,12 @@ businessDataModel.packages.each { Package pckg ->
     pckg.businessObjects.each { BusinessObject object ->
         section 4, object.name
         newLine()
-        write object.description ?: "_No description available_"
+        writeWithLineBreaks object.description ?: "_${messages.getString('descriptionPlaceholder')}_"
         2.times { newLine() }
         
-        if(object.attributes || object.relations) layout 'bdm/bdm_attributes_template.tpl', businessObject: object
-        if(object.uniqueConstraints) layout 'bdm/bdm_constraints_template.tpl', businessObject: object
-        if(object.customQueries) layout 'bdm/bdm_queries_template.tpl', businessObject: object
+        if(object.attributes || object.relations) layout 'bdm/bdm_attributes_template.tpl', businessObject:object, messages:messages
+        if(object.uniqueConstraints) layout 'bdm/bdm_constraints_template.tpl', businessObject:object, messages:messages
+        if(object.customQueries) layout 'bdm/bdm_queries_template.tpl', businessObject:object, messages:messages
     }
 
 }

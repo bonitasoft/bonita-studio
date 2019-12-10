@@ -34,6 +34,10 @@ class ProcessTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate process template"() {
         given:
@@ -52,7 +56,7 @@ class ProcessTemplateTest extends Specification {
                               |
                               |image::processes/MyProcess-1.0.png[]
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator())
+                              |'''.stripMargin().denormalize()
     }
     
     def "should generate process parameters table"() {
@@ -83,7 +87,7 @@ class ProcessTemplateTest extends Specification {
                               *|smtpPassword|String|                         
                               *|===
                               *
-                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
     
     def "should generate process documents table"() {
@@ -109,12 +113,12 @@ class ProcessTemplateTest extends Specification {
                               *
                               *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
                               *|===
-                              *|Name                                                               |Description              
-                              *|[[myprocess.doc.contractdoc,contractDoc]]contractDoc               |The contract to be signed
-                              *|[[myprocess.doc.photos,photos]]photos icon:files-o[title="Mutiple"]|                         
+                              *|Name                                                        |Description              
+                              *|[[myprocess.doc.contractdoc]]contractDoc                    |The contract to be signed
+                              *|[[myprocess.doc.photos]]photos icon:files-o[title="Mutiple"]|                         
                               *|===
                               *
-                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
     
     def "should generate process actors table"() {
@@ -140,12 +144,12 @@ class ProcessTemplateTest extends Specification {
                               *
                               *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
                               *|===
-                              *|Name                                                                                       |Description               
-                              *|[[myprocess.actor.customer-service,Customer Service]]Customer Service                      |The customer service actor
-                              *|[[myprocess.actor.customer,Customer]]Customer icon:play-circle-o[title="Process initiator"]|                          
+                              *|Name                                                                              |Description               
+                              *|[[myprocess.actor.customer-service]]Customer Service                              |The customer service actor
+                              *|[[myprocess.actor.customer]]Customer icon:play-circle-o[title="Process initiator"]|                          
                               *|===
                               *
-                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
     
     def "should generate process lanes section"() {
@@ -168,14 +172,14 @@ class ProcessTemplateTest extends Specification {
                               *
                               *===== image:icons/Lane.png[] Lanes
                               *
-                              *====== My Lane (<<myprocess.actor.employee>> actor)
+                              *====== My Lane (<<myprocess.actor.employee,Employee>> actor)
                               *
                               *_No description available_
                               *
                               *icon:filter[] *Actor filter:* ransomUser (Single user) + 
                               *_No description available_
                               *
-                              *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
 
     def File templateFolder() {

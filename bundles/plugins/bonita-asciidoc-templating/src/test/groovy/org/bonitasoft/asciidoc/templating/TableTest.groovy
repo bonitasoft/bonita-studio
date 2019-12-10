@@ -41,7 +41,7 @@ class TableTest extends Specification {
                             *|A.row1  |B.row1  
                             *|A.row2  |B.row2  
                             *|===
-                            *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                            *'''.stripMargin('*').denormalize()
     }
 
     def "should generate a formatted asciidoc table without headers"(){
@@ -57,7 +57,7 @@ class TableTest extends Specification {
                             *|A.row1.longer|B.row1
                             *|A.row2       |B.row2
                             *|===
-                            *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                            *'''.stripMargin('*').denormalize()
     }
     
     def "should escape '|' character in table content"(){
@@ -72,7 +72,7 @@ class TableTest extends Specification {
                             *|===
                             *|A.row1 \\| escaped pipe
                             *|===
-                            *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                            *'''.stripMargin('*').denormalize()
     }
     
     def "should align multi-line cell content"(){
@@ -88,7 +88,7 @@ class TableTest extends Specification {
                             *|A.row1|B.row1
                             *        some content on a second line|C.row1
                             *|===
-                            *'''.stripMargin('*').replace('\n', System.lineSeparator())
+                            *'''.stripMargin('*').denormalize()
     }
 
 }

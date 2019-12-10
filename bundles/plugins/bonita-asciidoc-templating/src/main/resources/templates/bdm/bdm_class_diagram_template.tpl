@@ -1,6 +1,7 @@
 package bdm
 
 @Field BusinessDataModel businessDataModel
+@Field ResourceBundle messages
 
 write '@startuml'
 newLine()
@@ -29,7 +30,7 @@ businessDataModel.packages.each{ Package pckg ->
         }
 
         if(businessObject.customQueries) {
-            writeIndent 2, '== Custom queries =='
+            writeIndent 2, "== ${messages.getString('customQueries')} =="
             newLine()
 
             businessObject.customQueries.each{ Query query ->
@@ -42,7 +43,7 @@ businessDataModel.packages.each{ Package pckg ->
         writeIndent '}'
         2.times { newLine() }
         businessObject.relations.each { Relation relation ->
-            writeIndent "$businessObject.name  ${relation.relationType == 'COMPOSITION' ? '"composed of"' :  '"references"'} ${relation.relationType == 'COMPOSITION' ? '*' :  'o'}-- ${relation.multiple ? '"*"' : ''} $relation.type : $relation.name"
+            writeIndent "$businessObject.name  ${relation.relationType == 'COMPOSITION' ? "\"${messages.getString('composedOf')}\"" :  "\"${messages.getString('references')}\""} ${relation.relationType == 'COMPOSITION' ? '*' :  'o'}-- ${relation.multiple ? '"*"' : ''} $relation.type : $relation.name"
             newLine()
         }
     }
