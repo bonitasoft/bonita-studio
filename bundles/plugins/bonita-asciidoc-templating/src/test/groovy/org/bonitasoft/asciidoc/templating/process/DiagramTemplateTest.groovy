@@ -29,6 +29,10 @@ class DiagramTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate diagram template"() {
         given:
@@ -46,7 +50,7 @@ class DiagramTemplateTest extends Specification {
                               |
                               |image::diagrams/My Diagram-1.0.png[]
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator()))
+                              |'''.stripMargin().denormalize())
     }
     
     def "should not include diagram image if diagram has only one process"() {
@@ -63,7 +67,7 @@ class DiagramTemplateTest extends Specification {
                               |
                               |Some simple description
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator())
+                              |'''.stripMargin().denormalize()
     }
 
     def File templateFolder() {

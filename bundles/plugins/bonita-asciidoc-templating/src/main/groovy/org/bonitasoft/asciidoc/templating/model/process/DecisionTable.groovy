@@ -19,22 +19,10 @@ import groovy.transform.builder.Builder
 
 @Canonical
 @Builder
-class FlowElement {
+class DecisionTable {
     
-    String name
+    DecisionTableLine[] lines
     
-    String description
-    
-    String bpmnType
-    
-    Data[] localVariables = []
-    
-    SequenceFlow[] incomings
-    
-    SequenceFlow[] outgoings
-    
-    String process
-    
-    String lane
+    boolean defaultTakeTransition
     
 }

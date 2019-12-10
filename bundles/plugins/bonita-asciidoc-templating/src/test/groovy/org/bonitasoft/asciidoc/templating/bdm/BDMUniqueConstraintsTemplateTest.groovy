@@ -32,6 +32,10 @@ class BDMUniqueConstraintsTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate business object queries in a table"() {
         given:
@@ -49,11 +53,11 @@ class BDMUniqueConstraintsTemplateTest extends Specification {
         then:
         outputFile.text == '''*===== icon:link[] Unique constraints
                               *
-                              *====== uniqueFirstAndLastName [<<Employee.firstName>>, <<Employee.lastName>>]
+                              *====== uniqueFirstAndLastName [<<Employee.firstName,firstName>>, <<Employee.lastName,lastName>>]
                               *
                               *I am a constraint description
                               *
-                              *'''.stripMargin('*').replace("\n", System.lineSeparator())
+                              *'''.stripMargin('*').denormalize()
     }
 
     def File templateFolder() {

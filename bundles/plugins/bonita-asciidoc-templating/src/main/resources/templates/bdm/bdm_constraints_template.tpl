@@ -2,11 +2,12 @@ package bdm
 
 import org.bonitasoft.asciidoc.templating.model.bdm.UniqueConstraint
 
-@Field BusinessObject businessObject 
+@Field BusinessObject businessObject
+@Field ResourceBundle messages
 
 def keepIndent = true
 
-section 5, 'icon:link[] Unique constraints'
+section 5, "icon:link[] ${messages.getString('uniqueConstraints')}"
 
 newLine()
 
@@ -17,7 +18,7 @@ businessObject.uniqueConstraints.each { UniqueConstraint constraint ->
     
     newLine()
    
-    write constraint.description ?: '_No description available_'
+    writeWithLineBreaks constraint.description ?: "_${messages.getString('descriptionPlaceholder')}_"
     
     2.times { newLine() }
     

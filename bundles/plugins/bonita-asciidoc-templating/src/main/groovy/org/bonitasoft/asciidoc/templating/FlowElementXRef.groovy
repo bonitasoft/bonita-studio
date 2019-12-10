@@ -8,25 +8,25 @@ import groovy.transform.CompileStatic
 import groovy.transform.builder.Builder
 
 @Builder
-class ActorXRef extends XRef {
+class FlowElementXRef extends XRef {
 
     /**
-     * The actor name
+     * The flow element name
      */
-    String actor
+    String name
     /**
-     * The process where the actor is defined
+     * The process name where the flow element is defined
      */
-    Process process
+    String process
     
     @Override
     public String getId() {
-       crossRefId("${process.name}.actor.${actor}")
+       crossRefId("${process}.flowElement.${name}")
     }
 
     @Override
     public String getLabel() {
-        actor
+        name
     }
     
 }

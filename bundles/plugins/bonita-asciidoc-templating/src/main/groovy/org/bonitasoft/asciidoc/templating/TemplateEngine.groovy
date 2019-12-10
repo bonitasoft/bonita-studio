@@ -39,6 +39,8 @@ class TemplateEngine {
     def run(String templatePath, File outputFile, Map context) {
         def config = new TemplateConfiguration()
         config.locale = locale ?: Locale.getDefault()
+        ClassLoader templateClassloader = new URLClassLoader([templateDir.toURI().toURL()] as URL[])
+        context << [messages:ResourceBundle.getBundle('messages', config.locale, templateClassloader)]
         config.setBaseTemplateClass(AsciiDocTemplate)
         def templateEngine = new MarkupTemplateEngine(TemplateEngine.getClassLoader(), templateDir, config)
         def compilerConfig = templateEngine.getCompilerConfiguration()

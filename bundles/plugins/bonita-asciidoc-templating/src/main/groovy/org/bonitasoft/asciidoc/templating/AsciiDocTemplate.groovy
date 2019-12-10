@@ -74,6 +74,10 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
         }
     }
     
+    private String asciidocLineBreaks(final Object text) {
+        text.toString().denormalize().replaceAll(System.lineSeparator(), ' + '+ System.lineSeparator())
+    }
+    
     /**
      * Write text into the asciidoc document with an indent
      * @param int indentCount, optional, 1 by default (1 indent = 4 spaces). The number of indent used as prefix
@@ -82,6 +86,15 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
     def writeIndent(int indentCount = 1, Object text) throws IOException {
         indentCount.times { yieldUnescaped DelegatingIndentWriter.SPACES }
         write text
+    }
+    
+    /**
+     * Write text into the asciidoc document. Replaces line breaks with asciidoc line breaks.
+     * @param boolean keepIndent, optional, false by default. When false each indented line of the text parameter is stripped. When true, indent is left as is.
+     * @param Object text, the text to inject in the document
+     */
+    def writeWithLineBreaks(boolean keepIndent = false, Object text) {
+        write(keepIndent, asciidocLineBreaks(text))
     }
     
     @Override

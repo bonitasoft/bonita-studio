@@ -27,6 +27,10 @@ class BDMTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate bdm template"() {
         given:
@@ -54,7 +58,7 @@ class BDMTemplateTest extends Specification {
                               |
                               |A simple description
                               |
-                              |'''.stripMargin().replace('\n', System.lineSeparator())
+                              |'''.stripMargin().denormalize()
     }
 
     def File templateFolder() {

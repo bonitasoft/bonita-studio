@@ -31,6 +31,10 @@ class BDMDiagramTemplateTest extends Specification {
 
     @Rule
     TemporaryFolder temporaryFolder
+    
+    def setup() {
+        Locale.setDefault(Locale.ENGLISH)
+    }
 
     def "should generate bdm plantuml diagram"() {
         given:
@@ -70,7 +74,7 @@ class BDMDiagramTemplateTest extends Specification {
                             |}
                             |
                             |@enduml
-                            |'''.stripMargin().replace('\n', System.lineSeparator())
+                            |'''.stripMargin().denormalize()
     }
 
     def File templateFolder() {

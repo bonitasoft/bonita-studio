@@ -1,12 +1,13 @@
 package process
 
 @Field Diagram diagram
+@Field ResourceBundle messages
 
 section 3, "$diagram.name ($diagram.version)"
 
 newLine()
 
-write diagram.description ?: '_No description available_'
+writeWithLineBreaks diagram.description ?: "_${messages.getString('descriptionPlaceholder')}_"
 
 2.times { newLine() }
 
@@ -17,5 +18,5 @@ if( diagram.processes.size() > 1) {
     2.times { newLine() }
 }
 
-diagram.processes.each { layout 'process/process_template.tpl', process:it }
+diagram.processes.each { layout 'process/process_template.tpl', process:it, messages:messages }
 
