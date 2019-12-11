@@ -57,7 +57,7 @@ class BDMQueriesTemplateTest extends Specification {
                               *====== findByNearestAddress
                               *
                               *_No description available_
-                              *[grid=cols, options="header",cols="1e,1a",stripes=even,frame=topbot]
+                              *[grid=cols,options="header",cols="1e,1a",stripes=even,frame=topbot]
                               *|===
                               *|Return type|Parameters            
                               *|Employee   |location (_Double_) + 

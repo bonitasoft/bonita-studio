@@ -99,7 +99,7 @@ class Table {
         if(footer) options << 'footer'
         if(autowidth) options << 'autowidth'
         
-        def tableContent = """*[grid=$gridStyle, options="${options.join(',')}",cols="${columnsFormat.join(',')}",stripes=$stripes,frame=$frame]
+        def tableContent = """*[grid=$gridStyle,options="${options.join(',')}",cols="${columnsFormat.join(',')}",stripes=$stripes,frame=$frame]
                           *|===
                           *""".stripMargin('*')
 

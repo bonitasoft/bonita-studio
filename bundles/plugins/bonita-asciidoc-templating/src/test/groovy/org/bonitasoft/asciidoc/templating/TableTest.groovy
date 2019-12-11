@@ -35,7 +35,7 @@ class TableTest extends Specification {
         def tableOutput = table.toString()
 
         then:
-        tableOutput == '''*[grid=cols, options="header",cols="1,1",stripes=even,frame=topbot]
+        tableOutput == '''*[grid=cols,options="header",cols="1,1",stripes=even,frame=topbot]
                             *|===
                             *|Header A|Header B
                             *|A.row1  |B.row1  
@@ -52,7 +52,7 @@ class TableTest extends Specification {
         def tableOutput = table.toString()
 
         then:
-        tableOutput == '''*[grid=cols, options="",cols="1,1",stripes=even,frame=topbot]
+        tableOutput == '''*[grid=cols,options="",cols="1,1",stripes=even,frame=topbot]
                             *|===
                             *|A.row1.longer|B.row1
                             *|A.row2       |B.row2
@@ -68,7 +68,7 @@ class TableTest extends Specification {
         def tableOutput = table.toString()
 
         then:
-        tableOutput == '''*[grid=cols, options="",cols="1,1",stripes=even,frame=topbot]
+        tableOutput == '''*[grid=cols,options="",cols="1,1",stripes=even,frame=topbot]
                             *|===
                             *|A.row1 \\| escaped pipe
                             *|===
@@ -83,7 +83,7 @@ class TableTest extends Specification {
         def tableOutput = table.toString()
 
         then:
-        tableOutput == '''*[grid=cols, options="",cols="1,1",stripes=even,frame=topbot]
+        tableOutput == '''*[grid=cols,options="",cols="1,1",stripes=even,frame=topbot]
                             *|===
                             *|A.row1|B.row1
                             *        some content on a second line|C.row1

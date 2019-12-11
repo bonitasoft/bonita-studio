@@ -80,7 +80,7 @@ class ProcessTemplateTest extends Specification {
                               *
                               *===== icon:gear[] Parameters
                               *
-                              *[grid=cols, options="header",cols="1,1e,3a",stripes=even,frame=topbot]
+                              *[grid=cols,options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name        |Type  |Description              
                               *|smtpHost    |String|Email smtp server address
@@ -111,7 +111,7 @@ class ProcessTemplateTest extends Specification {
                               *
                               *===== icon:file[] Documents
                               *
-                              *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
+                              *[grid=cols,options="header",cols="1,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name                                                        |Description              
                               *|[[myprocess.doc.contractdoc]]contractDoc                    |The contract to be signed
@@ -142,7 +142,7 @@ class ProcessTemplateTest extends Specification {
                               *
                               *===== icon:users[] Actors
                               *
-                              *[grid=cols, options="header",cols="1,3a",stripes=even,frame=topbot]
+                              *[grid=cols,options="header",cols="1,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name                                                                              |Description               
                               *|[[myprocess.actor.customer-service]]Customer Service                              |The customer service actor
@@ -152,12 +152,12 @@ class ProcessTemplateTest extends Specification {
                               *'''.stripMargin('*').denormalize()
     }
     
-    def "should generate process lanes section"() {
+    def "should generate process lanes section with an actor filter without description"() {
         given:
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("process.adoc");
         def process = new Process(name: 'MyProcess', version: '1.0', lanes: [
-                new Lane(name: 'My Lane', actor: 'Employee', actorFilter: new ActorFilter(name: 'ransomUser', definitionName: 'Single user'))
+                new Lane(name: 'My Lane', actor: 'Employee', actorFilter: new ActorFilter(name: 'ransomUser', definitionName: 'Single user'), process: 'MyProcess')
                 ])
 
         when:
@@ -170,14 +170,42 @@ class ProcessTemplateTest extends Specification {
                               *
                               *image::processes/MyProcess-1.0.png[]
                               *
-                              *===== image:icons/Lane.png[] Lanes
-                              *
-                              *====== My Lane (<<myprocess.actor.employee,Employee>> actor)
+                              *===== image:icons/Lane.png[title="Lane"] My Lane (<<myprocess.actor.employee,Employee>>)
                               *
                               *_No description available_
                               *
-                              *icon:filter[] *Actor filter:* ransomUser (Single user) + 
+                              *====== icon:filter[] Actor filter
+                              *
+                              **Single user: ransomUser*
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate process lanes section with an actor filter with a description"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("process.adoc");
+        def process = new Process(name: 'MyProcess', version: '1.0', lanes: [
+                new Lane(name: 'My Lane', actor: 'Employee', actorFilter: new ActorFilter(name: 'ransomUser', definitionName: 'Single user', description: 'Some nice description'), process: 'MyProcess')
+                ])
+
+        when:
+        engine.run("process/process_template.tpl", outputFile, [process:process])
+
+        then:
+        outputFile.text == '''*==== MyProcess (1.0)
+                              *
                               *_No description available_
+                              *
+                              *image::processes/MyProcess-1.0.png[]
+                              *
+                              *===== image:icons/Lane.png[title="Lane"] My Lane (<<myprocess.actor.employee,Employee>>)
+                              *
+                              *_No description available_
+                              *
+                              *====== icon:filter[] Actor filter
+                              *
+                              *Single user: ransomUser:: Some nice description
                               *
                               *'''.stripMargin('*').denormalize()
     }

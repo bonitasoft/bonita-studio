@@ -60,7 +60,7 @@ class BDMAttributesTemplateTest extends Specification {
         then:
         outputFile.text == '''*===== icon:list[] Attributes
                               *
-                              *[grid=cols, options="header",cols="1,1e,3a",stripes=even,frame=topbot]
+                              *[grid=cols,options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
                               *|Name                                    |Type         |Description                                                           
                               *|[[Employee.persistenceId]]persistenceId*|Long         |                                                                      

@@ -74,7 +74,12 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
         }
     }
     
-    private String asciidocLineBreaks(final Object text) {
+    /**
+     * Replaces line breaks with asciidoc line breaks.
+     * @param text the text to transform
+     * @return the text with asciidoc linebreaks (' + ')
+     */
+    def String asciidocLineBreaks(final Object text) {
         text.toString().denormalize().replaceAll(System.lineSeparator(), ' + '+ System.lineSeparator())
     }
     
