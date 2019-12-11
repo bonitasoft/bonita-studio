@@ -54,7 +54,6 @@ import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.common.repository.model.IProjectDocumentationContextProvider;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
@@ -592,7 +591,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         String imageFoldetPath = projectBuilder.build().getImageFolderPath();
         projectBuilder.diagrams( getChildren().stream()
             .map(DiagramFileStore::getContent)
-            .map(new DocumentationDiagramConverter(getRepository().getProject().getFolder(imageFoldetPath), localizedResourceProvider))
+            .map(new DocumentationDiagramConverter(getRepository().getProject().getFolder(imageFoldetPath), localizedResourceProvider, this))
             .toArray(org.bonitasoft.asciidoc.templating.model.process.Diagram[]::new));
         return projectBuilder;
     }

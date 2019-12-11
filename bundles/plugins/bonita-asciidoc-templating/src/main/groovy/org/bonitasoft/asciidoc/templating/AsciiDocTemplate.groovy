@@ -62,9 +62,10 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
         if(keepIndent) {
             yieldUnescaped text
         }else {
-            boolean endsWithNewLine = text?.toString()?.endsWith(System.lineSeparator())
-            def lineCount = text?.toString().split(System.lineSeparator()).length
-            text?.toString().eachLine{ String line, int lineNumber ->
+            def denormalize = text?.toString()?.denormalize()
+            boolean endsWithNewLine = denormalize.endsWith(System.lineSeparator())
+            def lineCount = denormalize.split(System.lineSeparator()).length
+            denormalize.eachLine{ String line, int lineNumber ->
                    yieldUnescaped line.stripIndent()
                    def lastLine =  lineNumber+1 == lineCount
                    if(!lastLine || (lastLine && endsWithNewLine)) {

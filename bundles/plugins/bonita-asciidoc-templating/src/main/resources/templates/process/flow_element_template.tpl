@@ -22,6 +22,36 @@ if(flowElement.connectorsIn) {
     layout 'process/connectors_template.tpl', connectors:flowElement.connectorsIn, messages:messages
 }
 
+if(flowElement.bpmnType == 'CallActivity') {
+    section 6, "icon:plus-square[] ${messages.getString('calledProcess')}"
+    newLine()
+    
+    if(flowElement.calledProcessName.type == ExpressionType.CONSTANT && flowElement.calledProcessName.content && flowElement.calledProcessVersion.type == ExpressionType.CONSTANT) {
+        write "<<$flowElement.calledProcessName.content ($flowElement.calledProcessVersion.content)>>"
+    }else {
+        write ".${messages.getString('nameExpression')}"
+        newLine()
+        write '''[source,groovy]
+                 ----'''
+        newLine()
+        write true, flowElement.calledProcessName.content
+        newLine()
+        write '----'
+        newLine()
+        if(flowElement.calledProcessVersion?.content) {
+            write ".${messages.getString('versionExpression')}"
+            newLine()
+            write '''[source,groovy]
+                     ----'''
+            newLine()
+            write true, flowElement.calledProcessVersion.content
+            newLine()
+            write '----'
+        }
+    }
+    2.times { newLine() }
+}
+
 if(flowElement.connectorsOut) {
     section 6, "icon:plug[] ${messages.getString('connectorsOut')}"
     newLine()

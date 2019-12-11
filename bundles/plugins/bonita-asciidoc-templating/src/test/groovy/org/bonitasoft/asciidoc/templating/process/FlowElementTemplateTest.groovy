@@ -15,21 +15,12 @@
 package org.bonitasoft.asciidoc.templating.process
 
 import org.bonitasoft.asciidoc.templating.TemplateEngine
-import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
-import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
-import org.bonitasoft.asciidoc.templating.model.bdm.Package
-import org.bonitasoft.asciidoc.templating.model.process.Actor
-import org.bonitasoft.asciidoc.templating.model.process.ActorFilter
 import org.bonitasoft.asciidoc.templating.model.process.Connector
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTable
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine
-import org.bonitasoft.asciidoc.templating.model.process.Diagram
-import org.bonitasoft.asciidoc.templating.model.process.Document
 import org.bonitasoft.asciidoc.templating.model.process.Expression
+import org.bonitasoft.asciidoc.templating.model.process.ExpressionType
 import org.bonitasoft.asciidoc.templating.model.process.FlowElement
-import org.bonitasoft.asciidoc.templating.model.process.Lane
-import org.bonitasoft.asciidoc.templating.model.process.Parameter
-import org.bonitasoft.asciidoc.templating.model.process.Process
 import org.bonitasoft.asciidoc.templating.model.process.SequenceFlow
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -259,6 +250,67 @@ class FlowElementTemplateTest extends Specification {
                               *====== icon:plug[] Connectors out
                               *
                               **Email: sendNotification*
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate call activity called process information with link for constant expressions"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'CallActivity',
+                                          process: 'Pool',
+                                          calledProcessName: new Expression(content: 'SubProcess', type: ExpressionType.CONSTANT),
+                                          calledProcessVersion: new Expression(content: '1.0', type: ExpressionType.CONSTANT),)
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''*===== [[pool.flowelement.my-task]]image:icons/CallActivity.png[title="CallActivity"] My Task
+                              *
+                              *Some simple description
+                              *
+                              *====== icon:plus-square[] Called process
+                              *
+                              *<<SubProcess (1.0)>>
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate call activity called process information"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'CallActivity',
+                                          process: 'Pool',
+                                          calledProcessName: new Expression(content: 'SubProcess'),
+                                          calledProcessVersion: new Expression(content: '1.0'),)
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''*===== [[pool.flowelement.my-task]]image:icons/CallActivity.png[title="CallActivity"] My Task
+                              *
+                              *Some simple description
+                              *
+                              *====== icon:plus-square[] Called process
+                              *
+                              *.Process name expression
+                              *[source,groovy]
+                              *----
+                              *SubProcess
+                              *----
+                              *.Process version expression
+                              *[source,groovy]
+                              *----
+                              *1.0
+                              *----
                               *
                               *'''.stripMargin('*').denormalize()
     }
