@@ -17,11 +17,11 @@ class ActorXRef extends XRef {
     /**
      * The process where the actor is defined
      */
-    Process process
+    String process
     
     @Override
     public String getId() {
-       crossRefId("${process.name}.actor.${actor}")
+       crossRefId("${process}.actor.${actor}")
     }
 
     @Override

@@ -19,31 +19,31 @@ import groovy.transform.builder.Builder
 
 @Canonical
 @Builder
-class Lane {
+class Connector {
     
     /**
-     * The name of the lane
+     * The name of the connector
      */
     String name
     
     /**
-     * The description of the lane
+     * The definition name of the connector
      */
-    String description
+    String definitionName
     
     /**
-     * The actor assigned to this lane
+     * The definition id of the connector
      */
-    String actor
+    String definitionId
     
     /**
-     * The actor filter configured for this lane actor
+     * The definition version of the connector
      */
-    ActorFilter actorFilter
+    String definitionVersion
     
     /**
-     * The lane parent process
+     * The description of the connector
      */
-    String process
+    String description = ""
     
 }

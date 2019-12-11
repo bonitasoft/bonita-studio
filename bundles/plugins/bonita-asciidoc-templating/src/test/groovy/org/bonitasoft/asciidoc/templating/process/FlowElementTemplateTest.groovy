@@ -20,6 +20,7 @@ import org.bonitasoft.asciidoc.templating.model.bdm.BusinessObject
 import org.bonitasoft.asciidoc.templating.model.bdm.Package
 import org.bonitasoft.asciidoc.templating.model.process.Actor
 import org.bonitasoft.asciidoc.templating.model.process.ActorFilter
+import org.bonitasoft.asciidoc.templating.model.process.Connector
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTable
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine
 import org.bonitasoft.asciidoc.templating.model.process.Diagram
@@ -105,15 +106,10 @@ class FlowElementTemplateTest extends Specification {
                               |
                               |Some simple description
                               |
-                              |*Outgoing transition(s)*:
+                              |====== icon:arrow-right[] Outgoing transition(s)
                               |
-                              |[horizontal]
-                              |_unnamed_:: _No description available_
-                              |+
-                              |To <<pool.flowelement.another-task,Another task>>
-                              |_unnamed_:: _No description available_
-                              |+
-                              |To <<pool.flowelement.gateway,Gateway>>
+                              |*To <<pool.flowelement.another-task,Another task>>* + 
+                              |*To <<pool.flowelement.gateway,Gateway>>* + 
                               |
                               |'''.stripMargin().denormalize()
     }
@@ -137,20 +133,16 @@ class FlowElementTemplateTest extends Specification {
                               |
                               |Some simple description
                               |
-                              |*Outgoing transition(s)*:
+                              |====== icon:arrow-right[] Outgoing transition(s)
                               |
-                              |[horizontal]
-                              |_unnamed_:: _No description available_
-                              |+
-                              |To <<pool.flowelement.another-task,Another task>> when:
+                              |To <<pool.flowelement.another-task,Another task>>:: When:
                               |+
                               |[source,groovy]
                               |----
                               |a > b
                               |----
-                              |_unnamed_:: _No description available_
-                              |+
-                              |To <<pool.flowelement.gateway,Gateway>>
+                              |
+                              |*To <<pool.flowelement.gateway,Gateway>>* + 
                               |
                               |'''.stripMargin().denormalize()
     }
@@ -179,23 +171,19 @@ class FlowElementTemplateTest extends Specification {
                               *
                               *Some simple description
                               *
-                              **Outgoing transition(s)*:
+                              *====== icon:arrow-right[] Outgoing transition(s)
                               *
-                              *[horizontal]
-                              *_unnamed_:: _No description available_
+                              *To <<pool.flowelement.another-task,Another task>>:: When:
                               *+
-                              *To <<pool.flowelement.another-task,Another task>> when:
-                              *+
-                              *[grid=cols, options="header,footer",cols="4,1",stripes=even,frame=topbot]
+                              *[grid=cols,options="header,footer",cols="4,1",stripes=none,frame=topbot]
                               *|===
                               *|Conditions         |Decision              
                               *|`a > b` and `c > b`|Take transition       
                               *|`requestApproved`  |Take transition       
                               *|By default         |Do not take transition
                               *|===
-                              *_unnamed_:: _No description available_
-                              *+
-                              *To <<pool.flowelement.gateway,Gateway>>
+                              *
+                              **To <<pool.flowelement.gateway,Gateway>>* + 
                               *
                               *'''.stripMargin('*').denormalize()
     }
@@ -218,12 +206,59 @@ class FlowElementTemplateTest extends Specification {
                               *
                               *Some simple description
                               *
-                              **Outgoing transition(s)*:
+                              *====== icon:arrow-right[] Outgoing transition(s)
                               *
-                              *[horizontal]
-                              *Enough time (default):: Some sequence flow description
-                              *+
-                              *To <<pool.flowelement.another-task,Another task>>
+                              *Enough time: To <<pool.flowelement.another-task,Another task>> (default):: Some sequence flow description
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate flow element connectors in section"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'Task',
+                                          process: 'Pool',
+                                          connectorsIn: [new Connector(name: 'sendNotification', definitionName: 'Email', description: 'Send an email to notify the user')])
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''*===== [[pool.flowelement.my-task]]image:icons/Task.png[title="Task"] My Task
+                              *
+                              *Some simple description
+                              *
+                              *====== icon:plug[] Connectors in
+                              *
+                              *Email: sendNotification:: Send an email to notify the user
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate flow element connectors out section"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'Task',
+                                          process: 'Pool',
+                                          connectorsOut: [new Connector(name: 'sendNotification', definitionName: 'Email')])
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''*===== [[pool.flowelement.my-task]]image:icons/Task.png[title="Task"] My Task
+                              *
+                              *Some simple description
+                              *
+                              *====== icon:plug[] Connectors out
+                              *
+                              **Email: sendNotification*
                               *
                               *'''.stripMargin('*').denormalize()
     }

@@ -1,7 +1,5 @@
 package process
 
-import org.bonitasoft.asciidoc.templating.model.process.FlowElement
-
 @Field Process process
 @Field ResourceBundle messages
 
@@ -32,7 +30,7 @@ if(process.actors) {
     write keepIndent, new Table( columnName: [messages.getString('name'), messages.getString('description')],
         columnsFormat: ['1','3a'],
         columms: [
-            process.actors.collect { "${new ActorXRef(process: process, actor: it.name).inlinedRefTag()}$it.name${it.initiator ? " icon:play-circle-o[title=\"${messages.getString('processInitiator')}\"]" : ''}" },
+            process.actors.collect { "${new ActorXRef(process: process.name, actor: it.name).inlinedRefTag()}$it.name${it.initiator ? " icon:play-circle-o[title=\"${messages.getString('processInitiator')}\"]" : ''}" },
             process.actors.description])
     
     newLine()
@@ -70,28 +68,19 @@ if(process.documents) {
     
 }
 
+if(process.connectorsIn) {
+    section 5, "icon:plug[] ${messages.getString('connectorsIn')}"
+    layout 'process/connectors_template.tpl', connectors:process.connectorsIn, messages:messages
+}
+
+if(process.connectorsOut) {
+    section 5, "icon:plug[] ${messages.getString('connectorsOut')}"
+    layout 'process/connectors_template.tpl', connectors:process.connectorsOut, messages:messages
+}
+
 if(process.lanes) {
-    
-    section 5, "image:icons/Lane.png[] ${messages.getString('lanes')}"
-    
-    newLine()
-    
     process.lanes.each { Lane lane ->
-        
-        section 6, "$lane.name${lane.actor ? " (${new ActorXRef(process: process, actor: lane.actor).refLink()} actor)" : ''}"
-        
-        newLine()
-        
-        writeWithLineBreaks lane.description ?: "_${messages.getString('descriptionPlaceholder')}_"
-        
-        2.times { newLine() }
-        
-        if(lane.actorFilter) {
-            write "icon:filter[] *${messages.getString('actorFilter')}:* $lane.actorFilter.name ($lane.actorFilter.definitionName) + "
-            newLine()
-            writeWithLineBreaks  lane.actorFilter.description ?: "_${messages.getString('descriptionPlaceholder')}_"
-            2.times { newLine() }
-        }
+        layout 'process/lane_template.tpl', lane:lane, messages:messages
     }
 }
 

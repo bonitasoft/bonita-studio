@@ -37,4 +37,8 @@ class FlowElement {
     
     String lane
     
+    Connector[] connectorsIn = []
+    
+    Connector[] connectorsOut = []
+    
 }

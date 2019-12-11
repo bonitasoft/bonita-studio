@@ -70,4 +70,14 @@ class Process {
      * The list of flow elements of the process
      */
     FlowElement[] flowElements = []
+    
+    /**
+     * The list of connectors on enter of the process
+     */
+    Connector[] connectorsIn = []
+    
+    /**
+     * The list of connectors on finish of the process
+     */
+    Connector[] connectorsOut = []
 }

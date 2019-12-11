@@ -16,57 +16,28 @@ if(flowElement.incomings) {
     2.times { newLine() }
 }
 
-if(flowElement.outgoings) {
-    write "*${messages.getString('outgoingTransitions')}*:"
-    
-    2.times { newLine() }
-    
-    write '[horizontal]'
+if(flowElement.connectorsIn) {
+    section 6, "icon:plug[] ${messages.getString('connectorsIn')}"
     newLine()
-    
-    flowElement.outgoings.collect{ SequenceFlow transition -> 
-        
-        write transition.name ?: "_${messages.getString('unnamed')}_"
-        if(transition.defaultFlow) {
-            write true, " (${messages.getString('default')})"
-        }
-        write ':: '
-        writeWithLineBreaks transition.description ?: "_${messages.getString('descriptionPlaceholder')}_"
-        newLine()
-        write '+'
-        newLine()
-    	write "${messages.getString('to')} ${new FlowElementXRef(name: transition.target, process: flowElement.process).refLink()}"
-        
-        def hasCondition = transition.useDecisionTable || transition.condition?.content
-    	if(hasCondition) {
-        	    write true, " ${messages.getString('when')}:"
-        	    newLine()
-        	    write '+'
-        	    newLine()
-        	    if(!transition.useDecisionTable) {
-            		write '[source,groovy]'
-            		newLine()
-            		write '----'
-            		newLine()
-            		write transition.condition.content
-            		newLine()
-            		write '----'
-                    newLine()
-    	       }else {
-            		def conditionColumn = transition.decisionTable.lines.collect {  it.conditions.content.collect{ "`$it`"}.join(' and ') }
-            		conditionColumn << messages.getString('byDefault').capitalize()
-            		def decisionColumn =  transition.decisionTable.lines.collect { it.takeTransition ? messages.getString('takeTransition') : messages.getString('doNotTakeTransition')}
-            		decisionColumn << (transition.decisionTable.defaultTakeTransition ?  messages.getString('takeTransition') : messages.getString('doNotTakeTransition'))
-            		write true, new Table(columnName: [messages.getString('conditions'), messages.getString('decision')],
-            		    		       footer : true,
-            		    		       columnsFormat: ['4','1'],
-            				           columms: [conditionColumn, decisionColumn])
-    	     }
-    	}else {
-            newLine()
-        }
-        
+    layout 'process/connectors_template.tpl', connectors:flowElement.connectorsIn, messages:messages
+}
+
+if(flowElement.connectorsOut) {
+    section 6, "icon:plug[] ${messages.getString('connectorsOut')}"
+    newLine()
+    layout 'process/connectors_template.tpl', connectors:flowElement.connectorsOut, messages:messages
+}
+
+
+if(flowElement.outgoings) {
+    section 6, "icon:arrow-right[] ${messages.getString('outgoingTransitions')}"
+
+    newLine()
+
+    flowElement.outgoings.collect{ SequenceFlow transition ->
+        layout 'process/transition_template.tpl', transition:transition, messages:messages, process:flowElement.process
     }
-    newLine() 
+
+    newLine()
 }
 

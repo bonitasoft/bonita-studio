@@ -63,4 +63,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.engine.session
+Import-Package: org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.session
