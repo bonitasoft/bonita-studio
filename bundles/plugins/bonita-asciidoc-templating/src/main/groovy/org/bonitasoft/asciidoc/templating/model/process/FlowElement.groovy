@@ -41,4 +41,8 @@ class FlowElement {
     
     Connector[] connectorsOut = []
     
+    Expression calledProcessName
+    
+    Expression calledProcessVersion
+    
 }
