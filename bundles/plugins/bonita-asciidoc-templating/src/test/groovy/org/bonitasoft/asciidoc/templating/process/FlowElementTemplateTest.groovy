@@ -99,8 +99,9 @@ class FlowElementTemplateTest extends Specification {
                               |
                               |====== icon:arrow-right[] Outgoing transition(s)
                               |
-                              |*To <<pool.flowelement.another-task,Another task>>* + 
-                              |*To <<pool.flowelement.gateway,Gateway>>* + 
+                              |*To <<pool.flowelement.another-task,Another task>>*
+                              |
+                              |*To <<pool.flowelement.gateway,Gateway>>*
                               |
                               |'''.stripMargin().denormalize()
     }
@@ -126,14 +127,15 @@ class FlowElementTemplateTest extends Specification {
                               |
                               |====== icon:arrow-right[] Outgoing transition(s)
                               |
-                              |To <<pool.flowelement.another-task,Another task>>:: When:
+                              |To <<pool.flowelement.another-task,Another task>>::
                               |+
+                              |.When:
                               |[source,groovy]
                               |----
                               |a > b
                               |----
                               |
-                              |*To <<pool.flowelement.gateway,Gateway>>* + 
+                              |*To <<pool.flowelement.gateway,Gateway>>*
                               |
                               |'''.stripMargin().denormalize()
     }
@@ -164,8 +166,9 @@ class FlowElementTemplateTest extends Specification {
                               *
                               *====== icon:arrow-right[] Outgoing transition(s)
                               *
-                              *To <<pool.flowelement.another-task,Another task>>:: When:
+                              *To <<pool.flowelement.another-task,Another task>>::
                               *+
+                              *.When:
                               *[grid=cols,options="header,footer",cols="4,1",stripes=none,frame=topbot]
                               *|===
                               *|Conditions         |Decision              
@@ -174,7 +177,7 @@ class FlowElementTemplateTest extends Specification {
                               *|By default         |Do not take transition
                               *|===
                               *
-                              **To <<pool.flowelement.gateway,Gateway>>* + 
+                              **To <<pool.flowelement.gateway,Gateway>>*
                               *
                               *'''.stripMargin('*').denormalize()
     }

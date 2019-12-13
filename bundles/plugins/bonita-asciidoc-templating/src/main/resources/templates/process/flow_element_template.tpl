@@ -68,6 +68,5 @@ if(flowElement.outgoings) {
         layout 'process/transition_template.tpl', transition:transition, messages:messages, process:flowElement.process
     }
 
-    newLine()
 }
 
