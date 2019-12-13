@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -44,14 +47,19 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.DocumentType;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 
 public class DocumentationDiagramConverter implements Function<MainProcess, Diagram> {
@@ -60,7 +68,8 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     private ILocalizedResourceProvider localizedResourceProvider;
     private DiagramRepositoryStore store;
 
-    public DocumentationDiagramConverter(IFolder targetFolder, ILocalizedResourceProvider localizedResourceProvider, DiagramRepositoryStore store) {
+    public DocumentationDiagramConverter(IFolder targetFolder, ILocalizedResourceProvider localizedResourceProvider,
+            DiagramRepositoryStore store) {
         this.targetFolder = targetFolder;
         this.localizedResourceProvider = localizedResourceProvider;
         this.store = store;
@@ -95,7 +104,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .name(pool.getName())
                 .displayName(pool.getDisplayName())
                 .version(pool.getVersion())
-                .description(thisOrEmpty(pool.getDocumentation()))
+                .description(buildDescription(pool))
                 .parameters(convertParameters(pool))
                 .documents(convertDocuments(pool))
                 .globalVariables(convertVariables(pool))
@@ -107,6 +116,35 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .connectorsOut(convertConnectors(pool.getConnectors().stream()
                         .filter(c -> Objects.equals(ConnectorEvent.ON_FINISH.name(), c.getEvent()))))
                 .build();
+    }
+
+    private String buildDescription(Element element) {
+        List<String> descriptions = new ArrayList<>();
+        if (element.getDocumentation() != null && !element.getDocumentation().isEmpty()) {
+            descriptions.add(element.getDocumentation());
+        }
+        if (element instanceof Container) {
+            List<TextAnnotationAttachment> attachments = ModelHelper.getAllElementOfTypeIn(element,
+                    TextAnnotationAttachment.class);
+            ((Container) element).getElements().stream()
+                    .filter(TextAnnotation.class::isInstance)
+                    .map(TextAnnotation.class::cast)
+                    .filter(annotation -> attachments.stream()
+                            .noneMatch(attachment -> EcoreUtil.equals(attachment.getSource(), annotation)))
+                    .map(TextAnnotation::getText)
+                    .filter(Objects::nonNull)
+                    .filter(text -> !text.isEmpty())
+                    .forEach(descriptions::add);
+        } else {
+            element.getTextAnnotationAttachment().stream()
+                    .map(TextAnnotationAttachment::getSource)
+                    .map(TextAnnotation::getText)
+                    .filter(Objects::nonNull)
+                    .filter(text -> !text.isEmpty())
+                    .forEach(descriptions::add);
+        }
+        return !descriptions.isEmpty() ? descriptions.stream().collect(Collectors.joining(System.lineSeparator()))
+                : "";
     }
 
     private FlowElement[] convertFlowElements(Pool pool) {
@@ -148,7 +186,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     private FlowElement createFlowElement(org.bonitasoft.studio.model.process.FlowElement flowElement) {
         FlowElementBuilder builder = FlowElement.builder()
                 .name(flowElement.getName())
-                .description(thisOrEmpty(flowElement.getDocumentation()))
+                .description(buildDescription(flowElement))
                 .bpmnType(flowElement.eClass().getName())
                 .incomings(convertSequenceFlows(flowElement.getIncoming()))
                 .outgoings(convertSequenceFlows(flowElement.getOutgoing()))
@@ -166,22 +204,24 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
 
         if (flowElement instanceof CallActivity) {
             builder
-                .calledProcessName(createExpression(((CallActivity) flowElement).getCalledActivityName()))
-                .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
+                    .calledProcessName(createExpression(((CallActivity) flowElement).getCalledActivityName()))
+                    .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
         }
         return builder.build();
     }
 
-    private org.bonitasoft.asciidoc.templating.model.process.Expression createCalledActivityVersionExpression(CallActivity callActivity){
-        if(callActivity.getCalledActivityName().hasContent()
-                && Objects.equals(callActivity.getCalledActivityName().getType(),ExpressionConstants.CONSTANT_TYPE) 
-                && (callActivity.getCalledActivityVersion() == null || !callActivity.getCalledActivityVersion().hasContent())) {
+    private org.bonitasoft.asciidoc.templating.model.process.Expression createCalledActivityVersionExpression(
+            CallActivity callActivity) {
+        if (callActivity.getCalledActivityName().hasContent()
+                && Objects.equals(callActivity.getCalledActivityName().getType(), ExpressionConstants.CONSTANT_TYPE)
+                && (callActivity.getCalledActivityVersion() == null
+                        || !callActivity.getCalledActivityVersion().hasContent())) {
             String latestVersion = store.findProcesses(callActivity.getCalledActivityName().getContent()).stream()
                     .map(AbstractProcess::getVersion)
                     .sorted(latestVersionComparator())
                     .findFirst()
                     .orElse(null);
-            if(latestVersion != null) {
+            if (latestVersion != null) {
                 return org.bonitasoft.asciidoc.templating.model.process.Expression.builder()
                         .name(latestVersion)
                         .content(latestVersion)
@@ -193,7 +233,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     }
 
     private Comparator<? super String> latestVersionComparator() {
-        return (v1,v2)->  new DefaultArtifactVersion(v2).compareTo(new DefaultArtifactVersion(v1));
+        return (v1, v2) -> new DefaultArtifactVersion(v2).compareTo(new DefaultArtifactVersion(v1));
     }
 
     private Connector[] convertConnectors(Stream<org.bonitasoft.studio.model.process.Connector> connectors) {
@@ -224,7 +264,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     private SequenceFlow createSequenceFlow(org.bonitasoft.studio.model.process.SequenceFlow sequenceFlow) {
         return SequenceFlow.builder()
                 .name(sequenceFlow.getName())
-                .description(thisOrEmpty(sequenceFlow.getDocumentation()))
+                .description(buildDescription(sequenceFlow))
                 .defaultFlow(sequenceFlow.isIsDefault())
                 .source(sequenceFlow.getSource().getName())
                 .target(sequenceFlow.getTarget().getName())
@@ -269,7 +309,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     private Lane createLane(org.bonitasoft.studio.model.process.Lane lane) {
         return Lane.builder()
                 .name(lane.getName())
-                .description(thisOrEmpty(lane.getDocumentation()))
+                .description(buildDescription(lane))
                 .actor(lane.getActor() != null ? lane.getActor().getName() : "")
                 .actorFilter(!lane.getFilters().isEmpty() ? createActorFilter(lane.getFilters().get(0)) : null)
                 .process(ModelHelper.getParentPool(lane).getName())

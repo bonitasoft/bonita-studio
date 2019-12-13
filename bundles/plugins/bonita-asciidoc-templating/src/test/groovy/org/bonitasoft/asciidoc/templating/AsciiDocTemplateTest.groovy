@@ -25,24 +25,41 @@ import spock.lang.Unroll
 
 class AsciiDocTemplateTest extends Specification {
 
-    @Unroll
-    def "should #qualifiedName have #simpleName simple name"(String qualifiedName, String simpleName){
+    def "should add asciidoc line breaks signs"(){
         given:
         def tplConfig = new TemplateConfiguration()
         tplConfig.baseTemplateClass = AsciiDocTemplate
         def engine = new MarkupTemplateEngine(tplConfig);
 
-        expect:
+        when:
         def template = engine.createTemplate('')
         def out = new StringWriter()
         def AsciiDocTemplate tpl = template.make()
-        tpl.toSimpleName(qualifiedName) == simpleName
+        def withLineBreaks = tpl.insertLineBreaks('''|Description with
+                                                       |line breaks'''.stripMargin().denormalize())
 
-        where:
-        qualifiedName             | simpleName
-        'org.bonitasoft.Employee' | 'Employee'
-        'Employee'                | 'Employee'
-        ''                        | ''
-        null                      | null
+        then:
+        withLineBreaks == '''|Description with + 
+                             |line breaks'''.stripMargin().denormalize()
+    }
+    
+    def "should not add asciidoc line breaks signs when more than one line separator is found"(){
+        given:
+        def tplConfig = new TemplateConfiguration()
+        tplConfig.baseTemplateClass = AsciiDocTemplate
+        def engine = new MarkupTemplateEngine(tplConfig);
+
+        when:
+        def template = engine.createTemplate('')
+        def out = new StringWriter()
+        def AsciiDocTemplate tpl = template.make()
+        def withLineBreaks = tpl.insertLineBreaks('''|Description with
+                                                       |
+                                                       |2 line breaks'''.stripMargin().denormalize())
+
+        then:
+        withLineBreaks == '''|Description with
+                             |
+                             |2 line breaks'''.stripMargin().denormalize()
     }
 }
