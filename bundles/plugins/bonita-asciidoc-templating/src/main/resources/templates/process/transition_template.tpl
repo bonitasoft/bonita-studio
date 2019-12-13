@@ -16,12 +16,13 @@ if(transition.defaultFlow) {
     write true, " (${messages.getString('default')})"
 }
 if(asList) {
-    write ':: '
+    write '::'
 }else {
-    write '* + '
+    write '*'
     newLine()
 }
 if(transition.description) {
+    write true, ' '
     writeWithLineBreaks transition.description
     newLine()
     if(hasCondition) {
@@ -30,9 +31,10 @@ if(transition.description) {
     }
 }
 if(hasCondition) {
-    write "${messages.getString('when')}:"
     newLine()
     write '+'
+    newLine()
+    write ".${messages.getString('when')}:"
     newLine()
     if(!transition.useDecisionTable) {
         write '[source,groovy]'
@@ -54,5 +56,5 @@ if(hasCondition) {
                               columnsFormat: ['4', '1'],
                               columms: [conditionColumn, decisionColumn])
     }
-    newLine()
 }
+newLine()
