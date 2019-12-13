@@ -19,6 +19,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,7 +51,17 @@ public class GenerateDiagramImagesJob extends UIJob {
     @Override
     public IStatus runInUIThread(IProgressMonitor monitor) {
         IFolder diagramsFolder = targetFolder.getFolder("diagrams");
+        try {
+            diagramsFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        } catch (CoreException e) {
+           return e.getStatus();
+        }
         IFolder processesFolder = targetFolder.getFolder("processes");
+        try {
+            processesFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        } catch (CoreException e) {
+           return e.getStatus();
+        }
         Resource emfResource = diagram.eResource();
         String fileName = URI.decode(emfResource.getURI().lastSegment());
         emfResource.getContents().stream()

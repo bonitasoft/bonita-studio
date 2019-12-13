@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.asciidoc.templating
 
+import org.apache.groovy.util.SystemUtil
+
 import groovy.text.markup.BaseTemplate
 import groovy.text.markup.DelegatingIndentWriter
 import groovy.transform.CompileStatic
@@ -22,15 +24,6 @@ import groovy.transform.InheritConstructors
 @CompileStatic
 @InheritConstructors
 abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacters {
-
-    /**
-     * Strips the package name of a qualifiedName
-     * @param qualifiedName
-     * @return a simple class name
-     */
-    def String toSimpleName(String qualifiedName) {
-        qualifiedName?.contains('.') ? qualifiedName.split("\\.").inject("") { s1, s2 ->  s2 } : qualifiedName
-    }
 
     /**
      * Write an Asciidoc section title in the document
@@ -76,12 +69,27 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
     }
     
     /**
-     * Replaces line breaks with asciidoc line breaks.
+     * Insert asciidoc line breaks.
      * @param text the text to transform
      * @return the text with asciidoc linebreaks (' + ')
      */
-    def String asciidocLineBreaks(final Object text) {
-        text.toString().denormalize().replaceAll(System.lineSeparator(), ' + '+ System.lineSeparator())
+    def String insertLineBreaks(final Object text) {
+        def denormalized = text.toString().denormalize()
+        def result = ''
+        denormalized.eachWithIndex { letter, int index -> 
+            def previousChar = (denormalized.toCharArray() as List)[index-1]
+            def nextChar = (denormalized.toCharArray() as List)[index+1]
+            if(letter == System.lineSeparator()
+                && previousChar != null
+                && previousChar != System.lineSeparator() 
+                && nextChar != null
+                && nextChar != System.lineSeparator()) {
+                result += " + $letter"
+            }else {
+                result += letter
+            }
+       }
+       return result
     }
     
     /**
@@ -100,7 +108,7 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
      * @param Object text, the text to inject in the document
      */
     def writeWithLineBreaks(boolean keepIndent = false, Object text) {
-        write(keepIndent, asciidocLineBreaks(text))
+        write(keepIndent, insertLineBreaks(text))
     }
     
     @Override
