@@ -36,7 +36,7 @@ class AsciiDocTemplateTest extends Specification {
         def out = new StringWriter()
         def AsciiDocTemplate tpl = template.make()
         def withLineBreaks = tpl.insertLineBreaks('''|Description with
-                                                       |line breaks'''.stripMargin().denormalize())
+                                                     |line breaks'''.stripMargin())
 
         then:
         withLineBreaks == '''|Description with + 
