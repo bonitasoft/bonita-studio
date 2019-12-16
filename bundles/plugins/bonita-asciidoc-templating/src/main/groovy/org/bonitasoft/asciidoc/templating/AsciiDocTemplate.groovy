@@ -74,22 +74,22 @@ abstract class AsciiDocTemplate extends BaseTemplate implements UnicodeCharacter
      * @return the text with asciidoc linebreaks (' + ')
      */
     def String insertLineBreaks(final Object text) {
-        def denormalized = text.toString().denormalize()
+        def denormalized = text.toString().normalize()
         def result = ''
         denormalized.eachWithIndex { letter, int index -> 
             def previousChar = (denormalized.toCharArray() as List)[index-1]
             def nextChar = (denormalized.toCharArray() as List)[index+1]
-            if(letter == System.lineSeparator()
+            if(letter == '\n'
                 && previousChar != null
-                && previousChar != System.lineSeparator() 
+                && previousChar != '\n'
                 && nextChar != null
-                && nextChar != System.lineSeparator()) {
+                && nextChar != '\n') {
                 result += " + $letter"
             }else {
                 result += letter
             }
        }
-       return result
+       return result.denormalize()
     }
     
     /**
