@@ -17,18 +17,18 @@ package org.bonitasoft.studio.migration.custom.migration.connector;
 /**
  * @author Romain Bioteau
  */
-public class UpdateWebServiceConnectorVersionTo110 extends UpdateConnectorDefinitionMigration {
+public class UpdateWebServiceConnectorVersionTo101 extends UpdateConnectorDefinitionMigration {
 
     private static final String WEB_SERVICE_CONNECTOR_DEFINITION = "webservice";
 
     @Override
     protected String getNewDefinitionVersion() {
-        return "1.1.0";
+        return "1.0.1";
     }
 
     @Override
     protected String getOldDefinitionVersion() {
-        return "1.0.1";
+        return "1.0.0";
     }
 
     @Override

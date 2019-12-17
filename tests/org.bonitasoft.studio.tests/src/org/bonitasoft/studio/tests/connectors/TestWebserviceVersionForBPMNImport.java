@@ -30,6 +30,6 @@ public class TestWebserviceVersionForBPMNImport {
 
         assertNotNull(
                 "The webservice connector defintion has been modified, you need to update the BPMNToProc.handleConnector method",
-                cdrs.getDefinition("webservice", "1.0.1"));
+                cdrs.getDefinition("webservice", "1.1.0"));
     }
 }
