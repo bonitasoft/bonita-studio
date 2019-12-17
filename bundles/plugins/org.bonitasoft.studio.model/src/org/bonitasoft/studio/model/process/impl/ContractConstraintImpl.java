@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl#getErrorMessage <em>Error Message</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl#getInputNames <em>Input Names</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.impl.ContractConstraintImpl#getDescription <em>Description</em>}</li>
  * </ul>
  *
  * @generated
@@ -121,6 +122,26 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 	protected EList<String> inputNames;
 
 	/**
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected static final String DESCRIPTION_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected String description = DESCRIPTION_EDEFAULT;
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
@@ -223,6 +244,29 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void setDescription(String newDescription) {
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION, oldDescription, description));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -237,6 +281,8 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
                 return getName();
             case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
                 return getInputNames();
+            case ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION:
+                return getDescription();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -263,6 +309,9 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
                 getInputNames().clear();
                 getInputNames().addAll((Collection<? extends String>)newValue);
                 return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION:
+                setDescription((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -287,6 +336,9 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
             case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
                 getInputNames().clear();
                 return;
+            case ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -307,6 +359,8 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
             case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
                 return inputNames != null && !inputNames.isEmpty();
+            case ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
         }
         return super.eIsSet(featureID);
     }
@@ -329,6 +383,8 @@ public class ContractConstraintImpl extends EObjectImpl implements ContractConst
         result.append(name);
         result.append(", inputNames: "); //$NON-NLS-1$
         result.append(inputNames);
+        result.append(", description: "); //$NON-NLS-1$
+        result.append(description);
         result.append(')');
         return result.toString();
     }
