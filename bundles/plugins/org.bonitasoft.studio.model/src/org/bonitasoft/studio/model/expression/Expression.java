@@ -326,7 +326,7 @@ public interface Expression extends AbstractExpression {
 	/**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @model annotation="http://www.eclipse.org/emf/2002/GenModel body='return content != null &amp;&amp; !content.isEmpty();'"
+     * @model
      * @generated
      */
 	boolean hasContent();
@@ -334,7 +334,7 @@ public interface Expression extends AbstractExpression {
 	/**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @model annotation="http://www.eclipse.org/emf/2002/GenModel body='return name != null &amp;&amp; !name.isEmpty();'"
+     * @model
      * @generated
      */
 	boolean hasName();

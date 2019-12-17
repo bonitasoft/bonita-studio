@@ -81,6 +81,7 @@ public class ContractConstraintItemProvider
             addErrorMessagePropertyDescriptor(object);
             addNamePropertyDescriptor(object);
             addInputNamesPropertyDescriptor(object);
+            addDescriptionPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -174,6 +175,28 @@ public class ContractConstraintItemProvider
     }
 
 	/**
+     * This adds a property descriptor for the Description feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDescriptionPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ContractConstraint_description_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_ContractConstraint_description_feature", "_UI_ContractConstraint_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.CONTRACT_CONSTRAINT__DESCRIPTION,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns ContractConstraint.gif.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -215,6 +238,7 @@ public class ContractConstraintItemProvider
             case ProcessPackage.CONTRACT_CONSTRAINT__ERROR_MESSAGE:
             case ProcessPackage.CONTRACT_CONSTRAINT__NAME:
             case ProcessPackage.CONTRACT_CONSTRAINT__INPUT_NAMES:
+            case ProcessPackage.CONTRACT_CONSTRAINT__DESCRIPTION:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

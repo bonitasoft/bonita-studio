@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.model.process.ContractConstraint#getErrorMessage <em>Error Message</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.ContractConstraint#getName <em>Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.ContractConstraint#getInputNames <em>Input Names</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.ContractConstraint#getDescription <em>Description</em>}</li>
  * </ul>
  *
  * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint()
@@ -134,5 +135,27 @@ public interface ContractConstraint extends EObject {
      * @generated
      */
 	EList<String> getInputNames();
+
+    /**
+     * Returns the value of the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Description</em>' attribute.
+     * @see #setDescription(String)
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getContractConstraint_Description()
+     * @model
+     * @generated
+     */
+    String getDescription();
+
+    /**
+     * Sets the value of the '{@link org.bonitasoft.studio.model.process.ContractConstraint#getDescription <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Description</em>' attribute.
+     * @see #getDescription()
+     * @generated
+     */
+    void setDescription(String value);
 
 } // ContractConstraint

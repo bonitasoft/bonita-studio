@@ -251,7 +251,6 @@ public interface ContractInput extends EObject {
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @model kind="operation"
-     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='switch(getType()){\r\ncase BOOLEAN:return java.lang.Boolean.class.getName();\r\ncase DATE: return java.util.Date.class.getName();\r\ncase LOCALDATE: return java.time.LocalDate.class.getName();\r\ncase LOCALDATETIME: return java.time.LocalDateTime.class.getName();\r\ncase OFFSETDATETIME: return java.time.OffsetDateTime.class.getName();\r\ncase INTEGER: return java.lang.Integer.class.getName();\ncase LONG: return java.lang.Long.class.getName();\r\ncase DECIMAL: return java.lang.Double.class.getName();\r\ncase FILE:return \"org.bonitasoft.engine.bpm.contract.FileInputValue\";\r\ncase COMPLEX:return java.util.Map.class.getName();\r\ncase TEXT:\r\ndefault: return java.lang.String.class.getName();\r\n}'"
      * @generated
      */
 	String getJavaType();

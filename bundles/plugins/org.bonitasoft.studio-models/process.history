@@ -14788,8 +14788,53 @@
   <releases xmi:id="_2CaBgIFbEembYuBMnmqjaw" date="2019-05-26T11:43:27.494+0200" label="7.10.0-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_7V1C8IFbEembYuBMnmqjaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateEmailConnectorVersionTo110"/>
   </releases>
-  <releases xmi:id="_FsWCcCAbEeq2WMeBvv36kg" date="2024-04-28T00:00:00.000+0200" label="7.11.0-001">
+  <releases xmi:id="_FsWCcCAbEeq2WMeBvv36kg" date="2019-12-16T23:00:00.000+0100" label="7.11.0-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_J5IzACAbEeq2WMeBvv36kg" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateWebServiceConnectorVersionTo110"/>
+  </releases>
+  <releases xmi:id="_jkp6QCCwEeqHc6LaArd-Iw" date="2019-12-17T23:00:00.000+0100" label="7.11.0-002">
+    <changes xsi:type="history:OperationChange" xmi:id="_QV5J4CCxEeqdOP_YgmJ3VQ">
+      <changes xsi:type="history:Create" xmi:id="_QV5J4SCxEeqdOP_YgmJ3VQ" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//ContractConstraint"/>
+        <element href="process.ecore#//ContractConstraint/description"/>
+        <changes xsi:type="history:Set" xmi:id="_QV5J4iCxEeqdOP_YgmJ3VQ" featureName="name" dataValue="description">
+          <element href="process.ecore#//ContractConstraint/description"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_QV5J4yCxEeqdOP_YgmJ3VQ" featureName="eType">
+          <element href="process.ecore#//ContractConstraint/description"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_QV5J5CCxEeqdOP_YgmJ3VQ" name="newAttribute">
+        <parameters xmi:id="_QV5J5SCxEeqdOP_YgmJ3VQ" name="eClass">
+          <referenceValue xmi:id="_QV5J5iCxEeqdOP_YgmJ3VQ">
+            <element href="process.ecore#//ContractConstraint"/>
+          </referenceValue>
+          <referenceValue xmi:id="_QV5J5yCxEeqdOP_YgmJ3VQ">
+            <element href="process.ecore#//ContractConstraint"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_QV5J6CCxEeqdOP_YgmJ3VQ" name="name">
+          <dataValue>description</dataValue>
+        </parameters>
+        <parameters xmi:id="_QV5J6SCxEeqdOP_YgmJ3VQ" name="type">
+          <referenceValue xmi:id="_QV5J6iCxEeqdOP_YgmJ3VQ">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+          <referenceValue xmi:id="_QV5J6yCxEeqdOP_YgmJ3VQ">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_QV5J7CCxEeqdOP_YgmJ3VQ" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_QV5J7SCxEeqdOP_YgmJ3VQ" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_QV5J7iCxEeqdOP_YgmJ3VQ" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
   </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

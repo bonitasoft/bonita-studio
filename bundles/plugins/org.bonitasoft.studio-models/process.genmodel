@@ -357,6 +357,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/description"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//ContractContainer">
       <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"

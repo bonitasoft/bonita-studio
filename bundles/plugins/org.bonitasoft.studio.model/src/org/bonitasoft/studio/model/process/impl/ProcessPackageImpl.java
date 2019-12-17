@@ -1907,6 +1907,16 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getContractConstraint_Description() {
+        return (EAttribute)contractConstraintEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -3905,6 +3915,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         createEAttribute(contractConstraintEClass, CONTRACT_CONSTRAINT__ERROR_MESSAGE);
         createEAttribute(contractConstraintEClass, CONTRACT_CONSTRAINT__NAME);
         createEAttribute(contractConstraintEClass, CONTRACT_CONSTRAINT__INPUT_NAMES);
+        createEAttribute(contractConstraintEClass, CONTRACT_CONSTRAINT__DESCRIPTION);
 
         contractContainerEClass = createEClass(CONTRACT_CONTAINER);
         createEReference(contractContainerEClass, CONTRACT_CONTAINER__CONTRACT);
@@ -4440,6 +4451,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         initEAttribute(getContractConstraint_ErrorMessage(), ecorePackage.getEString(), "errorMessage", null, 0, 1, ContractConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getContractConstraint_Name(), ecorePackage.getEString(), "name", null, 0, 1, ContractConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getContractConstraint_InputNames(), ecorePackage.getEString(), "inputNames", null, 0, -1, ContractConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getContractConstraint_Description(), ecorePackage.getEString(), "description", null, 0, 1, ContractConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(contractContainerEClass, ContractContainer.class, "ContractContainer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEReference(getContractContainer_Contract(), this.getContract(), null, "contract", null, 0, 1, ContractContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

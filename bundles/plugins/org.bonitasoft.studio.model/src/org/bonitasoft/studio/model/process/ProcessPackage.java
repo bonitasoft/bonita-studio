@@ -3495,13 +3495,22 @@ public interface ProcessPackage extends EPackage {
 	int CONTRACT_CONSTRAINT__INPUT_NAMES = 3;
 
 	/**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONTRACT_CONSTRAINT__DESCRIPTION = 4;
+
+    /**
      * The number of structural features of the '<em>Contract Constraint</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CONTRACT_CONSTRAINT_FEATURE_COUNT = 4;
+	int CONTRACT_CONSTRAINT_FEATURE_COUNT = 5;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.ContractContainerImpl <em>Contract Container</em>}' class.
@@ -10566,6 +10575,17 @@ public interface ProcessPackage extends EPackage {
 	EAttribute getContractConstraint_InputNames();
 
 	/**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.ContractConstraint#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.model.process.ContractConstraint#getDescription()
+     * @see #getContractConstraint()
+     * @generated
+     */
+    EAttribute getContractConstraint_Description();
+
+    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.ContractContainer <em>Contract Container</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13279,6 +13299,14 @@ public interface ProcessPackage extends EPackage {
 		EAttribute CONTRACT_CONSTRAINT__INPUT_NAMES = eINSTANCE.getContractConstraint_InputNames();
 
 		/**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CONTRACT_CONSTRAINT__DESCRIPTION = eINSTANCE.getContractConstraint_Description();
+
+        /**
          * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.ContractContainerImpl <em>Contract Container</em>}' class.
          * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
