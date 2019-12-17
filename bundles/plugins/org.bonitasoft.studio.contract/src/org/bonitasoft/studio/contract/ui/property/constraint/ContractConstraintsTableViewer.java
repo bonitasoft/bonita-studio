@@ -22,7 +22,9 @@ import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorAct
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpressionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintNameObservableEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.constraint.edit.DescriptionObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ErrorMessageObservableEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintDescriptionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintErrorMessageCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintExpressionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.constraint.labelProvider.ConstraintNameCellLabelProvider;
@@ -138,11 +140,13 @@ public class ContractConstraintsTableViewer extends TableViewer {
         createConstraintNameColumn();
         createConstraintExpressionColumn();
         createConstraintErrorMessageColumn();
+        createConstraintDescriptionColumn();
     }
 
     protected void configureTableLayout() {
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(2));
         tableLayout.addColumnData(new ColumnWeightData(2));
         tableLayout.addColumnData(new ColumnWeightData(2));
         getTable().setLayout(tableLayout);
@@ -175,6 +179,16 @@ public class ContractConstraintsTableViewer extends TableViewer {
                 messageManager,
                 emfDataBindingContext);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
+        descriptionColumnViewer.setEditingSupport(editingSupport);
+    }
+    
+    protected void createConstraintDescriptionColumn() {
+        final TableViewerColumn descriptionColumnViewer = createColumnViewer(Messages.description, SWT.FILL);
+        descriptionColumnViewer.setLabelProvider(new ConstraintDescriptionCellLabelProvider(propertySourceProvider, knowElements()));
+        final DescriptionObservableEditingSupport editingSupport = new DescriptionObservableEditingSupport(this,
+                messageManager,
+                emfDataBindingContext);
+        editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_DESCRIPTION_TEXTEDITOR);
         descriptionColumnViewer.setEditingSupport(editingSupport);
     }
 
