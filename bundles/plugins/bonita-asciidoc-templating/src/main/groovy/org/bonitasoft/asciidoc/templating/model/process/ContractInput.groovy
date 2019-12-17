@@ -19,32 +19,16 @@ import groovy.transform.builder.Builder
 
 @Canonical
 @Builder
-class FlowElement {
+class ContractInput {
     
     String name
     
+    String type
+    
+    boolean multiple
+    
     String description
     
-    String bpmnType
-    
-    Data[] localVariables = []
-    
-    SequenceFlow[] incomings
-    
-    SequenceFlow[] outgoings
-    
-    String process
-    
-    String lane
-    
-    Connector[] connectorsIn = []
-    
-    Connector[] connectorsOut = []
-    
-    Expression calledProcessName
-    
-    Expression calledProcessVersion
-    
-    Contract contract
+    ContractInput[] children = []
     
 }
