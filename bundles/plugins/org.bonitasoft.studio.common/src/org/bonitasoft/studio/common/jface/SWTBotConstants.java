@@ -132,4 +132,6 @@ public interface SWTBotConstants {
 
     public static final Object SWTBOT_ID_DEPLOY_TOOLITEM = "SWTBOT_ID_DEPLOY_TOOLITEM";
 
+    public static final String SWTBOT_ID_CONSTRAINT_DESCRIPTION_TEXTEDITOR = "SWTBOT_ID_CONSTRAINT_DESCRIPTION_TEXTEDITOR";
+
 }
