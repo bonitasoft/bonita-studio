@@ -68,6 +68,18 @@ if(process.documents) {
     
 }
 
+if(process.contract?.inputs) {
+    section 5, "icon:handshake-o[] ${messages.getString('contractInputs')}"
+    newLine()
+    layout 'process/contract_inputs_template.tpl', contract:process.contract, messages:messages
+}
+
+if(process.contract?.constraints) {
+    section 5, "icon:lock[] ${messages.getString('contractConstraints')}"
+    newLine()
+    layout 'process/contract_constraints_template.tpl', contract:process.contract, messages:messages
+}
+
 if(process.connectorsIn) {
     section 5, "icon:plug[] ${messages.getString('connectorsIn')}"
     layout 'process/connectors_template.tpl', connectors:process.connectorsIn, messages:messages

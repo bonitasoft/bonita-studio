@@ -16,6 +16,19 @@ if(flowElement.incomings) {
     2.times { newLine() }
 }
 
+if(flowElement.contract?.inputs) {
+    section 6, "icon:handshake-o[] ${messages.getString('contractInputs')}"
+    newLine()
+    layout 'process/contract_inputs_template.tpl', contract:flowElement.contract, messages:messages
+}
+
+if(flowElement.contract?.constraints) {
+    section 6, "icon:lock[] ${messages.getString('contractConstraints')}"
+    newLine()
+    layout 'process/contract_constraints_template.tpl', contract:flowElement.contract, messages:messages
+}
+
+
 if(flowElement.connectorsIn) {
     section 6, "icon:plug[] ${messages.getString('connectorsIn')}"
     newLine()
@@ -28,28 +41,18 @@ if(flowElement.bpmnType == 'CallActivity') {
     
     if(flowElement.calledProcessName.type == ExpressionType.CONSTANT && flowElement.calledProcessName.content && flowElement.calledProcessVersion.type == ExpressionType.CONSTANT) {
         write "<<$flowElement.calledProcessName.content ($flowElement.calledProcessVersion.content)>>"
+        newLine()
     }else {
-        write ".${messages.getString('nameExpression')}"
-        newLine()
-        write '''[source,groovy]
-                 ----'''
-        newLine()
-        write true, flowElement.calledProcessName.content
-        newLine()
-        write '----'
-        newLine()
+        write true, new Block(caption: messages.getString('nameExpression'),
+                              properties: ['source', 'groovy'],
+                              content: flowElement.calledProcessName.content.trim())
         if(flowElement.calledProcessVersion?.content) {
-            write ".${messages.getString('versionExpression')}"
-            newLine()
-            write '''[source,groovy]
-                     ----'''
-            newLine()
-            write true, flowElement.calledProcessVersion.content
-            newLine()
-            write '----'
+          write true, new Block(caption: messages.getString('versionExpression'),
+                    properties: ['source', 'groovy'],
+                    content: flowElement.calledProcessVersion.content.trim())
         }
     }
-    2.times { newLine() }
+    newLine()
 }
 
 if(flowElement.connectorsOut) {

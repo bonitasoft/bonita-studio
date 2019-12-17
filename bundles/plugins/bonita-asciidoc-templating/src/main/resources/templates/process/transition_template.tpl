@@ -37,14 +37,8 @@ if(hasCondition) {
     write ".${messages.getString('when')}:"
     newLine()
     if(!transition.useDecisionTable) {
-        write '[source,groovy]'
-        newLine()
-        write '----'
-        newLine()
-        write transition.condition.content
-        newLine()
-        write '----'
-        newLine()
+        write true, new Block(properties: ['source','groovy'],
+                              content: transition.condition.content.trim())
     }else {
         def conditionColumn = transition.decisionTable.lines.collect { it.conditions.content.collect{ "`$it`"}.join(" ${messages.getString('and')} ") }
         conditionColumn << messages.getString('byDefault').capitalize()

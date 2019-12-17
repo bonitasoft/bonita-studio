@@ -80,4 +80,6 @@ class Process {
      * The list of connectors on finish of the process
      */
     Connector[] connectorsOut = []
+    
+    Contract contract
 }

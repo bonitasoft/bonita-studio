@@ -26,6 +26,9 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.asciidoc.templating.model.process.Actor;
 import org.bonitasoft.asciidoc.templating.model.process.ActorFilter;
 import org.bonitasoft.asciidoc.templating.model.process.Connector;
+import org.bonitasoft.asciidoc.templating.model.process.Contract;
+import org.bonitasoft.asciidoc.templating.model.process.ContractConstraint;
+import org.bonitasoft.asciidoc.templating.model.process.ContractInput;
 import org.bonitasoft.asciidoc.templating.model.process.Data;
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTable;
 import org.bonitasoft.asciidoc.templating.model.process.Diagram;
@@ -115,6 +118,47 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                         .filter(c -> Objects.equals(ConnectorEvent.ON_ENTER.name(), c.getEvent()))))
                 .connectorsOut(convertConnectors(pool.getConnectors().stream()
                         .filter(c -> Objects.equals(ConnectorEvent.ON_FINISH.name(), c.getEvent()))))
+                .contract(createContract(pool.getContract()))
+                .build();
+    }
+
+    private Contract createContract(org.bonitasoft.studio.model.process.Contract contract) {
+        return Contract.builder()
+                .inputs(convertContractInputs(contract.getInputs()))
+                .constraints(convertContractConstraints(contract.getConstraints()))
+                .build();
+    }
+
+    private ContractConstraint[] convertContractConstraints(
+            EList<org.bonitasoft.studio.model.process.ContractConstraint> constraints) {
+        return constraints.stream()
+                .map(this::createContractConstraint)
+                .toArray(ContractConstraint[]::new);
+    }
+
+    private ContractInput[] convertContractInputs(EList<org.bonitasoft.studio.model.process.ContractInput> inputs) {
+        return inputs.stream()
+                .map(this::createContractInput)
+                .toArray(ContractInput[]::new);
+    }
+    
+    private ContractInput createContractInput(org.bonitasoft.studio.model.process.ContractInput input) {
+        return ContractInput.builder()
+                .name(input.getName())
+                .description(thisOrEmpty(input.getDescription()))
+                .type(input.getType().name())
+                .multiple(input.isMultiple())
+                .children(convertContractInputs(input.getInputs()))
+                .build();
+    }
+    
+    private ContractConstraint createContractConstraint(org.bonitasoft.studio.model.process.ContractConstraint constraint) {
+        return ContractConstraint.builder()
+                .name(constraint.getName())
+                .description(thisOrEmpty(constraint.getDescription()))
+                .expression(constraint.getExpression())
+                .errorMessage(thisOrEmpty(constraint.getErrorMessage()))
+                .inputs(constraint.getInputNames().toArray(new String[] {}))
                 .build();
     }
 
