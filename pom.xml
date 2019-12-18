@@ -45,7 +45,7 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>4.2.1</version>
 				</plugin>
 				<plugin>
 					<groupId>io.fabric8</groupId>
