@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -39,6 +41,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.DialogTray;
@@ -72,8 +75,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
 public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext {
-
-    private static final String DEFAULT_NAME_SCRIPT = "newScript";
 
     private static final int HEIGHT = 600;
 
@@ -122,6 +123,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     private EMFModelUpdater<Expression> expressionUpdater;
 
+    private Map<String, Expression> lastExpressionByType = new HashMap<String, Expression>();
+
     @Override
     public void openTray(final DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
         super.openTray(tray);
@@ -159,10 +162,6 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected Control createContents(Composite parent) {
         configureContext();
@@ -343,6 +342,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     protected void showContent(final String type) {
+        lastExpressionByType.put(inputExpression.getType(), EcoreUtil.copy(inputExpression));
+        Expression storedExpression = lastExpressionByType.getOrDefault(type, inputExpression);
+        expressionUpdater.editWorkingCopy(storedExpression);
         final IExpressionProvider provider = ExpressionProviderService.getInstance().getExpressionProvider(type);
 
         Assert.isNotNull(provider);
