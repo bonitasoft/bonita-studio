@@ -48,16 +48,19 @@ import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CallActivity;
+import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.LinkEvent;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
+import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.core.resources.IFolder;
@@ -141,7 +144,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .map(this::createContractInput)
                 .toArray(ContractInput[]::new);
     }
-    
+
     private ContractInput createContractInput(org.bonitasoft.studio.model.process.ContractInput input) {
         return ContractInput.builder()
                 .name(input.getName())
@@ -151,8 +154,9 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .children(convertContractInputs(input.getInputs()))
                 .build();
     }
-    
-    private ContractConstraint createContractConstraint(org.bonitasoft.studio.model.process.ContractConstraint constraint) {
+
+    private ContractConstraint createContractConstraint(
+            org.bonitasoft.studio.model.process.ContractConstraint constraint) {
         return ContractConstraint.builder()
                 .name(constraint.getName())
                 .description(thisOrEmpty(constraint.getDescription()))
@@ -193,6 +197,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
 
     private FlowElement[] convertFlowElements(Pool pool) {
         return ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.FlowElement.class).stream()
+                .filter(element -> !(element instanceof LinkEvent))
                 .map(this::createFlowElement)
                 .toArray(FlowElement[]::new);
     }
@@ -232,8 +237,8 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .name(flowElement.getName())
                 .description(buildDescription(flowElement))
                 .bpmnType(flowElement.eClass().getName())
-                .incomings(convertSequenceFlows(flowElement.getIncoming()))
-                .outgoings(convertSequenceFlows(flowElement.getOutgoing()))
+                .incomings(convertSequenceFlows(buildIncomingTransitions(flowElement)))
+                .outgoings(convertSequenceFlows(buildOutgoingTransitions(flowElement)))
                 .process(ModelHelper.getParentPool(flowElement).getName())
                 .lane(ModelHelper.getParentLane(flowElement) != null ? ModelHelper.getParentLane(flowElement).getName()
                         : null)
@@ -252,6 +257,50 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                     .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
         }
         return builder.build();
+    }
+
+    private List<Connection> buildIncomingTransitions(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+        List<Connection> incomingTransitions = new ArrayList<>();
+        for (Connection connection : flowElement.getIncoming()) {
+            if (connection instanceof org.bonitasoft.studio.model.process.SequenceFlow) {
+                if (connection.getSource() instanceof CatchLinkEvent) {
+                    List<ThrowLinkEvent> throwLinkEvents = ((CatchLinkEvent) connection.getSource()).getFrom();
+                    for (ThrowLinkEvent event : throwLinkEvents) {
+                        for (Connection c : event.getIncoming()) {
+                            Connection transitiveConnection = EcoreUtil.copy(connection);
+                            transitiveConnection.setSource(EcoreUtil.copy(c.getSource()));
+                            transitiveConnection.setTarget(EcoreUtil.copy(connection.getTarget()));
+                            incomingTransitions.add(transitiveConnection);
+                        }
+                    }
+                }
+            } else {
+                incomingTransitions.add(connection);
+            }
+        }
+        return incomingTransitions;
+    }
+
+    private List<Connection> buildOutgoingTransitions(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+        List<Connection> outgoingTransitions = new ArrayList<>();
+        for (Connection connection : flowElement.getOutgoing()) {
+            if (connection instanceof org.bonitasoft.studio.model.process.SequenceFlow) {
+                if (connection.getTarget() instanceof ThrowLinkEvent) {
+                    CatchLinkEvent catchLinkEvent = ((ThrowLinkEvent) connection.getTarget()).getTo();
+                    if (catchLinkEvent != null) {
+                        for (Connection c : catchLinkEvent.getOutgoing()) {
+                            Connection transitiveConnection = EcoreUtil.copy(connection);
+                            transitiveConnection.setTarget(EcoreUtil.copy(c.getTarget()));
+                            transitiveConnection.setSource(EcoreUtil.copy(connection.getSource()));
+                            outgoingTransitions.add(transitiveConnection);
+                        }
+                    }
+                } else {
+                    outgoingTransitions.add(connection);
+                }
+            }
+        }
+        return outgoingTransitions;
     }
 
     private org.bonitasoft.asciidoc.templating.model.process.Expression createCalledActivityVersionExpression(
@@ -297,8 +346,8 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .build();
     }
 
-    private SequenceFlow[] convertSequenceFlows(EList<Connection> incomingsConnection) {
-        return incomingsConnection.stream()
+    private SequenceFlow[] convertSequenceFlows(List<Connection> connections) {
+        return connections.stream()
                 .filter(org.bonitasoft.studio.model.process.SequenceFlow.class::isInstance)
                 .map(org.bonitasoft.studio.model.process.SequenceFlow.class::cast)
                 .map(this::createSequenceFlow)
