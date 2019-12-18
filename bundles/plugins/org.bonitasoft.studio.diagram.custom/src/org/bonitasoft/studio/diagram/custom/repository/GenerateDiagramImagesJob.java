@@ -27,11 +27,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
@@ -109,6 +114,12 @@ public class GenerateDiagramImagesJob extends UIJob {
     private void exportDiagramImage(Diagram diagram, IPath outputPath, ImageFileFormat imageFormat,
             IProgressMonitor monitor) {
         try {
+            DiagramEditor openedDiagramEditor = DiagramEditorUtil.findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+            if(openedDiagramEditor != null) {
+                //Remove selection in diagram as task focus figure is not supported
+                ISelectionProvider selectionProvider = openedDiagramEditor.getSite().getSelectionProvider();
+                selectionProvider.setSelection(new StructuredSelection());
+            }
             copyToImageUtil.copyToImage(
                     diagram, outputPath, imageFormat, Repository.NULL_PROGRESS_MONITOR,
                     ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
