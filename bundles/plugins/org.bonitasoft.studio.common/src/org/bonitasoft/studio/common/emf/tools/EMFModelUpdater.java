@@ -70,12 +70,16 @@ public class EMFModelUpdater<T extends EObject> {
         if (editingDomain != null) {
             editingDomain.getCommandStack().execute(createUpdateCommand(editingDomain));
         } else {
+            synched.clear();
+            manyFeaturesSynched.clear();
             deepEObjectUpdate(source, workingCopy);
         }
         return source;
     }
 
     public void editWorkingCopy(T value) {
+        synched.clear();
+        manyFeaturesSynched.clear();
         deepEObjectUpdate(workingCopy, value);
     }
 

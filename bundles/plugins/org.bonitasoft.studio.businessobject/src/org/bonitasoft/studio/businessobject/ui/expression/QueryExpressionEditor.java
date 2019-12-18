@@ -317,7 +317,6 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
             final ExpressionViewer viewer) {
         editingSupport.setInput(context);
         this.inputExpression = inputExpression;
-
         final QueryExpressionModel expressionModel = getQueryExpressionModel();
         final String queryName = inputExpression.getName();
         if (queryName == null || queryName.isEmpty()) {
@@ -336,6 +335,14 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                         observeQuerySingleSelection.setValue(exp);
                         break;
                     }
+                }
+            }
+            if(observeQuerySingleSelection.getValue() == null) {
+                if (!expressionModel.getBusinessObjects().isEmpty()) {
+                    final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel.getBusinessObjects()
+                            .get(0);
+                    observeBOSingleSelection.setValue(businessObjectExpressionQuery);
+                    observeQuerySingleSelection.setValue(businessObjectExpressionQuery.getQueryExpressions().get(0));
                 }
             }
         }
