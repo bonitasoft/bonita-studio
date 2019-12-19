@@ -63,7 +63,7 @@
 									</excludes>
 								</filter>
 								<filter>
-									<artifact>com.sun.xml.bind:jaxb-impl</artifact>
+                                   <artifact>org.glassfish.jaxb:txw2</artifact>
 									<excludes>
 										<exclude>**</exclude>
 									</excludes>
