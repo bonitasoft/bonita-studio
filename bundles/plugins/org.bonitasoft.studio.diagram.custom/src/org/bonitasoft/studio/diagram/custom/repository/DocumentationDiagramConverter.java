@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -59,6 +60,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
+import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
@@ -197,10 +199,52 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     }
 
     private FlowElement[] convertFlowElements(Pool pool) {
-        return ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.FlowElement.class).stream()
+        return sort(ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.FlowElement.class))
+                .stream()
                 .filter(element -> !(element instanceof LinkEvent))
                 .map(this::createFlowElement)
                 .toArray(FlowElement[]::new);
+    }
+
+    private Collection<org.bonitasoft.studio.model.process.FlowElement> sort(
+            List<org.bonitasoft.studio.model.process.FlowElement> flowElements) {
+        List<org.bonitasoft.studio.model.process.FlowElement> sortedList = new ArrayList<org.bonitasoft.studio.model.process.FlowElement>();
+        for (org.bonitasoft.studio.model.process.FlowElement element : flowElements) {
+            if (!sortedList.contains(element)) {
+                addTaskInSortedList(element, sortedList);
+            }
+        }
+        return sortedList;
+    }
+
+    private void addTaskInSortedList(org.bonitasoft.studio.model.process.FlowElement element,
+            List<org.bonitasoft.studio.model.process.FlowElement> sortedList) {
+        if (sortedList.isEmpty()) {
+            sortedList.add(element);
+        } else {
+            org.bonitasoft.studio.model.process.FlowElement previousTask = retrievePreviousTask(element);
+            if (previousTask != null) {
+                if (!sortedList.contains(previousTask)) {
+                    addTaskInSortedList(previousTask, sortedList);
+                }
+                int index = sortedList.indexOf(previousTask);
+                sortedList.add(index + 1, element);
+            } else {
+                sortedList.add(0, element);
+            }
+        }
+    }
+
+    private org.bonitasoft.studio.model.process.FlowElement retrievePreviousTask(
+            org.bonitasoft.studio.model.process.FlowElement element) {
+        if (!element.getIncoming().isEmpty()) {
+            Connection incoming = element.getIncoming().get(0);
+            if (incoming instanceof org.bonitasoft.studio.model.process.SequenceFlow) {
+                SourceElement source = incoming.getSource();
+                return source instanceof org.bonitasoft.studio.model.process.BoundaryEvent ? (org.bonitasoft.studio.model.process.FlowElement)((org.bonitasoft.studio.model.process.BoundaryEvent) source).eContainer() : (org.bonitasoft.studio.model.process.FlowElement) source;
+            }
+        }
+        return null;
     }
 
     private Lane[] convertLanes(Pool pool) {
@@ -262,13 +306,17 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
     }
 
     private String iterationType(org.bonitasoft.studio.model.process.FlowElement flowElement) {
-        if(flowElement instanceof MultiInstantiable) {
-            switch(((MultiInstantiable) flowElement).getType()) {
-                case PARALLEL: return "PARALLEL";
-                case SEQUENTIAL: return "SEQUENTIAL";
-                case STANDARD: return "LOOP";
+        if (flowElement instanceof MultiInstantiable) {
+            switch (((MultiInstantiable) flowElement).getType()) {
+                case PARALLEL:
+                    return "PARALLEL";
+                case SEQUENTIAL:
+                    return "SEQUENTIAL";
+                case STANDARD:
+                    return "LOOP";
                 case NONE:
-                default: return null;
+                default:
+                    return null;
             }
         }
         return null;
