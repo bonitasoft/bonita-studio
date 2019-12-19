@@ -43,7 +43,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
-import org.bonitasoft.studio.ui.widget.ComboWidget;
+import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -229,7 +229,7 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 0).create());
         composite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
 
-        final ComboWidget stringFieldCombo = new ComboWidget.Builder()
+        final CComboWidget stringFieldCombo = new CComboWidget.Builder()
                 .withLabel(Messages.length)
                 .withItems(getStringLengthValues())
                 .labelAbove()

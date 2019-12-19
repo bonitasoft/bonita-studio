@@ -26,8 +26,10 @@ public class DeployBDMHandler {
 
     @Execute
     public void deploy(RepositoryAccessor repositoryAccessor, Shell shell) {
-        BusinessObjectModelRepositoryStore store = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        DeployBDMJob job = new DeployBDMJob((BusinessObjectModelFileStore) store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true),false);
+        BusinessObjectModelRepositoryStore store = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        DeployBDMJob job = new DeployBDMJob(
+                (BusinessObjectModelFileStore) store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true), false);
         job.setUser(true);
         job.schedule();
     }

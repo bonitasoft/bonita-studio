@@ -24,7 +24,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.bonitasoft.studio.ui.validator.EmptyInputValidator;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
-import org.bonitasoft.studio.ui.widget.ComboWidget;
+import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -140,7 +140,7 @@ public class WizardBuilderTest {
                                     .inContext(ctx)
                                     .createIn(container);
 
-                            new ComboWidget.Builder()
+                            new CComboWidget.Builder()
                                     .withLabel("Manager With Super long label")
                                     .withLabelWidth(100)
                                     .labelAbove()

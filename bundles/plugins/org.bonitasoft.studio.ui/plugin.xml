@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.bonitasoft.studio.editor.contribution" name="Editor multi source contribution" schema="schema/org.bonitasoft.studio.editor.contribution.exsd"/>
    <extension
          point="org.eclipse.ui.statusHandlers">
       <statusHandler

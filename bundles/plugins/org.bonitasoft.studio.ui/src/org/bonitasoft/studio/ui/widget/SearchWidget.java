@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -33,8 +34,8 @@ public class SearchWidget extends TextWidget {
         @Override
         public SearchWidget createIn(Composite container) {
             final SearchWidget control = new SearchWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message, labelButton, toolkit, editableStrategy,
-                    Optional.ofNullable(ctx));
+                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
+                    toolkit, proposalProvider, editableStrategy, Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -57,12 +58,15 @@ public class SearchWidget extends TextWidget {
             boolean readOnly,
             String label,
             String message,
+            boolean useCompositeMessageDecorator,
             Optional<String> labelButton,
             Optional<FormToolkit> toolkit,
+            Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, labelButton, false, null, toolkit, Optional.empty(), editableStrategy, ctx);
+                message, useCompositeMessageDecorator, labelButton, false, null, toolkit, proposalProvider, editableStrategy,
+                ctx);
     }
 
     @Override

@@ -32,12 +32,14 @@ public class NativeTextWidget extends TextWidget {
 
     protected NativeTextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
+            boolean useCompositeMessageDecorator,
             Optional<String> labelButton, boolean transactionalEdit, BiConsumer<String, String> onEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, labelButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy, ctx);
+                message, useCompositeMessageDecorator, labelButton, transactionalEdit, onEdit, toolkit, proposalProvider,
+                editableStrategy, ctx);
     }
 
     /*

@@ -287,18 +287,18 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 PackageHelper.getPackageName(selectedBo),
                 new PackageNameValidator()) {
 
-                    @Override
-                    public void setErrorMessage(String errorMessage) {
-                        if (errorMessage == null) {
-                            errorMessage = Messages.changePackageTip;
-                        }
-                        super.setErrorMessage(errorMessage);
-                        Control button = getButton(IDialogConstants.OK_ID);
-                        if (button != null) {
-                            button.setEnabled(errorMessage == null || Objects.equals(errorMessage,Messages.changePackageTip));
-                        }
-                    }
-                };
+            @Override
+            public void setErrorMessage(String errorMessage) {
+                if (errorMessage == null) {
+                    errorMessage = Messages.changePackageTip;
+                }
+                super.setErrorMessage(errorMessage);
+                Control button = getButton(IDialogConstants.OK_ID);
+                if (button != null) {
+                    button.setEnabled(errorMessage == null || Objects.equals(errorMessage, Messages.changePackageTip));
+                }
+            }
+        };
         if (updatePackageDialog.open() != Window.CANCEL) {
             updatePackage(selectedBo, updatePackageDialog.getValue());
         }

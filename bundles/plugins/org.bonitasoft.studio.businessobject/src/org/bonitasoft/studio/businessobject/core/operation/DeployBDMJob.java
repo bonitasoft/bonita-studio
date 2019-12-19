@@ -28,8 +28,9 @@ public class DeployBDMJob extends Job {
 
     private BusinessObjectModelFileStore fileStore;
     private boolean dropDatabase;
+    private IStatus status = Status.OK_STATUS;
 
-    public DeployBDMJob(BusinessObjectModelFileStore fileStore,boolean dropDatabase) {
+    public DeployBDMJob(BusinessObjectModelFileStore fileStore, boolean dropDatabase) {
         super(Messages.deployBDMJobName);
         this.fileStore = fileStore;
         this.dropDatabase = dropDatabase;
@@ -39,13 +40,15 @@ public class DeployBDMJob extends Job {
     protected IStatus run(IProgressMonitor monitor) {
         try {
             new GenerateBDMOperation(fileStore).run(monitor);
-            new DeployBDMOperation(fileStore,dropDatabase).run(monitor);
+            new DeployBDMOperation(fileStore, dropDatabase).run(monitor);
         } catch (final InvocationTargetException e) {
-            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
+            status = new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID,
                     "Failed to deploy BDM. Check Studio logs for more information.",
                     new DeployBDMStackTraceResolver().reduceHibernateException(e));
+            return status;
         } catch (InterruptedException e) {
-            return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to deploy BDM", e);
+            status = new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to deploy BDM", e);
+            return status;
         }
         return Status.OK_STATUS;
     }
@@ -53,6 +56,10 @@ public class DeployBDMJob extends Job {
     @Override
     public boolean belongsTo(Object family) {
         return DeployBDMJob.class.equals(family);
+    }
+
+    public IStatus getStatus() {
+        return status;
     }
 
 }

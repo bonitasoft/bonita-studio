@@ -49,22 +49,24 @@ public abstract class EditableControlWidget extends ControlWidget {
     private final Color errorColor;
     private final Color warningColor;
     private Binding valueBinding;
+    private boolean useCompositeMessageDecorator;
     private WidgetMessageDecorator messageDecorator;
     protected IStatus status = Status.OK_STATUS;
 
     protected EditableControlWidget(Composite parent, String id, boolean labelAbove, int horizontalLabelAlignment,
-            int verticalLabelAlignment, int labelHint,
-            boolean readOnly, String labelValue, String message) {
+            int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message,
+            boolean useCompositeMessageDecorator) {
         this(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
-                message, Optional.empty(), Optional.empty());
+                message, useCompositeMessageDecorator, Optional.empty(), Optional.empty());
     }
 
     protected EditableControlWidget(Composite parent, String id, boolean labelAbove, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelHint, boolean readOnly, String labelValue, String message,
-            Optional<String> buttonLabel, Optional<FormToolkit> toolkit) {
+            boolean useCompositeMessageDecorator, Optional<String> buttonLabel, Optional<FormToolkit> toolkit) {
         super(parent, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment, labelHint, readOnly, labelValue,
                 message, buttonLabel, toolkit);
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        this.useCompositeMessageDecorator = useCompositeMessageDecorator;
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
     }
@@ -76,13 +78,15 @@ public abstract class EditableControlWidget extends ControlWidget {
     @Override
     protected void init() {
         super.init();
-        if (message.isPresent()) {
+        if (message.isPresent() || useCompositeMessageDecorator) {
             createMessageDecorator();
         }
     }
 
     private void createMessageDecorator() {
-        messageDecorator = new WidgetMessageDecorator(this, message);
+        messageDecorator = useCompositeMessageDecorator
+                ? new StaticWidgetMessageDecorator(this, message)
+                : new WidgetMessageDecorator(this, message);
         messageDecorator
                 .setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.FILL).grab(true, false)
                         .span(messageLabelHorizontalSpan(labelAbove), 1).indent(0, messageDecoratorVerticalIndent())
@@ -187,7 +191,7 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     protected void statusChanged(IStatus status) {
         EditableControlWidget.this.status = status;
-        if(status.getException() != null) {
+        if (status.getException() != null) {
             status.getException().printStackTrace();
         }
         if (messageDecorator == null) {

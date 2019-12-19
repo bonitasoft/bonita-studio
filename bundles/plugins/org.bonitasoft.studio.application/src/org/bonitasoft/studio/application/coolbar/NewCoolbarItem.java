@@ -140,7 +140,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                             .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                             .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true) == null;
                     if (hasNewBDM) {
-                        hasNewBDM = listener.add("org.bonitasoft.studio.businessobject.manage",
+                        hasNewBDM = listener.add("org.bonitasoft.studio.businessobject.define",
                                 Messages.businessDataModel);
                     }
                     boolean hasNewBDMAccess = RepositoryManager.getInstance()

@@ -22,7 +22,7 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
-import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.bdm.ImportBdmWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
@@ -193,13 +193,10 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
-    public DefineBdmWizardBot defineBDM() {
+    public BotBdmEditor defineBDM() {
         waitForMainShell(bot);
         bot.menu("Development").menu("Business Data Model").menu("Define...").click();
-        bot.waitUntil(
-                Conditions.shellIsActive(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));
-        bot.shell(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle).activate().setFocus();
-        return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
+        return new BotBdmEditor(bot);
     }
 
     public ImportBdmWizardBot importBDM() {

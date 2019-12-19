@@ -34,8 +34,8 @@ public class TextAreaWidget extends TextWidget {
         @Override
         public TextAreaWidget createIn(Composite container) {
             final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message, labelButton, toolkit, editableStrategy,
-                    Optional.ofNullable(ctx));
+                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
+                    toolkit, editableStrategy, Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (ctx != null && modelObservable != null) {
@@ -56,12 +56,14 @@ public class TextAreaWidget extends TextWidget {
             boolean readOnly,
             String label,
             String message,
+            boolean useCompositeMessageDecorator,
             Optional<String> labelButton,
             Optional<FormToolkit> toolkit,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, labelButton, false, null, toolkit, Optional.empty(), editableStrategy, ctx);
+                message, useCompositeMessageDecorator, labelButton, false, null, toolkit, Optional.empty(), editableStrategy,
+                ctx);
     }
 
     /*

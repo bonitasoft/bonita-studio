@@ -67,7 +67,7 @@ public class Messages extends NLS {
 
     public static String businessObjectNotFound;
 
-    public static String errorWhileDeployingBDR;
+    public static String errorWhileDeployingBDM;
 
     public static String publishBusinessObjectTitle;
 
@@ -390,7 +390,6 @@ public class Messages extends NLS {
     public static String deletePackageConfirm;
     public static String mergePackageConfirmTitle;
     public static String mergePackageConfirm;
-    public static String searchBusinessObject;
     public static String updatePackage;
     public static String updatePackageTitle;
     public static String updatePackageMessage;
@@ -430,6 +429,61 @@ public class Messages extends NLS {
     public static String conflictingWithSameObject;
     public static String changePackageTip;
     public static String bdmDocumentationLink;
+    public static String searchBusinessObject;
+    public static String searchAttribute;
+    public static String edition;
+    public static String attributeNameRequired;
+    public static String boNameRequired;
+    public static String emptyFieldList;
+    public static String cyclicComposition;
+    public static String unknownBusinessObjectReference;
+    public static String constraintNameRequired;
+    public static String constraintReferencesUnknownAttributes;
+    public static String fieldsDuplicated;
+    public static String cantUseTextTypeInConstraint;
+    public static String cantUseMultipleTypeInConstraint;
+    public static String defaultConstraintName;
+    public static String parametersLabel;
+    public static String queryNameRequired;
+    public static String queryParameterNameRequired;
+    public static String modelNotSavableTitle;
+    public static String modelNotSavable;
+    public static String emptyModelNotSavable;
+    public static String cantHaveNullReferenceInConstraint;
+    public static String cantUseTextTypeInIndex;
+    public static String cantUseMultipleTypeInIndex;
+    public static String cantHaveNullReferenceInIndex;
+    public static String indexReferencesUnknownAttributes;
+    public static String constraintFieldEmptiness;
+    public static String indexFieldEmptiness;
+    public static String deploy;
+    public static String constraintsSectionTitle;
+    public static String querySectionTitle;
+    public static String indexSectionTitle;
+    public static String unknownBusinessObject;
+    public static String modelPageName;
+    public static String constraintsPageName;
+    public static String createPackageTooltip;
+    public static String createBoTooltip;
+    public static String deleteTooltip;
+    public static String expandAll;
+    public static String collapseAll;
+    public static String addFieldTooltip;
+    public static String deleteFieldTooltip;
+    public static String searchConstraint;
+    public static String addConstraintTooltip;
+    public static String deleteConstraintTooltip;
+    public static String searchQuery;
+    public static String addQueryTooltip;
+    public static String deleteQueryTooltip;
+    public static String searchQueryParameter;
+    public static String addParameterTooltip;
+    public static String deleteParameterTooltip;
+    public static String addIndexTooltip;
+    public static String deleteIndexTooltip;
+    public static String searchIndex;
+    public static String dndIndexTooltip;
+    public static String pakage;
 
     private Messages() {
     }
