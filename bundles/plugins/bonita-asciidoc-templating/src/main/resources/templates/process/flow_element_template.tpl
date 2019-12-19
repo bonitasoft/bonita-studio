@@ -3,7 +3,12 @@ package process
 @Field FlowElement flowElement
 @Field ResourceBundle messages
 
-section 5, "${new FlowElementXRef(name: flowElement.name, process: flowElement.process).inlinedRefTag()}image:icons/${flowElement.bpmnType}.png[title=\"${flowElement.bpmnType}\"] $flowElement.name"
+def iterationTypeImage = ''
+if(flowElement.iterationType) {
+    iterationTypeImage = " image:icons/${flowElement.iterationType}.png[title=\"${messages.getString(flowElement.iterationType)}\"]"
+}
+
+section 5, "${new FlowElementXRef(name: flowElement.name, process: flowElement.process).inlinedRefTag()}image:icons/${flowElement.bpmnType}.png[title=\"${flowElement.bpmnType}\"]$iterationTypeImage $flowElement.name"
 
 newLine()
 

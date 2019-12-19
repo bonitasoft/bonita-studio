@@ -41,15 +41,36 @@ class FlowElementTemplateTest extends Specification {
         def engine = new TemplateEngine(templateFolder())
         def outputFile = temporaryFolder.newFile("flowElement.adoc");
         def flowElement = new FlowElement(name: 'My Task',
-        description: 'Some simple description',
-        bpmnType: 'Task',
-        process: 'Pool')
+                                          description: 'Some simple description',
+                                          bpmnType: 'Task',
+                                          process: 'Pool')
 
         when:
         engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
 
         then:
         outputFile.text == '''|===== [[pool.flowelement.my-task]]image:icons/Task.png[title="Task"] My Task
+                              |
+                              |Some simple description
+                              |
+                              |'''.stripMargin().denormalize()
+    }
+    
+    def "should generate flow element template with an iterationType"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'Task',
+                                          iterationType: 'LOOP',
+                                          process: 'Pool')
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''|===== [[pool.flowelement.my-task]]image:icons/Task.png[title="Task"] image:icons/LOOP.png[title="Loop"] My Task
                               |
                               |Some simple description
                               |

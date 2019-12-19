@@ -56,6 +56,7 @@ import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.LinkEvent;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.TextAnnotation;
@@ -237,6 +238,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .name(flowElement.getName())
                 .description(buildDescription(flowElement))
                 .bpmnType(flowElement.eClass().getName())
+                .iterationType(iterationType(flowElement))
                 .incomings(convertSequenceFlows(buildIncomingTransitions(flowElement)))
                 .outgoings(convertSequenceFlows(buildOutgoingTransitions(flowElement)))
                 .process(ModelHelper.getParentPool(flowElement).getName())
@@ -257,6 +259,19 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                     .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
         }
         return builder.build();
+    }
+
+    private String iterationType(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+        if(flowElement instanceof MultiInstantiable) {
+            switch(((MultiInstantiable) flowElement).getType()) {
+                case PARALLEL: return "PARALLEL";
+                case SEQUENTIAL: return "SEQUENTIAL";
+                case STANDARD: return "LOOP";
+                case NONE:
+                default: return null;
+            }
+        }
+        return null;
     }
 
     private List<Connection> buildIncomingTransitions(org.bonitasoft.studio.model.process.FlowElement flowElement) {

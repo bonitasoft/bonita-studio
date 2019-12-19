@@ -47,4 +47,10 @@ class FlowElement {
     
     Contract contract
     
+    /**
+     * Whether this flow element is a LOOP, PARALLEL or SEQUENTIAL.
+     * null otherwise 
+     */
+    String iterationType
+    
 }
