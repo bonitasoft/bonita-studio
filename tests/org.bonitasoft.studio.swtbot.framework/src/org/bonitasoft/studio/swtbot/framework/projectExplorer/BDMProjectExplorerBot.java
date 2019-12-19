@@ -14,8 +14,12 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
-import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class BDMProjectExplorerBot extends ProjectExplorerBot {
@@ -24,9 +28,9 @@ public class BDMProjectExplorerBot extends ProjectExplorerBot {
         super(bot);
     }
 
-    public DefineBdmWizardBot openBdm() {
+    public BotBdmEditor openBdm() {
         clickOnContextualMenu(getBdmTreeItem(), "Open");
-        return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
+        return new BotBdmEditor(bot);
     }
 
     public void deleteBdm() {
@@ -35,6 +39,10 @@ public class BDMProjectExplorerBot extends ProjectExplorerBot {
 
     public void deployBdm() {
         clickOnContextualMenu(getBdmTreeItem(), "Deploy");
+        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle));
+        SWTBotShell activeShell = bot.activeShell();
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
     public SWTBotTreeItem getBdmFolderTreeItem() {

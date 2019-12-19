@@ -205,7 +205,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     /**
-     * @deprecated use ExpressionViewer(final Composite composite, final int style,, final TabbedPropertySheetWidgetFactory widgetFactory) instead
+     * @deprecated use ExpressionViewer(final Composite composite, final int style,, final TabbedPropertySheetWidgetFactory
+     *             widgetFactory) instead
      * @param composite
      * @param style
      * @param expressionReference

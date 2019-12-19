@@ -43,6 +43,19 @@ public class EditorFinder {
         return Optional.empty();
     }
 
+    public static Optional<IEditorPart> findOpenedEditor(Function<IEditorPart, Boolean> editorInstanceValidator) {
+        if (PlatformUI.isWorkbenchRunning()
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+            return Arrays.asList(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
+                    .stream()
+                    .map(ref -> ref.getEditor(false))
+                    .filter(editorInstanceValidator::apply)
+                    .findFirst();
+        }
+        return Optional.empty();
+    }
+
     private static Optional<IEditorInput> getEditorInput(IEditorReference ref) {
         try {
             return Optional.of(ref.getEditorInput());

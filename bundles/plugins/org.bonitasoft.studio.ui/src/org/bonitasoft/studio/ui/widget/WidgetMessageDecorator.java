@@ -33,28 +33,33 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class WidgetMessageDecorator extends ExpandableComposite {
+public class WidgetMessageDecorator {
 
-    private final CLabel messageLabel;
+    protected final CLabel messageLabel;
     private Optional<String> defaultMessage;
     private final LocalResourceManager resourceManager;
     private final Color errorColor;
     private final Color warningColor;
     private Color foregroundColor;
+    protected Composite composite;
 
     public WidgetMessageDecorator(Composite parent, Optional<String> defaultMessage) {
-        super(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
+        createComposite(parent);
         this.resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
         this.defaultMessage = defaultMessage;
-        messageLabel = new CLabel(this, SWT.NONE);
+        messageLabel = new CLabel(composite, SWT.NONE);
         messageLabel.setTopMargin(1);
         messageLabel.setLeftMargin(0);
         messageLabel.setFont(getMessageFont());
         messageLabel.setText(defaultMessage.orElse(""));
         foregroundColor = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
         updateExpandState();
+    }
+
+    protected void createComposite(Composite parent) {
+        this.composite = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
     }
 
     private Font getMessageFont() {
@@ -67,20 +72,21 @@ public class WidgetMessageDecorator extends ExpandableComposite {
         return fontRegistry.get(WidgetMessageDecorator.class.getName());
     }
 
-    private void updateExpandState() {
-        final Composite parent = getParent().getParent();
+    protected void updateExpandState() {
+        Composite parent = composite.getParent().getParent();
+        ExpandableComposite expandableComposite = (ExpandableComposite) composite;
         if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
-            setClient(messageLabel);
-            setExpanded(true);
-            pack();
+            expandableComposite.setClient(messageLabel);
+            expandableComposite.setExpanded(true);
+            expandableComposite.pack();
         } else {
-            setExpanded(false);
+            expandableComposite.setExpanded(false);
         }
         parent.layout();
     }
 
     public void adapt(FormToolkit toolkit) {
-        toolkit.adapt(this);
+        toolkit.adapt(composite);
         toolkit.adapt(messageLabel, true, true);
         foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
         messageLabel.setForeground(foregroundColor);
@@ -126,5 +132,9 @@ public class WidgetMessageDecorator extends ExpandableComposite {
 
     public void setMessage(Optional<String> message) {
         this.defaultMessage = message;
+    }
+
+    public void setLayoutData(Object layoutData) {
+        composite.setLayoutData(layoutData);
     }
 }

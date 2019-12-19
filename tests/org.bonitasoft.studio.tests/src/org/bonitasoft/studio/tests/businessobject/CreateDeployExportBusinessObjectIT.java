@@ -22,13 +22,15 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
+import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
+import org.bonitasoft.studio.businessobject.ui.wizard.BusinessDataModelWizardPage;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,7 +38,6 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -88,57 +89,47 @@ public class CreateDeployExportBusinessObjectIT {
     public void shouldCreateAndPublishABusinessObject() throws Exception {
         BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
 
-        DefineBdmWizardBot bdmWizardBot = workBenchBot.defineBDM();
-
         String packageName = "org.model.test";
-        String employeeBo = "Employee";
-        bdmWizardBot.addPackage(packageName, employeeBo)
-                .addAttribute(packageName, employeeBo, "firstName", FieldType.STRING.name())
-                .setAttributeLength(packageName, employeeBo, "firstName", "25")
-                .setMandatory(packageName, employeeBo, "firstName")
-                .addAttribute(packageName, employeeBo, "lastaNme", FieldType.STRING.name())
-                .addAttribute(packageName, employeeBo, "birthDate", DateTypeLabels.DATE_ONLY)
-                .addAttribute(packageName, employeeBo, "age", FieldType.INTEGER.name())
-                .addAttribute(packageName, employeeBo, "married", FieldType.BOOLEAN.name())
-                .addAttribute(packageName, employeeBo, "resume", FieldType.TEXT.name())
-                .addAttribute(packageName, employeeBo, "salary", FieldType.DOUBLE.name())
-                .addAttribute(packageName, employeeBo, "skills", FieldType.STRING.name())
-                .setMultiple(packageName, employeeBo, "skills")
-                .addAttribute(packageName, employeeBo, "manager", employeeBo)
-                .setRelationType(packageName, employeeBo, "manager", "Aggregation");
+        BotBdmEditor bdmWizardBot = workBenchBot.defineBDM();
 
-        bdmWizardBot.addConstraint(packageName, employeeBo, "FIRSTLASTNAMEUNIQUE", "firstName -- STRING",
-                "lastaNme -- STRING");
-        bdmWizardBot.addIndex(packageName, employeeBo, "NAMEINDEX", "firstName -- STRING", "lastaNme -- STRING");
+        bdmWizardBot.modelPage()
+                .renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, "aPackage")
+                .renameBusinessObject("aPackage", BusinessDataModelWizardPage.DEFAULT_BUSINESS_OBJECT_NAME, "anObject")
+                .addPackage(packageName, "Employee")
+                .removePackage("aPackage")
+                .renameAttribute(packageName, "Employee", AttributeEditionControl.DEFAULT_FIELD_NAME, "firstName")
+                .setAttributeLength(packageName, "Employee", "firstName", "25")
+                .setMandatory(packageName, "Employee", "firstName")
+                .addAttribute(packageName, "Employee", "lastaNme", FieldType.STRING.name())
+                .addAttribute(packageName, "Employee", "birthDate", DateTypeLabels.DATE_ONLY)
+                .addAttribute(packageName, "Employee", "age", FieldType.INTEGER.name())
+                .addAttribute(packageName, "Employee", "married", FieldType.BOOLEAN.name())
+                .addAttribute(packageName, "Employee", "resume", FieldType.TEXT.name())
+                .addAttribute(packageName, "Employee", "salary", FieldType.DOUBLE.name())
+                .addAttribute(packageName, "Employee", "skills", FieldType.STRING.name())
+                .setMultiple(packageName, "Employee", "skills")
+                .addAttribute(packageName, "Employee", "manager", "Employee")
+                .setRelationType(packageName, "Employee", "manager", "Aggregation");
+        bdmWizardBot.constraintsPage().addConstraint(packageName, "Employee", "FIRSTLASTNAMEUNIQUE", "firstName -- String",
+                "lastaNme -- String");
+        bdmWizardBot.indexesPage()
+                .addIndex(packageName, "Employee", "NAMEINDEX", "firstName -- String", "lastaNme -- String")
+                .moveField(packageName, "Employee", "NAMEINDEX", "lastaNme -- String", 0);
 
-        bdmWizardBot.deploy();
-
-        bdmWizardBot = workBenchBot.defineBDM();
-        bdmWizardBot.renameAttribute(packageName, employeeBo, "lastaNme", "lastName");
-
-        SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.modelValidationFailedTitle));
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
-        activeShell.setFocus();
-        bdmWizardBot.editConstraint(packageName, employeeBo, "FIRSTLASTNAMEUNIQUE", "firstName -- STRING",
-                "lastName -- STRING");
-        bdmWizardBot.editIndex(packageName, employeeBo, "NAMEINDEX", "lastName -- STRING");
+        bdmWizardBot.save();
+        bdmWizardBot.modelPage().renameAttribute(packageName, "Employee", "lastaNme", "lastName");
+        bdmWizardBot.save(); // test refactoring constraints & indexes -> no error expected
 
         final Map<String, String> queryParam = new HashMap<>();
         queryParam.put("maxSalary", Double.class.getName());
-        bdmWizardBot.addCustomQuery(packageName, employeeBo,
+        bdmWizardBot.queriesPage().addCustomQuery(packageName,
+                "Employee",
                 "findByMaxSalary",
                 "SELECT e FROM Employee e WHERE e.salary < :maxSalary",
                 queryParam,
-                "Multiple (java.util.List)",
-                0);
+                "Multiple (java.util.List)");
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 30000);
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bdmWizardBot.save().deploy();
 
         validateBDMContent();
         exportBDM();

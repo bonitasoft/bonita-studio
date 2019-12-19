@@ -24,7 +24,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
-import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -64,11 +64,11 @@ public class ProjectExplorerBot extends BotBase {
         return new BotManageOrganizationWizard(bot);
     }
 
-    public DefineBdmWizardBot newBdm() {
+    public BotBdmEditor newBdm() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
         projectTreeItem.contextMenu().menu("New").menu("Business Data Model...").click();
-        return new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
+        return new BotBdmEditor(bot);
     }
 
     public void newLivingApplication() {

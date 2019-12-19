@@ -16,12 +16,11 @@ package org.bonitasoft.studio.tests.projectExplorer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
-import org.bonitasoft.studio.swtbot.framework.bdm.DefineBdmWizardBot;
+import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -52,10 +51,9 @@ public class ProjectExplorerBdmIT {
     public void should_manage_bdm_from_explorer() {
         createBdmIfRequired();
         ProjectExplorerBot projectExplorerBot = new ProjectExplorerBot(bot);
-        projectExplorerBot.bdm().openBdm().cancel();
+        projectExplorerBot.bdm().openBdm().close();
         projectExplorerBot.bdm().getBdmTreeItem().doubleClick();
-        new DefineBdmWizardBot(bot, org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle)
-                .cancel();
+        new BotBdmEditor(bot).close();
         projectExplorerBot.bdm().deployBdm();
         projectExplorerBot.bdm().deleteBdm();
         validateBdmIsDeleted();
@@ -72,14 +70,10 @@ public class ProjectExplorerBdmIT {
 
     private void createBdmIfRequired() {
         if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml",
-                true) == null) {
-            String packageName = "explorer.test";
-            String businessObject = "ProjectExplorerBo1";
-            new ProjectExplorerBot(bot).newBdm()
-                    .addPackage(packageName, businessObject)
-                    .addAttribute(packageName, businessObject, "name", FieldType.STRING.toString()).deploy();
+                false) == null) {
+            new ProjectExplorerBot(bot).newBdm().close();
             assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                    .getBusinessObjectByQualifiedName("explorer.test.ProjectExplorerBo1")).isPresent();
+                    .getBusinessObjectByQualifiedName("com.company.model.BusinessObject")).isPresent();
         }
     }
 

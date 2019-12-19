@@ -20,6 +20,7 @@ package org.bonitasoft.studio.common.diagram.tools;
 
 import java.util.List;
 
+import org.eclipse.gef.SharedCursors;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeConnectionTool;
 
 /**
@@ -30,6 +31,8 @@ public class BonitaUnspecifiedTypeConnectionTool extends UnspecifiedTypeConnecti
 
 	public BonitaUnspecifiedTypeConnectionTool(List connectionTypes) {
 		super(connectionTypes);
+		setDefaultCursor(SharedCursors.HAND);
+        setDisabledCursor(SharedCursors.CROSS);
 	}
 
 }

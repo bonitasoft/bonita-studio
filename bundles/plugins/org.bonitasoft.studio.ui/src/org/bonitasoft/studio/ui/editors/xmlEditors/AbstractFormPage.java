@@ -42,6 +42,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public abstract class AbstractFormPage<T> extends FormPage {
 
@@ -109,13 +110,13 @@ public abstract class AbstractFormPage<T> extends FormPage {
     }
 
     public void update() {
-        IDocument document = getEditor().getSourceEditor() != null
-                ? getEditor().getSourceEditor().getDocumentProvider().getDocument(getEditorInput())
+        IDocument document = getSourceEditor() != null
+                ? getSourceEditor().getDocumentProvider().getDocument(getEditorInput())
                 : null;
         if (document != null) {
-            final Optional<T> newModel = getEditor().xmlToModel(document.get().getBytes());
+            final Optional<T> newModel = xmlToModel(document.get().getBytes());
             newModel.ifPresent(model -> {
-                getEditor().updateWorkingCopy(model);
+                updateWorkingCopy(model);
                 setErrorState(false);
                 recreateForm();
             });
@@ -174,7 +175,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
                 @Override
                 public void linkActivated(HyperlinkEvent e) {
-                    getEditor().setActiveEditor(getEditor().getSourceEditor());
+                    getEditor().setActiveEditor(getSourceEditor());
                 }
             });
             final Label label = toolkit.createLabel(composite, Messages.parseError);
@@ -188,17 +189,32 @@ public abstract class AbstractFormPage<T> extends FormPage {
         Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
     }
 
-    @Override
-    public AbstractEditor<T> getEditor() {
-        return (AbstractEditor<T>) super.getEditor();
-    }
-
     public ECommandService getECommandService() {
         return eCommandService;
     }
 
     public EHandlerService getEHandlerService() {
         return eHandlerService;
+    }
+
+    public StructuredTextEditor getSourceEditor() {
+        if (getEditor() instanceof AbstractEditor) {
+            return ((AbstractEditor) getEditor()).getSourceEditor();
+        }
+        return null; // TODO: essayer de le recup via le context s'il existe! 
+    }
+
+    private Optional<T> xmlToModel(byte[] xml) {
+        if (getEditor() instanceof AbstractEditor) {
+            return ((AbstractEditor) getEditor()).xmlToModel(xml);
+        }
+        return Optional.empty();
+    }
+
+    private void updateWorkingCopy(T model) {
+        if (getEditor() instanceof AbstractEditor) {
+            ((AbstractEditor) getEditor()).updateWorkingCopy(model);
+        }
     }
 
 }

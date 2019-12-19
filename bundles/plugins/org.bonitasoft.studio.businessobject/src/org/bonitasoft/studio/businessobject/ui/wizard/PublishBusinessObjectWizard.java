@@ -62,11 +62,11 @@ public class PublishBusinessObjectWizard extends SelectBusinessObjectWizard {
                 runDeployOperationInWizard();
             } catch (InvocationTargetException e) {
                 BonitaStudioLog.error(e);
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, Messages.errorWhileDeployingBDR, e.getCause()).open();
+                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, Messages.errorWhileDeployingBDM, e.getCause()).open();
                 return false;
             } catch (InterruptedException e) {
                 BonitaStudioLog.error(e);
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, Messages.errorWhileDeployingBDR, e.getCause()).open();
+                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, Messages.errorWhileDeployingBDM, e.getCause()).open();
                 return false;
             }
             openSuccessDialog();

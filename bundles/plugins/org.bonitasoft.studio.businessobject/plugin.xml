@@ -16,6 +16,12 @@
                icon="icons/bdm.png"
                id="org.bonitasoft.studio.businessobject.menu">
             <command
+                  commandId="org.bonitasoft.studio.businessobject.define"
+                  icon="icons/manage-bdm.png"
+                  id="org.bonitasoft.studio.businessobject.openEditorMenu"
+                  style="push">
+            </command>
+            <command
                   commandId="org.bonitasoft.studio.businessobject.manage"
                   icon="icons/manage-bdm.png"
                   style="push"
@@ -54,13 +60,16 @@
                   id="org.bonitasoft.studio.businessobject.export.menu"
                   style="push">
             </command>
+            <separator
+                  name="org.bonitasoft.studio.businessobject.separator1">
+            </separator>
          </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.bdm">
          <command
-               commandId="org.bonitasoft.studio.businessobject.manage"
+               commandId="org.bonitasoft.studio.businessobject.define"
                id="org.bonitasoft.studio.businessobject.manage.popup.menu"
                label="%defineBDMMenu"
                mnemonic="B"
@@ -265,17 +274,67 @@
       </handler>
    </extension>
    <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.businessobject.manage"
-            icon="icons/bdm.png">
-      </image>
-      <image
-            commandId="org.bonitasoft.studio.businessobject.openH2Console"
-            icon="icons/h2.png">
-      </image>
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.businessobject.editor.BdmPerspectiveFactory"
+            icon="icons/manage-bdm.png"
+            id="org.bonitasoft.studio.businessobject.perspective"
+            name="%bdmPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            id="org.bonitasoft.studio.businessobject.contentType"
+            name="Business Data Model content type"
+            priority="normal">
+         <describer
+               class="org.bonitasoft.studio.businessobject.editor.core.BusinessDataModelContentDescriber">
+         </describer>
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditor"
+            default="false"
+            extensions="xml"
+            icon="icons/manage-bdm.png"
+            id="org.bonitasoft.studio.businessobject.editor"
+            name="%bdmEditor">
+         <contentTypeBinding
+               contentTypeId="org.bonitasoft.studio.businessobject.contentType">
+         </contentTypeBinding>
+         <contentTypeBinding
+               contentTypeId="org.bonitasoft.studio.bdm.access.control.contentType">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="bdm-xsd">
+            <public
+                  publicId=""
+                  uri="schema/bdm.xsd">
+         </public>
+      </catalogContribution>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.editor.contribution">
+      <contribution
+            class="org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution"
+            name="bdmEditorContribution">
+      </contribution>
    </extension>
 
-
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated BusinessDataModel -->
+      <package
+            uri="http://www.bonitasoft.org/studio/bdm"
+            class="org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage"
+            genModel="model/BusinessDataModel.genmodel"/>
+   </extension>
 
 </plugin>

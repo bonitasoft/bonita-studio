@@ -991,6 +991,12 @@
                variable="activeWorkbenchWindow.activePerspective">
            <equals
                   value="org.bonitasoft.studio.perspective.markdownEditor">
+           </equals>
+         </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.businessobject.perspective">
             </equals>
          </with>
          </or>

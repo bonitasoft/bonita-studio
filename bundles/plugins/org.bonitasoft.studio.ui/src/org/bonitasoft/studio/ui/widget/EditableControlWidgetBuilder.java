@@ -8,14 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.ui.widget;
 
-import java.util.Optional;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
 
-/**
- * @author Adrien lachambre
- */
 public abstract class EditableControlWidgetBuilder<T, W extends EditableControlWidget>
         extends ControlWidgetBuilder<T, EditableControlWidget> {
 
@@ -25,6 +19,7 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
     protected int verticalLabelAlignment = SWT.CENTER;
     protected String message;
     protected boolean useNativeRender = false;
+    protected boolean useCompositeMessageDecorator = false;
 
     /**
      * Set the control in read-only mode.
@@ -44,6 +39,17 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
      */
     public T withMessage(String message) {
         this.message = message;
+        return (T) this;
+    }
+
+    /**
+     * The message decorator is a simple composite instead of an expandable composite.
+     * You might need to manually save some space for the message, using a filler at the bottom of the widget for example.
+     * Use this when the expand / collapse behavior of the expandable composite has impacts on your UI (to many elements are
+     * resized, unexpected scrollbars appears ...)
+     */
+    public T withCompositeMessageDecorator() {
+        this.useCompositeMessageDecorator = true;
         return (T) this;
     }
 
@@ -79,5 +85,5 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
         this.useNativeRender = true;
         return (T) this;
     }
-    
+
 }

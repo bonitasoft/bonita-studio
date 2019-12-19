@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -205,8 +204,12 @@ public class LabelProviderBuilder<T> {
                 final T element = (T) cell.getElement();
                 statusProvider.ifPresent(provider -> {
                     final IStatus status = provider.apply(element);
-                    cell.setImage(statusImage(status, element));
-                    cell.setForeground(statusColor(status));
+                    if (!status.isOK()) {
+                        cell.setImage(statusImage(status, element));
+                        statusColor(status).ifPresent(cell::setForeground);
+                    } else {
+                        cell.setForeground(null);
+                    }
                 });
                 fontProvider.ifPresent(provider -> {
                     cell.setFont(provider.apply(element));
@@ -238,14 +241,14 @@ public class LabelProviderBuilder<T> {
                 }
             }
 
-            private Color statusColor(IStatus status) {
+            private Optional<Color> statusColor(IStatus status) {
                 switch (status.getSeverity()) {
                     case IStatus.ERROR:
-                        return errorColor;
+                        return Optional.of(errorColor);
                     case IStatus.WARNING:
-                        return warningColor;
+                        return Optional.of(warningColor);
                     default:
-                        return Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+                        return Optional.empty();
                 }
             }
 
@@ -258,7 +261,7 @@ public class LabelProviderBuilder<T> {
                     case IStatus.INFO:
                         return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
                     default:
-                        return imageFunction.map(function -> function.apply(element)).orElse(super.getImage(element));
+                        return getImage(element);
                 }
             }
         };

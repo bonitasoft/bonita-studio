@@ -34,15 +34,19 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
+import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditor;
+import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
@@ -58,10 +62,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
@@ -70,6 +81,8 @@ import com.google.common.io.ByteStreams;
  * @author Romain Bioteau
  */
 public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements ISmartImportable {
+
+    public static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
 
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
@@ -213,8 +226,36 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
      * we use the command to call the handler, so we do not have to extend this class for sp features.
      */
     protected IWorkbenchPart doOpen() {
-        executeCommand(DEFINE_BDM_COMMAND_ID, null);
-        return null;
+        try {
+            BusinessDataModelEditor openedEditor = getOpenedEditor();
+            if (openedEditor != null) {
+                if (openedEditor.setActiveContribution(BusinessDataModelEditorContribution.ID)) {
+                    return openedEditor;
+                }
+                openedEditor.close(true);
+            }
+            openedEditor = (BusinessDataModelEditor) IDE.openEditor(getActivePage(), getResource());
+            openedEditor.setActiveContribution(BusinessDataModelEditorContribution.ID);
+            return openedEditor;
+        } catch (final PartInitException e) {
+            throw new RuntimeException("Failed to open bdm", e);
+        }
+    }
+
+    public BusinessDataModelEditor getOpenedEditor() {
+        return findOpenedEditor()
+                .map(BusinessDataModelEditor.class::cast)
+                .orElse(null);
+    }
+
+    @Override
+    protected Optional<IEditorPart> findOpenedEditor() {
+        return EditorFinder.findOpenedEditor(this::validateEditorInstance);
+    }
+
+    @Override
+    protected boolean validateEditorInstance(IEditorPart editor) {
+        return editor instanceof BusinessDataModelEditor;
     }
 
     public List<BusinessObject> getBusinessObjects() {
@@ -304,6 +345,19 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
                     deployBDMOperation.run(monitor);
                 }
             });
+            IPreferenceStore preferenceStore = BusinessObjectPlugin.getDefault().getPreferenceStore();
+            if (!preferenceStore.getBoolean(DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG)) {
+                MessageDialogWithPrompt.openWithDetails(MessageDialog.INFORMATION,
+                        Display.getDefault().getActiveShell(),
+                        Messages.bdmDeployedTitle,
+                        Messages.bdmDeployedMessage,
+                        Messages.doNotShowMeAgain,
+                        Messages.bdmDeployDetails,
+                        false,
+                        preferenceStore,
+                        DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG,
+                        SWT.NONE);
+            }
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("An error occured while depoying the BDM", e);
         }
