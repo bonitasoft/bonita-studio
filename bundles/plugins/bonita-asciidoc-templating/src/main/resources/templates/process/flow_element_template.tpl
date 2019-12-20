@@ -60,6 +60,12 @@ if(flowElement.bpmnType == 'CallActivity') {
     newLine()
 }
 
+if(flowElement.boundaryEvents) {
+    section 6, "icon:flash[] ${messages.getString('boundaryEvents')}"
+    newLine()
+    layout 'process/boundary_events_template.tpl', events:flowElement.boundaryEvents, process:flowElement.process, messages:messages
+}
+
 if(flowElement.connectorsOut) {
     section 6, "icon:plug[] ${messages.getString('connectorsOut')}"
     newLine()

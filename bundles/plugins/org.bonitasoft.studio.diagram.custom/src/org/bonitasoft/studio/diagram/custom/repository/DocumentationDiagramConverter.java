@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.asciidoc.templating.model.process.Actor;
 import org.bonitasoft.asciidoc.templating.model.process.ActorFilter;
+import org.bonitasoft.asciidoc.templating.model.process.BoundaryEvent;
 import org.bonitasoft.asciidoc.templating.model.process.Connector;
 import org.bonitasoft.asciidoc.templating.model.process.Contract;
 import org.bonitasoft.asciidoc.templating.model.process.ContractConstraint;
@@ -48,6 +49,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -241,7 +243,10 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
             Connection incoming = element.getIncoming().get(0);
             if (incoming instanceof org.bonitasoft.studio.model.process.SequenceFlow) {
                 SourceElement source = incoming.getSource();
-                return source instanceof org.bonitasoft.studio.model.process.BoundaryEvent ? (org.bonitasoft.studio.model.process.FlowElement)((org.bonitasoft.studio.model.process.BoundaryEvent) source).eContainer() : (org.bonitasoft.studio.model.process.FlowElement) source;
+                return source instanceof org.bonitasoft.studio.model.process.BoundaryEvent
+                        ? (org.bonitasoft.studio.model.process.FlowElement) ((org.bonitasoft.studio.model.process.BoundaryEvent) source)
+                                .eContainer()
+                        : (org.bonitasoft.studio.model.process.FlowElement) source;
             }
         }
         return null;
@@ -284,8 +289,9 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .bpmnType(flowElement.eClass().getName())
                 .iterationType(iterationType(flowElement))
                 .incomings(convertSequenceFlows(buildIncomingTransitions(flowElement)))
-                .outgoings(convertSequenceFlows(buildOutgoingTransitions(flowElement)))
+                .outgoings(convertSequenceFlows(buildOutgoingTransitions(flowElement.getOutgoing())))
                 .process(ModelHelper.getParentPool(flowElement).getName())
+                .boundaryEvents(convertBoundaryEvents(flowElement))
                 .lane(ModelHelper.getParentLane(flowElement) != null ? ModelHelper.getParentLane(flowElement).getName()
                         : null)
                 .connectorsIn(flowElement instanceof ConnectableElement
@@ -303,6 +309,25 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                     .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
         }
         return builder.build();
+    }
+
+    private BoundaryEvent[] convertBoundaryEvents(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+        if(flowElement instanceof Activity) {
+            return ((Activity) flowElement).getBoundaryIntermediateEvents().stream()
+                    .map(this::createBoundaryEvent)
+                    .toArray(BoundaryEvent[]::new);
+        }
+        return new BoundaryEvent[0];
+    }
+    
+    private BoundaryEvent createBoundaryEvent(org.bonitasoft.studio.model.process.BoundaryEvent event) {
+        return BoundaryEvent.builder()
+                .name(event.getName())
+                .description(thisOrEmpty(event.getDocumentation()))
+                .bpmnType(event.eClass().getName())
+                .container(((Element) event.eContainer()).getName())
+                .outgoings(convertSequenceFlows(buildOutgoingTransitions(event.getOutgoing())))
+                .build();
     }
 
     private String iterationType(org.bonitasoft.studio.model.process.FlowElement flowElement) {
@@ -336,17 +361,24 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                             incomingTransitions.add(transitiveConnection);
                         }
                     }
+                } else if (connection.getSource() instanceof org.bonitasoft.studio.model.process.BoundaryEvent) {
+                    SourceElement boundaryContainer = (SourceElement) ((org.bonitasoft.studio.model.process.BoundaryEvent) connection.getSource())
+                            .eContainer();
+                    Connection transitiveConnection = EcoreUtil.copy(connection);
+                    transitiveConnection.setSource(EcoreUtil.copy(boundaryContainer));
+                    transitiveConnection.setTarget(EcoreUtil.copy(connection.getTarget()));
+                    incomingTransitions.add(transitiveConnection);
+                } else {
+                    incomingTransitions.add(connection);
                 }
-            } else {
-                incomingTransitions.add(connection);
             }
         }
         return incomingTransitions;
     }
 
-    private List<Connection> buildOutgoingTransitions(org.bonitasoft.studio.model.process.FlowElement flowElement) {
+    private List<Connection> buildOutgoingTransitions(List<Connection> connections) {
         List<Connection> outgoingTransitions = new ArrayList<>();
-        for (Connection connection : flowElement.getOutgoing()) {
+        for (Connection connection : connections) {
             if (connection instanceof org.bonitasoft.studio.model.process.SequenceFlow) {
                 if (connection.getTarget() instanceof ThrowLinkEvent) {
                     CatchLinkEvent catchLinkEvent = ((ThrowLinkEvent) connection.getTarget()).getTo();

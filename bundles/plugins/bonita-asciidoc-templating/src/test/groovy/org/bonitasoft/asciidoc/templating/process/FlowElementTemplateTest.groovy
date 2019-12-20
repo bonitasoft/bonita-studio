@@ -15,6 +15,7 @@
 package org.bonitasoft.asciidoc.templating.process
 
 import org.bonitasoft.asciidoc.templating.TemplateEngine
+import org.bonitasoft.asciidoc.templating.model.process.BoundaryEvent
 import org.bonitasoft.asciidoc.templating.model.process.Connector
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTable
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTableLine
@@ -335,6 +336,36 @@ class FlowElementTemplateTest extends Specification {
                               *----
                               *1.0
                               *----
+                              *
+                              *'''.stripMargin('*').denormalize()
+    }
+    
+    def "should generate flow element boundary events"() {
+        given:
+        def engine = new TemplateEngine(templateFolder())
+        def outputFile = temporaryFolder.newFile("flowElement.adoc");
+        def flowElement = new FlowElement(name: 'My Task',
+                                          description: 'Some simple description',
+                                          bpmnType: 'Task',
+                                          process: 'Pool',
+                                          boundaryEvents: [new BoundaryEvent(name: 'notification', bpmnType: 'BoundaryMessagesEvent', outgoings: [
+                                              new SequenceFlow(source: 'My Task', target: 'Another task')
+                                              ])
+                                          ])
+
+        when:
+        engine.run("process/flow_element_template.tpl", outputFile, [flowElement:flowElement])
+
+        then:
+        outputFile.text == '''*===== [[pool.flowelement.my-task]]image:icons/Task.png[title="Task"] My Task
+                              *
+                              *Some simple description
+                              *
+                              *====== icon:flash[] Boundary events
+                              *
+                              *image:icons/BoundaryMessagesEvent.png[] notification:: _No description available_
+                              *+
+                              **To <<pool.flowelement.another-task,Another task>>*
                               *
                               *'''.stripMargin('*').denormalize()
     }

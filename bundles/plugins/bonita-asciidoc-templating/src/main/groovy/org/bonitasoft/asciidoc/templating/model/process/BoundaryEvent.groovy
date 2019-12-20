@@ -19,40 +19,15 @@ import groovy.transform.builder.Builder
 
 @Canonical
 @Builder
-class FlowElement {
-    
+class BoundaryEvent {
+ 
     String name
     
-    String description
+    String description = ""
     
     String bpmnType
     
-    Data[] localVariables = []
+    SequenceFlow[] outgoings = []
     
-    SequenceFlow[] incomings
-    
-    SequenceFlow[] outgoings
-    
-    String process
-    
-    String lane
-    
-    Connector[] connectorsIn = []
-    
-    Connector[] connectorsOut = []
-    
-    Expression calledProcessName
-    
-    Expression calledProcessVersion
-    
-    Contract contract
-    
-    /**
-     * Whether this flow element is a LOOP, PARALLEL or SEQUENTIAL.
-     * null otherwise 
-     */
-    String iterationType
-    
-    BoundaryEvent[] boundaryEvents = []
-    
+    String container
 }
