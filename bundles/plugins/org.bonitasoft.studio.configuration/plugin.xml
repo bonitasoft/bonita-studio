@@ -24,7 +24,7 @@
       <coolbarItem
             class="org.bonitasoft.studio.configuration.coolbar.ConfigureCoolbarItem"
             priority="0"
-            toolbarPosition="10">
+            toolbarPosition="11">
       </coolbarItem>
    </extension>
    <extension
