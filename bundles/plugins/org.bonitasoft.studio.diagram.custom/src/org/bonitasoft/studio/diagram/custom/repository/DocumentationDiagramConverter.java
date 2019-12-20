@@ -35,6 +35,7 @@ import org.bonitasoft.asciidoc.templating.model.process.Data;
 import org.bonitasoft.asciidoc.templating.model.process.DecisionTable;
 import org.bonitasoft.asciidoc.templating.model.process.Diagram;
 import org.bonitasoft.asciidoc.templating.model.process.Document;
+import org.bonitasoft.asciidoc.templating.model.process.EventSubProcess;
 import org.bonitasoft.asciidoc.templating.model.process.FlowElement;
 import org.bonitasoft.asciidoc.templating.model.process.FlowElement.FlowElementBuilder;
 import org.bonitasoft.asciidoc.templating.model.process.Lane;
@@ -63,6 +64,7 @@ import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.TextAnnotationAttachment;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
@@ -121,13 +123,30 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .globalVariables(convertVariables(pool))
                 .actors(convertActors(pool))
                 .lanes(convertLanes(pool))
-                .flowElements(convertFlowElements(pool))
+                .flowElements(convertFlowElements(pool, true))
                 .connectorsIn(convertConnectors(pool.getConnectors().stream()
                         .filter(c -> Objects.equals(ConnectorEvent.ON_ENTER.name(), c.getEvent()))))
                 .connectorsOut(convertConnectors(pool.getConnectors().stream()
                         .filter(c -> Objects.equals(ConnectorEvent.ON_FINISH.name(), c.getEvent()))))
                 .contract(createContract(pool.getContract()))
+                .eventSubprocesses(convertEventSubprocesses(pool))
                 .build();
+    }
+
+    private EventSubProcess[] convertEventSubprocesses(Pool pool) {
+        return ModelHelper.getAllElementOfTypeIn(pool, SubProcessEvent.class).stream()
+                .map(this::createEventSubprocess)
+                .toArray( EventSubProcess[]::new);
+    }
+    
+    
+    private EventSubProcess createEventSubprocess(SubProcessEvent eventSubprocess) {
+       return EventSubProcess.builder()
+               .name(eventSubprocess.getName())
+               .description(buildDescription(eventSubprocess))
+               .parentProcess(processUniqueId(eventSubprocess))
+               .flowElements(convertFlowElements(eventSubprocess, false))
+               .build();
     }
 
     private Contract createContract(org.bonitasoft.studio.model.process.Contract contract) {
@@ -200,10 +219,11 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 : "";
     }
 
-    private FlowElement[] convertFlowElements(Pool pool) {
-        return sort(ModelHelper.getAllElementOfTypeIn(pool, org.bonitasoft.studio.model.process.FlowElement.class))
+    private FlowElement[] convertFlowElements(Container container, boolean excludeEventSubprocess) {
+        return sort(ModelHelper.getAllElementOfTypeIn(container, org.bonitasoft.studio.model.process.FlowElement.class))
                 .stream()
                 .filter(element -> !(element instanceof LinkEvent))
+                .filter(element -> excludeEventSubprocess ? !ModelHelper.isInEvenementialSubProcessPool(element) : true)
                 .map(this::createFlowElement)
                 .toArray(FlowElement[]::new);
     }
@@ -290,7 +310,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .iterationType(iterationType(flowElement))
                 .incomings(convertSequenceFlows(buildIncomingTransitions(flowElement)))
                 .outgoings(convertSequenceFlows(buildOutgoingTransitions(flowElement.getOutgoing())))
-                .process(ModelHelper.getParentPool(flowElement).getName())
+                .process(processUniqueId(flowElement))
                 .boundaryEvents(convertBoundaryEvents(flowElement))
                 .lane(ModelHelper.getParentLane(flowElement) != null ? ModelHelper.getParentLane(flowElement).getName()
                         : null)
@@ -309,6 +329,11 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                     .calledProcessVersion(createCalledActivityVersionExpression(((CallActivity) flowElement)));
         }
         return builder.build();
+    }
+
+    private String processUniqueId(org.bonitasoft.studio.model.process.Element element) {
+        Pool parentPool = ModelHelper.getParentPool(element);
+        return String.format("%s-%s", parentPool.getName(),parentPool.getVersion());
     }
 
     private BoundaryEvent[] convertBoundaryEvents(org.bonitasoft.studio.model.process.FlowElement flowElement) {
@@ -500,7 +525,7 @@ public class DocumentationDiagramConverter implements Function<MainProcess, Diag
                 .description(buildDescription(lane))
                 .actor(lane.getActor() != null ? lane.getActor().getName() : "")
                 .actorFilter(!lane.getFilters().isEmpty() ? createActorFilter(lane.getFilters().get(0)) : null)
-                .process(ModelHelper.getParentPool(lane).getName())
+                .process(processUniqueId(lane))
                 .build();
     }
 
