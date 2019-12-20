@@ -1,5 +1,8 @@
 package process
 
+import org.bonitasoft.asciidoc.templating.model.process.EventSubProcess
+import org.bonitasoft.asciidoc.templating.model.process.FlowElement
+
 @Field Process process
 @Field ResourceBundle messages
 
@@ -98,4 +101,16 @@ if(process.lanes) {
 
 if(process.flowElements) {
     process.flowElements.each { FlowElement flowElement -> layout 'process/flow_element_template.tpl', flowElement:flowElement, messages:messages }
+}
+
+if(process.eventSubprocesses) {
+    process.eventSubprocesses.each { EventSubProcess eventSubprocess ->
+         section 4, "image:icons/SubProcessEvent.png[] $eventSubprocess.name" 
+         newLine()
+         writeWithLineBreaks eventSubprocess.description ?: "_${messages.getString('descriptionPlaceholder')}_"
+         2.times { newLine() }
+         eventSubprocess.flowElements.each { FlowElement flowElement->
+             layout 'process/flow_element_template.tpl', flowElement:flowElement, messages:messages
+         }
+   }
 }
