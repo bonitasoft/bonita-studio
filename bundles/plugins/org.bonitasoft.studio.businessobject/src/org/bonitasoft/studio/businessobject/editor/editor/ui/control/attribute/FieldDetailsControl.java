@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.BusinessDataModelFormPage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
@@ -40,7 +43,9 @@ import org.eclipse.swt.widgets.Label;
 public class FieldDetailsControl extends Composite {
 
     private BusinessDataModelFormPage formPage;
+    private DataBindingContext ctx;
     private IObservableValue<Field> selectedFieldObservable;
+    private IObservableValue<String> descriptionObservable;
     private CustomStackLayout stackLayout;
     private Composite stringFieldDetailsComposite;
     private Composite dateDeprecatedComposite;
@@ -55,7 +60,10 @@ public class FieldDetailsControl extends Composite {
             IObservableValue<Field> selectedFieldObservable, DataBindingContext ctx) {
         super(parent, SWT.None);
         this.formPage = formPage;
+        this.ctx = ctx;
         this.selectedFieldObservable = selectedFieldObservable;
+        this.descriptionObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                selectedFieldObservable, BusinessDataModelPackage.Literals.FIELD__DESCRIPTION);
         formPage.getToolkit().adapt(this);
 
         stackLayout = new CustomStackLayout(this);
@@ -108,45 +116,49 @@ public class FieldDetailsControl extends Composite {
     }
 
     private void createNoDetailsComposite() {
-        noDetailsComposite = createDescriptionComposite(Messages.noDetailsAvailable);
+        noDetailsComposite = createDescriptionComposite(Optional.empty());
     }
 
     private void createRelationFieldComposite(DataBindingContext ctx) {
-        relationFieldComposite = new RelationFieldDetailsControl(this, formPage, selectedFieldObservable, ctx);
+        relationFieldComposite = new RelationFieldDetailsControl(this, formPage, selectedFieldObservable,
+                descriptionObservable, ctx);
     }
 
     private void createTextFieldComposite() {
-        textFieldComposite = createDescriptionComposite(Messages.textDetails);
+        textFieldComposite = createDescriptionComposite(Optional.of(Messages.textDetails));
     }
 
     private void createDateTimeComposite() {
-        dateTimeComposite = createDescriptionComposite(String.format(Messages.dateTimeDetails,
-                DateTypeLabels.DATE_AND_TIME, DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
+        dateTimeComposite = createDescriptionComposite(Optional.of(String.format(Messages.dateTimeDetails,
+                DateTypeLabels.DATE_AND_TIME, DateTypeLabels.DATE_TIME_WITH_TIMEZONE)));
     }
 
     private void createDateTimeInTimeZoneComposite() {
         dateTimeInTimezoneComposite = createDescriptionComposite(
-                String.format(Messages.dateTimeInTimezoneDetails, DateTypeLabels.DATE_TIME_WITH_TIMEZONE));
+                Optional.of(String.format(Messages.dateTimeInTimezoneDetails, DateTypeLabels.DATE_TIME_WITH_TIMEZONE)));
     }
 
     private void createDateOnlyDetailsComposite() {
-        dateOnlyComposite = createDescriptionComposite(String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY));
+        dateOnlyComposite = createDescriptionComposite(
+                Optional.of(String.format(Messages.dateOnlyDetails, DateTypeLabels.DATE_ONLY)));
     }
 
     private void createStringFieldDetailsComposite(DataBindingContext ctx) {
         stringFieldDetailsComposite = formPage.getToolkit().createComposite(this);
-        stringFieldDetailsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 0).create());
+        stringFieldDetailsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         stringFieldDetailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         IObservableValue<Integer> fieldLengthObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.SIMPLE_FIELD__LENGTH);
+
+        createDescriptionTextArea(stringFieldDetailsComposite);
 
         new ComboWidget.Builder()
                 .withLabel(Messages.length)
                 .withCompositeMessageDecorator()
                 .withItems(new String[] { "64", "128", "255", "512" })
                 .labelAbove()
-                .widthHint(400)
+                .widthHint(500)
                 .bindTo(fieldLengthObservable)
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(StringToNumberConverter.toInteger(false))
@@ -165,8 +177,10 @@ public class FieldDetailsControl extends Composite {
 
     private void createDateDeprecatedDetailsComposite() {
         dateDeprecatedComposite = formPage.getToolkit().createComposite(this);
-        dateDeprecatedComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 0).create());
+        dateDeprecatedComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         dateDeprecatedComposite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
+
+        createDescriptionTextArea(dateDeprecatedComposite);
 
         Label descriptionLabel = formPage.getToolkit().createLabel(dateDeprecatedComposite, Messages.dateDetails);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -176,15 +190,31 @@ public class FieldDetailsControl extends Composite {
         deprecatedDetailsLabel.setLayoutData(GridDataFactory.fillDefaults().create());
     }
 
-    private Composite createDescriptionComposite(String description) {
+    private Composite createDescriptionComposite(Optional<String> description) {
         Composite composite = formPage.getToolkit().createComposite(this);
-        composite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 0).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
 
-        Label descriptionLabel = formPage.getToolkit().createLabel(composite, description);
-        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        createDescriptionTextArea(composite);
+
+        description.ifPresent(desc -> {
+            Label descriptionLabel = formPage.getToolkit().createLabel(composite, desc);
+            descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        });
 
         return composite;
+    }
+
+    private void createDescriptionTextArea(Composite parent) {
+        new TextAreaWidget.Builder()
+                .withLabel(Messages.fieldDescriptionPlaceholder)
+                .labelAbove()
+                .widthHint(500)
+                .heightHint(70)
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .adapt(formPage.getToolkit())
+                .createIn(parent);
     }
 
 }

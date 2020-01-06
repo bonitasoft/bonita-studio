@@ -36,6 +36,7 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -104,7 +105,7 @@ public class ConstraintEditionControl {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createConstraintDefinitionSection();
-        createCronstraintEditionSection(ctx);
+        createConstraintEditionComposite(ctx);
         enableButtons(ctx);
 
         ctx.bindSet(ViewersObservables.observeCheckedElements(constraintEditionViewer, Field.class),
@@ -153,8 +154,49 @@ public class ConstraintEditionControl {
                         () -> new RuntimeException(String.format("Unable to find a field with the name %s", fieldName)));
     }
 
-    private void createCronstraintEditionSection(DataBindingContext ctx) {
-        Section section = formPage.getToolkit().createSection(mainComposite, Section.EXPANDED);
+    private void createConstraintEditionComposite(DataBindingContext ctx) {
+        Composite composite = formPage.getToolkit().createComposite(mainComposite);
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        createConstraintDescriptionSection(composite, ctx);
+        createConstraintEditionSection(composite);
+
+        ctx.bindValue(WidgetProperties.visible().observe(composite), new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return selectedConstraintObservable.getValue() != null;
+            }
+        });
+    }
+
+    private void createConstraintDescriptionSection(Composite parent, DataBindingContext ctx) {
+        Section section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        section.setLayout(GridLayoutFactory.fillDefaults().create());
+        section.setText(Messages.description);
+
+        Composite client = formPage.getToolkit().createComposite(section);
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        client.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+
+        IObservableValue descriptionObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                selectedConstraintObservable, BusinessDataModelPackage.Literals.UNIQUE_CONSTRAINT__DESCRIPTION);
+
+        new TextAreaWidget.Builder()
+                .widthHint(500)
+                .heightHint(70)
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .adapt(formPage.getToolkit())
+                .createIn(client);
+
+        section.setClient(client);
+    }
+
+    private void createConstraintEditionSection(Composite parent) {
+        Section section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
         section.setText(Messages.attributes);
@@ -173,13 +215,6 @@ public class ConstraintEditionControl {
         createConstraintEditionViewer(client);
 
         section.setClient(client);
-        ctx.bindValue(WidgetProperties.visible().observe(section), new ComputedValue<Boolean>() {
-
-            @Override
-            protected Boolean calculate() {
-                return selectedConstraintObservable.getValue() != null;
-            }
-        });
     }
 
     private void createConstraintEditionViewer(Composite parent) {

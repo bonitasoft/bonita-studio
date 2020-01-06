@@ -25,6 +25,11 @@ public class QueryParameterBuilder {
         return this;
     }
 
+    public QueryParameterBuilder withDescription(String description) {
+        queryParameter.setDescription(description);
+        return this;
+    }
+
     public QueryParameterBuilder withClassName(String className) {
         queryParameter.setClassName(className);
         return this;

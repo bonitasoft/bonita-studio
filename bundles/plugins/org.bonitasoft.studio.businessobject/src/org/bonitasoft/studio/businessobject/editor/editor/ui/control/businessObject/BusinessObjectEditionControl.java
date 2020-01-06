@@ -70,7 +70,6 @@ public class BusinessObjectEditionControl {
         editionSection.setClient(client);
     }
 
-    @SuppressWarnings("unchecked")
     private void buildDescriptionSection(Composite parent, BusinessDataModelFormPage formPage, DataBindingContext ctx) {
         IObservableValue<String> descriptionObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 boSelectedObservable, BusinessDataModelPackage.Literals.BUSINESS_OBJECT__DESCRIPTION);

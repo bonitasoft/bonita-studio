@@ -38,6 +38,7 @@ import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -104,7 +105,7 @@ public class IndexControl {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createIndexDefinitionSection(ctx);
-        createIndexEditionSection(ctx);
+        createIndexEditionComposite(ctx);
         enableButtons(ctx);
 
         EMFObservables.observeDetailList(Realm.getDefault(), selectedIndexObservable,
@@ -190,8 +191,49 @@ public class IndexControl {
         deleteIndexItem.addListener(SWT.Selection, e -> removeIndex());
     }
 
-    private void createIndexEditionSection(DataBindingContext ctx) {
-        Section section = formPage.getToolkit().createSection(mainComposite, Section.EXPANDED);
+    private void createIndexEditionComposite(DataBindingContext ctx) {
+        Composite composite = formPage.getToolkit().createComposite(mainComposite);
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+
+        createIndexDescriptionSection(composite, ctx);
+        createIndexEditionSection(composite, ctx);
+
+        ctx.bindValue(WidgetProperties.visible().observe(composite), new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return selectedIndexObservable.getValue() != null;
+            }
+        });
+    }
+
+    private void createIndexDescriptionSection(Composite parent, DataBindingContext ctx) {
+        Section section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        section.setLayout(GridLayoutFactory.fillDefaults().create());
+        section.setText(Messages.description);
+
+        Composite client = formPage.getToolkit().createComposite(section);
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        client.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+
+        IObservableValue descriptionObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                selectedIndexObservable, BusinessDataModelPackage.Literals.INDEX__DESCRIPTION);
+
+        new TextAreaWidget.Builder()
+                .widthHint(500)
+                .heightHint(70)
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .adapt(formPage.getToolkit())
+                .createIn(client);
+
+        section.setClient(client);
+    }
+
+    private void createIndexEditionSection(Composite parent, DataBindingContext ctx) {
+        Section section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
         section.setText(Messages.attributes);
@@ -200,13 +242,6 @@ public class IndexControl {
                 actualsFieldsObservable);
 
         section.setClient(indexEditionControl);
-        ctx.bindValue(WidgetProperties.visible().observe(section), new ComputedValue<Boolean>() {
-
-            @Override
-            protected Boolean calculate() {
-                return selectedIndexObservable.getValue() != null;
-            }
-        });
     }
 
     private void createIndexViewer(Composite parent) {

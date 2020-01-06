@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.QueryImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.QueryImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.QueryImpl#getContent <em>Content</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.QueryImpl#getReturnType <em>Return Type</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.QueryImpl#getQueryParameters <em>Query Parameters</em>}</li>
@@ -58,6 +59,26 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * @ordered
      */
     protected String name = NAME_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected static final String DESCRIPTION_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected String description = DESCRIPTION_EDEFAULT;
 
     /**
      * The default value of the '{@link #getContent() <em>Content</em>}' attribute.
@@ -154,6 +175,27 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDescription(String newDescription) {
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BusinessDataModelPackage.QUERY__DESCRIPTION, oldDescription, description));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public String getContent() {
         return content;
     }
@@ -227,6 +269,8 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
         switch (featureID) {
             case BusinessDataModelPackage.QUERY__NAME:
                 return getName();
+            case BusinessDataModelPackage.QUERY__DESCRIPTION:
+                return getDescription();
             case BusinessDataModelPackage.QUERY__CONTENT:
                 return getContent();
             case BusinessDataModelPackage.QUERY__RETURN_TYPE:
@@ -248,6 +292,9 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
         switch (featureID) {
             case BusinessDataModelPackage.QUERY__NAME:
                 setName((String)newValue);
+                return;
+            case BusinessDataModelPackage.QUERY__DESCRIPTION:
+                setDescription((String)newValue);
                 return;
             case BusinessDataModelPackage.QUERY__CONTENT:
                 setContent((String)newValue);
@@ -274,6 +321,9 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
             case BusinessDataModelPackage.QUERY__NAME:
                 setName(NAME_EDEFAULT);
                 return;
+            case BusinessDataModelPackage.QUERY__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
             case BusinessDataModelPackage.QUERY__CONTENT:
                 setContent(CONTENT_EDEFAULT);
                 return;
@@ -297,6 +347,8 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
         switch (featureID) {
             case BusinessDataModelPackage.QUERY__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case BusinessDataModelPackage.QUERY__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
             case BusinessDataModelPackage.QUERY__CONTENT:
                 return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
             case BusinessDataModelPackage.QUERY__RETURN_TYPE:
@@ -319,6 +371,8 @@ public class QueryImpl extends MinimalEObjectImpl.Container implements Query {
         StringBuilder result = new StringBuilder(super.toString());
         result.append(" (name: ");
         result.append(name);
+        result.append(", description: ");
+        result.append(description);
         result.append(", content: ");
         result.append(content);
         result.append(", returnType: ");

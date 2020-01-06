@@ -69,6 +69,7 @@ public class DocumentationBusinessDataModelConverter {
         return uniqueConstraints.stream()
                 .map(c -> UniqueConstraint.builder()
                         .name(c.getName())
+                        .description(c.getDescription())
                         .attributes(c.getFieldNames().toArray(new String[] {}))
                         .build())
                 .toArray(UniqueConstraint[]::new);
@@ -79,6 +80,7 @@ public class DocumentationBusinessDataModelConverter {
         return indexes.stream()
                 .map(index -> Index.builder()
                         .name(index.getName())
+                        .description(index.getDescription())
                         .attributes(index.getFieldNames().toArray(new String[] {}))
                         .build())
                 .toArray(Index[]::new);
@@ -87,6 +89,7 @@ public class DocumentationBusinessDataModelConverter {
     private Query[] convertQueries(List<org.bonitasoft.engine.bdm.model.Query> queries, BusinessObject object) {
         return queries.stream()
                 .map(q -> Query.builder().name(q.getName())
+                        .description(q.getDescription())
                         .returnType(convertToSimpleType(q.getReturnType(), object))
                         .sourceCode(q.getContent())
                         .parameters(convertQueryParameters(q, object))
@@ -121,6 +124,7 @@ public class DocumentationBusinessDataModelConverter {
                 .map(SimpleField.class::cast)
                 .map(f -> Attribute.builder()
                         .name(f.getName())
+                        .description(f.getDescription())
                         .type(f.getType().getClazz().getSimpleName())
                         .multiple(f.isCollection())
                         .mandatory(!f.isNullable())
@@ -140,6 +144,7 @@ public class DocumentationBusinessDataModelConverter {
                 .map(RelationField.class::cast)
                 .map(f -> Relation.builder()
                         .name(f.getName())
+                        .description(f.getDescription())
                         .type(f.getReference().getSimpleName())
                         .relationType(f.getType().toString())
                         .mandatory(!f.isNullable())

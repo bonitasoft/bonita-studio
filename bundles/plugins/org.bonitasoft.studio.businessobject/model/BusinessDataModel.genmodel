@@ -53,25 +53,30 @@
     </genClasses>
     <genClasses image="false" ecoreClass="BusinessDataModel.ecore#//Field">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/nullable"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Field/collection"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//UniqueConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//UniqueConstraint/fieldNames"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//Index">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Index/fieldNames"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//Query">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/content"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//Query/returnType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BusinessDataModel.ecore#//Query/queryParameters"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//QueryParameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BusinessDataModel.ecore#//QueryParameter/className"/>
     </genClasses>
     <genClasses ecoreClass="BusinessDataModel.ecore#//SimpleField">
