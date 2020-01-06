@@ -29,7 +29,7 @@ public class ProductVersion {
     public static final String CURRENT_VERSION = manifestVersion();
     public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
-    public static final String CURRENT_YEAR = "2019";
+    public static final String CURRENT_YEAR = "2020";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
