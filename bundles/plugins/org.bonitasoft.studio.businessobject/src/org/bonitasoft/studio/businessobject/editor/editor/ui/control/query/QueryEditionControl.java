@@ -95,7 +95,13 @@ public class QueryEditionControl {
         this.ctx = ctx;
         this.queryContentCreator = new QueryContentCreator();
 
-        createSection(parent);
+        Composite queryEditionComposite = formPage.getToolkit().createComposite(parent);
+        queryEditionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        queryEditionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        createDefinitionSection(queryEditionComposite);
+        queryDetailsControl = new QueryDetailsControl(queryEditionComposite, querySelectedObservable, formPage,
+                boSelectedObservable);
         enableButtons();
 
         customQueries = EMFObservables.observeDetailList(Realm.getDefault(), boSelectedObservable,
@@ -104,34 +110,27 @@ public class QueryEditionControl {
                 BusinessDataModelPackage.Literals.BUSINESS_OBJECT__DEFAULT_QUERIES);
     }
 
-    private void createSection(Composite parent) {
+    private void createDefinitionSection(Composite parent) {
         this.section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
 
         Composite client = formPage.getToolkit().createComposite(section);
         client.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).create());
-        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+                GridLayoutFactory.fillDefaults().create());
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
-        createDefinitionSection(client);
-
-        queryDetailsControl = new QueryDetailsControl(client, querySelectedObservable, formPage, boSelectedObservable);
-
-        section.setClient(client);
-    }
-
-    private void createDefinitionSection(Composite parent) {
-        Composite definitionComposite = formPage.getToolkit().createComposite(parent);
-        definitionComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        Composite definitionComposite = formPage.getToolkit().createComposite(client);
+        definitionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         definitionComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
-                        .extendedMargins(15, 5, 10, 10)
-                        .create());
+                        .margins(10, 10).create());
 
         createToolbar(definitionComposite);
         createSearchField(definitionComposite);
         createViewer(definitionComposite);
+
+        section.setClient(client);
     }
 
     private void createSearchField(Composite parent) {

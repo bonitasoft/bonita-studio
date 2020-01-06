@@ -342,7 +342,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getField_Nullable() {
+    public EAttribute getField_Description() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(1);
     }
 
@@ -351,8 +351,17 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getField_Collection() {
+    public EAttribute getField_Nullable() {
         return (EAttribute)fieldEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getField_Collection() {
+        return (EAttribute)fieldEClass.getEStructuralFeatures().get(3);
     }
 
     /**
@@ -378,8 +387,17 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getUniqueConstraint_FieldNames() {
+    public EAttribute getUniqueConstraint_Description() {
         return (EAttribute)uniqueConstraintEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getUniqueConstraint_FieldNames() {
+        return (EAttribute)uniqueConstraintEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -405,8 +423,17 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getIndex_FieldNames() {
+    public EAttribute getIndex_Description() {
         return (EAttribute)indexEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getIndex_FieldNames() {
+        return (EAttribute)indexEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -432,7 +459,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getQuery_Content() {
+    public EAttribute getQuery_Description() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(1);
     }
 
@@ -441,7 +468,7 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getQuery_ReturnType() {
+    public EAttribute getQuery_Content() {
         return (EAttribute)queryEClass.getEStructuralFeatures().get(2);
     }
 
@@ -450,8 +477,17 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getQuery_ReturnType() {
+        return (EAttribute)queryEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EReference getQuery_QueryParameters() {
-        return (EReference)queryEClass.getEStructuralFeatures().get(3);
+        return (EReference)queryEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -477,8 +513,17 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getQueryParameter_ClassName() {
+    public EAttribute getQueryParameter_Description() {
         return (EAttribute)queryParameterEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getQueryParameter_ClassName() {
+        return (EAttribute)queryParameterEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -619,25 +664,30 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
 
         fieldEClass = createEClass(FIELD);
         createEAttribute(fieldEClass, FIELD__NAME);
+        createEAttribute(fieldEClass, FIELD__DESCRIPTION);
         createEAttribute(fieldEClass, FIELD__NULLABLE);
         createEAttribute(fieldEClass, FIELD__COLLECTION);
 
         uniqueConstraintEClass = createEClass(UNIQUE_CONSTRAINT);
         createEAttribute(uniqueConstraintEClass, UNIQUE_CONSTRAINT__NAME);
+        createEAttribute(uniqueConstraintEClass, UNIQUE_CONSTRAINT__DESCRIPTION);
         createEAttribute(uniqueConstraintEClass, UNIQUE_CONSTRAINT__FIELD_NAMES);
 
         indexEClass = createEClass(INDEX);
         createEAttribute(indexEClass, INDEX__NAME);
+        createEAttribute(indexEClass, INDEX__DESCRIPTION);
         createEAttribute(indexEClass, INDEX__FIELD_NAMES);
 
         queryEClass = createEClass(QUERY);
         createEAttribute(queryEClass, QUERY__NAME);
+        createEAttribute(queryEClass, QUERY__DESCRIPTION);
         createEAttribute(queryEClass, QUERY__CONTENT);
         createEAttribute(queryEClass, QUERY__RETURN_TYPE);
         createEReference(queryEClass, QUERY__QUERY_PARAMETERS);
 
         queryParameterEClass = createEClass(QUERY_PARAMETER);
         createEAttribute(queryParameterEClass, QUERY_PARAMETER__NAME);
+        createEAttribute(queryParameterEClass, QUERY_PARAMETER__DESCRIPTION);
         createEAttribute(queryParameterEClass, QUERY_PARAMETER__CLASS_NAME);
 
         simpleFieldEClass = createEClass(SIMPLE_FIELD);
@@ -707,25 +757,30 @@ public class BusinessDataModelPackageImpl extends EPackageImpl implements Busine
 
         initEClass(fieldEClass, Field.class, "Field", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getField_Name(), ecorePackage.getEString(), "name", null, 0, 1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getField_Description(), ecorePackage.getEString(), "description", null, 0, 1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getField_Nullable(), ecorePackage.getEBoolean(), "nullable", "true", 0, 1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getField_Collection(), ecorePackage.getEBoolean(), "collection", "false", 0, 1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(uniqueConstraintEClass, UniqueConstraint.class, "UniqueConstraint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getUniqueConstraint_Name(), ecorePackage.getEString(), "name", null, 0, 1, UniqueConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUniqueConstraint_Description(), ecorePackage.getEString(), "description", null, 0, 1, UniqueConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getUniqueConstraint_FieldNames(), ecorePackage.getEString(), "fieldNames", null, 0, -1, UniqueConstraint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(indexEClass, Index.class, "Index", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getIndex_Name(), ecorePackage.getEString(), "name", null, 0, 1, Index.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getIndex_Description(), ecorePackage.getEString(), "description", null, 0, 1, Index.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndex_FieldNames(), ecorePackage.getEString(), "fieldNames", null, 0, -1, Index.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(queryEClass, Query.class, "Query", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getQuery_Name(), ecorePackage.getEString(), "name", null, 0, 1, Query.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getQuery_Description(), ecorePackage.getEString(), "description", null, 0, 1, Query.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getQuery_Content(), ecorePackage.getEString(), "content", null, 0, 1, Query.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getQuery_ReturnType(), ecorePackage.getEString(), "returnType", null, 0, 1, Query.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getQuery_QueryParameters(), this.getQueryParameter(), null, "queryParameters", null, 0, -1, Query.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(queryParameterEClass, QueryParameter.class, "QueryParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getQueryParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, QueryParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getQueryParameter_Description(), ecorePackage.getEString(), "description", null, 0, 1, QueryParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getQueryParameter_ClassName(), ecorePackage.getEString(), "className", null, 0, 1, QueryParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(simpleFieldEClass, SimpleField.class, "SimpleField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

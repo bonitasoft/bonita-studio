@@ -25,6 +25,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
+import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -47,21 +48,37 @@ public class RelationFieldDetailsControl extends Composite {
     private BusinessDataModelFormPage formPage;
     private IObservableValue<Field> selectedFieldObservable;
     private DataBindingContext ctx;
+    private IObservableValue<String> descriptionObservable;
 
     public RelationFieldDetailsControl(Composite parent, BusinessDataModelFormPage formPage,
-            IObservableValue<Field> selectedFieldObservable, DataBindingContext ctx) {
+            IObservableValue<Field> selectedFieldObservable, IObservableValue<String> descriptionObservable,
+            DataBindingContext ctx) {
         super(parent, SWT.None);
+        this.descriptionObservable = descriptionObservable;
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        setLayout(GridLayoutFactory.fillDefaults().margins(5, 0).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         formPage.getToolkit().adapt(this);
 
         this.formPage = formPage;
         this.selectedFieldObservable = selectedFieldObservable;
         this.ctx = ctx;
 
+        createDescriptionTextArea();
         createRelationKindLabel();
         createRelationKindCombo();
         createLoadingModeRadioButtons();
+    }
+
+    private void createDescriptionTextArea() {
+        new TextAreaWidget.Builder()
+                .withLabel(Messages.fieldDescriptionPlaceholder)
+                .labelAbove()
+                .widthHint(500)
+                .heightHint(70)
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .adapt(formPage.getToolkit())
+                .createIn(this);
     }
 
     private void createLoadingModeRadioButtons() {

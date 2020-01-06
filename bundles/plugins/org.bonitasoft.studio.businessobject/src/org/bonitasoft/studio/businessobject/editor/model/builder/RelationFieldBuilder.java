@@ -3,7 +3,7 @@
  * BonitaSoft is a trademark of BonitaSoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
+ * BonitaSoft, 32 rue Gustave Eiffel ï¿½ 38000 Grenoble
  * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.businessobject.editor.model.builder;
@@ -25,6 +25,11 @@ public class RelationFieldBuilder {
 
     public RelationFieldBuilder withName(String name) {
         relationField.setName(name);
+        return this;
+    }
+
+    public RelationFieldBuilder withDescription(String description) {
+        relationField.setDescription(description);
         return this;
     }
 

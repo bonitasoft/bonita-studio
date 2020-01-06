@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.FieldImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.FieldImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.FieldImpl#isNullable <em>Nullable</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.FieldImpl#isCollection <em>Collection</em>}</li>
  * </ul>
@@ -47,6 +48,26 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * @ordered
      */
     protected String name = NAME_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected static final String DESCRIPTION_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected String description = DESCRIPTION_EDEFAULT;
 
     /**
      * The default value of the '{@link #isNullable() <em>Nullable</em>}' attribute.
@@ -133,6 +154,27 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDescription(String newDescription) {
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BusinessDataModelPackage.FIELD__DESCRIPTION, oldDescription, description));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public boolean isNullable() {
         return nullable;
     }
@@ -180,6 +222,8 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
         switch (featureID) {
             case BusinessDataModelPackage.FIELD__NAME:
                 return getName();
+            case BusinessDataModelPackage.FIELD__DESCRIPTION:
+                return getDescription();
             case BusinessDataModelPackage.FIELD__NULLABLE:
                 return isNullable();
             case BusinessDataModelPackage.FIELD__COLLECTION:
@@ -198,6 +242,9 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
         switch (featureID) {
             case BusinessDataModelPackage.FIELD__NAME:
                 setName((String)newValue);
+                return;
+            case BusinessDataModelPackage.FIELD__DESCRIPTION:
+                setDescription((String)newValue);
                 return;
             case BusinessDataModelPackage.FIELD__NULLABLE:
                 setNullable((Boolean)newValue);
@@ -220,6 +267,9 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
             case BusinessDataModelPackage.FIELD__NAME:
                 setName(NAME_EDEFAULT);
                 return;
+            case BusinessDataModelPackage.FIELD__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
             case BusinessDataModelPackage.FIELD__NULLABLE:
                 setNullable(NULLABLE_EDEFAULT);
                 return;
@@ -240,6 +290,8 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
         switch (featureID) {
             case BusinessDataModelPackage.FIELD__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case BusinessDataModelPackage.FIELD__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
             case BusinessDataModelPackage.FIELD__NULLABLE:
                 return nullable != NULLABLE_EDEFAULT;
             case BusinessDataModelPackage.FIELD__COLLECTION:
@@ -260,6 +312,8 @@ public abstract class FieldImpl extends MinimalEObjectImpl.Container implements 
         StringBuilder result = new StringBuilder(super.toString());
         result.append(" (name: ");
         result.append(name);
+        result.append(", description: ");
+        result.append(description);
         result.append(", nullable: ");
         result.append(nullable);
         result.append(", collection: ");

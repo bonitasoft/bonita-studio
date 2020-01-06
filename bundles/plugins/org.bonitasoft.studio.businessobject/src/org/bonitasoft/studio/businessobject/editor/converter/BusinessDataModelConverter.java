@@ -207,6 +207,7 @@ public class BusinessDataModelConverter {
     private RelationField convertRelationField(org.bonitasoft.engine.bdm.model.field.RelationField field) {
         RelationField relationField = new RelationFieldBuilder()
                 .withName(field.getName())
+                .withDescription(field.getDescription())
                 .withNullable(field.isNullable())
                 .withCollection(field.isCollection())
                 .withReference(new BusinessObjectBuilder() // replaced with the real reference when all the business objects are created
@@ -221,6 +222,7 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.field.RelationField convertRelationField(RelationField field) {
         org.bonitasoft.engine.bdm.model.field.RelationField relationField = new org.bonitasoft.engine.bdm.model.field.RelationField();
         relationField.setName(field.getName());
+        relationField.setDescription(field.getDescription());
         relationField.setNullable(field.isNullable());
         relationField.setCollection(field.isCollection());
         org.bonitasoft.engine.bdm.model.BusinessObject tmpReference = new org.bonitasoft.engine.bdm.model.BusinessObject(
@@ -259,6 +261,7 @@ public class BusinessDataModelConverter {
     private SimpleField convertSimpleField(org.bonitasoft.engine.bdm.model.field.SimpleField field) {
         SimpleField simpleField = new SimpleFieldBuilder()
                 .withName(field.getName())
+                .withDescription(field.getDescription())
                 .withLength(field.getLength())
                 .withCollection(field.isCollection())
                 .withNullable(field.isNullable())
@@ -270,6 +273,7 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.field.SimpleField convertSimpleField(SimpleField field) {
         org.bonitasoft.engine.bdm.model.field.SimpleField simpleField = new org.bonitasoft.engine.bdm.model.field.SimpleField();
         simpleField.setName(field.getName());
+        simpleField.setDescription(field.getDescription());
         simpleField.setLength(field.getLength());
         simpleField.setCollection(field.isCollection());
         simpleField.setNullable(field.isNullable());
@@ -348,6 +352,7 @@ public class BusinessDataModelConverter {
     private Index convertIndex(org.bonitasoft.engine.bdm.model.Index index) {
         Index indx = new IndexBuilder()
                 .withName(index.getName())
+                .withDescription(index.getDescription())
                 .withFieldNames(index.getFieldNames().toArray(new String[0]))
                 .create();
         return indx;
@@ -356,6 +361,7 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.Index convertIndex(Index index) {
         org.bonitasoft.engine.bdm.model.Index indx = new org.bonitasoft.engine.bdm.model.Index();
         indx.setName(index.getName());
+        indx.setDescription(index.getDescription());
         indx.setFieldNames(index.getFieldNames());
         return indx;
     }
@@ -363,6 +369,7 @@ public class BusinessDataModelConverter {
     private Query convertQuery(org.bonitasoft.engine.bdm.model.Query query) {
         Query qury = new QueryBuilder()
                 .withName(query.getName())
+                .withDescription(query.getDescription())
                 .withContent(query.getContent())
                 .withReturnType(query.getReturnType())
                 .create();
@@ -373,6 +380,7 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.Query convertQuery(Query query) {
         org.bonitasoft.engine.bdm.model.Query qury = new org.bonitasoft.engine.bdm.model.Query(query.getName(),
                 query.getContent(), query.getReturnType());
+        qury.setDescription(query.getDescription());
         query.getQueryParameters().stream().map(this::convertQueryParameter).forEach(qury.getQueryParameters()::add);
         return qury;
     }
@@ -380,6 +388,7 @@ public class BusinessDataModelConverter {
     private QueryParameter convertQueryParameter(org.bonitasoft.engine.bdm.model.QueryParameter queryParameter) {
         QueryParameter quryParameter = new QueryParameterBuilder()
                 .withName(queryParameter.getName())
+                .withDescription(queryParameter.getDescription())
                 .withClassName(queryParameter.getClassName())
                 .create();
         return quryParameter;
@@ -388,12 +397,14 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.QueryParameter convertQueryParameter(QueryParameter queryParameter) {
         org.bonitasoft.engine.bdm.model.QueryParameter quryParameter = new org.bonitasoft.engine.bdm.model.QueryParameter(
                 queryParameter.getName(), queryParameter.getClassName());
+        quryParameter.setDescription(queryParameter.getDescription());
         return quryParameter;
     }
 
     private UniqueConstraint convertUniqueConstraint(org.bonitasoft.engine.bdm.model.UniqueConstraint uniqueConstraint) {
         UniqueConstraint constraint = new UniqueConstraintBuilder()
                 .withName(uniqueConstraint.getName())
+                .withDescription(uniqueConstraint.getDescription())
                 .withFieldNames(uniqueConstraint.getFieldNames().toArray(new String[0]))
                 .create();
         return constraint;
@@ -402,6 +413,7 @@ public class BusinessDataModelConverter {
     private org.bonitasoft.engine.bdm.model.UniqueConstraint convertUniqueConstraint(UniqueConstraint uniqueConstraint) {
         org.bonitasoft.engine.bdm.model.UniqueConstraint constraint = new org.bonitasoft.engine.bdm.model.UniqueConstraint();
         constraint.setName(uniqueConstraint.getName());
+        constraint.setDescription(uniqueConstraint.getDescription());
         constraint.setFieldNames(uniqueConstraint.getFieldNames());
         return constraint;
     }

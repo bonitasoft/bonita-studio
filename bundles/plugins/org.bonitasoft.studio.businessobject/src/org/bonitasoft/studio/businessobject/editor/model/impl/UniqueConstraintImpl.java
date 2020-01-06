@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  * </p>
  * <ul>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.UniqueConstraintImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.UniqueConstraintImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.bonitasoft.studio.businessobject.editor.model.impl.UniqueConstraintImpl#getFieldNames <em>Field Names</em>}</li>
  * </ul>
  *
@@ -52,6 +53,26 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * @ordered
      */
     protected String name = NAME_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected static final String DESCRIPTION_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDescription()
+     * @generated
+     * @ordered
+     */
+    protected String description = DESCRIPTION_EDEFAULT;
 
     /**
      * The cached value of the '{@link #getFieldNames() <em>Field Names</em>}' attribute list.
@@ -108,6 +129,27 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDescription(String newDescription) {
+        String oldDescription = description;
+        description = newDescription;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BusinessDataModelPackage.UNIQUE_CONSTRAINT__DESCRIPTION, oldDescription, description));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EList<String> getFieldNames() {
         if (fieldNames == null) {
             fieldNames = new EDataTypeEList<String>(String.class, this, BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES);
@@ -125,6 +167,8 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
         switch (featureID) {
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__NAME:
                 return getName();
+            case BusinessDataModelPackage.UNIQUE_CONSTRAINT__DESCRIPTION:
+                return getDescription();
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES:
                 return getFieldNames();
         }
@@ -142,6 +186,9 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
         switch (featureID) {
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__NAME:
                 setName((String)newValue);
+                return;
+            case BusinessDataModelPackage.UNIQUE_CONSTRAINT__DESCRIPTION:
+                setDescription((String)newValue);
                 return;
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES:
                 getFieldNames().clear();
@@ -162,6 +209,9 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__NAME:
                 setName(NAME_EDEFAULT);
                 return;
+            case BusinessDataModelPackage.UNIQUE_CONSTRAINT__DESCRIPTION:
+                setDescription(DESCRIPTION_EDEFAULT);
+                return;
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES:
                 getFieldNames().clear();
                 return;
@@ -179,6 +229,8 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
         switch (featureID) {
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case BusinessDataModelPackage.UNIQUE_CONSTRAINT__DESCRIPTION:
+                return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
             case BusinessDataModelPackage.UNIQUE_CONSTRAINT__FIELD_NAMES:
                 return fieldNames != null && !fieldNames.isEmpty();
         }
@@ -197,6 +249,8 @@ public class UniqueConstraintImpl extends MinimalEObjectImpl.Container implement
         StringBuilder result = new StringBuilder(super.toString());
         result.append(" (name: ");
         result.append(name);
+        result.append(", description: ");
+        result.append(description);
         result.append(", fieldNames: ");
         result.append(fieldNames);
         result.append(')');

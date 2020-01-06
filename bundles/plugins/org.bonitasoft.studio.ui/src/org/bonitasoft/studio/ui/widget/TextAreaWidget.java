@@ -38,6 +38,7 @@ public class TextAreaWidget extends TextWidget {
                     toolkit, editableStrategy, Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
+            placeholder.ifPresent(control::setPlaceholder);
             if (ctx != null && modelObservable != null) {
                 control.bindControl(ctx,
                         delay.map(time -> control.observeText(time, SWT.Modify))

@@ -457,4 +457,8 @@ public class TextWidget extends EditableControlWidget {
         return this;
     }
 
+    public ISWTObservableValue observeEnable() {
+        return WidgetProperties.enabled().observe(text);
+    }
+
 }

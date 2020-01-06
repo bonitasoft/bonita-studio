@@ -2,6 +2,7 @@ package org.bonitasoft.studio.businessobject.editor.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
@@ -32,13 +33,17 @@ public class BusinessDataModelConverterTest {
 
     private static final String DESCRIPTION = "description";
     private static final String CONSTRAINT_NAME = "constraint name";
+    private static final String CONSTRAINT_DESCRIPTION = "constraint desc";
     private static final String QUERY_RETURN_TYPE = "String";
     private static final String QUERY_CONTENT = "queryContent";
     private static final String QUERY_NAME = "query";
+    private static final String QUERY_DESCRIPTION = "query desc";
     private static final String INDEX_NAME = "index";
+    private static final String INDEX_DESCRIPTION = "index desc";
     private static final String FIELD1_NAME = "field1";
     private static final String FIELD2_NAME = "field2";
     private static final String FIELD3_NAME = "field3";
+    private static final String FIElD2_DESCRIPTION = "field2 desc";
     private static final String BUSINESS_OBJECT1_NAME = "org.bonitasoft.businessObject1";
     private static final String BUSINESS_OBJECT2_NAME = "com.bonitasoft.businessObject2";
 
@@ -99,6 +104,8 @@ public class BusinessDataModelConverterTest {
         assertThat(businessObject2.getFields()).allMatch(RelationField.class::isInstance);
         assertThat(businessObject2.getFields()).extracting(Field::getName).containsExactlyInAnyOrder(FIELD2_NAME,
                 FIELD3_NAME);
+        assertThat(businessObject2.getFields()).extracting(Field::getDescription).containsExactlyInAnyOrder(
+                FIElD2_DESCRIPTION, null);
         assertThat(businessObject2.getFields().stream().map(RelationField.class::cast))
                 .extracting(RelationField::getFetchType)
                 .containsExactlyInAnyOrder(FetchType.EAGER, FetchType.LAZY);
@@ -116,8 +123,9 @@ public class BusinessDataModelConverterTest {
         assertThat(businessObject2.getFields())
                 .allMatch(org.bonitasoft.engine.bdm.model.field.RelationField.class::isInstance);
         assertThat(businessObject2.getFields()).extracting(org.bonitasoft.engine.bdm.model.field.Field::getName)
-                .containsExactlyInAnyOrder(FIELD2_NAME,
-                        FIELD3_NAME);
+                .containsExactlyInAnyOrder(FIELD2_NAME, FIELD3_NAME);
+        assertThat(businessObject2.getFields()).extracting(org.bonitasoft.engine.bdm.model.field.Field::getDescription)
+                .containsExactlyInAnyOrder(FIElD2_DESCRIPTION, null);
         assertThat(businessObject2.getFields().stream().map(org.bonitasoft.engine.bdm.model.field.RelationField.class::cast))
                 .extracting(org.bonitasoft.engine.bdm.model.field.RelationField::getFetchType)
                 .containsExactlyInAnyOrder(org.bonitasoft.engine.bdm.model.field.RelationField.FetchType.EAGER,
@@ -135,11 +143,15 @@ public class BusinessDataModelConverterTest {
 
         assertThat(businessObject1.getIndexes()).extracting(org.bonitasoft.engine.bdm.model.Index::getName)
                 .containsExactly(INDEX_NAME);
+        assertThat(businessObject1.getIndexes()).extracting(org.bonitasoft.engine.bdm.model.Index::getDescription)
+                .containsExactly(INDEX_DESCRIPTION);
         assertThat(businessObject1.getIndexes()).flatExtracting(org.bonitasoft.engine.bdm.model.Index::getFieldNames)
                 .containsExactly(FIELD1_NAME);
 
         assertThat(businessObject1.getQueries()).extracting(org.bonitasoft.engine.bdm.model.Query::getName)
                 .containsExactly(QUERY_NAME);
+        assertThat(businessObject1.getQueries()).extracting(org.bonitasoft.engine.bdm.model.Query::getDescription)
+                .containsExactly(QUERY_DESCRIPTION);
         assertThat(businessObject1.getQueries()).extracting(org.bonitasoft.engine.bdm.model.Query::getReturnType)
                 .containsExactly(QUERY_RETURN_TYPE);
         assertThat(businessObject1.getQueries()).extracting(org.bonitasoft.engine.bdm.model.Query::getContent)
@@ -148,6 +160,9 @@ public class BusinessDataModelConverterTest {
         assertThat(businessObject1.getUniqueConstraints())
                 .extracting(org.bonitasoft.engine.bdm.model.UniqueConstraint::getName)
                 .containsExactly(CONSTRAINT_NAME);
+        assertThat(businessObject1.getUniqueConstraints())
+                .extracting(org.bonitasoft.engine.bdm.model.UniqueConstraint::getDescription)
+                .containsExactly(CONSTRAINT_DESCRIPTION);
         assertThat(businessObject1.getUniqueConstraints())
                 .flatExtracting(org.bonitasoft.engine.bdm.model.UniqueConstraint::getFieldNames)
                 .containsExactly(FIELD1_NAME);
@@ -166,9 +181,11 @@ public class BusinessDataModelConverterTest {
         assertThat(businessObject1.getDescription()).isEqualTo(DESCRIPTION);
 
         assertThat(businessObject1.getIndexes()).extracting(Index::getName).containsExactly(INDEX_NAME);
+        assertThat(businessObject1.getIndexes()).extracting(Index::getDescription).containsExactly(INDEX_DESCRIPTION);
         assertThat(businessObject1.getIndexes()).flatExtracting(Index::getFieldNames).containsExactly(FIELD1_NAME);
 
         assertThat(businessObject1.getQueries()).extracting(Query::getName).containsExactly(QUERY_NAME);
+        assertThat(businessObject1.getQueries()).extracting(Query::getDescription).containsExactly(QUERY_DESCRIPTION);
         assertThat(businessObject1.getQueries()).extracting(Query::getReturnType).containsExactly(QUERY_RETURN_TYPE);
         assertThat(businessObject1.getQueries()).extracting(Query::getContent).containsExactly(QUERY_CONTENT);
 
@@ -177,6 +194,8 @@ public class BusinessDataModelConverterTest {
 
         assertThat(businessObject1.getUniqueConstraints()).extracting(UniqueConstraint::getName)
                 .containsExactly(CONSTRAINT_NAME);
+        assertThat(businessObject1.getUniqueConstraints()).extracting(UniqueConstraint::getDescription)
+                .containsExactly(CONSTRAINT_DESCRIPTION);
         assertThat(businessObject1.getUniqueConstraints()).flatExtracting(UniqueConstraint::getFieldNames)
                 .containsExactly(FIELD1_NAME);
 
@@ -249,9 +268,26 @@ public class BusinessDataModelConverterTest {
                 BUSINESS_OBJECT1_NAME);
         businessObject.setDescription(DESCRIPTION);
         businessObject.addField(createField1());
-        businessObject.addIndex(INDEX_NAME, FIELD1_NAME);
-        businessObject.addQuery(QUERY_NAME, QUERY_CONTENT, QUERY_RETURN_TYPE);
-        businessObject.addUniqueConstraint(CONSTRAINT_NAME, FIELD1_NAME);
+
+        org.bonitasoft.engine.bdm.model.Index index = new org.bonitasoft.engine.bdm.model.Index();
+        index.setName(INDEX_NAME);
+        index.setDescription(INDEX_DESCRIPTION);
+        index.setFieldNames(Arrays.asList(FIELD1_NAME));
+        businessObject.addIndex(index);
+
+        org.bonitasoft.engine.bdm.model.Query query = new org.bonitasoft.engine.bdm.model.Query();
+        query.setName(QUERY_NAME);
+        query.setDescription(QUERY_DESCRIPTION);
+        query.setContent(QUERY_CONTENT);
+        query.setReturnType(QUERY_RETURN_TYPE);
+        businessObject.getQueries().add(query);
+
+        org.bonitasoft.engine.bdm.model.UniqueConstraint uniqueConstraint = new org.bonitasoft.engine.bdm.model.UniqueConstraint();
+        uniqueConstraint.setName(CONSTRAINT_NAME);
+        uniqueConstraint.setDescription(CONSTRAINT_DESCRIPTION);
+        uniqueConstraint.setFieldNames(Arrays.asList(FIELD1_NAME));
+        businessObject.addUniqueConstraint(uniqueConstraint);
+
         return businessObject;
     }
 
@@ -260,11 +296,22 @@ public class BusinessDataModelConverterTest {
                 .withQualifiedName(BUSINESS_OBJECT1_NAME)
                 .withdescription(DESCRIPTION)
                 .withFields(createEmfField1())
-                .withIndexes(new IndexBuilder().withName(INDEX_NAME).withFieldNames(FIELD1_NAME).create())
-                .withQueries(new QueryBuilder().withName(QUERY_NAME).withContent(QUERY_CONTENT)
-                        .withReturnType(QUERY_RETURN_TYPE).create())
-                .withUniqueConstraints(
-                        new UniqueConstraintBuilder().withName(CONSTRAINT_NAME).withFieldNames(FIELD1_NAME).create())
+                .withIndexes(new IndexBuilder()
+                        .withName(INDEX_NAME)
+                        .withDescription(INDEX_DESCRIPTION)
+                        .withFieldNames(FIELD1_NAME)
+                        .create())
+                .withQueries(new QueryBuilder()
+                        .withName(QUERY_NAME)
+                        .withDescription(QUERY_DESCRIPTION)
+                        .withContent(QUERY_CONTENT)
+                        .withReturnType(QUERY_RETURN_TYPE)
+                        .create())
+                .withUniqueConstraints(new UniqueConstraintBuilder()
+                        .withName(CONSTRAINT_NAME)
+                        .withDescription(CONSTRAINT_DESCRIPTION)
+                        .withFieldNames(FIELD1_NAME)
+                        .create())
                 .create();
     }
 
@@ -293,6 +340,7 @@ public class BusinessDataModelConverterTest {
         org.bonitasoft.engine.bdm.model.field.RelationField field = new org.bonitasoft.engine.bdm.model.field.RelationField();
         field.setType(Type.COMPOSITION);
         field.setName(FIELD2_NAME);
+        field.setDescription(FIElD2_DESCRIPTION);
         field.setReference(businessObject1);
         field.setFetchType(org.bonitasoft.engine.bdm.model.field.RelationField.FetchType.EAGER);
         return field;
@@ -302,6 +350,7 @@ public class BusinessDataModelConverterTest {
         return new RelationFieldBuilder()
                 .withType(RelationType.COMPOSITION)
                 .withName(FIELD2_NAME)
+                .withDescription(FIElD2_DESCRIPTION)
                 .withReference(businessObject1)
                 .withFetchType(FetchType.EAGER)
                 .create();

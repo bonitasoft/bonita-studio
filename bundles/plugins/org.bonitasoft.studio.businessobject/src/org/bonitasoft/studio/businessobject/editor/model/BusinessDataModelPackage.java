@@ -269,13 +269,22 @@ public interface BusinessDataModelPackage extends EPackage {
     int FIELD__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FIELD__DESCRIPTION = 1;
+
+    /**
      * The feature id for the '<em><b>Nullable</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIELD__NULLABLE = 1;
+    int FIELD__NULLABLE = 2;
 
     /**
      * The feature id for the '<em><b>Collection</b></em>' attribute.
@@ -284,7 +293,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int FIELD__COLLECTION = 2;
+    int FIELD__COLLECTION = 3;
 
     /**
      * The number of structural features of the '<em>Field</em>' class.
@@ -293,7 +302,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int FIELD_FEATURE_COUNT = 3;
+    int FIELD_FEATURE_COUNT = 4;
 
     /**
      * The number of operations of the '<em>Field</em>' class.
@@ -324,13 +333,22 @@ public interface BusinessDataModelPackage extends EPackage {
     int UNIQUE_CONSTRAINT__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int UNIQUE_CONSTRAINT__DESCRIPTION = 1;
+
+    /**
      * The feature id for the '<em><b>Field Names</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNIQUE_CONSTRAINT__FIELD_NAMES = 1;
+    int UNIQUE_CONSTRAINT__FIELD_NAMES = 2;
 
     /**
      * The number of structural features of the '<em>Unique Constraint</em>' class.
@@ -339,7 +357,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int UNIQUE_CONSTRAINT_FEATURE_COUNT = 2;
+    int UNIQUE_CONSTRAINT_FEATURE_COUNT = 3;
 
     /**
      * The number of operations of the '<em>Unique Constraint</em>' class.
@@ -370,13 +388,22 @@ public interface BusinessDataModelPackage extends EPackage {
     int INDEX__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDEX__DESCRIPTION = 1;
+
+    /**
      * The feature id for the '<em><b>Field Names</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDEX__FIELD_NAMES = 1;
+    int INDEX__FIELD_NAMES = 2;
 
     /**
      * The number of structural features of the '<em>Index</em>' class.
@@ -385,7 +412,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int INDEX_FEATURE_COUNT = 2;
+    int INDEX_FEATURE_COUNT = 3;
 
     /**
      * The number of operations of the '<em>Index</em>' class.
@@ -416,13 +443,22 @@ public interface BusinessDataModelPackage extends EPackage {
     int QUERY__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUERY__DESCRIPTION = 1;
+
+    /**
      * The feature id for the '<em><b>Content</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int QUERY__CONTENT = 1;
+    int QUERY__CONTENT = 2;
 
     /**
      * The feature id for the '<em><b>Return Type</b></em>' attribute.
@@ -431,7 +467,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUERY__RETURN_TYPE = 2;
+    int QUERY__RETURN_TYPE = 3;
 
     /**
      * The feature id for the '<em><b>Query Parameters</b></em>' containment reference list.
@@ -440,7 +476,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUERY__QUERY_PARAMETERS = 3;
+    int QUERY__QUERY_PARAMETERS = 4;
 
     /**
      * The number of structural features of the '<em>Query</em>' class.
@@ -449,7 +485,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUERY_FEATURE_COUNT = 4;
+    int QUERY_FEATURE_COUNT = 5;
 
     /**
      * The number of operations of the '<em>Query</em>' class.
@@ -480,13 +516,22 @@ public interface BusinessDataModelPackage extends EPackage {
     int QUERY_PARAMETER__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUERY_PARAMETER__DESCRIPTION = 1;
+
+    /**
      * The feature id for the '<em><b>Class Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int QUERY_PARAMETER__CLASS_NAME = 1;
+    int QUERY_PARAMETER__CLASS_NAME = 2;
 
     /**
      * The number of structural features of the '<em>Query Parameter</em>' class.
@@ -495,7 +540,7 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int QUERY_PARAMETER_FEATURE_COUNT = 2;
+    int QUERY_PARAMETER_FEATURE_COUNT = 3;
 
     /**
      * The number of operations of the '<em>Query Parameter</em>' class.
@@ -524,6 +569,15 @@ public interface BusinessDataModelPackage extends EPackage {
      * @ordered
      */
     int SIMPLE_FIELD__NAME = FIELD__NAME;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_FIELD__DESCRIPTION = FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Nullable</b></em>' attribute.
@@ -597,6 +651,15 @@ public interface BusinessDataModelPackage extends EPackage {
      * @ordered
      */
     int RELATION_FIELD__NAME = FIELD__NAME;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RELATION_FIELD__DESCRIPTION = FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Nullable</b></em>' attribute.
@@ -876,6 +939,17 @@ public interface BusinessDataModelPackage extends EPackage {
     EAttribute getField_Name();
 
     /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.Field#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.businessobject.editor.model.Field#getDescription()
+     * @see #getField()
+     * @generated
+     */
+    EAttribute getField_Description();
+
+    /**
      * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.Field#isNullable <em>Nullable</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -919,6 +993,17 @@ public interface BusinessDataModelPackage extends EPackage {
     EAttribute getUniqueConstraint_Name();
 
     /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint#getDescription()
+     * @see #getUniqueConstraint()
+     * @generated
+     */
+    EAttribute getUniqueConstraint_Description();
+
+    /**
      * Returns the meta object for the attribute list '{@link org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint#getFieldNames <em>Field Names</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -951,6 +1036,17 @@ public interface BusinessDataModelPackage extends EPackage {
     EAttribute getIndex_Name();
 
     /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.Index#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.businessobject.editor.model.Index#getDescription()
+     * @see #getIndex()
+     * @generated
+     */
+    EAttribute getIndex_Description();
+
+    /**
      * Returns the meta object for the attribute list '{@link org.bonitasoft.studio.businessobject.editor.model.Index#getFieldNames <em>Field Names</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -981,6 +1077,17 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      */
     EAttribute getQuery_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.Query#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.businessobject.editor.model.Query#getDescription()
+     * @see #getQuery()
+     * @generated
+     */
+    EAttribute getQuery_Description();
 
     /**
      * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.Query#getContent <em>Content</em>}'.
@@ -1035,6 +1142,17 @@ public interface BusinessDataModelPackage extends EPackage {
      * @generated
      */
     EAttribute getQueryParameter_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.QueryParameter#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.businessobject.editor.model.QueryParameter#getDescription()
+     * @see #getQueryParameter()
+     * @generated
+     */
+    EAttribute getQueryParameter_Description();
 
     /**
      * Returns the meta object for the attribute '{@link org.bonitasoft.studio.businessobject.editor.model.QueryParameter#getClassName <em>Class Name</em>}'.
@@ -1320,6 +1438,14 @@ public interface BusinessDataModelPackage extends EPackage {
         EAttribute FIELD__NAME = eINSTANCE.getField_Name();
 
         /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FIELD__DESCRIPTION = eINSTANCE.getField_Description();
+
+        /**
          * The meta object literal for the '<em><b>Nullable</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1354,6 +1480,14 @@ public interface BusinessDataModelPackage extends EPackage {
         EAttribute UNIQUE_CONSTRAINT__NAME = eINSTANCE.getUniqueConstraint_Name();
 
         /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute UNIQUE_CONSTRAINT__DESCRIPTION = eINSTANCE.getUniqueConstraint_Description();
+
+        /**
          * The meta object literal for the '<em><b>Field Names</b></em>' attribute list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1380,6 +1514,14 @@ public interface BusinessDataModelPackage extends EPackage {
         EAttribute INDEX__NAME = eINSTANCE.getIndex_Name();
 
         /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute INDEX__DESCRIPTION = eINSTANCE.getIndex_Description();
+
+        /**
          * The meta object literal for the '<em><b>Field Names</b></em>' attribute list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1404,6 +1546,14 @@ public interface BusinessDataModelPackage extends EPackage {
          * @generated
          */
         EAttribute QUERY__NAME = eINSTANCE.getQuery_Name();
+
+        /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute QUERY__DESCRIPTION = eINSTANCE.getQuery_Description();
 
         /**
          * The meta object literal for the '<em><b>Content</b></em>' attribute feature.
@@ -1446,6 +1596,14 @@ public interface BusinessDataModelPackage extends EPackage {
          * @generated
          */
         EAttribute QUERY_PARAMETER__NAME = eINSTANCE.getQueryParameter_Name();
+
+        /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute QUERY_PARAMETER__DESCRIPTION = eINSTANCE.getQueryParameter_Description();
 
         /**
          * The meta object literal for the '<em><b>Class Name</b></em>' attribute feature.

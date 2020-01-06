@@ -283,7 +283,7 @@ public class Messages extends NLS {
     public static String lengthCannotBeEmpty;
 
     public static String noDetailsAvailable;
-
+    
     public static String details;
 
     public static String detailsFor;
@@ -484,6 +484,7 @@ public class Messages extends NLS {
     public static String searchIndex;
     public static String dndIndexTooltip;
     public static String pakage;
+    public static String fieldDescriptionPlaceholder;
 
     private Messages() {
     }

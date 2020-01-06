@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.forms.widgets.Section;
 
 public class QueryDetailsControl extends Composite {
 
@@ -100,7 +101,7 @@ public class QueryDetailsControl extends Composite {
     public QueryDetailsControl(Composite parent, IObservableValue<Query> querySelectedObservable,
             QueryFormPage formPage, IObservableValue<BusinessObject> boSelectedObservable) {
         super(parent, SWT.NONE);
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 10).create());
+        setLayout(GridLayoutFactory.fillDefaults().create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         formPage.getToolkit().adapt(this);
 
@@ -109,10 +110,8 @@ public class QueryDetailsControl extends Composite {
         this.ctx = new DataBindingContext();
         this.boSelectedObservable = boSelectedObservable;
 
-        createLink();
-        createQueryTextArea();
-        createParametersComposite();
-        createReturnTypeComposite();
+        createDescriptionSection();
+        createContentSection();
 
         ctx.bindValue(WidgetProperties.visible().observe(this), new ComputedValueBuilder<Boolean>()
                 .withSupplier(
@@ -127,6 +126,53 @@ public class QueryDetailsControl extends Composite {
                 .build());
     }
 
+    private void createContentSection() {
+        Section section = formPage.getToolkit().createSection(this, Section.EXPANDED);
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        section.setLayout(GridLayoutFactory.fillDefaults().create());
+        section.setText(Messages.queryContent);
+
+        Composite client = formPage.getToolkit().createComposite(section);
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        client.setLayout(
+                GridLayoutFactory.fillDefaults().margins(10, 10).create());
+
+        createLink(client);
+        createQueryTextArea(client);
+        createParametersComposite(client);
+        createReturnTypeComposite(client);
+
+        section.setClient(client);
+    }
+
+    private void createDescriptionSection() {
+        Section section = formPage.getToolkit().createSection(this, Section.EXPANDED);
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        section.setLayout(GridLayoutFactory.fillDefaults().create());
+        section.setText(Messages.description);
+
+        Composite client = formPage.getToolkit().createComposite(section);
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        client.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+
+        IObservableValue descriptionObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                querySelectedObservable, BusinessDataModelPackage.Literals.QUERY__DESCRIPTION);
+
+        TextWidget widget = new TextAreaWidget.Builder()
+                .widthHint(500)
+                .heightHint(70)
+                .bindTo(descriptionObservable)
+                .inContext(ctx)
+                .adapt(formPage.getToolkit())
+                .createIn(client);
+
+        ctx.bindValue(widget.observeEnable(), new ComputedValueBuilder()
+                .withSupplier(() -> !isDefault())
+                .build());
+
+        section.setClient(client);
+    }
+
     // return false if the input query isn't one of the default or the custom queries of the selected bo (i.e one of the root of the tree viewer)
     private boolean isRealQuery(Query query) {
         if (boSelectedObservable.getValue() != null) {
@@ -136,8 +182,8 @@ public class QueryDetailsControl extends Composite {
         return false;
     }
 
-    private void createReturnTypeComposite() {
-        Composite returnTypeComposite = formPage.getToolkit().createComposite(this);
+    private void createReturnTypeComposite(Composite parent) {
+        Composite returnTypeComposite = formPage.getToolkit().createComposite(parent);
         returnTypeComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         returnTypeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
@@ -191,10 +237,10 @@ public class QueryDetailsControl extends Composite {
         return Collections.EMPTY_LIST;
     }
 
-    protected void createParametersComposite() {
-        Composite parametersComposite = formPage.getToolkit().createComposite(this);
-        parametersComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        parametersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+    protected void createParametersComposite(Composite parent) {
+        Composite parametersComposite = formPage.getToolkit().createComposite(parent);
+        parametersComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
+        parametersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         Label parametersLabel = formPage.getToolkit().createLabel(parametersComposite, Messages.parametersLabel);
         parametersLabel.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -202,7 +248,7 @@ public class QueryDetailsControl extends Composite {
         Composite viewerComposite = formPage.getToolkit().createComposite(parametersComposite);
         viewerComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createToolbar(viewerComposite);
         createSearchField(viewerComposite);
@@ -244,8 +290,7 @@ public class QueryDetailsControl extends Composite {
     protected TextWidget createSearchWidget(Composite parent) {
         return new SearchWidget.Builder()
                 .labelAbove()
-                .fill()
-                .grabHorizontalSpace()
+                .widthHint(300)
                 .withPlaceholder(Messages.searchQueryParameter)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
@@ -288,7 +333,7 @@ public class QueryDetailsControl extends Composite {
         parametersTableViewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         parametersTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).span(2, 1).hint(400, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         parametersTableViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, QUERY_PARAMETERS_VIEWER_ID);
         ColumnViewerToolTipSupport.enableFor(parametersTableViewer);
         parametersTableViewer.getTable().setHeaderVisible(true);
@@ -296,17 +341,39 @@ public class QueryDetailsControl extends Composite {
         parametersTableViewer.addFilter(createSearchFilter());
 
         TableLayout tableLayout = new TableLayout();
-        tableLayout.addColumnData(new ColumnWeightData(1, 175));
-        tableLayout.addColumnData(new ColumnWeightData(1, 175));
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(2));
         parametersTableViewer.getTable().setLayout(tableLayout);
 
         createNameColumn(parametersTableViewer);
         createTypeColumn(parametersTableViewer);
+        createDescriptionColumn(parametersTableViewer);
 
         selectedQueryParameterObservableList = EMFObservables.observeDetailList(Realm.getDefault(), querySelectedObservable,
                 BusinessDataModelPackage.Literals.QUERY__QUERY_PARAMETERS);
         parametersMultipleSelectionObservable = ViewersObservables.observeMultiSelection(parametersTableViewer);
         parametersTableViewer.setInput(selectedQueryParameterObservableList);
+    }
+
+    private void createDescriptionColumn(TableViewer viewer) {
+        TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+        column.getColumn().setText(Messages.description);
+        column.setLabelProvider(new LabelProviderBuilder<QueryParameter>()
+                .withTextProvider(parameter -> parameter.getDescription())
+                .shouldRefreshAllLabels(viewer)
+                .createColumnLabelProvider());
+        column.setEditingSupport(new EditingSupportBuilder<QueryParameter>(viewer)
+                .withCanEditProvider(e -> !isDefault())
+                .withValueProvider(parameter -> parameter.getDescription() != null ? parameter.getDescription() : "")
+                .withValueUpdater((parameter, newDesc) -> {
+                    String oldDesc = parameter.getDescription();
+                    if (!Objects.equals(oldDesc, newDesc)) {
+                        parameter.setDescription((String) newDesc);
+                        formPage.refreshQueryViewers();
+                    }
+                })
+                .create());
     }
 
     protected TableViewerColumn createTypeColumn(TableViewer viewer) {
@@ -347,25 +414,24 @@ public class QueryDetailsControl extends Composite {
         return column;
     }
 
-    private void createQueryTextArea() {
+    private void createQueryTextArea(Composite parent) {
         IObservableValue<String> contentObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 querySelectedObservable, BusinessDataModelPackage.Literals.QUERY__CONTENT);
         TextWidget textWidget = new TextAreaWidget.Builder()
                 .grabHorizontalSpace()
-                .horizontalSpan(2)
                 .fill()
                 .heightHint(175)
                 .adapt(formPage.getToolkit())
                 .bindTo(contentObservable)
                 .inContext(ctx)
                 .withId(QUERY_CONTENT_WIDGET_ID)
-                .createIn(this);
+                .createIn(parent);
         querySelectedObservable.addValueChangeListener(e -> textWidget.setEnabled(!isDefault()));
     }
 
-    private void createLink() {
-        Link link = new Link(this, SWT.None);
-        link.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
+    private void createLink(Composite parent) {
+        Link link = new Link(parent, SWT.None);
+        link.setLayoutData(GridDataFactory.fillDefaults().create());
         formPage.getToolkit().adapt(link, true, true);
         link.setText(Messages.queryLink);
         link.addListener(SWT.Selection, event -> {
