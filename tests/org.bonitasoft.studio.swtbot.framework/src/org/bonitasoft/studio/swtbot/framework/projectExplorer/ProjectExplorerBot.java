@@ -67,7 +67,8 @@ public class ProjectExplorerBot extends BotBase {
     public BotBdmEditor newBdm() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Business Data Model...").click();
+        projectTreeItem.contextMenu().menu("New").menu(org.bonitasoft.studio.application.i18n.Messages.businessDataModel)
+                .click();
         return new BotBdmEditor(bot);
     }
 

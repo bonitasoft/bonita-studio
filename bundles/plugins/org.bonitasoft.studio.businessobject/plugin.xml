@@ -336,5 +336,12 @@
             class="org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage"
             genModel="model/BusinessDataModel.genmodel"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.bonitasoft.studio.businessobject.define"
+            icon="icons/manage-bdm.png">
+      </image>
+   </extension>
 
 </plugin>
