@@ -101,6 +101,7 @@ public class DocumentationBusinessDataModelConverter {
         List<QueryParameter> parameters = q.getQueryParameters().stream()
                 .map(p -> QueryParameter.builder()
                         .name(p.getName())
+                        .description(p.getDescription())
                         .type(convertToSimpleType(p.getClassName(), object))
                         .build())
                 .collect(Collectors.toList());

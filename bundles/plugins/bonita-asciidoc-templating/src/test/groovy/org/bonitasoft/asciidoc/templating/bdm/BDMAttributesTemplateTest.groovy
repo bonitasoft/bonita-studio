@@ -44,7 +44,7 @@ class BDMAttributesTemplateTest extends Specification {
                                                 description: 'A simple description',
                                                 attributes: [
                                                     new Attribute(name: 'persistenceId', type: 'Long', mandatory: true),
-                                                    new Attribute(name: 'firstName', label:'First name', description: 'The first name of the employee, must not be greater than 75 characters', type: 'String')
+                                                    new Attribute(name: 'firstName', description: 'The first name of the employee, must not be greater than 75 characters', type: 'String')
                                                 ],
                                                 relations: [
                                                     new Relation(name: 'addresses', description:'Employee addresses', relationType: 'COMPOSITION', type: 'Address', multiple: true)
@@ -64,8 +64,7 @@ class BDMAttributesTemplateTest extends Specification {
                               *|===
                               *|Name                                    |Type         |Description                                                           
                               *|[[Employee.persistenceId]]persistenceId*|Long         |                                                                      
-                              *|[[Employee.firstName]]firstName         |String       |*Label:* First name + 
-                              *                                                        The first name of the employee, must not be greater than 75 characters
+                              *|[[Employee.firstName]]firstName         |String       |The first name of the employee, must not be greater than 75 characters
                               *|[[Employee.addresses]]&#x25c6; addresses|List<Address>|Employee addresses                                                    
                               *|===
                               *

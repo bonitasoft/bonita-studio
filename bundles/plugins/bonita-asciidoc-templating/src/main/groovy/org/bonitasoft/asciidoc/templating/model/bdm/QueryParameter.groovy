@@ -33,4 +33,9 @@ class QueryParameter {
      * The type of the parameter
      */
     String type
+    
+    /**
+     * The description of the parameter
+     */
+    String description
 }

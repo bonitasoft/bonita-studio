@@ -42,7 +42,7 @@ class BDMQueriesTemplateTest extends Specification {
         def outputFile = temporaryFolder.newFile("bdm_queries.adoc");
         def businessObject =  new BusinessObject(customQueries: [
                                                     new Query(name: 'findByNearestAddress', returnType: 'Employee', parameters: [
-                                                                    new QueryParameter(name: 'location', type: 'Double'),
+                                                                    new QueryParameter(name: 'location', type: 'Double', description: 'location coordinates'),
                                                                     new QueryParameter(name: 'lastUpdated', type: 'Date')
                                                                 ])
                                                 ])
@@ -56,12 +56,15 @@ class BDMQueriesTemplateTest extends Specification {
                               *
                               *====== findByNearestAddress
                               *
+                              *Return type: _Employee_ + 
                               *_No description available_
-                              *[grid=cols,options="header",cols="1e,1a",stripes=even,frame=topbot]
+                              *
+                              *.Query parameters
+                              *[caption=,grid=cols,options="header",cols="1,1e,3a",stripes=even,frame=topbot]
                               *|===
-                              *|Return type|Parameters            
-                              *|Employee   |location (_Double_) + 
-                              *             lastUpdated (_Date_)
+                              *|Name       |Type  |Description         
+                              *|location   |Double|location coordinates
+                              *|lastUpdated|Date  |                    
                               *|===
                               *
                               *'''.stripMargin('*').denormalize()

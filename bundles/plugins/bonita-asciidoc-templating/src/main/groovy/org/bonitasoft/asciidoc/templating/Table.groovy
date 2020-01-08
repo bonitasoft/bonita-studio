@@ -67,6 +67,8 @@ class Table {
      * @see <a href="https://asciidoctor.org/docs/user-manual/#cols-format">AsciiDoctor columns format</a>
      */
    List<String> columnsFormat = []
+   
+   String caption = null
 
     private static String cellPadding(Object value, List values, int minSize) {
         def trimmedValue = value.toString().trim()
@@ -95,11 +97,12 @@ class Table {
     @Override
     public String toString() {
         def options = []
+        def captionValue = caption != null ? "caption=$caption," : ''
         if(header) options << 'header'
         if(footer) options << 'footer'
         if(autowidth) options << 'autowidth'
         
-        def tableContent = """*[grid=$gridStyle,options="${options.join(',')}",cols="${columnsFormat.join(',')}",stripes=$stripes,frame=$frame]
+        def tableContent = """*[${captionValue}grid=$gridStyle,options="${options.join(',')}",cols="${columnsFormat.join(',')}",stripes=$stripes,frame=$frame]
                           *|===
                           *""".stripMargin('*')
 
