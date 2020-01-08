@@ -485,6 +485,8 @@ public class Messages extends NLS {
     public static String dndIndexTooltip;
     public static String pakage;
     public static String fieldDescriptionPlaceholder;
+    public static String saveBeforeImportTitle;
+    public static String saveBeforeImportMessage;
     public static String deleteFieldConfirmTitle;
     public static String deleteFieldConfirmMessage;
     public static String deleteConstraintConfirmTitle;
