@@ -15,14 +15,18 @@ businessObject.customQueries.each { Query query ->
     
     newLine()
    
+    write "${messages.getString('returnType')}: _${query.returnType}_ + "
+    newLine()
     writeWithLineBreaks query.description ?: "_${messages.getString('descriptionPlaceholder')}_"
     
-    newLine()
+    2.times { newLine() }
     
-    def parametersColumn =  query.parameters.collect{ "$it.name (_${it.type}_)" }.join(" + ${System.lineSeparator()}")
-    write  keepIndent, new Table(columnName : [messages.getString('returnType'), messages.getString('parameters')],
-                                 columnsFormat: ['1e','1a'],
-                                 columms : [[query.returnType], [parametersColumn]])
+    write ".${messages.getString('queryParameters')}"
+    newLine()
+    write  keepIndent, new Table(columnName : [messages.getString('name'),messages.getString('type'), messages.getString('description')],
+                                 columnsFormat: ['1','1e','3a'],
+                                 caption: '',
+                                 columms : [query.parameters.name, query.parameters.type, query.parameters.collect{insertLineBreaks(it.description ?: '')} ])
     
     newLine()
     

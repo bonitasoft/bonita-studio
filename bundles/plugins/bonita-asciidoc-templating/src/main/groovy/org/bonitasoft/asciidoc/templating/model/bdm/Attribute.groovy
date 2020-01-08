@@ -30,11 +30,6 @@ class Attribute {
     String name
     
     /**
-     * The label used in user interfaces for this attrubute
-     */
-    String label
-
-    /**
      * The description of the attribute
      */
     String description
