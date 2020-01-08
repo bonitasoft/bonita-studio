@@ -283,7 +283,7 @@ public class Messages extends NLS {
     public static String lengthCannotBeEmpty;
 
     public static String noDetailsAvailable;
-    
+
     public static String details;
 
     public static String detailsFor;
@@ -485,6 +485,16 @@ public class Messages extends NLS {
     public static String dndIndexTooltip;
     public static String pakage;
     public static String fieldDescriptionPlaceholder;
+    public static String deleteFieldConfirmTitle;
+    public static String deleteFieldConfirmMessage;
+    public static String deleteConstraintConfirmTitle;
+    public static String deleteConstraintConfirmMessage;
+    public static String deleteIndexConfirmTitle;
+    public static String deleteIndexConfirmMessage;
+    public static String deleteQueryConfirmTitle;
+    public static String deleteQueryConfirmMessage;
+    public static String deleteQueryParamsConfirmTitle;
+    public static String deleteQueryParamsConfirmMessage;
 
     private Messages() {
     }
