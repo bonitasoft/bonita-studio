@@ -47,6 +47,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -221,11 +222,14 @@ public class QueryEditionControl {
     }
 
     private void removeQuery() {
-        boSelectedObservable.getValue().getQueries().remove(querySelectedObservable.getValue());
-        Display.getDefault().asyncExec(() -> {
-            viewer.getTree().deselectAll();
-            viewer.refresh();
-        });
+        if (MessageDialog.openQuestion(section.getShell(), Messages.deleteQueryConfirmTitle,
+                String.format(Messages.deleteQueryConfirmMessage, querySelectedObservable.getValue().getName()))) {
+            boSelectedObservable.getValue().getQueries().remove(querySelectedObservable.getValue());
+            Display.getDefault().asyncExec(() -> {
+                viewer.getTree().deselectAll();
+                viewer.refresh();
+            });
+        }
     }
 
     private void addQuery() {

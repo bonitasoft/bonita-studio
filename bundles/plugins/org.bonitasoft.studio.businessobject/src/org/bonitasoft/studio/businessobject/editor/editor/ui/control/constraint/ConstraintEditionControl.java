@@ -49,6 +49,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -361,7 +362,10 @@ public class ConstraintEditionControl {
     }
 
     private void removeSelectedConstraint() {
-        constraintsObservable.remove(selectedConstraintObservable.getValue());
+        if (MessageDialog.openQuestion(mainComposite.getShell(), Messages.deleteConstraintConfirmTitle,
+                String.format(Messages.deleteConstraintConfirmMessage, selectedConstraintObservable.getValue().getName()))) {
+            constraintsObservable.remove(selectedConstraintObservable.getValue());
+        }
     }
 
     private void addUniqueConstraint() {

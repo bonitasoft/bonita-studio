@@ -19,10 +19,12 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.editingSupport.Quer
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotMultiPageEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -101,6 +103,10 @@ public class BotBdmQueriesEditor extends BotBase {
         }
         queryParametersTable.select(indexes);
         bot.toolbarButtonWithId(QueryDetailsControl.REMOVE_PARAM_BUTTON_ID).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteQueryParamsConfirmTitle));
+        SWTBotShell activeShell = bot.activeShell();
+        activeShell.bot().button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
 
         //add required parameters
         for (Entry<String, String> paramEntry : queryParam.entrySet()) {

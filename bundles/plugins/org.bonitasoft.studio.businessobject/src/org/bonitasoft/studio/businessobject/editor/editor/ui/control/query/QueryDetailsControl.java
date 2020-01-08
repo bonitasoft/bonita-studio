@@ -54,6 +54,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -310,7 +311,10 @@ public class QueryDetailsControl extends Composite {
     }
 
     private void removeParameter() {
-        selectedQueryParameterObservableList.removeAll(parametersMultipleSelectionObservable);
+        if (MessageDialog.openQuestion(getShell(), Messages.deleteQueryParamsConfirmTitle,
+                Messages.deleteQueryParamsConfirmMessage)) {
+            selectedQueryParameterObservableList.removeAll(parametersMultipleSelectionObservable);
+        }
     }
 
     private void addParameter() {
