@@ -49,7 +49,7 @@ public class DeployContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.deploy);
         item.setToolTipText(Messages.deploy);
-        item.setImage(BusinessObjectPlugin.getImage("icons/upload_16.png"));
+        item.setImage(BusinessObjectPlugin.getImage("icons/deploy16.png"));
         item.addListener(SWT.Selection, event -> deploy(false));
         item.setEnabled(isEnabled());
     }

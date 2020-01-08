@@ -23,6 +23,8 @@ import org.bonitasoft.studio.businessobject.editor.converter.BusinessDataModelCo
 import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.CleanDeployContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.DeployContributionItem;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ExportBDMContributionItem;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ImportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
@@ -56,6 +58,8 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
     protected void createHeaderContent(ToolBar toolBar) {
         toolBarManager.add(new DeployContributionItem(this));
         toolBarManager.add(new CleanDeployContributionItem(this));
+        toolBarManager.add(new ExportBDMContributionItem(this));
+        toolBarManager.add(new ImportBDMContributionItem(this));
         toolBarManager.update(true);
     }
 
@@ -90,6 +94,7 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
                 setErrorState(false);
             }
             workingCopyObservable.getRealm().exec(() -> workingCopyObservable.setValue(businessObjectModel));
+            // TODO refresh bdm artifact descriptor?? 
         } catch (IOException | SAXException | JAXBException e) {
             setErrorState(true);
         }

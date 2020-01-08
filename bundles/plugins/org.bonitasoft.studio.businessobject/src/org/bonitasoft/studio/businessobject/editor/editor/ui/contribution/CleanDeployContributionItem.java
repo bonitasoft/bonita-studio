@@ -31,7 +31,7 @@ public class CleanDeployContributionItem extends DeployContributionItem {
     @Override
     public void fill(ToolBar parent, int index) {
         item = new ToolItem(parent, SWT.PUSH);
-        item.setImage(BusinessObjectPlugin.getImage("icons/cleanUpload_16.png"));
+        item.setImage(BusinessObjectPlugin.getImage("icons/cleanDeploy.png"));
         item.setText(Messages.cleanDeployTitle);
         item.setToolTipText(Messages.cleanDeployTitle);
         item.addListener(SWT.Selection, event -> deploy(true));
