@@ -5,7 +5,7 @@ package process
 
 contract.constraints.each { ContractConstraint constraint ->
     write "$constraint.name:: "
-    writeWithLineBreaks constraint.description ?: messages.getString('descriptionPlaceholder')
+    writeWithLineBreaks constraint.description ?: "_${messages.getString('descriptionPlaceholder')}_"
     newLine()
     write '+'
     newLine()
