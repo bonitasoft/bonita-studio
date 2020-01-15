@@ -7,9 +7,9 @@ import groovy.transform.builder.Builder
 @Builder
 class Organization {
     
-    Group[] groups
+    Group[] groups = []
     
-    Role[] roles
+    Role[] roles = []
     
-    Profile[] profiles
+    Profile[] profiles = []
 }
