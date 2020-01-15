@@ -25,3 +25,7 @@ if (project.diagrams) {
    newLine()
    project.diagrams.each { Diagram diagram -> layout 'process/diagram_template.tpl', diagram:diagram, messages:messages }
 }
+
+if (project.organization) {
+    layout 'organization/organization_template.tpl', organization:project.organization, messages:messages
+}

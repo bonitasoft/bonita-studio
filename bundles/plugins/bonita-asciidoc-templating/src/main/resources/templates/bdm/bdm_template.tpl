@@ -3,7 +3,7 @@ package bdm
 @Field BusinessDataModel businessDataModel
 @Field ResourceBundle messages
 
-section 2,'Business Data Model'
+section 2, messages.getString('businessDataModel')
 
 newLine()
 
