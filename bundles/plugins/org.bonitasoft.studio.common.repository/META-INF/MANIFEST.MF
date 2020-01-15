@@ -50,6 +50,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.asciidoc.templating,
  org.bonitasoft.asciidoc.templating.model,
  org.bonitasoft.asciidoc.templating.model.bdm,
+ org.bonitasoft.asciidoc.templating.model.organization,
  org.bonitasoft.asciidoc.templating.model.process,
  org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,

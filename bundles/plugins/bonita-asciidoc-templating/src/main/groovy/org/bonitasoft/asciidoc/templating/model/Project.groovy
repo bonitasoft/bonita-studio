@@ -15,6 +15,7 @@
 package org.bonitasoft.asciidoc.templating.model
 
 import org.bonitasoft.asciidoc.templating.model.bdm.BusinessDataModel
+import org.bonitasoft.asciidoc.templating.model.organization.Organization
 import org.bonitasoft.asciidoc.templating.model.process.Diagram
 import groovy.transform.Canonical
 import groovy.transform.builder.Builder
@@ -68,4 +69,6 @@ class Project {
      * Use in asciidoc header for :imagedir: variable and for generated images location
      */
     String imageFolderPath = 'doc/images'
+    
+    Organization organization
 }
