@@ -18,16 +18,53 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 
 public class BonitaProjectPropertyTester extends PropertyTester {
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+        if (receiver instanceof IAdaptable) {
+            IResource resource = ((IAdaptable) receiver).getAdapter(IResource.class);
+            if (Objects.equals(property, "isBonitaProject")) {
+                return isBonitaProjectTest(resource, expectedValue);
+            }
+            if (Objects.equals(property, "isBonitaStoreContainer")) {
+                return isBonitaStoreContainer(resource);
+            }
+            if (Objects.equals(property, "isContainer")) {
+                return resource instanceof IContainer;
+            }
+        }
+        return false;
+    }
+
+    private boolean isBonitaStoreContainer(Object receiver) {
+        if (RepositoryManager.getInstance().hasActiveRepository()
+                && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+            Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            if (receiver instanceof IFolder) {
+                for (final IRepositoryStore<? extends IRepositoryFileStore> store : currentRepository.getAllStores()) {
+                    if (Objects.equals(store.getResource(), receiver)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isBonitaProjectTest(Object receiver, Object expectedValue) {
         if (receiver instanceof IProject) {
             try {
                 return receiver instanceof IProject && ((IProject) receiver).isOpen()

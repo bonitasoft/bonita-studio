@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -27,6 +28,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.RenameResourceAction;
 
 public class RenameHandler extends AbstractHandler {
 
@@ -35,8 +38,16 @@ public class RenameHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Repository repo = RepositoryManager.getInstance().getCurrentRepository();
-        selectionFinder.findElementToRename(repo)
-                .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
+        Optional<IRenamable> renamable = selectionFinder.findElementToRename(repo);
+        if (renamable.isPresent()) {
+            renamable
+                    .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
+        } else if(selectionFinder.getCurrentStructuredSelection().isPresent()){
+            RenameResourceAction renameResourceAction = new RenameResourceAction(
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+            renameResourceAction.selectionChanged(selectionFinder.getCurrentStructuredSelection().get());
+            renameResourceAction.run();
+        }
         return null;
     }
 
@@ -49,8 +60,11 @@ public class RenameHandler extends AbstractHandler {
             if (resource.getAdapter(IProject.class) != null) {
                 return Objects.equals(resource.getAdapter(IProject.class), currentRepository.getProject());
             }
-            return selectionFinder.findElementToRename(resource, RepositoryManager.getInstance().getCurrentRepository())
-                    .isPresent();
+            return selectionFinder
+                    .findElementToRename(resource, RepositoryManager.getInstance().getCurrentRepository())
+                    .isPresent()
+                    || (!selectionFinder.findFileStore(resource, currentRepository).isPresent()
+                            && currentRepository.getRepositoryStore(resource) == null);
         }
         return false;
     }
