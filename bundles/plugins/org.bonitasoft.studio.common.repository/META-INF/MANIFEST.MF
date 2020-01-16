@@ -47,12 +47,7 @@ Require-Bundle: org.eclipse.ui,
  org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.asciidoc.templating,
- org.bonitasoft.asciidoc.templating.model,
- org.bonitasoft.asciidoc.templating.model.bdm,
- org.bonitasoft.asciidoc.templating.model.organization,
- org.bonitasoft.asciidoc.templating.model.process,
- org.bonitasoft.studio.common.repository,
+Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.job,
  org.bonitasoft.studio.common.repository.extension,
@@ -68,8 +63,7 @@ Export-Package: org.bonitasoft.asciidoc.templating,
  org.bonitasoft.studio.common.repository.ui,
  org.bonitasoft.studio.common.repository.ui.viewer,
  org.bonitasoft.studio.common.repository.ui.wizard
-Bundle-ClassPath: .,
- lib/bonita-asciidoc-templating.jar
+Bundle-ClassPath: .
 Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.connector,

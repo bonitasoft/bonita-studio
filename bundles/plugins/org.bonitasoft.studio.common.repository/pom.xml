@@ -12,58 +12,5 @@
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.common.repository</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
-	<properties>
-		<lib.dir>lib</lib.dir>
-	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-			<artifactId>bonita-asciidoc-templating</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-asciidoc-templating-dependency</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
-									<artifactId>bonita-asciidoc-templating</artifactId>
-									<version>${project.version}</version>
-								</artifactItem>
-							</artifactItems>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<overWriteReleases>true</overWriteReleases>
-							<outputDirectory>${lib.dir}</outputDirectory>
-							<stripVersion>true</stripVersion>
-							<stripClassifier>true</stripClassifier>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${lib.dir}</directory>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	
 </project>

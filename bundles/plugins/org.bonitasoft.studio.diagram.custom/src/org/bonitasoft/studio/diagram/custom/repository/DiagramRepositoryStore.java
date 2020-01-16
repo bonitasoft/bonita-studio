@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.asciidoc.templating.model.Project.ProjectBuilder;
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
@@ -50,8 +49,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
-import org.bonitasoft.studio.common.repository.model.IProjectDocumentationContextProvider;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -90,7 +87,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore>implements IProjectDocumentationContextProvider {
+public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore> {
 
     private static final String STORE_NAME = "diagrams";
     private static final Set<String> extensions = new HashSet<>();
@@ -584,16 +581,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     public void close() {
         BonitaEditingDomainUtil.cleanEditingDomainRegistry();
         super.close();
-    }
-
-    @Override
-    public ProjectBuilder addToProjectContext(ProjectBuilder projectBuilder, ILocalizedResourceProvider localizedResourceProvider) {
-        String imageFoldetPath = projectBuilder.build().getImageFolderPath();
-        projectBuilder.diagrams( getChildren().stream()
-            .map(DiagramFileStore::getContent)
-            .map(new DocumentationDiagramConverter(getRepository().getProject().getFolder(imageFoldetPath), localizedResourceProvider, this))
-            .toArray(org.bonitasoft.asciidoc.templating.model.process.Diagram[]::new));
-        return projectBuilder;
     }
 
 }
