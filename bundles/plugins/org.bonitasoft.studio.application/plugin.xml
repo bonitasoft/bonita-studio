@@ -1448,8 +1448,8 @@
             class="org.bonitasoft.studio.application.property.tester.BonitaProjectPropertyTester"
             id="org.bonitasoft.studio.application.project.propertyTester"
             namespace="org.bonitasoft.studio.application"
-            properties="isBonitaProject"
-            type="org.eclipse.core.resources.IResource">
+            properties="isBonitaProject,isBonitaStoreContainer,isContainer"
+            type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
       <propertyTester
             class="org.bonitasoft.studio.application.property.tester.GroovySrcPropertyTester"
@@ -1509,6 +1509,69 @@
             commandId="org.bonitasoft.studio.application.command.deployArtifacts"
             icon="icons/deploy16.png">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=additions">
+             <command
+                   commandId="org.bonitasoft.studio.application.newFile.command"
+                   icon="icons/newfile_wiz.png"
+                   style="push">
+                  <visibleWhen
+                  checkEnabled="false">
+                   <with
+                         variable="activeMenuSelection">
+                      <and>
+                         <count
+                               value="1">
+                         </count>
+                         <iterate>
+                          <and>
+                             <not>
+                                <test
+                                      property="org.bonitasoft.studio.application.isBonitaStoreContainer">
+                                </test>
+                             </not>
+                             <test
+                                   property="org.bonitasoft.studio.application.isContainer">
+                             </test>
+                          </and>
+                         </iterate>
+                      </and>
+                   </with>
+                </visibleWhen>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.application.newFolder.command"
+                  icon="icons/newfolder_wiz.gif"
+                  style="push">
+                  <visibleWhen
+                  checkEnabled="false">
+                   <with
+                         variable="activeMenuSelection">
+                      <and>
+                         <count
+                               value="1">
+                         </count>
+                         <iterate>
+                           <and>
+                              <not>
+                                 <test
+                                       property="org.bonitasoft.studio.application.isBonitaStoreContainer">
+                                 </test>
+                              </not>
+                              <test
+                                    property="org.bonitasoft.studio.application.isContainer">
+                              </test>
+                           </and>
+                         </iterate>
+                      </and>
+                   </with>
+                </visibleWhen>
+            </command>
+      </menuContribution>
    </extension>
 
 </plugin>
