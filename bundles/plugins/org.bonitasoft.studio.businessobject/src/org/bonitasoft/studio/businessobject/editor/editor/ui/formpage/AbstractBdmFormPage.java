@@ -27,6 +27,9 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.Export
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ImportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.editor.refactor.BDMRefactorQueue;
+import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -37,14 +40,18 @@ import org.xml.sax.SAXException;
 
 public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjectModel> {
 
+    private static final String REFACTOR_ACCESS_CTRL_COMMAND = "org.bonitasoft.studio.bdm.access.control.refactor.command";
+
     protected IObservableValue<BusinessObjectModel> workingCopyObservable;
     protected IObservableValue<BusinessObject> boSelectedObservable;
     protected BusinessDataModelEditorContribution editorContribution;
+    private CommandExecutor commandExecutor;
 
     public AbstractBdmFormPage(String id, String title, IEclipseContext context,
             BusinessDataModelEditorContribution editorContribution) {
         super(id, title, context);
         this.editorContribution = editorContribution;
+        commandExecutor = new CommandExecutor();
     }
 
     public void init(IObservableValue<BusinessObjectModel> workingCopyObservable,
@@ -106,6 +113,18 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
     public void doSave(IProgressMonitor monitor) {
         if (isDirty()) {
             super.doSave(monitor);
+        }
+    }
+
+    public void addToAccessControlRefactorQueue(DiffElement diff) {
+        if (commandExecutor.canExecute(REFACTOR_ACCESS_CTRL_COMMAND, null)) {
+            BDMRefactorQueue.getInstance().add(diff);
+        }
+    }
+
+    public void refactorAccessControl() {
+        if (commandExecutor.canExecute(REFACTOR_ACCESS_CTRL_COMMAND, null)) {
+            commandExecutor.executeCommand(REFACTOR_ACCESS_CTRL_COMMAND, null);
         }
     }
 

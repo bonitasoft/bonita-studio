@@ -125,6 +125,21 @@ public class BotBdmModelEditor extends BotBase {
         return this;
     }
 
+    public BotBdmModelEditor removeBusinessObject(String packageName, String name) {
+        SWTBotTree businessObjectTree = getBusinessObjectTree();
+        bot.waitUntil(treeItemAvailable(businessObjectTree, packageName));
+        SWTBotTreeItem packageItem = businessObjectTree.getTreeItem(packageName);
+        packageItem.expand();
+        bot.waitUntil(nodeAvailable(packageItem, name));
+        packageItem.getNode(name).select();
+        bot.toolbarButtonWithId(BusinessObjectList.REMOVE_BUTTON_ID).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteBOConfirmTitle));
+        SWTBotShell activeShell = bot.activeShell();
+        activeShell.bot().button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+        return this;
+    }
+
     public BotBdmModelEditor addAttribute(String packageName, String businessObject, String attribute, String type) {
         selectBusinessObject(packageName, businessObject);
         bot.toolbarButtonWithId(AttributeEditionControl.ADD_ATTRIBUTE_BUTTON_ID).click();

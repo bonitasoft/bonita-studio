@@ -161,10 +161,12 @@ public interface BonitaPreferenceConstants {
     public static final int DEFAULT_PORT = 8080;
     public static final String DEFAULT_HOST = "localhost";
     public static final String SHOW_LEGACY_6X_MODE = "showLegacy6XMode";
-    
+
     public static final String UID_PORT = "uid.port";
     public static final String UID_JVM_OPTS = "uid.jvmOpts";
     public static final String CUSTOM_PAGE_DEBUG = "custom.page.debug";
     public static final String DATA_REPOSITORY_PORT = "data.repository.port";
+
+    public static final String ALWAYS_PERFORM_BDM_REFACTORING = "alwaysPerformBdmRefactoring";
 
 }

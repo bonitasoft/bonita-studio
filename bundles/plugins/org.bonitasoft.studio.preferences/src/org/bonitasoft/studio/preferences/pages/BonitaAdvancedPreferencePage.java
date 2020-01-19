@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
     private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
+    private static final String REFACTOR_CONTRIBUTOR_ID = "bdmRefactor";
 
     private BooleanFieldEditor askSaveDiagramAfterFirstSave;
 
@@ -61,6 +62,8 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
         showConnectorEditionConfirmation = new BooleanFieldEditor(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
+        
+        createPreferenceEditorContributions(REFACTOR_CONTRIBUTOR_ID);
 
         new Label(getFieldEditorParent(), SWT.NONE);
         new Label(getFieldEditorParent(), SWT.NONE);

@@ -35,6 +35,8 @@ import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.builder.BusinessObjectBuilder;
 import org.bonitasoft.studio.businessobject.editor.model.builder.PackageBuilder;
 import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuilder;
+import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.businessobject.editor.refactor.Event;
 import org.bonitasoft.studio.businessobject.editor.validator.BusinessObjectListValidator;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -58,6 +60,8 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -308,12 +312,14 @@ public class BusinessObjectList {
                         formPage.getEditorContribution().refreshConstraintList();
                         formPage.getEditorContribution().refreshIndexList();
                         formPage.getEditorContribution().refreshQueryViewers();
+                        formPage.refactorAccessControl();
                     }
                 })
                 .create());
     }
 
     private void updateName(Object element, String newName, AbstractBdmFormPage formPage) {
+        EObject old = EcoreUtil.copy(((EObject) element));
         if (element instanceof BusinessObject) {
             BusinessObject bo = (BusinessObject) element;
             String packageName = ((Package) bo.eContainer()).getName();
@@ -321,10 +327,12 @@ public class BusinessObjectList {
             bo.setQualifiedName(qualifiedName);
             bo.setSimpleName(newName);
             updateDefaultQueries(bo, formPage);
+            formPage.addToAccessControlRefactorQueue(new DiffElement(Event.RENAME_BO, old, bo));
             // TODO update queries: content and return type
         } else {
             Package pakage = (Package) element;
             pakage.setName(newName);
+            formPage.addToAccessControlRefactorQueue(new DiffElement(Event.RENAME_PACKAGE, old, pakage));
             pakage.getBusinessObjects().forEach(bo -> updateName(bo, bo.getSimpleName(), formPage));
         }
     }
@@ -439,15 +447,20 @@ public class BusinessObjectList {
                             NamingUtils.getSimpleName(bo.getSimpleName())))) {
                 Package pakage = (Package) bo.eContainer();
                 pakage.getBusinessObjects().remove(selectionObservable.getValue());
+                formPage.addToAccessControlRefactorQueue(new DiffElement(Event.REMOVE_BO, bo, null));
                 if (pakage.getBusinessObjects().isEmpty()) {
                     input.getValue().getPackages().remove(pakage);
+                    formPage.addToAccessControlRefactorQueue(new DiffElement(Event.REMOVE_PACKAGE, pakage, null));
                 }
+                formPage.refactorAccessControl();
             }
         } else {
             Package pakage = (Package) selectionObservable.getValue();
             if (MessageDialog.openQuestion(section.getShell(), Messages.deletePackageConfirmTitle,
                     String.format(Messages.deletePackageConfirm, pakage.getName()))) {
                 input.getValue().getPackages().remove(pakage);
+                formPage.addToAccessControlRefactorQueue(new DiffElement(Event.REMOVE_PACKAGE, pakage, null));
+                formPage.refactorAccessControl();
             }
         }
         formPage.getEditorContribution().refreshBusinessObjectList();
