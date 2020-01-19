@@ -36,6 +36,9 @@ public class DirtyStateAdapter extends EContentAdapter {
         if (!ignore) {
             formPage.forEach(AbstractBdmFormPage::makeDirty);
             formPage.forEach(AbstractBdmFormPage::refreshBusinessObjectList);
+            formPage.stream().findFirst() // Access ctrl available content is based on this working cpy -> when the working copy is updated access ctrl model must be reloaded. 
+                    .map(AbstractBdmFormPage::getEditorContribution)
+                    .ifPresent(BusinessDataModelEditorContribution::makeAccessControlStale);
         }
     }
 

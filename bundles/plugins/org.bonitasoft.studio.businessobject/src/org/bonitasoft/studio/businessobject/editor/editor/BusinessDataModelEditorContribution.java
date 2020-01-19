@@ -56,6 +56,7 @@ import org.xml.sax.SAXException;
 public class BusinessDataModelEditorContribution extends AbstractEditorContribution {
 
     public static final String ID = "bdmEditorContributionId";
+    private static final String ACCESS_CONTROL_ID = "accessControlEditorContributionId";
 
     private AbstractMultiSourceFormEditor editor;
 
@@ -95,7 +96,6 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         initFormPages();
 
         validator = new BusinessObjectListValidator(workingCopyObservable);
-
     }
 
     private void initFormPages() {
@@ -111,13 +111,13 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
             workingCopyObservable.addValueChangeListener(e -> {
                 dirtyStateAdapter.setIgnore(true);
                 try {
-                    BusinessObjectModel oldAccessControlModel = e.diff.getOldValue();
-                    if (oldAccessControlModel != null) {
-                        oldAccessControlModel.eAdapters().remove(dirtyStateAdapter);
+                    BusinessObjectModel oldBDM = e.diff.getOldValue();
+                    if (oldBDM != null) {
+                        oldBDM.eAdapters().remove(dirtyStateAdapter);
                     }
-                    BusinessObjectModel accessControlModel = e.diff.getNewValue();
-                    if (accessControlModel != null) {
-                        accessControlModel.eAdapters().add(dirtyStateAdapter);
+                    BusinessObjectModel newBDM = e.diff.getNewValue();
+                    if (newBDM != null) {
+                        newBDM.eAdapters().add(dirtyStateAdapter);
                     }
                 } finally {
                     dirtyStateAdapter.setIgnore(false);
@@ -266,6 +266,22 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
 
     public void refreshQueryViewers() {
         queryFormPage.refreshQueryViewers();
+    }
+
+    public BusinessObjectModel getWorkingCopy() {
+        return workingCopyObservable.getValue();
+    }
+
+    public void makeAccessControlStale() {
+        editor.getEditorContribution(ACCESS_CONTROL_ID).ifPresent(AbstractEditorContribution::makeStale);
+    }
+
+    @Override
+    public void makeStale() {
+        modelFormPage.makeStale();
+        constraintFormPage.makeStale();
+        queryFormPage.makeStale();
+        indexFormPage.makeStale();
     }
 
 }

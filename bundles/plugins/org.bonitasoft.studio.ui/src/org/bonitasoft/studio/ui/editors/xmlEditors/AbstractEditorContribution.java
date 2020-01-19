@@ -50,6 +50,8 @@ public abstract class AbstractEditorContribution implements IResourceChangeListe
 
     protected abstract void pageChange(int newPageIndex);
 
+    public abstract void makeStale();
+
     @Override
     public int compareTo(AbstractEditorContribution o) {
         return getContributionIndex() - o.getContributionIndex();
