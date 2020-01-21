@@ -436,7 +436,6 @@ public class BusinessObjectList {
         pakage.getBusinessObjects().add(newBusinessObject);
         formPage.getEditorContribution().refreshBusinessObjectList();
         viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newBusinessObject, 0));
-
     }
 
     private void remove(AbstractBdmFormPage formPage) {
