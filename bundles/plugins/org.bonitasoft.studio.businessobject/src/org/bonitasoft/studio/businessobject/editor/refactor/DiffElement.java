@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.businessobject.editor.refactor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 
 public class DiffElement {
@@ -21,6 +24,8 @@ public class DiffElement {
     private Event event;
     private EObject oldElement;
     private EObject newElement;
+
+    private Map<String, String> properties = new HashMap<>();
 
     public DiffElement(Event event, EObject oldElement, EObject newElement) {
         this.event = event;
@@ -38,6 +43,14 @@ public class DiffElement {
 
     public EObject getNewElement() {
         return newElement;
+    }
+
+    public void addProperty(String key, String value) {
+        properties.put(key, value);
+    }
+
+    public String getProperty(String key) {
+        return properties.get(key);
     }
 
 }

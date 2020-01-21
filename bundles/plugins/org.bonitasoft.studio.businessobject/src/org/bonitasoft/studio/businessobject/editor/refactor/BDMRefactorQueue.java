@@ -15,16 +15,15 @@
 package org.bonitasoft.studio.businessobject.editor.refactor;
 
 import java.util.ArrayDeque;
-import java.util.Queue;
 
-public class BDMRefactorQueue {
+public class BDMRefactorQueue extends ArrayDeque<DiffElement> {
+
+    private static final long serialVersionUID = 1L;
 
     private static BDMRefactorQueue INSTANCE;
 
-    Queue<DiffElement> queue;
-
     private BDMRefactorQueue() {
-        queue = new ArrayDeque<>();
+        super();
     }
 
     public static BDMRefactorQueue getInstance() {
@@ -32,32 +31,6 @@ public class BDMRefactorQueue {
             INSTANCE = new BDMRefactorQueue();
         }
         return INSTANCE;
-    }
-
-    public boolean add(DiffElement element) {
-        return queue.offer(element); // we use a resizable-array implementation of Queue so no need to worry here
-    }
-
-    /**
-     * Retrieves and removes the next element to refactor
-     */
-    public DiffElement poll() {
-        return queue.poll();
-    }
-
-    /**
-     * Retrieves but doesn't remove the next element to refactor
-     */
-    public DiffElement peek() {
-        return queue.peek();
-    }
-
-    public boolean isEmpty() {
-        return queue.isEmpty();
-    }
-
-    public void clear() {
-        queue.clear();
     }
 
 }

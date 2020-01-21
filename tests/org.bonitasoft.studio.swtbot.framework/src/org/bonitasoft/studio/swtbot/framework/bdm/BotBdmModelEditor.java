@@ -154,6 +154,18 @@ public class BotBdmModelEditor extends BotBase {
         SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         attributeTable.getTableItem(oldAttributeName).click();
         bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).setText(newAttributeName);
+        getBusinessObjectTree().pressShortcut(Keystrokes.CR);
+        return this;
+    }
+
+    public BotBdmModelEditor removeAttribute(String packageName, String businessObject, String attributeName) {
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
+        attributeTable.getTableItem(attributeName).select();
+        bot.toolbarButtonWithId(AttributeEditionControl.REMOVE_ATTRIBUTE_BUTTON_ID).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.deleteFieldConfirmTitle));
+        SWTBotShell activeShell = bot.activeShell();
+        activeShell.bot().button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
         return this;
     }
 
