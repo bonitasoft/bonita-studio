@@ -31,6 +31,8 @@ import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.FieldType;
 import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuilder;
+import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.businessobject.editor.refactor.Event;
 import org.bonitasoft.studio.businessobject.editor.validator.FieldNameValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -46,6 +48,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -297,10 +300,14 @@ public class AttributeEditionControl extends Composite {
                 .withValueUpdater((field, newName) -> {
                     String oldName = field.getName();
                     if (!Objects.equals(oldName, newName)) {
+                        Field oldField = EcoreUtil.copy(field);
                         field.setName((String) newName);
                         refactorConstraintsOnRename(oldName, (String) newName);
                         refactorIndexesOnRename(oldName, (String) newName);
                         refactorQueriesOnRename(oldName, (String) newName);
+                        DiffElement diff = new DiffElement(Event.RENAME_ATTRIBUTE, oldField, field);
+                        diff.addProperty("parentQualifiedName", ((BusinessObject) field.eContainer()).getQualifiedName());
+                        formPage.refactorAccessControl(diff);
                     }
                 })
                 .create());
@@ -378,6 +385,9 @@ public class AttributeEditionControl extends Composite {
                 String.format(Messages.deleteFieldConfirmMessage, field.getName()))) {
             refactorConstraintsOnDelete(field);
             refactorIndexesOnDelete(field);
+            DiffElement diff = new DiffElement(Event.REMOVE_ATTRIBUTE, field, null);
+            diff.addProperty("parentQualifiedName", ((BusinessObject) field.eContainer()).getQualifiedName());
+            formPage.refactorAccessControl(diff);
             selectedBoObservable.getValue().getFields().remove(field);
             updateDefaultQueries();
         }

@@ -167,6 +167,6 @@ public interface BonitaPreferenceConstants {
     public static final String CUSTOM_PAGE_DEBUG = "custom.page.debug";
     public static final String DATA_REPOSITORY_PORT = "data.repository.port";
 
-    public static final String ALWAYS_PERFORM_BDM_REFACTORING = "alwaysPerformBdmRefactoring";
+    public static final String HIDE_BDM_REFACTOR_PREVIEW = "hideBdmRefactorPreview";
 
 }

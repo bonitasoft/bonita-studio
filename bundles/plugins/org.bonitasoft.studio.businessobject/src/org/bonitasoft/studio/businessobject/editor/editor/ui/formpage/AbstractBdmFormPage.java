@@ -128,4 +128,9 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
         }
     }
 
+    public void refactorAccessControl(DiffElement diff) {
+        addToAccessControlRefactorQueue(diff);
+        refactorAccessControl();
+    }
+
 }

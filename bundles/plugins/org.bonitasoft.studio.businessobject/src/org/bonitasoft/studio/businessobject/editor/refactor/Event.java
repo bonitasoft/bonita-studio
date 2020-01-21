@@ -18,5 +18,7 @@ public enum Event {
     RENAME_PACKAGE, 
     REMOVE_PACKAGE, 
     RENAME_BO, 
-    REMOVE_BO
+    REMOVE_BO, 
+    RENAME_ATTRIBUTE, 
+    REMOVE_ATTRIBUTE
 }
