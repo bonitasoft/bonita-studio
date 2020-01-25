@@ -20,7 +20,10 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.Busi
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.FetchType;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
+import org.bonitasoft.studio.businessobject.editor.model.RelationField;
 import org.bonitasoft.studio.businessobject.editor.model.RelationType;
+import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.businessobject.editor.refactor.Event;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -31,6 +34,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -122,7 +126,6 @@ public class RelationFieldDetailsControl extends Composite {
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
     }
 
-    @SuppressWarnings("unchecked")
     private void createRelationKindCombo() {
         ComboViewer relationComboViewer = new ComboViewer(this, SWT.BORDER | SWT.READ_ONLY);
         relationComboViewer.getControl()
@@ -139,6 +142,17 @@ public class RelationFieldDetailsControl extends Composite {
         IObservableValue<RelationType> relationTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 selectedFieldObservable, BusinessDataModelPackage.Literals.RELATION_FIELD__TYPE);
 
+        relationTypeObservable.addValueChangeListener(e -> {
+            if (selectedFieldObservable.getValue() != null && e.diff.getOldValue() != null && e.diff.getNewValue() != null) {
+                RelationField oldValue = (RelationField) EcoreUtil.copy(selectedFieldObservable.getValue());
+                oldValue.setType(e.diff.getOldValue());
+                DiffElement diffElement = new DiffElement(Event.UPDATE_ATTRIBUTE_TYPE, oldValue,
+                        selectedFieldObservable.getValue());
+                diffElement.addProperty(AttributeEditionControl.PARENT_QUALIFIED_NAME,
+                        formPage.observeBusinessObjectSelected().getValue().getQualifiedName());
+                formPage.refactorAccessControl(diffElement);
+            }
+        });
         ctx.bindValue(selection, relationTypeObservable);
     }
 

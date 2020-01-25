@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.BusinessDataModelFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.provider.TypeLabelProvider;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
@@ -32,7 +33,11 @@ import org.bonitasoft.studio.businessobject.editor.model.RelationType;
 import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
 import org.bonitasoft.studio.businessobject.editor.model.builder.RelationFieldBuilder;
 import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuilder;
+import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.businessobject.editor.refactor.Event;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -126,6 +131,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     // TODO test me
     private void updateToSimpleField(RelationField field, FieldType type) {
+        EObject oldElement = EcoreUtil.copy(field);
         BusinessObject parent = (BusinessObject) field.eContainer();
         int index = parent.getFields().indexOf(field);
         parent.getFields().remove(field);
@@ -137,6 +143,10 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 .withType(type)
                 .create();
         parent.getFields().add(index, simpleField);
+        DiffElement diffElement = new DiffElement(Event.UPDATE_ATTRIBUTE_TYPE, oldElement,
+                simpleField);
+        diffElement.addProperty(AttributeEditionControl.PARENT_QUALIFIED_NAME, parent.getQualifiedName());
+        formPage.refactorAccessControl(diffElement);
     }
 
     // TODO test me
