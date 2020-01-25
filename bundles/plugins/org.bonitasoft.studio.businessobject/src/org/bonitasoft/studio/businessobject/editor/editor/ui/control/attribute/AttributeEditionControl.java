@@ -79,6 +79,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class AttributeEditionControl extends Composite {
 
+    public static final String PARENT_QUALIFIED_NAME = "parentQualifiedName";
     public static final String ATTRIBUTE_LIST_VIEWER_ID = "attributeViewerId";
     public static final String ADD_ATTRIBUTE_BUTTON_ID = "addAttributeId";
     public static final String REMOVE_ATTRIBUTE_BUTTON_ID = "removeAttributeId";
@@ -306,7 +307,7 @@ public class AttributeEditionControl extends Composite {
                         refactorIndexesOnRename(oldName, (String) newName);
                         refactorQueriesOnRename(oldName, (String) newName);
                         DiffElement diff = new DiffElement(Event.RENAME_ATTRIBUTE, oldField, field);
-                        diff.addProperty("parentQualifiedName", ((BusinessObject) field.eContainer()).getQualifiedName());
+                        diff.addProperty(PARENT_QUALIFIED_NAME, ((BusinessObject) field.eContainer()).getQualifiedName());
                         formPage.refactorAccessControl(diff);
                     }
                 })
@@ -386,7 +387,7 @@ public class AttributeEditionControl extends Composite {
             refactorConstraintsOnDelete(field);
             refactorIndexesOnDelete(field);
             DiffElement diff = new DiffElement(Event.REMOVE_ATTRIBUTE, field, null);
-            diff.addProperty("parentQualifiedName", ((BusinessObject) field.eContainer()).getQualifiedName());
+            diff.addProperty(PARENT_QUALIFIED_NAME, ((BusinessObject) field.eContainer()).getQualifiedName());
             formPage.refactorAccessControl(diff);
             selectedBoObservable.getValue().getFields().remove(field);
             updateDefaultQueries();
