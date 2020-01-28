@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Migration Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.migration;singleton:=true
-Bundle-Version: 7.10.1.qualifier
+Bundle-Version: 7.10.1
 Bundle-Activator: org.bonitasoft.studio.migration.MigrationPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
