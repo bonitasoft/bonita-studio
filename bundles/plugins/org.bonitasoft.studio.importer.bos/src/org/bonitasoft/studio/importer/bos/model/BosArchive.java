@@ -100,7 +100,7 @@ public class BosArchive {
         final List<String> segments = Splitter.on('/').splitToList(entryName);
         segments.stream()
                 .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent()
-                        || isLegacyFormRepo(segment))
+                        || isLegacyFormRepo(segment) || "README.adoc".equals(segment))
                 .forEach(segment -> handleSegment(archiveModel, segment, segments, repository, resourcesToOpen));
     }
 
@@ -123,8 +123,10 @@ public class BosArchive {
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
-        } else {
+        } else if(Repository.LEGACY_REPOSITORIES.contains(segment)){
             archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
+        } else {
+            archiveModel.addStore(new RootFileModel(segment, Joiner.on('/').join(parentSegments)));
         }
     }
 
