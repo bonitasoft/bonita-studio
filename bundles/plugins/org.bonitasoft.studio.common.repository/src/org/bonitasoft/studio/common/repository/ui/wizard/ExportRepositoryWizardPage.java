@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.ui.wizard;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IResourceContainer;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -292,6 +294,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(getDetinationPath());
         operation.setFileStores(getSelectedFileStores());
+        operation.addResources(getSelectedResoureContainer());
         try {
             final Set<IResource> toOpen = new HashSet<>();
             for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -307,6 +310,17 @@ public class ExportRepositoryWizardPage extends WizardPage {
         }
 
         return operation;
+    }
+
+    private List<IResource> getSelectedResoureContainer() {
+        List<IResource> resources = new ArrayList<>();
+        for (final Object element : treeViewer.checkedElementsObservable()) {
+            if (element instanceof IResourceContainer) {
+                resources.add(((IResourceContainer) element).getResource());
+                resources.addAll(((IResourceContainer) element).getRelatedResources());
+            }
+        }
+        return resources;
     }
 
     protected void createDestination(final Composite group) {

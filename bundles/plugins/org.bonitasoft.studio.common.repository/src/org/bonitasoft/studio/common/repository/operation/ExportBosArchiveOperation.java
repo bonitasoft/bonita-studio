@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -56,7 +57,7 @@ public class ExportBosArchiveOperation {
     public static final String TO_OPEN = "toOpen";
     public static final String NONE = "<NONE>";
 
-    private Set<IResource> resources;
+    private Set<IResource> resources = new HashSet<>();
     private IStatus status;
     private String destPath;
     private IFile manifestFile;
@@ -202,10 +203,14 @@ public class ExportBosArchiveOperation {
     }
 
     public void setFileStores(Set<IRepositoryFileStore> fileStores) {
-        resources = computeResourcesToExport(fileStores);
+        resources.addAll(computeResourcesToExport(fileStores));
     }
 
     public Set<IResource> getResources() {
         return resources;
+    }
+
+    public void addResources(List<IResource> selectedResoures) {
+        resources.addAll(selectedResoures);
     }
 }

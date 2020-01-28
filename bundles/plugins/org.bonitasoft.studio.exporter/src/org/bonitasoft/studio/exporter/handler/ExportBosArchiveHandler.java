@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IResourceContainer;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
@@ -73,7 +74,8 @@ public class ExportBosArchiveHandler {
             final MainProcess diagram = diagramToExport != null
                     ? getDiagram(repositoryAccessor, diagramToExport)
                     : getDiagramInEditor();
-            final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager.getInstance()
+            final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager
+                    .getInstance()
                     .getCurrentRepository()
                     .getAllExportableStores();
             if (diagram != null) {
@@ -95,13 +97,14 @@ public class ExportBosArchiveHandler {
                         RepositoryManager.getInstance().getCurrentRepository()
                                 .getAllExportableStores(),
                         true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
-                final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                final WizardDialog dialog = new WizardDialog(
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         wizard) {
 
                     @Override
                     protected void initializeBounds() {
                         super.initializeBounds();
-                        getShell().setSize(500, 600);
+                        getShell().setSize(600, 600);
                     }
                 };
                 dialog.setTitle(Messages.ExportButtonLabel);
