@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-61d8e9e2-b754-41af-8bee-6f7305d791b2" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <process id="sid-10bc5eb2-f157-4afa-973d-58b4b8f878a2" isClosed="false" isExecutable="false" name="proc" processType="None">
+      <laneSet id="sid-7279df2d-b72c-4a19-8c2c-61195a3d5f5c">
+         <lane id="sid-4EC0CD45-3B1E-4631-8ABD-065496871BE6">
+            <extensionElements>
+               <signavio:signavioMetaData metaKey="bgcolor" metaValue=""/>
+            </extensionElements>
+            <flowNodeRef>sid-8C74FAF1-AFEE-4C3A-B66E-1190133DB509</flowNodeRef>
+            <flowNodeRef>sid-D4D1A81E-2664-47E8-A9B9-F0F811567D7E</flowNodeRef>
+         </lane>
+      </laneSet>
+      <subProcess completionQuantity="1" id="sid-8C74FAF1-AFEE-4C3A-B66E-1190133DB509" isForCompensation="false" name="subproc" startQuantity="1" triggeredByEvent="false">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+         <task completionQuantity="1" id="sid-5DBD0AAA-0B58-4B63-B7C5-981164663AFA" isForCompensation="false" name="task in subproc" startQuantity="1">
+            <extensionElements>
+               <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+            </extensionElements>
+         </task>
+      </subProcess>
+      <task completionQuantity="1" id="sid-D4D1A81E-2664-47E8-A9B9-F0F811567D7E" isForCompensation="false" name="task in proc" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+      </task>
+   </process>
+   <collaboration id="sid-06f6efcf-c42c-40f3-b942-33c0edffc936">
+      <participant id="sid-897DCB46-2477-47E2-A178-66EF68559DC0" name="proc" processRef="sid-10bc5eb2-f157-4afa-973d-58b4b8f878a2">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </participant>
+   </collaboration>
+   <bpmndi:BPMNDiagram id="sid-2f6004a4-274a-467a-9d7c-b6ad6c1c4d2c">
+      <bpmndi:BPMNPlane bpmnElement="sid-06f6efcf-c42c-40f3-b942-33c0edffc936" id="sid-87588d10-935f-4b5e-a4a9-6b2a4b005533">
+         <bpmndi:BPMNShape bpmnElement="sid-4EC0CD45-3B1E-4631-8ABD-065496871BE6" id="sid-4EC0CD45-3B1E-4631-8ABD-065496871BE6_gui" isHorizontal="true">
+            <omgdc:Bounds height="250.0" width="570.0" x="30.0" y="6.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-8C74FAF1-AFEE-4C3A-B66E-1190133DB509" id="sid-8C74FAF1-AFEE-4C3A-B66E-1190133DB509_gui" isExpanded="true">
+            <omgdc:Bounds height="160.0" width="200.0" x="57.0" y="17.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-5DBD0AAA-0B58-4B63-B7C5-981164663AFA" id="sid-5DBD0AAA-0B58-4B63-B7C5-981164663AFA_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="107.0" y="57.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-D4D1A81E-2664-47E8-A9B9-F0F811567D7E" id="sid-D4D1A81E-2664-47E8-A9B9-F0F811567D7E_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="357.0" y="43.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-897DCB46-2477-47E2-A178-66EF68559DC0" id="sid-897DCB46-2477-47E2-A178-66EF68559DC0_gui" isHorizontal="false">
+            <omgdc:Bounds height="250.0" width="600.0" x="0.0" y="6.0"/>
+         </bpmndi:BPMNShape>
+      </bpmndi:BPMNPlane>
+   </bpmndi:BPMNDiagram>
+</definitions>
