@@ -12,10 +12,9 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.editingSupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.businessobject.ui.wizard.BusinessDataModelWizardPage;
-import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -84,7 +83,7 @@ public class BotBdmModelEditor extends BotBase {
     public BotBdmModelEditor addPackage(String packageName, String businessObject) {
         bot.toolbarButtonWithId(BusinessObjectList.ADD_PACKAGE_BUTTON_ID).click();
         renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, packageName);
-        renameBusinessObject(packageName, BusinessDataModelWizardPage.DEFAULT_BUSINESS_OBJECT_NAME, businessObject);
+        renameBusinessObject(packageName, BusinessObjectList.DEFAULT_BO_NAME, businessObject);
         return this;
     }
 
@@ -109,7 +108,7 @@ public class BotBdmModelEditor extends BotBase {
     public BotBdmModelEditor addBusinessObject(String packageName, String name) {
         selectPackage(packageName);
         bot.toolbarButtonWithId(BusinessObjectList.ADD_BO_BUTTON_ID).click();
-        renameBusinessObject(packageName, BusinessDataModelWizardPage.DEFAULT_BUSINESS_OBJECT_NAME, name);
+        renameBusinessObject(packageName, BusinessObjectList.DEFAULT_BO_NAME, name);
         return this;
     }
 

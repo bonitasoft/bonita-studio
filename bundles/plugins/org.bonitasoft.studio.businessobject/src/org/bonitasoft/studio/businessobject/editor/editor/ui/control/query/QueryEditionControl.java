@@ -20,15 +20,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
-import org.bonitasoft.studio.businessobject.editor.core.QueryContentCreator;
+import org.bonitasoft.studio.businessobject.core.QueryContentCreator;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.query.QueryFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.provider.QueryContentProvider;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.builder.QueryBuilder;
-import org.bonitasoft.studio.businessobject.editor.validator.QueryValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.validator.QueryValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;

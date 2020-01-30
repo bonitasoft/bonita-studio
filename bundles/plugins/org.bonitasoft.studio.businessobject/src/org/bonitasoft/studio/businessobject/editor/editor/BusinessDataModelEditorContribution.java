@@ -20,11 +20,11 @@ import java.util.Collection;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
+import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.editor.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.constraint.ConstraintFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.index.IndexFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.BusinessDataModelFormPage;
@@ -33,8 +33,8 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelFactor
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.editor.model.Package;
-import org.bonitasoft.studio.businessobject.editor.validator.BusinessObjectListValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.validator.BusinessObjectListValidator;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractEditorContribution;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractMultiSourceFormEditor;
 import org.bonitasoft.studio.ui.editors.xmlEditors.ReadOnlyStructuredTextEditor;

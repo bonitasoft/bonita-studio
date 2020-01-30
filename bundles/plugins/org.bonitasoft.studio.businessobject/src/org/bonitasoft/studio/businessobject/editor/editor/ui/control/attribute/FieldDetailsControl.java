@@ -21,9 +21,9 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackag
 import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.RelationField;
 import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
-import org.bonitasoft.studio.businessobject.editor.validator.StringLengthValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
+import org.bonitasoft.studio.businessobject.validator.StringLengthValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.ComboWidget;

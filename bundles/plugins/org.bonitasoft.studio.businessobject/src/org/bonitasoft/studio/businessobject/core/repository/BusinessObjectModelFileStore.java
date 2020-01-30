@@ -90,7 +90,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     private static final String BDM_DELETED_TOPIC = "bdm/deleted";
     public static final String BDM_ARTIFACT_DESCRIPTOR = ".artifact-descriptor.properties";
 
-    private static final String DEFINE_BDM_COMMAND_ID = "org.bonitasoft.studio.businessobject.manage";
     private static final String DEFAULT_GROUP_ID = "com.company.model";
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
@@ -222,14 +221,12 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     @Override
-    /**
-     * we use the command to call the handler, so we do not have to extend this class for sp features.
-     */
     protected IWorkbenchPart doOpen() {
         try {
             BusinessDataModelEditor openedEditor = getOpenedEditor();
             if (openedEditor != null) {
                 if (openedEditor.setActiveContribution(BusinessDataModelEditorContribution.ID)) {
+                    openedEditor.getSite().getPage().activate(openedEditor);
                     return openedEditor;
                 }
                 openedEditor.close(true);

@@ -193,6 +193,10 @@ public class Messages extends NLS {
 
     public static String localVariableDecsription;
 
+    public static String defineBdmTooltip;
+
+    public static String addBusinessDataTooltip;
+
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
     }

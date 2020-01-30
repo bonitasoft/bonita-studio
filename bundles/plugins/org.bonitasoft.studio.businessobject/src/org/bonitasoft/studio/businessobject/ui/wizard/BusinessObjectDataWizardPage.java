@@ -32,9 +32,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.businessobject.ui.handler.ManageBusinessObjectHandler;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -66,12 +64,9 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -241,7 +236,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         businessObjectLabel.setText(Messages.businessObject + " *");
 
         final Composite comboComposite = new Composite(mainComposite, SWT.NONE);
-        comboComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+        comboComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
         comboComposite.setLayoutData(fillDefaults().grab(true, false).create());
 
         final ComboViewer businessObjectComboViewer = new ComboViewer(comboComposite, SWT.READ_ONLY | SWT.BORDER);
@@ -254,7 +249,6 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
         final IViewerObservableValue observeSingleSelection = ViewersObservables
                 .observeSingleSelection(businessObjectComboViewer);
-        createNewBusinessObjectLink(comboComposite, businessObjectsObservableList, observeSingleSelection);
         businessObjectComboViewer.setInput(businessObjectsObservableList);
 
         classNameObservable = EMFObservables.observeValue(businessObjectData,
@@ -289,30 +283,6 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         };
     }
 
-    private void createNewBusinessObjectLink(final Composite comboComposite,
-            final IObservableList<BusinessObject> businessObjectsObservableList,
-            final IViewerObservableValue observeSingleSelection) {
-        final Link createBusinessObjectLink = new Link(comboComposite, SWT.NO_FOCUS);
-        createBusinessObjectLink.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
-        createBusinessObjectLink.setText(Messages.createNewBusinessObject);
-        createBusinessObjectLink.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                final Object value = observeSingleSelection.getValue();
-                openNewBusinessObjectWizard();
-                final List<BusinessObject> allBusinessObjects = getAllBusinessObjects();
-                businessObjectsObservableList.clear();
-                businessObjectsObservableList.addAll(allBusinessObjects);
-                if (value != null && allBusinessObjects.contains(value)) {
-                    observeSingleSelection.setValue(value);
-                } else if (!allBusinessObjects.isEmpty()) {
-                    observeSingleSelection.setValue(businessObjectsObservableList.get(0));
-                }
-            }
-        });
-    }
-
     private Converter fqnToBusinessObject() {
         return new Converter(String.class, BusinessObject.class) {
 
@@ -343,10 +313,6 @@ public class BusinessObjectDataWizardPage extends WizardPage {
             }
 
         };
-    }
-
-    protected void openNewBusinessObjectWizard() {
-        new ManageBusinessObjectHandler().execute(repositoryAccessor, getShell());
     }
 
     protected List<BusinessObject> getAllBusinessObjects() {
