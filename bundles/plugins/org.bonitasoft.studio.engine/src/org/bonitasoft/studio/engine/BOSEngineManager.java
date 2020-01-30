@@ -269,7 +269,7 @@ public class BOSEngineManager {
             monitor.beginTask(Messages.waitingForEngineToStart, IProgressMonitor.UNKNOWN);
         }
         start();
-        BonitaStudioLog.debug("Attempt to login as " + login + ":" + password, EnginePlugin.PLUGIN_ID);
+        BonitaStudioLog.debug("Attempt to login as " + login, EnginePlugin.PLUGIN_ID);
         final APISession session = getLoginAPI().login(requireNonNull(login), requireNonNull(password));
         if (session != null) {
             BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
@@ -352,13 +352,13 @@ public class BOSEngineManager {
                     monitor);
         } catch (final Exception e1) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { username + ":" + password, process.getName(),
+                    new String[] { username, process.getName(),
                             process.getVersion() }),
                     e1);
         }
         if (session == null) {
             throw new Exception(Messages.bind(Messages.loginFailed,
-                    new String[] { username + ":" + password, process.getName(),
+                    new String[] { username, process.getName(),
                             process.getVersion() }));
         }
         return session;
