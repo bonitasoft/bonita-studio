@@ -23,9 +23,9 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
-import org.bonitasoft.studio.businessobject.ui.wizard.BusinessDataModelWizardPage;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -94,7 +94,7 @@ public class CreateDeployExportBusinessObjectIT {
 
         bdmWizardBot.modelPage()
                 .renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, "aPackage")
-                .renameBusinessObject("aPackage", BusinessDataModelWizardPage.DEFAULT_BUSINESS_OBJECT_NAME, "anObject")
+                .renameBusinessObject("aPackage", BusinessObjectList.DEFAULT_BO_NAME, "anObject")
                 .addPackage(packageName, "Employee")
                 .removePackage("aPackage")
                 .renameAttribute(packageName, "Employee", AttributeEditionControl.DEFAULT_FIELD_NAME, "firstName")

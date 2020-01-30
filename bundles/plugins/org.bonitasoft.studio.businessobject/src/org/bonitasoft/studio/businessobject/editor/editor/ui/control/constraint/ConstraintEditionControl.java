@@ -28,9 +28,9 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackag
 import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
 import org.bonitasoft.studio.businessobject.editor.model.builder.UniqueConstraintBuilder;
-import org.bonitasoft.studio.businessobject.editor.validator.UniqueConstraintFieldsValidator;
-import org.bonitasoft.studio.businessobject.editor.validator.UniqueConstraintNameValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.businessobject.validator.UniqueConstraintFieldsValidator;
+import org.bonitasoft.studio.businessobject.validator.UniqueConstraintNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;

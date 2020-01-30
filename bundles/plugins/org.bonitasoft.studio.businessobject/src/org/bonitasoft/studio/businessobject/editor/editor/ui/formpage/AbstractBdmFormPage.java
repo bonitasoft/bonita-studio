@@ -19,7 +19,7 @@ import java.io.IOException;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
-import org.bonitasoft.studio.businessobject.editor.converter.BusinessDataModelConverter;
+import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.CleanDeployContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.DeployContributionItem;
@@ -27,8 +27,8 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.Export
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ImportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
-import org.bonitasoft.studio.businessobject.editor.refactor.BDMRefactorQueue;
-import org.bonitasoft.studio.businessobject.editor.refactor.DiffElement;
+import org.bonitasoft.studio.businessobject.refactor.BDMRefactorQueue;
+import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

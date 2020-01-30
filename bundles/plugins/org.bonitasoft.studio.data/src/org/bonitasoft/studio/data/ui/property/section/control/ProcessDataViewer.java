@@ -46,18 +46,22 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class ProcessDataViewer extends DataViewer implements IAddData {
 
     private final DataWizardFactory dataWizardFactory;
 
-    public ProcessDataViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final EStructuralFeature dataFeature,
+    public ProcessDataViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final EStructuralFeature dataFeature,
             final DataWizardFactory dataWizardFactory) {
         super(parent, widgetFactory, dataFeature);
         this.dataWizardFactory = dataWizardFactory;
@@ -87,7 +91,8 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
         if (createWizardDialog(moveDataWizard, IDialogConstants.FINISH_LABEL).open() == Dialog.OK) {
             final DataAware dataAware = moveDataWizard.getSelectedDataAwareElement();
             try {
-                final MoveDataCommand cmd = new MoveDataCommand(TransactionUtil.getEditingDomain(dataAware), container, structuredSelection.toList(), dataAware);
+                final MoveDataCommand cmd = new MoveDataCommand(TransactionUtil.getEditingDomain(dataAware), container,
+                        structuredSelection.toList(), dataAware);
                 OperationHistoryFactory.getOperationHistory().execute(cmd, null, null);
 
                 if (!(cmd.getCommandResult().getStatus().getSeverity() == Status.OK)) {
@@ -144,7 +149,8 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.data.ui.property.section.control.DataViewerComposite#addFilters(org.eclipse.jface.viewers.StructuredViewer)
+     * @see org.bonitasoft.studio.data.ui.property.section.control.DataViewerComposite#addFilters(org.eclipse.jface.viewers.
+     * StructuredViewer)
      */
     @Override
     protected void addFilters(final StructuredViewer viewer) {
@@ -171,7 +177,9 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.data.ui.property.section.control.DataViewer#createLabelProvider(org.eclipse.core.databinding.observable.map.IObservableMap[])
+     * @see
+     * org.bonitasoft.studio.data.ui.property.section.control.DataViewer#createLabelProvider(org.eclipse.core.databinding.
+     * observable.map.IObservableMap[])
      */
     @Override
     protected IBaseLabelProvider createLabelProvider(final IObservableMap[] labelMaps) {
@@ -212,6 +220,11 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
     @Override
     protected String getTableId() {
         return SWTBotConstants.SWTBOT_ID_PROCESS_DATA_LIST;
+    }
+
+    @Override
+    protected void createToolItems(ToolBar toolBar) {
+        new ToolItem(toolBar, SWT.PUSH); // Filler -> ensure alignment.
     }
 
 }

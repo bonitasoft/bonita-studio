@@ -22,12 +22,6 @@
                   style="push">
             </command>
             <command
-                  commandId="org.bonitasoft.studio.businessobject.manage"
-                  icon="icons/manage-bdm.png"
-                  style="push"
-                  id="org.bonitasoft.studio.businessobject.manage.menu">
-            </command>
-            <command
                   commandId="org.bonitasoft.studio.businessobject.openH2Console"
                   icon="icons/h2.png"
                   style="push">
@@ -290,7 +284,7 @@
             name="Business Data Model content type"
             priority="normal">
          <describer
-               class="org.bonitasoft.studio.businessobject.editor.core.BusinessDataModelContentDescriber">
+               class="org.bonitasoft.studio.businessobject.core.BusinessDataModelContentDescriber">
          </describer>
       </content-type>
    </extension>

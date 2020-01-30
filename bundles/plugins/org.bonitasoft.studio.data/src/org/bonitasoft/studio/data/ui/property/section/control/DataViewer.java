@@ -40,6 +40,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -60,22 +61,29 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public abstract class DataViewer extends Composite {
 
     private final TableViewer tableViewer;
-    private final TabbedPropertySheetWidgetFactory widgetFactory;
+    protected final TabbedPropertySheetWidgetFactory widgetFactory;
+    protected Button addButton;
     private Button editButton;
     private Button removeButton;
     private IObservableValue dataContainerObservable;
     private final EStructuralFeature dataFeature;
 
-    public DataViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final EStructuralFeature dataFeature) {
+    public DataViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final EStructuralFeature dataFeature) {
         super(parent, SWT.NONE);
         this.widgetFactory = widgetFactory;
         this.dataFeature = dataFeature;
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 5, 10).create());
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
+                .extendedMargins(10, 10, 5, 10).create());
+
+        //FILLER
+        widgetFactory.createLabel(this, "", SWT.NONE);
 
         createTitle();
 
@@ -118,18 +126,29 @@ public abstract class DataViewer extends Composite {
 
     protected abstract void addFilters(final StructuredViewer viewer);
 
-    private void createTitle() {
-        //FILLER
-        widgetFactory.createLabel(this, "", SWT.NONE);
+    protected void createTitle() {
+        Composite titleComposite = widgetFactory.createComposite(this);
+        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final Label label = widgetFactory.createLabel(this, getTitle(), SWT.NONE);
+        final Label label = widgetFactory.createLabel(titleComposite, getTitle(), SWT.NONE);
         label.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
-        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT, this);
+        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT, titleComposite);
         controlDecoration.setShowOnlyOnFocus(false);
         controlDecoration.setDescriptionText(getTitleDescripiton());
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+
+        Composite toolBarComposite = widgetFactory.createComposite(titleComposite);
+        toolBarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        toolBarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).create());
+        ToolBar toolBar = new ToolBar(toolBarComposite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
+        widgetFactory.adapt(toolBar);
+        toolBar.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+        createToolItems(toolBar);
     }
+
+    protected abstract void createToolItems(ToolBar toolBar);
 
     protected abstract String getTitle();
 
@@ -144,17 +163,19 @@ public abstract class DataViewer extends Composite {
     }
 
     protected void addButtons(final Composite buttonsComposite) {
-        createAddButton(buttonsComposite);
+        addButton = createAddButton(buttonsComposite);
         editButton = createEditButton(buttonsComposite);
         removeButton = createRemoveButton(buttonsComposite);
     }
 
     public void bindControl(final DataBindingContext context, final IObservableValue dataContainerObservable) {
         this.dataContainerObservable = dataContainerObservable;
-        final IObservableSet knownElements = ((ObservableListContentProvider) tableViewer.getContentProvider()).getKnownElements();
-        final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
-                ProcessPackage.Literals.DATA__MULTIPLE,
-                ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME, ProcessPackage.Literals.DATA__DATA_TYPE });
+        final IObservableSet knownElements = ((ObservableListContentProvider) tableViewer.getContentProvider())
+                .getKnownElements();
+        final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements,
+                new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
+                        ProcessPackage.Literals.DATA__MULTIPLE,
+                        ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME, ProcessPackage.Literals.DATA__DATA_TYPE });
         tableViewer.setLabelProvider(createLabelProvider(labelMaps));
         tableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), dataContainerObservable,
                 dataFeature));
@@ -191,8 +212,12 @@ public abstract class DataViewer extends Composite {
         return button;
     }
 
-    private void createAddButton(final Composite parent) {
-        final Button addDataButton = createButton(parent, Messages.addData, getAddButtonId());
+    protected Button createAddButton(final Composite parent) {
+        Composite addButtonComposite = widgetFactory.createComposite(parent);
+        addButtonComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        addButtonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        Button addDataButton = createButton(addButtonComposite, Messages.addData, getAddButtonId());
+        addDataButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         addDataButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -200,6 +225,7 @@ public abstract class DataViewer extends Composite {
                 addData();
             }
         });
+        return addDataButton;
     }
 
     protected abstract String getAddButtonId();
@@ -239,7 +265,8 @@ public abstract class DataViewer extends Composite {
 
     protected boolean onlyOneElementSelected(final IStructuredSelection selection) {
         if (selection.size() != 1) {
-            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
+            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle,
+                    Messages.selectOnlyOneElementMessage);
             return false;
         }
         return true;
