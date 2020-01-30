@@ -24,7 +24,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions;
@@ -57,6 +60,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
@@ -109,6 +113,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -119,6 +124,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private static final int LONG_FIELD_MAX_LENGTH = 255;
     private static final int CUSTOM_USER_DEFINITION_VALUE_LIMIT_SIZE = LONG_FIELD_MAX_LENGTH;
     private static final String DEFAULT_USER_PASSWORD = "bpm";
+    private static final char CLEAR_CHAR = '\0';
 
     CustomUserInfoDefinitions infoDefinitions;
 
@@ -260,7 +266,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             if (customUserInfoTable != null) {
                 if (organization.getCustomUserInfoDefinitions() == null) {
                     organization
-                            .setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
+                            .setCustomUserInfoDefinitions(
+                                    OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
                 }
                 customUserInfoObservableList = EMFProperties
                         .list(OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION)
@@ -446,8 +453,33 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         passwordLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         passwordLabel.setText(Messages.password + " *");
 
-        final Text passwordText = new Text(rightColumnComposite, SWT.BORDER | SWT.PASSWORD);
-        passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
+        Composite passwordComposite = new Composite(rightColumnComposite, SWT.NONE);
+        passwordComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        passwordComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        final Text passwordText = new Text(passwordComposite, SWT.BORDER | SWT.PASSWORD);
+        passwordText.setLayoutData(
+                GridDataFactory.swtDefaults()
+                .align(SWT.FILL, SWT.CENTER)
+                .grab(true, false)
+                .indent(5, 0)
+                .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
+                .create());
+        char echoChar = passwordText.getEchoChar();
+
+        if(!"macosx".equals(Platform.getOS())) {
+            final Button viewPaswsordButton = new Button(passwordComposite, SWT.TOGGLE);
+            viewPaswsordButton.setLayoutData(GridDataFactory.swtDefaults().create());
+            viewPaswsordButton.setImage(Pics.getImage("view.png", ActorsPlugin.getDefault()));
+            viewPaswsordButton.setToolTipText(Messages.showPassword);
+            viewPaswsordButton.addSelectionListener(new SelectionAdapter() {
+    
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                        passwordText.setEchoChar(viewPaswsordButton.getSelection() ? CLEAR_CHAR : echoChar);
+                }
+            });
+        }
 
         final UpdateValueStrategy mandatoryStrategy = new UpdateValueStrategy();
         mandatoryStrategy
@@ -673,7 +705,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 textValue.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
                 context.bindValue(SWTObservables.observeText(textValue, SWT.Modify),
-                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE),
+                        EMFObservables.observeValue(infoValue,
+                                OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE),
                         strategy, null);
 
             }
@@ -787,7 +820,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         roleName.setText(Messages.role);
 
         final Combo roleNameCombo = new Combo(detailsInfoComposite, SWT.BORDER | SWT.READ_ONLY);
-        roleNameCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create());
+        roleNameCombo
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create());
 
         for (final org.bonitasoft.studio.actors.model.organization.Role role : roleList) {
             roleNameCombo.add(role.getName());
@@ -844,32 +878,36 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 });
 
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
-        modelStrategy.setConverter(new Converter(String.class, org.bonitasoft.studio.actors.model.organization.Group.class) {
+        modelStrategy
+                .setConverter(new Converter(String.class, org.bonitasoft.studio.actors.model.organization.Group.class) {
 
-            @Override
-            public Object convert(final Object from) {
-                final String groupName = (String) from;
-                final Iterator<org.bonitasoft.studio.actors.model.organization.Group> iterator = observeGroupList.iterator();
-                while (iterator.hasNext()) {
-                    final org.bonitasoft.studio.actors.model.organization.Group group = iterator.next();
-                    if (group.getName().equals(groupName)) {
-                        final String gParentPath = group.getParentPath();
-                        final String mGroupParentPath = membership.getGroupParentPath();
-                        if (gParentPath == null && mGroupParentPath == null || gParentPath.equals(mGroupParentPath)) {
-                            return group;
+                    @Override
+                    public Object convert(final Object from) {
+                        final String groupName = (String) from;
+                        final Iterator<org.bonitasoft.studio.actors.model.organization.Group> iterator = observeGroupList
+                                .iterator();
+                        while (iterator.hasNext()) {
+                            final org.bonitasoft.studio.actors.model.organization.Group group = iterator.next();
+                            if (group.getName().equals(groupName)) {
+                                final String gParentPath = group.getParentPath();
+                                final String mGroupParentPath = membership.getGroupParentPath();
+                                if (gParentPath == null && mGroupParentPath == null
+                                        || gParentPath.equals(mGroupParentPath)) {
+                                    return group;
+                                }
+                            }
+
                         }
+                        return null;
+
                     }
-
-                }
-                return null;
-
-            }
-        });
+                });
 
         groupNameCombo.setInput(observeGroupList);
         final IObservableValue membershipValue = EMFObservables.observeValue(membership,
                 OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME);
-        final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(groupNameCombo), membershipValue,
+        final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(groupNameCombo),
+                membershipValue,
                 targetStrategy, modelStrategy);
         ControlDecorationSupport.create(binding, SWT.LEFT, detailsInfoComposite);
     }
@@ -974,8 +1012,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text roomText = new Text(buildingInfo, SWT.BORDER);
         roomText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         roomText.setMessage(Messages.roomHint);
-        bindTextToUserAttribute(roomText, reference, OrganizationPackage.Literals.CONTACT_DATA__ROOM, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.roomLabel, SHORT_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(roomText, reference, OrganizationPackage.Literals.CONTACT_DATA__ROOM,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.roomLabel, SHORT_FIELD_MAX_LENGTH)).create());
     }
 
     private void createAddressField(final Composite detailsInfoComposite, final EReference reference) {
@@ -1004,8 +1043,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text cityText = new Text(addressInfo, SWT.BORDER);
         cityText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         cityText.setMessage(Messages.cityHint);
-        bindTextToUserAttribute(cityText, reference, OrganizationPackage.Literals.CONTACT_DATA__CITY, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.cityLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(cityText, reference, OrganizationPackage.Literals.CONTACT_DATA__CITY,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.cityLabel, LONG_FIELD_MAX_LENGTH)).create());
 
         createPersonalStateField(addressInfo, reference);
 
@@ -1020,8 +1060,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text stateText = new Text(addressInfo, SWT.BORDER);
         stateText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         stateText.setMessage(Messages.stateHint);
-        bindTextToUserAttribute(stateText, reference, OrganizationPackage.Literals.CONTACT_DATA__STATE, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.stateLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(stateText, reference, OrganizationPackage.Literals.CONTACT_DATA__STATE,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.stateLabel, LONG_FIELD_MAX_LENGTH)).create());
     }
 
     private void createPersonalZipCodeField(final Composite addressInfo, final EReference reference) {
@@ -1046,8 +1087,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         emailText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         emailText.setMessage(Messages.emailHint);
 
-        bindTextToUserAttribute(emailText, reference, OrganizationPackage.Literals.CONTACT_DATA__EMAIL, updateValueStrategy()
-                .withValidator(maxLengthValidator(Messages.countryLabel, LONG_FIELD_MAX_LENGTH)).create());
+        bindTextToUserAttribute(emailText, reference, OrganizationPackage.Literals.CONTACT_DATA__EMAIL,
+                updateValueStrategy()
+                        .withValidator(maxLengthValidator(Messages.countryLabel, LONG_FIELD_MAX_LENGTH)).create());
 
     }
 
@@ -1069,9 +1111,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             final UpdateValueStrategy targetUpdateValueStrategy) {
         final IObservableValue personalDataValue = EMFObservables.observeDetailValue(Realm.getDefault(),
                 userSingleSelectionObservable, reference);
-        final IObservableValue propertyUserValue = EMFObservables.observeDetailValue(Realm.getDefault(), personalDataValue,
+        final IObservableValue propertyUserValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                personalDataValue,
                 attribute);
-        return context.bindValue(SWTObservables.observeText(text, SWT.Modify), propertyUserValue, targetUpdateValueStrategy,
+        return context.bindValue(SWTObservables.observeText(text, SWT.Modify), propertyUserValue,
+                targetUpdateValueStrategy,
                 null);
     }
 
@@ -1318,7 +1362,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite groupComposite = new Composite(infoCompo, SWT.NONE);
         groupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        groupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 0).equalWidth(true).create());
+        groupComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 0).equalWidth(true).create());
 
         // Group Default Information
         final Group defaultGroup = new Group(groupComposite, SWT.FILL);
@@ -1392,7 +1437,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                     for (final User user : organization.getUsers().getUser()) {
                         final List<CustomUserInfoValue> toRemove = new ArrayList<>();
                         for (final CustomUserInfoDefinition def : definitions) {
-                            for (final CustomUserInfoValue v : user.getCustomUserInfoValues().getCustomUserInfoValue()) {
+                            for (final CustomUserInfoValue v : user.getCustomUserInfoValues()
+                                    .getCustomUserInfoValue()) {
                                 if (v.getName().equals(def.getName())) {
                                     toRemove.add(v);
                                 }
@@ -1471,7 +1517,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         // add this new CustomUserInfo as a a CustomUserInfoValue for the User
         for (final User user : organization.getUsers().getUser()) {
-            final CustomUserInfoValue newCustomUserInfoValueType = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
+            final CustomUserInfoValue newCustomUserInfoValueType = OrganizationFactory.eINSTANCE
+                    .createCustomUserInfoValue();
             newCustomUserInfoValueType.setName(customUserInfoName);
             newCustomUserInfoValueType.setValue("");
 
@@ -1486,7 +1533,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Set<String> existingCustomUserInfoNames = new HashSet<>();
         if (organization != null) {
             if (organization.getCustomUserInfoDefinitions() == null) {
-                organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
+                organization
+                        .setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
             }
             for (final CustomUserInfoDefinition custom : organization.getCustomUserInfoDefinitions()
                     .getCustomUserInfoDefinition()) {
