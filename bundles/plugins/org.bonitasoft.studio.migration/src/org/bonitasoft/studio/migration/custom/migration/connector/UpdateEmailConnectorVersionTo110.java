@@ -17,6 +17,7 @@ package org.bonitasoft.studio.migration.custom.migration.connector;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.migration.utils.CustomMigrationUtil;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Model;
 
@@ -51,8 +52,10 @@ public class UpdateEmailConnectorVersionTo110 extends UpdateConnectorDefinitionM
                     Instance returnPathParameter = model.newInstance("connectorconfiguration.ConnectorParameter");
                     returnPathParameter.set("key", "returnPath");
                     Instance fromExpression = fromParameter.get("expression");
-                    returnPathParameter.set("expression", fromExpression.copy());
+                    Instance copy = CustomMigrationUtil.deepCopy(fromExpression);
+                    returnPathParameter.set("expression", copy);
                     parameters.add(returnPathParameter);
                 });
     }
+    
 }
