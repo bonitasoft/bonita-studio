@@ -25,9 +25,13 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
+import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFolder;
@@ -106,6 +110,13 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
+            if(!PageUUIDResolver.indexFile(location.toFile()).exists()) {
+                try {
+                    new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
+                } catch (InvocationTargetException | InterruptedException e) {
+                   BonitaStudioLog.error(e);
+                }
+            }
             String id = new PageUUIDResolver(location.toFile()).resolveUUID(uuid);
             WebPageFileStore page = super.getChild(id, force);
             if (page == null) {

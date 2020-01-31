@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.designer.core.repository;
+package org.bonitasoft.studio.designer.core.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -33,27 +33,27 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 
-public class MigrateUIDOperation implements IRunnableWithProgress {
+public class IndexingUIDOperation implements IRunnableWithProgress {
 
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
-    public MigrateUIDOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
+    public IndexingUIDOperation(PageDesignerURLFactory pageDesignerURLBuilder) {
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
 
-    public MigrateUIDOperation() {
+    public IndexingUIDOperation() {
 
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.subTask(Messages.migratingUID);
+        monitor.subTask(Messages.indexingUIDPages);
         PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
                 ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
         URI uri = null;
         try {
-            uri = urlBuilder.migrate().toURI();
+            uri = urlBuilder.indexation().toURI();
         } catch (MalformedURLException | URISyntaxException e1) {
             throw new InvocationTargetException(new MigrationException(e1));
         }

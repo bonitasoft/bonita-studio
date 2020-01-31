@@ -14,12 +14,15 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener;
-import org.bonitasoft.studio.designer.core.operation.INewFormOperationFactory;
+import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.NewFormOperationFactoryDelegate;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
@@ -35,12 +38,15 @@ import org.eclipse.ui.progress.IProgressService;
 @Creatable
 public class CreateOrEditFormProposalListener extends CreateNewFormProposalListener {
 
+    private IProgressService progressService;
+
     @Inject
-    public CreateOrEditFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory, 
+    public CreateOrEditFormProposalListener(final PageDesignerURLFactory pageDesignerURLFactory,
             final IProgressService progressService,
             final RepositoryAccessor repositoryAccessor,
-            NewFormOperationFactoryDelegate  operationFactory) {
-        super(pageDesignerURLFactory, progressService, repositoryAccessor,operationFactory);
+            NewFormOperationFactoryDelegate operationFactory) {
+        super(pageDesignerURLFactory, progressService, repositoryAccessor, operationFactory);
+        this.progressService = progressService;
     }
 
     @Override
@@ -48,16 +54,32 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
         final FormMapping mapping = (FormMapping) context;
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
-            final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent(), true);
+            WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)
+                    .getChild(targetForm.getContent(), true);
+            if (pageStore == null) {
+                reindexPages();
+                pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)
+                        .getChild(targetForm.getContent(), true);
+            }
             if (pageStore != null) {
                 pageStore.open();
             } else {
-                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.formDoesntExistAnymoreTitle,
-                        Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()), targetForm.getName()));
+                MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.bind(Messages.formDoesntExistAnymoreTitle, targetForm.getName()),
+                        Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()),
+                                targetForm.getName()));
             }
             return null;
         } else {
             return super.handleEvent(context, fixedReturnType);
+        }
+    }
+
+    private void reindexPages() {
+        try {
+            progressService.run(true, false, new IndexingUIDOperation());
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
     }
 

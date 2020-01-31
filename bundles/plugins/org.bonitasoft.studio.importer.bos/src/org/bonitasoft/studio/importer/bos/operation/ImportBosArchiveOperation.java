@@ -35,7 +35,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.designer.core.repository.MigrateUIDOperation;
+import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;

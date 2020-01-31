@@ -64,6 +64,7 @@ import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
+import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -230,6 +231,7 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             MultiStatus status) {
         return monitor -> {
+            new IndexingUIDOperation().run(monitor);
             if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
                 ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
                 operation.run(monitor);

@@ -16,8 +16,8 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,17 +33,35 @@ public class PageUUIDResolver {
     public PageUUIDResolver(File pageFolder) {
         this.pageFolder = pageFolder;
     }
+    
+    public static File indexFile(File pageFolder) {
+        return pageFolder.toPath().resolve(".metadata").resolve(".index.json").toFile();
+    }
 
     public String resolveUUID(String uuid) {
-        Path indexFile = pageFolder.toPath().resolve(".metadata").resolve(".index.json");
-        if (!indexFile.toFile().exists()) {
-            return null;
+        File indexFile = indexFile(pageFolder);
+        if (!indexFile.exists()) {
+                return null;
+        }
+
+        JSONObject index = loadIndex(indexFile);
+        if (!index.has(uuid)) {
+           return null;
         }
         try {
-            JSONObject index = new org.json.JSONObject(Files.toString(indexFile.toFile(), Charsets.UTF_8));
             return index.getString(uuid);
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
             return null;
         }
     }
+
+    private JSONObject loadIndex(File indexFile) {
+        try {
+            return new org.json.JSONObject(Files.toString(indexFile, Charsets.UTF_8));
+        } catch (JSONException | IOException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+  
 }
