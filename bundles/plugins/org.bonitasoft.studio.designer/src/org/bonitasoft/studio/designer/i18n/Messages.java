@@ -77,6 +77,7 @@ public class Messages extends NLS {
     public static String createLayoutFailed;
     public static String buildingWebPage;
     public static String startingDataRepositoryService;
+    public static String indexingUIDPages;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

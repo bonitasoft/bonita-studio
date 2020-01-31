@@ -21,6 +21,7 @@ import java.util.Map;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
@@ -72,9 +73,9 @@ public class BatchValidationHandler extends AbstractHandler {
         } else if (currentEditorIsADiagram()) {
             computeDiagramToValidate(validateOperation);
         }
-
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
+            service.run(true, false, new IndexingUIDOperation());
             service.run(true, true, validateOperation);
         } catch (final InvocationTargetException e) {
             throw new ExecutionException("Error during Validation", e);

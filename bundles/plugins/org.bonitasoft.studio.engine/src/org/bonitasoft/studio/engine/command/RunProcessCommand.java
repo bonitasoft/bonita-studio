@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -78,6 +79,7 @@ public class RunProcessCommand extends AbstractHandler {
                     Messages.noProcessToRun);
             return ValidationStatus.cancel(Messages.noProcessToRunTitle);
         }
+        
         final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
         final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
                 new BatchValidationOperation(
@@ -86,6 +88,7 @@ public class RunProcessCommand extends AbstractHandler {
                         new ValidationMarkerProvider()));
         validationOperation.addProcesses(processes);
         try {
+            new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
             if (runSynchronously) {
                 validationOperation.run(Repository.NULL_PROGRESS_MONITOR);
             } else {
