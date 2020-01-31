@@ -70,4 +70,5 @@ public class Messages extends NLS {
     public static String doNotDisplayConnectorDefConfirmationMessage;
     public static String noBrowserFoundTitle;
     public static String noBrowserFoundMsg;
+    public static String BonitaPreferenceDialog_Validation;
 }

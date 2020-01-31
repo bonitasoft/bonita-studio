@@ -378,4 +378,7 @@ public class PicsConstants {
 
     public static String collapseAll = "collapseall.png";
     public static String expandAll = "expandall.png";
+
+    public static String validation = "preferences/validation.png";
+    public static String validationDisabled = "preferences/validation_disabled.png";
 }
