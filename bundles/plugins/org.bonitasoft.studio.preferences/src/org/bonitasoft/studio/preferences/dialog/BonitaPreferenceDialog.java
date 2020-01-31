@@ -83,6 +83,7 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String REMOTE_ENGINE_PAGE_ID = "org.bonitasoft.studio.preferences.remoteEngine"; //$NON-NLS-1$
     public static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
     public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
+    public static final String CONSTRAINTS_PAGE_ID = "org.eclipse.emf.validation.constraintsPrefs";
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
     private static final String COLOR = "color";
@@ -109,6 +110,7 @@ public class BonitaPreferenceDialog extends Dialog {
             REMOTE_ENGINE_PAGE_ID,
             WEB_BROWSER_PAGE_ID,
             PROXY_PAGE_ID,
+            CONSTRAINTS_PAGE_ID,
             ADVANCED_PAGE_ID,
             ECLIPSE_PAGE_ID };
     private SWTResourcesRegistry swtResourcesRegistry;
@@ -519,8 +521,12 @@ public class BonitaPreferenceDialog extends Dialog {
     }
 
     protected void createOtherCategoryLine(final Composite menuComposite) {
-        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 2);
+        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 3);
 
+        final ToolItem tltmValidation = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.validation),
+                Pics.getImage(PicsConstants.validationDisabled), CONSTRAINTS_PAGE_ID);
+
+        
         final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, null,
                 Pics.getImage(PicsConstants.preferenceAdvanced),
                 Pics.getImage(PicsConstants.preferenceAdvanceddisabled), ADVANCED_PAGE_ID);
@@ -549,12 +555,17 @@ public class BonitaPreferenceDialog extends Dialog {
             }
         });
 
+        final Label lblValidation = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Validation);
         final Label lblAdvanced = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Advanced);
         final Label eclipseLabel = createItemLabel(otherRowComposite, null, Messages.EclipsePreferences);
 
+        putInItemPerPreferenceNode(CONSTRAINTS_PAGE_ID, tltmValidation);
+        putInLabelPerPreferenceNode(CONSTRAINTS_PAGE_ID, lblValidation);
+        
         putInItemPerPreferenceNode(ADVANCED_PAGE_ID, tltmAdvancedSettings);
         putInLabelPerPreferenceNode(ADVANCED_PAGE_ID, lblAdvanced);
 
+      
         putInItemPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseItem);
         putInLabelPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseLabel);
     }
