@@ -18,7 +18,13 @@
 package org.bonitasoft.studio.migration.utils;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -257,5 +263,62 @@ public class CustomMigrationUtil {
 		}
 		return null;
 	}
+	
+	 public static Instance deepCopy(Instance instance) {
+	        // mapping of originals to copies
+	        final Map<Instance, Instance> map = new HashMap<Instance, Instance>();
+
+	        // copy tree structure
+	        return copyTree(instance, map);
+	    }
+	    
+	    /** Copy the tree structure with an instance as root. */
+	    private static Instance copyTree(Instance original, Map<Instance, Instance> map) {
+	        final EClass eClass = original.getEClass();
+	        final Instance copi = original.getType().getModel().newInstance(eClass);
+	        for (final EReference reference : eClass.getEAllReferences()) {
+	            if (reference.isContainment()) {
+	                if (reference.isMany()) {
+	                    for (final Instance child : original.getLinks(reference)) {
+	                        copi.add(reference, copyTree(child, map));
+	                    }
+	                } else {
+	                    final Instance child = original.get(reference);
+	                    if (child != null) {
+	                        copi.set(reference, copyTree(child, map));
+	                    }
+	                }
+	            }else {
+	                if (reference.isMany()) {
+	                    if (reference.getEOpposite() == null
+	                            || reference.getEOpposite().isMany()) {
+	                        for (Instance ref : original.getLinks(reference)) {
+	                            if (map.get(ref) != null) {
+	                                ref = map.get(ref);
+	                            }
+	                            copi.add(reference, ref);
+	                        }
+	                    }
+	                } else {
+	                    if (reference.getEOpposite() == null
+	                            || !reference.getEOpposite().isContainment()) {
+	                        Instance ref = original.get(reference);
+	                        if (ref != null) {
+	                            if (map.get(ref) != null) {
+	                                ref = map.get(ref);
+	                            }
+	                            copi.set(reference, ref);
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        for (final EAttribute attribute : eClass.getEAllAttributes()) {
+	            copi.set(attribute, original.get(attribute));
+	        }
+	        map.put(original, copi);
+	        return copi;
+	    }
+
 
 }

@@ -100,6 +100,10 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public URL migrate() throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration");
     }
+    
+    public URL indexation() throws MalformedURLException {
+        return new URL(baseURL() + "/rest/indexing");
+    }
 
     public URL newWidget() throws MalformedURLException {
         return new URL(baseURL() + "/rest/widgets/");
