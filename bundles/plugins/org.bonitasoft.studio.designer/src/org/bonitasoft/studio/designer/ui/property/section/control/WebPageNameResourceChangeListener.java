@@ -70,12 +70,12 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
         return delta -> {
             String name = delta.getResource().getName();
             WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-            WebPageFileStore pageFileStore = repositoryStore.getChild(name, false);
             if (( delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
                     && repositoryStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
                     && delta.getResource() instanceof IFolder
                     && delta.getResource().isSynchronized(IResource.DEPTH_INFINITE)
-                    && pageFileStore != null) {
+                    && repositoryStore.getChild(name, false) != null) {
+                WebPageFileStore pageFileStore = repositoryStore.getChild(name, false);
                 IFile indexJsonFile = retrieveIndexJsonFile(repositoryStore);
                 try (InputStream is = indexJsonFile.getContents()) {
                     JSONObject jsonObject = new JSONObject(IoUtils.toString(is));

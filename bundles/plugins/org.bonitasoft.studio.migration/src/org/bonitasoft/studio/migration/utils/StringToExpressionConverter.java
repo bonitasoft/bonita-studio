@@ -25,6 +25,9 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Model;
 import org.w3c.dom.Document;
@@ -299,22 +302,15 @@ public class StringToExpressionConverter {
                 final boolean validSuffix = isValidSuffix(content,
                         documentName, index);
                 if (validPrefix && validSuffix) {
-                    final Instance dependencyInstance = copyInstance(documents
-                            .get(documentName));
+                    final Instance dependencyInstance = documents.get(documentName).copy();
                     final List<Instance> instList = expression
                             .get("referencedElements");
                     if (!dependancyAlreadyExists(instList, dependencyInstance)) {
-                        expression
-                        .add("referencedElements", dependencyInstance);
+                        expression.add("referencedElements", dependencyInstance);
                     }
                 }
             }
         }
-    }
-
-    private Instance copyInstance(final Instance instance) {
-        final Instance copy = instance.copy();
-        return copy;
     }
 
     public void resolvePatternDependencies(final Instance expression) {
@@ -610,5 +606,5 @@ public class StringToExpressionConverter {
     public void setDataToIgnore(final String dataName) {
         dataNameToIgnore = dataName;
     }
-
+    
 }
