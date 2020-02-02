@@ -110,4 +110,8 @@ public class ProductVersion {
         }
     }
 
+    public static String maintenanceVersion() {
+        return String.valueOf(new Version(CURRENT_VERSION).getMicro());
+    }
+
 }
