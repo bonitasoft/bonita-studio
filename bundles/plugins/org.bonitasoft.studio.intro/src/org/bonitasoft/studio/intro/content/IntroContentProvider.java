@@ -164,9 +164,10 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
     public static String redirectUrl(String redirectId) {
         return String.format(
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
                 redirectId,
-                ProductVersion.majorVersion());
+                ProductVersion.majorVersion(),
+                ProductVersion.maintenanceVersion());
     }
 
     @Override
