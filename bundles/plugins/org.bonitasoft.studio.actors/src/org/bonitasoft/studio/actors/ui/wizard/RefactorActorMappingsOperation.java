@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Group;
@@ -33,241 +34,291 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
+import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.model.actormapping.ActorMappingPackage;
 import org.bonitasoft.studio.model.actormapping.Groups;
 import org.bonitasoft.studio.model.actormapping.Membership;
 import org.bonitasoft.studio.model.actormapping.MembershipType;
 import org.bonitasoft.studio.model.actormapping.Roles;
 import org.bonitasoft.studio.model.actormapping.Users;
 import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
-import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.ReplaceCommand;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 
-	private final Organization oldOrganization;
-	private final Organization newOrganization;
+    private final Organization oldOrganization;
+    private final Organization newOrganization;
 
-	public RefactorActorMappingsOperation(final Organization oldOrganization,
-			final Organization newOrganization) {
-		this.oldOrganization = oldOrganization;
-		this.newOrganization = newOrganization;
+    public RefactorActorMappingsOperation(final Organization oldOrganization,
+            final Organization newOrganization) {
+        this.oldOrganization = oldOrganization;
+        this.newOrganization = newOrganization;
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-	public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
-		monitor.beginTask(Messages.refactoringActorMappings,IProgressMonitor.UNKNOWN);
+    @Override
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+            InterruptedException {
+        monitor.beginTask(Messages.refactoringActorMappings, IProgressMonitor.UNKNOWN);
 
-		final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-		final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		final List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
+        final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
 
         final Comparison comparison = compareOrganizations();
 
-		mergeDiferencesIntoActorMappings(actorMappings, comparison);
-		diagramStore.refresh();
-	}
-
-    protected Comparison compareOrganizations() {
-        final IComparisonScope scope = new DefaultComparisonScope(newOrganization, oldOrganization, null);
-		final EMFCompare comparator = EMFCompare.builder().build();
-		final Comparison comparison = comparator.compare(scope);
-        return comparison;
+        List<Configuration> configurations = getConfigurations(confStore, diagramStore);
+        for (Configuration config : configurations) {
+            EditingDomain editingDomain = TransactionUtil.getEditingDomain(config);
+            if (editingDomain == null) {
+                editingDomain = confStore.getEditingDomain();
+            }
+            refactorConfiguration(config, comparison, editingDomain);
+            if(config.eContainer() == null) {
+                try {
+                    final Resource eResource = config.eResource();
+                    if (eResource != null) {
+                        eResource.save(Collections.emptyMap());
+                    }
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+          
+        }
+        diagramStore.refresh();
     }
 
-    protected void mergeDiferencesIntoActorMappings(final List<ActorMappingsType> actorMappings, final Comparison comparison) {
-		final List<Diff> differences = comparison.getDifferences();
-		for(final Diff difference : differences){
+    private void refactorConfiguration(Configuration config, Comparison comparison,
+            EditingDomain editingDomain) {
+        final List<Diff> differences = comparison.getDifferences();
+        for (final Diff difference : differences) {
             if (difference instanceof AttributeChange) {
+                CompoundCommand cc = new CompoundCommand("Refactoring " + config.getName());
                 final AttributeChange updateAttributeChange = (AttributeChange) difference;
                 final Object oldElement = updateAttributeChange.getMatch().getRight();
                 final Object newElement = updateAttributeChange.getMatch().getLeft();
                 final EAttribute attribute = updateAttributeChange.getAttribute();
                 if (OrganizationPackage.Literals.GROUP__NAME.equals(attribute)) {
-                    refactorGroup((Group) oldElement, (Group) newElement, actorMappings);
-                    refactorMembership((Group) oldElement, (Group) newElement, actorMappings);
+                    cc.appendIfCanExecute(refactorGroup((Group) oldElement, (Group) newElement, config, editingDomain));
+                    cc.appendIfCanExecute(
+                            refactorMembership((Group) oldElement, (Group) newElement, config, editingDomain));
                 } else if (OrganizationPackage.Literals.ROLE__NAME.equals(attribute)) {
-                    refactorRole((Role) oldElement, (Role) newElement, actorMappings);
-                    refactorMembership((Role) oldElement, (Role) newElement, actorMappings);
+                    cc.appendIfCanExecute(refactorRole((Role) oldElement, (Role) newElement, config, editingDomain));
+                    cc.appendIfCanExecute(
+                            refactorMembership((Role) oldElement, (Role) newElement, config, editingDomain));
                 } else if (OrganizationPackage.Literals.USER__USER_NAME.equals(attribute)) {
-                    refactorUsername((User) oldElement, (User) newElement, actorMappings);
+                    cc.appendIfCanExecute(
+                            refactorUsername((User) oldElement, (User) newElement, config, editingDomain));
                 } else if (OrganizationPackage.Literals.MEMBERSHIP__USER_NAME.equals(attribute)) {
-                    refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
-                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
+                    cc.appendIfCanExecute(
+                            refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                                    (org.bonitasoft.studio.actors.model.organization.Membership) newElement, config,
+                                    editingDomain));
                 } else if (OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME.equals(attribute)) {
-                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
-                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
+                    cc.appendIfCanExecute(
+                            refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                                    (org.bonitasoft.studio.actors.model.organization.Membership) newElement, config,
+                                    editingDomain));
                 } else if (OrganizationPackage.Literals.GROUP__PARENT_PATH.equals(attribute)) {
-                    refactorGroup((Group) oldElement, (Group) newElement, actorMappings);
-                    refactorMembership((Group) oldElement, (Group) newElement, actorMappings);
+                    cc.appendIfCanExecute(refactorGroup((Group) oldElement, (Group) newElement, config, editingDomain));
+                    cc.appendIfCanExecute(
+                            refactorMembership((Group) oldElement, (Group) newElement, config, editingDomain));
                 } else if (OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH.equals(attribute)) {
-                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
-                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
+                    cc.appendIfCanExecute(
+                            refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                                    (org.bonitasoft.studio.actors.model.organization.Membership) newElement, config,
+                                    editingDomain));
                 }
+                editingDomain.getCommandStack().execute(cc);
+                cc.dispose();
             }
-		}
+        }
     }
 
-	protected void refactorUsername(
-			final org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
-			final org.bonitasoft.studio.actors.model.organization.Membership newMembership,
-			final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Users users = ac.getActorMapping().get(0).getUsers();
-				if(users != null){
-					if(users.getUser().remove(oldMembership.getUserName())){
-						users.getUser().add(newMembership.getUserName());
-						saveChange(ac);
-					}
-				}
-			}
-		}
-	}
+    private Comparison compareOrganizations() {
+        return EMFCompare.builder()
+                .build()
+                .compare(new DefaultComparisonScope(newOrganization, oldOrganization, null));
+    }
 
-	protected void refactorMembership(final Role oldRole, final Role newRole,
-			final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Membership membership = ac.getActorMapping().get(0).getMemberships();
-				if(membership != null){
-					for(final MembershipType membershipType : membership.getMembership()){
-						if(membershipType.getRole().equals(oldRole.getName())){
-							membershipType.setRole(newRole.getName());
-							saveChange(ac);
-						}
-					}
-				}
-			}
-		}
-	}
+    private Command refactorUsername(
+            final org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
+            final org.bonitasoft.studio.actors.model.organization.Membership newMembership,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Users users = ac.getUsers();
+            if (users != null) {
+                if (users.getUser().contains(oldMembership.getUserName())) {
+                    cc.appendIfCanExecute(new ReplaceCommand(editingDomain, users.getUser(),
+                            oldMembership.getUserName(), newMembership.getUserName()));
+                }
+            }
+        }
+        return cc;
+    }
 
-	protected void refactorMembership(final Group oldGroup, final Group newGroup,
-			final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Membership membership = ac.getActorMapping().get(0).getMemberships();
-				if(membership != null){
-					for(final MembershipType membershipType : membership.getMembership()){
-						if(membershipType.getGroup().equals(GroupContentProvider.getGroupPath(oldGroup))){
-							membershipType.setGroup(GroupContentProvider.getGroupPath(newGroup));
-							saveChange(ac);
-						}
-					}
-				}
-			}
-		}
-	}
+    private Command refactorMembership(final Role oldRole, final Role newRole,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Membership memberships = ac.getMemberships();
+            if (memberships != null) {
+                for (final MembershipType membershipType : memberships.getMembership()) {
+                    if (membershipType.getRole().equals(oldRole.getName())) {
+                        cc.appendIfCanExecute(SetCommand.create(editingDomain, membershipType,
+                                ActorMappingPackage.Literals.MEMBERSHIP_TYPE__ROLE, newRole.getName()));
+                    }
+                }
+            }
+        }
+        return cc;
+    }
 
-	protected void refactorUsername(final User oldUser, final User newUser,
-			final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Users users = ac.getActorMapping().get(0).getUsers();
-				if(users != null){
-					if(users.getUser().remove(oldUser.getUserName())){
-						users.getUser().add(newUser.getUserName());
-						saveChange(ac);
-					}
-				}
-			}
-		}
-	}
+    private Command refactorMembership(final Group oldGroup, final Group newGroup,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Membership memberships = ac.getMemberships();
+            if (memberships != null) {
+                for (final MembershipType membershipType : memberships.getMembership()) {
+                    if (membershipType.getGroup().equals(GroupContentProvider.getGroupPath(oldGroup))) {
+                        cc.appendIfCanExecute(SetCommand.create(editingDomain, membershipType,
+                                ActorMappingPackage.Literals.MEMBERSHIP_TYPE__GROUP,
+                                GroupContentProvider.getGroupPath(newGroup)));
+                    }
+                }
+            }
+        }
+        return cc;
+    }
 
-	protected void refactorRole(final Role oldRole, final Role newRole,
-			final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Roles roles = ac.getActorMapping().get(0).getRoles();
-				if(roles != null){
-					if(roles.getRole().remove(oldRole.getName())){
-						roles.getRole().add(newRole.getName());
-						saveChange(ac);
-					}
-				}
-			}
-		}
-	}
+    private Command refactorUsername(final User oldUser, final User newUser,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Users users = ac.getUsers();
+            if (users != null) {
+                if (users.getUser().contains(oldUser.getUserName())) {
+                    cc.appendIfCanExecute(RemoveCommand.create(editingDomain, users,
+                            ActorMappingPackage.Literals.USERS__USER, oldUser.getUserName()));
+                    cc.appendIfCanExecute(AddCommand.create(editingDomain, users,
+                            ActorMappingPackage.Literals.USERS__USER, newUser.getUserName()));
+                }
+            }
+        }
+        if (Objects.equals(configuration.getUsername(), oldUser.getUserName())) {
+            cc.appendIfCanExecute(SetCommand.create(editingDomain, configuration,
+                    ConfigurationPackage.Literals.CONFIGURATION__USERNAME, newUser.getUserName()));
+        }
+        return cc;
+    }
 
-	protected void refactorGroup(final Group oldGroup, final Group newGroup, final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Groups groups = ac.getActorMapping().get(0).getGroups();
-				if(groups != null){
-					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldGroup))){
-						groups.getGroup().add(GroupContentProvider.getGroupPath(newGroup));
-						saveChange(ac);
-					}
-				}
-			}
-		}
-	}
+    private Command refactorRole(final Role oldRole, final Role newRole,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Roles roles = ac.getRoles();
+            if (roles != null) {
+                if (roles.getRole().contains(oldRole.getName())) {
+                    cc.appendIfCanExecute(
+                            new ReplaceCommand(editingDomain, roles.getRole(), oldRole.getName(), newRole.getName()));
+                }
+            }
+        }
+        return cc;
+    }
 
-	protected void refactorGroup(final org.bonitasoft.studio.actors.model.organization.Membership oldMembership, final org.bonitasoft.studio.actors.model.organization.Membership newMembership, final List<ActorMappingsType> actorMappings) {
-		for(final ActorMappingsType ac :actorMappings){
-			if(!ac.getActorMapping().isEmpty()){
-				final Groups groups = ac.getActorMapping().get(0).getGroups();
-				if(groups != null){
-					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldMembership.getGroupName(),oldMembership.getGroupParentPath()))){
-						groups.getGroup().add(GroupContentProvider.getGroupPath(newMembership.getGroupName(),newMembership.getGroupParentPath()));
-						saveChange(ac);
-					}
-				}
-			}
-		}
-	}
+    private Command refactorGroup(Group oldGroup, Group newGroup, Configuration configuration,
+            EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Groups groups = ac.getGroups();
+            if (groups != null) {
+                if (groups.getGroup().contains(GroupContentProvider.getGroupPath(oldGroup))) {
+                    cc.appendIfCanExecute(RemoveCommand.create(editingDomain, groups,
+                            ActorMappingPackage.Literals.GROUPS__GROUP, GroupContentProvider.getGroupPath(oldGroup)));
+                    cc.appendIfCanExecute(AddCommand.create(editingDomain, groups,
+                            ActorMappingPackage.Literals.GROUPS__GROUP, GroupContentProvider.getGroupPath(newGroup)));
+                    //                    cc.append(new ReplaceCommand(editingDomain, groups.getGroup(), GroupContentProvider.getGroupPath(oldGroup),
+                    //                            GroupContentProvider.getGroupPath(newGroup)));
+                }
+            }
+        }
+        return cc;
+    }
 
+    private Command refactorGroup(final org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
+            final org.bonitasoft.studio.actors.model.organization.Membership newMembership,
+            final Configuration configuration, EditingDomain editingDomain) {
+        CompoundCommand cc = new CompoundCommand();
+        for (ActorMapping ac : configuration.getActorMappings().getActorMapping()) {
+            final Groups groups = ac.getGroups();
+            if (groups != null) {
+                if (groups.getGroup().contains(GroupContentProvider.getGroupPath(oldMembership.getGroupName(),
+                        oldMembership.getGroupParentPath()))) {
+                    cc.appendIfCanExecute(
+                            RemoveCommand.create(editingDomain, groups, ActorMappingPackage.Literals.GROUPS__GROUP,
+                                    GroupContentProvider.getGroupPath(oldMembership.getGroupName(),
+                                            oldMembership.getGroupParentPath())));
+                    cc.appendIfCanExecute(
+                            AddCommand.create(editingDomain, groups, ActorMappingPackage.Literals.GROUPS__GROUP,
+                                    GroupContentProvider.getGroupPath(newMembership.getGroupName(),
+                                            newMembership.getGroupParentPath())));
 
-	private void saveChange(final ActorMappingsType ac) {
-		try {
-			final Resource eResource = ac.eResource();
-			if(eResource != null){
-				eResource.save(Collections.emptyMap());
-			}
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e);
-		}
-	}
+                    //                    cc.appendIfCanExecute(new ReplaceCommand(editingDomain, groups.getGroup(),
+                    //                            GroupContentProvider.getGroupPath(oldMembership.getGroupName(),
+                    //                                    oldMembership.getGroupParentPath()),
+                    //                            GroupContentProvider.getGroupPath(newMembership.getGroupName(),
+                    //                                    newMembership.getGroupParentPath())));
+                }
+            }
+        }
+        return cc;
+    }
 
-	protected List<ActorMappingsType> getAllActorMappings(
-			final ProcessConfigurationRepositoryStore confStore,
-			final DiagramRepositoryStore diagramStore) {
-		final List<ActorMappingsType> allActorMappings = new ArrayList<>();
-		for(final ProcessConfigurationFileStore fileStore : confStore.getChildren()){
-			final Configuration c = fileStore.getContent();
-			if(c != null && c.getActorMappings() != null){
-				allActorMappings.add(c.getActorMappings());
-			}
-		}
-		for(final DiagramFileStore fileStore : diagramStore.getChildren()){
-			for(final AbstractProcess process: fileStore.getProcesses()){
-				for(final Configuration c : process.getConfigurations()){
-					if(c != null && c.getActorMappings() != null){
-						allActorMappings.add(c.getActorMappings());
-					}
-				}
-			}
-
-		}
-		return allActorMappings;
-	}
-
+    private List<Configuration> getConfigurations(
+            final ProcessConfigurationRepositoryStore confStore,
+            final DiagramRepositoryStore diagramStore) {
+        final List<Configuration> configurations = new ArrayList<>();
+        for (final ProcessConfigurationFileStore fileStore : confStore.getChildren()) {
+            final Configuration c = fileStore.getContent();
+            if (c != null && c.getActorMappings() != null) {
+                configurations.add(c);
+            }
+        }
+        for (final DiagramFileStore fileStore : diagramStore.getChildren()) {
+            for (final AbstractProcess process : fileStore.getProcesses()) {
+                for (final Configuration c : process.getConfigurations()) {
+                    if (c != null && c.getActorMappings() != null) {
+                        configurations.add(c);
+                    }
+                }
+            }
+        }
+        return configurations;
+    }
 }
