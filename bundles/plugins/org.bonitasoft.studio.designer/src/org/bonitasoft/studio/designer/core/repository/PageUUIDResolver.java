@@ -17,7 +17,6 @@ package org.bonitasoft.studio.designer.core.repository;
 import java.io.File;
 import java.io.IOException;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +44,7 @@ public class PageUUIDResolver {
         }
 
         JSONObject index = loadIndex(indexFile);
-        if (!index.has(uuid)) {
+        if (index == null || !index.has(uuid)) {
            return null;
         }
         try {
@@ -59,7 +58,6 @@ public class PageUUIDResolver {
         try {
             return new org.json.JSONObject(Files.toString(indexFile, Charsets.UTF_8));
         } catch (JSONException | IOException e) {
-            BonitaStudioLog.error(e);
             return null;
         }
     }
