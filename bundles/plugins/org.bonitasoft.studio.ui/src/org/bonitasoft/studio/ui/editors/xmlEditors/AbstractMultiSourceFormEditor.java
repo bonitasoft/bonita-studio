@@ -22,9 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -79,10 +77,8 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
                 .map(CTabFolder.class::cast)
                 .findFirst()
                 .ifPresent(cTabFolder -> {
-                    cTabFolder.setSelectionBackground(
-                            new Color[] { Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT),
-                                    Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND) },
-                            new int[] { 100 }, true);
+                    cTabFolder.setBorderVisible(true);
+                    cTabFolder.setTabPosition(SWT.TOP);
                 });
     }
 

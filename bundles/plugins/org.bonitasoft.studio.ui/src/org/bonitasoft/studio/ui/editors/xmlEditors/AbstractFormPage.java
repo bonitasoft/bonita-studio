@@ -81,7 +81,6 @@ public abstract class AbstractFormPage<T> extends FormPage {
     protected void createFormContent(IManagedForm managedForm) {
         toolkit = managedForm.getToolkit();
         scrolledForm = managedForm.getForm();
-        toolkit.decorateFormHeading(scrolledForm.getForm());
         scrolledForm.setHeadClient(createHeader(scrolledForm.getForm()));
         scrolledForm.getBody().setLayout(GridLayoutFactory.swtDefaults().create());
         scrolledForm.getBody().setLayoutData(GridDataFactory.fillDefaults().create());
@@ -98,6 +97,9 @@ public abstract class AbstractFormPage<T> extends FormPage {
         final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
         toolBarManager = new ToolBarManager(toolBar);
         createHeaderContent(toolBar);
+
+        Label toolbarSeparator = new Label(form.getBody(), SWT.HORIZONTAL | SWT.SEPARATOR);
+        toolbarSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         return toolBar;
     }
 
