@@ -171,8 +171,9 @@ public class FieldDetailsControl extends Composite {
                 .adapt(formPage.getToolkit())
                 .createIn(stringFieldDetailsComposite);
 
-        Label stringHelp = formPage.getToolkit().createLabel(stringFieldDetailsComposite, Messages.stringLengthTooltip);
-        stringHelp.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        Label stringHelp = formPage.getToolkit().createLabel(stringFieldDetailsComposite, Messages.stringLengthTooltip,
+                SWT.WRAP);
+        stringHelp.setLayoutData(GridDataFactory.fillDefaults().hint(800, SWT.DEFAULT).create());
     }
 
     private void createDateDeprecatedDetailsComposite() {
@@ -182,12 +183,12 @@ public class FieldDetailsControl extends Composite {
 
         createDescriptionTextArea(dateDeprecatedComposite);
 
-        Label descriptionLabel = formPage.getToolkit().createLabel(dateDeprecatedComposite, Messages.dateDetails);
-        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        Label descriptionLabel = formPage.getToolkit().createLabel(dateDeprecatedComposite, Messages.dateDetails, SWT.WRAP);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().hint(800, SWT.DEFAULT).create());
 
         Label deprecatedDetailsLabel = formPage.getToolkit().createLabel(dateDeprecatedComposite,
-                Messages.legacyDateTooltip);
-        deprecatedDetailsLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+                Messages.legacyDateTooltip, SWT.WRAP);
+        deprecatedDetailsLabel.setLayoutData(GridDataFactory.fillDefaults().hint(800, SWT.DEFAULT).create());
     }
 
     private Composite createDescriptionComposite(Optional<String> description) {
@@ -198,8 +199,8 @@ public class FieldDetailsControl extends Composite {
         createDescriptionTextArea(composite);
 
         description.ifPresent(desc -> {
-            Label descriptionLabel = formPage.getToolkit().createLabel(composite, desc);
-            descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+            Label descriptionLabel = formPage.getToolkit().createLabel(composite, desc, SWT.WRAP);
+            descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().hint(800, SWT.DEFAULT).create());
         });
 
         return composite;
