@@ -26,6 +26,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.Busi
 import org.bonitasoft.studio.businessobject.editor.editor.ui.provider.TypeLabelProvider;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.FetchType;
+import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.FieldType;
 import org.bonitasoft.studio.businessobject.editor.model.Package;
 import org.bonitasoft.studio.businessobject.editor.model.RelationField;
@@ -36,8 +37,10 @@ import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuil
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.businessobject.refactor.Event;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -53,11 +56,13 @@ public class FieldTypeEditingSupport extends EditingSupport {
 
     private StyledCellLabelProvider labelProvider;
     private BusinessDataModelFormPage formPage;
+    private IObservableValue<Field> selectedFieldObservable;
 
     public FieldTypeEditingSupport(ColumnViewer viewer, BusinessDataModelFormPage formPage) {
         super(viewer);
         this.formPage = formPage;
         labelProvider = new TypeLabelProvider(formPage.observeWorkingCopy());
+        selectedFieldObservable = ViewersObservables.observeSingleSelection(viewer);
     }
 
     @Override
@@ -129,7 +134,6 @@ public class FieldTypeEditingSupport extends EditingSupport {
         formPage.getEditorContribution().refreshIndexList();
     }
 
-    // TODO test me
     private void updateToSimpleField(RelationField field, FieldType type) {
         EObject oldElement = EcoreUtil.copy(field);
         BusinessObject parent = (BusinessObject) field.eContainer();
@@ -143,13 +147,13 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 .withType(type)
                 .create();
         parent.getFields().add(index, simpleField);
+        selectedFieldObservable.setValue(simpleField);
         DiffElement diffElement = new DiffElement(Event.UPDATE_ATTRIBUTE_TYPE, oldElement,
                 simpleField);
         diffElement.addProperty(AttributeEditionControl.PARENT_QUALIFIED_NAME, parent.getQualifiedName());
         formPage.refactorAccessControl(diffElement);
     }
 
-    // TODO test me
     private void updateToRelationField(SimpleField field, BusinessObject reference) {
         BusinessObject parent = (BusinessObject) field.eContainer();
         int index = parent.getFields().indexOf(field);
@@ -163,6 +167,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 .withReference(reference)
                 .create();
         parent.getFields().add(index, relationField);
+        selectedFieldObservable.setValue(relationField);
     }
 
 }
