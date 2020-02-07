@@ -175,12 +175,14 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     }
 
     private void updateAddButtonEnableState() {
-        boolean isEnable = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null;
-        addButton.setEnabled(isEnable);
-        addButton.getParent().setToolTipText(isEnable
-                ? ""
-                : String.format(Messages.addBusinessDataTooltip,
-                        org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));
+        if(addButton != null && !addButton.isDisposed()) {
+            boolean isEnable = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null;
+            addButton.setEnabled(isEnable);
+            addButton.getParent().setToolTipText(isEnable
+                    ? ""
+                    : String.format(Messages.addBusinessDataTooltip,
+                            org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));
+        }
     }
 
     @Override

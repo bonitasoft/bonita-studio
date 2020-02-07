@@ -34,19 +34,16 @@ import org.osgi.framework.FrameworkUtil;
 public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		Cloneable {
 
-	private List sectionDescriptors;
+	private List<ISectionDescriptor> sectionDescriptors;
 
 	/**
 	 * Constructor for AbstractTabDescriptor.
 	 */
 	public AbstractTabDescriptor() {
 		super();
-		sectionDescriptors = new ArrayList(5);
+		sectionDescriptors = new ArrayList<>(5);
 	}
 
-	/*
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public Object clone() {
 		try {
@@ -61,25 +58,26 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabDescriptor#createTab()
-	 */
 	@Override
 	public TabContents createTab() {
-		List sections = new ArrayList(getSectionDescriptors().size());
-		for (Iterator iter = getSectionDescriptors().iterator(); iter.hasNext();) {
-			ISectionDescriptor descriptor = (ISectionDescriptor) iter.next();
+		List<ISection> sections = new ArrayList<>(getSectionDescriptors().size());
+		for (@SuppressWarnings("unchecked")
+		Iterator<ISectionDescriptor> iter = getSectionDescriptors().iterator(); iter.hasNext();) {
+			ISectionDescriptor descriptor = iter.next();
 			ISection section = descriptor.getSectionClass();
 			sections.add(section);
 		}
 		TabContents tab = new TabContents();
-		tab.setSections((ISection[]) sections.toArray(new ISection[sections
-				.size()]));
+		tab.setSections(sections.toArray(new ISection[sections.size()]));
 		return tab;
 	}
 
 	@Override
 	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
+
 		if (this == object) {
 			return true;
 		}
@@ -113,17 +111,11 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		return false;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabDescriptor#getAfterTab()
-	 */
 	@Override
 	public String getAfterTab() {
 		return TOP;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return null;
@@ -139,9 +131,6 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		return sectionDescriptors;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#getText()
-	 */
 	@Override
 	public String getText() {
 		return getLabel();
@@ -160,17 +149,11 @@ public abstract class AbstractTabDescriptor implements ITabDescriptor,
 		return hashCode;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#isIndented()
-	 */
 	@Override
 	public boolean isIndented() {
 		return false;
 	}
 
-	/*
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabItem#isSelected()
-	 */
 	@Override
 	public boolean isSelected() {
 		return false;

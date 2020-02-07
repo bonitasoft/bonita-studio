@@ -21,11 +21,6 @@
 			<name>JBoss Public Repository Group</name>
 			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
 		</pluginRepository>
-		<pluginRepository>
-			<id>jboss-snapshots-repository</id>
-			<name>JBoss Snapshots Repository</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-		</pluginRepository>
 	</pluginRepositories>
 
 	<build>
@@ -60,7 +55,7 @@
 					<plugin>
 						<groupId>org.jboss.tools.tycho-plugins</groupId>
 						<artifactId>target-platform-utils</artifactId>
-						<version>1.3.0</version>
+						<version>1.6.0</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -69,13 +64,12 @@
 								</goals>
 								<configuration>
 									<executionEnvironment>JavaSE-1.8</executionEnvironment>
-									<!-- <includeSources>true</includeSources> -->
-									<outputRepository>/home/romain/target-platform-4.10-mirror</outputRepository>
+									<followStrictOnly>false</followStrictOnly>
 								</configuration>
 							</execution>
 						</executions>
 						<configuration>
-							<sourceTargetFile>original_platform.target</sourceTargetFile>
+							<sourceTargetFile>remote_platform.target</sourceTargetFile>
 						</configuration>
 					</plugin>
 				</plugins>

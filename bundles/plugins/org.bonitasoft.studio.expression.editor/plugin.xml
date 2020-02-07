@@ -24,7 +24,7 @@
       </fragment>
    </extension>
     <extension
-         point="org.codehaus.groovy.eclipse.codeassist.completion.completionProposalFilter">
+         point="org.codehaus.groovy.eclipse.codeassist.completionProposalFilter">
       <proposalFilter
             name="BonitaGroovyProposalFilter"
             proposalFilter="org.bonitasoft.studio.expression.editor.pattern.contentAssist.GenericProposalFilter">

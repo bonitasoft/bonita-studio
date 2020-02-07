@@ -74,6 +74,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
+ javax.inject;version="1.0.0",
  org.bonitasoft.engine.bdm.model,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.bar.form.model,

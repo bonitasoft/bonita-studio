@@ -26,6 +26,3 @@ Export-Package: org.bonitasoft.studio.intro,
  org.bonitasoft.studio.intro.content,
  org.bonitasoft.studio.intro.content.actions,
  org.bonitasoft.studio.intro.i18n
-Import-Package: com.sun.syndication.feed.synd;version="0.9.0",
- com.sun.syndication.io;version="0.9.0",
- org.jdom;version="1.0.0"

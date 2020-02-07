@@ -47,11 +47,6 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
         //In order to force the reorder of natures we must reset description
         String currentVersion = project.getDescription().getComment();
         if(ProductVersion.canBeMigrated(currentVersion)) {
-            project.setDescription(
-                    new ProjectDescriptionBuilder().withProjectName(project.getName())
-                            .withComment(ProductVersion.CURRENT_VERSION).build(),
-                    IResource.FORCE,
-                    monitor);
             project.setDescription(new ProjectDescriptionBuilder()
                     .withProjectName(project.getName())
                     .withComment(ProductVersion.CURRENT_VERSION)

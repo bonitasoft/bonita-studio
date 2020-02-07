@@ -15,7 +15,7 @@ public class BonitaExecutionPropertiesBrowserPage extends
 
 	@Override
 	protected String getViewID() {
-		return  VIEW_ID;
+		return VIEW_ID;
 	}
 
 }

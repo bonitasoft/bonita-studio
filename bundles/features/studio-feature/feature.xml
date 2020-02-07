@@ -62,10 +62,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.edapt.runtime.feature"
-         version="1.3.1.201812130816"/>
-
-   <includes
          id="org.eclipse.equinox.p2.extras.feature"
          version="0.0.0"/>
 
@@ -107,6 +103,26 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.babel.nls_webtools_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="de.jcup.asciidoctor.converter"
+         version="0.0.0"/>
+
+   <includes
+         id="de.jcup.asciidoctoreditor"
+         version="0.0.0"/>
+
+   <includes
+         id="markdown.editor.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="de.jcup.yamleditor"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.edapt.runtime.feature"
          version="0.0.0"/>
 
    <requires>
@@ -457,13 +473,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="javax.wsdl"
          download-size="0"
          install-size="0"
-         version="1.5.1.v201012040544"
-         unpack="false"/>
-
-   <plugin
-         id="javax.wsdl"
-         download-size="0"
-         install-size="0"
          version="1.6.2.v201012040545"
          unpack="false"/>
 
@@ -472,13 +481,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          download-size="0"
          install-size="0"
          version="1.6.0.v201011041432"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.batik.util"
-         download-size="0"
-         install-size="0"
-         version="1.7.0.v201011041433"
          unpack="false"/>
 
    <plugin
@@ -544,21 +546,5 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
-    <includes
-         id="de.jcup.asciidoctor.converter"
-         version="0.0.0"/>
-
-   <includes
-         id="de.jcup.asciidoctoreditor"
-         version="0.0.0"/>
-
-   <includes
-         id="markdown.editor.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="de.jcup.yamleditor"
-         version="0.0.0"/>
 
 </feature>

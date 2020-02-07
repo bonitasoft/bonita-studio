@@ -19,6 +19,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -67,8 +68,9 @@ public class BotBdmConstraintsEditor extends BotBase {
             String... selectFields) {
         selectBusinessObject(packageName, businessObject);
         bot.toolbarButtonWithId(ConstraintEditionControl.ADD_CONSTRAINT_BUTTON_ID).click();
-        bot.textWithId(SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR).setText(constraintName);
-        getConstraintsTable().pressShortcut(Keystrokes.CR);
+        SWTBotText botText = bot.textWithId(SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR);
+        botText.setText(constraintName);
+        botText.pressShortcut(Keystrokes.CR);
         return editConstraint(packageName, businessObject, constraintName, selectFields);
     }
 
@@ -99,8 +101,13 @@ public class BotBdmConstraintsEditor extends BotBase {
 
     private void selectBusinessObject(String packageName, String businessObject) {
         SWTBotTreeItem packageItem = getBusinessObjectTree().getTreeItem(packageName);
-        packageItem.expand();
-        packageItem.getNode(businessObject).select();
+        if(!packageItem.isExpanded()) {
+            packageItem.expand();
+        }
+        SWTBotTreeItem node = packageItem.getNode(businessObject);
+        if(!node.isSelected()) {
+            node.select();
+        }
     }
 
     private SWTBotTree getBusinessObjectTree() {

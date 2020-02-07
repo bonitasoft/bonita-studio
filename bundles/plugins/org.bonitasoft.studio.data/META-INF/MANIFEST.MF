@@ -57,6 +57,6 @@ Export-Package: org.bonitasoft.studio.data.i18n;
  org.bonitasoft.studio.data.provider,
  org.bonitasoft.studio.data.ui.property.section,
  org.bonitasoft.studio.data.util
-Import-Package: org.bonitasoft.engine.bpm.bar,
+Import-Package: javax.inject;version="1.0.0",
+ org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.document
- 

@@ -65,6 +65,7 @@ Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.ui.wizard
 Bundle-ClassPath: .
 Import-Package: javax.annotation;version="1.2.0",
+ javax.inject;version="1.0.0",
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,

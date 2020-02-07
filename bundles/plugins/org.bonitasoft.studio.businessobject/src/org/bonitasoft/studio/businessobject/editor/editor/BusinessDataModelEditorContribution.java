@@ -16,10 +16,14 @@ package org.bonitasoft.studio.businessobject.editor.editor;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
@@ -35,15 +39,17 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.editor.model.Package;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.BusinessObjectListValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractEditorContribution;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractMultiSourceFormEditor;
 import org.bonitasoft.studio.ui.editors.xmlEditors.ReadOnlyStructuredTextEditor;
+import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
@@ -160,6 +166,13 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
                 .map(Package::getBusinessObjects)
                 .flatMap(Collection::stream)
                 .anyMatch(bo -> validator.validate(bo).getSeverity() == ValidationStatus.ERROR)) {
+            MultiStatus status = workingCopyObservable.getValue().getPackages().stream()
+                .map(Package::getBusinessObjects)
+                .flatMap(Collection::stream)
+                .map(bo -> validator.validate(bo))
+                .collect(StatusCollectors.toMultiStatus());
+            
+            BonitaStudioLog.error(Stream.of(status.getChildren()).map(Object::toString).collect(Collectors.joining("\n")), BusinessObjectPlugin.PLUGIN_ID);
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelNotSavableTitle,
                     Messages.modelNotSavable);
         } else {

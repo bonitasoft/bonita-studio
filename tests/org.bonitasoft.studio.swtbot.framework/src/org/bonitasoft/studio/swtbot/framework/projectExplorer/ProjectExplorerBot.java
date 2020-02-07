@@ -205,7 +205,7 @@ public class ProjectExplorerBot extends BotBase {
                 .withFailureMessage(() -> String.format("The active editor title should be  %s instead of %s", expectedTitle,
                         bot.activeEditor().getTitle()))
                 .create();
-        bot.waitUntil(condition);
+        bot.waitUntil(condition, 10000);
     }
 
 }

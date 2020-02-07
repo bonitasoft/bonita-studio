@@ -42,7 +42,8 @@ public abstract class BonitaPropertiesBrowserPage extends PropertiesBrowserPage 
     @Override
     protected int getLastTabSelection(final IWorkbenchPart part, final ISelection input) {
         if (registry instanceof TabbedPropertyRegistryViewAware) {
-            final ITabDescriptor[] descriptors = ((TabbedPropertyRegistryViewAware) registry).getTabDescriptors(part, input, getViewID());
+            final ITabDescriptor[] descriptors = ((TabbedPropertyRegistryViewAware) registry).getTabDescriptors(part,
+                    input, getViewID());
             if (descriptors.length != 0) {
                 for (final Iterator iter = selectionQueue.iterator(); iter.hasNext();) {
                     final String text = (String) iter.next();
@@ -69,13 +70,13 @@ public abstract class BonitaPropertiesBrowserPage extends PropertiesBrowserPage 
             if (selection.equals(currentSelection)) {
                 return;
             }
-
             currentSelection = selection;
 
             // see if the selection provides a new contributor
             validateRegistry(selection);
             if (part instanceof DiagramEditor) {
-                final ITabDescriptor[] descriptors = ((TabbedPropertyRegistryViewAware) registry).getTabDescriptors(part,
+                final ITabDescriptor[] descriptors = ((TabbedPropertyRegistryViewAware) registry).getTabDescriptors(
+                        part,
                         currentSelection, getViewID());
                 // If there are no descriptors for the given input we do not need to
                 // touch the tab objects. We might reuse them for the next valid

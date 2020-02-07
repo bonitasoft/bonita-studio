@@ -23,6 +23,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 
 /**
  * @author Romain Bioteau
@@ -38,12 +39,14 @@ public class BotActorDefinitionPropertySection extends BotBase {
         final SWTBotTable table = bot.table();
 
         table.click(table.rowCount() - 1, 1);
-        bot.text().typeText(name);
-        table.pressShortcut(Keystrokes.CR);
+        bot.text()
+                .typeText(name)
+                .pressShortcut(Keystrokes.CR);
 
         table.click(table.rowCount() - 1, 2);
-        bot.text().typeText(description);
-        table.pressShortcut(Keystrokes.CR);
+        bot.text()
+                .typeText(description)
+                .pressShortcut(Keystrokes.CR);
         return this;
     }
 

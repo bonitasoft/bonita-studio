@@ -58,8 +58,8 @@ public class BotContractInputRow extends BotBase {
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(NAME_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR)
-        .typeText(name)
-        .pressShortcut(Keystrokes.CR);
+                .typeText(name)
+                .pressShortcut(Keystrokes.CR);
         return this;
     }
 
@@ -73,8 +73,8 @@ public class BotContractInputRow extends BotBase {
         swtBotTreeItem.setFocus();
         swtBotTreeItem.click(DESCRIPTION_COLUMN);
         bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR)
-        .typeText(description)
-        .pressShortcut(Keystrokes.CR);
+                .typeText(description)
+                .pressShortcut(Keystrokes.CR);
         return this;
     }
 

@@ -97,6 +97,8 @@ public class BonitaPerspectivesUtils {
             allPropertiesViews.add("org.bonitasoft.studio.views.properties.application");
             allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.general");
             allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.appearance");
+            allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.data");
+            allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.execution");
             allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.appearance");
             allPropertiesViews.add("org.bonitasoft.studio.bpmn.palette_view");
             allPropertiesViews.add("org.bonitasoft.studio.form.palette_view");

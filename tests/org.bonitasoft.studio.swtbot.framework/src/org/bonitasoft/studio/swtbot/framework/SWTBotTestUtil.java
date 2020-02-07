@@ -73,7 +73,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.matchers.WithId;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
@@ -190,48 +190,56 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabText) {
-        viewerBot.sleep(1000);
-        UIThreadRunnable.syncExec(new VoidResult() {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swtbot.swt.finder.results.VoidResult#run()
-             */
+        viewerBot.waitUntil(new DefaultCondition() {
+            
             @Override
-            public void run() {
-                try {
-                    final List<? extends Widget> widgets = viewerBot.getFinder()
-                            .findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
-                    Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found",
-                            widgets.size() > 0);
-                    final TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
-                    int i = 0;
-                    boolean found = false;
-                    ListElement currentTab;
-                    final Method selectMethod = TabbedPropertyList.class.getDeclaredMethod("select",
-                            new Class[] { int.class });
-                    selectMethod.setAccessible(true);
-                    do {
-                        currentTab = (org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement) tabbedPropertyList
-                                .getElementAt(i);
-                        if (currentTab != null) {
-                            final String label = currentTab.getTabItem().getText();
-                            if (label.equals(tabText)) {
-                                found = true;
-                                selectMethod.invoke(tabbedPropertyList, i);
+            public boolean test() throws Exception {
+                final List<? extends Widget> widgets = viewerBot.getFinder()
+                        .findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
+                Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found",
+                        widgets.size() > 0);
+               return UIThreadRunnable.syncExec(new Result<Boolean>() {
+
+                    @Override
+                    public Boolean run() {
+                        try {
+                            final TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
+                            int i = 0;
+                            boolean found = false;
+                            ListElement currentTab;
+                            final Method selectMethod = TabbedPropertyList.class.getDeclaredMethod("select",
+                                    new Class[] { int.class });
+                            selectMethod.setAccessible(true);
+                            do {
+                                currentTab = (org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement) tabbedPropertyList
+                                        .getElementAt(i);
+                                if (currentTab != null) {
+                                    final String label = currentTab.getTabItem().getText();
+                                    if (label.equals(tabText)) {
+                                        found = true;
+                                        selectMethod.invoke(tabbedPropertyList, i);
+                                    }
+                                }
+                                i++;
+                            } while (currentTab != null && !found);
+                            if (!found) {
+                                return false;
                             }
+                        } catch (final Exception ex) {
+                            BonitaStudioLog.error(ex);
+                            return false;
                         }
-                        i++;
-                    } while (currentTab != null && !found);
-                    if (!found) {
-                        throw new WidgetNotFoundException("Can't find a tab item with " + tabText + " label");
+                        return true;
                     }
-                } catch (final Exception ex) {
-                    BonitaStudioLog.error(ex);
-                    throw new WidgetNotFoundException("Can't find a tab item with " + tabText + " label");
-                }
+                });
             }
-        });
+            
+            @Override
+            public String getFailureMessage() {
+                return "Can't find a tab item with " + tabText + " label";
+            }
+            
+        }, 5000);
     }
 
 

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target includeMode="feature" name="platform">
+<target includeMode="feature" name="remote_platform">
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="http://repositories.rd.lan/p2/4.14/"/>
+            <repository location="https://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
             <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.8.0.201906121535"/>
             <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.8.0.201906121535"/>
             <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="2.8.0.201906121535"/>
             <unit id="org.eclipse.swtbot.feature.group" version="2.8.0.201906121535"/>
             <unit id="org.eclipse.swtbot.forms.feature.group" version="2.8.0.201906121535"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://download.eclipse.org/releases/2019-12"/>
             <unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.0.v20191122-2104"/>
             <unit id="org.eclipse.egit.feature.group" version="5.6.0.201912101111-r"/>
             <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.6.0.201912101111-r"/>
@@ -53,11 +56,16 @@
             <unit id="org.eclipse.emf.diffmerge.sdk.feature.feature.group" version="0.11.2.201906100817"/>
   			<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="1.4.0.201902190757"/>
             <unit id="org.eclipse.emf.edapt.runtime.feature.source.feature.group" version="1.4.0.201902190757"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
                 <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
                 <unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
                 <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
@@ -72,25 +80,59 @@
                 <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
                 <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
                 <unit id="stax2-api" version="3.1.4"/>
+                <repository location="http://update-site.bonitasoft.com/p2/4.10"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://download.eclipse.org/nebula/releases/2.2.0/"/>
             <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.201907151344"/>
+        </location>
+         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
             <unit id="javax.jws" version="2.0.0.v201005080400"/>
             <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
+            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20181128170323/repository/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.json" version="1.0.0.v201011060100"/>
+            <repository location="http://download.eclipse.org/tools/orbit/R-builds/R20170516192513/repository"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.team.svn.feature.group" version="4.0.5.I20170425-1700"/>
             <unit id="org.eclipse.team.svn.m2e.feature.group" version="4.0.0.I20160226-1700"/>
             <unit id="org.eclipse.team.svn.nl1.feature.group" version="4.0.0.I20160226-1700"/>
             <unit id="org.eclipse.team.svn.revision.graph.feature.group" version="4.0.0.I20160226-1700"/>
             <unit id="org.eclipse.team.svn.source.feature.group" version="4.0.5.I20170425-1700"/>
+            <repository location="https://download.eclipse.org/technology/subversive/4.0/update-site/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="6.0.4.I20161211-1700"/>
             <unit id="org.polarion.eclipse.team.svn.connector.javahl18.feature.group" version="6.0.0.I20160427-1700"/>
             <unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="6.0.4.I20161211-1700"/>
+            <repository location="http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/"/>
+        </location>
+
+       <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="de.jcup.asciidoctor.converter.feature.group" version="1.0.3"/>
             <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.0.3"/>
+            <repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://dl.bintray.com/de-jcup/yamleditor"/>
             <unit id="de.jcup.yamleditor.feature.group" version="1.6.1"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://nodeclipse.github.io/updates/markdown/"/>
             <unit id="markdown.editor.feature.feature.group" version="1.2.0.201501260515"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="http://dl.bintray.com/satyagraha/generic/2.0.1/"/>
             <unit id="code.satyagraha.gfm.viewer.feature.feature.group" version="2.0.1"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
+            <repository location="http://hallvard.github.io/plantuml"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.14.0.v20200113020001"/>
             <unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.14.0.v20200113020001"/>
             <unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.14.0.v20200113020001"/>
@@ -111,7 +153,14 @@
             <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.14.0.v20200113020001"/>
             <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.14.0.v20200113020001"/>
             <unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.14.0.v20200113020001"/>
+            <repository location="https://download.eclipse.org/technology/babel/update-site/R0.17.1/2019-12/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.7.0"/>
+        <repository location="https://dl.bintray.com/de-jcup/jenkinseditor/"/>
+    </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://dist.springsource.org/release/GRECLIPSE/e4.14"/>
             <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.6.0.v201912311228-e1912-RELEASE"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.6.0.v201912311228-e1912-RELEASE"/>
             <unit id="org.codehaus.groovy24.feature.feature.group" version="3.6.0.v201912311228-e1912-RELEASE"/>

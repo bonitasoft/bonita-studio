@@ -27,7 +27,7 @@ Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
  ernal:=true,org.eclipse.ui.internal.views.properties.tabbed.view;x-in
  ternal:=true,org.eclipse.ui.views.properties.tabbed
 Bundle-Name: %Plugin.name
-Bundle-Version: 3.8.300.v20180921-1036
+Bundle-Version: 3.8.700.v20191113-0939
 Bundle-Localization: plugin
 Created-By: Apache Maven 3.5.4
 Build-Jdk: 1.8.0_162
