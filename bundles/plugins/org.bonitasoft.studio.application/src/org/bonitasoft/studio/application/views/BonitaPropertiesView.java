@@ -18,11 +18,13 @@ import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.Adapters;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IContributedContentsView;
+import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.PageBookView;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -59,29 +61,47 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         if (part instanceof ProcessDiagramEditor) {
             page = getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part);
         } else {
-            page = (IPropertySheetPage) Adapters.adapt(part,
-                    IPropertySheetPage.class, false);
+            page = (IPropertySheetPage) Adapters.adapt(part, IPropertySheetPage.class);
         }
-
         if (page != null) {
             if (page instanceof IPageBookViewPage) {
                 initPage((IPageBookViewPage) page);
             }
             page.createControl(getPageBook());
+            page.selectionChanged(part, part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
             return new PageRec(part, page);
         }
 
-        // Use the default page
+        // IContributedContentsView without contributed view, show default page
+        IContributedContentsView view = Adapters.adapt(part, IContributedContentsView.class);
+        if (view != null && view.getContributingPart() == null) {
+            return null;
+        }
+
+        // Only if a part is a selection provider, it could have properties for the
+        // default PropertySheetPage. Every part gets its own PropertySheetPage
+        ISelectionProvider provider = part.getSite().getSelectionProvider();
+        if (provider != null) {
+            IPage dPage = createPropertySheetPage(getPageBook());
+            return new PageRec(part, dPage);
+        }
+
+        // No properties to be shown, use the default page
         return null;
     }
 
-    protected abstract BonitaPropertiesBrowserPage getBonitaPropertiesBrowserPage(ITabbedPropertySheetPageContributor part);
+    protected abstract BonitaPropertiesBrowserPage getBonitaPropertiesBrowserPage(
+            ITabbedPropertySheetPageContributor part);
 
     @Override
     public IWorkbenchPart getContributingPart() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     }
-
+    
+    @Override
+    protected IWorkbenchPart getBootstrapPart() {
+        return getContributingPart();
+    }
 
     @Override
     protected boolean isImportant(IWorkbenchPart part) {
@@ -89,22 +109,6 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         String partID = part.getSite().getId();
         boolean isPropertyView = BonitaPerspectivesUtils.getAllPropertiesViews().contains(partID);
         return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer);
-    }
-
-
-    @Override
-    protected IWorkbenchPart getBootstrapPart() {
-        IWorkbenchPage page = getSite().getPage();
-        //TODO: find a cleaner way to initialize the multiple Property views
-        /*
-         * by setting the focus here to the editor,
-         * the getSelection that initialize the bootstrapSelection in the super
-         * will return the selection of the editor as we want instead of no selection
-         */
-        if (page != null && page.getActiveEditor() != null) {
-            page.getActiveEditor().setFocus();
-        }
-        return super.getBootstrapPart();
     }
 
 }

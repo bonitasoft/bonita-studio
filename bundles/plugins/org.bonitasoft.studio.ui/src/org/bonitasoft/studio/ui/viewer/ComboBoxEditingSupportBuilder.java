@@ -45,7 +45,6 @@ public class ComboBoxEditingSupportBuilder<T, U> {
     public ComboBoxEditingSupportBuilder(ColumnViewer viewer) {
         this.viewer = viewer;
         this.editor = new ComboBoxViewerCellEditor((Composite) viewer.getControl(), SWT.BORDER | SWT.READ_ONLY);
-        editor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
     }
 
     public ComboBoxEditingSupportBuilder<T, U> withContentProvider(IStructuredContentProvider contentProvider) {

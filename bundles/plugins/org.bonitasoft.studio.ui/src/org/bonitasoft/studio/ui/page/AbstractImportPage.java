@@ -65,6 +65,7 @@ public abstract class AbstractImportPage implements ControlSupplier {
                 .withLabel(Messages.importLabel)
                 .labelAbove()
                 .fill()
+                .widthHint(500)
                 .grabHorizontalSpace()
                 .readOnly()
                 .withButton(Messages.browse)

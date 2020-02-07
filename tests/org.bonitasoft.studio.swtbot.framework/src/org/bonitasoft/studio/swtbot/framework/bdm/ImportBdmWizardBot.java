@@ -60,6 +60,7 @@ public class ImportBdmWizardBot extends BotWizardDialog {
         SWTBotShell activeShell = bot.activeShell();
         bot.waitUntil(treeItemAvailable(tree, packageName));
         SWTBotTreeItem treeItem = tree.getTreeItem(packageName);
+        treeItem.select();
         treeItem.click(1);
 
         SWTBot activeBot = activeShell.bot();

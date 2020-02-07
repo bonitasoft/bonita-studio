@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
@@ -89,22 +90,35 @@ public class TestConditionExpression implements SWTBotConstants {
             final boolean rightError)
             throws OperationCanceledException, InterruptedException {
         SWTBotTestUtil.initializeComparisonExpression(bot, condition);
-        final Point p1 = getLeftExpressionColumnLength(condition);
-        StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0,
-                p1.x);
-        if (leftError) {
-            assertTrue(unvalidErrorMessage + " expression = " + condition, styles.underline);
-        } else {
-            assertFalse(validErrorMessage + " expression = " + condition, styles.underline);
-        }
-        final Point p2 = getRighExpressionColumnLength(condition);
-        bot.sleep(500);
-        styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
-        if (rightError) {
-            assertTrue(unvalidErrorMessage + " expression = " + condition, styles.underline);
-        } else {
-            assertFalse(validErrorMessage + " expression = " + condition, styles.underline);
-        }
+        bot.waitUntil(new AssertionCondition() {
+            @Override
+            protected void makeAssert() throws Exception {
+                final Point p1 = getLeftExpressionColumnLength(condition);
+                StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(TestConditionExpression.this.bot, ExpressionConstants.CONDITION_TYPE, 0,
+                        p1.x);
+                if (leftError) {
+                    assertTrue(unvalidErrorMessage + " expression = " + condition, styles.underline);
+                } else {
+                    assertFalse(validErrorMessage + " expression = " + condition, styles.underline);
+                }
+            }
+        });
+     
+        
+        bot.waitUntil(new AssertionCondition() {
+            
+            @Override
+            protected void makeAssert() throws Exception {
+                final Point p2 = getRighExpressionColumnLength(condition);
+                StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(TestConditionExpression.this.bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
+                if (rightError) {
+                    assertTrue(unvalidErrorMessage + " expression = " + condition, styles.underline);
+                } else {
+                    assertFalse(validErrorMessage + " expression = " + condition, styles.underline);
+                }
+            }
+        });
+
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 

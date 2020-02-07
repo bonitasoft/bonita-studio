@@ -35,8 +35,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -56,7 +54,6 @@ public class ConnectorDefinitionTranslationsTest {
 
     private void openConnectorDefinitionWizardPage(String id, String categoryId) throws Exception {
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
-        Keyboard key = KeyboardFactory.getSWTKeyboard();
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, "1.0.0");
         SWTBotConnectorTestUtil.createNewCategory(bot, categoryId);
@@ -68,23 +65,18 @@ public class ConnectorDefinitionTranslationsTest {
         bot.button("Add...").click();
         table.click(1, 2);
         bot.ccomboBox().setSelection(Boolean.class.getName());
-        //   key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(2, 2);
         bot.ccomboBox().setSelection(Double.class.getName());
-        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(3, 2);
         bot.ccomboBox().setSelection(Float.class.getName());
-        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(4, 2);
         bot.ccomboBox().setSelection(Integer.class.getName());
-        //     key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(5, 2);
         bot.ccomboBox().setSelection(List.class.getName());
-        //   key.pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(6, 2);
         bot.ccomboBox().setSelection(Map.class.getName());

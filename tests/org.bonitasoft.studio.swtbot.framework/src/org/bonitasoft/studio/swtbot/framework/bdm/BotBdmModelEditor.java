@@ -29,6 +29,8 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -100,8 +102,10 @@ public class BotBdmModelEditor extends BotBase {
     public BotBdmModelEditor renamePackage(String oldName, String newName) {
         bot.waitUntil(treeItemAvailable(getBusinessObjectTree(), oldName));
         getBusinessObjectTree().getTreeItem(oldName).click();
-        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR).setText(newName);
-        getBusinessObjectTree().pressShortcut(Keystrokes.CR);
+        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR)
+                .setText(newName)
+                .pressShortcut(Keystrokes.CR);
+        getBusinessObjectTree().setFocus();
         return this;
     }
 
@@ -119,8 +123,10 @@ public class BotBdmModelEditor extends BotBase {
         packageItem.expand();
         bot.waitUntil(nodeAvailable(packageItem, oldName));
         packageItem.getNode(oldName).click();
-        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR).setText(newName);
-        getBusinessObjectTree().pressShortcut(Keystrokes.CR);
+        bot.textWithId(SWTBOT_ID_BO_NAME_TEXTEDITOR)
+                .setText(newName)
+                .pressShortcut(Keystrokes.CR);
+        businessObjectTree.setFocus();
         return this;
     }
 
@@ -140,20 +146,51 @@ public class BotBdmModelEditor extends BotBase {
     }
 
     public BotBdmModelEditor addAttribute(String packageName, String businessObject, String attribute, String type) {
-        selectBusinessObject(packageName, businessObject);
+        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
+        attributeTable.unselect();
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return attributeTable.selectionCount() == 0;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Attribute table should have no selection";
+            }
+        });
         bot.toolbarButtonWithId(AttributeEditionControl.ADD_ATTRIBUTE_BUTTON_ID).click();
-        getAttributeTable(packageName, businessObject).getTableItem(AttributeEditionControl.DEFAULT_FIELD_NAME).click();
-        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).setText(attribute);
-        setType(packageName, businessObject, attribute, type);
+        SWTBotText botText = bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR);
+        botText.setText(attribute);
+        botText.pressShortcut(Keystrokes.CR);
+
+        setType(packageName, businessObject, attributeTable.getTableItem(attribute), type, attributeTable);
         return this;
     }
 
     public BotBdmModelEditor renameAttribute(String packageName, String businessObject, String oldAttributeName,
             String newAttributeName) {
         SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
+        bot.waitUntil(Conditions.widgetIsEnabled(attributeTable));
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                attributeTable.getTableItem(oldAttributeName).select();
+                return attributeTable.selectionCount() == 1;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return String.format("Cannot select '%s' row in attribute table", oldAttributeName);
+            }
+        });
         attributeTable.getTableItem(oldAttributeName).click();
-        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR).setText(newAttributeName);
-        getBusinessObjectTree().pressShortcut(Keystrokes.CR);
+        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR)
+                .setText(newAttributeName)
+                .pressShortcut(Keystrokes.CR);
+        attributeTable.setFocus();
         return this;
     }
 
@@ -168,24 +205,16 @@ public class BotBdmModelEditor extends BotBase {
         return this;
     }
 
-    public BotBdmModelEditor setType(String packageName, String businessObject, String attribute, String type) {
-        SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
+    public BotBdmModelEditor setType(String packageName, String businessObject, SWTBotTableItem item, String type,
+            SWTBotTable attributeTable) {
         SWTBotShell activeShell = bot.activeShell();
-        attributeTable.getTableItem(attribute).click(1);
+        item.click(1);
         SWTBot activeBot = activeShell.bot();
         SWTBotCCombo ccomboBoxInGroup = activeBot.ccomboBoxWithId(FieldTypeEditingSupport.TYPE_COMBO_EDITOR_ID);
-        activeBot.waitUntil(new DefaultCondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return Stream.of(ccomboBoxInGroup.items()).anyMatch(type::equals);
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return String.format("No attribute type '%s' found in combo", type);
-            }
-        });
+        activeBot.waitUntil(new ConditionBuilder()
+                .withTest(() -> Stream.of(ccomboBoxInGroup.items()).anyMatch(type::equals))
+                .withFailureMessage(() -> String.format("Type '%s' not found in combo", type))
+                .create());
         ccomboBoxInGroup.setSelection(type);
         return this;
     }
@@ -193,7 +222,8 @@ public class BotBdmModelEditor extends BotBase {
     /**
      * The attribute type has to be a String!
      */
-    public BotBdmModelEditor setAttributeLength(String packageName, String businessObject, String attribute, String length) {
+    public BotBdmModelEditor setAttributeLength(String packageName, String businessObject, String attribute,
+            String length) {
         SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
         attributeTable.select(attribute);
         bot.comboBoxWithLabel(Messages.length).setText(length);
@@ -216,7 +246,20 @@ public class BotBdmModelEditor extends BotBase {
     public BotBdmModelEditor setRelationType(String packageName, String businessObject, String attribute,
             final String relationType) {
         SWTBotTable attributeTable = getAttributeTable(packageName, businessObject);
-        attributeTable.select(attribute);
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                attributeTable.getTableItem(attribute).select();
+                return attributeTable.selectionCount() == 1;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return String.format("Cannot select '%s' row in attribute table", attribute);
+            }
+        });
+
         bot.comboBoxWithLabel(Messages.relation).setSelection(relationType);
         return this;
     }
@@ -225,10 +268,16 @@ public class BotBdmModelEditor extends BotBase {
         getBusinessObjectTree().getTreeItem(packageName).select();
     }
 
-    private void selectBusinessObject(String packageName, String businessObject) {
+    public BotBdmModelEditor selectBusinessObject(String packageName, String businessObject) {
         SWTBotTreeItem packageItem = getBusinessObjectTree().getTreeItem(packageName);
-        packageItem.expand();
-        packageItem.getNode(businessObject).select();
+        if (!packageItem.isExpanded()) {
+            packageItem.expand();
+        }
+        SWTBotTreeItem node = packageItem.getNode(businessObject);
+        if (!node.isSelected()) {
+            node.select();
+        }
+        return this;
     }
 
     private SWTBotTable getAttributeTable(String packageName, String businessObject) {

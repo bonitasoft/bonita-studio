@@ -225,7 +225,12 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "creditCardNumber", "Text", false, "add your credit card number");
         bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "expirationDate", "Date", false, "Now");
+        try {
+            SWTBotTestUtil.addNewData(bot, "expirationDate", "Date", false, "Now");
+        }catch (IllegalArgumentException e) {
+            bot.captureScreenshot("screenshots/illegalArgumentException.jpg");
+            throw e;
+        }
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
         SWTBotTestUtil.configureSequenceFlow(bot, "if approved", "Web Purchase", false, "decision==\"Approve\"",

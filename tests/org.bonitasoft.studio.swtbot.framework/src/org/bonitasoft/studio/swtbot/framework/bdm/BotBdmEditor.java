@@ -17,7 +17,6 @@ package org.bonitasoft.studio.swtbot.framework.bdm;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.DeployContributionItem;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.projectExplorer.BDMProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -32,12 +31,11 @@ public class BotBdmEditor extends BotBase {
     private BotBdmConstraintsEditor botBdmConstraintsEditor;
     private BotBdmQueriesEditor botBdmQueriesEditor;
     private BotBdmIndexesEditor botBdmIndexesEditor;
-    private BDMProjectExplorerBot bdmExplorerBot;
 
     public BotBdmEditor(SWTGefBot bot) {
         super(bot);
         this.editor = bot.multipageEditorByTitle("Business Data Model editor");
-        bdmExplorerBot = new ProjectExplorerBot(bot).bdm();
+        new ProjectExplorerBot(bot).bdm();
         this.botBdmModelEditor = new BotBdmModelEditor(bot, editor, this);
         this.botBdmConstraintsEditor = new BotBdmConstraintsEditor(bot, editor, this);
         this.botBdmQueriesEditor = new BotBdmQueriesEditor(bot, editor, this);
@@ -66,7 +64,7 @@ public class BotBdmEditor extends BotBase {
 
     public BotBdmEditor deploy() {
         bot.toolbarButtonWithId(DeployContributionItem.ID).click();
-        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 15000);
+        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 20000);
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));

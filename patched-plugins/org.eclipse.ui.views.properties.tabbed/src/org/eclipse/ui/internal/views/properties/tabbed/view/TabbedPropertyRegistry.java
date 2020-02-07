@@ -206,7 +206,7 @@ public class TabbedPropertyRegistry {
 	 * the current contributor id or an empty array if none is found.
 	 */
 	protected ISectionDescriptor[] readSectionDescriptors() {
-		List result = new ArrayList();
+		List<ISectionDescriptor> result = new ArrayList<>();
 		IConfigurationElement[] extensions = getConfigurationElements(EXTPT_SECTIONS);
 		for (IConfigurationElement extension : extensions) {
 			IConfigurationElement[] sections = extension
@@ -217,8 +217,7 @@ public class TabbedPropertyRegistry {
 				result.add(descriptor);
 			}
 		}
-		return (ISectionDescriptor[]) result
-				.toArray(new ISectionDescriptor[result.size()]);
+		return result.toArray(new ISectionDescriptor[result.size()]);
 	}
 
 	/**
@@ -235,7 +234,7 @@ public class TabbedPropertyRegistry {
 				.getExtensionPoint(FrameworkUtil.getBundle(TabbedPropertyRegistry.class).getSymbolicName(),
 						extensionPointId);
 		IConfigurationElement[] extensions = point.getConfigurationElements();
-		List unordered = new ArrayList(extensions.length);
+		List<IConfigurationElement> unordered = new ArrayList<>(extensions.length);
 		for (IConfigurationElement extension : extensions) {
 			if (!extension.getName().equals(extensionPointId)) {
 				continue;
@@ -246,8 +245,7 @@ public class TabbedPropertyRegistry {
 			}
 			unordered.add(extension);
 		}
-		return (IConfigurationElement[]) unordered
-				.toArray(new IConfigurationElement[unordered.size()]);
+		return unordered.toArray(new IConfigurationElement[unordered.size()]);
 	}
 
 	/**
@@ -285,9 +283,8 @@ public class TabbedPropertyRegistry {
 					selection);
 		}
 
-		ITabDescriptor[] result = filterTabDescriptors(allDescriptors, part,
+		return filterTabDescriptors(allDescriptors, part,
 				selection);
-		return result;
 	}
 
 	/**
@@ -297,7 +294,7 @@ public class TabbedPropertyRegistry {
 	protected ITabDescriptor[] filterTabDescriptors(
 			ITabDescriptor[] descriptors, IWorkbenchPart part,
 			ISelection selection) {
-		List result = new ArrayList();
+		List<ITabDescriptor> result = new ArrayList<>();
 		for (ITabDescriptor descriptor : descriptors) {
 			ITabDescriptor filteredDescriptor = adaptDescriptorFor(descriptor,
 					part, selection);
@@ -308,8 +305,7 @@ public class TabbedPropertyRegistry {
 		if (result.isEmpty()) {
 			return EMPTY_DESCRIPTOR_ARRAY;
 		}
-		return (ITabDescriptor[]) result.toArray(new ITabDescriptor[result
-				.size()]);
+		return result.toArray(new ITabDescriptor[result.size()]);
 	}
 
 	/**
@@ -318,16 +314,16 @@ public class TabbedPropertyRegistry {
 	 */
 	protected ITabDescriptor adaptDescriptorFor(ITabDescriptor target,
 			IWorkbenchPart part, ISelection selection) {
-		List filteredSectionDescriptors = new ArrayList();
-		List descriptors = target.getSectionDescriptors();
-		for (Iterator iter = descriptors.iterator(); iter.hasNext();) {
-			ISectionDescriptor descriptor = (ISectionDescriptor) iter.next();
+		List<ISectionDescriptor> filteredSectionDescriptors = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		List<ISectionDescriptor> descriptors = target.getSectionDescriptors();
+		for (Iterator<ISectionDescriptor> iter = descriptors.iterator(); iter.hasNext();) {
+			ISectionDescriptor descriptor = iter.next();
 			if (descriptor.appliesTo(part, selection)) {
 				filteredSectionDescriptors.add(descriptor);
 			}
 		}
-		AbstractTabDescriptor result = (AbstractTabDescriptor) ((AbstractTabDescriptor) target)
-				.clone();
+		AbstractTabDescriptor result = (AbstractTabDescriptor) ((AbstractTabDescriptor) target).clone();
 		result.setSectionDescriptors(filteredSectionDescriptors);
 		return result;
 	}
@@ -338,12 +334,12 @@ public class TabbedPropertyRegistry {
 	 */
 	protected ITabDescriptor[] getAllTabDescriptors() {
 		if (tabDescriptors == null) {
-			List temp = readTabDescriptors();
+			@SuppressWarnings("unchecked")
+			List<TabDescriptor> temp = readTabDescriptors();
 			populateWithSectionDescriptors(temp);
 			temp = sortTabDescriptorsByCategory(temp);
 			temp = sortTabDescriptorsByAfterTab(temp);
-			tabDescriptors = (TabDescriptor[]) temp
-					.toArray(new TabDescriptor[temp.size()]);
+			tabDescriptors = temp.toArray(new TabDescriptor[temp.size()]);
 		}
 		return tabDescriptors;
 	}
@@ -353,7 +349,7 @@ public class TabbedPropertyRegistry {
 	 * current contributor id or an empty list if none is found.
 	 */
 	protected List readTabDescriptors() {
-		List result = new ArrayList();
+		List<TabDescriptor> result = new ArrayList<>();
 		IConfigurationElement[] extensions = getConfigurationElements(EXTPT_TABS);
 		for (IConfigurationElement extension : extensions) {
 			IConfigurationElement[] tabs = extension.getChildren(ELEMENT_TAB);

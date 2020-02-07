@@ -71,7 +71,9 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 SWT.READ_ONLY);
         cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, TYPE_COMBO_EDITOR_ID);
         cellEditor.setContentProvider(ArrayContentProvider.getInstance());
-        cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+    //    if(!GTKStyleHandler.isGTK3()) {
+            cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+   //     }
         cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().getParent().setFocus());
         cellEditor.setLabelProvider(labelProvider);
         cellEditor.setInput(getInput());

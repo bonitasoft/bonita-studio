@@ -64,4 +64,5 @@ Export-Package: org.bonitasoft.studio.ui,
  org.bonitasoft.studio.ui.wizard.listener
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.ui.UIPlugin
-Import-Package: org.bonitasoft.engine.api.result
+Import-Package: javax.inject;version="1.0.0",
+ org.bonitasoft.engine.api.result

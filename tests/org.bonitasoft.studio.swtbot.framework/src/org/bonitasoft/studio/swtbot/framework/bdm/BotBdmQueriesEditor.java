@@ -24,10 +24,12 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotMultiPageEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -112,7 +114,9 @@ public class BotBdmQueriesEditor extends BotBase {
         for (Entry<String, String> paramEntry : queryParam.entrySet()) {
             bot.toolbarButtonWithId(QueryDetailsControl.ADD_PARAM_BUTTON_ID).click();
             getQueryParametersTable().getTableItem(Messages.parameter).click();
-            bot.textWithId(SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR).setText(paramEntry.getKey());
+            SWTBotText textBot = bot.textWithId(SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR);
+            textBot.setText(paramEntry.getKey());
+            textBot.pressShortcut(Keystrokes.CR);
             setType(queryName, paramEntry.getKey(), paramEntry.getValue());
         }
         return this;

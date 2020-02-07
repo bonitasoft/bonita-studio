@@ -16,6 +16,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotMultiPageEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -64,8 +65,9 @@ public class BotBdmIndexesEditor extends BotBase {
             String... selectFields) {
         selectBusinessObject(packageName, businessObject);
         bot.toolbarButtonWithId(IndexControl.ADD_INDEX_BUTTON_ID).click();
-        bot.textWithId(SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR).setText(indexName);
-        getIndexesTable().pressShortcut(Keystrokes.CR);
+        SWTBotText botText = bot.textWithId(SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR);
+        botText.setText(indexName);
+        botText.pressShortcut(Keystrokes.CR);
         editIndex(packageName, businessObject, indexName, selectFields);
         return this;
     }
