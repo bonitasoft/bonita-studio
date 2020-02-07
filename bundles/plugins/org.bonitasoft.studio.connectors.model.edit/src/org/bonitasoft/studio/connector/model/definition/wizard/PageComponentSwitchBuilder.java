@@ -181,7 +181,7 @@ public class PageComponentSwitchBuilder {
         viewer.addFilter(connectorExpressionContentTypeFilter);
     }
 
-    private void handleMandatory(final Text object, final Input input, final ExpressionViewer viewer) {
+    protected void handleMandatory(final Text object, final Input input, final ExpressionViewer viewer) {
         if (input.isMandatory()) {
             viewer.setMandatoryField(getLabel(object.getId()), context);
         }

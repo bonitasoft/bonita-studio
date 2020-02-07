@@ -14836,5 +14836,8 @@
       </operation>
     </changes>
   </releases>
+  <releases date="2020-01-31T09:23:27.494+0100" label="7.11.0-003">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateUIPathConnectorTo20"/>
+  </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

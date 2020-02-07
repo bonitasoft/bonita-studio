@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -73,6 +74,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.databinding.observable.UnmodifiableObservableValue;
 import org.eclipse.core.runtime.Assert;
@@ -157,6 +159,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private AbstractRefactorOperation operation;
     private AbstractRefactorOperation removeOperation;
     final ExpressionViewerValidator expressionViewerValidator = new ExpressionViewerValidator();
+    private Optional<IValidator> mandatoryFieldValidator = Optional.empty();
     protected final DisposeListener disposeListener = new DisposeListener() {
 
         @Override
@@ -779,7 +782,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
         final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
         if (mandatoryFieldName != null) {
-            targetToModelNameStrategy.setBeforeSetValidator(new EmptyInputValidator(mandatoryFieldName));
+            targetToModelNameStrategy
+                    .setBeforeSetValidator(mandatoryFieldValidator.orElse(new EmptyInputValidator(mandatoryFieldName)));
         }
         targetToModelNameStrategy.setConverter(getNameConverter());
 
@@ -1128,8 +1132,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     public void setMandatoryField(final String fieldName, final DataBindingContext dbc) {
+        setMandatoryField(fieldName, dbc, null);
+    }
+
+    public void setMandatoryField(final String fieldName, final DataBindingContext dbc, IValidator<String> validator) {
         mandatoryFieldName = fieldName;
         externalDataBindingContext = dbc;
+        this.mandatoryFieldValidator = Optional.ofNullable(validator);
     }
 
     public void addExpressionEditorChangedListener(final ISelectionChangedListener iSelectionChangedListener) {
