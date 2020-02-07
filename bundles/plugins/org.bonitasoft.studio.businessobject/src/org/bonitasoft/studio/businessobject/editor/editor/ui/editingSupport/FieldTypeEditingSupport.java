@@ -145,7 +145,7 @@ public class FieldTypeEditingSupport extends EditingSupport {
                 .withName(field.getName())
                 .withCollection(field.isCollection())
                 .withNullable(field.isNullable())
-                .withLength(255)
+                .withLength(AttributeEditionControl.DEFAULT_LENGTH)
                 .withType(type)
                 .create();
         parent.getFields().add(index, simpleField);

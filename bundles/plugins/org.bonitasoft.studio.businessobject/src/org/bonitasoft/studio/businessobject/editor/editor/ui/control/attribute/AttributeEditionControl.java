@@ -83,6 +83,7 @@ public class AttributeEditionControl extends Composite {
     public static final String REMOVE_ATTRIBUTE_BUTTON_ID = "removeAttributeId";
 
     public static final String DEFAULT_FIELD_NAME = "attribute";
+    public static final int DEFAULT_LENGTH = 255;
 
     private BusinessDataModelFormPage formPage;
     private IObservableValue<BusinessObject> selectedBoObservable;
@@ -435,7 +436,7 @@ public class AttributeEditionControl extends Composite {
         Field newField = new SimpleFieldBuilder()
                 .withName(fieldName)
                 .withType(FieldType.STRING)
-                .withLength(64)
+                .withLength(DEFAULT_LENGTH)
                 .create();
         selectedBoObservable.getValue().getFields().add(newField);
         viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newField, 0));
