@@ -92,6 +92,8 @@ public class AttributeEditionControl extends Composite {
     private DataBindingContext ctx;
     private IObservableValue<Field> selectedFieldObservable;
     private ToolItem deleteFieldItem;
+    private ToolItem upFieldItem;
+    private ToolItem downFieldItem;
     private FieldDetailsControl fieldDetailsControl;
     private List<Field> fieldToFilter = new ArrayList<>();
     private TableViewer viewer;
@@ -113,7 +115,7 @@ public class AttributeEditionControl extends Composite {
 
         Composite viewerComposite = formPage.getToolkit().createComposite(this);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(1000, SWT.DEFAULT).create());
 
         Composite toolbarComposite = formPage.getToolkit().createComposite(viewerComposite);
         toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -163,6 +165,16 @@ public class AttributeEditionControl extends Composite {
     private void enableButtons() {
         ctx.bindValue(WidgetProperties.enabled().observe(deleteFieldItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectedFieldObservable.getValue() != null)
+                .build());
+
+        ctx.bindValue(WidgetProperties.enabled().observe(upFieldItem), new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> selectedFieldObservable.getValue() != null
+                        && fieldsObservable.indexOf(selectedFieldObservable.getValue()) > 0)
+                .build());
+
+        ctx.bindValue(WidgetProperties.enabled().observe(downFieldItem), new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> selectedFieldObservable.getValue() != null
+                        && fieldsObservable.indexOf(selectedFieldObservable.getValue()) < fieldsObservable.size() - 1)
                 .build());
     }
 
@@ -378,6 +390,30 @@ public class AttributeEditionControl extends Composite {
         deleteFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
         deleteFieldItem.setToolTipText(Messages.deleteFieldTooltip);
         deleteFieldItem.addListener(SWT.Selection, e -> removeSelectedAttribute());
+
+        upFieldItem = new ToolItem(toolBar, SWT.PUSH);
+        upFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/up.png"));
+        upFieldItem.setToolTipText(Messages.up);
+        upFieldItem.addListener(SWT.Selection, e -> upSelectedAttribute());
+
+        downFieldItem = new ToolItem(toolBar, SWT.PUSH);
+        downFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/down.png"));
+        downFieldItem.setToolTipText(Messages.down);
+        downFieldItem.addListener(SWT.Selection, e -> downSelectedAttribute());
+    }
+
+    private void downSelectedAttribute() {
+        Field field = selectedFieldObservable.getValue();
+        int oldIndex = fieldsObservable.indexOf(field);
+        fieldsObservable.move(oldIndex, oldIndex + 1);
+        viewer.refresh();
+    }
+
+    private void upSelectedAttribute() {
+        Field field = selectedFieldObservable.getValue();
+        int oldIndex = fieldsObservable.indexOf(field);
+        fieldsObservable.move(oldIndex, oldIndex - 1);
+        viewer.refresh();
     }
 
     private void removeSelectedAttribute() {
