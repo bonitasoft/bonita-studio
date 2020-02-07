@@ -83,8 +83,8 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         this.editor = editor;
         modelFormPage = new BusinessDataModelFormPage("Model", Messages.modelPageName, editor.getEclipseContext(), this);
         modelFormPage.initialize(editor);
-        constraintFormPage = new ConstraintFormPage("Constraints", Messages.constraintsPageName, editor.getEclipseContext(),
-                this);
+        constraintFormPage = new ConstraintFormPage("Unique constraints", Messages.constraintsPageName,
+                editor.getEclipseContext(), this);
         constraintFormPage.initialize(editor);
         queryFormPage = new QueryFormPage("Queries", Messages.queries, editor.getEclipseContext(), this);
         queryFormPage.initialize(editor);
