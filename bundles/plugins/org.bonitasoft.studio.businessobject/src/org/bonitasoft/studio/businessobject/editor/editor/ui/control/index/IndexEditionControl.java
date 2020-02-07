@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.IndexableFieldFilter;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.FieldTransfer;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
@@ -55,8 +54,10 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.Section;
@@ -76,6 +77,8 @@ public class IndexEditionControl extends Composite {
     private IObservableList<Field> indexedFieldsObservable;
     private IObservableList<Field> selectedAvailableAttributeObservable;
     private IObservableList<Field> selectedIndexedAttributeObservable;
+    private Cursor cursorHand;
+    private Cursor cursorArrow;
 
     public IndexEditionControl(Section parent, AbstractBdmFormPage formPage, DataBindingContext ctx,
             IObservableValue<Index> selectedIndexObservable, IObservableList<Field> actualsFieldsObservable) {
@@ -88,6 +91,8 @@ public class IndexEditionControl extends Composite {
         this.actualsFieldsObservable = actualsFieldsObservable;
         this.indexableFieldFilter = new IndexableFieldFilter();
         this.fieldStyleStringProvider = new FieldStyleStringProvider();
+        this.cursorHand = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
+        this.cursorArrow = new Cursor(parent.getDisplay(), SWT.CURSOR_ARROW);
 
         indexedFieldNameObservable = EMFObservables.observeDetailList(Realm.getDefault(), selectedIndexObservable,
                 BusinessDataModelPackage.Literals.INDEX__FIELD_NAMES);
@@ -98,20 +103,13 @@ public class IndexEditionControl extends Composite {
         createLabels();
 
         Composite viewersComposite = formPage.getToolkit().createComposite(this);
-        viewersComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0).numColumns(3).create());
+        viewersComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0).numColumns(2).create());
         viewersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createAvailableAttributesTableViewer(viewersComposite);
-        createArrow(viewersComposite);
         createIndexedAttributesTableViewer(viewersComposite);
 
         indexedFieldsObservable.addChangeListener(e -> availableAttributesTableViewer.refresh());
-    }
-
-    private void createArrow(Composite parent) {
-        Label arrow = formPage.getToolkit().createLabel(parent, "");
-        arrow.setImage(BusinessObjectPlugin.getImage("/icons/doubleArrow.png"));
-        arrow.setToolTipText(Messages.dndIndexTooltip);
     }
 
     private void bindIndexedFieldObservableLists(DataBindingContext ctx, IObservableList<Field> actualsFieldsObservable) {
@@ -167,6 +165,7 @@ public class IndexEditionControl extends Composite {
         availableAttributesTableViewer.setInput(actualsFieldsObservable);
         selectedAvailableAttributeObservable = ViewersObservables.observeMultiSelection(availableAttributesTableViewer);
 
+        availableAttributesTableViewer.getTable().addMouseMoveListener(e -> updateCursor(e, availableAttributesTableViewer));
         availableAttributesTableViewer.addDragSupport(DND.DROP_MOVE, new Transfer[] { FieldTransfer.getInstance() },
                 dragSourceAdapter(selectedAvailableAttributeObservable));
         availableAttributesTableViewer.addDropSupport(DND.DROP_MOVE,
@@ -229,6 +228,7 @@ public class IndexEditionControl extends Composite {
         ColumnViewerToolTipSupport.enableFor(indexedAttributesTableViewer);
         indexedAttributesTableViewer.setUseHashlookup(true);
         indexedAttributesTableViewer.getTable().setLinesVisible(true);
+        indexedAttributesTableViewer.getTable().addMouseMoveListener(e -> updateCursor(e, indexedAttributesTableViewer));
 
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
@@ -298,6 +298,14 @@ public class IndexEditionControl extends Composite {
                 .createStyledCellLabelProvider());
     }
 
+    private void updateCursor(MouseEvent e, TableViewer viewer) {
+        if (viewer.getCell(new Point(e.x, e.y)) != null) {
+            viewer.getTable().setCursor(cursorHand);
+        } else {
+            viewer.getTable().setCursor(cursorArrow);
+        }
+    }
+
     private void createLabels() {
         formPage.getToolkit()
                 .createLabel(this, Messages.selectIndexFieldsMessages, SWT.WRAP)
@@ -315,6 +323,8 @@ public class IndexEditionControl extends Composite {
     @Override
     public void dispose() {
         fieldStyleStringProvider.dispose();
+        cursorHand.dispose();
+        cursorArrow.dispose();
         super.dispose();
     }
 
