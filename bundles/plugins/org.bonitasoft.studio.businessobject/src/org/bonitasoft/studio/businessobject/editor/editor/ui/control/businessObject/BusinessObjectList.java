@@ -407,17 +407,18 @@ public class BusinessObjectList {
         String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.DEFAULT_PACKAGE_NAME, existingPackages);
         Package newPackage = new PackageBuilder().withName(newPackageName).create();
         input.getValue().getPackages().add(newPackage);
-        addBusinessObject(formPage, newPackage);
+        addBusinessObject(formPage, newPackage, false);
+        viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newPackage, 0));
     }
 
     private void addBusinessObject(AbstractBdmFormPage formPage) {
         Package pakage = selectionObservable.getValue() instanceof Package
                 ? (Package) selectionObservable.getValue()
                 : (Package) ((BusinessObject) selectionObservable.getValue()).eContainer();
-        addBusinessObject(formPage, pakage);
+        addBusinessObject(formPage, pakage, true);
     }
 
-    private void addBusinessObject(AbstractBdmFormPage formPage, Package pakage) {
+    private void addBusinessObject(AbstractBdmFormPage formPage, Package pakage, boolean edit) {
         List<String> existingNames = input.getValue().getPackages().stream()
                 .map(Package::getBusinessObjects)
                 .flatMap(Collection::stream)
@@ -435,7 +436,13 @@ public class BusinessObjectList {
         formPage.getConverter().createDefaultQueries(newBusinessObject).forEach(newBusinessObject.getDefaultQueries()::add);
         pakage.getBusinessObjects().add(newBusinessObject);
         formPage.getEditorContribution().refreshBusinessObjectList();
-        viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newBusinessObject, 0));
+        viewer.getControl().getDisplay().asyncExec(() -> {
+            if (edit) {
+                viewer.editElement(newBusinessObject, 0);
+            } else {
+                viewer.expandToLevel(newBusinessObject, 1);
+            }
+        });
     }
 
     private void remove(AbstractBdmFormPage formPage) {
