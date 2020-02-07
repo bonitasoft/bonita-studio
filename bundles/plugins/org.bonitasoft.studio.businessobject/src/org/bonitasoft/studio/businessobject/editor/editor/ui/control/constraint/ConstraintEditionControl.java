@@ -39,16 +39,16 @@ import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -56,6 +56,7 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ICheckable;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -109,7 +110,7 @@ public class ConstraintEditionControl {
         createConstraintEditionComposite(ctx);
         enableButtons(ctx);
 
-        ctx.bindSet(ViewersObservables.observeCheckedElements(constraintEditionViewer, Field.class),
+        ctx.bindSet(ViewerProperties.checkedElements(Field.class).observe((ICheckable) constraintEditionViewer),
                 attributesSetObservable);
         selectedConstraintObservable.addValueChangeListener(e -> {
             attributesSetObservable.clear();
@@ -232,10 +233,10 @@ public class ConstraintEditionControl {
         constraintEditionViewer.addFilter(new IndexableFieldFilter());
         constraintEditionViewer.setInput(actualsFieldsObservable);
 
-        selectedAttributeObservable = ViewersObservables.observeSingleSelection(constraintEditionViewer);
+        selectedAttributeObservable = ViewerProperties.singleSelection(Field.class).observe(constraintEditionViewer);
         constraintEditionViewer.addCheckStateListener(
                 new ConstraintAttributeCheckListener(selectedConstraintObservable, selectedAttributeObservable,
-                        constraintViewer));
+                        formPage, constraintViewer));
     }
 
     private void createContraintsDefinitionComposite(Composite parent, AbstractBdmFormPage formPage) {
@@ -311,7 +312,7 @@ public class ConstraintEditionControl {
 
         constraintViewer.setContentProvider(new ObservableListContentProvider());
         constraintViewer.setInput(constraintsObservable);
-        selectedConstraintObservable = ViewersObservables.observeSingleSelection(constraintViewer);
+        selectedConstraintObservable = ViewerProperties.singleSelection(UniqueConstraint.class).observe(constraintViewer);
     }
 
     private void createAttributesColumn(TableViewer viewer) {
@@ -365,6 +366,7 @@ public class ConstraintEditionControl {
         if (MessageDialog.openQuestion(mainComposite.getShell(), Messages.deleteConstraintConfirmTitle,
                 String.format(Messages.deleteConstraintConfirmMessage, selectedConstraintObservable.getValue().getName()))) {
             constraintsObservable.remove(selectedConstraintObservable.getValue());
+            formPage.updateDefaultQueries();
         }
     }
 
@@ -384,7 +386,7 @@ public class ConstraintEditionControl {
     }
 
     public IObservableValue<String> observeSectionTitle() {
-        return PojoProperties.value("text").observe(section);
+        return PojoProperties.<Section, String> value("text").observe(section);
     }
 
     public IObservableValue<Boolean> observeSectionVisible() {

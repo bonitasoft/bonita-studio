@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.SearchFilter;
@@ -29,7 +28,6 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackag
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.FieldType;
-import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.editor.model.builder.SimpleFieldBuilder;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
@@ -327,7 +325,7 @@ public class AttributeEditionControl extends Composite {
     }
 
     private void refactorQueriesOnRename(String oldName, String newName) {
-        updateDefaultQueries();
+        formPage.updateDefaultQueries();
         // TODO: refactor the JPQL expression -> complicated ?
         formPage.getEditorContribution().refreshQueryViewers();
     }
@@ -426,7 +424,7 @@ public class AttributeEditionControl extends Composite {
             diff.addProperty(PARENT_QUALIFIED_NAME, ((BusinessObject) field.eContainer()).getQualifiedName());
             formPage.refactorAccessControl(diff);
             selectedBoObservable.getValue().getFields().remove(field);
-            updateDefaultQueries();
+            formPage.updateDefaultQueries();
         }
     }
 
@@ -441,14 +439,7 @@ public class AttributeEditionControl extends Composite {
                 .create();
         selectedBoObservable.getValue().getFields().add(newField);
         viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newField, 0));
-        updateDefaultQueries();
-    }
-
-    private void updateDefaultQueries() {
-        BusinessObject businessObject = selectedBoObservable.getValue();
-        Stream<Query> newDefaultQueries = formPage.getConverter().createDefaultQueries(businessObject);
-        businessObject.getDefaultQueries().clear();
-        newDefaultQueries.forEach(businessObject.getDefaultQueries()::add);
+        formPage.updateDefaultQueries();
     }
 
     public void updateFieldDetailsTopControl() {
