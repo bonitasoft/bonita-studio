@@ -98,6 +98,7 @@ public class QueryDetailsControl extends Composite {
     private List<QueryParameter> parametersToFilter = new ArrayList<>();
     private ToolItem deleteParameterItem;
     private ToolItem addParameterItem;
+    private Section descriptionSection;
 
     public QueryDetailsControl(Composite parent, IObservableValue<Query> querySelectedObservable,
             QueryFormPage formPage, IObservableValue<BusinessObject> boSelectedObservable) {
@@ -118,6 +119,11 @@ public class QueryDetailsControl extends Composite {
                 .withSupplier(
                         () -> querySelectedObservable.getValue() != null && isRealQuery(querySelectedObservable.getValue()))
                 .build());
+
+        querySelectedObservable.addValueChangeListener(e -> {
+            descriptionSection.setExpanded(!isDefault());
+            descriptionSection.setVisible(!isDefault());
+        });
 
         ctx.bindValue(WidgetProperties.enabled().observe(deleteParameterItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> !isDefault() && !parametersMultipleSelectionObservable.isEmpty())
@@ -147,12 +153,12 @@ public class QueryDetailsControl extends Composite {
     }
 
     private void createDescriptionSection() {
-        Section section = formPage.getToolkit().createSection(this, Section.EXPANDED);
-        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        section.setLayout(GridLayoutFactory.fillDefaults().create());
-        section.setText(Messages.description);
+        descriptionSection = formPage.getToolkit().createSection(this, Section.EXPANDED);
+        descriptionSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        descriptionSection.setLayout(GridLayoutFactory.fillDefaults().create());
+        descriptionSection.setText(Messages.description);
 
-        Composite client = formPage.getToolkit().createComposite(section);
+        Composite client = formPage.getToolkit().createComposite(descriptionSection);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         client.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
 
@@ -171,7 +177,7 @@ public class QueryDetailsControl extends Composite {
                 .withSupplier(() -> !isDefault())
                 .build());
 
-        section.setClient(client);
+        descriptionSection.setClient(client);
     }
 
     // return false if the input query isn't one of the default or the custom queries of the selected bo (i.e one of the root of the tree viewer)
@@ -241,7 +247,7 @@ public class QueryDetailsControl extends Composite {
     protected void createParametersComposite(Composite parent) {
         Composite parametersComposite = formPage.getToolkit().createComposite(parent);
         parametersComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
-        parametersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parametersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
 
         Label parametersLabel = formPage.getToolkit().createLabel(parametersComposite, Messages.parametersLabel);
         parametersLabel.setLayoutData(GridDataFactory.fillDefaults().create());
