@@ -17,8 +17,10 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessOb
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -109,8 +111,11 @@ public class BusinessObjectList {
     private ToolItem addBoItem;
     private ToolItem addPackageItem;
     private List<BusinessObject> boToFilter = new ArrayList<>();
+    private Set<Package> expandedPackages = new HashSet();
 
-    public BusinessObjectList(Composite parent, AbstractBdmFormPage formPage, DataBindingContext ctx) {
+    public BusinessObjectList(
+            Composite parent, AbstractBdmFormPage formPage,
+            DataBindingContext ctx) {
         this.ctx = ctx;
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
@@ -154,6 +159,11 @@ public class BusinessObjectList {
         searchObservableValue.addValueChangeListener(e -> {
             Display.getDefault().asyncExec(() -> {
                 String search = searchObservableValue.getValue().toLowerCase();
+                List<Package> expandedElements = Arrays.asList(viewer.getExpandedElements()).stream()
+                        .filter(Package.class::isInstance).map(Package.class::cast).collect(Collectors.toList());
+                expandedPackages.removeIf(pkg -> !expandedElements.contains(pkg)
+                        && pkg.getBusinessObjects().stream().anyMatch(bo -> !boToFilter.contains(bo)));
+                expandedPackages.addAll(expandedElements);
                 boToFilter.clear();
                 input.getValue().getPackages().stream()
                         .map(Package::getBusinessObjects)
@@ -161,6 +171,7 @@ public class BusinessObjectList {
                         .filter(bo -> !bo.getSimpleName().toLowerCase().contains(search))
                         .forEach(boToFilter::add);
                 viewer.refresh();
+                expandedPackages.forEach(pkg -> viewer.expandToLevel(pkg, 1));
             });
         });
     }
