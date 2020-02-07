@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.editor.editor.ui.formpage;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.Export
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ImportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.editor.model.Query;
 import org.bonitasoft.studio.businessobject.refactor.BDMRefactorQueue;
 import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -131,6 +133,13 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
     public void refactorAccessControl(DiffElement diff) {
         addToAccessControlRefactorQueue(diff);
         refactorAccessControl();
+    }
+
+    public void updateDefaultQueries() {
+        BusinessObject businessObject = observeBusinessObjectSelected().getValue();
+        Stream<Query> newDefaultQueries = getConverter().createDefaultQueries(businessObject);
+        businessObject.getDefaultQueries().clear();
+        newDefaultQueries.forEach(businessObject.getDefaultQueries()::add);
     }
 
 }

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.listener;
 
+import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -26,11 +27,14 @@ public class ConstraintAttributeCheckListener implements ICheckStateListener {
     private IObservableValue<UniqueConstraint> selectedConstraintObservable;
     private IObservableValue<Field> selectedAttributeObservable;
     private TableViewer constraintViewer;
+    private AbstractBdmFormPage formPage;
 
     public ConstraintAttributeCheckListener(IObservableValue<UniqueConstraint> selectedConstraintObservable,
-            IObservableValue<Field> selectedAttributeObservable, TableViewer constraintViewer) {
+            IObservableValue<Field> selectedAttributeObservable, AbstractBdmFormPage formPage,
+            TableViewer constraintViewer) {
         this.selectedConstraintObservable = selectedConstraintObservable;
         this.selectedAttributeObservable = selectedAttributeObservable;
+        this.formPage = formPage;
         this.constraintViewer = constraintViewer;
     }
 
@@ -44,5 +48,6 @@ public class ConstraintAttributeCheckListener implements ICheckStateListener {
         }
         selectedAttributeObservable.setValue(element);
         constraintViewer.refresh(selectedConstraintObservable.getValue());
+        formPage.updateDefaultQueries();
     }
 }
