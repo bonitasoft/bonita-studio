@@ -39,14 +39,14 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -209,7 +209,7 @@ public class QueryEditionControl {
         viewer = createQueryViewer(customModeComposite);
         viewer.setInput(boSelectedObservable);
 
-        querySelectedObservable = ViewersObservables.observeSingleSelection(viewer);
+        querySelectedObservable = ViewerProperties.singleSelection(Query.class).observe(viewer);
     }
 
     private void enableButtons() {
@@ -233,6 +233,7 @@ public class QueryEditionControl {
     }
 
     private void addQuery() {
+        viewer.applyEditorValue();
         String queryName = generateNewQueryName();
         Query newQuery = new QueryBuilder().withName(queryName)
                 .withReturnType(boSelectedObservable.getValue().getQualifiedName()).create();
@@ -332,7 +333,7 @@ public class QueryEditionControl {
     }
 
     public IObservableValue<String> observeSectionTitle() {
-        return PojoProperties.value("text").observe(section);
+        return PojoProperties.<Section, String> value("text").observe(section);
     }
 
     public IObservableValue<Boolean> observeSectionVisible() {
