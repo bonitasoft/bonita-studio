@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 <target includeMode="feature" name="platform">
-<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="http://repositories.rd.lan/p2/4.14/"/>
@@ -58,20 +58,20 @@
             <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/>
-                <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-csv" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-smile" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml" version="2.4.4"/>
-                <unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.4.4"/>
-                <unit id="org.restlet.ext.html.feature.group" version="2.3.0.v20141217-1730"/>
-                <unit id="org.restlet.ext.jackson.feature.group" version="2.3.0.v20141217-1730"/>
-                <unit id="org.restlet.ext.jaxb.feature.group" version="2.3.0.v20141217-1730"/>
-                <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
-                <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
-                <unit id="stax2-api" version="3.1.4"/>
+            <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-csv" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-smile" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml" version="2.4.4"/>
+            <unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.4.4"/>
+            <unit id="org.restlet.ext.html.feature.group" version="2.3.0.v20141217-1730"/>
+            <unit id="org.restlet.ext.jackson.feature.group" version="2.3.0.v20141217-1730"/>
+            <unit id="org.restlet.ext.jaxb.feature.group" version="2.3.0.v20141217-1730"/>
+            <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
+            <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
+            <unit id="stax2-api" version="3.1.4"/>
             <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.201907151344"/>
             <unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
             <unit id="javax.jws" version="2.0.0.v201005080400"/>
