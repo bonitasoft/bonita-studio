@@ -32,6 +32,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintFieldsValidator;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -53,6 +54,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -63,8 +66,11 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Section;
@@ -89,6 +95,7 @@ public class ConstraintEditionControl {
     private Composite mainComposite;
     private ToolItem deleteConstraintItem;
     private List<UniqueConstraint> constraintsToFilter = new ArrayList<>();
+    private Color errorColor;
 
     public ConstraintEditionControl(Composite parent,
             AbstractBdmFormPage formPage,
@@ -101,6 +108,8 @@ public class ConstraintEditionControl {
         this.actualsFieldsObservable = EMFObservables.observeDetailList(Realm.getDefault(),
                 formPage.observeBusinessObjectSelected(),
                 BusinessDataModelPackage.Literals.BUSINESS_OBJECT__FIELDS);
+        this.errorColor = new LocalResourceManager(JFaceResources.getResources(),
+                parent).createColor(ColorConstants.ERROR_RGB);
 
         this.mainComposite = formPage.getToolkit().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -214,9 +223,32 @@ public class ConstraintEditionControl {
                 .createLabel(client, Messages.warningTextConstraint, SWT.WRAP)
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+        createValidationLabel(client);
         createConstraintEditionViewer(client);
 
         section.setClient(client);
+    }
+
+    private void createValidationLabel(Composite client) {
+        Label validationLabel = formPage.getToolkit().createLabel(client, "", SWT.WRAP);
+        validationLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        validationLabel.setForeground(errorColor);
+
+        attributesSetObservable.addChangeListener(e -> {
+            if (selectedConstraintObservable.getValue() != null) {
+                if (!attributesSetObservable.isEmpty()) {
+                    validationLabel.setVisible(false);
+                    ((GridData) validationLabel.getLayoutData()).exclude = true;
+                } else {
+                    validationLabel.setVisible(true);
+                    ((GridData) validationLabel.getLayoutData()).exclude = false;
+                    validationLabel.setText(
+                            String.format(Messages.constraintFieldEmptiness,
+                                    selectedConstraintObservable.getValue().getName()));
+                }
+                client.layout();
+            }
+        });
     }
 
     private void createConstraintEditionViewer(Composite parent) {
