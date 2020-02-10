@@ -45,21 +45,6 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
             repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
         }
     }
-    
-    @Override
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if(part == null) {
-            BonitaStudioLog.error("Part is null !", Activator.PLUGIN_ID);
-            return;
-        }
-        if(part.getSite() == null) {
-            BonitaStudioLog.error(String.format("Part site is null for %s (%s)", part.getTitle(), part.toString()), Activator.PLUGIN_ID);
-        }
-        if(part.getSite().getPage() == null) {
-            BonitaStudioLog.error(String.format("Site page is null for %s (%s)", part.getTitle(), part.toString()), Activator.PLUGIN_ID);
-        }
-        super.selectionChanged(part, selection);
-    }
 
     @Override
     protected void setPartName(String partName) {
@@ -67,6 +52,15 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         if (partName != null) {
             updateWebPageChangeListener(partName);
         }
+    }
+    
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+        if(getSite() == null || getSite().getPage() == null) {
+            //invalid editor
+            return;
+        }
+        super.selectionChanged(part, selection);
     }
 
     private void updateWebPageChangeListener(String processName) {
