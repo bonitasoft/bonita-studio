@@ -371,6 +371,7 @@ public class ConstraintEditionControl {
     }
 
     private void addUniqueConstraint() {
+        constraintViewer.applyEditorValue();
         String name = StringIncrementer.getNextIncrement(Messages.defaultConstraintName,
                 constraintsObservable.stream().map(UniqueConstraint::getName).collect(Collectors.toList()));
         UniqueConstraint newConstraint = new UniqueConstraintBuilder()

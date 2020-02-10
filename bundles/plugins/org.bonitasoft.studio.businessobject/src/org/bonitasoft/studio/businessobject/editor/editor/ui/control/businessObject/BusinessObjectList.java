@@ -64,8 +64,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -219,7 +219,7 @@ public class BusinessObjectList {
         viewer.setComparator(new BusinessObjectViewerComparator());
         viewer.setInput(input);
         addDNDSupport(formPage);
-        selectionObservable = ViewersObservables.observeSingleSelection(viewer);
+        selectionObservable = ViewerProperties.singleSelection(Object.class).observe(viewer);
     }
 
     protected void addDNDSupport(AbstractBdmFormPage formPage) {
@@ -413,6 +413,7 @@ public class BusinessObjectList {
     }
 
     private void addPackage(AbstractBdmFormPage formPage) {
+        viewer.applyEditorValue();
         List<String> existingPackages = input.getValue().getPackages().stream().map(Package::getName)
                 .collect(Collectors.toList());
         String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.DEFAULT_PACKAGE_NAME, existingPackages);
@@ -423,6 +424,7 @@ public class BusinessObjectList {
     }
 
     private void addBusinessObject(AbstractBdmFormPage formPage) {
+        viewer.applyEditorValue();
         Package pakage = selectionObservable.getValue() instanceof Package
                 ? (Package) selectionObservable.getValue()
                 : (Package) ((BusinessObject) selectionObservable.getValue()).eContainer();

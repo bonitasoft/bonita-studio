@@ -47,9 +47,9 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -203,7 +203,7 @@ public class AttributeEditionControl extends Composite {
 
         viewer.setContentProvider(new ObservableListContentProvider());
         viewer.setInput(fieldsObservable);
-        selectedFieldObservable = ViewersObservables.observeSingleSelection(viewer);
+        selectedFieldObservable = ViewerProperties.singleSelection(Field.class).observe(viewer);
 
         addDragAndDropSupport();
     }
@@ -430,6 +430,7 @@ public class AttributeEditionControl extends Composite {
     }
 
     private void addAttribute() {
+        viewer.applyEditorValue();
         String fieldName = StringIncrementer.getNextIncrement(DEFAULT_FIELD_NAME,
                 selectedBoObservable.getValue().getFields().stream().map(Field::getName)
                         .collect(Collectors.toList()));

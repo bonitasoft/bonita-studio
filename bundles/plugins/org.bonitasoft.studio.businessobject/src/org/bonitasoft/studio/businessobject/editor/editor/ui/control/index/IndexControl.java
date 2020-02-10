@@ -41,13 +41,13 @@ import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -105,7 +105,7 @@ public class IndexControl {
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        createIndexDefinitionSection(ctx);
+        createIndexDefinitionSection();
         createIndexEditionComposite(ctx);
         enableButtons(ctx);
 
@@ -113,7 +113,7 @@ public class IndexControl {
                 BusinessDataModelPackage.Literals.INDEX__FIELD_NAMES).addChangeListener(e -> indexViewer.refresh());
     }
 
-    private void createIndexDefinitionSection(DataBindingContext ctx) {
+    private void createIndexDefinitionSection() {
         this.section = formPage.getToolkit().createSection(mainComposite, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -316,6 +316,7 @@ public class IndexControl {
     }
 
     private void addIndex() {
+        indexViewer.applyEditorValue();
         String newName = getNewName();
         Index newIndex = new IndexBuilder()
                 .withName(newName)
@@ -352,7 +353,7 @@ public class IndexControl {
     }
 
     public IObservableValue<String> observeSectionTitle() {
-        return PojoProperties.value("text").observe(section);
+        return PojoProperties.<Section, String> value("text").observe(section);
     }
 
     public IObservableValue<Boolean> observeSectionVisible() {
