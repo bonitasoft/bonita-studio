@@ -68,6 +68,17 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
                         throw new RuntimeException("An error occured while intializing pages...", e);
                     }
                 });
+        editorContributions.stream()
+                .filter(AbstractEditorContribution::canContribute)
+                .sorted()
+                .forEach(contribution -> {
+                    try {
+                        contribution.addSource(this);
+                        contribution.initFormPages();
+                    } catch (PartInitException e) {
+                        throw new RuntimeException("An error occured while intializing pages...", e);
+                    }
+                });
         customizeTabeItem();
     }
 

@@ -32,7 +32,11 @@ public abstract class AbstractEditorContribution implements IResourceChangeListe
 
     protected abstract IEditorInput initEditorInput();
 
-    public abstract void addPages(AbstractMultiSourceFormEditor editor) throws PartInitException;
+    protected abstract void addPages(AbstractMultiSourceFormEditor editor) throws PartInitException;
+
+    protected abstract void addSource(AbstractMultiSourceFormEditor editor) throws PartInitException;
+
+    protected abstract void initFormPages();
 
     public abstract void doSave(IProgressMonitor monitor);
 

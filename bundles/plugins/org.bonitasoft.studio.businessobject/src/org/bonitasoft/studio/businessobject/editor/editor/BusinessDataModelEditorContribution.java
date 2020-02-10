@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
 import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
@@ -46,6 +45,7 @@ import org.bonitasoft.studio.ui.editors.xmlEditors.ReadOnlyStructuredTextEditor;
 import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,7 +79,7 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
     private BusinessObjectListValidator validator;
 
     @Override
-    public void addPages(AbstractMultiSourceFormEditor editor) throws PartInitException {
+    protected void addPages(AbstractMultiSourceFormEditor editor) throws PartInitException {
         this.editor = editor;
         modelFormPage = new BusinessDataModelFormPage("Model", Messages.modelPageName, editor.getEclipseContext(), this);
         modelFormPage.initialize(editor);
@@ -90,21 +90,25 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         queryFormPage.initialize(editor);
         indexFormPage = new IndexFormPage("Indexes", Messages.indexes, editor.getEclipseContext(), this);
         indexFormPage.initialize(editor);
-        sourceEditor = new ReadOnlyStructuredTextEditor();
-        sourceEditor.setEditorPart(editor);
 
         editor.addPage(modelFormPage);
         editor.addPage(constraintFormPage);
         editor.addPage(queryFormPage);
         editor.addPage(indexFormPage);
-        sourceEditorIndex = editor.addPage(sourceEditor, input);
-        editor.setPageTitle(sourceEditorIndex, input.getName());
-        initFormPages();
 
         validator = new BusinessObjectListValidator(workingCopyObservable);
     }
 
-    private void initFormPages() {
+    @Override
+    protected void addSource(AbstractMultiSourceFormEditor editor) throws PartInitException {
+        sourceEditor = new ReadOnlyStructuredTextEditor();
+        sourceEditor.setEditorPart(editor);
+        sourceEditorIndex = editor.addPage(sourceEditor, input);
+        editor.setPageTitle(sourceEditorIndex, input.getName());
+    }
+
+    @Override
+    protected void initFormPages() {
         final IDocument document = sourceEditor.getDocumentProvider().getDocument(input);
         try {
             boSelectedObservable = new WritableValue<>();
@@ -167,12 +171,13 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
                 .flatMap(Collection::stream)
                 .anyMatch(bo -> validator.validate(bo).getSeverity() == ValidationStatus.ERROR)) {
             MultiStatus status = workingCopyObservable.getValue().getPackages().stream()
-                .map(Package::getBusinessObjects)
-                .flatMap(Collection::stream)
-                .map(bo -> validator.validate(bo))
-                .collect(StatusCollectors.toMultiStatus());
-            
-            BonitaStudioLog.error(Stream.of(status.getChildren()).map(Object::toString).collect(Collectors.joining("\n")), BusinessObjectPlugin.PLUGIN_ID);
+                    .map(Package::getBusinessObjects)
+                    .flatMap(Collection::stream)
+                    .map(bo -> validator.validate(bo))
+                    .collect(StatusCollectors.toMultiStatus());
+
+            BonitaStudioLog.error(Stream.of(status.getChildren()).map(Object::toString).collect(Collectors.joining("\n")),
+                    BusinessObjectPlugin.PLUGIN_ID);
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelNotSavableTitle,
                     Messages.modelNotSavable);
         } else {
