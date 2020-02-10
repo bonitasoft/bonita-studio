@@ -27,6 +27,7 @@ import org.bonitasoft.studio.businessobject.editor.model.Field;
 import org.bonitasoft.studio.businessobject.editor.model.Index;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -40,6 +41,8 @@ import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
@@ -55,9 +58,12 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.Section;
@@ -68,6 +74,7 @@ public class IndexEditionControl extends Composite {
     public static final String AVAILABLE_FIELDS_VIEWER_ID = "availableFieldsViewerId";
 
     private AbstractBdmFormPage formPage;
+    private IObservableValue<Index> selectedIndexObservable;
     private IObservableList<Field> actualsFieldsObservable;
     private IndexableFieldFilter indexableFieldFilter;
     private FieldStyleStringProvider fieldStyleStringProvider;
@@ -79,6 +86,7 @@ public class IndexEditionControl extends Composite {
     private IObservableList<Field> selectedIndexedAttributeObservable;
     private Cursor cursorHand;
     private Cursor cursorArrow;
+    private Color errorColor;
 
     public IndexEditionControl(Section parent, AbstractBdmFormPage formPage, DataBindingContext ctx,
             IObservableValue<Index> selectedIndexObservable, IObservableList<Field> actualsFieldsObservable) {
@@ -88,11 +96,14 @@ public class IndexEditionControl extends Composite {
         setLayout(GridLayoutFactory.fillDefaults().margins(15, 10).create());
 
         this.formPage = formPage;
+        this.selectedIndexObservable = selectedIndexObservable;
         this.actualsFieldsObservable = actualsFieldsObservable;
         this.indexableFieldFilter = new IndexableFieldFilter();
         this.fieldStyleStringProvider = new FieldStyleStringProvider();
         this.cursorHand = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
         this.cursorArrow = new Cursor(parent.getDisplay(), SWT.CURSOR_ARROW);
+        this.errorColor = new LocalResourceManager(JFaceResources.getResources(),
+                parent).createColor(ColorConstants.ERROR_RGB);
 
         indexedFieldNameObservable = EMFObservables.observeDetailList(Realm.getDefault(), selectedIndexObservable,
                 BusinessDataModelPackage.Literals.INDEX__FIELD_NAMES);
@@ -313,6 +324,25 @@ public class IndexEditionControl extends Composite {
         formPage.getToolkit()
                 .createLabel(this, Messages.warningTextIndex, SWT.WRAP)
                 .setLayoutData(GridDataFactory.fillDefaults().create());
+
+        Label validationLabel = formPage.getToolkit().createLabel(this, "", SWT.WRAP);
+        validationLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        validationLabel.setForeground(errorColor);
+
+        indexedFieldNameObservable.addChangeListener(e -> {
+            if (selectedIndexObservable.getValue() != null) {
+                if (!selectedIndexObservable.getValue().getFieldNames().isEmpty()) {
+                    validationLabel.setVisible(false);
+                    ((GridData) validationLabel.getLayoutData()).exclude = true;
+                } else {
+                    validationLabel.setVisible(true);
+                    ((GridData) validationLabel.getLayoutData()).exclude = false;
+                    validationLabel.setText(
+                            String.format(Messages.indexFieldEmptiness, selectedIndexObservable.getValue().getName()));
+                }
+                layout();
+            }
+        });
     }
 
     public void refreshIndexEditionViewers() {

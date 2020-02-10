@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.IndexableFieldFilter;
@@ -49,7 +48,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -267,7 +266,7 @@ public class IndexControl {
 
         indexViewer.setContentProvider(new ObservableListContentProvider());
         indexViewer.setInput(indexObservable);
-        selectedIndexObservable = ViewersObservables.observeSingleSelection(indexViewer);
+        selectedIndexObservable = ViewerProperties.singleSelection(Index.class).observe(indexViewer);
     }
 
     private void enableButtons(DataBindingContext ctx) {
@@ -320,17 +319,9 @@ public class IndexControl {
         String newName = getNewName();
         Index newIndex = new IndexBuilder()
                 .withName(newName)
-                .withFieldNames(getIndexableFields().toArray(new String[0]))
                 .create();
         indexObservable.add(newIndex);
         Display.getDefault().asyncExec(() -> indexViewer.editElement(newIndex, 0));
-    }
-
-    private List<String> getIndexableFields() {
-        return selectedBoObservable.getValue().getFields().stream()
-                .filter(indexableFieldFilter::isIndexableField)
-                .map(Field::getName)
-                .collect(Collectors.toList());
     }
 
     private String getNewName() {
