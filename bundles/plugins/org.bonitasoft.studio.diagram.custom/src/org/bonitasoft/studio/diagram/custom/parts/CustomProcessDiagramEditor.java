@@ -14,8 +14,10 @@ import org.bonitasoft.studio.designer.ui.property.section.control.WebPageNameRes
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 
 public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
@@ -48,6 +50,15 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         if (partName != null) {
             updateWebPageChangeListener(partName);
         }
+    }
+    
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+        if(getSite() == null || getSite().getPage() == null) {
+            //invalid editor
+            return;
+        }
+        super.selectionChanged(part, selection);
     }
 
     private void updateWebPageChangeListener(String processName) {
