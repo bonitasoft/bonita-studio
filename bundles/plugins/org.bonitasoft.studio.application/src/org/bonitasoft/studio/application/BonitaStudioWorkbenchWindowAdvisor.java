@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.application.dialog.ExitDialog;
+import org.bonitasoft.studio.application.views.CustomObjectActionContributorManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
@@ -110,6 +111,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         if (widget instanceof Shell) {
             ((Widget) widget).setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_MAIN_SHELL);
         }
+        // Replace ObjectActionContributorManager with filtered actions
+        CustomObjectActionContributorManager.getManager();
     }
 
     @Override
