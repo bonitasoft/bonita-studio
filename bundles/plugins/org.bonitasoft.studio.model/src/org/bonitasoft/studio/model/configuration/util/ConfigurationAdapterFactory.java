@@ -99,6 +99,10 @@ public class ConfigurationAdapterFactory extends AdapterFactoryImpl {
                 return createFragmentContainerAdapter();
             }
             @Override
+            public Adapter caseResource(Resource object) {
+                return createResourceAdapter();
+            }
+            @Override
             public Adapter defaultCase(EObject object) {
                 return createEObjectAdapter();
             }
@@ -175,6 +179,20 @@ public class ConfigurationAdapterFactory extends AdapterFactoryImpl {
     }
 
 	/**
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.configuration.Resource <em>Resource</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.configuration.Resource
+     * @generated
+     */
+    public Adapter createResourceAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for the default case.
      * <!-- begin-user-doc -->
 	 * This default implementation returns null.

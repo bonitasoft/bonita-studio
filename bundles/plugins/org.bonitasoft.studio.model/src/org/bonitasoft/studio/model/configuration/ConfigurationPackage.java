@@ -190,13 +190,22 @@ public interface ConfigurationPackage extends EPackage {
 	int CONFIGURATION__PASSWORD = 11;
 
 	/**
+     * The feature id for the '<em><b>Additional Resources</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONFIGURATION__ADDITIONAL_RESOURCES = 12;
+
+    /**
      * The number of structural features of the '<em>Configuration</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CONFIGURATION_FEATURE_COUNT = 12;
+	int CONFIGURATION_FEATURE_COUNT = 13;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.configuration.impl.FragmentImpl <em>Fragment</em>}' class.
@@ -374,6 +383,44 @@ public interface ConfigurationPackage extends EPackage {
 
 
 	/**
+     * The meta object id for the '{@link org.bonitasoft.studio.model.configuration.impl.ResourceImpl <em>Resource</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.bonitasoft.studio.model.configuration.impl.ResourceImpl
+     * @see org.bonitasoft.studio.model.configuration.impl.ConfigurationPackageImpl#getResource()
+     * @generated
+     */
+    int RESOURCE = 4;
+
+    /**
+     * The feature id for the '<em><b>Bar Path</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RESOURCE__BAR_PATH = 0;
+
+    /**
+     * The feature id for the '<em><b>Project Path</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RESOURCE__PROJECT_PATH = 1;
+
+    /**
+     * The number of structural features of the '<em>Resource</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RESOURCE_FEATURE_COUNT = 2;
+
+
+    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.model.configuration.Configuration <em>Configuration</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -516,6 +563,17 @@ public interface ConfigurationPackage extends EPackage {
 	EAttribute getConfiguration_Password();
 
 	/**
+     * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.configuration.Configuration#getAdditionalResources <em>Additional Resources</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Additional Resources</em>'.
+     * @see org.bonitasoft.studio.model.configuration.Configuration#getAdditionalResources()
+     * @see #getConfiguration()
+     * @generated
+     */
+    EReference getConfiguration_AdditionalResources();
+
+    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.model.configuration.Fragment <em>Fragment</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -689,6 +747,38 @@ public interface ConfigurationPackage extends EPackage {
 	EAttribute getFragmentContainer_Id();
 
 	/**
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.configuration.Resource <em>Resource</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Resource</em>'.
+     * @see org.bonitasoft.studio.model.configuration.Resource
+     * @generated
+     */
+    EClass getResource();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.configuration.Resource#getBarPath <em>Bar Path</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Bar Path</em>'.
+     * @see org.bonitasoft.studio.model.configuration.Resource#getBarPath()
+     * @see #getResource()
+     * @generated
+     */
+    EAttribute getResource_BarPath();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.configuration.Resource#getProjectPath <em>Project Path</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Project Path</em>'.
+     * @see org.bonitasoft.studio.model.configuration.Resource#getProjectPath()
+     * @see #getResource()
+     * @generated
+     */
+    EAttribute getResource_ProjectPath();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -817,6 +907,14 @@ public interface ConfigurationPackage extends EPackage {
 		EAttribute CONFIGURATION__PASSWORD = eINSTANCE.getConfiguration_Password();
 
 		/**
+         * The meta object literal for the '<em><b>Additional Resources</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference CONFIGURATION__ADDITIONAL_RESOURCES = eINSTANCE.getConfiguration_AdditionalResources();
+
+        /**
          * The meta object literal for the '{@link org.bonitasoft.studio.model.configuration.impl.FragmentImpl <em>Fragment</em>}' class.
          * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -949,6 +1047,32 @@ public interface ConfigurationPackage extends EPackage {
          * @generated
          */
 		EAttribute FRAGMENT_CONTAINER__ID = eINSTANCE.getFragmentContainer_Id();
+
+        /**
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.configuration.impl.ResourceImpl <em>Resource</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.bonitasoft.studio.model.configuration.impl.ResourceImpl
+         * @see org.bonitasoft.studio.model.configuration.impl.ConfigurationPackageImpl#getResource()
+         * @generated
+         */
+        EClass RESOURCE = eINSTANCE.getResource();
+
+        /**
+         * The meta object literal for the '<em><b>Bar Path</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute RESOURCE__BAR_PATH = eINSTANCE.getResource_BarPath();
+
+        /**
+         * The meta object literal for the '<em><b>Project Path</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute RESOURCE__PROJECT_PATH = eINSTANCE.getResource_ProjectPath();
 
 	}
 
