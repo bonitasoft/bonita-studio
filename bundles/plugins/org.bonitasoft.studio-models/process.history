@@ -14836,8 +14836,151 @@
       </operation>
     </changes>
   </releases>
-  <releases date="2020-01-31T09:23:27.494+0100" label="7.11.0-003">
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateUIPathConnectorTo20"/>
+  <releases xmi:id="_DOHucEy7EeqbB9WjuS2FJA" date="2020-01-31T09:23:27.494+0100" label="7.11.0-003">
+    <changes xsi:type="history:MigrationChange" xmi:id="_DOHucUy7EeqbB9WjuS2FJA" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateUIPathConnectorTo20"/>
+  </releases>
+  <releases xmi:id="_ndaLIEy7EeqbB9WjuS2FJA" date="2020-02-11T09:23:27.494+0100" label="7.11.0-004">
+    <changes xsi:type="history:OperationChange" xmi:id="_KwQDIEy7EeqbB9WjuS2FJA">
+      <changes xsi:type="history:Create" xmi:id="_KwQDIUy7EeqbB9WjuS2FJA" referenceName="eClassifiers">
+        <target href="configuration.ecore#/"/>
+        <element href="configuration.ecore#//Resource"/>
+        <changes xsi:type="history:Set" xmi:id="_KwQDIky7EeqbB9WjuS2FJA" featureName="name" dataValue="Resource">
+          <element href="configuration.ecore#//Resource"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_KwQDI0y7EeqbB9WjuS2FJA" name="newClass">
+        <parameters xmi:id="_KwQDJEy7EeqbB9WjuS2FJA" name="ePackage">
+          <referenceValue xmi:id="_KwQDJUy7EeqbB9WjuS2FJA">
+            <element href="configuration.ecore#/"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_KwQDJky7EeqbB9WjuS2FJA" name="name">
+          <dataValue>Resource</dataValue>
+        </parameters>
+        <parameters xmi:id="_KwQDJ0y7EeqbB9WjuS2FJA" name="superClasses"/>
+        <parameters xmi:id="_KwQDKEy7EeqbB9WjuS2FJA" name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_Qc2ZkEy7EeqbB9WjuS2FJA">
+      <changes xsi:type="history:Create" xmi:id="_Qc2ZkUy7EeqbB9WjuS2FJA" referenceName="eStructuralFeatures">
+        <target href="configuration.ecore#//Configuration"/>
+        <element href="configuration.ecore#//Configuration/additionalResources"/>
+        <changes xsi:type="history:Set" xmi:id="_Qc2Zkky7EeqbB9WjuS2FJA" featureName="name" dataValue="additionalResources">
+          <element href="configuration.ecore#//Configuration/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_Qc2Zk0y7EeqbB9WjuS2FJA" featureName="upperBound" dataValue="-1" oldDataValue="1">
+          <element href="configuration.ecore#//Configuration/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_Qc2ZlEy7EeqbB9WjuS2FJA" featureName="containment" dataValue="true" oldDataValue="false">
+          <element href="configuration.ecore#//Configuration/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_Qc2ZlUy7EeqbB9WjuS2FJA" featureName="eType">
+          <element href="configuration.ecore#//Configuration/additionalResources"/>
+          <referenceValue href="configuration.ecore#//Resource"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_Qc2Zlky7EeqbB9WjuS2FJA" name="newReference">
+        <parameters xmi:id="_Qc2Zl0y7EeqbB9WjuS2FJA" name="eClass">
+          <referenceValue xmi:id="_Qc2ZmEy7EeqbB9WjuS2FJA">
+            <element href="configuration.ecore#//Configuration"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_Qc2ZmUy7EeqbB9WjuS2FJA" name="name">
+          <dataValue>additionalResources</dataValue>
+        </parameters>
+        <parameters xmi:id="_Qc2Zmky7EeqbB9WjuS2FJA" name="type">
+          <referenceValue xmi:id="_Qc2Zm0y7EeqbB9WjuS2FJA">
+            <element href="configuration.ecore#//Resource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_Qc2ZnEy7EeqbB9WjuS2FJA" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_Qc2ZnUy7EeqbB9WjuS2FJA" name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters xmi:id="_Qc2Znky7EeqbB9WjuS2FJA" name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters xmi:id="_Qc2Zn0y7EeqbB9WjuS2FJA" name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_UsXuAEy7EeqbB9WjuS2FJA">
+      <changes xsi:type="history:Create" xmi:id="_UsXuAUy7EeqbB9WjuS2FJA" referenceName="eStructuralFeatures">
+        <target href="configuration.ecore#//Resource"/>
+        <element href="configuration.ecore#//Resource/barPath"/>
+        <changes xsi:type="history:Set" xmi:id="_UsXuAky7EeqbB9WjuS2FJA" featureName="name" dataValue="barPath">
+          <element href="configuration.ecore#//Resource/barPath"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_UsXuA0y7EeqbB9WjuS2FJA" featureName="eType">
+          <element href="configuration.ecore#//Resource/barPath"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_UsXuBEy7EeqbB9WjuS2FJA" name="newAttribute">
+        <parameters xmi:id="_UsXuBUy7EeqbB9WjuS2FJA" name="eClass">
+          <referenceValue xmi:id="_UsXuBky7EeqbB9WjuS2FJA">
+            <element href="configuration.ecore#//Resource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_UsXuB0y7EeqbB9WjuS2FJA" name="name">
+          <dataValue>barPath</dataValue>
+        </parameters>
+        <parameters xmi:id="_UsXuCEy7EeqbB9WjuS2FJA" name="type">
+          <referenceValue xmi:id="_UsXuCUy7EeqbB9WjuS2FJA">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_UsXuCky7EeqbB9WjuS2FJA" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_UsXuC0y7EeqbB9WjuS2FJA" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_UsXuDEy7EeqbB9WjuS2FJA" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_YDwgkEy7EeqbB9WjuS2FJA">
+      <changes xsi:type="history:Create" xmi:id="_YDwgkUy7EeqbB9WjuS2FJA" referenceName="eStructuralFeatures">
+        <target href="configuration.ecore#//Resource"/>
+        <element href="configuration.ecore#//Resource/projectPath"/>
+        <changes xsi:type="history:Set" xmi:id="_YDwgkky7EeqbB9WjuS2FJA" featureName="name" dataValue="projectPath">
+          <element href="configuration.ecore#//Resource/projectPath"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_YDwgk0y7EeqbB9WjuS2FJA" featureName="eType">
+          <element href="configuration.ecore#//Resource/projectPath"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_YDwglEy7EeqbB9WjuS2FJA" name="newAttribute">
+        <parameters xmi:id="_YDwglUy7EeqbB9WjuS2FJA" name="eClass">
+          <referenceValue xmi:id="_YDwglky7EeqbB9WjuS2FJA">
+            <element href="configuration.ecore#//Resource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_YDwgl0y7EeqbB9WjuS2FJA" name="name">
+          <dataValue>projectPath</dataValue>
+        </parameters>
+        <parameters xmi:id="_YDwgmEy7EeqbB9WjuS2FJA" name="type">
+          <referenceValue xmi:id="_YDwgmUy7EeqbB9WjuS2FJA">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_YDwgmky7EeqbB9WjuS2FJA" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_YDwgm0y7EeqbB9WjuS2FJA" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_YDwgnEy7EeqbB9WjuS2FJA" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
   </releases>
   <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
 </history:History>

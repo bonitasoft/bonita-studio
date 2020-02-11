@@ -178,6 +178,29 @@ public class ConfigurationItemProviderAdapterFactory extends ConfigurationAdapte
     }
 
 	/**
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.configuration.Resource} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ResourceItemProvider resourceItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.configuration.Resource}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createResourceAdapter() {
+        if (resourceItemProvider == null) {
+            resourceItemProvider = new ResourceItemProvider(this);
+        }
+
+        return resourceItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

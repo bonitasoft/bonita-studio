@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 
+import org.bonitasoft.studio.model.configuration.Resource;
 import org.bonitasoft.studio.model.parameter.Parameter;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -62,6 +63,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.model.configuration.impl.ConfigurationImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.configuration.impl.ConfigurationImpl#getUsername <em>Username</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.configuration.impl.ConfigurationImpl#getPassword <em>Password</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.configuration.impl.ConfigurationImpl#getAdditionalResources <em>Additional Resources</em>}</li>
  * </ul>
  *
  * @generated
@@ -258,6 +260,16 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 	protected String password = PASSWORD_EDEFAULT;
 
 	/**
+     * The cached value of the '{@link #getAdditionalResources() <em>Additional Resources</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getAdditionalResources()
+     * @generated
+     * @ordered
+     */
+    protected EList<Resource> additionalResources;
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
@@ -536,6 +548,19 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EList<Resource> getAdditionalResources() {
+        if (additionalResources == null) {
+            additionalResources = new EObjectContainmentEList<Resource>(Resource.class, this, ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES);
+        }
+        return additionalResources;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -552,6 +577,8 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
                 return ((InternalEList<?>)getApplicationDependencies()).basicRemove(otherEnd, msgs);
             case ConfigurationPackage.CONFIGURATION__PARAMETERS:
                 return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
+                return ((InternalEList<?>)getAdditionalResources()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -588,6 +615,8 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
                 return getUsername();
             case ConfigurationPackage.CONFIGURATION__PASSWORD:
                 return getPassword();
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
+                return getAdditionalResources();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -641,6 +670,10 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
             case ConfigurationPackage.CONFIGURATION__PASSWORD:
                 setPassword((String)newValue);
                 return;
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
+                getAdditionalResources().clear();
+                getAdditionalResources().addAll((Collection<? extends Resource>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -689,6 +722,9 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
             case ConfigurationPackage.CONFIGURATION__PASSWORD:
                 setPassword(PASSWORD_EDEFAULT);
                 return;
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
+                getAdditionalResources().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -725,6 +761,8 @@ public class ConfigurationImpl extends EObjectImpl implements Configuration {
                 return USERNAME_EDEFAULT == null ? username != null : !USERNAME_EDEFAULT.equals(username);
             case ConfigurationPackage.CONFIGURATION__PASSWORD:
                 return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
+                return additionalResources != null && !additionalResources.isEmpty();
         }
         return super.eIsSet(featureID);
     }
