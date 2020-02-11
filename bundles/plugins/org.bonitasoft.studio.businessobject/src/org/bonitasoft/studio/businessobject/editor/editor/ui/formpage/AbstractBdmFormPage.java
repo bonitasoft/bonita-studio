@@ -37,6 +37,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.xml.sax.SAXException;
 
@@ -136,10 +137,12 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
     }
 
     public void updateDefaultQueries() {
-        BusinessObject businessObject = observeBusinessObjectSelected().getValue();
-        Stream<Query> newDefaultQueries = getConverter().createDefaultQueries(businessObject);
-        businessObject.getDefaultQueries().clear();
-        newDefaultQueries.forEach(businessObject.getDefaultQueries()::add);
+        Display.getDefault().asyncExec(() -> {
+            BusinessObject businessObject = observeBusinessObjectSelected().getValue();
+            Stream<Query> newDefaultQueries = getConverter().createDefaultQueries(businessObject);
+            businessObject.getDefaultQueries().clear();
+            newDefaultQueries.forEach(businessObject.getDefaultQueries()::add);
+        });
     }
 
 }
