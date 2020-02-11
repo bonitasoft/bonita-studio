@@ -21,22 +21,34 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.eclipse.core.runtime.FileLocator.toFileURL;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
-
-import javax.xml.bind.JAXBContext;
+import java.util.Properties;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
+import org.bonitasoft.studio.model.configuration.Resource;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.junit.After;
@@ -98,10 +110,35 @@ public class ExportBarIT {
 
         Thread.sleep(3000); // wait for assets folder ..
 
+        DocumentRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(DocumentRepositoryStore.class);
+        IFolder folder = repositoryStore.getResource();
+
+        Properties properties = new Properties();
+        properties.setProperty("pass", "word");
+        IFile confProperties = folder.getFile("local_conf.properties");
+        try (OutputStream out = new FileOutputStream(confProperties.getLocation().toFile())) {
+            properties.store(out, null);
+        }
+        folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
         final DiagramFileStore diagram = (DiagramFileStore) importBosArchiveOperation.getFileStoresToOpen().get(0);
-        exportBarOperation.addProcessToDeploy(diagram.getProcesses().get(0));
+        AbstractProcess process = diagram.getProcesses().get(0);
+        ProcessConfigurationFileStore configurationFileStore = repositoryAccessor
+                .getRepositoryStore(ProcessConfigurationRepositoryStore.class)
+                .getChild(ModelHelper.getEObjectID(process) + ".conf", false);
+        assertThat(configurationFileStore).isNotNull();
+        Configuration configuration = configurationFileStore.getContent();
+
+        Resource resource = ConfigurationFactory.eINSTANCE.createResource();
+        resource.setBarPath("config.properties");
+        resource.setProjectPath(confProperties.getProjectRelativePath().toString());
+        configuration.getAdditionalResources().add(resource);
+        
+        configurationFileStore.save(configuration);
+
+        exportBarOperation.addProcessToDeploy(process);
         exportBarOperation.setTargetFolder(targetBarFolder.getAbsolutePath());
         exportBarOperation.run(Repository.NULL_PROGRESS_MONITOR);
 
@@ -124,5 +161,6 @@ public class ExportBarIT {
         assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();
+        assertThat(businessArchive.getResource("resources/conf/config.properties")).isNotEmpty();
     }
 }

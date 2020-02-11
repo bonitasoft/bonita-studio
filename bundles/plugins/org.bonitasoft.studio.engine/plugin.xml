@@ -190,4 +190,10 @@
            label="%serverKeywords">
      </keyword>
   </extension>
+  <extension
+        point="org.bonitasoft.studio.common.barResourcesProvider">
+     <barResourceProvider
+           providerClass="org.bonitasoft.studio.engine.contribution.AdditionalResourcesBARResourcesProvider">
+     </barResourceProvider>
+  </extension>
 </plugin>
