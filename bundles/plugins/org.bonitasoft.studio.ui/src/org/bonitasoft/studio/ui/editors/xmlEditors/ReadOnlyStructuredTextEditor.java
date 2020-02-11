@@ -8,9 +8,12 @@
  *******************************************************************************/
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
@@ -19,6 +22,16 @@ public class ReadOnlyStructuredTextEditor extends StructuredTextEditor {
     @Override
     protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
         return new ReadOnlyStructedTextViewer(parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
+    }
+
+    @Override
+    protected void doSetInput(IEditorInput input) throws CoreException {
+        super.doSetInput(input);
+        configureInsertMode(SMART_INSERT, false);
+    }
+
+    @Override
+    public void editorContextMenuAboutToShow(IMenuManager menu) {
     }
 
 }
