@@ -8,7 +8,6 @@ Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.command,
- org.bonitasoft.studio.engine.config,
  org.bonitasoft.studio.engine.contribution,
  org.bonitasoft.studio.engine.export,
  org.bonitasoft.studio.engine.export.builder,
@@ -17,9 +16,9 @@ Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.i18n;x-friends:="org.bonitasoft.studio.engine.test",
  org.bonitasoft.studio.engine.operation,
  org.bonitasoft.studio.engine.preferences,
+ org.bonitasoft.studio.engine.server,
  org.bonitasoft.studio.engine.ui,
  org.bonitasoft.studio.engine.ui.contributionItem,
- org.bonitasoft.studio.engine.server,
  org.bonitasoft.studio.engine.ui.dialog,
  org.bonitasoft.studio.engine.ui.wizard
 Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
