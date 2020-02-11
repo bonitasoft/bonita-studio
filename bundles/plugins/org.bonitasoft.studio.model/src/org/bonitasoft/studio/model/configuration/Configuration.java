@@ -46,6 +46,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.model.configuration.Configuration#getVersion <em>Version</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.configuration.Configuration#getUsername <em>Username</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.configuration.Configuration#getPassword <em>Password</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.configuration.Configuration#getAdditionalResources <em>Additional Resources</em>}</li>
  * </ul>
  *
  * @see org.bonitasoft.studio.model.configuration.ConfigurationPackage#getConfiguration()
@@ -324,5 +325,17 @@ public interface Configuration extends EObject {
      * @generated
      */
 	void setPassword(String value);
+
+    /**
+     * Returns the value of the '<em><b>Additional Resources</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.configuration.Resource}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Additional Resources</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.configuration.ConfigurationPackage#getConfiguration_AdditionalResources()
+     * @model containment="true"
+     * @generated
+     */
+    EList<Resource> getAdditionalResources();
 
 } // Configuration

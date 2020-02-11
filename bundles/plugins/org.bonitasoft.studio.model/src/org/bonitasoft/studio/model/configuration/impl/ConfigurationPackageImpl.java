@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 
+import org.bonitasoft.studio.model.configuration.Resource;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 
 import org.bonitasoft.studio.model.connectorconfiguration.impl.ConnectorConfigurationPackageImpl;
@@ -107,6 +108,13 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
 	private EClass fragmentContainerEClass = null;
 
 	/**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass resourceEClass = null;
+
+    /**
      * Creates an instance of the model <b>Package</b>, registered with
      * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
      * package URI value.
@@ -341,6 +349,16 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EReference getConfiguration_AdditionalResources() {
+        return (EReference)configurationEClass.getEStructuralFeatures().get(12);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -501,6 +519,36 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EClass getResource() {
+        return resourceEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getResource_BarPath() {
+        return (EAttribute)resourceEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getResource_ProjectPath() {
+        return (EAttribute)resourceEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -541,6 +589,7 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
         createEAttribute(configurationEClass, CONFIGURATION__VERSION);
         createEAttribute(configurationEClass, CONFIGURATION__USERNAME);
         createEAttribute(configurationEClass, CONFIGURATION__PASSWORD);
+        createEReference(configurationEClass, CONFIGURATION__ADDITIONAL_RESOURCES);
 
         fragmentEClass = createEClass(FRAGMENT);
         createEAttribute(fragmentEClass, FRAGMENT__KEY);
@@ -560,6 +609,10 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
         createEReference(fragmentContainerEClass, FRAGMENT_CONTAINER__PARENT);
         createEReference(fragmentContainerEClass, FRAGMENT_CONTAINER__FRAGMENTS);
         createEAttribute(fragmentContainerEClass, FRAGMENT_CONTAINER__ID);
+
+        resourceEClass = createEClass(RESOURCE);
+        createEAttribute(resourceEClass, RESOURCE__BAR_PATH);
+        createEAttribute(resourceEClass, RESOURCE__PROJECT_PATH);
     }
 
 	/**
@@ -609,6 +662,7 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
         initEAttribute(getConfiguration_Version(), ecorePackage.getEString(), "version", null, 0, 1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getConfiguration_Username(), ecorePackage.getEString(), "username", null, 0, 1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getConfiguration_Password(), ecorePackage.getEString(), "password", null, 0, 1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getConfiguration_AdditionalResources(), this.getResource(), null, "additionalResources", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(fragmentEClass, Fragment.class, "Fragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEAttribute(getFragment_Key(), ecorePackage.getEString(), "key", null, 1, 1, Fragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -628,6 +682,10 @@ public class ConfigurationPackageImpl extends EPackageImpl implements Configurat
         initEReference(getFragmentContainer_Parent(), this.getFragmentContainer(), this.getFragmentContainer_Children(), "parent", null, 0, 1, FragmentContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEReference(getFragmentContainer_Fragments(), this.getFragment(), null, "fragments", null, 0, -1, FragmentContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getFragmentContainer_Id(), ecorePackage.getEString(), "id", null, 1, 1, FragmentContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+        initEClass(resourceEClass, Resource.class, "Resource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getResource_BarPath(), ecorePackage.getEString(), "barPath", null, 0, 1, Resource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getResource_ProjectPath(), ecorePackage.getEString(), "projectPath", null, 0, 1, Resource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Create resource
         createResource(eNS_URI);

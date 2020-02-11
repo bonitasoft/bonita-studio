@@ -75,6 +75,7 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
             case ConfigurationPackage.FRAGMENT: return createFragment();
             case ConfigurationPackage.DEFINITION_MAPPING: return createDefinitionMapping();
             case ConfigurationPackage.FRAGMENT_CONTAINER: return createFragmentContainer();
+            case ConfigurationPackage.RESOURCE: return createResource();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -125,6 +126,17 @@ public class ConfigurationFactoryImpl extends EFactoryImpl implements Configurat
     }
 
 	/**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Resource createResource() {
+        ResourceImpl resource = new ResourceImpl();
+        return resource;
+    }
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
