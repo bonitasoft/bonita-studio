@@ -158,5 +158,15 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.templates">
+          <contextType
+            name="Groovy"
+            class="org.codehaus.groovy.eclipse.quickfix.templates.GroovyContextType"
+            id="groovy" />
+      <include
+            file="templates/groovy-templates.xml">
+      </include>
+   </extension>
 
 </plugin>
