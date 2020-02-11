@@ -48,6 +48,5 @@ public class ConstraintAttributeCheckListener implements ICheckStateListener {
         }
         selectedAttributeObservable.setValue(element);
         constraintViewer.refresh(selectedConstraintObservable.getValue());
-        formPage.updateDefaultQueries();
     }
 }
