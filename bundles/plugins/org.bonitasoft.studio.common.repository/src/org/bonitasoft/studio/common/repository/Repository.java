@@ -738,14 +738,17 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         } catch (IllegalArgumentException e) {
             oldVersion = new Version("6.0.0");
         }
-        if (oldVersion.compareTo(new Version("7.8.0")) < 0) {
-            LEGACY_REPOSITORIES.stream().forEach(folderName -> removeFolder(folderName, monitor));
-        }
-
+        removeLegacyFolders(oldVersion, monitor);
         workspace.run(newProjectMigrationOperation(project), monitor);
     }
 
-    private void removeFolder(String folderName, final IProgressMonitor monitor) {
+    protected void removeLegacyFolders(Version oldVersion, final IProgressMonitor monitor) {
+        if (oldVersion.compareTo(new Version("7.8.0")) < 0) {
+            LEGACY_REPOSITORIES.stream().forEach(folderName -> removeFolder(folderName, monitor));
+        }
+    }
+
+    protected void removeFolder(String folderName, final IProgressMonitor monitor) {
         IFolder resourceFolder = project.getFolder(folderName);
         if (resourceFolder.exists()) {
             try {
