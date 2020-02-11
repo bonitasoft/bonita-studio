@@ -196,10 +196,6 @@ public class QueryDetailsControl extends Composite {
 
         Label queryResultTypeLabel = formPage.getToolkit().createLabel(returnTypeComposite, Messages.queryResultType);
         queryResultTypeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
-        ControlDecoration typeWarning = new ControlDecoration(queryResultTypeLabel, SWT.RIGHT);
-        typeWarning.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
-        typeWarning.setDescriptionText(Messages.queryReturnTypeWarning);
-        typeWarning.setMarginWidth(5);
 
         returnTypeComboViewer = new ComboViewer(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY);
         returnTypeComboViewer.getControl()
@@ -208,12 +204,19 @@ public class QueryDetailsControl extends Composite {
         returnTypeComboViewer.setLabelProvider(new QueryResultTypeLabelProvider(boSelectedObservable));
         updateReturnTypeViewerInput();
 
+        Label queryResultTypeInfoLabel = formPage.getToolkit().createLabel(returnTypeComposite,
+                Messages.queryReturnTypeWarning);
+        queryResultTypeInfoLabel
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).indent(20, 0).create());
+
+        ControlDecoration typeinfo = new ControlDecoration(queryResultTypeInfoLabel, SWT.LEFT);
+        typeinfo.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
+        typeinfo.setMarginWidth(5);
+
         querySelectedObservable.addValueChangeListener(e -> {
             if (isDefault()) {
-                typeWarning.hide();
                 returnTypeComboViewer.getControl().setEnabled(false);
             } else {
-                typeWarning.show();
                 returnTypeComboViewer.getControl().setEnabled(true);
             }
         });
