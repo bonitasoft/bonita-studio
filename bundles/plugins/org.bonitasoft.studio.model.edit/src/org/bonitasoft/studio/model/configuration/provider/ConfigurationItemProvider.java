@@ -266,6 +266,7 @@ public class ConfigurationItemProvider
             childrenFeatures.add(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES);
             childrenFeatures.add(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES);
             childrenFeatures.add(ConfigurationPackage.Literals.CONFIGURATION__PARAMETERS);
+            childrenFeatures.add(ConfigurationPackage.Literals.CONFIGURATION__ADDITIONAL_RESOURCES);
         }
         return childrenFeatures;
     }
@@ -335,6 +336,7 @@ public class ConfigurationItemProvider
             case ConfigurationPackage.CONFIGURATION__PROCESS_DEPENDENCIES:
             case ConfigurationPackage.CONFIGURATION__APPLICATION_DEPENDENCIES:
             case ConfigurationPackage.CONFIGURATION__PARAMETERS:
+            case ConfigurationPackage.CONFIGURATION__ADDITIONAL_RESOURCES:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -376,6 +378,11 @@ public class ConfigurationItemProvider
             (createChildParameter
                 (ConfigurationPackage.Literals.CONFIGURATION__PARAMETERS,
                  ParameterFactory.eINSTANCE.createParameter()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ConfigurationPackage.Literals.CONFIGURATION__ADDITIONAL_RESOURCES,
+                 ConfigurationFactory.eINSTANCE.createResource()));
     }
 
 	/**
