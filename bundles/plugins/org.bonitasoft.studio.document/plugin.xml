@@ -60,5 +60,12 @@
             class="org.bonitasoft.studio.document.core.export.DocumentEngineDefinitionBuilder">
       </EngineDefinitionBuilder>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.configuration.wizardPage">
+      <configurationWizardPage
+            class="org.bonitasoft.studio.document.ui.AdditionalResourcesConfigurationWizardPage"
+            priority="7">
+      </configurationWizardPage>
+   </extension>
 
 </plugin>
