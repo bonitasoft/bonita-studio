@@ -77,7 +77,8 @@ public class ConfigurationWizard extends Wizard {
         return false;
     }
 
-    public ConfigurationWizard(final MainProcess diagram, final AbstractProcess selectedProcess, final String configurationName) {
+    public ConfigurationWizard(final MainProcess diagram, final AbstractProcess selectedProcess,
+            final String configurationName) {
         this();
         Assert.isNotNull(selectedProcess);
         Assert.isNotNull(configurationName);
@@ -91,11 +92,13 @@ public class ConfigurationWizard extends Wizard {
 
     @Override
     public void addPages() {
-        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
+        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
         final List<IConfigurationElement> elements = sortByPriority(elems);
         for (final IConfigurationElement e : elements) {
             try {
-                final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
+                final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e
+                        .createExecutableExtension(CLASS_ATTRIBUTE);
                 addPage(page);
             } catch (final Exception e1) {
                 BonitaStudioLog.error(e1);
@@ -106,7 +109,7 @@ public class ConfigurationWizard extends Wizard {
     }
 
     private List<IConfigurationElement> sortByPriority(final IConfigurationElement[] elems) {
-        final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        final List<IConfigurationElement> sortedConfigElems = new ArrayList<>();
         for (final IConfigurationElement elem : elems) {
             sortedConfigElems.add(elem);
         }
@@ -162,7 +165,6 @@ public class ConfigurationWizard extends Wizard {
         }
     }
 
-
     public AbstractProcess getProcess() {
         return process;
     }
@@ -207,7 +209,8 @@ public class ConfigurationWizard extends Wizard {
         }
         for (final IWizardPage page : getPages()) {
             if (page instanceof IProcessConfigurationWizardPage) {
-                if (configurationWorkingCopy != null && ((IProcessConfigurationWizardPage) page).isConfigurationPageValid(configurationWorkingCopy) != null) {
+                if (configurationWorkingCopy != null && ((IProcessConfigurationWizardPage) page)
+                        .isConfigurationPageValid(configurationWorkingCopy) != null) {
                     return page;
                 }
             }

@@ -77,6 +77,16 @@ public class Messages extends NLS {
 
     public static String documentListScriptToolTip;
 
+    public static String additionalResources;
+    public static String additionalResourcesDesc;
+    public static String resourceName;
+    public static String file;
+    public static String unknownResource;
+    public static String deleteAdditionalResourceConfirmTitle;
+    public static String deleteAdditionalResourceConfirm;
+    public static String barPathMissing;
+    public static String projectPathInvalid;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

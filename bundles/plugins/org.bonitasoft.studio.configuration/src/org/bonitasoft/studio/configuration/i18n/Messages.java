@@ -76,5 +76,4 @@ public class Messages extends NLS {
     public static String javaDependencies;
     public static String javaDependenciesConfigurationDescription;
     public static String unknownUser;
-
 }
