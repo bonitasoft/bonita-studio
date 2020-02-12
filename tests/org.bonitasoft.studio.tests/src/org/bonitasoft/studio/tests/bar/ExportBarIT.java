@@ -161,6 +161,6 @@ public class ExportBarIT {
         assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();
-        assertThat(businessArchive.getResource("resources/conf/config.properties")).isNotEmpty();
+        assertThat(businessArchive.getResource("resources/misc/config.properties")).isNotEmpty();
     }
 }

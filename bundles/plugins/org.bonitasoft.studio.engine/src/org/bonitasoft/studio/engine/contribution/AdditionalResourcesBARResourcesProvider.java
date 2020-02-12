@@ -31,7 +31,7 @@ import com.google.common.io.Files;
 
 public class AdditionalResourcesBARResourcesProvider implements BARResourcesProvider {
 
-    private static final String CONF_PREFIX = "conf/";
+    private static final String MISC_PREFIX = "misc/";
 
     @Override
     public void addResourcesForConfiguration(BusinessArchiveBuilder builder, 
@@ -43,10 +43,10 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
     }
 
     private void addResourceInBar(BusinessArchiveBuilder builder, Resource resource) throws Exception {
-        IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         if(resource.getProjectPath() == null || resource.getProjectPath().isEmpty()) {
             throw new Exception("projectPath cannot be null for an additional resource.");
         }
+        IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         File file = project.getFile(resource.getProjectPath()).getLocation().toFile();
         if(!file.exists()) {
             throw new FileNotFoundException(file.getAbsolutePath());
@@ -62,7 +62,7 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
             barPath = barPath.trim().substring(1);
         }
         //Avoid resource name conflict using conf/ folder in bar.
-        builder.addExternalResource(new BarResource(CONF_PREFIX + barPath, Files.toByteArray(file)));
+        builder.addExternalResource(new BarResource(MISC_PREFIX + barPath, Files.toByteArray(file)));
     }
 
 }

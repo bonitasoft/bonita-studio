@@ -22,7 +22,7 @@
 	autoinsert="true"
 	context="groovy"
 	enabled="true"
->def additionalResources = apiAccessor.processAPI.getProcessResources(processDefinitionId, 'resources/conf/*')</template>
+>def additionalResources = apiAccessor.processAPI.getProcessResources(processDefinitionId, 'resources/misc/.*')</template>
 
 
 </templates>

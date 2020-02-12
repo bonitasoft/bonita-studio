@@ -33,7 +33,7 @@ public class AdditionalResourceProjectPathValidator implements IValidator<Resour
         if (Strings.isNullOrEmpty(projectPath)) {
             return ValidationStatus.error(org.bonitasoft.studio.ui.i18n.Messages.required);
         }
-        return repositoryAccessor.getRepositoryStore(DocumentRepositoryStore.class).getChild(projectPath, false) != null
+        return repositoryAccessor.getCurrentRepository().getProject().getFile(projectPath).exists()
                 ? ValidationStatus.ok()
                 : ValidationStatus.error(Messages.unknownResource);
     }

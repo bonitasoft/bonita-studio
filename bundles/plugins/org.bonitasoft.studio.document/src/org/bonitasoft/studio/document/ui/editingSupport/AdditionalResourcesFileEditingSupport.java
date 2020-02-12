@@ -50,7 +50,7 @@ public class AdditionalResourcesFileEditingSupport extends EditingSupport {
         Resource resource = (Resource) element;
         if (value instanceof DocumentFileStore) {
             DocumentFileStore document = (DocumentFileStore) value;
-            resource.setProjectPath(document.getName());
+            resource.setProjectPath("attachments/"+document.getName());
             if (resource.getBarPath() == null || resource.getBarPath().isEmpty()) {
                 resource.setBarPath(document.getName());
             }
