@@ -15,8 +15,11 @@
 package org.bonitasoft.studio.document.ui;
 
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
+import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
+import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.editingSupport.AdditionalResourcesFileEditingSupport;
+import org.bonitasoft.studio.document.ui.validator.AdditionalResourceBarPathValidator;
 import org.bonitasoft.studio.document.ui.validator.AdditionalResourceProjectPathValidator;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -28,7 +31,6 @@ import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -51,8 +53,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.google.common.base.Strings;
-
 public class AdditionalResourcesConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage {
 
     private DataBindingContext ctx;
@@ -61,6 +61,7 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
     private ToolItem deleteItem;
     private IViewerObservableValue<Resource> singleSelectionObservable;
     private IValidator<Resource> projectPathValidator;
+    private AdditionalResourceBarPathValidator barPathValidator;
 
     public AdditionalResourcesConfigurationWizardPage() {
         super(AdditionalResourcesConfigurationWizardPage.class.getName());
@@ -68,6 +69,7 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         setDescription(Messages.additionalResourcesDesc);
         ctx = new DataBindingContext();
         projectPathValidator = new AdditionalResourceProjectPathValidator();
+        barPathValidator = new AdditionalResourceBarPathValidator();
     }
 
     @Override
@@ -135,18 +137,12 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         column.setLabelProvider(new LabelProviderBuilder<Resource>()
                 .withTextProvider(Resource::getBarPath)
                 .shouldRefreshAllLabels(viewer)
-                .withStatusProvider(this::validateBarPath)
+                .withStatusProvider(barPathValidator::validate)
                 .createColumnLabelProvider());
         column.setEditingSupport(new EditingSupportBuilder<Resource>(viewer)
                 .withValueProvider(Resource::getBarPath)
                 .withValueUpdater((resource, newName) -> resource.setBarPath((String) newName))
                 .create());
-    }
-
-    private IStatus validateBarPath(Resource resource) {
-        return Strings.isNullOrEmpty(resource.getBarPath())
-                ? ValidationStatus.error(org.bonitasoft.studio.ui.i18n.Messages.required)
-                : ValidationStatus.ok();
     }
 
     private void createToolbar(Composite parent) {
@@ -171,17 +167,24 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
     }
 
     private void addItem() {
-        Resource resource = ConfigurationFactory.eINSTANCE.createResource();
-        resource.setBarPath(""); // null leads to cell editor errors..
-        configuration.getAdditionalResources().add(resource);
-        viewer.refresh();
-        viewer.editElement(resource, 1);
+        SelectDocumentInBonitaStudioRepository dialog = new SelectDocumentInBonitaStudioRepository(getShell());
+        dialog.open();
+        DocumentFileStore selectedDocument = dialog.getSelectedDocument();
+        if (selectedDocument != null) {
+            Resource resource = ConfigurationFactory.eINSTANCE.createResource();
+            resource.setBarPath(selectedDocument.getName());
+            resource.setProjectPath(selectedDocument.getResource().getProjectRelativePath().toString());
+            configuration.getAdditionalResources().add(resource);
+            viewer.refresh();
+            viewer.editElement(resource, 1);
+        }
     }
 
     @Override
     public void updatePage(AbstractProcess process, Configuration configuration) {
         if (process != null && configuration != null && viewer != null && !viewer.getTable().isDisposed()) {
             this.configuration = configuration;
+            barPathValidator.setConfiguration(configuration);
             viewer.setInput(configuration.getAdditionalResources());
         }
     }
@@ -189,9 +192,9 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
     @Override
     public String isConfigurationPageValid(Configuration conf) {
         boolean barPathMissing = conf.getAdditionalResources().stream()
-                .anyMatch(resource -> validateBarPath(resource).getSeverity() == IStatus.ERROR);
+                .anyMatch(resource -> barPathValidator.validate(resource).getSeverity() == IStatus.ERROR);
         if (barPathMissing) {
-            return Messages.barPathMissing;
+            return Messages.barPathInvalid;
         }
         boolean projectPathInvalid = conf.getAdditionalResources().stream()
                 .anyMatch(resource -> projectPathValidator.validate(resource).getSeverity() == IStatus.ERROR);
