@@ -54,7 +54,7 @@ public class DefineBusinessDataModelHandler {
         String defaultName = String.format("%s.%s", BusinessDataModelFormPart.DEFAULT_PACKAGE_NAME,
                 BusinessObjectList.DEFAULT_BO_NAME);
         return new BusinessObjectBuilder(defaultName)
-                .withField(FieldBuilder.aStringField(AttributeEditionControl.DEFAULT_FIELD_NAME).withLength(64).build())
+                .withField(FieldBuilder.aStringField(AttributeEditionControl.DEFAULT_FIELD_NAME).withLength(255).build())
                 .build();
     }
 
