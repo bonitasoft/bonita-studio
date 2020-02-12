@@ -84,8 +84,9 @@ public class Messages extends NLS {
     public static String unknownResource;
     public static String deleteAdditionalResourceConfirmTitle;
     public static String deleteAdditionalResourceConfirm;
-    public static String barPathMissing;
+    public static String barPathInvalid;
     public static String projectPathInvalid;
+    public static String barPathUnicityError;
 
     static {
         // initialize resource bundle
