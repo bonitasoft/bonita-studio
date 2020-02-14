@@ -43,9 +43,6 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
             bottomfolder.addPlaceholder("org.eclipse.team.ui.GenericHistoryView");
         }
         bottomfolder.addView("org.eclipse.ui.views.ProblemView");
-        
-        final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
-        rightFolder.addView(IPageLayout.ID_OUTLINE);
     }
 
 
