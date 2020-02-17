@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Path;
 
 public class BonitaProjectPropertyTester extends PropertyTester {
 
@@ -43,17 +44,25 @@ public class BonitaProjectPropertyTester extends PropertyTester {
                 return isBonitaStoreContainer(resource);
             }
             if (Objects.equals(property, "isContainer")) {
-                return resource instanceof IContainer;
+                return resource instanceof IContainer && !isContainedInBonitaStore(resource);
             }
         }
         return false;
+    }
+
+    private boolean isContainedInBonitaStore(IResource resource) {
+        IContainer parent = resource.getParent();
+        while (parent != null && !isBonitaStoreContainer(parent)) {
+            parent = parent.getParent();
+        }
+        return parent != null;
     }
 
     private boolean isBonitaStoreContainer(Object receiver) {
         if (RepositoryManager.getInstance().hasActiveRepository()
                 && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-            if (receiver instanceof IFolder) {
+            if (receiver instanceof IFolder && !isDocumentationStore(receiver)) {
                 for (final IRepositoryStore<? extends IRepositoryFileStore> store : currentRepository.getAllStores()) {
                     if (Objects.equals(store.getResource(), receiver)) {
                         return true;
@@ -62,6 +71,10 @@ public class BonitaProjectPropertyTester extends PropertyTester {
             }
         }
         return false;
+    }
+
+    private boolean isDocumentationStore(Object receiver) {
+        return ((IFolder) receiver).getProjectRelativePath().equals(Path.fromOSString("documentation"));
     }
 
     private boolean isBonitaProjectTest(Object receiver, Object expectedValue) {
