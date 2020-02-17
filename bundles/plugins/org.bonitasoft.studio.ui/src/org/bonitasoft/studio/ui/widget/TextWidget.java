@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -29,6 +31,8 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.bindings.Trigger;
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -50,7 +54,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.keys.IBindingService;
 
 public class TextWidget extends EditableControlWidget {
 
@@ -270,7 +276,7 @@ public class TextWidget extends EditableControlWidget {
         proposalProvider.ifPresent(provider -> {
             final TextContentAdapter controlContentAdapter = new TextContentAdapter();
             final CustomContentProposalAdapter proposalAdapter = new CustomContentProposalAdapter(text,
-                    controlContentAdapter, provider, null, null);
+                    controlContentAdapter, provider, retrieveEclipseContentAssistKeyStroke().orElse(null), null);
             proposalAdapter.setPropagateKeys(true);
             proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
             proposalAdapter.setAutoActivationDelay(0);
@@ -310,6 +316,22 @@ public class TextWidget extends EditableControlWidget {
         });
         button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())::applyTo);
         return textContainer;
+    }
+
+    private Optional<KeyStroke> retrieveEclipseContentAssistKeyStroke() {
+        IBindingService bindingService = PlatformUI.getWorkbench().getService(IBindingService.class);
+        return Optional
+                .ofNullable(bindingService.getBestActiveBindingFor("org.eclipse.ui.edit.text.contentAssist.proposals"))
+                .map(triggerSequence -> {
+                    List<Trigger> triggers = Arrays.asList(triggerSequence.getTriggers());
+                    return triggers.size() > 1
+                            ? null // auto complete cell editor doesn't handle sequence
+                            : triggers.stream()
+                                    .filter(KeyStroke.class::isInstance)
+                                    .map(KeyStroke.class::cast)
+                                    .findFirst()
+                                    .orElse(null);
+                });
     }
 
     private void openProposalPopup(CustomContentProposalAdapter proposalAdapter) {
