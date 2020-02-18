@@ -39,7 +39,7 @@
 							<filters>
 								<!-- exclude eclipse compiler because studio already have it in classpath -->
 								<filter>
-									<artifact>org.eclipse.jdt.core.compiler:ecj</artifact>
+									<artifact>org.eclipse.jdt:ecj</artifact>
 									<excludes>
 										<exclude>**</exclude>
 									</excludes>
