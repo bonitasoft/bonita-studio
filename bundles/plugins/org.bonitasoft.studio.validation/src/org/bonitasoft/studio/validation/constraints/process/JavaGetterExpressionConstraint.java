@@ -17,7 +17,6 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.tryFind;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,10 +71,8 @@ public class JavaGetterExpressionConstraint extends AbstractLiveValidationMarker
         if (type == null) {
             return ctx.createFailureStatus(NLS.bind(Messages.failedToRetrieveExpressionType, dataClassname));
         }
-        final List<IMethod> methods = new ArrayList<IMethod>();
-        JDTMethodHelper.allPublicMethodWithoutParameterReturningNonVoid(type, methods, javaProject);
         final String methodName = expression.getContent();
-        final Optional<IMethod> foundMethod = tryFind(methods, methodWithName(methodName));
+        final Optional<IMethod> foundMethod = tryFind(JDTMethodHelper.allPublicMethodWithoutParameterReturningNonVoid(type), methodWithName(methodName));
         if (!foundMethod.isPresent()) {
             return ctx.createFailureStatus(NLS.bind(Messages.methodDoesnotExist, methodName, dataName(expression)));
         }
