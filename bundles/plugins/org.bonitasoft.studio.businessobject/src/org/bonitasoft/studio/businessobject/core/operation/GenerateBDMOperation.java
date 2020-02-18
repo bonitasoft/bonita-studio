@@ -28,6 +28,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.engine.business.data.generator.AbstractBDMJarBuilder;
 import org.bonitasoft.engine.business.data.generator.client.ClientBDMJarBuilder;
 import org.bonitasoft.engine.business.data.generator.client.ResourcesLoader;
+import org.bonitasoft.engine.business.data.generator.compiler.JDTCompiler;
 import org.bonitasoft.engine.business.data.generator.filter.OnlyDAOImplementationFileFilter;
 import org.bonitasoft.engine.business.data.generator.filter.WithoutDAOImplementationFileFilter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
@@ -82,14 +83,15 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             try {
                 final Map<String, byte[]> resources = new HashMap<>();
+                JDTCompiler compiler = new JDTCompiler();
                 // Build jar with Model
                 ResourcesLoader bundleResourcesLoader = new ResourcesLoader();
-                AbstractBDMJarBuilder builder = new ClientBDMJarBuilder(bundleResourcesLoader);
+                AbstractBDMJarBuilder builder = new ClientBDMJarBuilder(compiler, bundleResourcesLoader);
                 final byte[] modelJarContent = builder.build(model, new WithoutDAOImplementationFileFilter());
                 resources.put(BDM_CLIENT, modelJarContent);
 
                 // Build jar with DAO
-                builder = new ClientBDMJarBuilder(bundleResourcesLoader);
+                builder = new ClientBDMJarBuilder(compiler, bundleResourcesLoader);
                 final byte[] daoJarContent = builder.build(model, new OnlyDAOImplementationFileFilter());
                 resources.put(BDM_DAO, daoJarContent);
 
