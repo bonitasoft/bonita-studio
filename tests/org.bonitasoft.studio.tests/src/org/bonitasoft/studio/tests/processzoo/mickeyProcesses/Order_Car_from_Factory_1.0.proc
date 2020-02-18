@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process">
+  <process:MainProcess xmi:id="_iqrSwcfBEd6xbrRyhKBWUA" name="Order_Car_from_Factory" label="Order Car from Factory" version="1.0" bonitaVersion="5.0.preview">
+    <elements xmi:type="process:Pool" xmi:id="_isdbcMfBEd6xbrRyhKBWUA" name="Order_Car_from_Factory" label="Order Car from Factory" version="1.0">
+      <elements xmi:type="process:StartEvent" xmi:id="_is6HYMfBEd6xbrRyhKBWUA" name="Start1" label="Start1" outgoing="_itWzUMfBEd6xbrRyhKBWUA"/>
+      <elements xmi:type="process:EndEvent" xmi:id="_rNF4YMfEEd6xbrRyhKBWUA" name="End2" label="End2" incoming="_2kBNAMfHEd6xbrRyhKBWUA"/>
+      <elements xmi:type="process:Task" xmi:id="_jsq-cMfFEd6xbrRyhKBWUA" documentation="Contact factory, confirm ship date&#xD;&#xA;" name="Place_factory_order" label="Place factory order" outgoing="_NA5cAMfDEd6xbrRyhKBWUA" incoming="_itWzUMfBEd6xbrRyhKBWUA" user="admin" actorType="USER"/>
+      <elements xmi:type="process:Task" xmi:id="_m1ESwMfFEd6xbrRyhKBWUA" documentation="Calculate receipt date at showroom&#xD;&#xA;Calculate delivery date to customer&#xD;&#xA;Contact customer - cConfirm that date to deliver is OK" name="Notify_customer_of_promised_date" label="Notify customer of promised date" outgoing="_2kBNAMfHEd6xbrRyhKBWUA" incoming="_NA5cAMfDEd6xbrRyhKBWUA" user="admin" actorType="USER"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_itWzUMfBEd6xbrRyhKBWUA" source="_is6HYMfBEd6xbrRyhKBWUA" target="_jsq-cMfFEd6xbrRyhKBWUA" isDefault="true"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_NA5cAMfDEd6xbrRyhKBWUA" source="_jsq-cMfFEd6xbrRyhKBWUA" target="_m1ESwMfFEd6xbrRyhKBWUA" isDefault="true"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_2kBNAMfHEd6xbrRyhKBWUA" source="_m1ESwMfFEd6xbrRyhKBWUA" target="_rNF4YMfEEd6xbrRyhKBWUA" isDefault="true"/>
+    </elements>
+    <groups xmi:type="process:Group" xmi:id="_iqrSwsfBEd6xbrRyhKBWUA" documentation="Person who takes the first action to start the process" name="Initiator" label="Initiator" connectorId="ProcessInitiatior"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_iqrSw8fBEd6xbrRyhKBWUA" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_iqrSxMfBEd6xbrRyhKBWUA" name="Date" label="Date"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_iqrSxcfBEd6xbrRyhKBWUA" name="Float" label="Float"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_iqrSxsfBEd6xbrRyhKBWUA" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_iqrSx8fBEd6xbrRyhKBWUA" name="String" label="String"/>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_iq1DwMfBEd6xbrRyhKBWUA" type="Process" element="_iqrSwcfBEd6xbrRyhKBWUA" name="Order_Car_from_Factory_1.0.proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_isdbccfBEd6xbrRyhKBWUA" type="2007" element="_isdbcMfBEd6xbrRyhKBWUA">
+      <children xmi:type="notation:DecorationNode" xmi:id="_isdbdsfBEd6xbrRyhKBWUA" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_isdbd8fBEd6xbrRyhKBWUA" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_is6HYcfBEd6xbrRyhKBWUA" type="3002" element="_is6HYMfBEd6xbrRyhKBWUA" fontName="Segoe UI">
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_is6HYsfBEd6xbrRyhKBWUA" x="37" y="66"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_rNF4YcfEEd6xbrRyhKBWUA" type="3003" element="_rNF4YMfEEd6xbrRyhKBWUA" fontName="Segoe UI">
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_rNPCUMfEEd6xbrRyhKBWUA" x="531" y="66"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_js0IYMfFEd6xbrRyhKBWUA" type="3005" element="_jsq-cMfFEd6xbrRyhKBWUA" fontName="Segoe UI">
+          <children xmi:type="notation:DecorationNode" xmi:id="_js0IYsfFEd6xbrRyhKBWUA" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_js0IYcfFEd6xbrRyhKBWUA" x="130" y="56" width="100" height="50"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_m1ESwcfFEd6xbrRyhKBWUA" type="3005" element="_m1ESwMfFEd6xbrRyhKBWUA" fontName="Segoe UI">
+          <children xmi:type="notation:DecorationNode" xmi:id="_m1ESw8fFEd6xbrRyhKBWUA" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m1ESwsfFEd6xbrRyhKBWUA" x="322" y="56" width="100" height="50"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_isdbcsfBEd6xbrRyhKBWUA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_isdbc8fBEd6xbrRyhKBWUA" fontName="Segoe UI"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_isdbdMfBEd6xbrRyhKBWUA"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_isdbdcfBEd6xbrRyhKBWUA" x="-437" width="1449" height="456"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_iq1DwcfBEd6xbrRyhKBWUA"/>
+    <edges xmi:type="notation:Connector" xmi:id="_itWzUcfBEd6xbrRyhKBWUA" type="4001" element="_itWzUMfBEd6xbrRyhKBWUA" source="_is6HYcfBEd6xbrRyhKBWUA" target="_js0IYMfFEd6xbrRyhKBWUA" routing="Rectilinear" avoidObstructions="true" closestDistance="true" roundedBendpointsRadius="5">
+      <children xmi:type="notation:DecorationNode" xmi:id="_itWzVMfBEd6xbrRyhKBWUA" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_itWzVcfBEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_itWzVsfBEd6xbrRyhKBWUA" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_itWzV8fBEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_itWzUsfBEd6xbrRyhKBWUA" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_itWzU8fBEd6xbrRyhKBWUA" points="[0, 0, -130, -55]$[130, 55, 0, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_NA5cAcfDEd6xbrRyhKBWUA" type="4001" element="_NA5cAMfDEd6xbrRyhKBWUA" source="_js0IYMfFEd6xbrRyhKBWUA" target="_m1ESwcfFEd6xbrRyhKBWUA" routing="Rectilinear" avoidObstructions="true" closestDistance="true" roundedBendpointsRadius="5">
+      <children xmi:type="notation:DecorationNode" xmi:id="_NA5cBMfDEd6xbrRyhKBWUA" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_NA5cBcfDEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_NA5cBsfDEd6xbrRyhKBWUA" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_NA5cB8fDEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_NA5cAsfDEd6xbrRyhKBWUA" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_NA5cA8fDEd6xbrRyhKBWUA" points="[50, 1, -101, 0]$[142, 1, -9, 0]"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_NBDNAMfDEd6xbrRyhKBWUA" id="(0.09,0.52)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_2kBNAcfHEd6xbrRyhKBWUA" type="4001" element="_2kBNAMfHEd6xbrRyhKBWUA" source="_m1ESwcfFEd6xbrRyhKBWUA" target="_rNF4YcfEEd6xbrRyhKBWUA" routing="Rectilinear" avoidObstructions="true" closestDistance="true" roundedBendpointsRadius="5">
+      <children xmi:type="notation:DecorationNode" xmi:id="_2kBNBMfHEd6xbrRyhKBWUA" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_2kBNBcfHEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_2kBNBsfHEd6xbrRyhKBWUA" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_2kBNB8fHEd6xbrRyhKBWUA" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_2kBNAsfHEd6xbrRyhKBWUA" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2kBNA8fHEd6xbrRyhKBWUA" points="[50, 2, -124, 2]$[189, 2, 15, 2]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>
