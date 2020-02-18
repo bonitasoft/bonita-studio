@@ -17,8 +17,6 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.tryFind;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -67,20 +65,19 @@ public class JavaSetterOperatorConstraint extends AbstractLiveValidationMarkerCo
         return ctx.createSuccessStatus();
     }
 
-    private IStatus validateMethodExists(final IValidationContext ctx, final Operator operator, final String leftOperandType) throws JavaModelException {
+    private IStatus validateMethodExists(final IValidationContext ctx, final Operator operator,
+            final String leftOperandType) throws JavaModelException {
         final IJavaProject javaProject = javaProject();
         final IType type = javaProject.findType(leftOperandType);
         if (type == null) {
             return ctx.createFailureStatus(NLS.bind(Messages.failedToRetrieveLeftOperandType, leftOperandType));
         }
-        final List<IMethod> methods = new ArrayList<IMethod>();
-        JDTMethodHelper.allPublicMethodWithOneParameter(type, methods, javaProject);
         final String parameterType = operator.getInputTypes().get(0);
         final String methodName = operator.getExpression();
-        final Optional<IMethod> foundMethod = tryFind(methods, methodWith(methodName, parameterType));
+        final Optional<IMethod> foundMethod = tryFind(JDTMethodHelper.allPublicMethodWithOneParameter(type), methodWith(methodName, parameterType));
         if (!foundMethod.isPresent()) {
-            return ctx.createFailureStatus(NLS.bind(Messages.methodDoesnotExistInLeftOperandType, new String[] { methodName, parameterType,
-                    leftOperandName(operator) }));
+            return ctx.createFailureStatus(NLS.bind(Messages.methodDoesnotExistInLeftOperandType,
+                    new String[] { methodName, parameterType, leftOperandName(operator) }));
         }
         return ctx.createSuccessStatus();
     }
@@ -94,18 +91,15 @@ public class JavaSetterOperatorConstraint extends AbstractLiveValidationMarkerCo
 
             @Override
             public boolean apply(final IMethod method) {
-                return Objects.equals(name, method.getElementName())
-                        && Objects.equals(
-                                returnType,
-                                toQualfiedType(method.getParameterTypes()[0], method.getDeclaringType()));
+                return Objects.equals(name, method.getElementName()) && Objects.equals(returnType,
+                        toQualfiedType(method.getParameterTypes()[0], method.getDeclaringType()));
             }
 
         };
     }
 
     protected String toQualfiedType(final String parameterType, final IType declaringType) {
-        return JDTMethodHelper.retrieveQualifiedType(Signature.getTypeErasure(parameterType),
-                declaringType);
+        return JDTMethodHelper.retrieveQualifiedType(Signature.getTypeErasure(parameterType), declaringType);
     }
 
     protected IJavaProject javaProject() {

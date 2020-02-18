@@ -18,9 +18,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
+import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
@@ -28,6 +33,9 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.internal.core.SourceType;
+import org.eclipse.jdt.internal.corext.codemanipulation.GetterSetterUtil;
+import org.eclipse.jdt.internal.corext.util.JdtFlags;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -65,7 +73,8 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         if (inputElement instanceof String) {
             IType type = null;
             try {
-                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(inputElement.toString());
+                type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject()
+                        .findType(inputElement.toString());
             } catch (final JavaModelException e1) {
                 BonitaStudioLog.error(e1);
             }
@@ -76,12 +85,6 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         return new Object[0];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
-     * Object)
-     */
     @Override
     public Object[] getChildren(final Object parentElement) {
         try {
@@ -107,13 +110,9 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         }
     }
 
-    /**
-     * @param type
-     * @return
-     */
     protected Object[] computeChildren(final IType type, final IJavaProject javaProject) throws Exception {
         final List<IMethod> res = new ArrayList<IMethod>();
-        JDTMethodHelper.allPublicMethodWithOneParameter(type, res, javaProject);
+        res.addAll(JDTMethodHelper.allPublicMethodWithOneParameter(type));
         Collections.sort(res, new Comparator<IMember>() {
 
             @Override
@@ -126,8 +125,8 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
                     return 1;
                 }
             }
-
         });
+
         return res.toArray();
     }
 

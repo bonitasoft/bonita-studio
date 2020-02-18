@@ -321,12 +321,12 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         final IConverter methodToSelectionConverter = new Converter(String.class, IMethod.class) {
 
             @Override
-            public Object convert(final Object methodName) {
+            public Object convert(final Object name) {
                 final IType type = ((PojoBrowserContentProvider) getContentProvider()).getType();
                 if (type != null) {
                     try {
                         for (final IMethod method : type.getMethods()) {
-                            if (method.getElementName().equals(methodName)) {
+                            if (method.getElementName().equals(name)) {
                                 return method;
                             }
                         }
@@ -455,8 +455,11 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
     @Override
     public boolean canFinish() {
-        return !viewer.getSelection().isEmpty() && !javaTreeviewer.getSelection().isEmpty()
-                && ((IStructuredSelection) javaTreeviewer.getSelection()).getFirstElement() instanceof IMethod;
+    	if(viewer.getSelection().isEmpty() || javaTreeviewer.getSelection().isEmpty()) {
+    		return false;
+    	}
+        Object element = ((IStructuredSelection) javaTreeviewer.getSelection()).getFirstElement();
+		return element instanceof IMethod;
     }
 
     @Override
