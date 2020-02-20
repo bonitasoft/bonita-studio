@@ -20,6 +20,7 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 public class CommandExecutor {
 
@@ -27,18 +28,24 @@ public class CommandExecutor {
     private EHandlerService eHandlerService;
 
     public Object executeCommand(String command, Map<String, Object> parameters) {
-        initServices();
-        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-        if (eHandlerService.canExecute(parameterizedCommand)) {
-            return eHandlerService.executeHandler(parameterizedCommand);
+        if (Workbench.getInstance() != null) {
+            initServices();
+            ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
+            if (eHandlerService.canExecute(parameterizedCommand)) {
+                return eHandlerService.executeHandler(parameterizedCommand);
+            }
+            throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
         }
-        throw new RuntimeException(String.format("Can't execute command %s", parameterizedCommand.getId()));
+        return null;
     }
 
     public boolean canExecute(String command, Map<String, Object> parameters) {
-        initServices();
-        ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
-        return eHandlerService.canExecute(parameterizedCommand);
+        if (Workbench.getInstance() != null) {
+            initServices();
+            ParameterizedCommand parameterizedCommand = eCommandService.createCommand(command, parameters);
+            return eHandlerService.canExecute(parameterizedCommand);
+        }
+        return false;
     }
 
     protected void initServices() {
