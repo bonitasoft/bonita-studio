@@ -39,6 +39,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEdito
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.SmartImportBdmValidator;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
@@ -83,19 +84,21 @@ import com.google.common.io.ByteStreams;
 public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements ISmartImportable {
 
     public static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
-
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
-    private static final String BDM_DELETED_TOPIC = "bdm/deleted";
     public static final String BDM_ARTIFACT_DESCRIPTOR = ".artifact-descriptor.properties";
 
+    private static final String BDM_DELETED_TOPIC = "bdm/deleted";
+    private static final String CLEAN_ACCESS_CONTROL_CMD = "org.bonitasoft.studio.bdm.access.control.command.clean";
     private static final String DEFAULT_GROUP_ID = "com.company.model";
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
+    private CommandExecutor commandExecutor;
 
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
         super(fileName, store);
+        commandExecutor = new CommandExecutor();
     }
 
     @Override
@@ -196,6 +199,9 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         super.doDelete();
         cachedBusinessObjectModel.clear();
         eventBroker().ifPresent(broker -> broker.send(BDM_DELETED_TOPIC, null));
+        if (commandExecutor.canExecute(CLEAN_ACCESS_CONTROL_CMD, null)) {
+            commandExecutor.executeCommand(CLEAN_ACCESS_CONTROL_CMD, null);
+        }
     }
 
     public void deleteArtifactDescriptor() {
