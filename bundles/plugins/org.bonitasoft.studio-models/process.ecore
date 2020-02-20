@@ -415,6 +415,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="searchIndexes" upperBound="-1"
         eType="#//SearchIndex" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="additionalResources" upperBound="-1"
+        eType="#//AdditionalResource" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecapFlow" abstract="true" interface="true"
       eSuperTypes="#//AbstractPageFlow">
@@ -540,6 +542,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMLType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="XORGateway" eSuperTypes="#//Gateway"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AdditionalResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">

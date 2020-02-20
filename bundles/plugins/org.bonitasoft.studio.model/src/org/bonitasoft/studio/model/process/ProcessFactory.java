@@ -802,6 +802,15 @@ public interface ProcessFactory extends EFactory {
 	XORGateway createXORGateway();
 
 	/**
+     * Returns a new object of class '<em>Additional Resource</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Additional Resource</em>'.
+     * @generated
+     */
+    AdditionalResource createAdditionalResource();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

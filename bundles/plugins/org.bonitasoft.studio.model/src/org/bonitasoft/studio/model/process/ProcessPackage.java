@@ -6794,13 +6794,22 @@ public interface ProcessPackage extends EPackage {
 	int POOL__DISPLAY_NAME = ABSTRACT_PROCESS_FEATURE_COUNT + 3;
 
 	/**
+     * The feature id for the '<em><b>Additional Resources</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POOL__ADDITIONAL_RESOURCES = ABSTRACT_PROCESS_FEATURE_COUNT + 4;
+
+    /**
      * The number of structural features of the '<em>Pool</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int POOL_FEATURE_COUNT = ABSTRACT_PROCESS_FEATURE_COUNT + 4;
+	int POOL_FEATURE_COUNT = ABSTRACT_PROCESS_FEATURE_COUNT + 5;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}' class.
@@ -9588,6 +9597,43 @@ public interface ProcessPackage extends EPackage {
 	int XOR_GATEWAY_FEATURE_COUNT = GATEWAY_FEATURE_COUNT + 0;
 
 	/**
+     * The meta object id for the '{@link org.bonitasoft.studio.model.process.impl.AdditionalResourceImpl <em>Additional Resource</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.bonitasoft.studio.model.process.impl.AdditionalResourceImpl
+     * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getAdditionalResource()
+     * @generated
+     */
+    int ADDITIONAL_RESOURCE = 102;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ADDITIONAL_RESOURCE__NAME = 0;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ADDITIONAL_RESOURCE__DESCRIPTION = 1;
+
+    /**
+     * The number of structural features of the '<em>Additional Resource</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ADDITIONAL_RESOURCE_FEATURE_COUNT = 2;
+
+    /**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.CorrelationTypeActive <em>Correlation Type Active</em>}' enum.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9595,7 +9641,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getCorrelationTypeActive()
      * @generated
      */
-	int CORRELATION_TYPE_ACTIVE = 102;
+	int CORRELATION_TYPE_ACTIVE = 103;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.ContractInputType <em>Contract Input Type</em>}' enum.
@@ -9605,7 +9651,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getContractInputType()
      * @generated
      */
-	int CONTRACT_INPUT_TYPE = 103;
+	int CONTRACT_INPUT_TYPE = 104;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.DocumentType <em>Document Type</em>}' enum.
@@ -9615,7 +9661,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getDocumentType()
      * @generated
      */
-	int DOCUMENT_TYPE = 104;
+	int DOCUMENT_TYPE = 105;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.FormMappingType <em>Form Mapping Type</em>}' enum.
@@ -9625,7 +9671,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getFormMappingType()
      * @generated
      */
-	int FORM_MAPPING_TYPE = 105;
+	int FORM_MAPPING_TYPE = 106;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.GatewayType <em>Gateway Type</em>}' enum.
@@ -9635,7 +9681,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getGatewayType()
      * @generated
      */
-	int GATEWAY_TYPE = 106;
+	int GATEWAY_TYPE = 107;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.InputMappingAssignationType <em>Input Mapping Assignation Type</em>}' enum.
@@ -9645,7 +9691,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getInputMappingAssignationType()
      * @generated
      */
-	int INPUT_MAPPING_ASSIGNATION_TYPE = 107;
+	int INPUT_MAPPING_ASSIGNATION_TYPE = 108;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.MultiInstanceType <em>Multi Instance Type</em>}' enum.
@@ -9655,7 +9701,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getMultiInstanceType()
      * @generated
      */
-	int MULTI_INSTANCE_TYPE = 108;
+	int MULTI_INSTANCE_TYPE = 109;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.SequenceFlowConditionType <em>Sequence Flow Condition Type</em>}' enum.
@@ -9665,7 +9711,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getSequenceFlowConditionType()
      * @generated
      */
-	int SEQUENCE_FLOW_CONDITION_TYPE = 109;
+	int SEQUENCE_FLOW_CONDITION_TYPE = 110;
 
 	/**
      * The meta object id for the '{@link org.bonitasoft.studio.model.process.StartTimerScriptType <em>Start Timer Script Type</em>}' enum.
@@ -9675,7 +9721,7 @@ public interface ProcessPackage extends EPackage {
      * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getStartTimerScriptType()
      * @generated
      */
-	int START_TIMER_SCRIPT_TYPE = 110;
+	int START_TIMER_SCRIPT_TYPE = 111;
 
 
 	/**
@@ -11848,6 +11894,17 @@ public interface ProcessPackage extends EPackage {
 	EAttribute getPool_DisplayName();
 
 	/**
+     * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.model.process.Pool#getAdditionalResources <em>Additional Resources</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Additional Resources</em>'.
+     * @see org.bonitasoft.studio.model.process.Pool#getAdditionalResources()
+     * @see #getPool()
+     * @generated
+     */
+    EReference getPool_AdditionalResources();
+
+    /**
      * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12459,6 +12516,38 @@ public interface ProcessPackage extends EPackage {
 	EClass getXORGateway();
 
 	/**
+     * Returns the meta object for class '{@link org.bonitasoft.studio.model.process.AdditionalResource <em>Additional Resource</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Additional Resource</em>'.
+     * @see org.bonitasoft.studio.model.process.AdditionalResource
+     * @generated
+     */
+    EClass getAdditionalResource();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AdditionalResource#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.bonitasoft.studio.model.process.AdditionalResource#getName()
+     * @see #getAdditionalResource()
+     * @generated
+     */
+    EAttribute getAdditionalResource_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.bonitasoft.studio.model.process.AdditionalResource#getDescription <em>Description</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Description</em>'.
+     * @see org.bonitasoft.studio.model.process.AdditionalResource#getDescription()
+     * @see #getAdditionalResource()
+     * @generated
+     */
+    EAttribute getAdditionalResource_Description();
+
+    /**
      * Returns the meta object for enum '{@link org.bonitasoft.studio.model.process.CorrelationTypeActive <em>Correlation Type Active</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14353,6 +14442,14 @@ public interface ProcessPackage extends EPackage {
 		EAttribute POOL__DISPLAY_NAME = eINSTANCE.getPool_DisplayName();
 
 		/**
+         * The meta object literal for the '<em><b>Additional Resources</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference POOL__ADDITIONAL_RESOURCES = eINSTANCE.getPool_AdditionalResources();
+
+        /**
          * The meta object literal for the '{@link org.bonitasoft.studio.model.process.RecapFlow <em>Recap Flow</em>}' class.
          * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -14871,6 +14968,32 @@ public interface ProcessPackage extends EPackage {
 		EClass XOR_GATEWAY = eINSTANCE.getXORGateway();
 
 		/**
+         * The meta object literal for the '{@link org.bonitasoft.studio.model.process.impl.AdditionalResourceImpl <em>Additional Resource</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.bonitasoft.studio.model.process.impl.AdditionalResourceImpl
+         * @see org.bonitasoft.studio.model.process.impl.ProcessPackageImpl#getAdditionalResource()
+         * @generated
+         */
+        EClass ADDITIONAL_RESOURCE = eINSTANCE.getAdditionalResource();
+
+        /**
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ADDITIONAL_RESOURCE__NAME = eINSTANCE.getAdditionalResource_Name();
+
+        /**
+         * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ADDITIONAL_RESOURCE__DESCRIPTION = eINSTANCE.getAdditionalResource_Description();
+
+        /**
          * The meta object literal for the '{@link org.bonitasoft.studio.model.process.CorrelationTypeActive <em>Correlation Type Active</em>}' enum.
          * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->

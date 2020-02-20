@@ -46,10 +46,16 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.Resource;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.AdditionalResource;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.swt.widgets.Display;
 import org.junit.After;
 import org.junit.Before;
@@ -125,17 +131,26 @@ public class ExportBarIT {
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
         final DiagramFileStore diagram = (DiagramFileStore) importBosArchiveOperation.getFileStoresToOpen().get(0);
         AbstractProcess process = diagram.getProcesses().get(0);
+
+        Pool pool = ModelHelper.getParentPool(process);
+        AdditionalResource additionalResource = ProcessFactory.eINSTANCE.createAdditionalResource();
+        additionalResource.setName("config.properties");
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool);
+        editingDomain.getCommandStack()
+                .execute(new AddCommand(editingDomain, pool.getAdditionalResources(), additionalResource));
+        diagram.save(pool);
+
         ProcessConfigurationFileStore configurationFileStore = repositoryAccessor
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class)
                 .getChild(ModelHelper.getEObjectID(process) + ".conf", false);
         assertThat(configurationFileStore).isNotNull();
-        Configuration configuration = configurationFileStore.getContent();
 
         Resource resource = ConfigurationFactory.eINSTANCE.createResource();
         resource.setBarPath("config.properties");
         resource.setProjectPath(confProperties.getProjectRelativePath().toString());
+        Configuration configuration = configurationFileStore.getContent();
+        configuration.getAdditionalResources().clear(); // In case of residue, happens especially in local.
         configuration.getAdditionalResources().add(resource);
-        
         configurationFileStore.save(configuration);
 
         exportBarOperation.addProcessToDeploy(process);

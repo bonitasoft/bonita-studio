@@ -19,12 +19,13 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -42,14 +43,12 @@ public class NativeTextWidget extends TextWidget {
                 editableStrategy, ctx);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.EditableControlWidget#drawBorder(org.eclipse.swt.widgets.Composite,
-     * org.eclipse.swt.widgets.Event)
-     */
     @Override
-    protected void drawBorder(Composite container, Event e) {
-
+    protected Color getBorderColor(Control focused, Control container) {
+        if (status.isOK() || status.getSeverity() == IStatus.INFO) {
+            return container.getBackground(); // Transparent
+        }
+        return getStatusColor(status);
     }
 
     @Override

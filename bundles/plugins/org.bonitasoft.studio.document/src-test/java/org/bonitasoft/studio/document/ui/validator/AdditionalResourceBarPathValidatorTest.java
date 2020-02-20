@@ -1,47 +1,43 @@
 package org.bonitasoft.studio.document.ui.validator;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
-import org.bonitasoft.studio.model.configuration.Resource;
-import org.eclipse.core.runtime.IStatus;
+import org.bonitasoft.studio.model.process.AdditionalResource;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 public class AdditionalResourceBarPathValidatorTest {
 
-    private static String BAR_PATH = "toto.txt";
+    private static final String CURRENT_BAR_PATH = "toto.txt";
+    private static final String USED_BAR_PATH = "tutu.txt";
+    private static final String FREE_BAR_PATH = "titi.txt";
 
-    AdditionalResourceBarPathValidator validator = new AdditionalResourceBarPathValidator();
+    AdditionalResourceBarPathValidator validator;
+
+    @Before
+    public void init() {
+        Pool pool = ProcessFactory.eINSTANCE.createPool();
+        AdditionalResource additionalResource = ProcessFactory.eINSTANCE.createAdditionalResource();
+        AdditionalResource otherAdditionalResource = ProcessFactory.eINSTANCE.createAdditionalResource();
+        additionalResource.setName(CURRENT_BAR_PATH);
+        otherAdditionalResource.setName(USED_BAR_PATH);
+        pool.getAdditionalResources().add(additionalResource);
+        pool.getAdditionalResources().add(otherAdditionalResource);
+        validator = new AdditionalResourceBarPathValidator(pool, additionalResource);
+    }
 
     @Test
     public void should_return_error_for_empty_bar_path() {
-        Resource resource = ConfigurationFactory.eINSTANCE.createResource();
-        IStatus status = validator.validate(resource);
-        StatusAssert.assertThat(status).isError();
-        resource.setBarPath("");
-        StatusAssert.assertThat(status).isError();
+        StatusAssert.assertThat(validator.validate(null)).isError();
+        StatusAssert.assertThat(validator.validate("")).isError();
     }
 
     @Test
     public void should_validate_unicity() {
-        Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-        validator.setConfiguration(configuration);
-
-        Resource resource1 = ConfigurationFactory.eINSTANCE.createResource();
-        resource1.setBarPath(BAR_PATH);
-        configuration.getAdditionalResources().add(resource1);
-
-        IStatus status = validator.validate(resource1);
-        StatusAssert.assertThat(status).isOK();
-
-        Resource resource2 = ConfigurationFactory.eINSTANCE.createResource();
-        resource2.setBarPath(BAR_PATH);
-        configuration.getAdditionalResources().add(resource2);
-
-        status = validator.validate(resource1);
-        StatusAssert.assertThat(status).isError();
-        status = validator.validate(resource2);
-        StatusAssert.assertThat(status).isError();
+        StatusAssert.assertThat(validator.validate(FREE_BAR_PATH)).isOK();
+        StatusAssert.assertThat(validator.validate(CURRENT_BAR_PATH)).isOK();
+        StatusAssert.assertThat(validator.validate(USED_BAR_PATH)).isError();
     }
 
 }

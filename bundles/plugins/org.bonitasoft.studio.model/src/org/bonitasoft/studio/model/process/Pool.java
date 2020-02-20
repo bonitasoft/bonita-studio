@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.bonitasoft.studio.model.process.Pool#getDocuments <em>Documents</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.Pool#getSearchIndexes <em>Search Indexes</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.Pool#getDisplayName <em>Display Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.Pool#getAdditionalResources <em>Additional Resources</em>}</li>
  * </ul>
  *
  * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool()
@@ -95,5 +96,17 @@ public interface Pool extends AbstractProcess, ContractContainer {
      * @generated
      */
 	void setDisplayName(String value);
+
+    /**
+     * Returns the value of the '<em><b>Additional Resources</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.model.process.AdditionalResource}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Additional Resources</em>' containment reference list.
+     * @see org.bonitasoft.studio.model.process.ProcessPackage#getPool_AdditionalResources()
+     * @model containment="true"
+     * @generated
+     */
+    EList<AdditionalResource> getAdditionalResources();
 
 } // Pool

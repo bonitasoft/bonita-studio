@@ -17,37 +17,35 @@ package org.bonitasoft.studio.document.ui.validator;
 import java.util.Objects;
 
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.Resource;
+import org.bonitasoft.studio.model.process.AdditionalResource;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
 import com.google.common.base.Strings;
 
-public class AdditionalResourceBarPathValidator implements IValidator<Resource> {
+public class AdditionalResourceBarPathValidator implements IValidator<String> {
 
-    private Configuration configuration;
+    private Pool pool;
+    private AdditionalResource originalAdditionalResource;
 
-    @Override
-    public IStatus validate(Resource resource) {
-        String barPath = resource.getBarPath();
-        if (Strings.isNullOrEmpty(barPath)) {
-            return ValidationStatus.error(org.bonitasoft.studio.ui.i18n.Messages.required);
-        }
-        if (configuration != null) {
-            return configuration.getAdditionalResources().stream()
-                    .filter(rsrc -> Objects.equals(rsrc.getBarPath(), barPath))
-                    .count() > 1
-                            ? ValidationStatus.error(Messages.barPathUnicityError)
-                            : ValidationStatus.ok();
-        }
-        return ValidationStatus.ok();
-
+    public AdditionalResourceBarPathValidator(Pool pool, AdditionalResource originalAdditionalResource) {
+        this.pool = pool;
+        this.originalAdditionalResource = originalAdditionalResource;
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    @Override
+    public IStatus validate(String barPath) {
+        if (Strings.isNullOrEmpty(barPath)) {
+            return ValidationStatus.error(Messages.additionalresourceNameIsRequired);
+        }
+        return pool.getAdditionalResources().stream()
+                .filter(additionalResource -> !Objects.equals(additionalResource, originalAdditionalResource))
+                .filter(additionalResource -> Objects.equals(additionalResource.getName(), barPath))
+                .count() > 0
+                        ? ValidationStatus.error(String.format(Messages.barPathUnicityError, barPath))
+                        : ValidationStatus.ok();
     }
 
 }
