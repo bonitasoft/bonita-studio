@@ -14982,5 +14982,148 @@
       </operation>
     </changes>
   </releases>
-  <releases xmi:id="_15TmyGnREeaTLbmqFFisdA"/>
+  <releases xmi:id="_15TmyGnREeaTLbmqFFisdA" date="2020-02-14T10:25:27.494+0100" label="7.11.0-005">
+    <changes xsi:type="history:OperationChange" xmi:id="_-CnZQE8zEeqSzOLvWNYUfw">
+      <changes xsi:type="history:Create" xmi:id="_-CnZQU8zEeqSzOLvWNYUfw" referenceName="eClassifiers">
+        <target href="process.ecore#/"/>
+        <element href="process.ecore#//AdditionalResource"/>
+        <changes xsi:type="history:Set" xmi:id="_-CnZQk8zEeqSzOLvWNYUfw" featureName="name" dataValue="AdditionalResource">
+          <element href="process.ecore#//AdditionalResource"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_-CnZQ08zEeqSzOLvWNYUfw" name="newClass">
+        <parameters xmi:id="_-CnZRE8zEeqSzOLvWNYUfw" name="ePackage">
+          <referenceValue xmi:id="_-CnZRU8zEeqSzOLvWNYUfw">
+            <element href="process.ecore#/"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_-CnZRk8zEeqSzOLvWNYUfw" name="name">
+          <dataValue>AdditionalResource</dataValue>
+        </parameters>
+        <parameters xmi:id="_-CnZR08zEeqSzOLvWNYUfw" name="superClasses"/>
+        <parameters xmi:id="_-CnZSE8zEeqSzOLvWNYUfw" name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_EewWQE80EeqSzOLvWNYUfw">
+      <changes xsi:type="history:Create" xmi:id="_EewWQU80EeqSzOLvWNYUfw" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//AdditionalResource"/>
+        <element href="process.ecore#//AdditionalResource/name"/>
+        <changes xsi:type="history:Set" xmi:id="_EewWQk80EeqSzOLvWNYUfw" featureName="name" dataValue="name">
+          <element href="process.ecore#//AdditionalResource/name"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_EewWQ080EeqSzOLvWNYUfw" featureName="eType">
+          <element href="process.ecore#//AdditionalResource/name"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_EewWRE80EeqSzOLvWNYUfw" name="newAttribute">
+        <parameters xmi:id="_EewWRU80EeqSzOLvWNYUfw" name="eClass">
+          <referenceValue xmi:id="_EewWRk80EeqSzOLvWNYUfw">
+            <element href="process.ecore#//AdditionalResource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_EewWR080EeqSzOLvWNYUfw" name="name">
+          <dataValue>name</dataValue>
+        </parameters>
+        <parameters xmi:id="_EewWSE80EeqSzOLvWNYUfw" name="type">
+          <referenceValue xmi:id="_EewWSU80EeqSzOLvWNYUfw">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_EewWSk80EeqSzOLvWNYUfw" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_EewWS080EeqSzOLvWNYUfw" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_EewWTE80EeqSzOLvWNYUfw" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_Hg54oE80EeqSzOLvWNYUfw">
+      <changes xsi:type="history:Create" xmi:id="_Hg54oU80EeqSzOLvWNYUfw" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//AdditionalResource"/>
+        <element href="process.ecore#//AdditionalResource/description"/>
+        <changes xsi:type="history:Set" xmi:id="_Hg54ok80EeqSzOLvWNYUfw" featureName="name" dataValue="description">
+          <element href="process.ecore#//AdditionalResource/description"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_Hg54o080EeqSzOLvWNYUfw" featureName="eType">
+          <element href="process.ecore#//AdditionalResource/description"/>
+          <referenceValue href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_Hg54pE80EeqSzOLvWNYUfw" name="newAttribute">
+        <parameters xmi:id="_Hg54pU80EeqSzOLvWNYUfw" name="eClass">
+          <referenceValue xmi:id="_Hg54pk80EeqSzOLvWNYUfw">
+            <element href="process.ecore#//AdditionalResource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_Hg54p080EeqSzOLvWNYUfw" name="name">
+          <dataValue>description</dataValue>
+        </parameters>
+        <parameters xmi:id="_Hg54qE80EeqSzOLvWNYUfw" name="type">
+          <referenceValue xmi:id="_Hg54qU80EeqSzOLvWNYUfw">
+            <element href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_Hg54qk80EeqSzOLvWNYUfw" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_Hg54q080EeqSzOLvWNYUfw" name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters xmi:id="_Hg54rE80EeqSzOLvWNYUfw" name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange" xmi:id="_dSHiME80EeqSzOLvWNYUfw">
+      <changes xsi:type="history:Create" xmi:id="_dSHiMU80EeqSzOLvWNYUfw" referenceName="eStructuralFeatures">
+        <target href="process.ecore#//Pool"/>
+        <element href="process.ecore#//Pool/additionalResources"/>
+        <changes xsi:type="history:Set" xmi:id="_dSHiMk80EeqSzOLvWNYUfw" featureName="name" dataValue="additionalResources">
+          <element href="process.ecore#//Pool/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_dSHiM080EeqSzOLvWNYUfw" featureName="upperBound" dataValue="-1" oldDataValue="1">
+          <element href="process.ecore#//Pool/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_dSHiNE80EeqSzOLvWNYUfw" featureName="containment" dataValue="true" oldDataValue="false">
+          <element href="process.ecore#//Pool/additionalResources"/>
+        </changes>
+        <changes xsi:type="history:Set" xmi:id="_dSHiNU80EeqSzOLvWNYUfw" featureName="eType">
+          <element href="process.ecore#//Pool/additionalResources"/>
+          <referenceValue href="process.ecore#//AdditionalResource"/>
+        </changes>
+      </changes>
+      <operation xmi:id="_dSHiNk80EeqSzOLvWNYUfw" name="newReference">
+        <parameters xmi:id="_dSHiN080EeqSzOLvWNYUfw" name="eClass">
+          <referenceValue xmi:id="_dSHiOE80EeqSzOLvWNYUfw">
+            <element href="process.ecore#//Pool"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_dSHiOU80EeqSzOLvWNYUfw" name="name">
+          <dataValue>additionalResources</dataValue>
+        </parameters>
+        <parameters xmi:id="_dSHiOk80EeqSzOLvWNYUfw" name="type">
+          <referenceValue xmi:id="_dSHiO080EeqSzOLvWNYUfw">
+            <element href="process.ecore#//AdditionalResource"/>
+          </referenceValue>
+        </parameters>
+        <parameters xmi:id="_dSHiPE80EeqSzOLvWNYUfw" name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters xmi:id="_dSHiPU80EeqSzOLvWNYUfw" name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters xmi:id="_dSHiPk80EeqSzOLvWNYUfw" name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters xmi:id="_dSHiP080EeqSzOLvWNYUfw" name="opposite"/>
+      </operation>
+    </changes>
+  </releases>
+  <releases xmi:id="_tt2RcE8LEeq0LYHRol2p7w"/>
 </history:History>

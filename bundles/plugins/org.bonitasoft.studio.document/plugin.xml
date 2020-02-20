@@ -25,6 +25,13 @@
                       tab="tab.document"
                       viewID="org.bonitasoft.studio.views.properties.process.data">
                 </propertySection>
+             <propertySection
+                   class="org.bonitasoft.studio.document.ui.AdditionalResourcesPropertySection"
+                   filter="org.bonitasoft.studio.document.ui.AdditionalResourcesSectionFilter"
+                   id="section.general.tab.additionalResources"
+                   tab="tab.additionalResources"
+                   viewID="org.bonitasoft.studio.views.properties.process.data">
+             </propertySection>
       </propertySections>
    </extension>
    <extension
@@ -66,6 +73,24 @@
             class="org.bonitasoft.studio.document.ui.AdditionalResourcesConfigurationWizardPage"
             priority="7">
       </configurationWizardPage>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="org.bonitasoft.studio.diagram">
+         <propertyTab
+               afterTab="tab.parameter"
+               category="domain"
+               id="tab.additionalResources"
+               label="%additionalResources">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.configuration.synchronizer">
+      <synchronier
+            class="org.bonitasoft.studio.document.configuration.AdditionalResourcesConfigurationSyncronizer">
+      </synchronier>
    </extension>
 
 </plugin>

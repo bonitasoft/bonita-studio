@@ -19,6 +19,7 @@ package org.bonitasoft.studio.model.process.impl;
 
 import java.util.Collection;
 
+import org.bonitasoft.studio.model.process.AdditionalResource;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractContainer;
 import org.bonitasoft.studio.model.process.Document;
@@ -36,6 +37,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EDataTypeEList;
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -51,6 +54,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.model.process.impl.PoolImpl#getDocuments <em>Documents</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.PoolImpl#getSearchIndexes <em>Search Indexes</em>}</li>
  *   <li>{@link org.bonitasoft.studio.model.process.impl.PoolImpl#getDisplayName <em>Display Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.model.process.impl.PoolImpl#getAdditionalResources <em>Additional Resources</em>}</li>
  * </ul>
  *
  * @generated
@@ -107,6 +111,16 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 	protected String displayName = DISPLAY_NAME_EDEFAULT;
 
 	/**
+     * The cached value of the '{@link #getAdditionalResources() <em>Additional Resources</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getAdditionalResources()
+     * @generated
+     * @ordered
+     */
+    protected EList<AdditionalResource> additionalResources;
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
@@ -221,6 +235,19 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EList<AdditionalResource> getAdditionalResources() {
+        if (additionalResources == null) {
+            additionalResources = new EObjectContainmentEList<AdditionalResource>(AdditionalResource.class, this, ProcessPackage.POOL__ADDITIONAL_RESOURCES);
+        }
+        return additionalResources;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -233,6 +260,8 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
                 return ((InternalEList<?>)getDocuments()).basicRemove(otherEnd, msgs);
             case ProcessPackage.POOL__SEARCH_INDEXES:
                 return ((InternalEList<?>)getSearchIndexes()).basicRemove(otherEnd, msgs);
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
+                return ((InternalEList<?>)getAdditionalResources()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -253,6 +282,8 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
                 return getSearchIndexes();
             case ProcessPackage.POOL__DISPLAY_NAME:
                 return getDisplayName();
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
+                return getAdditionalResources();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -280,6 +311,10 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
             case ProcessPackage.POOL__DISPLAY_NAME:
                 setDisplayName((String)newValue);
                 return;
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
+                getAdditionalResources().clear();
+                getAdditionalResources().addAll((Collection<? extends AdditionalResource>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -304,6 +339,9 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
             case ProcessPackage.POOL__DISPLAY_NAME:
                 setDisplayName(DISPLAY_NAME_EDEFAULT);
                 return;
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
+                getAdditionalResources().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -324,6 +362,8 @@ public class PoolImpl extends AbstractProcessImpl implements Pool {
                 return searchIndexes != null && !searchIndexes.isEmpty();
             case ProcessPackage.POOL__DISPLAY_NAME:
                 return DISPLAY_NAME_EDEFAULT == null ? displayName != null : !DISPLAY_NAME_EDEFAULT.equals(displayName);
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
+                return additionalResources != null && !additionalResources.isEmpty();
         }
         return super.eIsSet(featureID);
     }

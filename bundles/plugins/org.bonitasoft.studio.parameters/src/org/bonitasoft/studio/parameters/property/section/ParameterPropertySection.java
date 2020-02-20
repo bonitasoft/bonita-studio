@@ -90,9 +90,9 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class ParameterPropertySection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener, IDoubleClickListener {
+public class ParameterPropertySection extends AbstractBonitaDescriptionSection
+        implements ISelectionChangedListener, IDoubleClickListener {
 
     private TableViewer parameterTableViewer;
 
@@ -128,7 +128,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 180).create());
 
         final Composite mainComposite = widgetFactory.createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(0, 20, 0, 10).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createParameterComposite(mainComposite);
 
@@ -138,12 +138,10 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
     protected void createParameterComposite(final Composite parent) {
         final Composite parameterComposite = getWidgetFactory().createComposite(parent);
         parameterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).extendedMargins(0, 20, 5, 15).create());
-
-        widgetFactory.createLabel(parameterComposite, "");
+        parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         final Composite buttonsComposite = getWidgetFactory().createComposite(parameterComposite, SWT.NONE);
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 3).create());
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).create());
 
         createAddParameterButton(buttonsComposite);
@@ -154,7 +152,8 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
                 GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL)));
         parameterTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         getWidgetFactory().adapt(parameterTableViewer.getTable(), false, false);
-        parameterTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
+        parameterTableViewer.getTable()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         parameterTableViewer.setSorter(new ViewerSorter());
         parameterTableViewer.addDoubleClickListener(this);
         parameterTableViewer.addSelectionChangedListener(this);
@@ -237,7 +236,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         final Parameter param = ParameterFactory.eINSTANCE.createParameter();
         final AbstractProcess process = (AbstractProcess) getEObject();
 
-        final Set<String> names = new HashSet<String>();
+        final Set<String> names = new HashSet<>();
         for (final Parameter p : process.getParameters()) {
             names.add(p.getName());
         }
@@ -278,12 +277,15 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
     private void updateParametersAction() {
         final IStructuredSelection selection = (IStructuredSelection) parameterTableViewer.getSelection();
         if (selection.size() != 1) {
-            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
+            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle,
+                    Messages.selectOnlyOneElementMessage);
         } else {
-            final EditParameterWizard parameterWizard = new EditParameterWizard(ModelHelper.getParentProcess(getEObject()), (Parameter) selection.getFirstElement(),
+            final EditParameterWizard parameterWizard = new EditParameterWizard(ModelHelper.getParentProcess(getEObject()),
+                    (Parameter) selection.getFirstElement(),
                     getEditingDomain());
 
-            final ParameterWizardDialog dialog = new ParameterWizardDialog(Display.getCurrent().getActiveShell(), parameterWizard, IDialogConstants.OK_LABEL);
+            final ParameterWizardDialog dialog = new ParameterWizardDialog(Display.getCurrent().getActiveShell(),
+                    parameterWizard, IDialogConstants.OK_LABEL);
 
             dialog.open();
             parameterTableViewer.refresh();
@@ -327,7 +329,8 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         final AbstractProcess process = (AbstractProcess) getEObject();
         updateButtons();
         if (parameterTableViewer != null && getEObject() != null) {
-            parameterTableViewer.setInput(EMFEditObservables.observeList(getEditingDomain(), process, getParameterFeature()));
+            parameterTableViewer
+                    .setInput(EMFEditObservables.observeList(getEditingDomain(), process, getParameterFeature()));
             parameterTableViewer.getTable().forceFocus();
             bindParametersTree();
         }
@@ -352,7 +355,8 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
         final IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getParameterFeature());
         observeParametersList = list.observe(getEObject());
         observeParametersNameList = list.values(ParameterPackage.Literals.PARAMETER__NAME).observe(getEObject());
-        observeParametersDescriptionList = list.values(ParameterPackage.Literals.PARAMETER__DESCRIPTION).observe(getEObject());
+        observeParametersDescriptionList = list.values(ParameterPackage.Literals.PARAMETER__DESCRIPTION)
+                .observe(getEObject());
         observeParametersTypeList = list.values(ParameterPackage.Literals.PARAMETER__TYPE_CLASSNAME).observe(getEObject());
         parametersListener = new IChangeListener() {
 
@@ -404,8 +408,10 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
     }
 
     public void openAddParameterWizardDialog() {
-        final AddParameterWizard parameterWizard = new AddParameterWizard(ModelHelper.getParentProcess(getEObject()), getEditingDomain());
-        final ParameterWizardDialog dialog = new ParameterWizardDialog(Display.getCurrent().getActiveShell(), parameterWizard, this);
+        final AddParameterWizard parameterWizard = new AddParameterWizard(ModelHelper.getParentProcess(getEObject()),
+                getEditingDomain());
+        final ParameterWizardDialog dialog = new ParameterWizardDialog(Display.getCurrent().getActiveShell(),
+                parameterWizard, this);
         if (dialog.open() == Dialog.OK) {
             parameterTableViewer.refresh();
         }

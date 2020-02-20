@@ -15,30 +15,18 @@
 package org.bonitasoft.studio.document.ui;
 
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
-import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
-import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.editingSupport.AdditionalResourcesFileEditingSupport;
-import org.bonitasoft.studio.document.ui.validator.AdditionalResourceBarPathValidator;
 import org.bonitasoft.studio.document.ui.validator.AdditionalResourceProjectPathValidator;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.Resource;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
-import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -50,26 +38,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 public class AdditionalResourcesConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage {
 
-    private DataBindingContext ctx;
     private TableViewer viewer;
-    private Configuration configuration;
-    private ToolItem deleteItem;
-    private IViewerObservableValue<Resource> singleSelectionObservable;
     private IValidator<Resource> projectPathValidator;
-    private AdditionalResourceBarPathValidator barPathValidator;
 
     public AdditionalResourcesConfigurationWizardPage() {
         super(AdditionalResourcesConfigurationWizardPage.class.getName());
         setTitle(Messages.additionalResources);
         setDescription(Messages.additionalResourcesDesc);
-        ctx = new DataBindingContext();
         projectPathValidator = new AdditionalResourceProjectPathValidator();
-        barPathValidator = new AdditionalResourceBarPathValidator();
     }
 
     @Override
@@ -82,16 +61,7 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         description.setText(Messages.additionalResourcesDesc);
 
-        Composite viewerComposite = new Composite(composite, SWT.None);
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        createToolbar(viewerComposite);
-        createViewer(viewerComposite);
-
-        ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder()
-                .withSupplier(() -> singleSelectionObservable.getValue() != null)
-                .build());
+        createViewer(composite);
 
         setControl(composite);
     }
@@ -113,7 +83,6 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         createFileColumn();
 
         viewer.setContentProvider(new ArrayContentProvider());
-        singleSelectionObservable = ViewerProperties.singleSelection(Resource.class).observe(viewer);
     }
 
     private void createFileColumn() {
@@ -137,65 +106,18 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         column.setLabelProvider(new LabelProviderBuilder<Resource>()
                 .withTextProvider(Resource::getBarPath)
                 .shouldRefreshAllLabels(viewer)
-                .withStatusProvider(barPathValidator::validate)
                 .createColumnLabelProvider());
-        column.setEditingSupport(new EditingSupportBuilder<Resource>(viewer)
-                .withValueProvider(Resource::getBarPath)
-                .withValueUpdater((resource, newName) -> resource.setBarPath((String) newName))
-                .create());
-    }
-
-    private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
-
-        ToolItem addItem = new ToolItem(toolBar, SWT.PUSH);
-        addItem.setImage(Pics.getImage("add.png"));
-        addItem.addListener(SWT.Selection, e -> addItem());
-
-        deleteItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteItem.setImage(Pics.getImage("delete_icon.png"));
-        deleteItem.addListener(SWT.Selection, e -> deleteItem());
-    }
-
-    private void deleteItem() {
-        if (MessageDialog.openQuestion(getShell(), Messages.deleteAdditionalResourceConfirmTitle,
-                String.format(Messages.deleteAdditionalResourceConfirm,
-                        singleSelectionObservable.getValue().getBarPath()))) {
-            configuration.getAdditionalResources().remove(singleSelectionObservable.getValue());
-            viewer.refresh();
-        }
-    }
-
-    private void addItem() {
-        SelectDocumentInBonitaStudioRepository dialog = new SelectDocumentInBonitaStudioRepository(getShell());
-        dialog.open();
-        DocumentFileStore selectedDocument = dialog.getSelectedDocument();
-        if (selectedDocument != null) {
-            Resource resource = ConfigurationFactory.eINSTANCE.createResource();
-            resource.setBarPath(selectedDocument.getName());
-            resource.setProjectPath(selectedDocument.getResource().getProjectRelativePath().toString());
-            configuration.getAdditionalResources().add(resource);
-            viewer.refresh();
-            viewer.editElement(resource, 1);
-        }
     }
 
     @Override
     public void updatePage(AbstractProcess process, Configuration configuration) {
         if (process != null && configuration != null && viewer != null && !viewer.getTable().isDisposed()) {
-            this.configuration = configuration;
-            barPathValidator.setConfiguration(configuration);
             viewer.setInput(configuration.getAdditionalResources());
         }
     }
 
     @Override
     public String isConfigurationPageValid(Configuration conf) {
-        boolean barPathMissing = conf.getAdditionalResources().stream()
-                .anyMatch(resource -> barPathValidator.validate(resource).getSeverity() == IStatus.ERROR);
-        if (barPathMissing) {
-            return Messages.barPathInvalid;
-        }
         boolean projectPathInvalid = conf.getAdditionalResources().stream()
                 .anyMatch(resource -> projectPathValidator.validate(resource).getSeverity() == IStatus.ERROR);
         if (projectPathInvalid) {

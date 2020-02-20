@@ -157,6 +157,7 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
             case ProcessPackage.XML_DATA: return createXMLData();
             case ProcessPackage.XML_TYPE: return createXMLType();
             case ProcessPackage.XOR_GATEWAY: return createXORGateway();
+            case ProcessPackage.ADDITIONAL_RESOURCE: return createAdditionalResource();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -1160,6 +1161,17 @@ public class ProcessFactoryImpl extends EFactoryImpl implements ProcessFactory {
     }
 
 	/**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public AdditionalResource createAdditionalResource() {
+        AdditionalResourceImpl additionalResource = new AdditionalResourceImpl();
+        return additionalResource;
+    }
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated

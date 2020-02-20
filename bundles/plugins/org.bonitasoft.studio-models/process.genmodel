@@ -506,6 +506,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/documents"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/searchIndexes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Pool/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//Pool/additionalResources"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//RecapFlow">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/overviewFormMapping"/>
@@ -578,6 +579,10 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//XMLType"/>
     <genClasses ecoreClass="process.ecore#//XORGateway"/>
+    <genClasses ecoreClass="process.ecore#//AdditionalResource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AdditionalResource/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AdditionalResource/description"/>
+    </genClasses>
     <nestedGenPackages prefix="Decision" basePackage="org.bonitasoft.studio.model.process"
         resource="XML" disposableProviderFactory="true" ecorePackage="process.ecore#//decision">
       <genClasses ecoreClass="process.ecore#//decision/DecisionTable">

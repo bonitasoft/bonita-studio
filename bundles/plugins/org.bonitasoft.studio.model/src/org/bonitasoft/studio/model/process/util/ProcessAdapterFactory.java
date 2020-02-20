@@ -491,6 +491,10 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
                 return createXORGatewayAdapter();
             }
             @Override
+            public Adapter caseAdditionalResource(AdditionalResource object) {
+                return createAdditionalResourceAdapter();
+            }
+            @Override
             public Adapter defaultCase(EObject object) {
                 return createEObjectAdapter();
             }
@@ -1939,6 +1943,20 @@ public class ProcessAdapterFactory extends AdapterFactoryImpl {
     }
 
 	/**
+     * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.model.process.AdditionalResource <em>Additional Resource</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.bonitasoft.studio.model.process.AdditionalResource
+     * @generated
+     */
+    public Adapter createAdditionalResourceAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for the default case.
      * <!-- begin-user-doc -->
 	 * This default implementation returns null.

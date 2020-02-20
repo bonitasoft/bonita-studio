@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
+import org.bonitasoft.studio.model.process.AdditionalResource;
 import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.Association;
 import org.bonitasoft.studio.model.process.BooleanType;
@@ -900,6 +901,13 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 	private EClass xorGatewayEClass = null;
 
 	/**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass additionalResourceEClass = null;
+
+    /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
@@ -3107,6 +3115,16 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EReference getPool_AdditionalResources() {
+        return (EReference)poolEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -3687,6 +3705,36 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
 
 	/**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EClass getAdditionalResource() {
+        return additionalResourceEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getAdditionalResource_Name() {
+        return (EAttribute)additionalResourceEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getAdditionalResource_Description() {
+        return (EAttribute)additionalResourceEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
@@ -4082,6 +4130,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         createEReference(poolEClass, POOL__DOCUMENTS);
         createEReference(poolEClass, POOL__SEARCH_INDEXES);
         createEAttribute(poolEClass, POOL__DISPLAY_NAME);
+        createEReference(poolEClass, POOL__ADDITIONAL_RESOURCES);
 
         recapFlowEClass = createEClass(RECAP_FLOW);
         createEReference(recapFlowEClass, RECAP_FLOW__OVERVIEW_FORM_MAPPING);
@@ -4167,6 +4216,10 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         xmlTypeEClass = createEClass(XML_TYPE);
 
         xorGatewayEClass = createEClass(XOR_GATEWAY);
+
+        additionalResourceEClass = createEClass(ADDITIONAL_RESOURCE);
+        createEAttribute(additionalResourceEClass, ADDITIONAL_RESOURCE__NAME);
+        createEAttribute(additionalResourceEClass, ADDITIONAL_RESOURCE__DESCRIPTION);
 
         // Create enums
         correlationTypeActiveEEnum = createEEnum(CORRELATION_TYPE_ACTIVE);
@@ -4618,6 +4671,7 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         initEReference(getPool_Documents(), this.getDocument(), null, "documents", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEReference(getPool_SearchIndexes(), this.getSearchIndex(), null, "searchIndexes", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getPool_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getPool_AdditionalResources(), this.getAdditionalResource(), null, "additionalResources", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(recapFlowEClass, RecapFlow.class, "RecapFlow", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEReference(getRecapFlow_OverviewFormMapping(), this.getFormMapping(), null, "overviewFormMapping", null, 0, 1, RecapFlow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -4703,6 +4757,10 @@ public class ProcessPackageImpl extends EPackageImpl implements ProcessPackage {
         initEClass(xmlTypeEClass, XMLType.class, "XMLType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         initEClass(xorGatewayEClass, XORGateway.class, "XORGateway", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+        initEClass(additionalResourceEClass, AdditionalResource.class, "AdditionalResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getAdditionalResource_Name(), ecorePackage.getEString(), "name", null, 0, 1, AdditionalResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getAdditionalResource_Description(), ecorePackage.getEString(), "description", null, 0, 1, AdditionalResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Initialize enums and add enum literals
         initEEnum(correlationTypeActiveEEnum, CorrelationTypeActive.class, "CorrelationTypeActive"); //$NON-NLS-1$

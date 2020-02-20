@@ -70,10 +70,6 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         return new DeployProcessOperation();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.running, IProgressMonitor.UNKNOWN);
@@ -100,9 +96,11 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         sb.append(":\n");
                         sb.append(status.getMessage());
                         if (status instanceof MultiStatus) {
-                            new MultiStatusDialog(Display.getDefault().getActiveShell(),
+                            MultiStatusDialog multiStatusDialog = new MultiStatusDialog(Display.getDefault().getActiveShell(),
                                     Messages.deploymentFailedMessage, Messages.deploymentFailedMessage,
-                                    new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status).open();
+                                    new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status);
+                            multiStatusDialog.setLevel(IStatus.WARNING);
+                            multiStatusDialog.open();
                         } else {
                             new BonitaErrorDialog(Display.getDefault().getActiveShell(),
                                     Messages.deploymentFailedMessage,
