@@ -51,7 +51,12 @@ public class MenuLevelValidator extends AbstractValidator {
         if (!shouldValidate()) {
             return new ValidationResult();
         }
-        this.converter = getConverter();
+        if(converter == null) {
+            converter = getConverter();
+            if(converter == null) {
+                return null;
+            }
+        }
         if (resource.getType() != IResource.FILE) {
             return null;
         }
@@ -76,8 +81,13 @@ public class MenuLevelValidator extends AbstractValidator {
     }
 
     protected ApplicationNodeContainerConverter getConverter() {
-        return RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
+        RepositoryManager repositoryManager = RepositoryManager.getInstance();
+        if(repositoryManager.hasActiveRepository() && 
+                repositoryManager.getCurrentRepository().isLoaded()) {
+            return repositoryManager
+                    .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
+        }
+        return null;
     }
 
     protected boolean shouldValidate() {
