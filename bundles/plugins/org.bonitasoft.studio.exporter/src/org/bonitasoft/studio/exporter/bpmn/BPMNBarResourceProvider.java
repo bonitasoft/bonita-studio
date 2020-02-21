@@ -32,12 +32,14 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 
 public class BPMNBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder,
             final AbstractProcess process, final Configuration configuration) throws Exception {
         File destFile = null;
         try {
@@ -66,6 +68,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                 destFile.delete();
             }
         }
+        return Status.OK_STATUS;
     }
 
 }

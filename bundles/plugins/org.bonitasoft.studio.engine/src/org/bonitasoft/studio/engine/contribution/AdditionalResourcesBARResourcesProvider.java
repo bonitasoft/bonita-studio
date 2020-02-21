@@ -15,16 +15,21 @@
 package org.bonitasoft.studio.engine.contribution;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Resource;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 
 import com.google.common.io.Files;
 
@@ -34,22 +39,31 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
     private static final String MISC_PREFIX = "misc/";
 
     @Override
-    public void addResourcesForConfiguration(BusinessArchiveBuilder builder, 
+    public IStatus addResourcesForConfiguration(BusinessArchiveBuilder builder, 
             AbstractProcess process,
             Configuration configuration) throws Exception {
+       MultiStatus status = new MultiStatus(EnginePlugin.PLUGIN_ID, 0, null, null);
        for(Resource resource : configuration.getAdditionalResources()) {
-           addResourceInBar(builder, resource);
+           status.add(addResourceInBar(builder, resource, process));
        }
+       return status;
     }
 
-    private void addResourceInBar(BusinessArchiveBuilder builder, Resource resource) throws Exception {
+    private IStatus addResourceInBar(BusinessArchiveBuilder builder, Resource resource, AbstractProcess process) throws Exception {
         if(resource.getProjectPath() == null || resource.getProjectPath().isEmpty()) {
-            throw new Exception("projectPath cannot be null for an additional resource.");
+            return ValidationStatus.error(String.format(Messages.additionalResourceProjectPathNotSet,
+                    process.getName(),
+                    process.getVersion(),
+                    resource.getBarPath()));
         }
         IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         File file = project.getFile(resource.getProjectPath()).getLocation().toFile();
         if(!file.exists()) {
-            throw new FileNotFoundException(file.getAbsolutePath());
+            return ValidationStatus.error(String.format(Messages.additionalResourceFileNotFound,  
+                    process.getName(),
+                    process.getVersion(),
+                    file.getAbsolutePath(), 
+                    resource.getBarPath()));
         }
         if(!file.isFile()) {
             throw new Exception(file.getAbsolutePath() + "is not a file.");
@@ -63,6 +77,7 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
         }
         //Avoid resource name conflict using conf/ folder in bar.
         builder.addExternalResource(new BarResource(MISC_PREFIX + barPath, Files.toByteArray(file)));
+        return Status.OK_STATUS;
     }
 
 }

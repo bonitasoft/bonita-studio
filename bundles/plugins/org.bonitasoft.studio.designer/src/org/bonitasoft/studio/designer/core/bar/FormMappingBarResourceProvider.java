@@ -40,6 +40,8 @@ import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
 
@@ -65,10 +67,11 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) throws Exception {
         checkArgument(process != null);
         builder.setFormMappings(newFormMappingModel(builder, process));
+        return Status.OK_STATUS;
     }
 
     protected FormMappingModel newFormMappingModel(final BusinessArchiveBuilder builder, final AbstractProcess process) throws BarResourceCreationException,

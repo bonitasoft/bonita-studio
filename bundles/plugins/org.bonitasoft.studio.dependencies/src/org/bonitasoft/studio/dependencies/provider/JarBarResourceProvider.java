@@ -32,6 +32,9 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 import com.google.common.io.Files;
 
@@ -41,10 +44,10 @@ import com.google.common.io.Files;
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) {
         if (configuration == null) {
-            return;
+            return ValidationStatus.error("No configuration selected.");
         }
         final List<BarResource> resources = new ArrayList<>();
         final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
@@ -70,6 +73,7 @@ public class JarBarResourceProvider implements BARResourcesProvider {
         for (final BarResource barResource : resources) {
             builder.addClasspathResource(barResource);
         }
+        return Status.OK_STATUS;
     }
 
 }

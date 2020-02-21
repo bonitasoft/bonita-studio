@@ -54,6 +54,9 @@ import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -77,10 +80,10 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
     }
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) throws IOException, InvocationTargetException, InterruptedException {
         if (configuration == null) {
-            return;
+            return ValidationStatus.error("No configuration selected.");
         }
         final IImplementationRepositoryStore implStore = getImplementationStore();
         final List<BarResource> resources = new ArrayList<>();
@@ -119,6 +122,7 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
         for (final BarResource barResource : resources) {
             builder.addClasspathResource(barResource);
         }
+        return Status.OK_STATUS;
     }
 
     protected String getFragmentType() {

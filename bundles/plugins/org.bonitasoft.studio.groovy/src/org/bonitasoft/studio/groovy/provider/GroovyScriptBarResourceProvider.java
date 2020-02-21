@@ -67,12 +67,13 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
     private RepositoryAccessor repositoryAccessor;
 
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) throws Exception {
         if (configuration != null) {
             addGroovyScriptDependenciesToClasspath(builder, configuration, configuration.getProcessDependencies());
         }
         addProvidedScriptsToClasspath(builder);
+        return Status.OK_STATUS;
     }
 
     private void addProvidedScriptsToClasspath(final BusinessArchiveBuilder builder)

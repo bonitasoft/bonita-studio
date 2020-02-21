@@ -187,6 +187,8 @@ public class Messages extends NLS {
     public static String debugCustomPageMode;
     public static String debugCustomPageModeHint;
     public static String deployWithWarningMessage;
+    public static String additionalResourceProjectPathNotSet;
+    public static String additionalResourceFileNotFound;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

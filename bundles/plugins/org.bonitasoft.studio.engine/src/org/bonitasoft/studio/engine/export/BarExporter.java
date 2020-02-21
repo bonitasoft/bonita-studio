@@ -54,6 +54,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.MultiStatus;
 
 import com.google.common.collect.Maps;
 
@@ -103,12 +104,16 @@ public class BarExporter {
         builder.setProcessDefinition(def).setParameters(getParameters(configuration))
                 .setActorMapping(getActorMapping(configuration));
 
+        MultiStatus resourceConfigurationStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, 0, null, null);
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
             try {
-                resourceProvider.addResourcesForConfiguration(builder, process, configuration);
+                resourceConfigurationStatus.addAll(resourceProvider.addResourcesForConfiguration(builder, process, configuration));
             } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Process resources from configuration.", e);
             }
+        }
+        if(!resourceConfigurationStatus.isOK()) {
+            throw new BarCreationException("Failed to add Process resources from configuration.", resourceConfigurationStatus);
         }
 
         //Add forms resources

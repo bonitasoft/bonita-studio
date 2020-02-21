@@ -2042,6 +2042,29 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
     }
 
 	/**
+     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.model.process.AdditionalResource} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AdditionalResourceItemProvider additionalResourceItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.bonitasoft.studio.model.process.AdditionalResource}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAdditionalResourceAdapter() {
+        if (additionalResourceItemProvider == null) {
+            additionalResourceItemProvider = new AdditionalResourceItemProvider(this);
+        }
+
+        return additionalResourceItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2231,6 +2254,7 @@ public class ProcessItemProviderAdapterFactory extends ProcessAdapterFactory imp
         if (xmlDataItemProvider != null) xmlDataItemProvider.dispose();
         if (xmlTypeItemProvider != null) xmlTypeItemProvider.dispose();
         if (xorGatewayItemProvider != null) xorGatewayItemProvider.dispose();
+        if (additionalResourceItemProvider != null) additionalResourceItemProvider.dispose();
     }
 
 }

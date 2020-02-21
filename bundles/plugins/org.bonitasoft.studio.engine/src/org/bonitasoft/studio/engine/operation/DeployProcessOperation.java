@@ -119,7 +119,7 @@ public class DeployProcessOperation {
             status.add(deploy(monitor));
             if (!hasErrors(status)) {
                 IStatus enablementStatus = enable(monitor);
-                if(enablementStatus.getSeverity() == IStatus.CANCEL) {
+                if (enablementStatus.getSeverity() == IStatus.CANCEL) {
                     return enablementStatus;
                 }
                 status.add(enablementStatus);
@@ -183,10 +183,14 @@ public class DeployProcessOperation {
                 return deployStatus;
             }
         } catch (final BarCreationException bce) {
-            String message = String.format("Error when trying to create bar for process %s (%s)", process.getName(),
-                    process.getVersion());
-            BonitaStudioLog.error(bce, message);
-            return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, message, bce);
+            return bce.getStatus()
+                    .orElseGet(() -> {
+                        String message = String.format("Error when trying to create bar for process %s (%s)",
+                                process.getName(),
+                                process.getVersion());
+                        BonitaStudioLog.error(bce, message);
+                        return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, message, bce);
+                    });
         }
         ProcessDefinition def = null;
         APISession session = null;

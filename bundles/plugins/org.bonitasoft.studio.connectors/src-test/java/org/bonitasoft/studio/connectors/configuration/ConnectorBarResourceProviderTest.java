@@ -51,9 +51,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author aurelie
- */
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorBarResourceProviderTest {
 
@@ -85,19 +82,23 @@ public class ConnectorBarResourceProviderTest {
     public void initRepositoryAccessor() throws Exception {
         when(repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class)).thenReturn(connectorImplStore);
         when(repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class)).thenReturn(depStore);
-        when(repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class)).thenReturn(connectorSourceStore);
+        when(repositoryAccessor.getRepositoryStore(ConnectorSourceRepositoryStore.class))
+                .thenReturn(connectorSourceStore);
     }
 
     @Test
     public void should_add_implementation_jar_in_bar_resource_from_source() throws Exception {
         final ConnectorBarResourceProvider provider = spy(new ConnectorBarResourceProvider(repositoryAccessor));
-        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(), any(PackageFileStore.class));
+        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(),
+                any(PackageFileStore.class));
         doReturn(true).when(provider).classInSourceProject("org.test.MyConnector");
-        when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
-                "org.test.MyConnector"));
+        when(myConnectorImplFileStore.getContent())
+                .thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
+                        "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(connectorSourceStore.getChild("org.test", true)).thenReturn(connectorSourceFileStore);
-        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0"))
+                .thenReturn(myConnectorImplFileStore);
         when(connectorImplStore.getImplementation("myConnectorImpl", "1.0.0")).thenReturn(
                 aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
                         "org.test.MyConnector"));
@@ -114,14 +115,17 @@ public class ConnectorBarResourceProviderTest {
     @Test
     public void should_add_implementation_jar_in_bar_resource_from_dependency_store() throws Exception {
         final ConnectorBarResourceProvider provider = spy(new ConnectorBarResourceProvider(repositoryAccessor));
-        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(), any(PackageFileStore.class));
+        doReturn(fileRule.newFile("myConnectorImpl-1.0.0.jar")).when(provider).exportJar(anyString(),
+                any(PackageFileStore.class));
 
-        when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
-                "org.test.MyConnector"));
+        when(myConnectorImplFileStore.getContent())
+                .thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
+                        "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
         when(depStore.getChild("myConnectorImpl-1.0.0.jar", true)).thenReturn(libFileStore);
-        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0"))
+                .thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
         provider.addResourcesForConfiguration(builder, aPool().build(),
@@ -137,24 +141,28 @@ public class ConnectorBarResourceProviderTest {
     public void should_add_implementation_jar__name_in_dependency_of_implemetation__bar_resource() throws Exception {
         final ConnectorBarResourceProvider provider = new ConnectorBarResourceProvider(repositoryAccessor);
 
-        when(myConnectorImplFileStore.getContent()).thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
-                "org.test.MyConnector"));
+        when(myConnectorImplFileStore.getContent())
+                .thenReturn(aConnectorImplementation("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0",
+                        "org.test.MyConnector"));
         when(myConnectorImplFileStore.canBeShared()).thenReturn(true);
         when(libFileStore.getName()).thenReturn("myConnectorImpl-1.0.0.jar");
         when(depStore.getChild("myConnectorImpl-1.0.0.jar", true)).thenReturn(libFileStore);
-        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0")).thenReturn(myConnectorImplFileStore);
+        when(connectorImplStore.getImplementationFileStore("myConnectorImpl", "1.0.0"))
+                .thenReturn(myConnectorImplFileStore);
 
         final BusinessArchiveBuilder builder = mock(BusinessArchiveBuilder.class);
         provider.addResourcesForConfiguration(builder, aPool().build(),
                 connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
 
-        final ConnectorImplementation implemetationWithSelfDep = provider.implemetationWithSelfDep(myConnectorImplFileStore,
+        final ConnectorImplementation implemetationWithSelfDep = provider.implemetationWithSelfDep(
+                myConnectorImplFileStore,
                 connectorConfiguration("myConnectorDef", "1.0.0", "myConnectorImpl", "1.0.0"));
 
         final ArgumentCaptor<BarResource> barResourceCaptor = ArgumentCaptor.forClass(BarResource.class);
         verify(builder).addConnectorImplementation(barResourceCaptor.capture());
 
-        assertThat(implemetationWithSelfDep.getJarDependencies().getJarDependency()).contains("myConnectorImpl-1.0.0.jar");
+        assertThat(implemetationWithSelfDep.getJarDependencies().getJarDependency())
+                .contains("myConnectorImpl-1.0.0.jar");
     }
 
     private ConnectorImplementation aConnectorImplementation(final String definitionId,
@@ -162,7 +170,8 @@ public class ConnectorBarResourceProviderTest {
             final String implementationId,
             final String implementationVersion,
             final String className) {
-        final ConnectorImplementation connectorImplementation = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation();
+        final ConnectorImplementation connectorImplementation = ConnectorImplementationFactory.eINSTANCE
+                .createConnectorImplementation();
         connectorImplementation.setDefinitionId(definitionId);
         connectorImplementation.setDefinitionId(definitionVersion);
         connectorImplementation.setImplementationId(implementationId);
@@ -185,8 +194,13 @@ public class ConnectorBarResourceProviderTest {
                 .havingProcessDependencies(
                         aFragmentContainer(FragmentTypes.CONNECTOR)
                                 .havingChildren(
-                                        aFragmentContainer(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false)).havingFragments(
-                                                aFragment().withValue(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false) + ".jar")
-                                                        .exported()))).build();
+                                        aFragmentContainer(NamingUtils.toConnectorImplementationFilename(implId,
+                                                implVersion, false)).havingFragments(
+                                                        aFragment()
+                                                                .withValue(
+                                                                        NamingUtils.toConnectorImplementationFilename(
+                                                                                implId, implVersion, false) + ".jar")
+                                                                .exported())))
+                .build();
     }
 }
