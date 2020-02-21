@@ -33,19 +33,14 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
-/**
- * @author Romain Bioteau
- */
+
 public class DocumentBarResourceProvider implements BARResourcesProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess,
-     * org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
-     */
     @Override
-    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
+    public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) {
         final List<BarResource> resources = new ArrayList<>();
         if (process instanceof Pool) {
@@ -72,6 +67,7 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
                 builder.addDocumentResource(barResource);
             }
         }
+        return Status.OK_STATUS;
     }
 
     private void addFileContents(final List<BarResource> resources, final File file, String barPathPrefix)

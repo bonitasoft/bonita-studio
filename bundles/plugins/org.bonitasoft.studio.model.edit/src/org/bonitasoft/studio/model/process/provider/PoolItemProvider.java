@@ -65,6 +65,7 @@ public class PoolItemProvider extends AbstractProcessItemProvider {
 
             addContractPropertyDescriptor(object);
             addDisplayNamePropertyDescriptor(object);
+            addAdditionalResourcesPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -114,6 +115,28 @@ public class PoolItemProvider extends AbstractProcessItemProvider {
     }
 
 	/**
+     * This adds a property descriptor for the Additional Resources feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addAdditionalResourcesPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Pool_additionalResources_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Pool_additionalResources_feature", "_UI_Pool_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 ProcessPackage.Literals.POOL__ADDITIONAL_RESOURCES,
+                 true,
+                 false,
+                 false,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -184,6 +207,7 @@ public class PoolItemProvider extends AbstractProcessItemProvider {
 
         switch (notification.getFeatureID(Pool.class)) {
             case ProcessPackage.POOL__DISPLAY_NAME:
+            case ProcessPackage.POOL__ADDITIONAL_RESOURCES:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case ProcessPackage.POOL__DOCUMENTS:

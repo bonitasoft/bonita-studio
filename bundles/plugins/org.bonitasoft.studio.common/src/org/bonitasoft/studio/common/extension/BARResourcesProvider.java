@@ -17,10 +17,8 @@ package org.bonitasoft.studio.common.extension;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.runtime.IStatus;
 
-/**
- * @author Romain Bioteau
- */
 public interface BARResourcesProvider {
 
     public static final String STUDIO_BAR_PATH = "studio/";
@@ -31,11 +29,11 @@ public interface BARResourcesProvider {
      * @param builder
      * @param process
      * @param configuration
-     * @param excludedObject
-     * @return a list of the added BAR resources
+     * @return a status
      * @throws Exception
      */
-    void addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration)
+    IStatus addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process,
+            Configuration configuration)
             throws Exception;
 
 }
