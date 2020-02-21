@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -88,11 +89,17 @@ public class DeleteHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        ISelection selection = selectionFinder.getSelectionInExplorer();
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        return selection instanceof IStructuredSelection
-                ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)
-                : false;
+        if(PlatformUI.isWorkbenchRunning()
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof BonitaProjectExplorer) {
+            ISelection selection = selectionFinder.getSelectionInExplorer();
+            Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            return selection instanceof IStructuredSelection
+                    ? selectionCanBeDeleted((IStructuredSelection) selection, currentRepository)
+                    : false;
+        }
+        return false;
     }
 
     protected boolean selectionCanBeDeleted(IStructuredSelection selection, Repository currentRepository) {
