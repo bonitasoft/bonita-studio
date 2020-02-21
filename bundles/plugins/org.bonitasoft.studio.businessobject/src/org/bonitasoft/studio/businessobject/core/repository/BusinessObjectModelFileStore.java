@@ -239,6 +239,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             }
             openedEditor = (BusinessDataModelEditor) IDE.openEditor(getActivePage(), getResource());
             openedEditor.setActiveContribution(BusinessDataModelEditorContribution.ID);
+            openedEditor.getSite().getPage().activate(openedEditor);
             return openedEditor;
         } catch (final PartInitException e) {
             throw new RuntimeException("Failed to open bdm", e);

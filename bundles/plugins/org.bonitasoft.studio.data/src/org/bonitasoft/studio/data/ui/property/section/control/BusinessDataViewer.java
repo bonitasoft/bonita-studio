@@ -22,10 +22,13 @@ import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizar
 import org.bonitasoft.studio.businessobject.ui.wizard.EditBusinessObjectDataWizard;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.widgets.CustomStackLayout;
+import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.RemoveDataHandler;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -36,6 +39,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -44,8 +50,12 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public class BusinessDataViewer extends DataViewer implements IResourceChangeListener {
@@ -55,15 +65,71 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     private final BusinessObjectModelRepositoryStore store;
     private CommandExecutor commandExecutor;
     private boolean updated;
+    private CustomStackLayout stackLayout;
+    private Composite viewerComposite;
+    private Composite emptyBDMComposite;
 
     public BusinessDataViewer(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EStructuralFeature dataFeature,
             final BusinessObjectModelRepositoryStore store) {
         super(parent, widgetFactory, dataFeature);
+        setLayout(GridLayoutFactory.fillDefaults().create());
         this.store = store;
         this.commandExecutor = new CommandExecutor();
+        updateTopControl();
         store.getResource().getWorkspace().addResourceChangeListener(this);
-        updateAddButtonEnableState();
+    }
+
+    @Override
+    protected void createContent(Composite parent) {
+        Composite stackComposite = widgetFactory.createComposite(parent);
+        stackLayout = new CustomStackLayout(stackComposite);
+        stackComposite.setLayout(stackLayout);
+        stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        viewerComposite = createViewerComposite(stackComposite);
+        emptyBDMComposite = createEmptyBDMComposite(stackComposite);
+    }
+
+    private Composite createViewerComposite(Composite parent) {
+        Composite viewerComposite = widgetFactory.createComposite(parent);
+        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
+                .extendedMargins(10, 10, 5, 10).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        super.createContent(viewerComposite);
+
+        return viewerComposite;
+    }
+
+    private Composite createEmptyBDMComposite(Composite parent) {
+        Composite client = widgetFactory.createComposite(parent);
+        client.setLayout(GridLayoutFactory.fillDefaults().create());
+        client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        Composite emptyBDMComposite = widgetFactory.createComposite(client);
+        emptyBDMComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        emptyBDMComposite
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).create());
+
+        final ImageHyperlink imageHyperlink = widgetFactory.createImageHyperlink(emptyBDMComposite, SWT.NO_FOCUS);
+        imageHyperlink.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
+        imageHyperlink.setImage(Pics.getImage("defineBdm_60.png", DataPlugin.getDefault()));
+        imageHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null);
+            }
+        });
+
+        Link labelLink = new Link(emptyBDMComposite, SWT.NO_FOCUS);
+        widgetFactory.adapt(labelLink, false, false);
+        labelLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
+        labelLink.setText(Messages.defineBdmTooltip);
+        labelLink.addListener(SWT.Selection, e -> commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null));
+
+        return client;
     }
 
     @Override
@@ -120,7 +186,6 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
         ToolItem defineBdmToolItem = new ToolItem(toolBar, SWT.PUSH);
         defineBdmToolItem.setImage(BusinessObjectPlugin.getImage("/icons/manage-bdm.png"));
         defineBdmToolItem.setText(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
-        defineBdmToolItem.setToolTipText(Messages.defineBdmTooltip);
         defineBdmToolItem.addListener(SWT.Selection, e -> commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null));
     }
 
@@ -154,34 +219,31 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
         updated = false;
         try {
             if (event.getDelta() != null) {
-                event.getDelta().accept(this::updateAddButton);
+                event.getDelta().accept(this::updateTopControl);
             }
         } catch (final CoreException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private boolean updateAddButton(IResourceDelta delta) {
+    private boolean updateTopControl(IResourceDelta delta) {
         if (updated) {
             return false;
         }
         if (delta.getKind() != IResourceDelta.CHANGED
                 && BusinessObjectModelFileStore.BOM_FILENAME.equals(delta.getResource().getName())) {
-            Display.getDefault().syncExec(() -> updateAddButtonEnableState());
+            Display.getDefault().syncExec(() -> updateTopControl());
             updated = true;
             return false;
         }
         return true;
     }
 
-    private void updateAddButtonEnableState() {
-        if(addButton != null && !addButton.isDisposed()) {
-            boolean isEnable = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null;
-            addButton.setEnabled(isEnable);
-            addButton.getParent().setToolTipText(isEnable
-                    ? ""
-                    : String.format(Messages.addBusinessDataTooltip,
-                            org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle));
+    public void updateTopControl() {
+        if (store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null) {
+            stackLayout.setTopControl(viewerComposite);
+        } else {
+            stackLayout.setTopControl(emptyBDMComposite);
         }
     }
 

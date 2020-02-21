@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.data.ui.property.section.control;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -25,6 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
@@ -32,22 +33,21 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -66,8 +66,8 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 public abstract class DataViewer extends Composite {
 
-    private final TableViewer tableViewer;
-    protected final TabbedPropertySheetWidgetFactory widgetFactory;
+    private TableViewer tableViewer;
+    protected TabbedPropertySheetWidgetFactory widgetFactory;
     protected Button addButton;
     private Button editButton;
     private Button removeButton;
@@ -82,27 +82,29 @@ public abstract class DataViewer extends Composite {
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
                 .extendedMargins(10, 10, 5, 10).create());
 
+        createContent(this);
+        widgetFactory.adapt(this);
+    }
+
+    protected void createContent(Composite parent) {
         //FILLER
-        widgetFactory.createLabel(this, "", SWT.NONE);
+        widgetFactory.createLabel(parent, "", SWT.NONE);
 
-        createTitle();
+        createTitle(parent);
+        createButtons(parent);
+        createViewer(parent, widgetFactory, dataFeature);
+    }
 
-        createButtons();
-
-        tableViewer = new TableViewer(this, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+    private void createViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory,
+            EStructuralFeature dataFeature) {
+        tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
         widgetFactory.adapt(tableViewer.getTable(), false, false);
         tableViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, getTableId());
         tableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
         widgetFactory.adapt(tableViewer.getTable(), false, false);
         tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
-        tableViewer.setSorter(new ViewerSorter());
-        tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-
-            @Override
-            public void doubleClick(final DoubleClickEvent event) {
-                editData();
-            }
-        });
+        tableViewer.setComparator(new ViewerComparator());
+        tableViewer.addDoubleClickListener(e -> editData());
         tableViewer.getTable().addKeyListener(new KeyAdapter() {
 
             @Override
@@ -114,10 +116,8 @@ public abstract class DataViewer extends Composite {
             }
         });
         addFilters(tableViewer);
-        final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
+        ObservableListContentProvider contentProvider = new ObservableListContentProvider();
         tableViewer.setContentProvider(contentProvider);
-
-        widgetFactory.adapt(this);
     }
 
     protected abstract String getTableId();
@@ -126,15 +126,15 @@ public abstract class DataViewer extends Composite {
 
     protected abstract void addFilters(final StructuredViewer viewer);
 
-    protected void createTitle() {
-        Composite titleComposite = widgetFactory.createComposite(this);
+    protected void createTitle(Composite parent) {
+        Composite titleComposite = widgetFactory.createComposite(parent);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final Label label = widgetFactory.createLabel(titleComposite, getTitle(), SWT.NONE);
+        Label label = widgetFactory.createLabel(titleComposite, getTitle(), SWT.NONE);
         label.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).create());
 
-        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT, titleComposite);
+        ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT, titleComposite);
         controlDecoration.setShowOnlyOnFocus(false);
         controlDecoration.setDescriptionText(getTitleDescripiton());
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
@@ -154,10 +154,10 @@ public abstract class DataViewer extends Composite {
 
     protected abstract String getTitleDescripiton();
 
-    private void createButtons() {
-        final Composite buttonsComposite = widgetFactory.createComposite(this, SWT.NONE);
+    private void createButtons(Composite parent) {
+        Composite buttonsComposite = widgetFactory.createComposite(parent, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(3, 3).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(3, 3).create());
 
         addButtons(buttonsComposite);
     }
@@ -170,9 +170,9 @@ public abstract class DataViewer extends Composite {
 
     public void bindControl(final DataBindingContext context, final IObservableValue dataContainerObservable) {
         this.dataContainerObservable = dataContainerObservable;
-        final IObservableSet knownElements = ((ObservableListContentProvider) tableViewer.getContentProvider())
+        IObservableSet knownElements = ((ObservableListContentProvider) tableViewer.getContentProvider())
                 .getKnownElements();
-        final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements,
+        IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements,
                 new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
                         ProcessPackage.Literals.DATA__MULTIPLE,
                         ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME, ProcessPackage.Literals.DATA__DATA_TYPE });
@@ -180,14 +180,19 @@ public abstract class DataViewer extends Composite {
         tableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), dataContainerObservable,
                 dataFeature));
 
-        context.bindValue(SWTObservables.observeEnabled(editButton),
-                ViewersObservables.observeSingleSelection(tableViewer),
-                neverUpdateValueStrategy().create(),
-                updateValueStrategy().withConverter(selectionNotNull()).create());
+        IViewerObservableValue<Object> selectionObservable = ViewerProperties.singleSelection().observe(tableViewer);
+        UpdateValueStrategy selectionNotNullUpdateValueStrategy = updateValueStrategy().withConverter(selectionNotNull())
+                .create();
 
-        context.bindValue(SWTObservables.observeEnabled(removeButton),
-                ViewersObservables.observeSingleSelection(tableViewer),
-                neverUpdateValueStrategy().create(), updateValueStrategy().withConverter(selectionNotNull()).create());
+        context.bindValue(WidgetProperties.enabled().observe(editButton),
+                selectionObservable,
+                neverUpdateValueStrategy().create(),
+                selectionNotNullUpdateValueStrategy);
+
+        context.bindValue(WidgetProperties.enabled().observe(removeButton),
+                selectionObservable,
+                neverUpdateValueStrategy().create(),
+                selectionNotNullUpdateValueStrategy);
     }
 
     protected IObservableValue getDataContainerObservable() {
