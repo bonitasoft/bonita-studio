@@ -497,6 +497,11 @@ public class Messages extends NLS {
     public static String deleteQueryConfirmMessage;
     public static String deleteQueryParamsConfirmTitle;
     public static String deleteQueryParamsConfirmMessage;
+    public static String validate;
+    public static String validateTooltip;
+    public static String validationStatus;
+    public static String validatioNStatusDesc;
+    public static String bdmValidMessage;
 
     private Messages() {
     }
