@@ -443,7 +443,7 @@ public class BusinessObjectList {
                 .withFields(new SimpleFieldBuilder()
                         .withName(AttributeEditionControl.DEFAULT_FIELD_NAME)
                         .withType(FieldType.STRING)
-                        .withLength(64)
+                        .withLength(255)
                         .create())
                 .create();
         formPage.getConverter().createDefaultQueries(newBusinessObject).forEach(newBusinessObject.getDefaultQueries()::add);
