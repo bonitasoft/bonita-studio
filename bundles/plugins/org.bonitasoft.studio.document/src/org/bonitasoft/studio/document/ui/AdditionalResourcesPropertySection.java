@@ -50,6 +50,8 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -105,6 +107,17 @@ public class AdditionalResourcesPropertySection extends AbstractBonitaDescriptio
 
         viewer.setContentProvider(new ObservableListContentProvider());
         selectionObservable = ViewerProperties.singleSelection(AdditionalResource.class).observe(viewer);
+        viewer.addDoubleClickListener(e -> editAdditionalResource());
+        viewer.getControl().addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    e.doit = false;
+                    removeSelectedAdditionResource();
+                }
+            }
+        });
     }
 
     private void createNameColumn() {

@@ -92,6 +92,7 @@ public class Messages extends NLS {
     public static String editAdditionalResource;
     public static String newAdditionalResourceDescription;
     public static String additionalresourceNameIsRequired;
+    public static String additionalResourcesLiveUpdateWarning;
 
     static {
         // initialize resource bundle
