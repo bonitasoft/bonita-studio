@@ -38,6 +38,7 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
     private final RepositoryAccessor repositoryAccessor;
     private final PoolAdaptableSelectionProvider selectionProvider;
     private EMFDataBindingContext context;
+    private BusinessDataViewer businessDataComposite;
 
     @Inject
     public PoolDataSection(final RepositoryAccessor repositoryAccessor, final PoolAdaptableSelectionProvider selectionProvider) {
@@ -56,8 +57,10 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         context = new EMFDataBindingContext();
-        final BusinessDataViewer businessDataComposite = new BusinessDataViewer(mainComposite, getWidgetFactory(), ProcessPackage.Literals.DATA_AWARE__DATA,
-                repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class));
+        BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        businessDataComposite = new BusinessDataViewer(mainComposite, getWidgetFactory(), ProcessPackage.Literals.DATA_AWARE__DATA,
+                businessObjectModelRepositoryStore);
+        repositoryAccessor.getWorkspace().addResourceChangeListener(businessDataComposite);
         businessDataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         businessDataComposite.bindControl(context, ViewersObservables.observeSingleSelection(selectionProvider));
 
@@ -66,11 +69,22 @@ public class PoolDataSection extends AbstractBonitaDescriptionSection {
         processDataViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         processDataViewer.bindControl(context, ViewersObservables.observeSingleSelection(selectionProvider));
     }
+    
+    @Override
+    public void dispose() {
+        if(businessDataComposite != null) {
+            repositoryAccessor.getWorkspace().removeResourceChangeListener(businessDataComposite);
+        }
+        super.dispose();
+    }
 
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         selectionProvider.setSelection(selection);
+        if(businessDataComposite != null) {
+            businessDataComposite.updateTopControl();
+        }
     }
 
     protected DataBindingContext getContext() {

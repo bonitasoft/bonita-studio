@@ -54,10 +54,9 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
         expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
     }
 
-
     @Override
     public void resourceChanged(final IResourceChangeEvent event) {
-        if (mainProcess != null &&  event.getDelta() != null) {
+        if (mainProcess != null && event.getDelta() != null) {
             try {
                 event.getDelta().accept(resourceDeltaVisitor());
             } catch (final CoreException e) {
@@ -69,19 +68,22 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
     private IResourceDeltaVisitor resourceDeltaVisitor() {
         return delta -> {
             String name = delta.getResource().getName();
-            WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
-            if (( delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
+            WebPageRepositoryStore repositoryStore = repositoryAccessor
+                    .getRepositoryStore(WebPageRepositoryStore.class);
+            if ((delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
                     && repositoryStore.getResource().getLocation().isPrefixOf(delta.getResource().getLocation())
                     && delta.getResource() instanceof IFolder
                     && delta.getResource().isSynchronized(IResource.DEPTH_INFINITE)
                     && repositoryStore.getChild(name, false) != null) {
                 WebPageFileStore pageFileStore = repositoryStore.getChild(name, false);
                 IFile indexJsonFile = retrieveIndexJsonFile(repositoryStore);
-                try (InputStream is = indexJsonFile.getContents()) {
-                    JSONObject jsonObject = new JSONObject(IoUtils.toString(is));
-                    updateMatchingFormMapping(mainProcess, jsonObject, pageFileStore.getDisplayName());
-                } catch (IOException | JSONException e) {
-                    throw new RuntimeException(e);
+                if (indexJsonFile.exists()) {
+                    try (InputStream is = indexJsonFile.getContents()) {
+                        JSONObject jsonObject = new JSONObject(IoUtils.toString(is));
+                        updateMatchingFormMapping(mainProcess, jsonObject, pageFileStore.getDisplayName());
+                    } catch (IOException | JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             return true;
@@ -90,8 +92,7 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
 
     private IFile retrieveIndexJsonFile(WebPageRepositoryStore repositoryStore) {
         return repositoryStore.getResource()
-                .findMember("/.metadata/.index.json")
-                .getAdapter(IFile.class);
+                .getFile(".metadata/.index.json");
     }
 
     private void updateMatchingFormMapping(MainProcess container, JSONObject jsonObject, String name) {
@@ -101,7 +102,8 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
                 .collect(Collectors.toList());
         for (Expression expression : expressions) {
             try {
-                if (jsonObject.has(expression.getContent()) && Objects.equals(jsonObject.get(expression.getContent()),name)) {
+                if (jsonObject.has(expression.getContent())
+                        && Objects.equals(jsonObject.get(expression.getContent()), name)) {
                     expressionItemProvider.setPropertyValue(expression,
                             ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
                             name);

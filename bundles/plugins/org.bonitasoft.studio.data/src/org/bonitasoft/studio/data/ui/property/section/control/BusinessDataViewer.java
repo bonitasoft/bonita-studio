@@ -76,8 +76,6 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
         setLayout(GridLayoutFactory.fillDefaults().create());
         this.store = store;
         this.commandExecutor = new CommandExecutor();
-        updateTopControl();
-        store.getResource().getWorkspace().addResourceChangeListener(this);
     }
 
     @Override
@@ -157,6 +155,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     @Override
     protected void removeData(final IObservableValue observable, final EStructuralFeature dataFeature) {
         new RemoveDataHandler().execute(getStructuredSelection(), (EObject) observable.getValue(), dataFeature);
+        updateTopControl();
     }
 
     @Override
@@ -216,6 +215,9 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
 
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
+        if(isDisposed()) {
+            return;
+        }
         updated = false;
         try {
             if (event.getDelta() != null) {
@@ -225,7 +227,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
             throw new RuntimeException(e);
         }
     }
-
+    
     private boolean updateTopControl(IResourceDelta delta) {
         if (updated) {
             return false;
@@ -240,11 +242,25 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     }
 
     public void updateTopControl() {
-        if (store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null) {
+        if(viewerComposite.isDisposed() || emptyBDMComposite.isDisposed()) {
+            return;
+        }
+        if (store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null || poolHasBusinessData()) {
             stackLayout.setTopControl(viewerComposite);
         } else {
             stackLayout.setTopControl(emptyBDMComposite);
         }
+    }
+
+    private boolean poolHasBusinessData() {
+        IObservableValue observableValue = getDataContainerObservable();
+        if(observableValue != null) {
+            final Pool pool = (Pool) observableValue.getValue();
+            if(pool != null) {
+                return pool.getData().stream().anyMatch(BusinessObjectData.class::isInstance);
+            }
+        }
+        return false;
     }
 
     @Override
