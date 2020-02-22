@@ -15,13 +15,19 @@
 package org.bonitasoft.studio.businessobject.validator;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.Query;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 
@@ -30,8 +36,10 @@ public class QueryValidator implements IValidator<Query> {
     QueryNameValidator queryNameValidator;
     QueryParameterNameValidator parameterValidator;
     IObservableValue<Query> querySelectedObservable = new WritableValue<>();
+    private IObservableValue<BusinessObject> boSelectedObservable;
 
     public QueryValidator(IObservableValue<BusinessObject> boSelectedObservable) {
+        this.boSelectedObservable = boSelectedObservable;
         queryNameValidator = new QueryNameValidator(boSelectedObservable);
         parameterValidator = new QueryParameterNameValidator(querySelectedObservable);
     }
@@ -43,6 +51,10 @@ public class QueryValidator implements IValidator<Query> {
 
         validate(queryNameValidator, value, globalStatus);
         validateQueryParameters(globalStatus);
+        if (!hasCountQuery(value)) {
+            globalStatus.add(ValidationStatus
+                    .info(String.format(Messages.missingCountQuery, BDMQueryUtil.getCountQueryName(value.getName()))));
+        }
 
         return globalStatus;
     }
@@ -64,6 +76,20 @@ public class QueryValidator implements IValidator<Query> {
     private void validateQueryParameters(MultiStatus globalStatus) {
         querySelectedObservable.getValue().getQueryParameters()
                 .forEach(parameter -> validate(parameterValidator, parameter, globalStatus));
+    }
+
+    private boolean hasCountQuery(Query query) {
+        BusinessObject businessObject = boSelectedObservable.getValue();
+        String returnType = query.getReturnType();
+        if (List.class.getName().equals(returnType)) {
+            String countQueryName = BDMQueryUtil.getCountQueryName(query.getName());
+            return businessObject.getQueries().stream().anyMatch(countQueryWithName(countQueryName));
+        }
+        return true;
+    }
+
+    private Predicate<Query> countQueryWithName(final String name) {
+        return query -> Objects.equals(name, query.getName()) && Objects.equals(query.getReturnType(), Long.class.getName());
     }
 
 }

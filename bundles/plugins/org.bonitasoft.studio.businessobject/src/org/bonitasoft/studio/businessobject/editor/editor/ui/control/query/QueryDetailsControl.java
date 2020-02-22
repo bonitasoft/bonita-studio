@@ -50,9 +50,9 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -67,6 +67,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -99,9 +100,10 @@ public class QueryDetailsControl extends Composite {
     private ToolItem deleteParameterItem;
     private ToolItem addParameterItem;
     private Section descriptionSection;
+    private TreeViewer queryViewer;
 
     public QueryDetailsControl(Composite parent, IObservableValue<Query> querySelectedObservable,
-            QueryFormPage formPage, IObservableValue<BusinessObject> boSelectedObservable) {
+            QueryFormPage formPage, IObservableValue<BusinessObject> boSelectedObservable, TreeViewer queryViewer) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -111,6 +113,7 @@ public class QueryDetailsControl extends Composite {
         this.querySelectedObservable = querySelectedObservable;
         this.ctx = new DataBindingContext();
         this.boSelectedObservable = boSelectedObservable;
+        this.queryViewer = queryViewer;
 
         createDescriptionSection();
         createContentSection();
@@ -223,11 +226,12 @@ public class QueryDetailsControl extends Composite {
 
         boSelectedObservable.addValueChangeListener(e -> updateReturnTypeViewerInput());
 
-        IObservableValue<String> returnTypeSelectionObservable = ViewersObservables
-                .observeSingleSelection(returnTypeComboViewer);
+        IObservableValue<String> returnTypeSelectionObservable = ViewerProperties.singleSelection(String.class)
+                .observe(returnTypeComboViewer);
         IObservableValue<String> returnTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 querySelectedObservable, BusinessDataModelPackage.Literals.QUERY__RETURN_TYPE);
         ctx.bindValue(returnTypeSelectionObservable, returnTypeObservable);
+        returnTypeObservable.addValueChangeListener(e -> queryViewer.refresh()); // might impact the info tooltip for the count queries
     }
 
     public void updateReturnTypeViewerInput() {
@@ -365,7 +369,8 @@ public class QueryDetailsControl extends Composite {
 
         selectedQueryParameterObservableList = EMFObservables.observeDetailList(Realm.getDefault(), querySelectedObservable,
                 BusinessDataModelPackage.Literals.QUERY__QUERY_PARAMETERS);
-        parametersMultipleSelectionObservable = ViewersObservables.observeMultiSelection(parametersTableViewer);
+        parametersMultipleSelectionObservable = ViewerProperties.multipleSelection(QueryParameter.class)
+                .observe(parametersTableViewer);
         parametersTableViewer.setInput(selectedQueryParameterObservableList);
     }
 
