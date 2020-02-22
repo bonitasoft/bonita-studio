@@ -141,6 +141,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
 
     private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
 
+    private boolean enableOpenIntroListener = true;
+
     public Repository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
@@ -253,7 +255,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                     }
                     new ClasspathValidation(jProject).validate();
                 } else {
-                    BonitaStudioLog.log("Cannot retrieve the JavaProject Nature from the project: " + project.getName());
+                    BonitaStudioLog
+                            .log("Cannot retrieve the JavaProject Nature from the project: " + project.getName());
                     project.open(NULL_PROGRESS_MONITOR);//Open anyway
                 }
             }
@@ -288,7 +291,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     }
 
     protected void updateCurrentRepositoryPreference() {
-        CommonRepositoryPlugin.getDefault().getPreferenceStore().setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,
+        CommonRepositoryPlugin.getDefault().getPreferenceStore().setValue(
+                RepositoryPreferenceConstant.CURRENT_REPOSITORY,
                 getName());
         try {
             ((ScopedPreferenceStore) CommonRepositoryPlugin.getDefault().getPreferenceStore()).save();
@@ -301,6 +305,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     public void close() {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
+            disableOpenIntroListener(); // avoid intro part flickering
             closeAllEditors();
             if (project.isOpen()) {
                 if (stores != null) {
@@ -312,6 +317,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
+        } finally {
+            enableOpenIntroListener();
         }
         if (stores != null) {
             stores.clear();
@@ -322,6 +329,18 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         projectListeners.stream().forEach(l -> l.projectClosed(this, NULL_PROGRESS_MONITOR));
     }
 
+    private void enableOpenIntroListener() {
+        this.enableOpenIntroListener = true;
+    }
+
+    public boolean isOpenIntroListenerEnabled() {
+        return this.enableOpenIntroListener;
+    }
+
+    private void disableOpenIntroListener() {
+        this.enableOpenIntroListener = false;
+    }
+
     protected void closeAllEditors() {
         if (PlatformUI.isWorkbenchRunning()) {
             Display.getDefault().syncExec(() -> {
@@ -329,7 +348,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                         .getWorkbench().getActiveWorkbenchWindow();
                 if (activeWorkbenchWindow != null
                         && activeWorkbenchWindow.getActivePage() != null) {
-                    if(!activeWorkbenchWindow.getActivePage().closeAllEditors(false)) {
+                    if (!activeWorkbenchWindow.getActivePage().closeAllEditors(false)) {
                         return;
                     }
                 }
@@ -416,7 +435,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
-            RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE, false);
+            RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,
+                    false);
         }
     }
 
@@ -440,7 +460,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
 
     @Override
     public boolean isBuildEnable() {
-        return RepositoryManager.getInstance().getPreferenceStore().getBoolean(RepositoryPreferenceConstant.BUILD_ENABLE);
+        return RepositoryManager.getInstance().getPreferenceStore()
+                .getBoolean(RepositoryPreferenceConstant.BUILD_ENABLE);
     }
 
     @Override
@@ -658,7 +679,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     }
 
     @Override
-    public IRepositoryFileStore asRepositoryFileStore(final Path path, boolean force) throws IOException, CoreException {
+    public IRepositoryFileStore asRepositoryFileStore(final Path path, boolean force)
+            throws IOException, CoreException {
         if (!project.isAccessible() || project.getLocation() == null) {
             return null;
         }
@@ -893,7 +915,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     public void buildXtext() {
         try {
             getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(),
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID,
+                            Collections.<String, String> emptyMap(),
                             null);
         } catch (CoreException e) {
             BonitaStudioLog.error(e);

@@ -52,7 +52,7 @@ public class AdditionalResourceWizardPage extends WizardPage {
     @Override
     public void createControl(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 10).create());
+        composite.setLayout(GridLayoutFactory.swtDefaults().spacing(LayoutConstants.getSpacing().x, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         
         ctx = new EMFDataBindingContext();
@@ -66,7 +66,8 @@ public class AdditionalResourceWizardPage extends WizardPage {
                         ProcessPackage.Literals.ADDITIONAL_RESOURCE__NAME))
                 .withValidator(new AdditionalResourceBarPathValidator(pool, originalAdditionalResource))
                 .inContext(ctx)
-                .createIn(composite);
+                .createIn(composite)
+                .setFocus();
 
         new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
