@@ -61,6 +61,10 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         description.setText(Messages.additionalResourcesDesc);
 
+        Label liveUpdateWarning = new Label(composite, SWT.WRAP);
+        liveUpdateWarning.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        liveUpdateWarning.setText(Messages.additionalResourcesLiveUpdateWarning);
+
         createViewer(composite);
 
         setControl(composite);
