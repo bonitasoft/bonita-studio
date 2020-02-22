@@ -102,7 +102,7 @@ public class QueryEditionControl {
 
         createDefinitionSection(queryEditionComposite);
         queryDetailsControl = new QueryDetailsControl(queryEditionComposite, querySelectedObservable, formPage,
-                boSelectedObservable);
+                boSelectedObservable, viewer);
         enableButtons();
 
         customQueries = EMFObservables.observeDetailList(Realm.getDefault(), boSelectedObservable,
