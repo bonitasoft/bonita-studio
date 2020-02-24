@@ -42,7 +42,7 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL, false);
         store.setDefault(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true);
         store.setDefault(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
-        store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 512);
+        store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 1024);
         store.setDefault(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, getDefaultOr(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS,"-DnoCacheCustomPage=true"));
 
         if (PlatformUI.isWorkbenchRunning()) {
