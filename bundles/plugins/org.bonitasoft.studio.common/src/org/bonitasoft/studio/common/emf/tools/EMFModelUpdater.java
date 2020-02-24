@@ -45,7 +45,7 @@ public class EMFModelUpdater<T extends EObject> {
     private T source;
     private T workingCopy;
     private CustomCopier copier = new CustomCopier();
-    private List<EObject> synched = new ArrayList<>();
+    private List<EObjectFeature> synched = new ArrayList<>();
     private Set<String> manyFeaturesSynched = new HashSet<>();
 
     /**
@@ -98,8 +98,9 @@ public class EMFModelUpdater<T extends EObject> {
                 .filter(EAttribute.class::isInstance)
                 .filter(feature -> {
                     if (!target.eClass().getEAllStructuralFeatures().contains(feature)) {
-                        BonitaStudioLog.warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
-                                target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
+                        BonitaStudioLog
+                                .warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
+                                        target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
                         return false;
                     }
                     return true;
@@ -112,8 +113,9 @@ public class EMFModelUpdater<T extends EObject> {
                 .filter(EReference.class::isInstance)
                 .filter(feature -> {
                     if (!target.eClass().getEAllStructuralFeatures().contains(feature)) {
-                        BonitaStudioLog.warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
-                                target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
+                        BonitaStudioLog
+                                .warning(String.format("Cannot update EObject value: %s does not have a %s feature.",
+                                        target.eClass().getName(), feature.getName()), Activator.PLUGIN_ID);
                         return false;
                     }
                     return true;
@@ -129,10 +131,12 @@ public class EMFModelUpdater<T extends EObject> {
                     } else {
                         Object sourceRef = source.eGet(feature);
                         Object targetRef = target.eGet(feature);
-                        if (sourceRef instanceof EObject && targetRef instanceof EObject && !synched.contains(sourceRef)
+                        if ((sourceRef == null || sourceRef instanceof EObject) && targetRef instanceof EObject
+                                && !synched.contains(EObjectFeature.create(source, feature))
                                 && !EcoreUtil.equals((EObject) sourceRef, (EObject) targetRef)) {
-                            synched.add((EObject) sourceRef);
-                            if (Objects.equals(((EObject) sourceRef).eClass(), ((EObject) targetRef).eClass())) {
+                            synched.add(EObjectFeature.create(source, feature));
+                            if (sourceRef != null
+                                    && Objects.equals(((EObject) sourceRef).eClass(), ((EObject) targetRef).eClass())) {
                                 deepEObjectUpdate((EObject) sourceRef, (EObject) targetRef);
                             } else {
                                 source.eSet(feature, targetRef);
@@ -140,6 +144,53 @@ public class EMFModelUpdater<T extends EObject> {
                         }
                     }
                 });
+    }
+
+    static class EObjectFeature {
+
+        private EObject eObject;
+        private EStructuralFeature feature;
+
+        private EObjectFeature(EObject eObject, EStructuralFeature feature) {
+            this.eObject = eObject;
+            this.feature = feature;
+        }
+
+        static EObjectFeature create(EObject eObject, EStructuralFeature feature) {
+            return new EObjectFeature(eObject, feature);
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((eObject == null) ? 0 : eObject.hashCode());
+            result = prime * result + ((feature == null) ? 0 : feature.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            EObjectFeature other = (EObjectFeature) obj;
+            if (eObject == null) {
+                if (other.eObject != null)
+                    return false;
+            } else if (!eObject.equals(other.eObject))
+                return false;
+            if (feature == null) {
+                if (other.feature != null)
+                    return false;
+            } else if (!feature.equals(other.feature))
+                return false;
+            return true;
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -152,12 +203,12 @@ public class EMFModelUpdater<T extends EObject> {
 
         for (Object sourceElement : sourceList) {
             EObject targetElement = findEObject(targetList, getEObjectID((EObject) sourceElement));
-                if (sourceElement instanceof EObject
-                        && targetElement instanceof EObject) {
-                    deepEObjectUpdate((EObject) sourceElement,
-                            targetElement);
-                    targetList.remove(targetElement);
-                }
+            if (sourceElement instanceof EObject
+                    && targetElement instanceof EObject) {
+                deepEObjectUpdate((EObject) sourceElement,
+                        targetElement);
+                targetList.remove(targetElement);
+            }
         }
 
         for (Object targetElement : targetList) {
