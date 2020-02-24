@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+		<version>7.10.2-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.designer.win32</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<repository.folder>repository</repository.folder>
+	</properties>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Retrieve business data model repository app</id>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.web</groupId>
+									<artifactId>bonita-data-repository</artifactId>
+									<version>${business.data.repository.version}</version>
+									<classifier>win</classifier>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<destFileName>bonita-data-repository.zip</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
+							<outputDirectory>${repository.folder}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
