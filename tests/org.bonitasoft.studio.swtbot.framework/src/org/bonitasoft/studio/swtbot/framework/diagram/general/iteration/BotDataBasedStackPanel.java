@@ -16,10 +16,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
 /**
  * @author Romain Bioteau
@@ -36,21 +33,13 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
     }
 
     public BotDataBasedStackPanel setIteratorName(final String iteratorName) {
-        waitForTable();
-        iteratorEditor().click(0, 0);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_EDITOR)
-	        .typeText(iteratorName)
-	        .pressShortcut(Keystrokes.CR);
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON).click();
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_TEXTEDITOR)
+	        .setText(iteratorName);
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON).click();
         return this;
     }
 
-    private void waitForTable() {
-        bot.waitUntil(Conditions.widgetIsEnabled(iteratorEditor()));
-    }
-
-    private SWTBotTable iteratorEditor() {
-        return bot.tableWithId(SWTBotConstants.SWTBOT_ID_ITERATOR_TABLE);
-    }
 
     public BotDataBasedStackPanel setIteratorReturnType(final String returnType) {
         bot.comboBoxWithLabelInGroup(Messages.type + " *", Messages.input).setText(returnType);
