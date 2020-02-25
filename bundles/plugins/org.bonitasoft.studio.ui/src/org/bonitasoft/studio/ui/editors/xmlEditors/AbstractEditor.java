@@ -184,7 +184,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     protected abstract void updateWorkingCopy(T newModel);
 
     private IEditorPart createSourceEditor() {
-        fSourceEditor = new StructuredTextEditor();
+        fSourceEditor = new NoPropertySheetStructuredTextEditor();
         fSourceEditor.setEditorPart(this);
         return fSourceEditor;
     }
