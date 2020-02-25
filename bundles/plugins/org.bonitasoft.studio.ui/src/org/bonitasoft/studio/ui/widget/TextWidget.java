@@ -355,7 +355,7 @@ public class TextWidget extends EditableControlWidget {
     protected void createEditItem(final ToolBar toolBar) {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
         editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.ui.widget.textWidget.editButton");
+                SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON);
         editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
@@ -371,6 +371,8 @@ public class TextWidget extends EditableControlWidget {
         updateEditableState(true);
 
         final ToolItem cancelButton = new ToolItem(toolBar, SWT.FLAT);
+        cancelButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON);
         cancelButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "error.png").createImage());
         cancelButton.setToolTipText(Messages.revertEdit);
         cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
@@ -378,7 +380,7 @@ public class TextWidget extends EditableControlWidget {
 
         okButton = new ToolItem(toolBar, SWT.FLAT);
         okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
-                "org.bonitasoft.studio.ui.widget.textWidget.validateEdit");
+                SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON);
         okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));

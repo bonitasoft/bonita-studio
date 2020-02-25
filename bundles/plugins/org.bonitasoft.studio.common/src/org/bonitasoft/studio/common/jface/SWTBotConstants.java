@@ -82,7 +82,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_OUTPUT = "SWTBOT_ID_CALLACTIVITY_MAPPING_DELETE_OUTPUT";
 
     public static final String SWTBOT_ID_ITERATOR_TABLE = "SWTBOT_ID_ITERATOR_TABLE";
-    public static final String SWTBOT_ID_ITERATOR_NAME_EDITOR = "SWTBOT_ID_ITERATOR_NAME_EDITOR";
+    public static final String SWTBOT_ID_ITERATOR_NAME_TEXTEDITOR = "SWTBOT_ID_ITERATOR_NAME_EDITOR";
 
     public static final String SWTBOT_ID_ADD_PROCESS_DATA = "SWTBOT_ID_ADD_PROCESS_DATA";
     public static final String SWTBOT_ID_ADD_BUSINESS_DATA = "SWTBOT_ID_ADD_BUSINESS_DATA";
@@ -130,8 +130,13 @@ public interface SWTBotConstants {
 
 	public static final String SWTBOT_ID_RULE_NAME_TEXTEDITOR = "SWTBOT_ID_RULE_NAME_TEXTEDITOR";
 
-    public static final Object SWTBOT_ID_DEPLOY_TOOLITEM = "SWTBOT_ID_DEPLOY_TOOLITEM";
+    public static final String SWTBOT_ID_DEPLOY_TOOLITEM = "SWTBOT_ID_DEPLOY_TOOLITEM";
 
     public static final String SWTBOT_ID_CONSTRAINT_DESCRIPTION_TEXTEDITOR = "SWTBOT_ID_CONSTRAINT_DESCRIPTION_TEXTEDITOR";
 
+    public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.editButton";
+
+    public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON =  "org.bonitasoft.studio.ui.widget.textWidget.validateEdit";
+
+    public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.cancelEdit";;
 }

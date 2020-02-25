@@ -59,5 +59,28 @@ public class EMFEditWithRefactorObservables extends EMFEditObservables {
             }
         };
     }
+    
+    public static IObservableFactory valueWithRefactorFactory(final Realm realm, final EStructuralFeature eStructuralFeature, IRefactorOperationFactory refactorOperationFactory,
+            IProgressService progressService) {
+        return new IObservableFactory()
+        {
+
+            @Override
+            public IObservable createObservable(final Object target)
+            {
+                final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(target);
+                return new ObservableValueWithRefactor(editingDomain, (EObject) target, eStructuralFeature, refactorOperationFactory, progressService);
+            }
+        };
+    }
+
+    public static DetailObservableValueWithRefactor observeDetailValueWithRefactor(Realm realm,
+            IObservableValue value, 
+            EStructuralFeature eStructuralFeature,
+            IRefactorOperationFactory refactorOperationFactory,
+            IProgressService progressService) {
+        return new DetailObservableValueWithRefactor(value, valueWithRefactorFactory(realm, eStructuralFeature, refactorOperationFactory, progressService), eStructuralFeature);
+        
+    }
 
 }

@@ -165,7 +165,6 @@ public class MultiInstantiationIT implements SWTBotConstants {
                         .hasReturnType(Boolean.class.getName());
             }
         });
-
     }
 
     @Test
