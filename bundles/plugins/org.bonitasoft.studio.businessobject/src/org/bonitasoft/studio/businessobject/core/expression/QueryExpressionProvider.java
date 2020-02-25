@@ -19,7 +19,9 @@ import static org.bonitasoft.studio.common.predicate.ExpressionPredicates.withNa
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.BDMQueryUtil;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -41,6 +43,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
@@ -54,6 +57,15 @@ public class QueryExpressionProvider implements IExpressionProvider {
 
     @Override
     public Set<Expression> getExpressions(final EObject context) {
+        if (context instanceof BusinessObjectData) {
+            String className = ((BusinessObjectData) context).getClassName();
+            BusinessObject businessObject = getBusinessObjectModel().getBusinessObjects().stream()
+                    .filter(bo -> Objects.equals(bo.getQualifiedName(), className))
+                    .findFirst()
+                    .orElse(null);
+            return businessObject != null ? getExpressions(businessObject).stream().collect(Collectors.toSet())
+                    : Collections.emptySet();
+        }
         return Collections.emptySet();
     }
 
@@ -120,16 +132,19 @@ public class QueryExpressionProvider implements IExpressionProvider {
         queryParameter.setType("QUERY_PARAM_TYPE");
         queryParameter.setReturnTypeFixed(true);
         queryParameter.setReturnType(param.getClassName());
-        final Expression constantExpression = ExpressionHelper.createConstantExpression(defaultValue, param.getClassName());
+        final Expression constantExpression = ExpressionHelper.createConstantExpression(defaultValue,
+                param.getClassName());
         constantExpression.setReturnTypeFixed(true);
         queryParameter.getReferencedElements().add(constantExpression);
         return queryParameter;
     }
 
     protected BusinessObjectModel getBusinessObjectModel() {
-        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = RepositoryManager.getInstance()
+        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = RepositoryManager
+                .getInstance()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
+                true);
         return fileStore != null ? fileStore.getContent() : null;
     }
 
