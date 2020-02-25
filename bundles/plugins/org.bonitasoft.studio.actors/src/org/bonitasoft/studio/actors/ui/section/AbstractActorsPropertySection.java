@@ -295,8 +295,10 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
             }
             emfDatabindingContext = new EMFDataBindingContext() ;
             final AbstractProcess process = ModelHelper.getParentProcess(assignable) ;
-            emfDatabindingContext.bindValue(ViewersObservables.observeInput(actorComboViewer), EMFObservables.observeValue(process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS)) ;
-            emfDatabindingContext.bindValue(ViewersObservables.observeSingleSelection(actorComboViewer), EMFEditObservables.observeValue(getEditingDomain(),assignable, ProcessPackage.Literals.ASSIGNABLE__ACTOR)) ;
+            if(process != null) {
+                emfDatabindingContext.bindValue(ViewersObservables.observeInput(actorComboViewer), EMFObservables.observeValue(process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS)) ;
+                emfDatabindingContext.bindValue(ViewersObservables.observeSingleSelection(actorComboViewer), EMFEditObservables.observeValue(getEditingDomain(),assignable, ProcessPackage.Literals.ASSIGNABLE__ACTOR)) ; 
+            }
         }
     }
 

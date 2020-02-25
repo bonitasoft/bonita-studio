@@ -18,6 +18,7 @@ import static com.google.common.collect.Iterables.tryFind;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.refactoring.core.script.ReferenceDiff;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
@@ -25,6 +26,7 @@ import org.codehaus.groovy.ast.DynamicVariable;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.control.SourceUnit;
+import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 
@@ -60,7 +62,12 @@ public class ProcessVariableRenamer extends ClassCodeVisitorSupport {
         if (accessedVar instanceof DynamicVariable) {
             final String newName = findReplacement(accessedVar.getName());
             if (newName != null) {
-                edits.addChild(new ReplaceEdit(expression.getStart(), expression.getLength(), newName));
+                ReplaceEdit replaceEdit = new ReplaceEdit(expression.getStart(), expression.getLength(), newName);
+                try {
+                    edits.addChild(replaceEdit);
+                }catch (MalformedTreeException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
         }
     }

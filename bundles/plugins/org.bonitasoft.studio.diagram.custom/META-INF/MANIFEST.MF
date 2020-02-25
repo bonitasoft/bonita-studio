@@ -60,7 +60,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.designer;bundle-version="7.9.0",
  org.eclipse.m2e.maven.runtime,
- org.eclipse.jface
+ org.eclipse.jface,
+ org.bonitasoft.studio.expression.editor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.connector,
