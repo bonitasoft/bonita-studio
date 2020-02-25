@@ -17,7 +17,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
-public class ReadOnlyStructuredTextEditor extends StructuredTextEditor {
+public class ReadOnlyStructuredTextEditor extends NoPropertySheetStructuredTextEditor {
 
     @Override
     protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
