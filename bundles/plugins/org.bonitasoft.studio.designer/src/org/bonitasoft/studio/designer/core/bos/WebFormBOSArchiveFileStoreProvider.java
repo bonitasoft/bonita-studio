@@ -123,14 +123,16 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     private Predicate<WebWidgetFileStore> customWidgetOnly() {
-        return WebWidgetFileStore::canBeExported;
+        return fstore -> fstore != null && fstore.canBeExported();
     }
 
     private Function<String, WebWidgetFileStore> toWidgetFileStore(final Pattern widgetPattern) {
         return matchingEntry -> {
             final Matcher matcher = widgetPattern.matcher(matchingEntry);
-            checkState(matcher.matches());
-            return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1), true);
+            if(matcher.matches()) {
+                return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1), true);
+            }
+            return null;
         };
     }
 
