@@ -12,11 +12,8 @@ import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -41,17 +38,12 @@ public class ImportBDMContributionItem extends ContributionItem {
         item.setText(Messages.importActionName);
         item.setToolTipText(Messages.smartImportDesc);
         item.setImage(BusinessObjectPlugin.getImage("icons/import-bdm.png"));
-        item.addListener(SWT.Selection, event -> onClick(parent.getShell()));
+        item.addListener(SWT.Selection, e -> onClick());
     }
 
-    private void onClick(Shell shell) {
-        if (formPage.getEditor().isDirty()
-                && MessageDialog.openQuestion(shell, Messages.saveBeforeImportTitle, Messages.saveBeforeImportMessage)) {
-            formPage.getEditor().doSave(new NullProgressMonitor());
-        }
+    private void onClick() {
         if (commandExecutor.canExecute(IMPORT_COMMAND, null)) {
             commandExecutor.executeCommand(IMPORT_COMMAND, null);
-            formPage.updateWorkingCopy();
         }
     }
 
