@@ -42,7 +42,8 @@ public class PropertySectionHistory {
                 "EntryFormsSection",
                 "EntryFormsSectionEx",
                 "OverviewFormsSection",
-                "OverviewFormsSectionEx");
+                "OverviewFormsSectionEx",
+                "AdditionalResourcesPropertySection");
     }
 
     public PropertySectionHistory(final String sectionId) {

@@ -93,6 +93,7 @@ public class Messages extends NLS {
     public static String newAdditionalResourceDescription;
     public static String additionalresourceNameIsRequired;
     public static String additionalResourcesLiveUpdateWarning;
+    public static String additionalResourcesHelp;
     public static String fileNotFoundTitle;
     public static String fileNotFound;
 

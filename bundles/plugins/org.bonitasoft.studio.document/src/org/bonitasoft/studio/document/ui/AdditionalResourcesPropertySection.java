@@ -192,7 +192,7 @@ public class AdditionalResourcesPropertySection extends AbstractBonitaDescriptio
 
     @Override
     public String getSectionDescription() {
-        return "TOTO";
+        return Messages.additionalResourcesHelp;
     }
 
 }
