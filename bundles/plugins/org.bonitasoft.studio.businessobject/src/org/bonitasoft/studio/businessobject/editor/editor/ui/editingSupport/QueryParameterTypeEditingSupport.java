@@ -65,7 +65,7 @@ public class QueryParameterTypeEditingSupport extends EditingSupport {
         QueryParameter param = (QueryParameter) element;
         return Arrays.asList(QueryParameterTypes.values())
                 .stream()
-                .filter(type -> Objects.equals(type.getName(), param.getClassName()))
+                .filter(type -> Objects.equals(type.getClazz().getName(), param.getClassName()))
                 .findFirst()
                 .orElse(null);
     }
@@ -73,7 +73,7 @@ public class QueryParameterTypeEditingSupport extends EditingSupport {
     @Override
     protected void setValue(Object element, Object value) {
         QueryParameter param = (QueryParameter) element;
-        param.setClassName(((QueryParameterTypes) value).getName());
+        param.setClassName(((QueryParameterTypes) value).getClazz().getName());
     }
 
 }
