@@ -120,7 +120,8 @@ public class QueryDetailsControl extends Composite {
 
         ctx.bindValue(WidgetProperties.visible().observe(this), new ComputedValueBuilder<Boolean>()
                 .withSupplier(
-                        () -> querySelectedObservable.getValue() != null && isRealQuery(querySelectedObservable.getValue()))
+                        () -> querySelectedObservable.getValue() != null
+                                && isRealQuery(querySelectedObservable.getValue()))
                 .build());
 
         querySelectedObservable.addValueChangeListener(e -> {
@@ -254,7 +255,8 @@ public class QueryDetailsControl extends Composite {
     protected void createParametersComposite(Composite parent) {
         Composite parametersComposite = formPage.getToolkit().createComposite(parent);
         parametersComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
-        parametersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
+        parametersComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
 
         Label parametersLabel = formPage.getToolkit().createLabel(parametersComposite, Messages.parametersLabel);
         parametersLabel.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -367,7 +369,8 @@ public class QueryDetailsControl extends Composite {
         createTypeColumn(parametersTableViewer);
         createDescriptionColumn(parametersTableViewer);
 
-        selectedQueryParameterObservableList = EMFObservables.observeDetailList(Realm.getDefault(), querySelectedObservable,
+        selectedQueryParameterObservableList = EMFObservables.observeDetailList(Realm.getDefault(),
+                querySelectedObservable,
                 BusinessDataModelPackage.Literals.QUERY__QUERY_PARAMETERS);
         parametersMultipleSelectionObservable = ViewerProperties.multipleSelection(QueryParameter.class)
                 .observe(parametersTableViewer);
@@ -398,7 +401,16 @@ public class QueryDetailsControl extends Composite {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.getColumn().setText(Messages.type);
         column.setLabelProvider(new LabelProviderBuilder<QueryParameter>()
-                .withTextProvider(parameter -> parameter.getClassName())
+                .withTextProvider(parameter -> {
+                    String classname = parameter.getClassName();
+                    Class<?> clazz;
+                    try {
+                        clazz = Class.forName(classname);
+                    } catch (ClassNotFoundException e) {
+                        return null;
+                    }
+                    return clazz.getCanonicalName();
+                })
                 .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
         column.setEditingSupport(new QueryParameterTypeEditingSupport(viewer, () -> isDefault()));
