@@ -290,6 +290,10 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         return workingCopyObservable.getValue();
     }
 
+    public IObservableValue<BusinessObjectModel> observeWorkingCopy() {
+        return workingCopyObservable;
+    }
+
     public void makeAccessControlStale() {
         editor.getEditorContribution(ACCESS_CONTROL_ID).ifPresent(AbstractEditorContribution::makeStale);
     }

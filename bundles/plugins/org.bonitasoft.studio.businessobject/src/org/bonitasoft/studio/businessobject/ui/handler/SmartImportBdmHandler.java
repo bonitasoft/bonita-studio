@@ -29,6 +29,9 @@ import org.apache.commons.io.FileUtils;
 import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditor;
+import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution;
+import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.SmartImportBdmPage;
 import org.bonitasoft.studio.common.ZipUtil;
@@ -38,8 +41,10 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -61,16 +66,50 @@ public class SmartImportBdmHandler extends AbstractHandler {
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
         SmartImportBdmPage page = new SmartImportBdmPage(repositoryAccessor);
+        Optional<BusinessDataModelEditor> openedEditor = retrieveBdmFileStore(repositoryAccessor)
+                .map(BusinessObjectModelFileStore::getOpenedEditor);
+        manageDirtyEditor(activeShell, openedEditor);
         Optional<IStatus> status = createWizard(newWizard(), page, repositoryAccessor).open(activeShell,
                 Messages.importButtonLabel);
         if (status.isPresent()) {
             IStatus s = status.get();
             if (s.isOK()) {
                 MessageDialog.openInformation(activeShell, Messages.bdmImportedTitle, Messages.bdmImported);
+                updateWorkingCopy(openedEditor, repositoryAccessor);
             } else {
                 MessageDialog.openError(activeShell, Messages.ImportError, s.getMessage());
             }
         }
+    }
+
+    private void updateWorkingCopy(Optional<BusinessDataModelEditor> openedEditor, RepositoryAccessor repositoryAccessor) {
+        openedEditor.ifPresent(
+                editor -> editor.getEditorContribution(BusinessDataModelEditorContribution.ID)
+                        .filter(BusinessDataModelEditorContribution.class::isInstance)
+                        .map(BusinessDataModelEditorContribution.class::cast)
+                        .ifPresent(contribution -> {
+                            retrieveBdmFileStore(repositoryAccessor).ifPresent(fStore -> {
+                                BusinessObjectModel businessObjectModel = contribution.getConverter()
+                                        .toEmfModel(fStore.getContent(), contribution.loadBdmArtifactDescriptor());
+                                IObservableValue<BusinessObjectModel> workingCopyObservable = contribution
+                                        .observeWorkingCopy();
+                                workingCopyObservable.getRealm()
+                                        .exec(() -> workingCopyObservable.setValue(businessObjectModel));
+                            });
+                        }));
+    }
+
+    private void manageDirtyEditor(Shell shell, Optional<BusinessDataModelEditor> openedEditor) {
+        if (openedEditor.isPresent() && openedEditor.get().isDirty()) {
+            if (MessageDialog.openQuestion(shell, Messages.saveBeforeImportTitle, Messages.saveBeforeImportMessage)) {
+                openedEditor.get().doSave(new NullProgressMonitor());
+            }
+        }
+    }
+
+    private Optional<BusinessObjectModelFileStore> retrieveBdmFileStore(RepositoryAccessor repositoryAccessor) {
+        return Optional.ofNullable((BusinessObjectModelFileStore) repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml", false));
     }
 
     private WizardBuilder<IStatus> createWizard(WizardBuilder<IStatus> builder, SmartImportBdmPage page,
