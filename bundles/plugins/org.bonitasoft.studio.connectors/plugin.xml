@@ -118,7 +118,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?before=org.bonitasoft.studio.dependencies.manageJars">
+            locationURI="menu:org.bonitasoft.studio.development?before=org.bonitasoft.studio.document.manageResources.command">
              <menu
                    icon="icons/connector.png"
                    id="org.bonitasoft.studio.menu.connector"

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.document.ui;
 
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
+import org.bonitasoft.studio.document.DocumentPlugin;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.editingSupport.AdditionalResourcesFileEditingSupport;
 import org.bonitasoft.studio.document.ui.validator.AdditionalResourceProjectPathValidator;
@@ -132,7 +133,7 @@ public class AdditionalResourcesConfigurationWizardPage extends WizardPage imple
 
     @Override
     public Image getConfigurationImage() {
-        return Pics.getImage("Document.gif");
+        return Pics.getImage("Document.gif", DocumentPlugin.getDefault());
     }
 
     @Override
