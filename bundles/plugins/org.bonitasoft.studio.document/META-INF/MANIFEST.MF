@@ -3,8 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Document
 Bundle-SymbolicName: org.bonitasoft.studio.document;singleton:=true
 Bundle-Version: 7.11.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.document,
+ org.bonitasoft.studio.document.core.export,
+ org.bonitasoft.studio.document.core.expression,
+ org.bonitasoft.studio.document.core.repository,
+ org.bonitasoft.studio.document.i18n,
+ org.bonitasoft.studio.document.propertyTester,
+ org.bonitasoft.studio.document.refactoring,
+ org.bonitasoft.studio.document.ui
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
@@ -35,18 +43,17 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.engine,
  org.bonitasoft.studio.groovy,
  org.bonitasoft.studio.configuration,
- org.bonitasoft.studio.ui
-Bundle-Localization: plugin
+ org.bonitasoft.studio.ui,
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.1.600.v20191106-1503",
+ org.eclipse.e4.core.di.annotations,
+ org.eclipse.e4.ui.services,
+ javax.inject
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.bpm.process.impl,
  org.bonitasoft.engine.expression,
  org.bonitasoft.studio.common
-Export-Package: org.bonitasoft.studio.document,
- org.bonitasoft.studio.document.core.export,
- org.bonitasoft.studio.document.core.expression,
- org.bonitasoft.studio.document.core.repository,
- org.bonitasoft.studio.document.i18n,
- org.bonitasoft.studio.document.refactoring,
- org.bonitasoft.studio.document.ui
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.bonitasoft.studio.document.DocumentPlugin
