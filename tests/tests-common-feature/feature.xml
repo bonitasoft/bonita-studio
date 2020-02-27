@@ -2,7 +2,7 @@
 <feature
       id="tests-common-feature"
       label="Feature for BonitaStudio tests"
-      version="7.10.2.qualifier"
+      version="7.10.3.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
