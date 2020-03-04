@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provided drivers fragment
+Bundle-SymbolicName: org.bonitasoft.studio.connectors.database.drivers;singleton:=true
+Bundle-Version: 7.10.3.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Fragment-Host: org.bonitasoft.studio.connectors;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.bonitasoft.studio.connectors.database.drivers
