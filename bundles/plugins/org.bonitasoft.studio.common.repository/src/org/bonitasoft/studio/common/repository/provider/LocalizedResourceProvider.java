@@ -21,14 +21,14 @@ import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ILocalizedResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 
-
 public class LocalizedResourceProvider implements ILocalizedResourceProvider {
-    
+
     private IDefinitionRepositoryStore actorFilterDefStore;
     private IDefinitionRepositoryStore connectorDefStore;
     private Locale locale = Locale.getDefault();
 
-    public LocalizedResourceProvider(IDefinitionRepositoryStore actorFilterDefStore, IDefinitionRepositoryStore connectorDefStore, Locale locale) {
+    public LocalizedResourceProvider(IDefinitionRepositoryStore actorFilterDefStore,
+            IDefinitionRepositoryStore connectorDefStore, Locale locale) {
         this.actorFilterDefStore = actorFilterDefStore;
         this.connectorDefStore = connectorDefStore;
         this.locale = locale;
@@ -46,10 +46,12 @@ public class LocalizedResourceProvider implements ILocalizedResourceProvider {
 
     private String getKey(IDefinitionRepositoryStore store, String definitionId, String definitionVersion) {
         ConnectorDefinition definition = store.getDefinition(definitionId, definitionVersion);
-        if(definition != null) {
+        if (definition != null) {
             ResourceBundle resourceBundle = store.getResourceProvider().getResourceBundle(definition, locale);
-            if(resourceBundle != null) {
-                return resourceBundle.getString(DefinitionResourceProvider.connectorDefinition);
+            if (resourceBundle != null && resourceBundle.containsKey(DefinitionResourceProvider.connectorDefinition)) {
+                return resourceBundle.containsKey(DefinitionResourceProvider.connectorDefinition)
+                        ? resourceBundle.getString(DefinitionResourceProvider.connectorDefinition)
+                        : String.format("%s-%s", definitionId, definitionVersion);
             }
             return store.getResourceProvider().getConnectorDefinitionLabel(definition);
         }
