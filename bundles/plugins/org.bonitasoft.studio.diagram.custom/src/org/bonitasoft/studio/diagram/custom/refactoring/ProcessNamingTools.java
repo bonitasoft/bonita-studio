@@ -19,7 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -36,6 +38,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -93,30 +96,11 @@ public class ProcessNamingTools {
             final String oldVersion, final String newVersion) {
         List<AbstractProcess> processes = diagramStore.getAllProcesses();
         StringBuilder activitiesToUpdateMsg = new StringBuilder();
-        final Set<CallActivity> toUpdate = new HashSet<>();
+        final Set<CallActivity> callActivityToUpdate = new HashSet<>();
+        final Set<Message> messagesToUpdate = new HashSet<>();
         for (AbstractProcess process : processes) {
-            List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process,
-                    ProcessPackage.Literals.CALL_ACTIVITY);
-            for (CallActivity sub : callActivities) {
-                String subprocessName = null;
-                if (sub.getCalledActivityName() != null
-                        && sub.getCalledActivityName().getContent() != null) {
-                    subprocessName = sub.getCalledActivityName().getContent();
-                }
-                String subprocessVersion = null;
-                if (sub.getCalledActivityVersion() != null
-                        && sub.getCalledActivityVersion().getContent() != null) {
-                    subprocessVersion = sub.getCalledActivityVersion().getContent();
-                }
-
-                if (subprocessName != null && subprocessName.equals(oldPoolName) //same pool name
-                        && ((subprocessVersion == null || subprocessVersion.isEmpty() /* ie Latest */)
-                                || subprocessVersion.equals(oldVersion))) { //same version or Latest
-                    activitiesToUpdateMsg.append(sub.getName() + " (" + process.getName() + ")");
-                    activitiesToUpdateMsg.append(SWT.CR);
-                    toUpdate.add(sub);
-                }
-            }
+            callActivityToUpdate.addAll(searchCallActivitiesReferences(oldPoolName, oldVersion, activitiesToUpdateMsg, process));
+            messagesToUpdate.addAll(searchMessagesReferences(oldPoolName, process));
         }
 
         CompoundCommand cc = new CompoundCommand("Rename pool");
@@ -124,9 +108,9 @@ public class ProcessNamingTools {
         cc.append(SetCommand.create(editingDomain, pool, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), newVersion));
         editingDomain.getCommandStack().execute(cc);
 
-        if (!toUpdate.isEmpty()
+        if (!messagesToUpdate.isEmpty() || (!callActivityToUpdate.isEmpty()
                 && MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.updateReferencesTitle,
-                        Messages.bind(Messages.updateReferencesMsg, activitiesToUpdateMsg.toString()))) {
+                        Messages.bind(Messages.updateReferencesMsg, activitiesToUpdateMsg.toString())))) {
             IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.run(true, false, new IRunnableWithProgress() {
@@ -134,7 +118,7 @@ public class ProcessNamingTools {
                     @Override
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.updatingReferences, IProgressMonitor.UNKNOWN);
-                        for (CallActivity sub : toUpdate) {
+                        for (CallActivity sub : callActivityToUpdate) {
                             String subprocessName = null;
                             if (sub.getCalledActivityName() != null
                                     && sub.getCalledActivityName().getContent() != null) {
@@ -199,7 +183,47 @@ public class ProcessNamingTools {
                                 }
                             }
                         }
+                        
+                        for(Message event : messagesToUpdate) {
+                            CompoundCommand cc = new CompoundCommand("Update process references in messages");
+                            Message toModify = event;
+                            TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(event);
+                            boolean loadResource = domain == null;
+                            Resource res = null;
+                            if (loadResource) {
+                                URI uri = EcoreUtil.getURI(event);
+                                domain = WorkspaceEditingDomainFactory.INSTANCE.createEditingDomain();
+                                res = domain.getResourceSet().createResource(uri);
+                                try {
+                                    res.load(Collections.emptyMap());
+                                } catch (IOException e) {
+                                    BonitaStudioLog.error(e);
+                                }
 
+                                MainProcess mainProc = (MainProcess) res.getContents().get(0);
+                                for (EObject message : ModelHelper.getAllItemsOfType(mainProc,
+                                        ProcessPackage.Literals.MESSAGE)) {
+                                    if (ModelHelper.getEObjectID(message).equals(EcoreUtil.getURI(event).fragment())) {
+                                        toModify = (Message) message;
+                                        break;
+                                    }
+                                }
+                            }
+                            Expression targetProcessExpression = toModify.getTargetProcessExpression();
+                            EMFModelUpdater<EObject> updater = new EMFModelUpdater<>()
+                                    .from(targetProcessExpression);
+                            updater.editWorkingCopy(createStringExpression(newPoolName));
+                            cc.append(updater.createUpdateCommand(domain));
+                            domain.getCommandStack().execute(cc);
+                            if (loadResource && res != null) {
+                                try {
+                                    res.save(Collections.emptyMap());
+                                } catch (IOException e) {
+                                    BonitaStudioLog.error(e);
+                                }
+                                domain.dispose();
+                            }
+                        }
                     }
                 });
             } catch (InvocationTargetException e) {
@@ -208,5 +232,43 @@ public class ProcessNamingTools {
                 BonitaStudioLog.error(e);
             }
         }
+    }
+
+    private Set<CallActivity> searchCallActivitiesReferences(final String oldPoolName, final String oldVersion,
+            StringBuilder activitiesToUpdateMsg,AbstractProcess process) {
+        List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process,
+                ProcessPackage.Literals.CALL_ACTIVITY);
+        Set<CallActivity> result = new HashSet<CallActivity>();
+        for (CallActivity sub : callActivities) {
+            String subprocessName = null;
+            if (sub.getCalledActivityName() != null
+                    && sub.getCalledActivityName().getContent() != null) {
+                subprocessName = sub.getCalledActivityName().getContent();
+            }
+            String subprocessVersion = null;
+            if (sub.getCalledActivityVersion() != null
+                    && sub.getCalledActivityVersion().getContent() != null) {
+                subprocessVersion = sub.getCalledActivityVersion().getContent();
+            }
+
+            if (subprocessName != null && subprocessName.equals(oldPoolName) //same pool name
+                    && ((subprocessVersion == null || subprocessVersion.isEmpty() /* ie Latest */)
+                            || subprocessVersion.equals(oldVersion))) { //same version or Latest
+                activitiesToUpdateMsg.append(sub.getName() + " (" + process.getName() + ")");
+                activitiesToUpdateMsg.append(SWT.CR);
+                result.add(sub);
+            }
+        }
+        return result;
+    }
+    
+    private Set<Message> searchMessagesReferences(final String oldPoolName, AbstractProcess process) {
+        return ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.MESSAGE).stream()
+                .map(Message.class::cast)
+                .filter(event -> event.getTargetProcessExpression() != null)
+                .filter(event -> event.getTargetProcessExpression().hasContent())
+                .filter(event -> ExpressionConstants.CONSTANT_TYPE.equals(event.getTargetProcessExpression().getType()))
+                .filter(event -> Objects.equals(event.getTargetProcessExpression().getContent(), oldPoolName))
+                .collect(Collectors.toSet());
     }
 }
