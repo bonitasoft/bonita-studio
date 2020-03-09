@@ -3,7 +3,7 @@
  * BonitaSoft is a trademark of BonitaSoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
+ * BonitaSoft, 32 rue Gustave Eiffel ï¿½ 38000 Grenoble
  * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.ui.widget;
@@ -15,8 +15,8 @@ import org.bonitasoft.studio.ui.widget.BulletPointWidget.BulletPointState;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 public class BulletPointWidget extends Composite {
 
@@ -61,16 +61,15 @@ public class BulletPointWidget extends Composite {
     }
 
     private void createBulletPoint(BulletPoint bulletPoint) {
-        StyledText text = new StyledText(this, SWT.WRAP);
-        text.setEditable(false);
-        text.setEnabled(false);
-        text.setText(String.format("%s %s", bulletPoint.isTodo()
+        Label label = new Label(this, SWT.WRAP);
+        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        label.setText(String.format("%s %s", bulletPoint.isTodo()
                 ? emptyBullet
                 : bulletPoint.isDone()
                         ? doneBullet
                         : failedBullet,
                 bulletPoint.getName()));
-        text.setBackground(getBackground());
+        label.setBackground(getBackground());
     }
 
 }
