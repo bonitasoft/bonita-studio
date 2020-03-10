@@ -102,12 +102,12 @@ public class ConstraintEditionControl {
             DataBindingContext ctx) {
         this.formPage = formPage;
         this.fieldStyleStringProvider = new FieldStyleStringProvider();
-        this.constraintsObservable = EMFObservables.observeDetailList(Realm.getDefault(),
-                formPage.observeBusinessObjectSelected(),
-                BusinessDataModelPackage.Literals.BUSINESS_OBJECT__UNIQUE_CONSTRAINTS);
         this.actualsFieldsObservable = EMFObservables.observeDetailList(Realm.getDefault(),
                 formPage.observeBusinessObjectSelected(),
                 BusinessDataModelPackage.Literals.BUSINESS_OBJECT__FIELDS);
+        this.constraintsObservable = EMFObservables.observeDetailList(Realm.getDefault(),
+                formPage.observeBusinessObjectSelected(),
+                BusinessDataModelPackage.Literals.BUSINESS_OBJECT__UNIQUE_CONSTRAINTS);
         this.errorColor = new LocalResourceManager(JFaceResources.getResources(),
                 parent).createColor(ColorConstants.ERROR_RGB);
 
