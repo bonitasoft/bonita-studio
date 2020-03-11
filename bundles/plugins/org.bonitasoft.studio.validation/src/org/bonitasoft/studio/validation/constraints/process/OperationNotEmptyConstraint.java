@@ -56,7 +56,9 @@ public class OperationNotEmptyConstraint extends
     private List<String> checkOperations(final EList<Operation> operations) {
         final List<String> errorsFound = new ArrayList<String>();
         for (final Operation operation : operations) {
-            if (operation.getLeftOperand() == null || operation.getLeftOperand().getName() == null) {
+            if (operation.getLeftOperand() == null 
+                    || operation.getLeftOperand().getName() == null
+                    || operation.getLeftOperand().getName().isEmpty()) {
                 errorsFound.add("An operation has no Left Operand.");
             }
             boolean deleteOperator = false;

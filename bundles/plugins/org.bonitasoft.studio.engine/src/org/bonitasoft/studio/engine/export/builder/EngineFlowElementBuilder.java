@@ -207,7 +207,12 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final ReceiveTaskDefinitionBuilder taskBuilder = builder.addReceiveTask(receiveTask.getName(), messageName);
         if (messageName != null) {
             for (final Operation operation : receiveTask.getMessageContent()) {
-                taskBuilder.addMessageOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
+                if (operation.getLeftOperand() != null
+                        && operation.getLeftOperand().hasContent()
+                        && operation.getRightOperand() != null
+                        && operation.getRightOperand().getContent() != null) {
+                    taskBuilder.addMessageOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
+                }
             }
             if (receiveTask.getCorrelation() != null) {
                 for (final ListExpression row : receiveTask.getCorrelation().getExpressions()) {
@@ -235,7 +240,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         final StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(object.getName());
         final String message = object.getEvent();
         if (message != null) {
-            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder
+                    .addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
             if (modelSearch.isInEvenementialSubProcessPool(object)) {
                 addMessageCorrelation(object, triggerBuilder);
@@ -247,10 +253,12 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     @Override
     public FlowElement caseIntermediateCatchMessageEvent(final IntermediateCatchMessageEvent object) {
-        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
+        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder
+                .addIntermediateCatchEvent(object.getName());
         final String message = object.getEvent();
         if (message != null) {
-            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder
+                    .addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
             addMessageCorrelation(object, triggerBuilder);
         }
@@ -261,7 +269,12 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     private void addMessageContent(final AbstractCatchMessageEvent messageEvent,
             final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         for (final Operation operation : messageEvent.getMessageContent()) {
-            triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
+            if (operation.getLeftOperand() != null
+                    && operation.getLeftOperand().hasContent()
+                    && operation.getRightOperand() != null
+                    && operation.getRightOperand().getContent() != null) {
+                triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
+            }
         }
     }
 
@@ -287,9 +300,11 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     @Override
     public FlowElement caseIntermediateThrowMessageEvent(final IntermediateThrowMessageEvent object) {
-        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
+        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder
+                .addIntermediateThrowEvent(object.getName());
         for (final Message message : object.getEvents()) {
-            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
+            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(
+                    message.getName(),
                     EngineExpressionUtil.createExpression(message.getTargetProcessExpression()),
                     EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
@@ -344,7 +359,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     public FlowElement caseEndMessageEvent(final EndMessageEvent object) {
         final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(object.getName());
         for (final Message message : object.getEvents()) {
-            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
+            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(
+                    message.getName(),
                     EngineExpressionUtil.createExpression(message.getTargetProcessExpression()),
                     EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
@@ -396,7 +412,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     @Override
     public IntermediateCatchSignalEvent caseIntermediateCatchSignalEvent(final IntermediateCatchSignalEvent object) {
-        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
+        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder
+                .addIntermediateCatchEvent(object.getName());
         final String signal = object.getSignalCode();
         if (signal != null) {
             eventBuilder.addSignalEventTrigger(signal);
@@ -407,7 +424,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     @Override
     public IntermediateThrowSignalEvent caseIntermediateThrowSignalEvent(final IntermediateThrowSignalEvent object) {
-        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
+        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder
+                .addIntermediateThrowEvent(object.getName());
         final String signal = object.getSignalCode();
         if (signal != null) {
             eventBuilder.addSignalEventTrigger(signal);
@@ -463,14 +481,15 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 callActivity.getCalledActivityName() != null ? callActivity.getCalledActivityName().getContent() : null,
                 callActivity.getCalledActivityVersion() != null ? callActivity.getCalledActivityVersion().getContent()
                         : null)
-                                .map(AbstractProcess::getData)
-                                .map(Collection::stream)
-                                .orElse(Stream.empty())
-                                .filter(data -> subprocessTarget.equals(data.getName()))
-                                .findFirst();
+                .map(AbstractProcess::getData)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .filter(data -> subprocessTarget.equals(data.getName()))
+                .findFirst();
         if (targetData.isPresent()) {
             builder.setType(
-                    targetData.get() instanceof BusinessObjectData ? LeftOperand.TYPE_BUSINESS_DATA : LeftOperand.TYPE_DATA);
+                    targetData.get() instanceof BusinessObjectData ? LeftOperand.TYPE_BUSINESS_DATA
+                            : LeftOperand.TYPE_DATA);
         } else {
             final List<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
             String type = LeftOperand.TYPE_DATA;
@@ -589,7 +608,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 type = TimerType.DURATION;
             } else {
                 throw new RuntimeException(
-                        "Unsupported return type " + startConditionExpression.getReturnType() + " for Start timer condition "
+                        "Unsupported return type " + startConditionExpression.getReturnType()
+                                + " for Start timer condition "
                                 + startTimer.getName());
             }
             startTimerBuilder.addTimerEventTriggerDefinition(type, startConditionExpression);
@@ -624,7 +644,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 }
             } catch (final ClassNotFoundException e) {
                 throw new IllegalArgumentException(
-                        String.format("Timer condition return type '%s' is not supported.", timerConditionReturnType), e);
+                        String.format("Timer condition return type '%s' is not supported.", timerConditionReturnType),
+                        e);
             }
         }
         return null;
@@ -713,7 +734,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
 
     protected void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
         for (final BoundaryEvent boundaryEvent : activity.getBoundaryIntermediateEvents()) {
-            final BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),
+            final BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(
+                    boundaryEvent.getName(),
                     !(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
             if (boundaryEvent instanceof IntermediateErrorCatchEvent) {
                 String errorCode = ((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode();
@@ -815,7 +837,7 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
     protected void addOperation(final ActivityDefinitionBuilder builder, final OperationContainer activity) {
         for (final Operation operation : activity.getOperations()) {
             if (operation.getLeftOperand() != null
-                    && operation.getLeftOperand().getContent() != null
+                    && operation.getLeftOperand().hasContent()
                     && operation.getRightOperand() != null
                     && operation.getRightOperand().getContent() != null) {
                 if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())) {
@@ -866,7 +888,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 if (completionCondition != null
                         && completionCondition.getContent() != null
                         && !completionCondition.getContent().isEmpty()) {
-                    multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
+                    multiInstanceBuilder
+                            .addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
                 }
                 if (activity.isStoreOutput()) {
                     final Data outputData = activity.getOutputData();
@@ -895,7 +918,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
                 if (completionCondition != null
                         && completionCondition.getContent() != null
                         && !completionCondition.getContent().isEmpty()) {
-                    multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
+                    multiInstanceBuilder
+                            .addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
                 }
 
                 if (iteratorExpression != null && iteratorExpression.getName() != null
@@ -923,7 +947,8 @@ public class EngineFlowElementBuilder extends AbstractProcessBuilder {
         if (collectionDataToMultiInstantiate instanceof BusinessObjectData) {
             taskBuilder.addBusinessData(iteratorExpression.getName(), iteratorExpression.getReturnType());
         } else {
-            final FlowElement parentFlowElement = modelSearch.getDirectParentOfType(iteratorExpression, FlowElement.class);
+            final FlowElement parentFlowElement = modelSearch.getDirectParentOfType(iteratorExpression,
+                    FlowElement.class);
             if (parentFlowElement instanceof DataAware
                     && !isDataAlreadyExists(iteratorExpression, (DataAware) parentFlowElement)) {
                 taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
