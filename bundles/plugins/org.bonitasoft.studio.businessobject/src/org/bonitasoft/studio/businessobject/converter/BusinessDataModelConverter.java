@@ -86,6 +86,7 @@ public class BusinessDataModelConverter {
                 .map(Package::getBusinessObjects)
                 .flatMap(Collection::stream)
                 .map(this::convertBusinessObject)
+                .sorted((bo1, bo2) -> compare(bo1, bo2))
                 .forEach(engineBusinessObjectModel.getBusinessObjects()::add);
 
         engineBusinessObjectModel.getBusinessObjects().stream()
@@ -95,6 +96,13 @@ public class BusinessDataModelConverter {
                 .map(org.bonitasoft.engine.bdm.model.field.RelationField.class::cast)
                 .forEach(field -> findParentReference(field, engineBusinessObjectModel));
         return engineBusinessObjectModel;
+    }
+
+    private int compare(org.bonitasoft.engine.bdm.model.BusinessObject bo1,
+            org.bonitasoft.engine.bdm.model.BusinessObject bo2) {
+        String qualifiedName1 = bo1.getQualifiedName();
+        String qualifiedName2 = bo2.getQualifiedName();
+        return qualifiedName1.compareTo(qualifiedName2);
     }
 
     private void findParentReference(RelationField field, BusinessObjectModel emfBusinessObjectModel) {
