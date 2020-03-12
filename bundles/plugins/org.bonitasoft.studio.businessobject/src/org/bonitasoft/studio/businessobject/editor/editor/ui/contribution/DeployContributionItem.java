@@ -17,14 +17,13 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler;
 import org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
-import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -35,10 +34,10 @@ import org.eclipse.swt.widgets.ToolItem;
 public class DeployContributionItem extends ContributionItem {
 
     public static final String ID = "org.bonitasoft.studio.bdm.editor.deploy";
-    private final AbstractFormPage<BusinessObjectModel> formPage;
+    private final AbstractBdmFormPage formPage;
     protected ToolItem item;
 
-    public DeployContributionItem(AbstractFormPage<BusinessObjectModel> formPage) {
+    public DeployContributionItem(AbstractBdmFormPage formPage) {
         super(ID);
         this.formPage = formPage;
     }
@@ -69,6 +68,7 @@ public class DeployContributionItem extends ContributionItem {
         } else {
             new DeployBDMHandler().deploy(formPage.getRepositoryAccessor(), Display.getDefault().getActiveShell());
         }
+        formPage.getEditorContribution().observeDeployRequired().setValue(false);
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.io.IOException;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.control.DeployRequiredControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
@@ -58,6 +59,8 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
     private BusinessObjectList businessObjectList;
     private BusinessObjectEditionControl businessObjectEditionControl;
 
+    private DeployRequiredControl deployRequiredControl;
+
     public BusinessDataModelFormPart(Composite businessDataModelComposite,
             BusinessDataModelFormPage formPage) {
         this.formPage = formPage;
@@ -65,6 +68,9 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         businessDataModelComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 5).create());
         businessDataModelComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        deployRequiredControl = new DeployRequiredControl(businessDataModelComposite, formPage,
+                GridDataFactory.fillDefaults().span(2, 1).create());
 
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -168,5 +174,14 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
     public void showBusinessObjectSelection() {
         businessObjectList.showBusinessObjectSelection();
+    }
+
+    public void updateDeployRequiredComposite(Boolean deployRequired) {
+        if (deployRequired) {
+            deployRequiredControl.show();
+        } else {
+            deployRequiredControl.hide();
+        }
+
     }
 }

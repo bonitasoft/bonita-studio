@@ -87,4 +87,11 @@ public class QueryFormPage extends AbstractBdmFormPage implements IDocumentListe
         }
     }
 
+    @Override
+    public void updateDeployRequiredComposite(Boolean deployRequired) {
+        if (queryFormPart != null) {
+            queryFormPart.updateDeployRequiredComposite(deployRequired);
+        }
+    }
+
 }

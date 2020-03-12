@@ -87,4 +87,11 @@ public class IndexFormPage extends AbstractBdmFormPage implements IDocumentListe
         }
     }
 
+    @Override
+    public void updateDeployRequiredComposite(Boolean deployRequired) {
+        if (indexFormPart != null) {
+            indexFormPart.updateDeployRequiredComposite(deployRequired);
+        }
+    }
+
 }

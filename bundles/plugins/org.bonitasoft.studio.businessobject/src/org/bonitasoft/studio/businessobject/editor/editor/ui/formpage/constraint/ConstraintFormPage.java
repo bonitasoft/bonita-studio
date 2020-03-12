@@ -87,4 +87,11 @@ public class ConstraintFormPage extends AbstractBdmFormPage implements IDocument
         }
     }
 
+    @Override
+    public void updateDeployRequiredComposite(Boolean deployRequired) {
+        if (constraintFormPart != null) {
+            constraintFormPart.updateDeployRequiredComposite(deployRequired);
+        }
+    }
+
 }
