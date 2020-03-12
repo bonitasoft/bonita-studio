@@ -98,4 +98,11 @@ public class BusinessDataModelFormPage extends AbstractBdmFormPage implements ID
         }
     }
 
+    @Override
+    public void updateDeployRequiredComposite(Boolean deployRequired) {
+        if (businessDataModelFormPart != null) {
+            businessDataModelFormPart.updateDeployRequiredComposite(deployRequired);
+        }
+    }
+
 }

@@ -502,6 +502,7 @@ public class Messages extends NLS {
     public static String validationStatus;
     public static String validatioNStatusDesc;
     public static String bdmValidMessage;
+    public static String bdmDeployRequired;
 
     private Messages() {
     }

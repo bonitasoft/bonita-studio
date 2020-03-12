@@ -15,16 +15,15 @@
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
-import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class CleanDeployContributionItem extends DeployContributionItem {
 
-    public CleanDeployContributionItem(AbstractFormPage<BusinessObjectModel> formPage) {
+    public CleanDeployContributionItem(AbstractBdmFormPage formPage) {
         super(formPage);
     }
 

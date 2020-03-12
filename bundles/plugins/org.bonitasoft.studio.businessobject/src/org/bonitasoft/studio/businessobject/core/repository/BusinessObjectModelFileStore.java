@@ -362,6 +362,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
                         DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG,
                         SWT.NONE);
             }
+            updateDeployRequiredState();
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("An error occured while depoying the BDM", e);
         }
@@ -386,7 +387,18 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
             return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM",
                     e);
         }
+        updateDeployRequiredState();
         return ValidationStatus.info(Messages.businessDataModelDeployed);
+    }
+
+    private void updateDeployRequiredState() {
+        BusinessDataModelEditor openedEditor = getOpenedEditor();
+        if (openedEditor != null) {
+            openedEditor.getEditorContribution(BusinessDataModelEditorContribution.ID)
+                    .filter(BusinessDataModelEditorContribution.class::isInstance)
+                    .map(BusinessDataModelEditorContribution.class::cast)
+                    .ifPresent(contribution -> contribution.observeDeployRequired().setValue(false));
+        }
     }
 
     @Override
