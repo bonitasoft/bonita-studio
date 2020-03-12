@@ -36,10 +36,17 @@ public class SVGContentProvider implements DOMContentProvider {
 
     private String id;
     private String svgName;
+    private int size = 6;
 
     public SVGContentProvider(String id, String svgName) {
         this.id = id;
         this.svgName = svgName;
+    }
+    
+    public SVGContentProvider(String id, String svgName, int size) {
+        this.id = id;
+        this.svgName = svgName;
+        this.size = size;
     }
 
     @Override
@@ -47,7 +54,7 @@ public class SVGContentProvider implements DOMContentProvider {
         try {
             Document document = loadXMLFromFile(toSvgFile());
             Element node = (Element) dom.importNode(document.getFirstChild(), true);
-            node.setAttribute("class", "inline h-6 w-6 mb-2");
+            node.setAttribute("class", String.format("inline h-%s w-%s mb-2",size, size));
             parent.appendChild(node);
             parent.setAttribute("class", "inline");
         } catch (ParserConfigurationException | SAXException | IOException e) {
