@@ -12,29 +12,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.ui;
+package org.bonitasoft.studio.document.ui.dialog;
 
-import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;
 
-public class AdditionalResourceWizardDialog extends FinishAndAddCustomWizardDialog {
+public class ManageResourceDialog extends SelectResourceDialog {
 
-    public AdditionalResourceWizardDialog(Shell parentShell, AdditionalResourceWizard newWizard,
-            boolean withFinishAndAddButton) {
-        super(parentShell, newWizard, withFinishAndAddButton);
-        setTitle(Messages.newAdditionalResource);
+    public ManageResourceDialog(IShellProvider parentShell) {
+        super(parentShell);
+    }
+
+    public ManageResourceDialog(Shell parentShell) {
+        super(parentShell);
     }
 
     @Override
-    protected void actionOnFinishAndAdd() {
-        AdditionalResourceWizardDialog documentWizardDialog = new AdditionalResourceWizardDialog(getParentShell(),
-                new AdditionalResourceWizard(getWizard().getPool()), true);
-        documentWizardDialog.open();
+    protected String getDialogTitle() {
+        return Messages.manageResourcesDialogTitle;
     }
 
     @Override
-    protected AdditionalResourceWizard getWizard() {
-        return (AdditionalResourceWizard) super.getWizard();
+    protected String getDialogDescription() {
+        return Messages.manageResourcesDescription;
     }
+
 }

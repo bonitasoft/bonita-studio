@@ -70,7 +70,7 @@
    <extension
          point="org.bonitasoft.studio.configuration.wizardPage">
       <configurationWizardPage
-            class="org.bonitasoft.studio.document.ui.AdditionalResourcesConfigurationWizardPage"
+            class="org.bonitasoft.studio.document.ui.wizardPage.AdditionalResourcesConfigurationWizardPage"
             priority="7">
       </configurationWizardPage>
    </extension>

@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.ui;
+package org.bonitasoft.studio.document.ui.wizardPage;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
@@ -20,13 +20,13 @@ import java.util.Iterator;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.control.DocumentDescriptionComposite;
 import org.bonitasoft.studio.document.ui.control.DocumentNameComposite;
 import org.bonitasoft.studio.document.ui.control.FileContractInputSelectionComposite;
 import org.bonitasoft.studio.document.ui.control.MultipleFileContractInputSelectionComposite;
 import org.bonitasoft.studio.document.ui.control.SingleFileContractInputSelectionComposite;
+import org.bonitasoft.studio.document.ui.dialog.SelectResourceDialog;
 import org.bonitasoft.studio.document.ui.validator.DocumentInitialContentValidator;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -480,7 +480,7 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final SelectDocumentInBonitaStudioRepository selectDocumentInBonitaStudioRepository = new SelectDocumentInBonitaStudioRepository(
+                final SelectResourceDialog selectDocumentInBonitaStudioRepository = new SelectResourceDialog(
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow());
                 if (IDialogConstants.OK_ID == selectDocumentInBonitaStudioRepository.open()) {
                     documentTextId.setText(selectDocumentInBonitaStudioRepository.getSelectedDocument().getDisplayName());

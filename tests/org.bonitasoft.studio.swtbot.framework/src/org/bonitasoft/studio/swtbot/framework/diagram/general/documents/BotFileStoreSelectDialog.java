@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 
-import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
-
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -30,7 +28,7 @@ public class BotFileStoreSelectDialog extends BotDialog {
      * @param dialogTitle
      */
     public BotFileStoreSelectDialog(final SWTGefBot bot) {
-        super(bot, Messages.bind(Messages.selectDocumentDialogTitle, new Object[] { bonitaStudioModuleName }));
+        super(bot, Messages.selectResourceDialogTitle);
 
     }
 

@@ -12,10 +12,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.ui;
+package org.bonitasoft.studio.document.ui.dialog;
 
 import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.document.ui.wizard.DocumentWizard;
 import org.eclipse.swt.widgets.Shell;
 
 public class DocumentWizardDialog extends FinishAndAddCustomWizardDialog {

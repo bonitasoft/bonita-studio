@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.document.ui.editingSupport;
 
-import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
+import org.bonitasoft.studio.document.ui.dialog.SelectResourceDialog;
 import org.bonitasoft.studio.model.configuration.Resource;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -67,7 +67,7 @@ class CustomDialogCellEditor extends DialogCellEditor {
 
     @Override
     protected Object openDialogBox(Control cellEditorWindow) {
-        SelectDocumentInBonitaStudioRepository dialog = new SelectDocumentInBonitaStudioRepository(
+        SelectResourceDialog dialog = new SelectResourceDialog(
                 cellEditorWindow.getShell());
         dialog.open();
         return dialog.getSelectedDocument();
