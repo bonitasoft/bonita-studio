@@ -12,10 +12,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.ui;
+package org.bonitasoft.studio.document.ui.wizard;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.document.ui.wizardPage.AdditionalResourceWizardPage;
 import org.bonitasoft.studio.model.process.AdditionalResource;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;

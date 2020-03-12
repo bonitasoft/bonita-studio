@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document.ui;
+package org.bonitasoft.studio.document.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.DocumentPlugin;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
+import org.bonitasoft.studio.document.ui.wizardPage.DocumentWizardPage;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;

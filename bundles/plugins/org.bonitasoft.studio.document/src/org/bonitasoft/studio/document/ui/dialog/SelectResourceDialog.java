@@ -12,32 +12,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.document;
-
-
-import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
+package org.bonitasoft.studio.document.ui.dialog;
 
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;
+
 /**
  * @author Aurelien Pupier
- *
  */
-public class SelectDocumentInBonitaStudioRepository extends FileStoreSelectDialog {
+public class SelectResourceDialog extends FileStoreSelectDialog {
 
-    public SelectDocumentInBonitaStudioRepository(final IShellProvider parentShell) {
+    public SelectResourceDialog(final IShellProvider parentShell) {
         super(parentShell);
     }
 
-    public SelectDocumentInBonitaStudioRepository(final Shell parentShell){
+    public SelectResourceDialog(final Shell parentShell) {
         super(parentShell);
     }
 
-    public DocumentFileStore getSelectedDocument(){
-        return (DocumentFileStore)getSelectedFileStore();
+    public DocumentFileStore getSelectedDocument() {
+        return (DocumentFileStore) getSelectedFileStore();
     }
 
     @Override
@@ -47,12 +44,12 @@ public class SelectDocumentInBonitaStudioRepository extends FileStoreSelectDialo
 
     @Override
     protected String getDialogTitle() {
-        return Messages.bind(Messages.selectDocumentDialogTitle, new Object[]{bonitaStudioModuleName});
+        return Messages.selectResourceDialogTitle;
     }
 
     @Override
     protected String getDialogDescription() {
-        return Messages.bind(Messages.selectDocumentDescription, new Object[] { bonitaStudioModuleName });
+        return Messages.selectResourceDescription;
     }
 
 }

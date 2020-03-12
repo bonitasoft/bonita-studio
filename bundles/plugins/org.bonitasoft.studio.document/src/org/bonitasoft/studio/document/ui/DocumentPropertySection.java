@@ -28,6 +28,8 @@ import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
+import org.bonitasoft.studio.document.ui.dialog.DocumentWizardDialog;
+import org.bonitasoft.studio.document.ui.wizard.DocumentWizard;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
