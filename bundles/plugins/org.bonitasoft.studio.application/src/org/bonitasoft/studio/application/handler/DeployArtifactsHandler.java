@@ -168,7 +168,7 @@ public class DeployArtifactsHandler {
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
                     e.getCause() != null ? e.getCause() : e);
         }
-        if(status.getSeverity() == IStatus.CANCEL) {
+        if (status.getSeverity() == IStatus.CANCEL) {
             openAbortDialog(Display.getDefault().getActiveShell());
         }
         return status.getSeverity() == IStatus.CANCEL ? null : status;
@@ -232,30 +232,30 @@ public class DeployArtifactsHandler {
             MultiStatus status) {
         return monitor -> {
             new IndexingUIDOperation().run(monitor);
-            if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
-                ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
-                operation.run(monitor);
-                status.add(operation.getStatus());
-            }
-            if (status.isOK()) {
-                GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
-                apiSessionOperation.run(monitor);
-                try {
-                    APISession session = apiSessionOperation.getSession();
-                    DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                            artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
-                                    .map(TenantArtifact.class::cast).collect(Collectors.toList()),
-                            session, deployOptions);
-                    monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
-                    deployTenantResourcesOperation.run(monitor);
-                    addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
-                    addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
-                } finally {
-                    monitor.done();
-                    apiSessionOperation.logout();
+            GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+            apiSessionOperation.run(monitor);
+            try {
+                APISession session = apiSessionOperation.getSession();
+                DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
+                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
+                                .map(TenantArtifact.class::cast).collect(Collectors.toList()),
+                        session, deployOptions);
+                monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
+                deployTenantResourcesOperation.run(monitor);
+                addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
+                if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
+                    ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
+                    operation.run(monitor);
+                    status.add(operation.getStatus());
                 }
+                if (status.getSeverity() != IStatus.ERROR) {
+                    addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
+                }
+            } finally {
+                monitor.done();
+                apiSessionOperation.logout();
             }
-            if(monitor.isCanceled()) {
+            if (monitor.isCanceled()) {
                 status.add(ValidationStatus.cancel(Messages.abort));
             }
         };
@@ -314,7 +314,7 @@ public class DeployArtifactsHandler {
                         (MultiStatus) status);
                 multiStatusDialog.setLevel(IStatus.WARNING);
                 if (multiStatusDialog.open() == MultiStatusDialog.SEE_DETAILS_ID) {
-                    openDiagrams(processValidationStatuses,repositoryAccessor);
+                    openDiagrams(processValidationStatuses, repositoryAccessor);
                 }
             } else {
                 try {
@@ -330,7 +330,6 @@ public class DeployArtifactsHandler {
             StatusManager.getManager().handle(status, StatusManager.SHOW);
         }
     }
-    
 
     private void openAbortDialog(Shell activeShell) {
         MessageDialog.openInformation(activeShell, Messages.abort, Messages.deployAborted);
@@ -346,7 +345,7 @@ public class DeployArtifactsHandler {
                 .distinct()
                 .filter(fStore -> !fStore.isOpened())
                 .forEach(DiagramFileStore::open);
-        
+
         RunProcessesValidationOperation.showValidationPart();
     }
 
