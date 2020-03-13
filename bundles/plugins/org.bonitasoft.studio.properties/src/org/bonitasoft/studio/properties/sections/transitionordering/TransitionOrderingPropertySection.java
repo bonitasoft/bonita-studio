@@ -18,6 +18,7 @@ package org.bonitasoft.studio.properties.sections.transitionordering;
 
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -27,7 +28,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.edit.command.MoveCommand;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -88,7 +88,7 @@ public class TransitionOrderingPropertySection extends AbstractBonitaDescription
         final List list = getWidgetFactory().createList(mainComposite, SWT.BORDER | SWT.V_SCROLL);
         list.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 90).create());
         listViewer = new ListViewer(list);
-        listViewer.setContentProvider(new ObservableListContentProvider());
+        listViewer.setContentProvider(new ObservableListContentProvider<Element>());
         listViewer.setLabelProvider(new LabelProvider(){
             @Override
             public String getText(final Object element) {
@@ -182,24 +182,14 @@ public class TransitionOrderingPropertySection extends AbstractBonitaDescription
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        resetDatabindingContext();
         bindList();
         updateButtonsEnablement();
     }
 
-    protected void resetDatabindingContext() {
-        if(databindingContext != null){
-            databindingContext.dispose();
-        }
-        databindingContext = new EMFDataBindingContext();
-    }
 
     protected void bindList() {
         final SourceElement sourceElement = getSourceElement();
         final IObservableList outgoingListObserved = EMFEditProperties.list(getEditingDomain(), ProcessPackage.Literals.SOURCE_ELEMENT__OUTGOING).observe(sourceElement);
-        databindingContext.bindList(
-                WidgetProperties.items().observe(listViewer.getList()),
-                outgoingListObserved);
         listViewer.setInput(outgoingListObserved);
     }
 
