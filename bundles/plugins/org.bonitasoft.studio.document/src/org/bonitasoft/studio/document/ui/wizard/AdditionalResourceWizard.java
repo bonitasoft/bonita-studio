@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.document.ui.wizard;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.ui.wizardPage.AdditionalResourceWizardPage;
@@ -21,6 +24,7 @@ import org.bonitasoft.studio.model.process.AdditionalResource;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -28,6 +32,8 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.wizard.Wizard;
 
 public class AdditionalResourceWizard extends Wizard {
+
+    public static final String ADDITIONAL_RESSOURCE_DEFAULT_NAME = "myAdditionalRessource";
 
     private Pool pool;
     private AdditionalResource workingCopy;
@@ -38,6 +44,12 @@ public class AdditionalResourceWizard extends Wizard {
         super();
         this.pool = pool;
         this.workingCopy = ProcessFactory.eINSTANCE.createAdditionalResource();
+
+        List<String> existingNames = getPool().getAdditionalResources().stream().map(AdditionalResource::getName)
+                .collect(Collectors.toList());
+        String newName = StringIncrementer.getNextIncrement(ADDITIONAL_RESSOURCE_DEFAULT_NAME, existingNames);
+        workingCopy.setName(newName);
+
         setWindowTitle();
     }
 
