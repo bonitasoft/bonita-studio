@@ -211,7 +211,7 @@ public class TreeExplorer extends Composite implements SWTBotConstants {
         final TreeColumn columnName = new TreeColumn(leftTree.getTree(), SWT.NONE);
         columnName.setText(title);
         final TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1));
+        layout.addColumnData(new ColumnWeightData(1, 300));
         leftTree.getTree().setLayout(layout);
     }
 
@@ -220,7 +220,7 @@ public class TreeExplorer extends Composite implements SWTBotConstants {
         final TableColumn columnName = new TableColumn(rightTable.getTable(), SWT.NONE);
         columnName.setText(title);
         final TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1));
+        layout.addColumnData(new ColumnWeightData(1, 300));
         rightTable.getTable().setLayout(layout);
     }
 

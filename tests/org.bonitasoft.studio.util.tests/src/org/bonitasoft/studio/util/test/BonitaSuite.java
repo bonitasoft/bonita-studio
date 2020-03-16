@@ -24,13 +24,12 @@ import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
-import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -161,8 +160,8 @@ public class BonitaSuite extends Suite {
     }
 
     public static void configurePreferencesForTests() {
-        ConnectorEditPlugin.getPlugin().getPreferenceStore()
-                .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
         IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
         preferenceStore.setValue(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE,
                 BonitaCoolBarPreferenceConstant.NORMAL);

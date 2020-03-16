@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -31,6 +30,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 
 public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
+
+    public static final String HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING = "HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING";
 
     private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
 
@@ -59,7 +60,7 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
         addField(askSaveDiagramAfterFirstSave);
 
         showConnectorEditionConfirmation = new BooleanFieldEditor(
-                AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
+                HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
 

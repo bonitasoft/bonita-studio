@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,9 +44,10 @@ import org.bonitasoft.studio.connector.model.definition.Group;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -67,13 +66,10 @@ import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     private static final String DEF_EXT = "def";
-
-    public static final String HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING = "HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING";
 
     private boolean editMode = false;
 
@@ -93,7 +89,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     private final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore;
 
-    public AbstractDefinitionWizard(final String windowTitle, final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,
+    public AbstractDefinitionWizard(final String windowTitle,
+            final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,
             final DefinitionResourceProvider messageProvider) {
         Assert.isTrue(defStore instanceof IDefinitionRepositoryStore);
         setWindowTitle(windowTitle);
@@ -106,14 +103,16 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     }
 
     public AbstractDefinitionWizard(final String windowTitle, final ConnectorDefinition definition,
-            final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore, final DefinitionResourceProvider messageProvider) {
+            final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,
+            final DefinitionResourceProvider messageProvider) {
         Assert.isTrue(defStore instanceof IDefinitionRepositoryStore);
         setWindowTitle(windowTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
         editMode = true;
         originalDefinition = definition;
         this.defStore = defStore;
-        fileStore = defStore.getChild(NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true), true);
+        fileStore = defStore.getChild(
+                NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true), true);
         definitionWorkingCopy = EcoreUtil.copy(definition);
         this.messageProvider = messageProvider;
         messages = messageProvider.getDefaultMessageProperties(definition);
@@ -122,14 +121,16 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     @Override
     public void addPages() {
-        final List<ConnectorDefinition> existinfDefinitions = new ArrayList<ConnectorDefinition>();
+        final List<ConnectorDefinition> existinfDefinitions = new ArrayList<>();
         for (final ConnectorDefinition def : ((IDefinitionRepositoryStore) defStore).getDefinitions()) {
-            if (originalDefinition == null || !(def.getId().equals(originalDefinition.getId()) && def.getVersion().equals(originalDefinition.getVersion()))) {
+            if (originalDefinition == null || !(def.getId().equals(originalDefinition.getId())
+                    && def.getVersion().equals(originalDefinition.getVersion()))) {
                 existinfDefinitions.add(def);
             }
         }
 
-        infoPage = new DefinitionInformationWizardPage(definitionWorkingCopy, messages, existinfDefinitions, Pics.getImage("connector.png"), messageProvider);
+        infoPage = new DefinitionInformationWizardPage(definitionWorkingCopy, messages, existinfDefinitions,
+                Pics.getImage("connector.png"), messageProvider);
         if (originalDefinition != null) {
             infoPage.setDisplayName(messageProvider.getConnectorDefinitionLabel(originalDefinition));
             infoPage.setDefinitionDescription(messageProvider.getConnectorDefinitionDescription(originalDefinition));
@@ -140,7 +141,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
         addOutputPage();
 
-        i18nPage = new DefinitionI18NWizardPage(definitionWorkingCopy, originalDefinition, messageProvider.getExistingLocale(originalDefinition));
+        i18nPage = new DefinitionI18NWizardPage(definitionWorkingCopy, originalDefinition,
+                messageProvider.getExistingLocale(originalDefinition));
         addPage(i18nPage);
     }
 
@@ -156,11 +158,13 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     public boolean performFinish() {
         final Input faultyMandatoryInput = isDefinitionValid();
         if (faultyMandatoryInput != null) {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.bind(Messages.inputMandatoryErrorTitle, faultyMandatoryInput.getName()),
+            MessageDialog.openError(Display.getCurrent().getActiveShell(),
+                    Messages.bind(Messages.inputMandatoryErrorTitle, faultyMandatoryInput.getName()),
                     Messages.bind(Messages.inputMandatoryError, faultyMandatoryInput.getName()));
             return false;
         } else {
-            final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+            final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(),
+                    definitionWorkingCopy.getVersion(), false);
             final String defFileName = defId + "." + DEF_EXT;
 
             if (editMode) {
@@ -173,7 +177,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 final IFolder targetFoler = defStore.getResource();
                 final IFile iconFile = targetFoler.getFile(definitionWorkingCopy.getIcon());
                 try {
-                    if (iconFile.exists() && !iconFile.getLocation().toFile().getAbsolutePath().equals(imageFile.getAbsolutePath())) {
+                    if (iconFile.exists()
+                            && !iconFile.getLocation().toFile().getAbsolutePath().equals(imageFile.getAbsolutePath())) {
                         iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
                     }
                     BufferedImage image = ImageIO.read(imageFile);
@@ -216,16 +221,17 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     }
 
     protected boolean editConnectorDefinition() {
-        final IPreferenceStore preferenceStore = ConnectorEditPlugin.getPlugin().getPreferenceStore();
+        final IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
         boolean editAnyway = true;
-        if (!preferenceStore.getBoolean(HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)) {
-            final MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
+        if (!preferenceStore.getBoolean(BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)) {
+            final MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(
+                    Display.getDefault().getActiveShell(),
                     Messages.confirmConnectorDefEditionTitle,
                     Messages.confirmConnectorDefEditionMsg,
                     Messages.doNotDisplayAgain,
                     false,
                     preferenceStore,
-                    HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING);
+                    BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING);
             editAnyway = dialog.getReturnCode() == Dialog.OK;
         }
 
@@ -234,8 +240,10 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
             return false;
         }
 
-        final String oldDefId = NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(), originalDefinition.getVersion(), false);
-        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+        final String oldDefId = NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(),
+                originalDefinition.getVersion(), false);
+        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(),
+                definitionWorkingCopy.getVersion(), false);
         String oldFileName = oldDefId + "." + DEF_EXT;
         final String defFileName = defId + "." + DEF_EXT;
         if (!oldDefId.equals(defId)) {
@@ -275,7 +283,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 oldDefFilseStore.delete();
             }
         } else if (oldDefFilseStore == null) {
-            final ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(), originalDefinition.getVersion());
+            final ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(),
+                    originalDefinition.getVersion());
             oldFileName = URI.decode(oldef.eResource().getURI().lastSegment());
             oldDefFilseStore = defStore.getChild(oldFileName, true);
             if (oldDefFilseStore != null) {
@@ -299,8 +308,9 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     }
 
     protected List<IFile> openPropertiesEditor(final Set<Locale> selectedLocales) {
-        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
-        final List<IFile> filesToOpen = new ArrayList<IFile>();
+        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(),
+                definitionWorkingCopy.getVersion(), false);
+        final List<IFile> filesToOpen = new ArrayList<>();
         for (final Locale l : selectedLocales) {
             try {
                 for (final IResource r : defStore.getResource().members()) {

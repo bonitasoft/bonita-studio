@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
+import static org.bonitasoft.studio.connector.model.definition.CloudProblematicsConnectors.WARNING_CONNECTORS;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,17 +28,16 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionExplorerLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.filter.CustomConnectorViewerFilter;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ContentViewer;
@@ -49,11 +50,13 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -78,21 +81,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     private final DefinitionResourceProvider messageProvider;
     protected final List<ConnectorDefinition> definitions;
     private List<ViewerFilter> filters = new ArrayList<>();
-    private final ViewerFilter customConnectorFilter = new ViewerFilter() {
-
-        @Override
-        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-            if (element instanceof ConnectorDefinition) {
-                final Resource eResource = ((ConnectorDefinition) element).eResource();
-                if (eResource != null) {
-                    final IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-                    return rootPath.isPrefixOf(Path.fromOSString(eResource.getURI().toFileString()));
-                }
-            }
-            return false;
-        }
-    };
-
+    private final ViewerFilter customConnectorFilter = new CustomConnectorViewerFilter();
+    private Composite cloudValidationComposite;
+    private CLabel cloudValidationLabel;
 
     public AbstractDefinitionSelectionImpementationWizardPage(final ConnectorImplementation implementation,
             final List<ConnectorImplementation> existingImpl, final List<ConnectorDefinition> definitions,
@@ -117,17 +108,12 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         checkOnlyCustom = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
-
         context = new EMFDataBindingContext();
 
-        final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
 
         explorer = createTreeExplorer(mainComposite);
 
@@ -136,29 +122,32 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         definitionVersionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
         versionCombo = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
-        versionCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().create());
+        versionCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         versionCombo.setContentProvider(new ArrayContentProvider());
         versionCombo.setLabelProvider(new LabelProvider());
         versionCombo.getCombo().setEnabled(false);
-        versionCombo.setSorter(new ViewerSorter());
+        versionCombo.setComparator(new ViewerComparator());
 
         final Group descriptionGroup = new Group(mainComposite, SWT.NONE);
         descriptionGroup.setText(Messages.description);
-        descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
+        descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         descriptionGroup
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
 
         final Label descriptionLabel = new Label(descriptionGroup, SWT.WRAP);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
+        createCloudValidationComposite(mainComposite);
+
         explorer.getRightTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 final Object sel = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                validateCloudRestrictions(sel);
                 if (sel instanceof ConnectorDefinition) {
                     final String defId = ((ConnectorDefinition) sel).getId();
-                    final List<String> versions = new ArrayList<String>();
+                    final List<String> versions = new ArrayList<>();
                     for (final ConnectorDefinition def : definitions) {
                         if (defId.equals(def.getId())) {
                             versions.add(def.getVersion());
@@ -193,6 +182,25 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                     descriptionGroup.layout(true);
                 }
 
+            }
+
+            private void validateCloudRestrictions(Object sel) {
+                if (sel instanceof ConnectorDefinition) {
+                    String id = ((ConnectorDefinition) sel).getId();
+                    if (WARNING_CONNECTORS.containsKey(id)) {
+                        cloudValidationLabel.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
+                        cloudValidationLabel.setText(WARNING_CONNECTORS.get(id));
+                        ((GridData) cloudValidationComposite.getLayoutData()).exclude = false;
+                        cloudValidationComposite.setVisible(true);
+                        cloudValidationComposite.getParent().layout();
+                        return;
+                    }
+                }
+                if (cloudValidationComposite.isVisible()) {
+                    cloudValidationComposite.setVisible(false);
+                    ((GridData) cloudValidationComposite.getLayoutData()).exclude = true;
+                    cloudValidationComposite.getParent().layout();
+                }
             }
         });
 
@@ -251,7 +259,15 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         setControl(mainComposite);
     }
 
-    @SuppressWarnings("unchecked")
+    private void createCloudValidationComposite(Composite parent) {
+        cloudValidationComposite = new Composite(parent, SWT.NONE);
+        cloudValidationComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        cloudValidationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+
+        cloudValidationLabel = new CLabel(cloudValidationComposite, SWT.WRAP);
+        cloudValidationLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    }
+
     protected ConnectorDefinition getConnectorDefinitionFromId(final String definitionId) {
         final List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
         for (final Object c : definitions) {
@@ -264,7 +280,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
     protected TreeExplorer createTreeExplorer(final Composite mainComposite) {
         final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
-        explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 290).span(2, 1).create());
+        explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 290).create());
 
         final Composite additionalComposite = explorer.getAdditionalComposite();
         additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
@@ -314,13 +330,12 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                 return element instanceof ConnectorDefinition;
             }
         });
-        
-        
-        for(ViewerFilter filter : filters) {
+
+        for (ViewerFilter filter : filters) {
             explorer.addRightTreeFilter(filter);
             explorer.addLeftTreeFilter(filter);
         }
-        
+
         explorer.setLeftHeader(Messages.categoriesLabel);
         explorer.setRightHeader(getRightHeaderMessage());
         explorer.setInput(new Object());
@@ -333,7 +348,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
             }
         });
         final Object[] rootElement = contentProvider.getElements(new Object());
-        final List<Object> flattenTree = new ArrayList<Object>();
+        final List<Object> flattenTree = new ArrayList<>();
         getFlattenTree(flattenTree, rootElement, contentProvider);
         explorer.getRightTableViewer().setInput(flattenTree);
         explorer.getRightTableViewer().addDoubleClickListener(new IDoubleClickListener() {
@@ -424,6 +439,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     }
 
     public void addConnectorDefinitionFilter(ViewerFilter deprecatedConnectorFilter) {
-        filters .add(deprecatedConnectorFilter);
+        filters.add(deprecatedConnectorFilter);
     }
+
 }
