@@ -17,13 +17,12 @@ package org.bonitasoft.studio.swtbot.framework.rule;
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
-import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -85,25 +84,25 @@ public class SWTGefBotRule implements TestRule {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
             bot.captureScreenshot(String.format("screenshots/OpenedShellAfterTest%s.jpg", System.currentTimeMillis()));
-            closeAllShells(bot,e);
+            closeAllShells(bot, e);
         }
         try {
-        	 closeAllAndReturnToWelcomePage();
-        }catch (Throwable e) {
-        	BonitaStudioLog.error("An error occured while trying to close all editors.",e);
-		}
+            closeAllAndReturnToWelcomePage();
+        } catch (Throwable e) {
+            BonitaStudioLog.error("An error occured while trying to close all editors.", e);
+        }
     }
 
-    private void closeAllShells(SWTWorkbenchBot bot,Exception e) {
+    private void closeAllShells(SWTWorkbenchBot bot, Exception e) {
         final SWTBotShell[] shells = bot.shells();
         for (final SWTBotShell shell : shells) {
             if (shell.isOpen() && !isEclipseShell(shell)) {
-				System.out.println(String.format("Trying to close shell '%s' after test failure %s",shell.getText(),e));
-				try {
-				    shell.close();
-				}catch(TimeoutException e1) {
-				    System.out.println(String.format("Failed to close shell %s: %s",shell.getText(),e1));
-				}
+                System.out.println(String.format("Trying to close shell '%s' after test failure %s", shell.getText(), e));
+                try {
+                    shell.close();
+                } catch (TimeoutException e1) {
+                    System.out.println(String.format("Failed to close shell %s: %s", shell.getText(), e1));
+                }
             }
         }
     }
@@ -132,8 +131,8 @@ public class SWTGefBotRule implements TestRule {
     }
 
     protected void initPreferences() {
-        ConnectorEditPlugin.getPlugin().getPreferenceStore()
-                .setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
         IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
         preferenceStore.setValue(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE,
                 BonitaCoolBarPreferenceConstant.NORMAL);

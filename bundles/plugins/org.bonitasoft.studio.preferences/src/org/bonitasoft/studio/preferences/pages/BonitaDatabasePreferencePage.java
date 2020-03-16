@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Button;
 
 /**
  * @author Romain Bioteau
- *
  */
 
 public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage {
@@ -53,9 +52,11 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage {
 
         createTitleBar(Messages.BonitaPreferenceDialog_database, Pics.getImage(PicsConstants.preferenceDB), false);
 
-        dropDB = new BooleanFieldEditor(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT, Messages.deleteTenantOnExit, getFieldEditorParent());
+        dropDB = new BooleanFieldEditor(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT, Messages.deleteTenantOnExit,
+                getFieldEditorParent());
         addField(dropDB);
-        usersAndRoles = new BooleanFieldEditor(BonitaPreferenceConstants.LOAD_ORGANIZATION, Messages.reloadDefaultOrganization, getFieldEditorParent()) {
+        usersAndRoles = new BooleanFieldEditor(BonitaPreferenceConstants.LOAD_ORGANIZATION,
+                Messages.reloadDefaultOrganization, getFieldEditorParent()) {
 
             @Override
             protected org.eclipse.swt.widgets.Button getChangeControl(final org.eclipse.swt.widgets.Composite parent) {
@@ -65,7 +66,9 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage {
 
         };
         addField(usersAndRoles);
-        usersAndRoles.setEnabled(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT),
+        usersAndRoles.setEnabled(
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT),
                 getFieldEditorParent());
 
         createPreferenceEditorContributions(DATABASE_CONTRIBUTOR_ID);
@@ -81,14 +84,14 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage {
     public void propertyChange(final PropertyChangeEvent event) {
         if (event.getSource() == dropDB) {
             if (!(Boolean) event.getNewValue()) {
-                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.LOAD_ORGANIZATION, false);
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .setValue(BonitaPreferenceConstants.LOAD_ORGANIZATION, false);
                 checkbox.setSelection(false);
             }
             usersAndRoles.setEnabled((Boolean) event.getNewValue(), getFieldEditorParent());
         }
         super.propertyChange(event);
     }
-
 
     /*
      * (non-Javadoc)
@@ -99,6 +102,5 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage {
         super.performDefaults();
         usersAndRoles.setEnabled(dropDB.getBooleanValue(), getFieldEditorParent());
     }
-
 
 }

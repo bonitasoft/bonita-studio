@@ -91,8 +91,8 @@ public class BonitaPreferenceDialog extends Dialog {
     private static final String LIGHTER = "lighter";
 
     private final Map keywordCache = new HashMap();
-    private final Map<String, ToolItem> itemPerPreferenceNode = new HashMap<String, ToolItem>();
-    private final Map<String, Label> labelPerPreferenceNode = new HashMap<String, Label>();
+    private final Map<String, ToolItem> itemPerPreferenceNode = new HashMap<>();
+    private final Map<String, Label> labelPerPreferenceNode = new HashMap<>();
     private StackLayout stack;
     private Composite mainComposite;
     private Composite menuComposite;
@@ -263,7 +263,7 @@ public class BonitaPreferenceDialog extends Dialog {
 
     protected void filter(final String text) {
         matcher = new StringMatcher(text, true, false);
-        final Set<String> foundIds = new HashSet<String>();
+        final Set<String> foundIds = new HashSet<>();
         for (final String id : pageIds) {
             final IPreferenceNode node = PreferenceUtil.findNodeMatching(id);
             if (isLeafMatch(node)) {
@@ -526,7 +526,6 @@ public class BonitaPreferenceDialog extends Dialog {
         final ToolItem tltmValidation = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.validation),
                 Pics.getImage(PicsConstants.validationDisabled), CONSTRAINTS_PAGE_ID);
 
-        
         final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, null,
                 Pics.getImage(PicsConstants.preferenceAdvanced),
                 Pics.getImage(PicsConstants.preferenceAdvanceddisabled), ADVANCED_PAGE_ID);
@@ -538,7 +537,7 @@ public class BonitaPreferenceDialog extends Dialog {
             @Override
             public void widgetSelected(final SelectionEvent e) {
 
-                final Set<String> preferencesToShow = new HashSet<String>();
+                final Set<String> preferencesToShow = new HashSet<>();
                 for (final Object elem : PlatformUI.getWorkbench().getPreferenceManager()
                         .getElements(PreferenceManager.POST_ORDER)) {
                     if (elem instanceof IPreferenceNode) {
@@ -561,11 +560,10 @@ public class BonitaPreferenceDialog extends Dialog {
 
         putInItemPerPreferenceNode(CONSTRAINTS_PAGE_ID, tltmValidation);
         putInLabelPerPreferenceNode(CONSTRAINTS_PAGE_ID, lblValidation);
-        
+
         putInItemPerPreferenceNode(ADVANCED_PAGE_ID, tltmAdvancedSettings);
         putInLabelPerPreferenceNode(ADVANCED_PAGE_ID, lblAdvanced);
 
-      
         putInItemPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseItem);
         putInLabelPerPreferenceNode(ECLIPSE_PAGE_ID, eclipseLabel);
     }

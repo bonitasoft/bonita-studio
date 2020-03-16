@@ -1145,6 +1145,22 @@
            class="Connector:http://www.bonitasoft.org/ns/studio/process">
      </target>
   </constraint>
+  <constraint
+        class="org.bonitasoft.studio.validation.constraints.connector.CloudWarningConnectors"
+        id="org.bonitasoft.studio.validation.constraints.cloudWarningConnectors"
+        isEnabledByDefault="true"
+        lang="Java"
+        mode="Batch"
+        name="Cloud warning connectors"
+        severity="WARNING"
+        statusCode="1">
+     <message>
+        {0}
+     </message>
+     <target
+           class="Connector:http://www.bonitasoft.org/ns/studio/process">
+     </target>
+  </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
