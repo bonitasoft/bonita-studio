@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -59,6 +60,7 @@ public class Well extends Composite {
     private final Link label;
     private Link moreInformationLink;
     private IObservableValue<String> labelTextObservable;
+    private WritableValue<Integer> severityObservable;
 
     /**
      * Display the given text in colored frame starting with a bold separator
@@ -76,6 +78,7 @@ public class Well extends Composite {
 
     public Well(final Composite parent, final String text, final String moreDetails, final FormToolkit toolkit, final int severity) {
         super(parent, SWT.NONE);
+        severityObservable = new WritableValue<Integer>(severity, Integer.class);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 8).spacing(0, 3).create());
         addPaintListener(new PaintListener() {
 
@@ -85,9 +88,9 @@ public class Well extends Composite {
                 final Rectangle bounds = source.getBounds();
                 final Rectangle borderBounds = new Rectangle(0, 0, bounds.width - 2, bounds.height - 2);
                 e.gc.setAntialias(SWT.ON);
-                e.gc.setBackground(backgroundColor(toolkit, severity));
+                e.gc.setBackground(backgroundColor(toolkit, severityObservable.getValue()));
                 e.gc.fillRoundRectangle(0, 0, bounds.width - 1, bounds.height - 1, ARC_SIZE, ARC_SIZE);
-                e.gc.setForeground(separatorColor(toolkit, severity));
+                e.gc.setForeground(separatorColor(toolkit, severityObservable.getValue()));
                 e.gc.setLineAttributes(new LineAttributes(1, SWT.CAP_ROUND, SWT.JOIN_ROUND));
                 e.gc.setLineWidth(1);
                 e.gc.drawRoundRectangle(0, 0, borderBounds.width, borderBounds.height, ARC_SIZE, ARC_SIZE);
@@ -99,8 +102,8 @@ public class Well extends Composite {
         if(text != null) {
             label.setText(text);
         }
-        label.setBackground(backgroundColor(toolkit, severity));
-        label.setForeground(separatorColor(toolkit, severity));
+        label.setBackground(backgroundColor(toolkit, severityObservable.getValue()));
+        label.setForeground(separatorColor(toolkit, severityObservable.getValue()));
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(parent.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, SWT.DEFAULT)
                 .create());
         labelTextObservable = WidgetProperties.text().observe(label);
@@ -108,11 +111,17 @@ public class Well extends Composite {
             getParent().getParent().layout(true,true);
         });
 
+        severityObservable.addValueChangeListener(e -> {
+            label.setBackground(backgroundColor(toolkit, severityObservable.getValue()));
+            label.setForeground(separatorColor(toolkit, severityObservable.getValue()));
+            getParent().getParent().layout(true,true);
+        });
+
         if (!Strings.isNullOrEmpty(moreDetails)) {
             moreInformationLink = new Link(this, SWT.WRAP);
             moreInformationLink.setText("<a>" + Messages.moreDetails + "</a>");
-            moreInformationLink.setBackground(backgroundColor(toolkit, severity));
-            moreInformationLink.setForeground(separatorColor(toolkit, severity));
+            moreInformationLink.setBackground(backgroundColor(toolkit, severityObservable.getValue()));
+            moreInformationLink.setForeground(separatorColor(toolkit, severityObservable.getValue()));
             moreInformationLink.setLayoutData(
                     GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.BOTTOM).grab(true, false).create());
             final Shell tootltipShell = new Shell(getDisplay());
@@ -230,6 +239,10 @@ public class Well extends Composite {
 
     public IObservableValue<String> labelObservable() {
         return labelTextObservable;
+    }
+    
+    public WritableValue<Integer> severityObservable() {
+        return severityObservable;
     }
 
 }

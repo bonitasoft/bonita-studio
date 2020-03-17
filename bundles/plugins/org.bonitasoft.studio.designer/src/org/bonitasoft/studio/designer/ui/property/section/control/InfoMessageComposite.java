@@ -14,11 +14,19 @@
  */
 package org.bonitasoft.studio.designer.ui.property.section.control;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import org.bonitasoft.studio.common.properties.Well;
+import org.bonitasoft.studio.model.process.FormMapping;
 import org.bonitasoft.studio.model.process.FormMappingType;
+import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -29,7 +37,8 @@ public class InfoMessageComposite extends Composite {
 
     private final Well well;
 
-    public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,int severity) {
+    public InfoMessageComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
+            int severity) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 0).create());
         well = new Well(this, null, widgetFactory, severity);
@@ -37,13 +46,41 @@ public class InfoMessageComposite extends Composite {
         widgetFactory.adapt(this);
     }
 
-    public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable, final FormMappingType type) {
+    public void doBindControl(final DataBindingContext context, final IObservableValue formMappingObservable,
+            final FormMappingType type) {
         doBindInfo(context, formMappingObservable, type);
     }
 
-    protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable, final FormMappingType type) {
+    protected void doBindInfo(final DataBindingContext context, final IObservableValue formMappingObservable,
+            final FormMappingType type) {
         final UpdateValueStrategy infoStrategy = new UpdateValueStrategy();
         infoStrategy.setConverter(new InfoMessageConverter(type));
+
         context.bindValue(well.labelObservable(), formMappingObservable, null, infoStrategy);
+        context.bindValue(well.severityObservable(),
+                formMappingObservable,
+                null,
+                updateValueStrategy()
+                        .withConverter(ConverterBuilder.<FormMapping, Integer> newConverter()
+                                .fromType(FormMapping.class)
+                                .toType(Integer.class)
+                                .withConvertFunction(mapping -> convertToSeverity(mapping, type))
+                                .create())
+                        .create());
+    }
+
+    private Integer convertToSeverity(FormMapping mapping, FormMappingType formMappingType) {
+        if (mapping != null) {
+            final EObject context = mapping.eContainer();
+            switch (formMappingType) {
+                case NONE:
+                    return context instanceof Task ? IStatus.WARNING : IStatus.INFO;
+                case INTERNAL:
+                case URL:
+                default:
+                    return IStatus.INFO;
+            }
+        }
+        return IStatus.INFO;
     }
 }

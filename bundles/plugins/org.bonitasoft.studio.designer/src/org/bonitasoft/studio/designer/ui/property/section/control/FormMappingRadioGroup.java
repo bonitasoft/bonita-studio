@@ -82,7 +82,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         stackLayout = new CustomStackLayout(stackedComposite);
         stackedComposite.setLayout(stackLayout);
 
-        noneComposite = new InfoMessageComposite(stackedComposite, widgetFactory,IStatus.INFO);
+        noneComposite = new InfoMessageComposite(stackedComposite, widgetFactory, IStatus.INFO);
         pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory,
                 repositoryAccessor, formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
