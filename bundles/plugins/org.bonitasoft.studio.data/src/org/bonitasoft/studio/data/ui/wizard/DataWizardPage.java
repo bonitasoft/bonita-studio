@@ -375,6 +375,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 }
             }
         }
+        nameText.setFocus();
         setControl(mainComposite);
     }
 
@@ -425,7 +426,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     if (data instanceof JavaObjectData) {
                         technicalTypeFor = ((JavaObjectData) data).getClassName();
                     }
-                    final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue();
+                    final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression
+                            .getValue();
                     if (defaultValueExp != null) {
                         final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp,
                                 ExpressionPackage.Literals.EXPRESSION__CONTENT);
@@ -462,33 +464,39 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                                 try {
                                     Integer.valueOf(content);
                                 } catch (final NumberFormatException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             } else if (Double.class.getName().equals(returnType)) {
                                 try {
                                     Double.valueOf(content);
                                 } catch (final NumberFormatException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             } else if (Float.class.getName().equals(returnType)) {
                                 try {
                                     Float.valueOf(content);
                                 } catch (final NumberFormatException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             } else if (Long.class.getName().equals(returnType)) {
                                 try {
                                     Long.valueOf(content);
                                 } catch (final NumberFormatException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             } else if (Date.class.getName().equals(returnType)) {
                                 try {
                                     DateFormat.getInstance().parse(content);
                                 } catch (final IllegalArgumentException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 } catch (final ParseException e) {
-                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                    return ValidationStatus
+                                            .warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             }
                         }
@@ -647,7 +655,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         final AbstractProcess process = ModelHelper.getMainProcess(container);
         emfDatabindingContext.bindValue(ViewersObservables.observeInput(typeCombo),
                 EMFObservables.observeValue(process, ProcessPackage.Literals.ABSTRACT_PROCESS__DATATYPES));
-        final IObservableValue modelObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__DATA_TYPE);
+        final IObservableValue modelObservable = EMFObservables.observeValue(data,
+                ProcessPackage.Literals.DATA__DATA_TYPE);
         modelObservable.addValueChangeListener(typeChangeListener);
 
         observeSingleSelectionTypeCombo = ViewersObservables.observeSingleSelection(typeCombo);
@@ -673,7 +682,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         final Expression exp = data.getDefaultValue();
         final String expType = exp.getType();
-        if (!(ExpressionConstants.VARIABLE_TYPE.equals(expType) || ExpressionConstants.PARAMETER_TYPE.equals(expType))) {
+        if (!(ExpressionConstants.VARIABLE_TYPE.equals(expType)
+                || ExpressionConstants.PARAMETER_TYPE.equals(expType))) {
             exp.setReturnType(getSelectedReturnType());
         }
 
@@ -810,7 +820,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     return Status.OK_STATUS;
                 }
             });
-            final IObservableValue observeValue = EMFObservables.observeValue(data, ProcessPackage.Literals.XML_DATA__TYPE);
+            final IObservableValue observeValue = EMFObservables.observeValue(data,
+                    ProcessPackage.Literals.XML_DATA__TYPE);
             final ISWTObservableValue observeText = SWTObservables.observeText(elementCombo);
             emfDatabindingContext.bindValue(observeText,
                     observeValue, strategy, null);
@@ -819,8 +830,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 @Override
                 public void handleValueChange(final ValueChangeEvent event) {
                     if (newXMLButton != null && !newXMLButton.isDisposed()) {
-                        newXMLButton.setEnabled(((XMLData) data).getNamespace() != null && event.diff.getNewValue() != null
-                                && !event.diff.getNewValue().toString().isEmpty());
+                        newXMLButton
+                                .setEnabled(((XMLData) data).getNamespace() != null && event.diff.getNewValue() != null
+                                        && !event.diff.getNewValue().toString().isEmpty());
                     }
                 }
             });
@@ -861,7 +873,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         defaultValueComposite = new Composite(parent, SWT.NONE);
         defaultValueComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         defaultValueComposite
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).span(2, 1).create());
 
         defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER,
                 ProcessPackage.Literals.DATA__DEFAULT_VALUE);
@@ -893,7 +906,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         refreshDataNames();
 
         defaultValueViewer
-                .addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext(), isPageFlowContext()));
+                .addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext(),
+                        isPageFlowContext()));
         defaultValueViewer.setInput(data);
 
         updateBrowseXMLButton(data.getDataType());
@@ -913,7 +927,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 final XSDRepositoryStore store = RepositoryManager.getInstance()
                         .getRepositoryStore(XSDRepositoryStore.class);
                 if (data instanceof XMLData) {
-                    final XSDFileStore nameSpaceStore = store.findArtifactWithNamespace(((XMLData) data).getNamespace());
+                    final XSDFileStore nameSpaceStore = store
+                            .findArtifactWithNamespace(((XMLData) data).getNamespace());
                     if (nameSpaceStore != null) {
                         final String[] errors = new String[2];
                         final CMDocument createCMDocument = NewXMLGenerator
@@ -1087,7 +1102,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         descriptionText = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         descriptionText
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
         descriptionText.addTraverseListener(e -> {
             if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
                 e.doit = true;
@@ -1095,13 +1111,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         });
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            Display.getDefault().asyncExec(nameText::setFocus);
-        }
-    }
     protected void createDataOptions(final Composite parent) {
 
         new Label(parent, SWT.NONE); // FILLER
