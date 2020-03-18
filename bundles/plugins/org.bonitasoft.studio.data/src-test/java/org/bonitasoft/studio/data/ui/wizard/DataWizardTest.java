@@ -84,7 +84,7 @@ public class DataWizardTest {
     @Test
     public void should_performFinish_execute_refactor_operation() throws Exception {
         wizard.performFinish();
-        verify(wizardContainer).run(true, true, refactorOperation);
+        verify(wizardContainer).run(false, true, refactorOperation);
     }
 
 }
