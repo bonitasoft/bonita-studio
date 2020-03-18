@@ -73,7 +73,7 @@ public class EditParameterWizard extends Wizard {
         operation.setEditingDomain(TransactionUtil.getEditingDomain(container));
         operation.setAskConfirmation(!parameter.getName().equals(parameterWorkingCopy.getName()));
         try {
-            getContainer().run(true, true, operation);
+            getContainer().run(false, true, operation);
         } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e);
             return false;

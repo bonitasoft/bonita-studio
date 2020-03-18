@@ -179,7 +179,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             op.setAskConfirmation(isEdited(workingCopy));
             if (op.canExecute()) {
                 try {
-                    getContainer().run(true, true, op);
+                    getContainer().run(false, true, op);
                 } catch (final InvocationTargetException e) {
                     BonitaStudioLog.error(e);
                     return false;
