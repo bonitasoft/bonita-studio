@@ -109,12 +109,14 @@ public class DataStyledTreeLabelProvider extends StyledCellLabelProvider impleme
 			if(d.getDefaultValue() != null
 					&& d.getDefaultValue().getName() != null
 					&& !d.getDefaultValue().getName().isEmpty()){
-				String content =  d.getDefaultValue().getName();
-				content  = Messages.defaultValue+": "  + content.replaceAll("\n", " ")  ;
+				String content = d.getDefaultValue().getName();
+				content = Messages.defaultValue+": "  + content.replaceAll("\n", " ")  ;
+				if(content.length() > 150) {
+				    content = content.substring(0, 150) + "...";
+				}
 				styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
 				styledString.append(content, StyledString.QUALIFIER_STYLER);
 			}
-
 			cell.setText(styledString.getString());
 			cell.setImage(getImage(d)) ;
 			cell.setStyleRanges(styledString.getStyleRanges());
