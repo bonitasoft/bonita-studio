@@ -121,6 +121,10 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.emf.edapt.runtime.feature"
          version="0.0.0"/>
 
+   <includes
+         id="code.satyagraha.gfm.viewer.feature"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.11.0" match="equivalent"/>
