@@ -112,8 +112,7 @@
         </location>
 
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.asciidoctor.converter.feature.group" version="1.0.3"/>
-            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.0.3"/>
+            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.1.1"/>
             <repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
