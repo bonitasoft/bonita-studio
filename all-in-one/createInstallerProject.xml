@@ -1,0 +1,46 @@
+<project name="BOS-installer" default="generate.bitrock.project.file">
+
+	<target name="generate.bitrock.project.file">
+		<copy file="${project.file}" tofile="${updated.project.file}" overwrite="true"/>
+
+		<!-- PRODUCT -->
+		<replace file="${updated.project.file}" token="@vendor@" value="${vendor}"/>
+		<replace file="${updated.project.file}" token="@product.short.name@" value="${product.short.name}"/>
+		<replace file="${updated.project.file}" token="@product.full.name@" value="${product.full.name}"/>
+		<replace file="${updated.project.file}" token="@product.version@" value="${product.version}"/>
+		<replace file="${updated.project.file}" token="@file.shortname@" value="${file.shortname}"/>
+		<replace file="${updated.project.file}" token="@os_arch@" value="${os_arch}"/>
+		
+		<!-- RESOURCES -->
+		
+		<replace file="${updated.project.file}" token="@license@" value="${license}"/>
+		<replace file="${updated.project.file}" token="@wizard.image@" value="${wizard.image}"/>
+		<replace file="${updated.project.file}" token="@titlebar.image@" value="${titlebar.image}"/>
+		<replace file="${updated.project.file}" token="@mac.icns@" value="${mac.icns}"/>
+		<replace file="${updated.project.file}" token="@mac.installer.icns@" value="${mac.installer.icns}"/>
+		<replace file="${updated.project.file}" token="@windows.ico@" value="${windows.ico}"/>
+		<replace file="${updated.project.file}" token="@linux.icon@" value="${linux.icon}"/>
+		<replace file="${updated.project.file}" token="@installer.name@" value="${installer.name}"/>
+		<replace file="${updated.project.file}" token="@logo@" value="${logo}"/>
+		<replace file="${updated.project.file}" token="@leftImage@" value="${leftImage}"/>
+		<replace file="${updated.project.file}" token="@splash@" value="${splash}"/>
+		<replace file="${updated.project.file}" token="@studio.dir@" value="${studio.dir}"/>
+		<replace file="${updated.project.file}" token="@bitrock.output@" value="${bitrock.output}"/>
+		<replace file="${updated.project.file}" token="@linux.shortcut@" value="${linux.shortcut}"/>
+		<replace file="${updated.project.file}" token="@windows.shortcut@" value="${windows.shortcut}"/>
+		<replace file="${updated.project.file}" token="@windows64.shortcut@" value="${windows64.shortcut}"/>
+		<replace file="${updated.project.file}" token="@mac.shortcut@" value="${mac.shortcut}"/>
+		<replace file="${updated.project.file}" token="@shortcut.comment@" value="${shortcut.comment}"/>
+		<replace file="${updated.project.file}" token="@shortcut.name@" value="${shortcut.name}"/>
+		<replace file="${updated.project.file}" token="@mac.shortcut.name@" value="${mac.shortcut.name}"/>
+		<replace file="${updated.project.file}" token="@windows.shortcut.name@" value="${windows.shortcut.name}"/>
+		<replace file="${updated.project.file}" token="@linux.shortcut.name@" value="${linux.shortcut.name}"/>
+		<replace file="${updated.project.file}" token="@mac.studio.dir@" value="${mac.studio.dir}"/>
+		<replace file="${updated.project.file}" token="@enable.uninstaller@" value="${enable.uninstaller}"/>
+		<replace file="${updated.project.file}" token="@slide1@" value="${slide1}"/>
+		<replace file="${updated.project.file}" token="@slide2@" value="${slide2}"/>
+		<replace file="${updated.project.file}" token="@slide3@" value="${slide3}"/>
+		<replace file="${updated.project.file}" token="@slide4@" value="${slide4}"/>
+	</target>
+
+</project>
