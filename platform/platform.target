@@ -114,9 +114,9 @@
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.6.0.v201912311228-e1912-RELEASE"/>
             <unit id="org.codehaus.groovy24.feature.feature.group" version="3.6.0.v201912311228-e1912-RELEASE"/>
         </location>
-	    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-		    <repository location="http://repositories.rd.lan/p2/asciidoctor-editor"/>
-		    <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.0.3"/>
-	    </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor/"/>
+            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.1.1"/>
+        </location>
     </locations>
 </target>
