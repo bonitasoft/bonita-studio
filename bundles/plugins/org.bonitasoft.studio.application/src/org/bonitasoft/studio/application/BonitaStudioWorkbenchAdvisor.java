@@ -18,7 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -70,6 +73,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -79,7 +83,6 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
@@ -87,6 +90,8 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
+import org.eclipse.ui.internal.registry.EditorRegistry;
+import org.eclipse.ui.internal.registry.FileEditorMapping;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
@@ -558,7 +563,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 .getConfigurationElements(
                         "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
         for (final IConfigurationElement elem : elements) {
-
             final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
             try {
                 IPostStartupContribution contrib = (IPostStartupContribution) ContextInjectionFactory
@@ -571,7 +575,17 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         preLoad();
-
+        
+        // Fix issue with asciidoctor plugin overriding text content-type
+        final EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry();
+        IFileEditorMapping[] fileEditorMappings = editorRegistry.getFileEditorMappings();
+        List<IFileEditorMapping> mappings = Stream.of(fileEditorMappings).collect(Collectors.toList());
+        FileEditorMapping mapping = new FileEditorMapping("*", "log");
+        mapping.setDefaultEditor(editorRegistry.findEditor("org.eclipse.ui.DefaultTextEditor"));
+        mappings.add(mapping);
+        Display.getDefault().asyncExec(()-> editorRegistry.setFileEditorMappings(mappings.toArray(new FileEditorMapping[] {})));
+        editorRegistry.setDefaultEditor("*.txt", "org.eclipse.ui.DefaultTextEditor");
+        
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);
