@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="org.bonitasoft.studio.diagram">
+         <propertyTab
+               category="domain"
+               id="tab.contract"
+               label="%tab.contract.label">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.bonitasoft.studio.diagram">
+         <propertySection
+               class="org.bonitasoft.studio.contract.ui.property.ContractPropertySection"
+               enablesFor="1"
+               filter="org.bonitasoft.studio.contract.ui.property.ContractContainerFilter"
+               id="InputsSection"
+               tab="tab.contract"
+               viewID="org.bonitasoft.studio.views.properties.process.execution">
+         </propertySection>
+      </propertySections>
+   </extension>
+    <extension
+         id="org.codehaus.groovy.contract.input.category"
+         name="Contract Inputs"
+         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
+      <proposalCategory
+            icon="icons/ContractInput.gif">
+      </proposalCategory>
+   </extension>
+    <extension
+          id="org.bonitasoft.studio.contract.input.completion"
+          point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
+      <javaCompletionProposalComputer
+            activate="true"
+            categoryId="org.codehaus.groovy.contract.input.category"
+            class="org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer">
+         <partition
+               type="__dftl_partition_content_type">
+         </partition>
+         <partition
+               type="__java_string">
+         </partition>
+      </javaCompletionProposalComputer>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider">
+      </expressionProvider>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.engine.definition.builder">
+           <EngineDefinitionBuilder
+                 class="org.bonitasoft.studio.contract.core.ProcessContractEngineBuilder">
+           </EngineDefinitionBuilder>
+           <EngineDefinitionBuilder
+                 class="org.bonitasoft.studio.contract.core.TaskContractEngineDefinitionBuilder">
+           </EngineDefinitionBuilder>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.designer.formOperationFactory">
+      <factory
+            class="org.bonitasoft.studio.contract.core.operation.NewFormFromContractOperationFactory"></factory>
+   </extension>
+  
+
+</plugin>
