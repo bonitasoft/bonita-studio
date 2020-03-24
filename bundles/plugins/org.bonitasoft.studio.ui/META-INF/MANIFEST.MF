@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: UI Toolkit Plug In
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.ui;singleton:=true
-Bundle-Version: 7.10.4.qualifier
+Bundle-Version: 7.10.4
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",

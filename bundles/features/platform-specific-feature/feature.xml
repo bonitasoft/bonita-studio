@@ -2,7 +2,7 @@
 <feature
       id="platform-specific-feature"
       label="Platform specific feature"
-      version="7.10.4.qualifier"
+      version="7.10.4"
       provider-name="BonitaSoft S.A.">
 
    <description>
