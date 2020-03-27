@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Process Model Assertions
 Bundle-SymbolicName: org.bonitasoft.studio.tests-utils
-Bundle-Version: 7.11.0.qualifier
+Bundle-Version: 7.11.0.W13
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.bonitasoft.studio.assertions,
