@@ -14691,6 +14691,7 @@
   </releases>
   <releases xmi:id="_7NF0QDj6Eem-ZO25_WoPnQ" date="2019-02-25T10:43:27.494+0100" label="7.8.3-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_7NF0QTj6Eem-ZO25_WoPnQ" migration="org.bonitasoft.studio.migration.custom.migration.UpdateConfigurationId"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_fYe2YHNSEeqin5n0SIS5Ng" migration="org.bonitasoft.studio.migration.custom.migration.UpdatePoolSize"/>
   </releases>
   <releases xmi:id="_lGPssDBZEemIIINmMdyzoA" date="2019-02-14T10:43:27.494+0100" label="7.9.0-001">
     <changes xsi:type="history:OperationChange" xmi:id="_p10aMDBZEemIIINmMdyzoA">

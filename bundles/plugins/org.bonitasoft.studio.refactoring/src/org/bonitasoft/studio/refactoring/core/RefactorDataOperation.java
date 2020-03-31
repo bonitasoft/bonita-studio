@@ -158,7 +158,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data, Data,
             if (((Data) oldDependency).getName().equals(pairToRefactor.getOldValue().getName())
                     && !isReturnFixedOnExpressionWithUpdatedType(pairToRefactor, exp)) {
                 EMFModelUpdater<EObject> updater = new EMFModelUpdater<EObject>().from(oldDependency);
-                updater.editWorkingCopy(pairToRefactor.getNewValue());
+                updater.editWorkingCopy(ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue()));
                 compoundCommand.append(updater.createUpdateCommand(getEditingDomain()));
             }
         }

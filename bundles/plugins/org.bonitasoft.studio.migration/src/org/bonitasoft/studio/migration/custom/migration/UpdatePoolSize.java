@@ -14,11 +14,6 @@
  */
 package org.bonitasoft.studio.migration.custom.migration;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
-import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
@@ -29,20 +24,20 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 /**
  * @author Romain Bioteau
  */
-public class UpdateConfigurationId extends CustomMigration {
+public class UpdatePoolSize extends CustomMigration {
+
+    private static final String POOL_VISUAL_ID = "2007";
+    private static final int DEFAULT_WIDTH = 975;
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel)
             throws MigrationException {
-        for (final Instance mainProc : model.getAllInstances("process.MainProcess")) {
-            final MainProcess diagram = ProcessFactory.eINSTANCE.createMainProcess();
-            diagram.setName((String) mainProc.get("name"));
-            diagram.setVersion((String) mainProc.get("version"));
-            diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
-            diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-            mainProc.set("bonitaVersion", ProductVersion.CURRENT_VERSION);
-            mainProc.set("bonitaModelVersion", ModelVersion.CURRENT_VERSION);
-            mainProc.set("configId", ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
+        for (final Instance node : model.getAllInstances(NotationPackage.eINSTANCE.getNode())) {
+            if (node.get("type").equals(POOL_VISUAL_ID)
+                    && node.get("layoutConstraint") != null
+                    && (Integer) ((Instance) node.get("layoutConstraint")).get("width") == 0) {
+                ((Instance) node.get("layoutConstraint")).set("width", DEFAULT_WIDTH);
+            }
         }
     }
 
