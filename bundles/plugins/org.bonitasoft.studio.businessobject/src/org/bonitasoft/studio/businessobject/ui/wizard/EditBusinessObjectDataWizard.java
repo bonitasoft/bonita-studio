@@ -120,7 +120,7 @@ public class EditBusinessObjectDataWizard extends AbstractBusinessObjectWizard {
         final RefactorDataOperation op = newRefactorOperation(updatedData);
         if (op.canExecute()) {
             try {
-                getContainer().run(true, false, op);
+                getContainer().run(false, false, op);
                 if (op.isCancelled()) {
                     return false;
                 }
