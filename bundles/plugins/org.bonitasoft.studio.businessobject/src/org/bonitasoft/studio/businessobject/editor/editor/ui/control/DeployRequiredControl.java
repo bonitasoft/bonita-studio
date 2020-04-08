@@ -51,17 +51,21 @@ public class DeployRequiredControl extends Composite {
 
     public void hide() {
         Display.getDefault().asyncExec(() -> {
-            setVisible(false);
-            ((GridData) getLayoutData()).exclude = true;
-            getParent().layout();
+            if (!isDisposed()) {
+                setVisible(false);
+                ((GridData) getLayoutData()).exclude = true;
+                getParent().layout();
+            }
         });
     }
 
     public void show() {
         Display.getDefault().asyncExec(() -> {
-            setVisible(true);
-            ((GridData) getLayoutData()).exclude = false;
-            getParent().layout();
+            if (!isDisposed()) {
+                setVisible(true);
+                ((GridData) getLayoutData()).exclude = false;
+                getParent().layout();
+            }
         });
     }
 
