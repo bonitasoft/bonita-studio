@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+		<version>7.11.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.businessobject</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<lib.dir>lib</lib.dir>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-h2-dependency</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.h2database</groupId>
+									<artifactId>h2</artifactId>
+									<version>1.4.199</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${lib.dir}</outputDirectory>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Retrieve bonita-business-data-generator dependencies</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+									<artifactId>bonita-business-data-generator</artifactId>
+									<version>${engine.version}</version>
+									<classifier>studio</classifier>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
+							<outputDirectory>${lib.dir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${lib.dir}</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
