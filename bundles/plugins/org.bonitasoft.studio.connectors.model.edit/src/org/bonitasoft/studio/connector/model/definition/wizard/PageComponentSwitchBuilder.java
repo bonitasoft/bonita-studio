@@ -377,7 +377,6 @@ public class PageComponentSwitchBuilder {
             createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
 
             final PatternExpressionViewer viewer = new PatternExpressionViewer(composite, SWT.NONE);
-            viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
 
@@ -397,7 +396,11 @@ public class PageComponentSwitchBuilder {
             if (input.isMandatory()) {
                 viewer.setMandatoryField(getLabel(object.getId()));
             }
-
+            if(ExpressionConstants.PATTERN_TYPE.equals(exp.getType())){
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
+            }else {
+                viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            }
             viewer.setExpression(exp);
             return viewer;
         }
