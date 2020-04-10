@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Process Editor customization classes
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.custom;singleton:=true
-Bundle-Version: 7.11.0.qualifier
+Bundle-Version: 7.11.0.W15
 Bundle-Activator: org.bonitasoft.studio.diagram.custom.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
