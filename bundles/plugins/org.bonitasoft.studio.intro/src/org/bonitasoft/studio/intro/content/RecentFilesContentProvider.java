@@ -63,6 +63,9 @@ public class RecentFilesContentProvider implements DOMContentProvider {
             final EditorHistoryItem item = historyItems[i];
             if (item.isRestored() || item.restoreState().isOK()) {
                 IEditorInput input = item.getInput();
+                if(input == null) {
+                    break;
+                }
                 IResource resource = input.getAdapter(IResource.class);
                 if (resource != null && resource.isAccessible()) {
                     Element li = dom.createElement("li");
