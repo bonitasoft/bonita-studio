@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.editor.contribution" name="Editor multi source contribution" schema="schema/org.bonitasoft.studio.editor.contribution.exsd"/>
+   <extension
+         point="org.eclipse.ui.statusHandlers">
+      <statusHandler
+            class="org.bonitasoft.studio.ui.handler.BonitaStatusHandler"
+            id="org.bonitasoft.studio.ui.statusHandler">
+      </statusHandler>
+      <statusHandlerProductBinding
+            handlerId="org.bonitasoft.studio.ui.statusHandler"
+            productId="org.bonitasoft.studio.product">
+      </statusHandlerProductBinding>
+      <statusHandlerProductBinding
+            handlerId="org.bonitasoft.studio.ui.statusHandler"
+            productId="org.bonitasoft.studioEx.product">
+      </statusHandlerProductBinding>
+   </extension>
+</plugin>

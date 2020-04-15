@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
+        <version>7.11.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.bonitasoft.studio.designer.war</artifactId>
+    <packaging>eclipse-plugin</packaging>
+
+    <properties>
+        <webapp.dir>${basedir}/webapp</webapp.dir>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Retrieve UI Designer Exec War</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.web</groupId>
+                                    <artifactId>ui-designer-backend-webapp</artifactId>
+                                    <version>${ui.designer.version}</version>
+                                    <classifier>exec-war</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripClassifier>true</stripClassifier>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${webapp.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Clean generated resources</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <delete dir="${webapp.dir}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
