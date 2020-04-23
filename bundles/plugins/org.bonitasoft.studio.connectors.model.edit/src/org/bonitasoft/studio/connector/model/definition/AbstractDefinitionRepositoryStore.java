@@ -19,12 +19,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -33,6 +34,7 @@ import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
+import org.bonitasoft.studio.connector.model.ConnectorModelPlugin;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceImpl;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
@@ -51,15 +53,17 @@ import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
-public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IDefinitionRepositoryStore {
+public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
+        implements IDefinitionRepositoryStore {
 
-    private final List<T> cachedFileStore = new ArrayList<T>();
+    private final List<T> providedConnectorDefFileStore = new ArrayList<T>();
     private final List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
 
     public AbstractDefinitionRepositoryStore() {
         super();
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.connectors.connectorDefFilter")) {
+        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        "org.bonitasoft.studio.connectors.connectorDefFilter")) {
             try {
                 filters.add((IConnectorDefinitionFilter) elem.createExecutableExtension("class"));
             } catch (final CoreException e) {
@@ -70,50 +74,42 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
 
     @Override
     public List<ConnectorDefinition> getDefinitions() {
-        final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
-        for (final IRepositoryFileStore fileStore : getChildren()) {
-            ConnectorDefinition def;
-            try {
-                def = (ConnectorDefinition) fileStore.getContent();
-            } catch (final Exception e) {
-                def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
-                def.setId(fileStore.getName());
-                def.setVersion("");
-            }
-            if (def == null) {
-                def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
-                def.setId(fileStore.getName());
-                def.setVersion("");
-            }
-            result.add(def);
+        return getChildren().stream()
+                .map(this::toConnectorDefinition)
+                .collect(Collectors.toList());
+    }
+    
+    private ConnectorDefinition toConnectorDefinition(IRepositoryFileStore fStore) {
+        ConnectorDefinition def;
+        try {
+            def = (ConnectorDefinition) fStore.getContent();
+        } catch (Exception e) {
+            def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
+            def.setId(fStore.getName());
+            def.setVersion(""); 
         }
-        return result;
+        if (def == null) {
+            def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
+            def.setId(fStore.getName());
+            def.setVersion("");
+        }
+        return def;
     }
 
     @Override
     public ConnectorDefinition getDefinition(final String id, final String version) {
-        for (final ConnectorDefinition def : getDefinitions()) {
-            if (def.getId().equals(id) && def.getVersion().equals(version)) {
-                return def;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public ConnectorDefinition getDefinition(final String id, final String version, final Collection<ConnectorDefinition> existingDefinitions) {
-        for (final ConnectorDefinition def : existingDefinitions) {
-            if (def.getId().equals(id) && def.getVersion().equals(version)) {
-                return def;
-            }
-        }
-        return null;
+        return getDefinitions().stream()
+                .filter(definition -> Objects.equals(definition.getId(), id))
+                .filter(definition -> Objects.equals(definition.getVersion(), version))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<T> getChildren() {
         final List<T> result = super.getChildren();
-        if (cachedFileStore.isEmpty()) {
+        if (providedConnectorDefFileStore.isEmpty()) {
+            BonitaStudioLog.info("Loading provided connector definitions...", ConnectorModelPlugin.PLUGIN_ID);
             final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
             if (connectorDefs != null) {
                 while (connectorDefs.hasMoreElements()) {
@@ -131,7 +127,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                                 }
                             }
                             if (!filtered) {
-                                cachedFileStore.add(defFileStore);
+                                providedConnectorDefFileStore.add(defFileStore);
                                 result.add(defFileStore);
                             }
                         }
@@ -139,7 +135,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 }
             }
         } else {
-            result.addAll(cachedFileStore);
+            result.addAll(providedConnectorDefFileStore);
         }
         return result;
     }
@@ -168,10 +164,6 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
 
     }
 
-    public void clearCachedFileStore() {
-        cachedFileStore.clear();
-    }
-
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
@@ -182,7 +174,8 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
     protected abstract Bundle getBundle();
 
     @Override
-    protected void performMigration(final Migrator migrator, final URI resourceURI, final Release release) throws MigrationException {
+    protected void performMigration(final Migrator migrator, final URI resourceURI, final Release release)
+            throws MigrationException {
         migrator.setLevel(ValidationLevel.NONE);
         final ResourceSet rSet = migrator.migrateAndLoad(
                 Collections.singletonList(resourceURI), release,
@@ -193,7 +186,8 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 final ConnectorDefinitionResourceImpl r = (ConnectorDefinitionResourceImpl) rSet.getResources().get(0);
                 final Resource resource = new XMLResourceImpl(resourceURI);
                 final DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot();
-                final ConnectorDefinition definition = EcoreUtil.copy(((DocumentRoot) r.getContents().get(0)).getConnectorDefinition());
+                final ConnectorDefinition definition = EcoreUtil
+                        .copy(((DocumentRoot) r.getContents().get(0)).getConnectorDefinition());
                 root.setConnectorDefinition(definition);
                 resource.getContents().add(root);
                 final Map<String, String> options = new HashMap<String, String>();

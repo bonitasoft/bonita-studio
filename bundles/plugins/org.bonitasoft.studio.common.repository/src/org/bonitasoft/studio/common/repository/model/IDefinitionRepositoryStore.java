@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
@@ -31,8 +30,6 @@ public interface IDefinitionRepositoryStore {
     List<ConnectorDefinition> getDefinitions() ;
 
     ConnectorDefinition getDefinition(String id, String version) ;
-
-    ConnectorDefinition getDefinition(String id, String version, Collection<ConnectorDefinition> existingDefinitions);
 
     DefinitionResourceProvider getResourceProvider();
 

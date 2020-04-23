@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.connectors.repository;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -59,13 +58,11 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
                 ConnectorSourceRepositoryStore.class);
         final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(
                 DependencyRepositoryStore.class);
-        final List<ConnectorDefinition> existingDefinitions = connectorDefSotre.getDefinitions();
-
         for (final DefinitionMapping mapping : configuration.getDefinitionMappings()) {
             if (mapping.getType().equals(FragmentTypes.CONNECTOR)) {
                 final String defId = mapping.getDefinitionId();
                 final String defVersion = mapping.getDefinitionVersion();
-                final ConnectorDefinition def = connectorDefSotre.getDefinition(defId, defVersion, existingDefinitions);
+                final ConnectorDefinition def = connectorDefSotre.getDefinition(defId, defVersion);
                 if (def != null) {
                     final IRepositoryFileStore definition = ((IRepositoryStore<? extends IRepositoryFileStore>) connectorDefSotre)
                             .getChild(URI.decode(def
