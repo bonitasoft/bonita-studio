@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.bonitasoft.studio.diagram">
+         <!-- FORMS TAB -->
+        <propertySection
+              class="org.bonitasoft.studio.properties.bos.message.ThrowEventSectionBOS"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.filters.ThrowMessageEventFilter"
+              id="ThrowMessageSection"
+              tab="tab.throwMessage"
+              viewID="org.bonitasoft.studio.views.properties.process.general">
+        </propertySection>
+      </propertySections>
+   </extension>
+
+</plugin>
