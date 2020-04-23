@@ -191,7 +191,6 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
     public void testProvidedImplementationsSanity() throws Exception {
         final StringBuilder testReport = new StringBuilder("testProvidedImplementationsSanity report:");
-        final List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
         for (final ConnectorImplementation implementation : connectorImplStore.getImplementations()) {
             final String resourceName = implementation.eResource().getURI().lastSegment();
             if (connectorImplStore.getChild(resourceName, true).isReadOnly()) {
@@ -220,8 +219,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     testReport.append("Missing definition version for " + resourceName);
                 }
 
-                if (connectorDefStore.getDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(),
-                        definitions) == null) {
+                if (connectorDefStore.getDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion()) == null) {
                     testReport.append("\n");
                     testReport.append("Connector definition not found for implementation " + resourceName);
                 }

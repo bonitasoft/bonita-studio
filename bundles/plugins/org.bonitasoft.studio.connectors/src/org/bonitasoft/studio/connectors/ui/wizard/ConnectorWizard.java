@@ -144,8 +144,6 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
     private EMFModelUpdater<Connector> modelUpdater = new EMFModelUpdater<>();
 
-    protected List<ConnectorDefinition> definitions;
-
     public ConnectorWizard(final EObject container,
             final EStructuralFeature connectorContainmentFeature,
             final Set<EStructuralFeature> featureToCheckForUniqueID) {
@@ -211,8 +209,6 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 .getInstance().getConfigurationElements(CUSTOM_WIZARD_ID)) {
             contributions.add(new CustomWizardExtension(element));
         }
-        final IDefinitionRepositoryStore defStore = getDefinitionStore();
-        definitions = defStore.getDefinitions();
         final ConnectorDefinition def = getDefinition();
         final DefinitionResourceProvider resourceProvider = initMessageProvider();
         String connectorDefinitionLabel = resourceProvider
@@ -277,8 +273,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
             final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
             final ConnectorDefinition definition = definitionStore
                     .getDefinition(connectorWorkingCopy.getDefinitionId(),
-                            connectorWorkingCopy.getDefinitionVersion(),
-                            definitions);
+                            connectorWorkingCopy.getDefinitionVersion());
             final AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                     .getChild(URI.decode(definition.eResource().getURI()
                             .lastSegment()), true);
@@ -358,7 +353,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
             final DefinitionResourceProvider resourceProvider) {
         return new SelectAdvancedConnectorDefinitionWizardPage(
                 connectorWorkingCopy,
-                Collections.<ConnectorImplementation> emptyList(), definitions,
+                Collections.<ConnectorImplementation> emptyList(), getDefinitionStore().getDefinitions(),
                 Messages.selectConnectorDefinitionTitle,
                 Messages.selectConnectorDefinitionDesc, resourceProvider);
     }
@@ -795,14 +790,13 @@ public class ConnectorWizard extends ExtensibleWizard implements
         final IDefinitionRepositoryStore defStore = getDefinitionStore();
         if (originalConnector != null) {
             return defStore.getDefinition(originalConnector.getDefinitionId(),
-                    originalConnector.getDefinitionVersion(), definitions);
+                    originalConnector.getDefinitionVersion());
         } else {
             if (connectorWorkingCopy.getDefinitionId() != null
                     && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
                 return defStore.getDefinition(
                         connectorWorkingCopy.getDefinitionId(),
-                        connectorWorkingCopy.getDefinitionVersion(),
-                        definitions);
+                        connectorWorkingCopy.getDefinitionVersion());
             }
         }
         return null;

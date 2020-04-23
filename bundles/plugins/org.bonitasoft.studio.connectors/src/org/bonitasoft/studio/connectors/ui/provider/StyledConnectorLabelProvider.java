@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.connectors.ui.provider;
 
-import java.util.List;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -42,12 +40,10 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
 
 	private final ConnectorDefRepositoryStore connectorDefStore;
 	private final DefinitionResourceProvider resourceProvider;
-	private List<ConnectorDefinition> definitions;
 
 	public StyledConnectorLabelProvider() {
 		super();
 		connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-		definitions = connectorDefStore.getDefinitions();
 		resourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle()) ;
 	}
 
@@ -61,7 +57,7 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
 	public void update(ViewerCell cell) {
 		if (cell.getElement() instanceof Connector) {
 			Connector connector = (Connector) cell.getElement();
-			ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion(),definitions) ;
+			ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
 			if(def == null){
 				def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
 			}
@@ -101,10 +97,7 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
 	@Override
 	public Image getImage(Object element) {
 		if(element instanceof Connector){
-			ConnectorDefinition def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion(),definitions) ;
-			if(def == null){
-				def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion()) ;
-			}
+			ConnectorDefinition def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion()) ;
 			return resourceProvider.getDefinitionIcon(def) ;
 		}
 		return null;

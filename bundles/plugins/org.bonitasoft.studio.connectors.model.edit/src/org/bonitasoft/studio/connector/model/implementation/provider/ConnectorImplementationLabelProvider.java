@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.provider;
 
-import java.util.List;
-
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -37,13 +35,11 @@ public class ConnectorImplementationLabelProvider extends LabelProvider {
 
     private final IDefinitionRepositoryStore store;
     private final DefinitionResourceProvider messageProvider;
-    private final List<ConnectorDefinition> definitions;
 
     @SuppressWarnings("unchecked")
 	public ConnectorImplementationLabelProvider(IDefinitionRepositoryStore store,Bundle bundle){
         this.store = store ;
         messageProvider = DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) store, bundle) ;
-        definitions = store.getDefinitions() ;
     }
 
     @Override
@@ -64,7 +60,7 @@ public class ConnectorImplementationLabelProvider extends LabelProvider {
         ConnectorImplementation impl = (ConnectorImplementation) element ;
         String defId = impl.getDefinitionId() ;
         String defVerison = impl.getDefinitionVersion() ;
-        ConnectorDefinition definition = store.getDefinition(defId, defVerison,definitions) ;
+        ConnectorDefinition definition = store.getDefinition(defId, defVerison) ;
         return messageProvider.getDefinitionIcon(definition);
     }
 

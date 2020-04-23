@@ -105,10 +105,6 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
 		  }
 	  }
 	  super.delete();
-	  if (store instanceof AbstractDefinitionRepositoryStore<?>){
-		  ((AbstractDefinitionRepositoryStore<?>)store).clearCachedFileStore();
-	  }
-
   }
 
     @Override

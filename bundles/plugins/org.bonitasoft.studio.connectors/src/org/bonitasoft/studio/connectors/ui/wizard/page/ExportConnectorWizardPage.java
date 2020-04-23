@@ -16,12 +16,10 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.io.File;
-import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -71,7 +69,6 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
     private final IContentProvider contentProvider;
     private final LabelProvider labelProvider;
     private final IDefinitionRepositoryStore defStore;
-    private final List<ConnectorDefinition> definitions;
     private TableViewer tableViewer;
     private Text destFileNameText;
 
@@ -83,7 +80,6 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
         this.contentProvider = contentProvider;
         this.labelProvider = labelProvider;
         this.defStore = defStore;
-        definitions = defStore.getDefinitions();
     }
 
     @Override
@@ -131,7 +127,7 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
                 if (version == null || version.isEmpty()) {
                     return new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, Messages.selectAValidConnectorImplWarning);
                 }
-                if (defStore.getDefinition(id, version, definitions) == null) {
+                if (defStore.getDefinition(id, version) == null) {
                     return new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, Messages.selectAValidConnectorImplWarning);
                 }
 
