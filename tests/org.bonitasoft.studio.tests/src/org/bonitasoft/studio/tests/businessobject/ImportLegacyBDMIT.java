@@ -17,7 +17,9 @@ package org.bonitasoft.studio.tests.businessobject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
+import org.apache.commons.io.IOUtils;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -27,6 +29,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
@@ -75,6 +78,22 @@ public class ImportLegacyBDMIT {
 
         assertThat(defStore.getChildren()).hasSize(1);
         assertThat(depStore.getChild(BusinessObjectModelFileStore.BDM_JAR_NAME, true)).isNotNull();
+    }
+
+    @Test
+    public void should_import_a_bdm_without_namespace_and_add_it() throws Exception {
+        ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
+        operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
+        operation.setArchiveFile(
+                new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/bdmWithoutNamespace.bos")).getFile())
+                        .getAbsolutePath());
+        operation.run(Repository.NULL_PROGRESS_MONITOR);
+
+        StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
+
+        IFile iFile = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).getResource();
+        String bomFileContent = IOUtils.toString(iFile.getContents(), Charset.defaultCharset());
+        assertThat(bomFileContent).contains("xmlns=\"http://documentation.bonitasoft.com/bdm-xml-schema/1.0\"");
     }
 
 }

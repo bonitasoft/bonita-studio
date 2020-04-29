@@ -161,10 +161,24 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             } catch (CoreException e) {
                 BonitaStudioLog.error("Failed to import Business data model artifact descriptor", e);
             }
+            addNamespace((BusinessObjectModelFileStore) fileStore);
         }
-
         generateJar(fileStore);
         return fileStore;
+    }
+
+    // namespace migration (performed by the marshaller, engine side)
+    private void addNamespace(BusinessObjectModelFileStore fStore) {
+        try {
+            BusinessObjectModel model = fStore.getContent();
+            if (model != null) {
+                byte[] bytes = converter.marshall(model);
+                model = converter.unmarshall(bytes);
+                fStore.save(model);
+            }
+        } catch (JAXBException | IOException | SAXException e) {
+            BonitaStudioLog.error("Failed to perform namespace migration on Business data model", e);
+        }
     }
 
     protected IStatus generateJar(F fileStore) {
@@ -180,23 +194,29 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
-        final BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
+        BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
                 BusinessObjectModelFileStore.ZIP_FILENAME, true);
-        if (fStore != null) {
-            final File legacyBDM = fStore.getResource().getLocation().toFile();
-            BusinessObjectModel businessObjectModel;
-            try {
-                BusinessObjectModelConverter converter = getConverter();
+        BusinessObjectModelConverter converter = getConverter();
+        try {
+            if (fStore != null) {
+                final File legacyBDM = fStore.getResource().getLocation().toFile();
+                BusinessObjectModel businessObjectModel;
                 businessObjectModel = converter.unzip(Files.toByteArray(legacyBDM));
                 try (InputStream is = ByteSource.wrap(converter.marshall(businessObjectModel)).openBufferedStream()) {
                     doImportInputStream(BusinessObjectModelFileStore.BOM_FILENAME, is);
                 } catch (IOException e) {
                     throw new MigrationException("Failed to migrate Business data model", e);
                 }
-            } catch (IOException | JAXBException | SAXException e1) {
-                throw new MigrationException("Failed to migrate Business data model", e1);
+
+                fStore.getResource().delete(true, monitor);
+            } else {
+                fStore = (BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, false);
+                if (fStore != null) {
+                    addNamespace(fStore);
+                }
             }
-            fStore.getResource().delete(true, monitor);
+        } catch (IOException | JAXBException | SAXException e1) {
+            throw new MigrationException("Failed to migrate Business data model", e1);
         }
     }
 
