@@ -24,6 +24,7 @@ import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter
 import org.bonitasoft.studio.businessobject.editor.editor.BusinessDataModelEditorContribution;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.CleanDeployContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.DeployContributionItem;
+import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ExploreBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ExportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ImportBDMContributionItem;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.contribution.ValidateContributionItem;
@@ -75,6 +76,7 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
         toolBarManager.add(new CleanDeployContributionItem(this));
         toolBarManager.add(new ExportBDMContributionItem(this));
         toolBarManager.add(new ImportBDMContributionItem(this));
+        toolBarManager.add(new ExploreBDMContributionItem());
         toolBarManager.add(new ValidateContributionItem(this));
         toolBarManager.update(true);
     }

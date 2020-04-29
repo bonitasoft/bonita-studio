@@ -29,7 +29,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.Trace;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
@@ -42,7 +41,7 @@ public class OpenBrowserOperation implements Runnable {
 
     protected static final String TYPE_ID = "org.bonitasoft.studio.browser"; //$NON-NLS-1$
     private final URL url;
-    private ExternalBrowserInstance externalBrowser;
+    private IWebBrowser externalBrowser;
     private boolean useInternalBrowser = false;
     private String name;
     private String id;
@@ -53,7 +52,7 @@ public class OpenBrowserOperation implements Runnable {
         this.url = url;
     }
 
-    public OpenBrowserOperation withExternalBrowser(final ExternalBrowserInstance externalBrowser) {
+    public OpenBrowserOperation withExternalBrowser(final IWebBrowser externalBrowser) {
         this.externalBrowser = externalBrowser;
         return this;
     }

@@ -7,6 +7,7 @@
     <elements xsi:type="commands:Handler" xmi:id="_97_PME8OEemrzvHvLv5I3g" elementId="org.bonitasoft.studio.businessobject.cleanDeploy.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler" command="_yr-TgE8OEemrzvHvLv5I3g"/>
     <elements xsi:type="commands:Handler" xmi:id="_6dzO8Op7Eemi2fumwpsySA" elementId="org.bonitasoft.studio.businessobject.deploy.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler" command="_9NM0cOp7Eemi2fumwpsySA"/>
     <elements xsi:type="commands:Handler" xmi:id="_n53ugD4wEei2ao2oQF6cSQ" elementId="org.bonitasoft.studio.businessobject.define.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.DefineBusinessDataModelHandler" command="_j00ksD4wEei2ao2oQF6cSQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_6bPGYIhsEeq3NNuqUoJrsg" elementId="org.bonitasoft.studio.businessobject.explore.handler" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.ui.handler.ExploreBusinessDataModelHandler" command="_vaQsQIhsEeq3NNuqUoJrsg"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_08KwkGhGEea_RMV0DBK5kg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_2hZB8GhGEea_RMV0DBK5kg" elementId="org.bonitasoft.studio.businessobject.openH2Console" commandName="%openH2Console"/>
@@ -15,6 +16,7 @@
     <elements xsi:type="commands:Command" xmi:id="_yr-TgE8OEemrzvHvLv5I3g" elementId="org.bonitasoft.studio.businessobject.cleanDeployCommand" commandName="%cleanDeploy"/>
     <elements xsi:type="commands:Command" xmi:id="_9NM0cOp7Eemi2fumwpsySA" elementId="org.bonitasoft.studio.businessobject.deployCommand" commandName="%deploy"/>
     <elements xsi:type="commands:Command" xmi:id="_j00ksD4wEei2ao2oQF6cSQ" elementId="org.bonitasoft.studio.businessobject.define" commandName="%manageBusinessObjects"/>
+    <elements xsi:type="commands:Command" xmi:id="_vaQsQIhsEeq3NNuqUoJrsg" elementId="org.bonitasoft.studio.businessobject.explore.command" commandName="%explore"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_RV8qICDcEeqEWZYzWPZlqg" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_UtjfICDcEeqEWZYzWPZlqg" elementId="org.bonitasoft.studio.businessobject.startAddon" contributionURI="bundleclass://org.bonitasoft.studio.businessobject/org.bonitasoft.studio.businessobject.StartAddon"/>
