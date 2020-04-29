@@ -23,7 +23,10 @@
             </command>
             <command
                   commandId="org.bonitasoft.studio.businessobject.openH2Console"
-                  icon="icons/h2.png"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.businessobject.explore.command"
                   style="push">
             </command>
             <separator
@@ -113,6 +116,26 @@
                      </test>
                   </iterate>
                </and>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.businessobject.explore.command"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <test
+                              property="org.bonitasoft.studio.businessobject.isBDMFile">
+                        </test>
+                     </iterate>
+                  </and>
                </with>
             </visibleWhen>
          </command>
@@ -335,6 +358,14 @@
       <image
             commandId="org.bonitasoft.studio.businessobject.define"
             icon="icons/manage-bdm.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.businessobject.explore.command"
+            icon="icons/wen.png">
+      </image>
+      <image
+            commandId="org.bonitasoft.studio.businessobject.openH2Console"
+            icon="icons/h2.png">
       </image>
    </extension>
 
