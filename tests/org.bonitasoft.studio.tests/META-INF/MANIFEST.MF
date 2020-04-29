@@ -89,7 +89,8 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.migration,
  org.bonitasoft.studio.validation,
  org.bonitasoft.studio.model.edit.custom,
- org.bonitasoft.studio.ui
+ org.bonitasoft.studio.ui,
+ org.apache.commons.io;bundle-version="2.6.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.actors,
  org.bonitasoft.studio.tests.api,
