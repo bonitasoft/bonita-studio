@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<organization:Organization xmlns:organization="http://documentation.bonitasoft.com/organization-xml-schema">
+  <users>
+    <user userName="william.jobs">
+      <password>bpm</password>
+      <firstName>William</firstName>
+      <lastName>Jobs</lastName>
+      <title>Mr</title>
+      <jobTitle>Chief Executive Officer</jobTitle>
+      <professionalData>
+        <email>william.jobs@acme.com</email>
+        <phoneNumber>484-302-5848</phoneNumber>
+        <faxNumber>484-302-0848</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="april.sanchez">
+      <password>bpm</password>
+      <firstName>April</firstName>
+      <lastName>Sanchez</lastName>
+      <title>Mrs</title>
+      <jobTitle>Compensation specialist</jobTitle>
+      <manager>helen.kelly</manager>
+      <professionalData>
+        <email>april.sanchez@acme.com</email>
+        <phoneNumber>484-302-5490</phoneNumber>
+        <faxNumber>484-302-0490</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="helen.kelly">
+      <password>bpm</password>
+      <firstName>Helen</firstName>
+      <lastName>Kelly</lastName>
+      <title>Mrs</title>
+      <jobTitle>Human resource manager</jobTitle>
+      <manager>william.jobs</manager>
+      <professionalData>
+        <email>helen.kelly@acme.com</email>
+        <phoneNumber>484-302-5490</phoneNumber>
+        <faxNumber>484-302-0490</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="walter.bates">
+      <password>bpm</password>
+      <firstName>Walter</firstName>
+      <lastName>Bates</lastName>
+      <title>Mr</title>
+      <jobTitle>Human resources benefits</jobTitle>
+      <manager>helen.kelly</manager>
+      <professionalData>
+        <email>walter.bates@acme.com</email>
+        <phoneNumber>484-302-5490</phoneNumber>
+        <faxNumber>484-302-0490</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="zachary.williamson">
+      <password>bpm</password>
+      <firstName>Zachary</firstName>
+      <lastName>Williamson</lastName>
+      <title>Mr</title>
+      <jobTitle>Chief Financial Officer</jobTitle>
+      <manager>william.jobs</manager>
+      <professionalData>
+        <email>zachary.williamson@acme.com</email>
+        <phoneNumber>484-302-5490</phoneNumber>
+        <faxNumber>484-302-0490</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="patrick.gardenier">
+      <password>bpm</password>
+      <firstName>Patrick</firstName>
+      <lastName>Gardenier</lastName>
+      <title>Mr</title>
+      <jobTitle>Financial controller</jobTitle>
+      <manager>zachary.williamson</manager>
+      <professionalData>
+        <email>patrick.gardenier@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="virginie.jomphe">
+      <password>bpm</password>
+      <firstName>Virgine</firstName>
+      <lastName>Jomphe</lastName>
+      <title>Mrs</title>
+      <jobTitle>Accountant</jobTitle>
+      <manager>zachary.williamson</manager>
+      <professionalData>
+        <email>virginie.jomphe@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="thorsten.hartmann">
+      <password>bpm</password>
+      <firstName>Thorsten</firstName>
+      <lastName>Hartmann</lastName>
+      <title>Mr</title>
+      <jobTitle>Financial planning manager</jobTitle>
+      <manager>zachary.williamson</manager>
+      <professionalData>
+        <email>thorsten.hartmann@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="jan.fisher">
+      <password>bpm</password>
+      <firstName>Jan</firstName>
+      <lastName>Fisher</lastName>
+      <title>Mr</title>
+      <jobTitle>Infrastucture specialist</jobTitle>
+      <manager>favio.riviera</manager>
+      <professionalData>
+        <email>jan.fisher@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="isabel.bleasdale">
+      <password>bpm</password>
+      <firstName>Isabel</firstName>
+      <lastName>Bleasdale</lastName>
+      <title>Mrs</title>
+      <jobTitle>Product marketing manager</jobTitle>
+      <manager>favio.riviera</manager>
+      <professionalData>
+        <email>isabel.bleasdale@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="favio.riviera">
+      <password>bpm</password>
+      <firstName>Favio</firstName>
+      <lastName>Riviera</lastName>
+      <title>Mr</title>
+      <jobTitle>Vice President of Marketing</jobTitle>
+      <manager>william.jobs</manager>
+      <professionalData>
+        <email>favio.riviera@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="michael.morrison">
+      <password>bpm</password>
+      <firstName>Michael</firstName>
+      <lastName>Morrison</lastName>
+      <title>Mr</title>
+      <jobTitle>Chief Technical Officer</jobTitle>
+      <manager>william.jobs</manager>
+      <professionalData>
+        <email>michael.morrison@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="marc.marseau">
+      <password>bpm</password>
+      <firstName>Marc</firstName>
+      <lastName>Marseau</lastName>
+      <title>Mr</title>
+      <jobTitle>Engineer</jobTitle>
+      <manager>michael.morrison</manager>
+      <professionalData>
+        <email>marc.marseau@acme.com</email>
+        <phoneNumber>484-302-5618</phoneNumber>
+        <faxNumber>484-302-0618</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="joseph.hovell">
+      <password>bpm</password>
+      <firstName>Joseph</firstName>
+      <lastName>Hovell</lastName>
+      <title>Mr</title>
+      <jobTitle>Engineer</jobTitle>
+      <manager>michael.morrison</manager>
+      <professionalData>
+        <email>joseph.hovell@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="mauro.zetticci">
+      <password>bpm</password>
+      <firstName>Mauro</firstName>
+      <lastName>Zetticci</lastName>
+      <title>Mr</title>
+      <jobTitle>Consultant</jobTitle>
+      <manager>michael.morrison</manager>
+      <professionalData>
+        <email>mauro.zetticci@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="thomas.wallis">
+      <password>bpm</password>
+      <firstName>Thomas</firstName>
+      <lastName>Wallis</lastName>
+      <title>Mr</title>
+      <jobTitle>Consultant</jobTitle>
+      <manager>michael.morrison</manager>
+      <professionalData>
+        <email>thomas.wallis@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="daniela.angelo">
+      <password>bpm</password>
+      <firstName>Daniela</firstName>
+      <lastName>Angelo</lastName>
+      <title>Mrs</title>
+      <jobTitle>Vice President of Sales</jobTitle>
+      <manager>william.jobs</manager>
+      <professionalData>
+        <email>daniela.angelo@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="anthony.nichols">
+      <password>bpm</password>
+      <firstName>Anthony</firstName>
+      <lastName>Nichols</lastName>
+      <title>Mr</title>
+      <jobTitle>Account manager</jobTitle>
+      <manager>daniela.angelo</manager>
+      <professionalData>
+        <email>anthony.nichols@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="misa.kumagai">
+      <password>bpm</password>
+      <firstName>Misa</firstName>
+      <lastName>Kumagai</lastName>
+      <title>Mrs</title>
+      <jobTitle>Account manager</jobTitle>
+      <manager>daniela.angelo</manager>
+      <professionalData>
+        <email>misa.kumagai@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="norio.yamazaki">
+      <password>bpm</password>
+      <firstName>Norio</firstName>
+      <lastName>Yamazaki</lastName>
+      <title>Mr</title>
+      <jobTitle>Account manager</jobTitle>
+      <manager>daniela.angelo</manager>
+      <professionalData>
+        <email>norio.yamazaki@acme.com</email>
+        <phoneNumber>484-302-5938</phoneNumber>
+        <faxNumber>484-302-0938</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+    <user userName="giovanna.almeida">
+      <password>bpm</password>
+      <firstName>Giovanna</firstName>
+      <lastName>Almeida</lastName>
+      <title>Mrs</title>
+      <jobTitle>Account manager</jobTitle>
+      <manager>daniela.angelo</manager>
+      <professionalData>
+        <email>giovanna.almeida@acme.com</email>
+        <phoneNumber>484-302-5362</phoneNumber>
+        <faxNumber>484-302-0362</faxNumber>
+        <building>70</building>
+        <address>Renwick Drive</address>
+        <zipCode>19108</zipCode>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <country>United States</country>
+      </professionalData>
+      
+    </user>
+  </users>
+  <roles>
+    <role name="member">
+      <displayName>Member</displayName>
+      <description></description>
+    </role>
+  </roles>
+  <groups>
+    <group name="acme">
+      <displayName>Acme</displayName>
+      <description>This group represents the acme department of the ACME organization</description>
+    </group>
+    <group name="hr" parentPath="/acme">
+      <displayName>Human Resources</displayName>
+      <description>This group represents the human resources department of the ACME organization</description>
+    </group>
+    <group name="finance" parentPath="/acme">
+      <displayName>Finance</displayName>
+      <description>This group represents the finance department of the ACME organization</description>
+    </group>
+    <group name="it" parentPath="/acme">
+      <displayName>Infrastructure</displayName>
+      <description>This group represents the infrastructure department of the ACME organization</description>
+    </group>
+    <group name="marketing" parentPath="/acme">
+      <displayName>Marketing</displayName>
+      <description>This group represents the marketing department of the ACME organization</description>
+    </group>
+    <group name="production" parentPath="/acme">
+      <displayName>Production</displayName>
+      <description>This group represents the production department of the ACME organization</description>
+    </group>
+    <group name="sales" parentPath="/acme">
+      <displayName>Sales</displayName>
+      <description>This group represents the sales department of the ACME organization</description>
+    </group>
+    <group name="europe" parentPath="/acme/sales">
+      <displayName>Europe</displayName>
+      <description>This group represents the europe department of the ACME organization</description>
+    </group>
+    <group name="asia" parentPath="/acme/sales">
+      <displayName>Asia</displayName>
+      <description>This group represents the asia department of the ACME organization</description>
+    </group>
+    <group name="latin_america" parentPath="/acme/sales">
+      <displayName>Latin America</displayName>
+      <description>This group represents the latin america department of the ACME organization</description>
+    </group>
+    <group name="north_america" parentPath="/acme/sales">
+      <displayName>North America</displayName>
+      <description>This group represents the north america department of the ACME organization</description>
+    </group>
+    <group name="rd" parentPath="/acme/production">
+      <displayName>Research &amp; Development</displayName>
+      <description>This group represents the research &amp; development department of the ACME organization</description>
+    </group>
+    <group name="services" parentPath="/acme/production">
+      <displayName>Services</displayName>
+      <description>This group represents the services department of the ACME organization</description>
+    </group>
+  </groups>
+  <memberships>
+    <membership>
+      <userName>william.jobs</userName>
+      <roleName>member</roleName>
+      <groupName>acme</groupName>
+    </membership>
+    <membership>
+      <userName>april.sanchez</userName>
+      <roleName>member</roleName>
+      <groupName>hr</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>helen.kelly</userName>
+      <roleName>member</roleName>
+      <groupName>hr</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>walter.bates</userName>
+      <roleName>member</roleName>
+      <groupName>hr</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>zachary.williamson</userName>
+      <roleName>member</roleName>
+      <groupName>finance</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>patrick.gardenier</userName>
+      <roleName>member</roleName>
+      <groupName>finance</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>virginie.jomphe</userName>
+      <roleName>member</roleName>
+      <groupName>finance</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>thorsten.hartmann</userName>
+      <roleName>member</roleName>
+      <groupName>finance</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>jan.fisher</userName>
+      <roleName>member</roleName>
+      <groupName>it</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>isabel.bleasdale</userName>
+      <roleName>member</roleName>
+      <groupName>marketing</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>favio.riviera</userName>
+      <roleName>member</roleName>
+      <groupName>marketing</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>michael.morrison</userName>
+      <roleName>member</roleName>
+      <groupName>production</groupName>
+      <groupParentPath>/acme</groupParentPath>
+    </membership>
+    <membership>
+      <userName>marc.marseau</userName>
+      <roleName>member</roleName>
+      <groupName>rd</groupName>
+      <groupParentPath>/acme/production</groupParentPath>
+    </membership>
+    <membership>
+      <userName>joseph.hovell</userName>
+      <roleName>member</roleName>
+      <groupName>rd</groupName>
+      <groupParentPath>/acme/production</groupParentPath>
+    </membership>
+    <membership>
+      <userName>mauro.zetticci</userName>
+      <roleName>member</roleName>
+      <groupName>services</groupName>
+      <groupParentPath>/acme/production</groupParentPath>
+    </membership>
+    <membership>
+      <userName>thomas.wallis</userName>
+      <roleName>member</roleName>
+      <groupName>services</groupName>
+      <groupParentPath>/acme/production</groupParentPath>
+    </membership>
+    <membership>
+      <userName>daniela.angelo</userName>
+      <roleName>member</roleName>
+      <groupName>europe</groupName>
+      <groupParentPath>/acme/sales</groupParentPath>
+    </membership>
+    <membership>
+      <userName>misa.kumagai</userName>
+      <roleName>member</roleName>
+      <groupName>asia</groupName>
+      <groupParentPath>/acme/sales</groupParentPath>
+    </membership>
+    <membership>
+      <userName>norio.yamazaki</userName>
+      <roleName>member</roleName>
+      <groupName>asia</groupName>
+      <groupParentPath>/acme/sales</groupParentPath>
+    </membership>
+    <membership>
+      <userName>giovanna.almeida</userName>
+      <roleName>member</roleName>
+      <groupName>latin_america</groupName>
+      <groupParentPath>/acme/sales</groupParentPath>
+    </membership>
+    <membership>
+      <userName>anthony.nichols</userName>
+      <roleName>member</roleName>
+      <groupName>north_america</groupName>
+      <groupParentPath>/acme/sales</groupParentPath>
+    </membership>
+  </memberships>
+</organization:Organization>
