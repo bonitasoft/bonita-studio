@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Validation Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.validation.common
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.11.0.W19
 Bundle-Activator: org.bonitasoft.studio.validation.common.ValidationCommonPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
