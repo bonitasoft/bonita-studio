@@ -43,5 +43,6 @@ public class Messages extends NLS {
 	public static String autoLoginMessageMigration;
 	public static String autoLoginNameMigration;
 	public static String formsNotExported;
+    public static String resolvingDiagramDependencies;
 
 }
