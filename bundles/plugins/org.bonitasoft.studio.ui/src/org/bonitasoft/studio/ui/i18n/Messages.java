@@ -56,5 +56,7 @@ public class Messages extends NLS {
     public static String deployCurrent;
     public static String seeDetails;
     public static String skipValidation;
+    public static String exportCancel;
+    public static String exportCancelTitle;
 
 }
