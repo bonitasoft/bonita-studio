@@ -155,8 +155,10 @@ public class ExportBosArchiveHandler {
             final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
             for (final IBOSArchiveFileStoreProvider provider : fileStoreProvider) {
                 result.addAll(provider.getFileStoreForConfiguration(p, conf));
-                for (final Configuration config : p.getConfigurations()) {
-                    result.addAll(provider.getFileStoreForConfiguration(p, config));
+                if(provider.distinctByConfiguration()) {
+                    for (final Configuration config : p.getConfigurations()) {
+                        result.addAll(provider.getFileStoreForConfiguration(p, config));
+                    }
                 }
             }
         }

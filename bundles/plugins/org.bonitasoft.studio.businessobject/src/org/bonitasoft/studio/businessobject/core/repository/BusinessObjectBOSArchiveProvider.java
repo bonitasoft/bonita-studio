@@ -44,6 +44,11 @@ public class BusinessObjectBOSArchiveProvider implements IBOSArchiveFileStorePro
         }
         return result;
     }
+    
+    @Override
+    public boolean distinctByConfiguration() {
+        return false;
+    }
 
     protected BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
