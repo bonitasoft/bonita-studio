@@ -36,8 +36,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.inject.Injector;
 
 
 /**
@@ -55,13 +58,14 @@ public class ConditionExpressionConstraintTest {
     @Spy
     private ConditionExpressionConstraint constraintUnderTest;
 
-    /**
-     * @throws java.lang.Exception
-     */
+    @Mock
+    private Injector injector;
+
     @Before
     public void setUp() throws Exception {
         when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
         when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+        doReturn(injector).when(constraintUnderTest).getInjector();
     }
 
     @Test
@@ -87,7 +91,7 @@ public class ConditionExpressionConstraintTest {
         Operation_Compare op = ConditionModelFactory.eINSTANCE.createOperation_Compare();
         Operation_Greater operation_Greater = ConditionModelFactory.eINSTANCE.createOperation_Greater();
         op.setOp(operation_Greater);
-        doReturn(op).when(constraintUnderTest).getCompareOperation(expression);
+        doReturn(op).when(constraintUnderTest).getCompareOperation(injector, expression);
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isTrue();
     }
 
@@ -102,10 +106,10 @@ public class ConditionExpressionConstraintTest {
         f.setCondition(expression);
         when(context.getTarget()).thenReturn(f);
         Operation_Compare op = ConditionModelFactory.eINSTANCE.createOperation_Compare();
-        doReturn(op).when(constraintUnderTest).getCompareOperation(expression);
+        doReturn(op).when(constraintUnderTest).getCompareOperation(injector, expression);
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isFalse();
         
-        doReturn(null).when(constraintUnderTest).getCompareOperation(expression);
+        doReturn(null).when(constraintUnderTest).getCompareOperation(injector, expression);
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isFalse();
     }
 
