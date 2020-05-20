@@ -46,6 +46,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
@@ -81,17 +82,18 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
             return ValidationStatus.error(e.getMessage());
         }
 
+        return validateXtextResource(injector, resource, getContextResourceSet());
+	}
+
+    public IStatus validateXtextResource(final Injector injector, Resource resource, ResourceSet resourceSet) throws OperationCanceledError {
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
         final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
-        final ResourceSet resourceSet = getContextResourceSet();
         validator.setCurrentResourceSet(resourceSet);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
-
 		if(issues.isEmpty()){
 			updateDependencies(resource);
 		}
-
 		for(final Issue issue : issues){
 			int severity = IStatus.ERROR;
 			final Severity issueSeverity = issue.getSeverity();
@@ -102,7 +104,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		}
 
 		return status;
-	}
+    }
 
     /**
      * Public for test purpose
@@ -121,8 +123,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
      * @return
      */
     public ResourceSet getContextResourceSet() {
-        final ResourceSet resourceSet = context.eResource().getResourceSet();
-        return resourceSet;
+        return context.eResource().getResourceSet();
     }
 
     private void updateDependencies(final Resource resource) {

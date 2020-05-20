@@ -161,11 +161,11 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
             }
             tenantManagementAPI.resume();
-        } catch (final Exception e) {
+        } catch (final Throwable e) {
             try {
                 tenantManagementAPI.uninstallBusinessDataModel();
-            } catch (final BusinessDataRepositoryDeploymentException e1) {
-                // ignore exception
+            } catch (Throwable e1) {
+                // ignored, we want to fire the first exception.
             }
             throw new InvocationTargetException(e);
         } finally {
