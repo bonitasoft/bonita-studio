@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.webservicex.net/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.webservicex.net/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.webservicex.net/">
+      <s:element name="TopLists">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="NumberOfRecords" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Filter" type="tns:FilterList" />
+            <s:element minOccurs="1" maxOccurs="1" name="Sort" type="tns:SortingList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="FilterList">
+        <s:restriction base="s:string">
+          <s:enumeration value="AllStocks" />
+          <s:enumeration value="ExchangeTradedFunds" />
+          <s:enumeration value="NYSEListedStocksListed" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="SortingList">
+        <s:restriction base="s:string">
+          <s:enumeration value="MatchedShares" />
+          <s:enumeration value="MatchedSharesAfterHours" />
+          <s:enumeration value="OpenOrders" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="TopListsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="TopListsResult" type="tns:TopList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TopList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StockLists" type="tns:ArrayOfStock" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfStock">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Stock" type="tns:Stock" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Stock">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Market" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SharesMatched" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastMatchTime" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastPrice" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="OpenOrders" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Book">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="NumberOfRecords" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BookResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="BookResult" type="tns:OrderList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OrderList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderLists" type="tns:ArrayOfOrder" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Order" type="tns:Order" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Order">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Shares" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="LastExecution">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="NumberOfRecords" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastExecutionResult" type="tns:OrderList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByMilliSecondsAfterMidNight">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="MilliSeconds" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByMilliSecondsAfterMidNightResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastExecutionByMilliSecondsAfterMidNightResult" type="tns:OrderList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByReferenceNumber">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ReferenceNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByReferenceNumberResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastExecutionByReferenceNumberResult" type="tns:OrderList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByTime">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Hours" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Minutes" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Seconds" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LastExecutionByTimeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="LastExecutionByTimeResult" type="tns:OrderList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StatsSymbol">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StatsSymbolResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="StatsSymbolResult" type="tns:QuoteStats" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="QuoteStats">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Market" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastOrderTime" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatchedShares" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OpenOrders" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OpenShares" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BookedShares" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BookedOrder" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Quote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QuoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="QuoteResult" type="tns:QuoteList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="QuoteList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="QuoteLists" type="tns:ArrayOfQuote" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfQuote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Quote" type="tns:Quote" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Quote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MatchedShares" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TopList" type="tns:TopList" />
+      <s:element name="OrderList" type="tns:OrderList" />
+      <s:element name="QuoteStats" type="tns:QuoteStats" />
+      <s:element name="QuoteList" type="tns:QuoteList" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="TopListsSoapIn">
+    <wsdl:part name="parameters" element="tns:TopLists" />
+  </wsdl:message>
+  <wsdl:message name="TopListsSoapOut">
+    <wsdl:part name="parameters" element="tns:TopListsResponse" />
+  </wsdl:message>
+  <wsdl:message name="BookSoapIn">
+    <wsdl:part name="parameters" element="tns:Book" />
+  </wsdl:message>
+  <wsdl:message name="BookSoapOut">
+    <wsdl:part name="parameters" element="tns:BookResponse" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionSoapIn">
+    <wsdl:part name="parameters" element="tns:LastExecution" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionSoapOut">
+    <wsdl:part name="parameters" element="tns:LastExecutionResponse" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightSoapIn">
+    <wsdl:part name="parameters" element="tns:LastExecutionByMilliSecondsAfterMidNight" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightSoapOut">
+    <wsdl:part name="parameters" element="tns:LastExecutionByMilliSecondsAfterMidNightResponse" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberSoapIn">
+    <wsdl:part name="parameters" element="tns:LastExecutionByReferenceNumber" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberSoapOut">
+    <wsdl:part name="parameters" element="tns:LastExecutionByReferenceNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeSoapIn">
+    <wsdl:part name="parameters" element="tns:LastExecutionByTime" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeSoapOut">
+    <wsdl:part name="parameters" element="tns:LastExecutionByTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolSoapIn">
+    <wsdl:part name="parameters" element="tns:StatsSymbol" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolSoapOut">
+    <wsdl:part name="parameters" element="tns:StatsSymbolResponse" />
+  </wsdl:message>
+  <wsdl:message name="QuoteSoapIn">
+    <wsdl:part name="parameters" element="tns:Quote" />
+  </wsdl:message>
+  <wsdl:message name="QuoteSoapOut">
+    <wsdl:part name="parameters" element="tns:QuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="TopListsHttpGetIn">
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+    <wsdl:part name="Filter" type="s:string" />
+    <wsdl:part name="Sort" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TopListsHttpGetOut">
+    <wsdl:part name="Body" element="tns:TopList" />
+  </wsdl:message>
+  <wsdl:message name="BookHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BookHttpGetOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionHttpGetOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="MilliSeconds" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightHttpGetOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="ReferenceNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberHttpGetOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="Hours" type="s:string" />
+    <wsdl:part name="Minutes" type="s:string" />
+    <wsdl:part name="Seconds" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeHttpGetOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolHttpGetOut">
+    <wsdl:part name="Body" element="tns:QuoteStats" />
+  </wsdl:message>
+  <wsdl:message name="QuoteHttpGetIn">
+    <wsdl:part name="Symbol" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="QuoteHttpGetOut">
+    <wsdl:part name="Body" element="tns:QuoteList" />
+  </wsdl:message>
+  <wsdl:message name="TopListsHttpPostIn">
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+    <wsdl:part name="Filter" type="s:string" />
+    <wsdl:part name="Sort" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TopListsHttpPostOut">
+    <wsdl:part name="Body" element="tns:TopList" />
+  </wsdl:message>
+  <wsdl:message name="BookHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BookHttpPostOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="NumberOfRecords" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionHttpPostOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="MilliSeconds" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByMilliSecondsAfterMidNightHttpPostOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="ReferenceNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByReferenceNumberHttpPostOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+    <wsdl:part name="Hours" type="s:string" />
+    <wsdl:part name="Minutes" type="s:string" />
+    <wsdl:part name="Seconds" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LastExecutionByTimeHttpPostOut">
+    <wsdl:part name="Body" element="tns:OrderList" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StatsSymbolHttpPostOut">
+    <wsdl:part name="Body" element="tns:QuoteStats" />
+  </wsdl:message>
+  <wsdl:message name="QuoteHttpPostIn">
+    <wsdl:part name="Symbol" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="QuoteHttpPostOut">
+    <wsdl:part name="Body" element="tns:QuoteList" />
+  </wsdl:message>
+  <wsdl:portType name="RealTimeMarketDataSoap">
+    <wsdl:operation name="TopLists">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 500 stocks from Island Top List. There are three additional parameters which allow you to filter, sort and adjust the size of the returned results. All additional parameters are optional and can be combined for a customized list. </wsdl:documentation>
+      <wsdl:input message="tns:TopListsSoapIn" />
+      <wsdl:output message="tns:TopListsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 50 open orders per side from the Island Book. You must specify a symbol for which to retrieve the Island Book. Omitting a symbol, or providing a symbol which is currently not traded on Island will result in an empty record set.</wsdl:documentation>
+      <wsdl:input message="tns:BookSoapIn" />
+      <wsdl:output message="tns:BookSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionSoapIn" />
+      <wsdl:output message="tns:LastExecutionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by milli seconds after mid night.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByMilliSecondsAfterMidNightSoapIn" />
+      <wsdl:output message="tns:LastExecutionByMilliSecondsAfterMidNightSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by reference number.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByReferenceNumberSoapIn" />
+      <wsdl:output message="tns:LastExecutionByReferenceNumberSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by time.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByTimeSoapIn" />
+      <wsdl:output message="tns:LastExecutionByTimeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieving Statistics for a Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:StatsSymbolSoapIn" />
+      <wsdl:output message="tns:StatsSymbolSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve Island Last Execution Price and Time for up to 100 stocks per call.This call retrieves last execution price and time, as well as total matched shares (volume) for symbols ABCD, EFGH, and IJKL. You can pass up to 100 symbols per call. Please make sure the symbols are delimited with a space, which can be encoded as either '%20' or '+'.</wsdl:documentation>
+      <wsdl:input message="tns:QuoteSoapIn" />
+      <wsdl:output message="tns:QuoteSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="RealTimeMarketDataHttpGet">
+    <wsdl:operation name="TopLists">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 500 stocks from Island Top List. There are three additional parameters which allow you to filter, sort and adjust the size of the returned results. All additional parameters are optional and can be combined for a customized list. </wsdl:documentation>
+      <wsdl:input message="tns:TopListsHttpGetIn" />
+      <wsdl:output message="tns:TopListsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 50 open orders per side from the Island Book. You must specify a symbol for which to retrieve the Island Book. Omitting a symbol, or providing a symbol which is currently not traded on Island will result in an empty record set.</wsdl:documentation>
+      <wsdl:input message="tns:BookHttpGetIn" />
+      <wsdl:output message="tns:BookHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionHttpGetIn" />
+      <wsdl:output message="tns:LastExecutionHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by milli seconds after mid night.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByMilliSecondsAfterMidNightHttpGetIn" />
+      <wsdl:output message="tns:LastExecutionByMilliSecondsAfterMidNightHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by reference number.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByReferenceNumberHttpGetIn" />
+      <wsdl:output message="tns:LastExecutionByReferenceNumberHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by time.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByTimeHttpGetIn" />
+      <wsdl:output message="tns:LastExecutionByTimeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieving Statistics for a Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:StatsSymbolHttpGetIn" />
+      <wsdl:output message="tns:StatsSymbolHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve Island Last Execution Price and Time for up to 100 stocks per call.This call retrieves last execution price and time, as well as total matched shares (volume) for symbols ABCD, EFGH, and IJKL. You can pass up to 100 symbols per call. Please make sure the symbols are delimited with a space, which can be encoded as either '%20' or '+'.</wsdl:documentation>
+      <wsdl:input message="tns:QuoteHttpGetIn" />
+      <wsdl:output message="tns:QuoteHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="RealTimeMarketDataHttpPost">
+    <wsdl:operation name="TopLists">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 500 stocks from Island Top List. There are three additional parameters which allow you to filter, sort and adjust the size of the returned results. All additional parameters are optional and can be combined for a customized list. </wsdl:documentation>
+      <wsdl:input message="tns:TopListsHttpPostIn" />
+      <wsdl:output message="tns:TopListsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 50 open orders per side from the Island Book. You must specify a symbol for which to retrieve the Island Book. Omitting a symbol, or providing a symbol which is currently not traded on Island will result in an empty record set.</wsdl:documentation>
+      <wsdl:input message="tns:BookHttpPostIn" />
+      <wsdl:output message="tns:BookHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionHttpPostIn" />
+      <wsdl:output message="tns:LastExecutionHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by milli seconds after mid night.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByMilliSecondsAfterMidNightHttpPostIn" />
+      <wsdl:output message="tns:LastExecutionByMilliSecondsAfterMidNightHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by reference number.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByReferenceNumberHttpPostIn" />
+      <wsdl:output message="tns:LastExecutionByReferenceNumberHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve up to 100 execution for a specific Symbol by time.</wsdl:documentation>
+      <wsdl:input message="tns:LastExecutionByTimeHttpPostIn" />
+      <wsdl:output message="tns:LastExecutionByTimeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieving Statistics for a Symbol.</wsdl:documentation>
+      <wsdl:input message="tns:StatsSymbolHttpPostIn" />
+      <wsdl:output message="tns:StatsSymbolHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve Island Last Execution Price and Time for up to 100 stocks per call.This call retrieves last execution price and time, as well as total matched shares (volume) for symbols ABCD, EFGH, and IJKL. You can pass up to 100 symbols per call. Please make sure the symbols are delimited with a space, which can be encoded as either '%20' or '+'.</wsdl:documentation>
+      <wsdl:input message="tns:QuoteHttpPostIn" />
+      <wsdl:output message="tns:QuoteHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RealTimeMarketDataSoap" type="tns:RealTimeMarketDataSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TopLists">
+      <soap:operation soapAction="http://www.webservicex.net/TopLists" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <soap:operation soapAction="http://www.webservicex.net/Book" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <soap:operation soapAction="http://www.webservicex.net/LastExecution" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <soap:operation soapAction="http://www.webservicex.net/LastExecutionByMilliSecondsAfterMidNight" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <soap:operation soapAction="http://www.webservicex.net/LastExecutionByReferenceNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <soap:operation soapAction="http://www.webservicex.net/LastExecutionByTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <soap:operation soapAction="http://www.webservicex.net/StatsSymbol" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <soap:operation soapAction="http://www.webservicex.net/Quote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="RealTimeMarketDataSoap12" type="tns:RealTimeMarketDataSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TopLists">
+      <soap12:operation soapAction="http://www.webservicex.net/TopLists" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <soap12:operation soapAction="http://www.webservicex.net/Book" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <soap12:operation soapAction="http://www.webservicex.net/LastExecution" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <soap12:operation soapAction="http://www.webservicex.net/LastExecutionByMilliSecondsAfterMidNight" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <soap12:operation soapAction="http://www.webservicex.net/LastExecutionByReferenceNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <soap12:operation soapAction="http://www.webservicex.net/LastExecutionByTime" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <soap12:operation soapAction="http://www.webservicex.net/StatsSymbol" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <soap12:operation soapAction="http://www.webservicex.net/Quote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="RealTimeMarketDataHttpGet" type="tns:RealTimeMarketDataHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="TopLists">
+      <http:operation location="/TopLists" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <http:operation location="/Book" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <http:operation location="/LastExecution" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <http:operation location="/LastExecutionByMilliSecondsAfterMidNight" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <http:operation location="/LastExecutionByReferenceNumber" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <http:operation location="/LastExecutionByTime" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <http:operation location="/StatsSymbol" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <http:operation location="/Quote" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="RealTimeMarketDataHttpPost" type="tns:RealTimeMarketDataHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="TopLists">
+      <http:operation location="/TopLists" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Book">
+      <http:operation location="/Book" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecution">
+      <http:operation location="/LastExecution" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByMilliSecondsAfterMidNight">
+      <http:operation location="/LastExecutionByMilliSecondsAfterMidNight" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByReferenceNumber">
+      <http:operation location="/LastExecutionByReferenceNumber" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LastExecutionByTime">
+      <http:operation location="/LastExecutionByTime" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StatsSymbol">
+      <http:operation location="/StatsSymbol" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Quote">
+      <http:operation location="/Quote" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RealTimeMarketData">
+    <wsdl:port name="RealTimeMarketDataSoap" binding="tns:RealTimeMarketDataSoap">
+      <soap:address location="http://www.webservicex.net/RealTimeMarketData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="RealTimeMarketDataSoap12" binding="tns:RealTimeMarketDataSoap12">
+      <soap12:address location="http://www.webservicex.net/RealTimeMarketData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="RealTimeMarketDataHttpGet" binding="tns:RealTimeMarketDataHttpGet">
+      <http:address location="http://www.webservicex.net/RealTimeMarketData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="RealTimeMarketDataHttpPost" binding="tns:RealTimeMarketDataHttpPost">
+      <http:address location="http://www.webservicex.net/RealTimeMarketData.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
