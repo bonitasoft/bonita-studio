@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         id="product"
+         name="BonitaBPM"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.bonitasoft.studio.application.application"
+            name="Bonita Studio">
+            <property
+                  name="windowImages"
+                  value="icons/bonitasoft-icon-16-16-transparent.png,icons/bonitasoft-icon-32-32-transparent.png,icons/bonitasoft-icon-48-48-transparent.png,icons/bonitasoft-icon-64-64-transparent.png,icons/bonitasoft-icon-128-128-transparent.png">
+            </property>
+  		<property
+               name="appName"
+               value="Bonita Studio">
+         </property>
+         <property
+               name="aboutText"
+               value="Bonita Studio&#x0A;Build : XXX_BONITA_PRODUCT_VERSION_XXX&#x0A;Copyright (c) BonitaSoft S.A., 2009-2011&#x0A;All rights reserved&#x0A;&#x0A;This software is licensed under GPL v2.">
+         </property>
+          <property
+               name="aboutImage"
+               value="about.bmp">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="0,286,600,14">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="00FF00">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="0,0,0,0">
+         </property>
+         <property
+			name="cssTheme"
+			value="org.eclipse.e4.minimal.theme.standard">
+		 </property>
+         <property
+               name="applicationXMI"
+               value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.LifeCycleManager">
+         </property>
+         
+      </product>
+   </extension> 
+
+<!-- =================================================================================== -->
+<!-- Themes						 					                                 -->
+<!-- =================================================================================== -->
+
+</plugin>
