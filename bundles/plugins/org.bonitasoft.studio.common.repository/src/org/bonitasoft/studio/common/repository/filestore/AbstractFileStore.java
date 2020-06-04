@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.filestore;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
@@ -73,7 +75,8 @@ public abstract class AbstractFileStore
     private RepositoryAccessor repositoryAccessor;
     private CommandExecutor commandExecutor = new CommandExecutor();
 
-    public AbstractFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public AbstractFileStore(final String fileName,
+            final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         name = fileName;
         store = parentStore;
         initParameters();
@@ -92,7 +95,7 @@ public abstract class AbstractFileStore
     protected void setName(final String name) {
         this.name = name;
     }
-
+    
     @Override
     public IResource getResource() {
         return getParentStore().getResource().getFile(getName());
@@ -220,6 +223,16 @@ public abstract class AbstractFileStore
     @Override
     public IWorkbenchPart open() {
         final Display display = Display.getDefault();
+        IStatus status = validate();
+        switch (status.getSeverity()) {
+            case IStatus.ERROR:
+                MessageDialog.openError(display.getActiveShell(), Messages.invalidFile, status.getMessage());
+                return null;
+            case IStatus.WARNING:
+            default:
+                break;
+        }
+
         final boolean[] done = new boolean[1];
         display.asyncExec(() -> {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
@@ -463,4 +476,17 @@ public abstract class AbstractFileStore
         return true;
     }
 
+    @Override
+    public IStatus validate() {
+        IResource resource = getResource();
+        if (resource instanceof IFile) {
+            try (InputStream is = ((IFile) resource).getContents()) {
+                return getParentStore().validate(resource.getName(), is);
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+                return ValidationStatus.error("Failed to validate file model", e);
+            }
+        }
+        return ValidationStatus.ok();
+    }
 }

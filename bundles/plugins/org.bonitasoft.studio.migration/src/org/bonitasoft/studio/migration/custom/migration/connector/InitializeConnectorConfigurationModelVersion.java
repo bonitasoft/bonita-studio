@@ -33,7 +33,7 @@ public class InitializeConnectorConfigurationModelVersion extends CustomMigratio
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         for (final Instance configuration : model.getAllInstances("connectorconfiguration.ConnectorConfiguration")) {
-            configuration.set("modelVersion", ModelVersion.CURRENT_VERSION);
+            configuration.set("modelVersion", ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
     }
 }

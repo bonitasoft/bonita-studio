@@ -42,6 +42,8 @@ import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -67,6 +69,7 @@ import com.google.common.base.Function;
 public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> implements IRepositoryStore<T> {
 
     private static final String CLASS = "class";
+    public static final IValidator<InputStream> DEFAULT_MODEL_VALIDATOR = is -> ValidationStatus.ok();
     private IFolder folder;
     private IRepository repository;
 

@@ -94,6 +94,8 @@ public final class Messages extends NLS {
     public static String unloadable;
     public static String uncategorized;
 
+    public static String invalidFile;
+
     private Messages() {
         // Do not instantiate
     }

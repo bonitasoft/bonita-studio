@@ -198,7 +198,7 @@ public class BarExporter {
                 file = processConfStore.createRepositoryFileStore(id + ".conf");
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(configurationId);
-                configuration.setVersion(ModelVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                 file.save(configuration);
             }
             try {
@@ -218,7 +218,7 @@ public class BarExporter {
         if (configuration == null) {
             configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName(configurationId);
-            configuration.setVersion(ModelVersion.CURRENT_VERSION);
+            configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize();

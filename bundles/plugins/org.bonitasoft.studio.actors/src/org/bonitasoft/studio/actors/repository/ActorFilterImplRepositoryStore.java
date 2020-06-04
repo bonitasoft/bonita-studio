@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.actors.repository;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -24,11 +25,15 @@ import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -132,4 +137,13 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
         return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if(filename != null & filename.endsWith("."+ IMPL_EXT)) {
+            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
+                    Messages.incompatibleActorFilterImplementationModel)).validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
+    }
+  
 }

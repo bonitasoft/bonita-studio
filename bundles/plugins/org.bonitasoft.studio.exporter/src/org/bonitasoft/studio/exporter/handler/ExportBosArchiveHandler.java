@@ -204,7 +204,7 @@ public class ExportBosArchiveHandler {
             if (file == null) {
                 file = processConfStore.createRepositoryFileStore(id + ".conf");
                 final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-                conf.setVersion(ModelVersion.CURRENT_VERSION);
+                conf.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                 file.save(conf);
             }
             try {
@@ -222,7 +222,7 @@ public class ExportBosArchiveHandler {
         if (configuration == null) {
             configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
             configuration.setName(configurationId);
-            configuration.setVersion(ModelVersion.CURRENT_VERSION);
+            configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize();

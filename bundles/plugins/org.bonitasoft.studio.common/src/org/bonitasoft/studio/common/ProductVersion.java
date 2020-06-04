@@ -93,8 +93,7 @@ public class ProductVersion {
         } catch (final IllegalArgumentException e) {
             return false;
         }
-        final Version productVersion = new Version(CURRENT_VERSION);
-        return current.compareTo(productVersion) <= 0 && current.compareTo(initialVersion) >= 0;
+        return minorVersion(version).compareTo(minorVersion(CURRENT_VERSION)) <= 0 && current.compareTo(initialVersion) >= 0;
     }
 
     public static String majorVersion() {
@@ -114,4 +113,12 @@ public class ProductVersion {
         return String.valueOf(new Version(CURRENT_VERSION).getMicro());
     }
 
+    public static Version minorVersion(String version) {
+        Version v = new Version(version);
+        return new Version(v.getMajor(), v.getMinor(), 0);
+    }
+
+    public static String toMinorVersionString(Version version) {
+        return String.format("%s.%s", version.getMajor(), version.getMinor());
+    }
 }

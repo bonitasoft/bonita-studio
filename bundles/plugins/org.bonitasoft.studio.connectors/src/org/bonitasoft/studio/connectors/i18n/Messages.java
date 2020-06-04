@@ -188,6 +188,8 @@ public class Messages extends NLS {
     public static String unSelectAll;
     public static String DebugProcessButtonLabel;
     public static String debugProcessWizardtitle;
+    public static String incompatibleConnectorDefinitionModel;
+    public static String incompatibleConnectorImplementationModel;
 
     /**
      * @param event
