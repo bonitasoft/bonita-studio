@@ -234,6 +234,7 @@ public class Messages extends NLS {
     public static String Validation_jasperConnectorRemoved;
     public static String invalidColumnUsageInTaskName;
     public static String deprecatedConnectorDefinition;
+    public static String checkingModelCompatibility;
     
     static {
         // initialize resource bundle

@@ -168,8 +168,8 @@ public class ConfigurationSynchronizer implements Synchronizer {
                     ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON));
         }
 
-        if (configuration.getVersion() == null || !ModelVersion.CURRENT_VERSION.equals(configuration.getVersion())) {
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_VERSION));
+        if (configuration.getVersion() == null || !ModelVersion.CURRENT_DIAGRAM_VERSION.equals(configuration.getVersion())) {
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_DIAGRAM_VERSION));
         }
 
         synchronizeFragmentContainers(cc);

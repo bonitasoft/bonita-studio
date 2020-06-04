@@ -40,7 +40,10 @@ import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -350,6 +353,16 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     @Override
     public void projectClosed(Repository repository, IProgressMonitor monitor) {
         //Nothing to do
+    }
+
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if (Objects.equals(filename, BusinessObjectModelFileStore.BOM_FILENAME)) {
+            return new XMLModelCompatibilityValidator(
+                    new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE, Messages.incompatibleBdmModel))
+                            .validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
     }
 
 }

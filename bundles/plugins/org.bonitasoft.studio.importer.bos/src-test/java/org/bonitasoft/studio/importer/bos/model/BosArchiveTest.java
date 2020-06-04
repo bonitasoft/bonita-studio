@@ -119,7 +119,7 @@ public class BosArchiveTest {
         doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
-        doReturn(Status.OK_STATUS).when(bosArchive).validateDiagram(any());
+        doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
         return bosArchive;
     }
 

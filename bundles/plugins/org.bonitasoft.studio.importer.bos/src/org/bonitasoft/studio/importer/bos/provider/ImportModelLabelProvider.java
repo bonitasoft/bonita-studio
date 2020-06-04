@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.repository.model.IPresentable;
@@ -17,6 +18,8 @@ import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler.ConflictStyler;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -108,12 +111,13 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
     }
 
     protected ImageDescriptor statusDecorator(IStatus status) {
+        //Initialize image registry with default decorator (error, warning...etc)
+        FieldDecorationRegistry.getDefault();
         switch (status.getSeverity()) {
             case IStatus.ERROR:
                 return JFaceResources.getImageRegistry().getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_ERROR");
             case IStatus.WARNING:
-                return JFaceResources.getImageRegistry()
-                        .getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_WARNING");
+                return JFaceResources.getImageRegistry().getDescriptor("org.eclipse.jface.fieldassist.IMG_DEC_FIELD_WARNING");
             default:
                 return null;
         }
@@ -132,6 +136,20 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
             AbstractImportModel importModel = (AbstractImportModel) element;
             IStatus validationStatus = importModel.getValidationStatus();
             if (!validationStatus.isOK()) {
+                if(validationStatus instanceof MultiStatus) {
+                    StringBuilder sb = new StringBuilder();
+                    Stream.of(validationStatus.getChildren())
+                    .filter(s -> !s.isOK())
+                    .map(s -> s.getMessage())
+                    .filter(Objects::nonNull)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(message -> {
+                        sb.append(message);
+                        sb.append(System.lineSeparator());
+                        });
+                    sb.delete(sb.lastIndexOf(System.lineSeparator()), sb.length());
+                    return sb.toString();
+                }
                 return validationStatus.getMessage();
             }
             if (element instanceof AbstractFileModel) {

@@ -21,12 +21,16 @@ import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -127,6 +131,15 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         if(PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }
+    }
+    
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if(filename != null & filename.endsWith("." + DEF_EXT)) {
+            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE, 
+                    Messages.incompatibleActorFilterDefinitionModel)).validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
     }
 
 }

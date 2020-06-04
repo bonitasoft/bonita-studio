@@ -49,7 +49,6 @@ import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -65,20 +64,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class NewDiagramFactory {
 
-    /**
-     * 
-     */
     private static final String POOL_DEFAULT_WIDTH = "poolDefaultWidth";
     private static final String BASE_VERSION = "1.0"; //$NON-NLS-1$
     private DiagramFileStore fileStore;
     private final IRepository repository;
     private final CustomProcessViewProvider processViewProvider;
     private final ProcessFactory processFactory;
-    private final IPreferenceStore preferenceStore;
 
-    public NewDiagramFactory(final IRepository repository, final IPreferenceStore preferenceStore) {
+    public NewDiagramFactory(final IRepository repository) {
         this.repository = repository;
-        this.preferenceStore = preferenceStore;
         processViewProvider = new CustomProcessViewProvider();
         processFactory = ProcessFactory.eINSTANCE;
     }
@@ -88,7 +82,7 @@ public class NewDiagramFactory {
 
         final String diagramIdentifier = getNewProcessIdentifier();
         final Map<Class<?>, EObject> domainElements = createlModel(processFactory, diagramIdentifier,
-                ElementInitializers.getInstance(), ModelVersion.CURRENT_VERSION, monitor);
+                ElementInitializers.getInstance(), ModelVersion.CURRENT_DIAGRAM_VERSION, monitor);
         final Diagram diagram = createViews(domainElements, monitor);
 
         final MainProcess mainProcess = (MainProcess) domainElements.get(MainProcess.class);
@@ -177,7 +171,7 @@ public class NewDiagramFactory {
                 ProcessConfigurationRepositoryStore.class);
         final IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID + ".conf");
         final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-        conf.setVersion(ModelVersion.CURRENT_VERSION);
+        conf.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         createDefaultActorMapping(conf);
         confFile.save(conf);
         monitor.worked(1);

@@ -277,4 +277,7 @@ public class Messages extends NLS {
     public static String deployingOrganization;
     public static String organizationDeployed;
     public static String showPassword;
+    public static String incompatibleOrganizationModel;
+    public static String incompatibleActorFilterImplementationModel;
+    public static String incompatibleActorFilterDefinitionModel;
 }

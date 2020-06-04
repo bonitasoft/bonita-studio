@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.model;
 import java.io.IOException;
 import java.util.Set;
 
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -68,6 +69,10 @@ public interface IRepositoryFileStore extends IDisplayable, IAdaptable {
     @Override
     default <T> T getAdapter(Class<T> adapter) {
         return null;
+    }
+    
+    default IStatus validate() {
+        return ValidationStatus.ok();
     }
 
 }

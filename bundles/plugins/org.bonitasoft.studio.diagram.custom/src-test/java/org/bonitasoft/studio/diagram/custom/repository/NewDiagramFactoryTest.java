@@ -33,9 +33,7 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.StartEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,9 +55,6 @@ public class NewDiagramFactoryTest {
     private DiagramRepositoryStore diagramRepositoryStore;
 
     @Mock
-    private IPreferenceStore preferenceStore;
-
-    @Mock
     private ElementInitializers elementInitalizers;
 
     /**
@@ -67,7 +62,7 @@ public class NewDiagramFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        newDiagramFactory = spy(new NewDiagramFactory(repository, preferenceStore));
+        newDiagramFactory = spy(new NewDiagramFactory(repository));
 
         doReturn(null).when(newDiagramFactory).getConfigurationId(any(MainProcess.class));
         when(repository.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramRepositoryStore);

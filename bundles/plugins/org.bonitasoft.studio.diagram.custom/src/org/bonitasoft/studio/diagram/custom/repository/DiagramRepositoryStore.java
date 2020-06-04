@@ -69,6 +69,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -289,7 +290,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#doImportArchiveData(org.bonitasoft.studio.common.repository.ImportArchiveData,
+     * @see
+     * org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#doImportArchiveData(org.bonitasoft.studio.common
+     * .repository.ImportArchiveData,
      * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -431,14 +434,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     @Override
     protected InputStream handlePreImport(final String fileName,
             final InputStream inputStream) throws MigrationException, IOException {
-        
+
         DiagramFileStore fileStore = getChild(fileName, false);
-        Display.getDefault().syncExec(() ->  {
-            if(fileStore != null && fileStore.isOpened()) {
+        Display.getDefault().syncExec(() -> {
+            if (fileStore != null && fileStore.isOpened()) {
                 fileStore.close();
             }
         });
-       
+
         CopyInputStream copyIs = null;
         Resource diagramResource = null;
         try {
@@ -512,8 +515,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
             diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
         }
-        if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
-            diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+        if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
+            diagram.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
         diagram.setConfigId(ConfigurationIdProvider
                 .getConfigurationIdProvider().getConfigurationId(
@@ -583,4 +586,11 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         super.close();
     }
 
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if (filename != null & filename.endsWith(".proc")) {
+            return new DiagramCompatibilityValidator().validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
+    }
 }
