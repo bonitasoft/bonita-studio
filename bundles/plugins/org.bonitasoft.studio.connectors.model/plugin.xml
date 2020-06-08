@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.bonitasoft.org/ns/connector/definition/6.0"
+            class="org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage"
+            genModel="model/connector.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="def"
+            class="org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.bonitasoft.org/ns/connector/implementation/6.0"
+            class="org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage"
+            genModel="model/connector.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="impl"
+            class="org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationResourceFactoryImpl"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.edapt.migrators">
+      <migrator
+            path="model/connector.history">
+      </migrator>
+   </extension>
+
+</plugin>
