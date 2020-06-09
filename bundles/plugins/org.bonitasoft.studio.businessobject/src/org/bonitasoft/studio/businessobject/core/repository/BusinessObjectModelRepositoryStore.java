@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.zip.ZipFile;
 
 import javax.xml.bind.JAXBException;
 
@@ -357,10 +359,25 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
+        XMLModelCompatibilityValidator validator = new XMLModelCompatibilityValidator(
+                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE, Messages.incompatibleBdmModel));
         if (Objects.equals(filename, BusinessObjectModelFileStore.BOM_FILENAME)) {
-            return new XMLModelCompatibilityValidator(
-                    new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE, Messages.incompatibleBdmModel))
-                            .validate(inputStream);
+            return validator.validate(inputStream);
+        }
+        if (Objects.equals(filename, BusinessObjectModelFileStore.ZIP_FILENAME)) {
+            try {
+                File tempFile = File.createTempFile("bdm", ".zip");
+                java.nio.file.Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                try (ZipFile zipFile = new ZipFile(tempFile);
+                        InputStream is = zipFile
+                                .getInputStream(zipFile.getEntry(BusinessObjectModelFileStore.BOM_FILENAME));) {
+                    return validator.validate(is);
+                }finally {
+                    tempFile.delete();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return super.validate(filename, inputStream);
     }

@@ -345,7 +345,7 @@ public class SmartImportBdmPage extends AbstractImportPage {
     @Override
     protected List<IValidator> getValidators() {
         List<IValidator> validators = super.getValidators();
-        validators.add(new ImportBdmContentValidator());
+        validators.add(new ImportBdmContentValidator(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)));
         return validators;
     }
 
