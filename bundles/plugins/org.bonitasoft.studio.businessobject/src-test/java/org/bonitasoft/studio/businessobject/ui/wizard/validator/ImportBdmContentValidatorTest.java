@@ -19,14 +19,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ImportBdmContentValidatorTest {
 
-    File archive;
+    private File archive;
+    @Mock
+    private BusinessObjectModelRepositoryStore<?> store;
 
     @Before
     public void init() throws Exception {
@@ -35,7 +42,7 @@ public class ImportBdmContentValidatorTest {
 
     @Test
     public void should_validate_archive_content() {
-        IStatus status = new ImportBdmContentValidator().validate(archive.getAbsolutePath());
+        IStatus status = new ImportBdmContentValidator(store).validate(archive.getAbsolutePath());
         StatusAssert.assertThat(status).isError();
         assertThat(status.getMessage()).isEqualTo(String.format(Messages.bdmZipInvalid, archive.getName()));
     }
