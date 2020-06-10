@@ -34,9 +34,9 @@ public class ImportApplicationPage extends AbstractImportPage {
     @Override
     protected List<IValidator> getValidators() {
         List<IValidator> validators = super.getValidators();
-        validators.add(new ApplicationXMLContentValidator());
-        validators.add(new ImportFileStoreConflictsValidator(
-                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)));
+        ApplicationRepositoryStore store = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class);
+        validators.add(new ApplicationXMLContentValidator(store));
+        validators.add(new ImportFileStoreConflictsValidator(store));
         return validators;
     }
 
