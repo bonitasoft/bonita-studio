@@ -506,6 +506,8 @@ public class Messages extends NLS {
     public static String explore;
     public static String exploreTooltip;
     public static String bdmVoyager;
+    public static String deployCancelTitle;
+    public static String deployCancel;
 
     private Messages() {
     }

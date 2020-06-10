@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
+import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionValidator;
 import org.bonitasoft.studio.condition.ui.expression.ProjectXtextResourceProvider;
 import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
@@ -39,6 +40,8 @@ import com.google.inject.Injector;
  */
 public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerConstraint {
 
+    private ComparisonExpressionValidator comparisonExpressionValidator = new ComparisonExpressionValidator();
+
     @Override
     protected String getConstraintId() {
         return "org.bonitasoft.studio.validation.constraints.condition_expression";
@@ -51,20 +54,29 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
             final Expression conditionExpression = ((SequenceFlow) target).getCondition();
             if (conditionExpression != null
                     && ExpressionConstants.CONDITION_TYPE.equals(conditionExpression.getType())
-                    && conditionExpression.getContent() != null
-                    && !conditionExpression.getContent().isEmpty()) {
-                final Operation_Compare opCompare = getCompareOperation(conditionExpression);
+                    && conditionExpression.hasContent()) {
+                Injector injector = getInjector();
+                final Operation_Compare opCompare = getCompareOperation(injector, conditionExpression);
                 if (opCompare == null || opCompare.getOp() == null) {
                     return ctx.createFailureStatus(Messages.bind(Messages.invalidConditionExpression, conditionExpression.getName()));
+                }
+                if(target.eResource() != null) {
+                    IStatus status = comparisonExpressionValidator.validateXtextResource(injector, opCompare.eResource(), target.eResource().getResourceSet());
+                    if(status.getSeverity() == IStatus.ERROR) {
+                        return ctx.createFailureStatus(Messages.bind(Messages.invalidConditionExpression, conditionExpression.getName()));
+                    }
                 }
             }
         }
         return ctx.createSuccessStatus();
     }
 
-    protected Operation_Compare getCompareOperation(final Expression conditionExpression) {
-        Injector injector = ConditionModelActivator.getInstance()
+    Injector getInjector() {
+        return ConditionModelActivator.getInstance()
                 .getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+    }
+
+    protected Operation_Compare getCompareOperation(Injector injector, final Expression conditionExpression) {
         final XtextComparisonExpressionLoader comparisonExpressionConverter = new XtextComparisonExpressionLoader(
                 injector.getInstance(ConditionModelGlobalScopeProvider.class),
                 new ModelSearch(Collections::emptyList),

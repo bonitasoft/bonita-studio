@@ -26,6 +26,7 @@ import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
@@ -59,6 +60,11 @@ public class DeployContributionItem extends ContributionItem {
             DeployStrategy choice = SaveBeforeDeployDialog.open(name);
             if (choice == DeployStrategy.SAVE_AND_DEPLOY) {
                 formPage.getEditor().doSave(new NullProgressMonitor());
+                if (formPage.getEditor().isDirty()) {
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.deployCancelTitle,
+                            Messages.deployCancel);
+                    return;
+                }
             } else if (choice == DeployStrategy.CANCEL) {
                 return;
             }

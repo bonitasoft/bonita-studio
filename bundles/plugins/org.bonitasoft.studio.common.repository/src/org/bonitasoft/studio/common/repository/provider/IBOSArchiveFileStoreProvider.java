@@ -31,4 +31,8 @@ public interface IBOSArchiveFileStoreProvider {
 
     Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration);
 
+    default boolean distinctByConfiguration() {
+        return true;
+    }
+
 }
