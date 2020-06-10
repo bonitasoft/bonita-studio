@@ -14,14 +14,15 @@
  */
 package org.bonitasoft.studio.la.application.ui.validator;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.xml.bind.JAXBException;
 
-import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -31,21 +32,30 @@ import org.xml.sax.SAXException;
 
 public class ApplicationXMLContentValidator implements IValidator<String> {
 
-    private ApplicationNodeContainerConverter applicationNodeContainerConverter;
+    private ApplicationRepositoryStore store;
 
-    public ApplicationXMLContentValidator() {
-        this.applicationNodeContainerConverter = RepositoryManager.getInstance()
-                .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
-
+    public ApplicationXMLContentValidator(ApplicationRepositoryStore store) {
+        this.store = store;
     }
 
     @Override
     public IStatus validate(String value) {
         try {
-            applicationNodeContainerConverter.unmarshallFromXML(Files.readAllBytes(Paths.get(value)));
+            IStatus status = validateVersion(value);
+            if (!status.isOK()) {
+                return status;
+            }
+            store.getConverter().unmarshallFromXML(Files.readAllBytes(Paths.get(value)));
         } catch (JAXBException | IOException | SAXException e) {
             return ValidationStatus.error(Messages.notAnApplicationError);
         }
         return ValidationStatus.ok();
+    }
+
+    private IStatus validateVersion(String filePath) throws IOException {
+        File file = Paths.get(filePath).toFile();
+        try (InputStream is = new FileInputStream(file)) {
+            return store.validate(file.getName(), is);
+        }
     }
 }
