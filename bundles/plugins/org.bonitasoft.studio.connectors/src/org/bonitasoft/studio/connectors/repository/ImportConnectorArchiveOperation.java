@@ -136,6 +136,17 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
         if (files != null) {
             for (final File implFile : files) {
                 final IRepositoryStore implStore = getImplementationStore();
+                
+                try (final FileInputStream fis = new FileInputStream(implFile)) {
+                    IStatus validationStatus = implStore.validate(implFile.getName(), fis);
+                    if(validationStatus.getSeverity() == IStatus.ERROR) {
+                        status = validationStatus;
+                        return;
+                    }
+                } catch (IOException e1) {
+                    BonitaStudioLog.error(e1);
+                } 
+                
                 try (final FileInputStream fis = new FileInputStream(implFile);) {
                     implStore.importInputStream(implFile.getName(), fis);
                 } catch (final Exception e) {
@@ -170,7 +181,18 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
             for (final File defFile : files) {
                 final IRepositoryStore defStore = getDefinitionStore();
                 IRepositoryFileStore fileStore = null;
-                try (final FileInputStream fis = new FileInputStream(defFile);) {
+                
+                try (final FileInputStream fis = new FileInputStream(defFile)) {
+                    IStatus validationStatus = defStore.validate(defFile.getName(), fis);
+                    if(validationStatus.getSeverity() == IStatus.ERROR) {
+                        status = validationStatus;
+                        return;
+                    }
+                } catch (IOException e1) {
+                    BonitaStudioLog.error(e1);
+                } 
+                
+                try (final FileInputStream fis = new FileInputStream(defFile)) {
                     final ConnectorDefinition connectorDefinition = toConnectorDefinition(defFile);
                     if (connectorDefinition == null) {
                         fileStore = defStore.importInputStream(defFile.getName(), fis);
