@@ -210,7 +210,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if (filename != null & filename.endsWith("." + ORGANIZATION_EXT)) {
+        if (filename != null & filename.endsWith("." + ORGANIZATION_EXT) || filename.toLowerCase().endsWith(".xml")) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_ORGANIZATION_NAMESPACE,
                     Messages.incompatibleOrganizationModel,
                     LEGACY_ORGA_NAMESPACES)).validate(inputStream);
