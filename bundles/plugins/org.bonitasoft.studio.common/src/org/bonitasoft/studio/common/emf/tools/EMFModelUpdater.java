@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -202,23 +203,39 @@ public class EMFModelUpdater<T extends EObject> {
         List sourceList = (List) source.eGet(feature);
         List targetList = (List) target.eGet(feature);
 
+        //Remove deleted element
         sourceList.removeIf(
                 sourceElement -> findEObject(targetList, getEObjectID((EObject) sourceElement)) == null);
 
+        List<EObject> alreadyExistingEObjects = new ArrayList<>();
+        //Update existing element
         for (Object sourceElement : sourceList) {
             EObject targetElement = findEObject(targetList, getEObjectID((EObject) sourceElement));
             if (sourceElement instanceof EObject
                     && targetElement instanceof EObject) {
                 deepEObjectUpdate((EObject) sourceElement,
                         targetElement);
-                targetList.remove(targetElement);
+                alreadyExistingEObjects.add(targetElement);
             }
         }
 
+        //Add new element
         for (Object targetElement : targetList) {
-            if (targetElement instanceof EObject
+            if (!alreadyExistingEObjects.contains(targetElement)
+                    && targetElement instanceof EObject
                     && getEObjectID((EObject) targetElement) == null) {//Add new Object
                 sourceList.add(targetList.indexOf(targetElement), EcoreUtil.copy((T) targetElement));
+            }
+        }
+        
+        //Reorder list
+        for(EObject element : alreadyExistingEObjects) {
+            int sourceIndex = sourceList.indexOf(findEObject(sourceList, getEObjectID((EObject) element)));
+            int targetIndex = targetList.indexOf(element);
+            if(sourceIndex != -1 && sourceIndex != targetIndex) {
+                if(sourceList instanceof EList) {
+                    ((EList)sourceList).move(targetIndex, sourceIndex);
+                }
             }
         }
     }
