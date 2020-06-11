@@ -59,7 +59,7 @@ public class ImportBdmContentValidator implements IValidator<String> {
     
     private IStatus checkBDMVersion(File value) throws FileNotFoundException, IOException {
         try(InputStream is = new FileInputStream(value)){
-            return store.validate(value.getName(), is);
+            return store.validate(BusinessObjectModelFileStore. ZIP_FILENAME, is);
         }
     }
 
