@@ -14,9 +14,14 @@
  */
 package org.bonitasoft.studio.preferences;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -32,7 +37,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
+import org.eclipse.ui.internal.ide.IDEPreferenceInitializer;
+import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -71,6 +80,22 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+        
+        IPreferenceStore preferenceStore = getIDEPreferenceStore();
+        try {
+            preferenceStore.setDefault(
+                    "org.eclipse.ui.internal.views.markers.CachedMarkerBuilderorg.eclipse.ui.views.ProblemView",
+                    Files.toString(
+                            new File(FileLocator.toFileURL(PreferenceInitializer.class.getResource("problemView.xml"))
+                                    .getFile()),
+                            Charset.defaultCharset()));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected IPreferenceStore getIDEPreferenceStore() {
+        return IDEWorkbenchPlugin.getDefault().getPreferenceStore();
     }
 
     protected void initializeWorkbenchPreferences() {
