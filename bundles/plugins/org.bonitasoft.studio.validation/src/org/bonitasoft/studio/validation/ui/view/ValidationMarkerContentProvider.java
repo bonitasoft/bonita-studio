@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.validation.ui.view;
 
+import java.util.stream.Stream;
+
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -48,7 +51,9 @@ public class ValidationMarkerContentProvider extends ArrayContentProvider {
 
     private Object[] processMarkers(final IResource resource) throws CoreException {
         if (resource != null && resource.exists()) {
-            return resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE);
+            Stream.of(resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE));
+            return Stream.concat(Stream.of(resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE)), 
+                    Stream.of(resource.findMarkers(ModelFileCompatibilityValidator.MODEL_VERSION_MARKER_TYPE, false, IResource.DEPTH_INFINITE))).toArray();
         }
         return new Object[0];
     }

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -56,6 +57,7 @@ public class ValidationMarkerContentProviderTest {
         final IResource processFile = mock(IResource.class);
         when(processFile.exists()).thenReturn(true);
         when(processFile.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, false, IResource.DEPTH_INFINITE)).thenReturn(markers);
+        when(processFile.findMarkers(ModelFileCompatibilityValidator.MODEL_VERSION_MARKER_TYPE, false, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
         when(editorInput.getAdapter(IResource.class)).thenReturn(processFile);
         when(processDiagramEditor.getEditorInput()).thenReturn(editorInput);
         return processDiagramEditor;

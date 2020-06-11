@@ -162,7 +162,7 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.level = STATUS_LEVEL.get(level);
     }
 
     static class StatusSeverityComparator implements Comparator<IStatus> {

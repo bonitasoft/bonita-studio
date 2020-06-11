@@ -48,7 +48,7 @@ public class IndexingUIDOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.subTask(Messages.indexingUIDPages);
+        monitor.setTaskName(Messages.indexingUIDPages);
         PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
                 ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
         URI uri = null;

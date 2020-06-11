@@ -1249,12 +1249,18 @@
             locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator2">
             <command
                   commandId="org.bonitasoft.studio.validation.batchValidation"
+                  icon="icons/Accept-icon.png"
+                  label="%batchValidationAction_Label"
                   style="push">
+               <parameter
+                     name="showReport"
+                     value="true">
+               </parameter>
+               <parameter
+                     name="checkAllModelVersion"
+                     value="true">
+               </parameter>
             </command>
-             <separator
-                  name="org.bonitasoft.studio.validation.separator2"
-                  visible="true">
-            </separator>
        </menuContribution>
       <menuContribution
             allPopups="false"
@@ -1276,6 +1282,33 @@
                </and>
             </visibleWhen>
          </command>
+         <command
+               commandId="org.bonitasoft.studio.validation.batchValidation"
+               icon="icons/Accept-icon.png"
+               label="%batchValidationAction_Label"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.application.isBonitaProject">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+            <parameter
+                  name="showReport"
+                  value="true">
+            </parameter>
+            <parameter
+                  name="checkAllModelVersion"
+                  value="true">
+            </parameter>
+         </command>
       </menuContribution>
       </extension>
       <extension
@@ -1291,6 +1324,11 @@
                <commandParameter
                      id="showReport"
                      name="showReport"
+                     optional="true">
+               </commandParameter>
+               <commandParameter
+                     id="checkAllModelVersion"
+                     name="checkAllModelVersion"
                      optional="true">
                </commandParameter>
       </command>
@@ -1330,5 +1368,16 @@
          <fragment
                uri="fragment.e4xmi">
          </fragment>
+      </extension>
+      <extension
+            id="modelVersionMarker"
+            name="%modelVersionMarker"
+            point="org.eclipse.core.resources.markers">
+         <super
+               type="org.eclipse.core.resources.problemmarker">
+         </super>
+         <persistent
+               value="true">
+         </persistent>
       </extension>
 </plugin>
