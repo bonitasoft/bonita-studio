@@ -17,16 +17,24 @@ package org.bonitasoft.studio.validation.ui.view;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -40,44 +48,50 @@ public class ValidationViewAction extends Action {
     private TableViewer tableViewer;
     private IWorkbenchPage activePage;
 
-    /**
-     * @param tableViewer the tableViewer to set
-     */
     public void setTableViewer(final TableViewer tableViewer) {
         this.tableViewer = tableViewer;
     }
 
-    /**
-     * @param activePage the activePage to set
-     */
     public void setActivePage(final IWorkbenchPage activePage) {
         setText(Messages.validationViewValidateButtonLabel);
         this.activePage = activePage;
     }
 
-    /**
-     *
-     */
     public ValidationViewAction() {
         super();
     }
 
-    /**
-     *
-     */
     @Override
     public void run() {
+        DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory(
                 org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                 new ValidationMarkerProvider());
         final IEditorPart ieditor = activePage.getActiveEditor();
         if (ieditor instanceof DiagramEditor) {
-
-            final Resource resource = ((DiagramEditor) ieditor).getDiagramEditPart().resolveSemanticElement().eResource();
+            final Resource resource = ((DiagramEditor) ieditor).getDiagramEditPart().resolveSemanticElement()
+                    .eResource();
             for (final EObject content : resource.getContents()) {
                 if (content instanceof Diagram) {
                     validateOperation.addDiagram((Diagram) content);
                 }
+            }
+            String filename = URI.decode(resource.getURI().lastSegment());
+            try {
+                ModelFileCompatibilityValidator modelValidator = new ModelFileCompatibilityValidator(
+                        RepositoryManager.getInstance().getCurrentRepository())
+                                .addResourceMarkers()
+                                .addFile(store.getChild(filename, false).getResource().getLocation().toFile());
+                modelValidator.run(Repository.NULL_PROGRESS_MONITOR);
+                IStatus status = modelValidator.getStatus();
+                if (status.getSeverity() == IStatus.ERROR) {
+                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
+                            status.getChildren()[0].getMessage());
+                    Display.getDefault().asyncExec(() -> activePage.closeEditor(ieditor, false));
+                    return;
+                }
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
             }
         }
 

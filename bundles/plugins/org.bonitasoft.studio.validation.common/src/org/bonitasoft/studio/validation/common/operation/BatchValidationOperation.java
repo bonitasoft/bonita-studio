@@ -31,7 +31,6 @@ import org.bonitasoft.studio.validation.common.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -75,22 +74,27 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     @Override
     protected void execute(final IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
-        buildEditPart();
-        validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
-        for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
-            final DiagramEditPart diagramEp = entry.getValue();
-            final Diagram diagram = entry.getKey();
-            if (diagramEp != null && !monitor.isCanceled()) {
-                monitor.setTaskName(Messages.bind(
-                        Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
-                        ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
-                final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
-                runWithConstraints(txDomain, () -> validate(diagramEp, diagram, monitor));
-                monitor.worked(1);
+        try {
+            if(diagramsToDiagramEditPart.isEmpty()) {
+                return;
             }
+            buildEditPart();
+            validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
+            for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
+                final DiagramEditPart diagramEp = entry.getValue();
+                final Diagram diagram = entry.getKey();
+                if (diagramEp != null && !monitor.isCanceled()) {
+                    monitor.setTaskName(Messages.bind(
+                            Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
+                            ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
+                    final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);
+                    runWithConstraints(txDomain, () -> validate(diagramEp, diagram, monitor));
+                    monitor.worked(1);
+                }
+            }
+        }finally {
+            offscreenEditPartFactory.dispose();
         }
-        offscreenEditPartFactory.dispose();
     }
 
     private void buildEditPart() {

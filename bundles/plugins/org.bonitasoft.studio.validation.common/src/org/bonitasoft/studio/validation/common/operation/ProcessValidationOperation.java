@@ -38,9 +38,15 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
 
     private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<>();
     private MultiStatus status = new MultiStatus(ValidationCommonPlugin.PLUGIN_ID ,-1, null, null);
+    private boolean forceMarkerUpdate = false;
 
     public ProcessValidationOperation addProcess(final AbstractProcess process) {
         listOfProcessesToValidate.add(process);
+        return this;
+    }
+    
+    public ProcessValidationOperation forceMarkerUpdate() {
+        this.forceMarkerUpdate = true;;
         return this;
     }
 
@@ -64,7 +70,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
                 monitor.setTaskName(Messages.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
                 ProcessValidationStatus processValidationStatus = new ProcessValidationStatus(process,validator.validate(process, monitor));
                 status.add(processValidationStatus);
-                if(processValidationStatus.getSeverity() == IStatus.ERROR) {
+                if(forceMarkerUpdate || processValidationStatus.getSeverity() == IStatus.ERROR) {
                     final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
                             new BatchValidationOperation(
                                     new OffscreenEditPartFactory(

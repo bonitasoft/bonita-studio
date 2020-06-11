@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -182,7 +183,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
 
                     final String elementId = (String) marker
                             .getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
-                    String location = (String) marker.getAttribute("location");
+                    String location = (String) marker.getAttribute(IMarker.LOCATION);
                     int idx = location.lastIndexOf(":");
                     if (idx > 0) {
                         String result = location.substring(idx + 1);

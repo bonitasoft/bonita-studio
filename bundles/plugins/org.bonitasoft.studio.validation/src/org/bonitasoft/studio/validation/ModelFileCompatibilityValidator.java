@@ -25,31 +25,71 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.validation.i18n.Messages;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.MultiStatus;
 
 public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
 
+    public static final String MODEL_VERSION_MARKER_TYPE = "org.bonitasoft.studio.validation.modelVersionMarker";
     private File projectRootFolder;
     private IRepository repository;
     private int fileCount = 0;
-    private IStatus status = Status.OK_STATUS;
+    private MultiStatus status = new MultiStatus(ValidationPlugin.PLUGIN_ID, -1, null, null);
+    private boolean addResourceMarkers = false;
+    private List<File> filesToValidate = new ArrayList<>();
 
     public ModelFileCompatibilityValidator(File projectRootFolder, IRepository repository) {
         this.projectRootFolder = projectRootFolder;
         this.repository = repository;
     }
+    
+    public ModelFileCompatibilityValidator(Repository currentRepository) {
+        this(currentRepository.getProject().getLocation().toFile(), currentRepository);
+    }
+
+    /**
+     * When this option is enabled, the validator will add a problem marker on the resources
+     * when a incompatible version is detected.
+     * By default, this option is disabled and the validator stops at the first incompatible resource.
+     */
+    public ModelFileCompatibilityValidator addResourceMarkers() {
+        this.addResourceMarkers = true;
+        return this;
+    }
+    
+    
+    public ModelFileCompatibilityValidator addFile(File fileToValidate) {
+        this.filesToValidate.add(fileToValidate);
+        return this;
+    }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        IProject project = repository.getProject();
+        if(addResourceMarkers) {
+            File projectRoot = project.getLocation().toFile();
+            if(!Objects.equals(projectRoot, projectRootFolder)) {
+                throw new InvocationTargetException(new IllegalArgumentException("Cannot use 'addResourceMarkers' option when the project does not exists in the worksapce."));
+            }
+        }
         try {
             BonitaModelVisitor fileCountVisitor = new BonitaModelVisitor(new SimpleFileVisitor<Path>() {
                 @Override
@@ -64,11 +104,37 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if(!filesToValidate.isEmpty() && !filesToValidate.contains( file.toFile())) {
+                        return FileVisitResult.CONTINUE;
+                    }
                     IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = repository.getRepositoryStoreByName(file.toFile().getParentFile().getName()).get();
                     try(InputStream inputStream = new FileInputStream(file.toFile())){
+                        IFile resource = null;
+                        if(addResourceMarkers) {
+                            IPath absolutePath = org.eclipse.core.runtime.Path.fromOSString(file.toFile().getAbsolutePath());
+                            resource = project.getFile(absolutePath.makeRelativeTo(project.getLocation()));
+                            if(resource != null && resource.exists()) {
+                                try {
+                                    resource.deleteMarkers(MODEL_VERSION_MARKER_TYPE, true, IResource.DEPTH_ONE);
+                                } catch (CoreException e) {
+                                    BonitaStudioLog.error(e);
+                                }
+                            }
+                        }
                         IStatus status = repositoryStore.validate(file.toFile().getName(), inputStream);
                         if(status.getSeverity() == IStatus.ERROR) {
-                            ModelFileCompatibilityValidator.this.status = status;
+                            ModelFileCompatibilityValidator.this.status.add(status);
+                            if(resource != null && resource.exists()) {
+                                try {
+                                    IMarker marker = resource.createMarker(MODEL_VERSION_MARKER_TYPE);
+                                    marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+                                    marker.setAttribute(IMarker.MESSAGE, status.getMessage());
+                                    marker.setAttribute(IMarker.LOCATION, "Diagram");
+                                } catch (CoreException e) {
+                                    BonitaStudioLog.error(e);
+                                }
+                                return FileVisitResult.CONTINUE;
+                            }
                             return FileVisitResult.TERMINATE;
                         }
                     }
@@ -115,4 +181,6 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
         }
         
     }
+
+
 }

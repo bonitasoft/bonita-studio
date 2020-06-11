@@ -235,6 +235,9 @@ public class Messages extends NLS {
     public static String invalidColumnUsageInTaskName;
     public static String deprecatedConnectorDefinition;
     public static String checkingModelCompatibility;
+    public static String validationErrorMessage;
+    public static String validationSuccessTitle;
+    public static String validationSuccessMsg;
     
     static {
         // initialize resource bundle
