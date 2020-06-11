@@ -32,9 +32,10 @@ public class MarkdownEditorPerspectiveFactory extends AbstractPerspectiveFactory
         final String editorArea = layout.getEditorArea();
 
         final IFolderLayout leftView = layout.createFolder(
-                "leftView", IPageLayout.LEFT, getExplorerViewRatio(), editorArea);
+                "left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea);
         leftView.addView("org.bonitasoft.studio.application.project.explorer");
-
+        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.75f, "left");
+        bottomLeft.addView("org.eclipse.ui.views.ProblemView");
         
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.75f, editorArea); //$NON-NLS-1$
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
