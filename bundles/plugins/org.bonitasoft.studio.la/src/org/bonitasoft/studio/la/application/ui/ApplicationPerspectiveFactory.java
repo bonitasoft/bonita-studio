@@ -35,7 +35,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
         leftFolder.addView(BonitaProjectExplorer.ID);
         leftFolder.addView(IPageLayout.ID_OUTLINE);
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
-        bottomLeft.addView("org.eclipse.ui.views.ProblemView");
+        bottomLeft.addView(PROBLEM_VIEW_ID);
         
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.7f, editorArea); //$NON-NLS-1$
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {

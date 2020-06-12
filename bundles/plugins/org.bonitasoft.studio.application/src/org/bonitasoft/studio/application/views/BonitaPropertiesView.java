@@ -23,6 +23,7 @@ import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.views.markers.ProblemsView;
 import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -108,7 +109,7 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         // Don't interfere with other property views
         String partID = part.getSite().getId();
         boolean isPropertyView = BonitaPerspectivesUtils.getAllPropertiesViews().contains(partID);
-        return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer);
+        return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer) && !(part instanceof ProblemsView);
     }
 
 }
