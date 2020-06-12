@@ -41,7 +41,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
         left.addView("org.bonitasoft.studio.views.overview.tree");
         
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
-        bottomLeft.addView("org.eclipse.ui.views.ProblemView");
+        bottomLeft.addView(PROBLEM_VIEW_ID);
 
         layout.createFolder("right", IPageLayout.RIGHT, 100, editorArea);
         // Bottom right.

@@ -32,6 +32,8 @@ public class WelcomePagePerspectiveFactory extends AbstractPerspectiveFactory {
         final String editorArea = layout.getEditorArea();
         final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
         leftFolder.addView(BonitaProjectExplorer.ID);
+        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.75f, "left");
+        bottomLeft.addView(PROBLEM_VIEW_ID);
         final IFolderLayout rightFolder = layout.createFolder("right", IPageLayout.RIGHT, 0.75f, editorArea); //$NON-NLS-1$
         rightFolder.addPlaceholder(IIntroConstants.INTRO_VIEW_ID);
     }

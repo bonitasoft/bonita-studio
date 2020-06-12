@@ -34,6 +34,7 @@ import java.util.zip.ZipFile;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.common.perspectives.ViewIds;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.IFileSystem;
@@ -183,6 +184,8 @@ public class PlatformUtil {
                 false);
 
         page.setPartState(page.findViewReference("org.bonitasoft.studio.application.project.explorer"),
+                IWorkbenchPage.STATE_RESTORED);
+        page.setPartState(page.findViewReference(ViewIds.PROBLEM_VIEW_ID),
                 IWorkbenchPage.STATE_RESTORED);
     }
 

@@ -35,7 +35,7 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
         final IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, getExplorerViewRatio(), editorArea); //$NON-NLS-1$
         leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.75f, "left");
-        bottomLeft.addView("org.eclipse.ui.views.ProblemView");
+        bottomLeft.addView(PROBLEM_VIEW_ID);
         
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.75f, editorArea); //$NON-NLS-1$
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {

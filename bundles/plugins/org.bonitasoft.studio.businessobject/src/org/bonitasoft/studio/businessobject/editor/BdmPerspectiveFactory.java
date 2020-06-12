@@ -42,7 +42,7 @@ public class BdmPerspectiveFactory extends AbstractPerspectiveFactory {
                 "left", IPageLayout.LEFT, 0.2f, editorArea);
         leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
-        bottomLeft.addView("org.eclipse.ui.views.ProblemView");
+        bottomLeft.addView(PROBLEM_VIEW_ID);
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.7f, editorArea); //$NON-NLS-1$
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
             bottomfolder.addView("org.eclipse.egit.ui.StagingView");

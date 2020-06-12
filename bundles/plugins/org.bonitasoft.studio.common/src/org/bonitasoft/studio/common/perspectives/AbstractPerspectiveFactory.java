@@ -30,7 +30,7 @@ import org.eclipse.ui.IPerspectiveFactory;
  * @author Baptiste Mesta
  * @author Aurelien Pupier
  */
-public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory {
+public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory, ViewIds {
 
     private static final String CUSTOM_PERMISSIONS_MAPPING_FILE = "custom-permissions-mapping.properties";
 
