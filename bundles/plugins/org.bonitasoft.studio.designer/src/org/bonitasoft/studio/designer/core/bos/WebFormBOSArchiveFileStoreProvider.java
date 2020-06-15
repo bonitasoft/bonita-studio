@@ -79,6 +79,11 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         this.repositoryAccessor = repositoryAccessor;
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
+    
+    @Override
+    public boolean distinctByConfiguration() {
+        return false;
+    }
 
     @Override
     public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
