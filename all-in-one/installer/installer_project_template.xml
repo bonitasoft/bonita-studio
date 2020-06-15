@@ -296,7 +296,7 @@
         </createDirectory>
         <runProgram>
             <program>tar</program>
-            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9.tar.gz" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
+            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/@jre.osx.archive.name@" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
             <progressText>Installing JRE...</progressText>
             <ruleList>
                 <platformTest>
@@ -315,7 +315,7 @@
         </runProgram>
         <runProgram>
             <program>mv</program>
-            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jdk-11.0.2+9-jre/Contents/" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
+            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/@jre.folder.name@/Contents/" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -324,7 +324,7 @@
         </runProgram>
          <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/jdk-11.0.2+9-jre"</programArguments>
+            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/@jre.folder.name@"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -333,7 +333,7 @@
         </runProgram>
         <runProgram>
             <program>rm</program>
-            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9.tar.gz"</programArguments>
+            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/@jre.osx.archive.name@"</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>

@@ -49,6 +49,10 @@ public abstract class AbstractExportContributionItem<T extends AbstractFormPage>
                 && MessageDialog.openQuestion(shell, Messages.saveBeforeTitle,
                         String.format(Messages.saveBeforeMessage, formPage.getEditor().getEditorInput().getName()))) {
             formPage.getEditor().doSave(new NullProgressMonitor());
+            if (formPage.getEditor().isDirty()) {
+                MessageDialog.openInformation(shell, Messages.exportCancelTitle, Messages.exportCancel);
+                return;
+            }
         }
         exportAction(shell);
     }

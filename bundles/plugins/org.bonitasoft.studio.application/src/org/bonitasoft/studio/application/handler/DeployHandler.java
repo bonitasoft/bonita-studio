@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.handler;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -28,7 +29,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 
 public class DeployHandler extends AbstractHandler {
 
@@ -43,6 +46,11 @@ public class DeployHandler extends AbstractHandler {
                         DeployStrategy choice = SaveBeforeDeployDialog.open(((AbstractFileStore) deployable).getName());
                         if (choice == DeployStrategy.SAVE_AND_DEPLOY) {
                             ((AbstractFileStore) deployable).saveOpenedEditor();
+                            if (((AbstractFileStore) deployable).isDirty()) {
+                                MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                                        Messages.deployCancelTitle, Messages.deployCancel);
+                                return;
+                            }
                         } else if (choice == DeployStrategy.CANCEL) {
                             return; // cancel
                         }
