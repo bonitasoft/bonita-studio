@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<process-definition name="websale" >
+
+  <!-- SWIMLANES (= process roles) -->
+
+  <swimlane name="buyer" />
+  
+  <swimlane name="salesman">
+    <assignment actor-id="manager" />
+  </swimlane>
+  
+  <swimlane name="accountant">
+    <assignment actor-id="shipper" />
+  </swimlane>
+  
+  <swimlane name="shipper">
+    <assignment actor-id="admin" />
+  </swimlane>
+ 
+  <!-- NODES -->
+
+  <start-state name="Create new web sale order">
+    <task swimlane="buyer" />
+    <transition to="Evaluate web order" />
+  </start-state>
+  
+  <task-node name="Evaluate web order">
+    <task swimlane="salesman">
+      <timer duedate="20 seconds" repeat="10 seconds">
+        <action class="org.jbpm.examples.websale.RemindActor">
+          <swimlaneName>salesman</swimlaneName>
+        </action>
+      </timer>
+    </task>
+    <transition name="OK" to="salefork" />
+    <transition name="More info needed" to="Fix web order data" />
+  </task-node>
+
+  <task-node name="Fix web order data">
+    <task swimlane="buyer" />
+    <transition to="Evaluate web order" />
+  </task-node>
+
+  <fork name="salefork">
+    <transition name="payment"  to="Wait for money" />
+    <transition name="shipping" to="ship item" />
+  </fork>  
+  
+  <task-node name="Wait for money">
+    <task swimlane="accountant" />
+    <transition to="update books" />
+  </task-node>
+  
+  <node name="update books">
+    <action class="org.jbpm.examples.websale.UpdateBooks">
+      <msg>accountancy application is now informed of the payment</msg>
+    </action>
+    <transition to="salejoin" />
+  </node>
+  
+  <node name="ship item">
+    <action class="org.jbpm.examples.websale.ShipItem">
+      <swimlaneName>shipper</swimlaneName>
+      <msg>${shipper} now ships ${item} to ${address}</msg>
+    </action>
+    <transition to="salejoin" />
+  </node>
+  
+  <join name="salejoin">
+    <transition to="end" />
+  </join>  
+
+  <end-state name="end" />
+
+</process-definition>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.common.properties.contribution" name="Section Contribution" schema="schema/org.bonitasoft.studio.common.properties.contribution.exsd"/>
+	<extension-point id="poststartup" name="Actions to hook after studio started" schema="schema/org.bonitasoft.studio.common.poststartup.exsd"/>
+   <extension-point id="barResourcesProvider" name="Extension Point to add Resources to BAR at export" schema="schema/barResourcesProvider.exsd"/>
+   <extension-point id="startupDialog" name="Actions to hook after studio started" schema="schema/org.bonitasoft.studio.common.startup.dialog.exsd"/>
+   <extension-point id="org.bonitasoft.studio.coolbarContributionItem" name="org.bonitasoft.studio.coolbarContributionItem" schema="schema/org.bonitasoft.studio.coolbarContributionItem.exsd"/>
+  <extension-point id="configurationIdProvider" name="configurationIdProvider" schema="schema/configurationIdProvider.exsd"/>
+  <extension-point id="org.bonitasoft.studio.common.introModelPageId" name="introModelPageId" schema="schema/org.bonitasoft.studio.common.exsd"/>
+ 
+<extension
+          id="RestAPIExtensionNature"
+          name="Rest API Extension"
+          point="org.eclipse.core.resources.natures">
+       <builder
+             id="org.bonitasoft.studio.rest.api.extension.pagePropertyBuilder">
+       </builder>
+       <runtime>
+          <run
+                class="org.bonitasoft.studio.common.RestAPIExtensionNature">
+          </run>
+       </runtime>
+       <builder
+             id="org.bonitasoft.studio.rest.api.extension.themePagePropertyBuilder">
+       </builder>
+    </extension>
+
+</plugin>

@@ -1,0 +1,330 @@
+﻿/*
+ * Copyright (c) 2006, 2010 Borland Software Corporation and others
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Artem Tikhomirov (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«IMPORT 'http://www.eclipse.org/emf/2002/Ecore'»
+«EXTENSION xpt::editor::palette::Utils»
+
+«DEFINE Factory FOR gmfgen::Palette»
+«EXPAND xpt::Common::copyright FOR diagram.editorGen-»
+package «packageName»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «factoryClassName» {
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	public void fillPalette(org.eclipse.gef.palette.PaletteRoot paletteRoot) {
+«IF definesStandardTools()-»
+		cleanStandardTools(paletteRoot);
+«ENDIF-»
+		«EXPAND addEntry('paletteRoot') FOREACH groups-»
+	}
+«IF definesStandardTools()»
+«EXPAND cleanStandardToolsHack-»
+«ENDIF-»
+
+«EXPAND createGroup FOREACH collectGroups(self)»
+«EXPAND createEntry FOREACH collectTools(self)»
+
+«EXPAND generateToolEntryClasses»
+}
+«ENDDEFINE»
+
+«REM»Override this method with «EXPAND generateToolEntryClasses(true)» if you need to generate ToolEntry classes
+     override also «DEFINE newEntry(toolVarName : String) FOR gmfgen::Palette»«ENDREM»
+«DEFINE generateToolEntryClasses FOR gmfgen::Palette»«EXPAND generateToolEntryClasses(true)»«ENDDEFINE»
+
+«DEFINE generateToolEntryClasses(shouldGenerateEntryClasses : Boolean) FOR gmfgen::Palette-»
+	«IF needsNodeToolEntryClass(self) and shouldGenerateEntryClasses»«EXPAND nodeToolEntry»«ENDIF-»
+	«IF needsLinkToolEntryClass(self) and shouldGenerateEntryClasses»«EXPAND linkToolEntry»«ENDIF-»
+«ENDDEFINE»
+
+
+«DEFINE createGroup FOR gmfgen::ToolGroup-»
+/*Set as protected by Bonita to override it*/
+	«EXPAND xpt::Common::generatedMemberComment('Creates \"' + title + '\" palette tool group')»
+	protected org.eclipse.gef.palette.PaletteContainer «createMethodName»() {
+		«EXPAND newContainer('paletteContainer')-»
+		«EXPAND setIdentity('paletteContainer')-»
+		«EXPAND setDescription('paletteContainer', self) FOR description-»
+		«EXPAND setSmallImage('paletteContainer', palette)-»
+		«EXPAND setLargeImage('paletteContainer', palette)-»
+		«EXPAND addEntry('paletteContainer') FOREACH entries-»
+		return paletteContainer;
+	}
+«ENDDEFINE»
+
+«DEFINE newContainer(varName : String) FOR gmfgen::ToolGroup-»
+«IF collapse and toolsOnly-»
+		org.eclipse.gef.palette.PaletteDrawer «varName» = new org.eclipse.gef.palette.PaletteDrawer(«EXPAND i18nTitle»);
+«ELSEIF stack-»
+		org.eclipse.gef.palette.PaletteStack «varName» = new org.eclipse.gef.palette.PaletteStack(«EXPAND i18nTitle», null, null);
+«ELSE-»
+		org.eclipse.gef.palette.PaletteGroup «varName» = new org.eclipse.gef.palette.PaletteGroup(«EXPAND i18nTitle»);
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE setDescription(varName : String, gr : gmfgen::ToolGroup) FOR String-»
+«varName».setDescription(«EXPAND i18nDesc FOR gr»);
+«ENDDEFINE»
+
+«DEFINE addEntry(varName : String) FOR gmfgen::ToolGroupItem»
+«ERROR 'abstract addEntry(ToolGroupItem,String) template'»
+«ENDDEFINE»
+
+«DEFINE addEntry(varName : String) FOR gmfgen::AbstractToolEntry-»
+«varName».add(«createMethodName»());
+«IF _default and group.stack-»
+«varName».setActiveEntry((org.eclipse.gef.palette.ToolEntry) paletteContainer.getChildren().get(paletteContainer.getChildren().size() - 1));
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE addEntry(varName : String) FOR gmfgen::Separator-»
+«varName».add(new org.eclipse.gef.palette.PaletteSeparator());
+«ENDDEFINE»
+
+«DEFINE addEntry(varName : String) FOR gmfgen::ToolGroup-»
+«varName».add(«createMethodName»());
+«ENDDEFINE»
+
+«DEFINE createEntry FOR gmfgen::AbstractToolEntry-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.gef.palette.ToolEntry «createMethodName»() {
+		«EXPAND newEntry('entry')-»
+		«EXPAND setIdentity('entry')-»
+		«EXPAND setSmallImage('entry', group.palette)-»
+		«EXPAND setLargeImage('entry', group.palette)-»
+		«EXPAND setToolClass('entry')-»
+		«EXPAND setToolProperty('entry') FOREACH properties-»
+		return entry;
+	}
+«ENDDEFINE»
+
+«DEFINE newEntry(toolVarName : String) FOR gmfgen::AbstractToolEntry-»
+«ERROR 'abstract newEntry(AbstractToolEntry,String) template'»
+«ENDDEFINE»
+
+«REM»Override this method with «EXPAND newEntry(toolVarName, false)» if you need to generate ToolEntry classes
+     override also «EXPAND generateToolEntryClasses(shouldGenerateEntryClasses : Boolean)» FOR gmfgen::Palette»«ENDREM»
+«DEFINE newEntry(toolVarName : String) FOR gmfgen::ToolEntry»«EXPAND newEntry(toolVarName, true)»«ENDDEFINE»
+«DEFINE newEntry(toolVarName : String, shouldGenerateEntryClasses : Boolean) FOR gmfgen::ToolEntry-»
+«IF elements->isEmpty()-»
+org.eclipse.gef.palette.ToolEntry «toolVarName» = new org.eclipse.gef.palette.ToolEntry(«EXPAND i18nTitle», «EXPAND i18nDesc», null, null) {};
+«ELSE-»
+«LET (if genNodes->isEmpty() 
+	then (if shouldGenerateEntryClasses then 'LinkToolEntry' else 'org.eclipse.gmf.tooling.runtime.part.DefaultLinkToolEntry' endif) 
+	else (if shouldGenerateEntryClasses then 'NodeToolEntry' else 'org.eclipse.gmf.tooling.runtime.part.DefaultNodeToolEntry' endif) endif) 
+	AS toolEntryClass-»
+«IF elements->size() > 1-»
+«EXPAND CodeStyle::newGenericInstance('types', 'java.util.ArrayList', 'org.eclipse.gmf.runtime.emf.type.core.IElementType') FOR elements->any(true)»(«elements->size()»);
+«FOREACH elements->asSequence() AS e-»
+types.add(«EXPAND xpt::providers::ElementTypes::accessElementType FOR e»);
+«ENDFOREACH-»
+«ENDIF-»
+«toolEntryClass» «toolVarName» = new «toolEntryClass»(«EXPAND i18nTitle», «EXPAND i18nDesc», «IF elements->size() > 1»types«ELSE»java.util.Collections.singletonList(«EXPAND xpt::providers::ElementTypes::accessElementType FOR elements->first()»)«ENDIF»);
+«ENDLET-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE newEntry(toolVarName : String) FOR gmfgen::StandardEntry-»
+«IF gmfgen::StandardEntryKind::SELECT = kind -»
+«EXPAND newStdSelectEntry(toolVarName)-»
+«ELSEIF kind = gmfgen::StandardEntryKind::MARQUEE-»
+«EXPAND newStdMarqueeEntry(toolVarName)-»
+«ELSEIF kind = gmfgen::StandardEntryKind::ZOOM-»
+«EXPAND newStdZoomEntry(toolVarName)-»
+«ELSE-»
+«EXPAND newStdOtherEntry(toolVarName)-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE newStdSelectEntry(toolVarName : String) FOR gmfgen::StandardEntry-»
+org.eclipse.gef.palette.PanningSelectionToolEntry «toolVarName» = new org.eclipse.gef.palette.PanningSelectionToolEntry();
+«ENDDEFINE»
+
+«DEFINE newStdMarqueeEntry(toolVarName : String) FOR gmfgen::StandardEntry-»
+org.eclipse.gef.palette.MarqueeToolEntry «toolVarName» = new org.eclipse.gef.palette.MarqueeToolEntry();
+«ENDDEFINE»
+
+«DEFINE newStdZoomEntry(toolVarName : String) FOR gmfgen::StandardEntry-»
+FIXME
+«ENDDEFINE»
+
+«DEFINE newStdOtherEntry(toolVarName : String) FOR gmfgen::StandardEntry-»
+«ERROR 'override newStdOtherEntry(StandardEntry, String) for kind ' + kind.repr()»
+«ENDDEFINE»
+
+// FIXME: odd code - FOR EntryBase, while most of the template is valid for ToolEntry only!!!
+«DEFINE setSmallImage(toolVarName : String, palette : gmfgen::Palette) FOR gmfgen::EntryBase-»
+«IF null <> smallIconPath-»
+«toolVarName».setSmallIcon(«palette.activatorFQN()».findImageDescriptor("«smallIconPath»"));«EXPAND xpt::Common::nonNLS»
+«ELSEIF not (Sequence { self })[gmfgen::ToolEntry].elements->isEmpty()-»
+«LET self.oclAsType(gmfgen::ToolEntry) AS toolEntry-»
+«toolVarName».setSmallIcon(«palette.diagram.getElementTypesQualifiedClassName()».getImageDescriptor(«EXPAND xpt::providers::ElementTypes::accessElementType FOR toolEntry.elements->first()»));
+«ENDLET-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE setLargeImage(toolVarName : String, palette : gmfgen::Palette) FOR gmfgen::EntryBase-»
+«IF null <> largeIconPath-»
+«toolVarName».setLargeIcon(«palette.activatorFQN()».findImageDescriptor("«largeIconPath»")); «EXPAND xpt::Common::nonNLS»
+«ELSEIF not (Sequence { self })[gmfgen::ToolEntry].elements->isEmpty()-»
+«toolVarName».setLargeIcon(«toolVarName».getSmallIcon());
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE setToolClass(toolVarName : String) FOR gmfgen::AbstractToolEntry-»
+«IF null <> qualifiedToolName-»
+«toolVarName».setToolClass(«qualifiedToolName».class);
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE setToolProperty(toolVarName : String) FOR ecore::EStringToStringMapEntry-»
+«toolVarName».setToolProperty(«key», «value»);
+«ENDDEFINE»
+
+«DEFINE i18nTitle FOR gmfgen::ToolEntry-»
+«IF title = null»null«ELSE»«EXPAND xpt::Externalizer::accessorCall(i18nTitleKey(self)) FOR group.palette.diagram.editorGen»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE i18nTitle FOR gmfgen::ToolGroup-»
+«IF title = null»null«ELSE»«EXPAND xpt::Externalizer::accessorCall(i18nTitleKey(self)) FOR palette.diagram.editorGen»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE i18nDesc FOR gmfgen::ToolEntry-»
+«IF null = description»null«ELSE»«EXPAND xpt::Externalizer::accessorCall(i18nDescKey(self)) FOR group.palette.diagram.editorGen»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE i18nDesc FOR gmfgen::ToolGroup-»
+«IF null = description»null«ELSE»«EXPAND xpt::Externalizer::accessorCall(i18nDescKey(self)) FOR palette.diagram.editorGen»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE i18nAccessors FOR gmfgen::Palette-»
+«EXPAND internal_i18n_accessors FOREACH collectGroups(self)-»
+«EXPAND internal_i18n_accessors FOREACH collectTools(self)-»
+«ENDDEFINE»
+
+«DEFINE i18nValues FOR gmfgen::Palette-»
+«EXPAND internal_i18n_values FOREACH collectGroups(self)-»
+«EXPAND internal_i18n_values FOREACH collectTools(self)-»
+«ENDDEFINE»
+
+«DEFINE internal_i18n_accessors FOR gmfgen::EntryBase-»
+«IF null <> title»«EXPAND xpt::Externalizer::accessorField(i18nTitleKey(self))»«ENDIF-»
+«IF null <> description»«EXPAND xpt::Externalizer::accessorField(i18nDescKey(self))»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE internal_i18n_values FOR gmfgen::EntryBase-»
+«IF null <> title»«EXPAND xpt::Externalizer::messageEntry(i18nTitleKey(self), title)»«ENDIF-»
+«IF null <> description»«EXPAND xpt::Externalizer::messageEntry(i18nDescKey(self), description)»«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE cleanStandardToolsHack FOR gmfgen::Palette»
+	«EXPAND xpt::Common::generatedMemberComment('Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=159289')»
+	private void cleanStandardTools(org.eclipse.gef.palette.PaletteRoot paletteRoot) {
+		for (java.util.Iterator it = paletteRoot.getChildren().iterator(); it.hasNext();) {
+			org.eclipse.gef.palette.PaletteEntry entry = (org.eclipse.gef.palette.PaletteEntry) it.next();
+			if (!"standardGroup".equals(entry.getId())) { «EXPAND xpt::Common::nonNLS»
+				continue;
+			}
+			for (java.util.Iterator it2 = ((org.eclipse.gef.palette.PaletteContainer) entry).getChildren().iterator(); it2.hasNext();) {
+				org.eclipse.gef.palette.PaletteEntry entry2 = (org.eclipse.gef.palette.PaletteEntry) it2.next();
+				if ("zoomTool".equals(entry2.getId())) { «EXPAND xpt::Common::nonNLS»
+					it2.remove();
+				} else if ("noteStack".equals(entry2.getId())) { «EXPAND xpt::Common::nonNLS»
+					it2.remove();
+				} else if ("selectionTool".equals(entry2.getId())) { «EXPAND xpt::Common::nonNLS»
+					it2.remove();
+				}
+				if (paletteRoot.getDefaultEntry() == entry2) {
+					paletteRoot.setDefaultEntry(null);
+				}
+			}
+		}
+	}
+«ENDDEFINE»
+
+«REM»
+«DEFINE nodeToolEntry FOR gmfgen::Palette»
+	«EXPAND xpt::Common::generatedClassComment»
+	private static class NodeToolEntry extends org.eclipse.gmf.tooling.runtime.part.DefaultNodeToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private NodeToolEntry(String title, String description, java.util.List<org.eclipse.gmf.runtime.emf.type.core.IElementType> elementTypes) {
+			super(title, description, elementTypes);
+		}
+		
+	}
+«ENDDEFINE»
+«ENDREM»
+
+«DEFINE nodeToolEntry FOR gmfgen::Palette»
+	«EXPAND xpt::Common::generatedClassComment»
+	«REM»set it public in order to be subclass in a subclass of PaletteFactory;«ENDREM»
+	/**@deprecated WARN : set t public only as a workaround in order to be able be used in a sublcass of PaletteToolEntry*/
+	public static class NodeToolEntry extends org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final «EXPAND CodeStyle::G('java.util.List', 'org.eclipse.gmf.runtime.emf.type.core.IElementType') FOR diagram» elementTypes;;
+		
+		«REM»set it public in order to be used in subclass of PaletteFactory.«ENDREM»
+		«EXPAND xpt::Common::generatedMemberComment»
+		/**@deprecated WARN : set t public only as a workaround in order to be able be used in a sublcass of PaletteToolEntry*/
+		public NodeToolEntry(String title, String description, «EXPAND CodeStyle::G('java.util.List', 'org.eclipse.gmf.runtime.emf.type.core.IElementType') FOR diagram» elementTypes) {
+
+			super(null,org.bonitasoft.studio.common.NamingUtils.getPaletteTitle(elementTypes), null);
+			super.setDescription(org.bonitasoft.studio.common.NamingUtils.getPaletteDescription(elementTypes)) ;
+			this.elementTypes = elementTypes;
+		}
+
+		/**
+		* Used a custom tool to have a better feedback.
+		* @generated
+		*/
+		public org.eclipse.gef.Tool createTool() {
+«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getTypesFor(elementTypes));
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+«ENDDEFINE»
+
+«DEFINE linkToolEntry FOR gmfgen::Palette»
+	«EXPAND xpt::Common::generatedClassComment»
+	private static class LinkToolEntry extends org.eclipse.gef.palette.ToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final java.util.List relationshipTypes;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private LinkToolEntry(String title, String description, java.util.List relationshipTypes) {
+			super(org.bonitasoft.studio.common.NamingUtils.getPaletteTitle(relationshipTypes),
+			 org.bonitasoft.studio.common.NamingUtils.getPaletteDescription(relationshipTypes), null, null);
+			this.relationshipTypes = relationshipTypes;
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public org.eclipse.gef.Tool createTool() {
+			«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeConnectionTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getRelationTypes());
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+«ENDDEFINE»
+
+«DEFINE setIdentity(toolVarName : String) FOR gmfgen::EntryBase-»
+«IF id <> null and id.size() <> 0-»
+		 «toolVarName».setId(«id»);«IF id.isQuoted('\"')»«EXPAND xpt::Common::nonNLS»«ENDIF»
+«ENDIF-»
+«ENDDEFINE»
