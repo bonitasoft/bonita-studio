@@ -22,8 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.PropertiesFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
@@ -58,18 +60,33 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	}
 	
 	public void setAutoAddDriver(Boolean b){
-		Properties properties = getContent();
+		Properties properties;
+        try {
+            properties = getContent();
+        } catch (ReadFileStoreException e) {
+            properties = new Properties();
+        }
 		properties.put(AUTO_Add_DRIVERS, b.toString());
 		save(properties);
 	}
 	
 	public boolean getAutoAddDriver(){
-		Boolean b = Boolean.valueOf((String)((Properties)getContent()).get(AUTO_Add_DRIVERS));
-		return b;
+	    Properties propeties;
+	    try {
+	        propeties = getContent();
+        } catch (ReadFileStoreException e) {
+            propeties = new Properties();
+        }
+	    return Boolean.valueOf((String)propeties.get(AUTO_Add_DRIVERS));
 	}
 	
 	public void setDefault(String jarName){
-		 Properties properties = getContent();
+		 Properties properties;
+        try {
+            properties = getContent();
+        } catch (ReadFileStoreException e) {
+            properties = new Properties();
+        }
 		 if(jarName == null){
 			 properties.remove(DEFAULT);
 		 }else{
@@ -80,23 +97,38 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	}
 	
 	public String getDefault(){
-		String jarName =  (String)((Properties)getContent()).get(DEFAULT);
+		String jarName = null;
+        try {
+            jarName = (String) getContent().get(DEFAULT);
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ConnectorPlugin.PLUGIN_ID);
+        }
 		return jarName;
 	}
 	
 	
 	public List<String> getJarList(){
-		String list = (String)((Properties)getContent()).get(JAR_LIST) ;
+		String list = null;
+        try {
+            list = (String) getContent().get(JAR_LIST);
+        } catch (ReadFileStoreException e) {
+            return new ArrayList<>() ;
+        }
 		if(list == null || list.isEmpty()){
-			return new ArrayList<String>() ;
+			return new ArrayList<>() ;
 		}
 		String[] jars = list.split(SEPARATOR) ;
-		return new ArrayList<String>(Arrays.asList(jars));
+		return new ArrayList<>(Arrays.asList(jars));
 	}
 	
 	
 	public void setJarList(List<String> jars){
-		Properties properties = (Properties) getContent() ;
+		Properties properties;
+        try {
+            properties = (Properties) getContent();
+        } catch (ReadFileStoreException e) {
+            properties = new Properties();
+        }
 		StringBuilder sb = new StringBuilder() ;
 		if(!jars.isEmpty()){
 			for(String id : jars){

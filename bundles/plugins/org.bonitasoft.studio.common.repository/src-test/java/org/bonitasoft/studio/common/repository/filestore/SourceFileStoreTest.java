@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.runtime.Path;
@@ -45,7 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SourceFileStoreTest {
 
 	@Mock
-	private IRepositoryStore<IRepositoryFileStore> parentStore;
+	private IRepositoryStore<?> parentStore;
 	
 	private SourceFileStore fileStoreUnderTest;
 	

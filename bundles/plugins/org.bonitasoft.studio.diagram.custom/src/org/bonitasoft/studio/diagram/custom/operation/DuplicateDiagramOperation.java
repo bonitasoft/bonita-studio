@@ -14,11 +14,6 @@
  */
 package org.bonitasoft.studio.diagram.custom.operation;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,22 +23,22 @@ import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -86,7 +81,12 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             newFildeStore = diagramStore
                     .createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         }
-        final MainProcess newDiagram = newFildeStore.getContent();
+        MainProcess newDiagram;
+        try {
+            newDiagram = newFildeStore.getContent();
+        } catch (ReadFileStoreException e) {
+            throw new InvocationTargetException(e);
+        }
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
         editingDomain.getCommandStack().execute(
                 SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
@@ -129,7 +129,12 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 .createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         store.save(copiedElements);
 
-        final MainProcess newDiagram = store.getContent();
+        MainProcess newDiagram;
+        try {
+            newDiagram = store.getContent();
+        } catch (ReadFileStoreException e) {
+            return store;
+        }
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
         changeProcessNameAndVersion(newDiagram, editingDomain, diagramName, diagramVersion);
         editingDomain.getCommandStack().execute(
@@ -149,45 +154,24 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                     .getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
             if (file != null) {
                 final Copier copier = new Copier(true, false);
-                final Collection<EObject> copiedElements = copier.copyAll(file.getContent().eResource().getContents());
-                copier.copyReferences();
-                if (!copiedElements.isEmpty()) {
-                    final int index = sourceDiagram.getElements().indexOf(p);
-                    final Pool newPool = (Pool) newDiagram.getElements().get(index);
-                    final ProcessConfigurationFileStore newFile = confStore
-                            .createRepositoryFileStore(ModelHelper.getEObjectID(newPool) + "."
-                                    + ProcessConfigurationRepositoryStore.CONF_EXT);
-                    newFile.save(copiedElements.iterator().next());
+                try {
+                    Configuration configuration = file.getContent();
+                    final Collection<EObject> copiedElements = copier.copyAll(configuration.eResource().getContents());
+                    copier.copyReferences();
+                    if (!copiedElements.isEmpty()) {
+                        final int index = sourceDiagram.getElements().indexOf(p);
+                        final Pool newPool = (Pool) newDiagram.getElements().get(index);
+                        final ProcessConfigurationFileStore newFile = confStore
+                                .createRepositoryFileStore(ModelHelper.getEObjectID(newPool) + "."
+                                        + ProcessConfigurationRepositoryStore.CONF_EXT);
+                        newFile.save(copiedElements.iterator().next());
+                    }
+                } catch (ReadFileStoreException e) {
+                    BonitaStudioLog.warning(file.getName() +": "+ e.getMessage(), Activator.PLUGIN_ID);
                 }
             }
         }
     }
-
-    private void replaceIdInFile(final IFile file, final Copier copier) throws IOException, CoreException {
-        final File fileToModify = file.getLocation().toFile();
-        StringBuilder sb = new StringBuilder();
-        String line = ""; //$NON-NLS-1$
-        try (final BufferedReader reader = new BufferedReader(new FileReader(fileToModify));) {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-        }
-        for (final java.util.Map.Entry<EObject, EObject> entry : copier.entrySet()) {
-            final String originalId = ModelHelper.getEObjectID(entry.getKey());
-            final String newId = ModelHelper.getEObjectID(entry.getValue());
-            final String content = sb.toString();
-            if (content.contains(originalId)) {
-                sb = new StringBuilder(content.replaceAll(originalId, newId));
-            }
-        }
-
-        try (final FileWriter writer = new FileWriter(fileToModify.getAbsolutePath());) {
-            writer.write(sb.toString());
-        }
-        file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-    }
-
 
     private void changeProcessNameAndVersion(final AbstractProcess process, final TransactionalEditingDomain editingDomain,
             final String newProcessLabel,

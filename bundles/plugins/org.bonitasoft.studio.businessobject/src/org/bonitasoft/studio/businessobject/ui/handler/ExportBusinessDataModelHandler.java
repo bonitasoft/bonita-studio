@@ -16,14 +16,18 @@ package org.bonitasoft.studio.businessobject.ui.handler;
 
 import javax.inject.Named;
 
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.ExportBusinessDataModelWizard;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -61,8 +65,15 @@ public class ExportBusinessDataModelHandler extends AbstractHandler {
             final BusinessObjectModelFileStore fileStore = (BusinessObjectModelFileStore) RepositoryManager.getInstance()
                     .getRepositoryStore(BusinessObjectModelRepositoryStore.class)
                     .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-            return fileStore != null && fileStore.getContent() != null
-                    && !fileStore.getContent().getBusinessObjects().isEmpty();
+            BusinessObjectModel businessObjectModel;
+            try {
+                businessObjectModel = fileStore.getContent();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+               return false;
+            }
+            return fileStore != null && businessObjectModel != null
+                    && !businessObjectModel.getBusinessObjects().isEmpty();
         }
         return false;
     }

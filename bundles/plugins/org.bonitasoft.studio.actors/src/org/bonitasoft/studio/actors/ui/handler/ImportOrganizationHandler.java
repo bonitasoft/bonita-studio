@@ -28,10 +28,12 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -138,7 +140,11 @@ public class ImportOrganizationHandler extends AbstractHandler {
     }
 
     protected IStatus validateImportedOrganization(final OrganizationFileStore fileStore) {
-        return new OrganizationValidator().validate(fileStore.getContent());
+        try {
+            return new OrganizationValidator().validate(fileStore.getContent());
+        } catch (ReadFileStoreException e) {
+            return ValidationStatus.error(e.getMessage());
+        }
     }
 
     @Override

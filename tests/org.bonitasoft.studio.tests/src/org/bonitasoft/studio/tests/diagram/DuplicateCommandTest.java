@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -53,16 +54,16 @@ public class DuplicateCommandTest {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
-    public void testDuplicationSourceClean() throws PartInitException {
+    public void testDuplicationSourceClean() throws PartInitException, ReadFileStoreException {
         baseTest(false);
     }
 
     @Test
-    public void testDuplicationSourceDirty() throws PartInitException {
+    public void testDuplicationSourceDirty() throws PartInitException, ReadFileStoreException {
         baseTest(true);
     }
 
-    private void baseTest(boolean sourceDirty) throws PartInitException {
+    private void baseTest(boolean sourceDirty) throws PartInitException, ReadFileStoreException {
         final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
         SWTBotTestUtil.createNewDiagram(bot);

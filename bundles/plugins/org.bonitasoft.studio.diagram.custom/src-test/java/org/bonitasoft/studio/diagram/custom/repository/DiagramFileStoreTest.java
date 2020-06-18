@@ -94,7 +94,7 @@ public class DiagramFileStoreTest {
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(processConfFStore);
 
         //When
-        final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
+        final Set<IRepositoryFileStore<?>> relatedFileStore = diagramFileStore.getRelatedFileStore();
 
         //Then
         assertThat(relatedFileStore).contains(processConfFStore);
@@ -109,7 +109,7 @@ public class DiagramFileStoreTest {
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(null);
 
         //When
-        final Set<IRepositoryFileStore> relatedFileStore = diagramFileStore.getRelatedFileStore();
+        final Set<IRepositoryFileStore<?>> relatedFileStore = diagramFileStore.getRelatedFileStore();
 
         //Then
         assertThat(relatedFileStore).doesNotContainNull();

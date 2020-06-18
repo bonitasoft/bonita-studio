@@ -40,8 +40,8 @@ public class DiagramFileStoreBOSArchiveProvider implements IBOSArchiveFileStoreP
      * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>();
         final DiagramRepositoryStore diagramSotre = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final String diagramFileName = URI.decode(process.eResource().getURI().lastSegment());
         final IRepositoryFileStore diagram = diagramSotre.getChild(diagramFileName, true);

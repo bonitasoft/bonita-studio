@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -103,7 +104,13 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
                     .filter(DiagramFileStore.class::isInstance)
                     .map(DiagramFileStore.class::cast)
-                    .map(DiagramFileStore::getContent)
+                    .map(t -> {
+                        try {
+                            return t.getContent();
+                        } catch (ReadFileStoreException e) {
+                           return null;
+                        }
+                    })
                     .orElse(null);
         }
         return null;
@@ -119,8 +126,12 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
     private MainProcess getMainProcess(String diagramToRename) {
         DiagramFileStore fileStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(diagramToRename, true);
-        return fileStore != null
-                ? fileStore.getContent()
-                : null;
+        try {
+            return fileStore != null
+                    ? fileStore.getContent()
+                    : null;
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
     }
 }

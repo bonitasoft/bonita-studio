@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -39,11 +40,11 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public abstract class EMFFileStore extends AbstractFileStore {
+public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<T> {
 
     protected Resource eResource;
 
-    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
+    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore<T>> store) {
         super(fileName, store);
     }
 
@@ -71,16 +72,12 @@ public abstract class EMFFileStore extends AbstractFileStore {
         return getParentStore().getResource().getLocation().toFile().getAbsolutePath() + File.separatorChar + getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepositoryFileStore#getContent()
-     */
     @Override
-    public synchronized EObject getContent() {
+    protected T doGetContent() throws ReadFileStoreException {
         final Resource eResource = getEMFResource();
         doLoad(eResource);
         if (eResource != null && !eResource.getContents().isEmpty()) {
-            return eResource.getContents().get(0);
+            return (T) eResource.getContents().get(0);
         }
         return null;
     }
@@ -183,17 +180,25 @@ public abstract class EMFFileStore extends AbstractFileStore {
 
     @Override
     public String getDisplayName() {
-        return getLabelProvider().getText(getContent());
+        try {
+            return getLabelProvider().getText(getContent());
+        } catch (ReadFileStoreException e) {
+           return getName();
+        }
     }
-
+    
     @Override
-    public AbstractEMFRepositoryStore<? extends IRepositoryFileStore> getParentStore() {
-        return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore>) super.getParentStore();
+    public AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
+        return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>>) super.getParentStore();
     }
 
     @Override
     public Image getIcon() {
-        return getLabelProvider().getImage(getContent());
+        try {
+            return getLabelProvider().getImage(getContent());
+        } catch (ReadFileStoreException e) {
+           return null;
+        }
     }
 
     @Override

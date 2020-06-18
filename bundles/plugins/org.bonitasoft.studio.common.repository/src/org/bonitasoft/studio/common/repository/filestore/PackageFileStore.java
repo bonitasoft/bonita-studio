@@ -41,11 +41,11 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class PackageFileStore extends AbstractFileStore {
+public class PackageFileStore extends AbstractFileStore<IFolder> {
 
     private final String packageName;
 
-    public PackageFileStore(final String packageName, final IRepositoryStore<?> parentStore) {
+    public PackageFileStore(final String packageName, final IRepositoryStore parentStore) {
         super("", parentStore);
         this.packageName = packageName;
     }
@@ -69,12 +69,8 @@ public class PackageFileStore extends AbstractFileStore {
         return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public IFolder getContent() {
+    protected IFolder doGetContent() {
         return getResource();
     }
 

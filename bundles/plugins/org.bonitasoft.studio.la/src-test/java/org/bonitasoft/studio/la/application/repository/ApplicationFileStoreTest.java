@@ -32,35 +32,30 @@ import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContai
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 public class ApplicationFileStoreTest {
 
-    private InputStream resourceAsStream;
     private ApplicationRepositoryStore store;
 
     @Before
     public void openStreams() throws Exception {
-        resourceAsStream = ApplicationFileStoreTest.class.getResourceAsStream("/myApp.xml");
         store = mock(ApplicationRepositoryStore.class);
         Mockito.when(store.getConverter()).thenReturn(new ApplicationNodeContainerConverter());
+        Mockito.when(store.validate(Mockito.anyString(), Mockito.any(InputStream.class))).thenReturn(ValidationStatus.ok());
     }
 
-    @After
-    public void closeStreams() throws Exception {
-        resourceAsStream.close();
-    }
 
     @Test
     public void should_retrieve_model_from_application_xml_file() throws Exception {
         ApplicationFileStore applicationFileStore = spy(new ApplicationFileStore("myApp.xml", store));
         doReturn(anIFile().withName("myApp.xml")
-                .withContent(resourceAsStream).build())
+                .withContentSupplier(() -> ApplicationFileStoreTest.class.getResourceAsStream("/myApp.xml")).build())
                         .when(applicationFileStore)
                         .getResource();
 

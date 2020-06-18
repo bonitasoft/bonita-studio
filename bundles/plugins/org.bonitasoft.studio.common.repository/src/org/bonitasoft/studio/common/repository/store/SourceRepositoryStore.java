@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.store;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,11 +31,8 @@ import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComp
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaElement;
@@ -53,61 +49,9 @@ import org.eclipse.jdt.internal.core.SourceType;
 /**
  * @author Romain Bioteau
  */
-public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends AbstractRepositoryStore<T> {
+public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> extends AbstractRepositoryStore<T> {
 
     public static String SIGNATURE_FILE_NAME = "Generated_With_BOS";
-
-    /**
-     * Handles the import of packages folder
-     */
-    @Override
-    protected T doImportIResource(final String fileName, final IResource resource) {
-        try {
-            if (resource instanceof IFile) {
-                return doImportInputStream(fileName, ((IFile) resource).getContents());
-            } else if (resource instanceof IFolder) {
-                final List<IFile> sourceFiles = new ArrayList<>();
-                findParentPackage((IFolder) resource, sourceFiles);
-                for (final IFile sourceFile : sourceFiles) {
-                    final IPath path = sourceFile.getProjectRelativePath();
-                    final IFile targetFile = RepositoryManager.getInstance().getCurrentRepository().getProject()
-                            .getFile(path.removeFirstSegments(1));
-                    boolean skip = false;
-                    if (targetFile.exists()) {
-                        if (FileActionDialog.overwriteQuestion(targetFile.getName())) {
-                            targetFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                        } else {
-                            skip = true;
-                        }
-                    }
-                    if (!skip) {
-                        targetFile.getLocation().toFile().getParentFile().mkdirs();
-                        refresh();
-
-                        try {
-                            targetFile.create(new FileInputStream(sourceFile.getLocation().toFile()), true,
-                                    Repository.NULL_PROGRESS_MONITOR);
-                            incrementaBuild();
-                        } catch (final Exception e) {
-                            BonitaStudioLog.error(e);
-                        }
-
-                    }
-                }
-                return null;
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-        return createRepositoryFileStore(fileName);
-    }
-
-    private void incrementaBuild() throws CoreException {
-        if (RepositoryManager.getInstance().getCurrentRepository().isBuildEnable()) {
-            final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
-            project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
-        }
-    }
 
     @Override
     protected T doImportInputStream(final String fileName, final InputStream inputStream) {
@@ -155,22 +99,6 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
         }
 
         return createRepositoryFileStore(packageName);
-    }
-
-    private void findParentPackage(final IFolder folder, final List<IFile> sourceFiles) {
-        try {
-            for (final IResource r : folder.members()) {
-                if (r instanceof IFile) {
-                    if (!sourceFiles.contains(r)) {
-                        sourceFiles.add((IFile) r);
-                    }
-                } else if (r instanceof IFolder) {
-                    findParentPackage((IFolder) r, sourceFiles);
-                }
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     @Override

@@ -40,10 +40,10 @@ public class OpenGroovyScriptsHandler {
                 .ifPresent(selection -> selection.forEach(IRepositoryFileStore::open));
     }
 
-    private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
+    private WizardBuilder<Stream<IRepositoryFileStore<?>>> createWizard(WizardBuilder<Stream<IRepositoryFileStore<?>>> builder,
             RepositoryAccessor repositoryAccessor) {
         SelectionMultiPage<GroovyRepositoryStore> selectGroovyScriptPage = new SelectionMultiPage<>(
-                repositoryAccessor, GroovyRepositoryStore.class, new FileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class), new FileStoreLabelProvider());
         return builder.withTitle(Messages.openExistingGroovyScript)
                 .havingPage(newPage()
                         .withTitle(Messages.openExistingGroovyScript)

@@ -29,6 +29,8 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -42,7 +44,12 @@ public class SmartImportBdmValidator implements IValidator<File> {
 
     public SmartImportBdmValidator(BusinessObjectModelFileStore fileStore, BusinessObjectModelConverter converter) {
         this.converter = converter;
-        this.currentModel = fileStore != null ? fileStore.getContent() : new BusinessObjectModel();
+        try {
+            this.currentModel = fileStore != null ? fileStore.getContent() : new BusinessObjectModel();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            this.currentModel = new BusinessObjectModel();
+        }
     }
 
     // For test purpose

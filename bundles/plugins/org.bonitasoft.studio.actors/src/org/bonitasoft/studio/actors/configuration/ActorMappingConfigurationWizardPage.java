@@ -26,14 +26,15 @@ import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
-import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.SelectGroupsWizard;
 import org.bonitasoft.studio.actors.ui.wizard.SelectMembershipsWizard;
 import org.bonitasoft.studio.actors.ui.wizard.SelectRolesWizard;
 import org.bonitasoft.studio.actors.ui.wizard.SelectUsersWizard;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.Groups;
@@ -100,7 +101,14 @@ public class ActorMappingConfigurationWizardPage extends WizardPage
                 .getRepositoryStore(OrganizationRepositoryStore.class)
                 .getChild(String.format("%s.organization", new ActiveOrganizationProvider().getActiveOrganization()),
                         true))
-                .map(OrganizationFileStore::getContent);
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+                    }
+                    return null;
+                });
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());

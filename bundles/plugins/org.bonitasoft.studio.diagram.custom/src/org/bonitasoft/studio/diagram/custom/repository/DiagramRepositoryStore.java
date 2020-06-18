@@ -50,10 +50,11 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
+import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -149,8 +150,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     public List<AbstractProcess> getAllProcesses() {
         final List<AbstractProcess> processes = new ArrayList<>();
-        for (final IRepositoryFileStore file : getChildren()) {
-            processes.addAll(((DiagramFileStore) file).getProcesses());
+        for (final DiagramFileStore file : getChildren()) {
+            processes.addAll(file.getProcesses());
         }
         return processes;
     }
@@ -246,55 +247,26 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     public DiagramFileStore getDiagram(final String name, final String version) {
-        final StringBuilder sb = new StringBuilder("Repository content:\n");
         for (final DiagramFileStore diagram : getChildren()) {
-            final MainProcess diagramModel = diagram.getContent();
+            MainProcess diagramModel;
+            try {
+                diagramModel = diagram.getContent();
+            } catch (ReadFileStoreException e) {
+                return null;
+            }
             if (diagramModel != null) {
                 final String diagramName = diagramModel.getName();
-                sb.append(diagramName);
                 if (diagramName.equals(name)) {
                     final String diagramVersion = diagramModel.getVersion();
-                    if (diagramVersion != null) {
-                        sb.append("(").append(diagramVersion).append(")");
-                    }
-                    sb.append("\n");
                     if (diagramVersion.equals(version)) {
                         return diagram;
                     }
                 }
             }
         }
-        BonitaStudioLog.log("Diagram not found in repository: " + name
-                + version != null ? "(" + version + ")" : "");
-        BonitaStudioLog.log(sb.toString());
         return null;
     }
 
-    @Override
-    protected DiagramFileStore doImportIResource(final String fileName,
-            final IResource resource) {
-
-        final DiagramFileStore fileStore = super.doImportIResource(fileName,
-                resource);
-        if (fileStore == null) {
-            return null;
-        }
-        final MainProcess content = fileStore.getContent();
-        if (content == null) {
-            fileStore.delete();
-            return null;
-        }
-
-        return fileStore;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#doImportArchiveData(org.bonitasoft.studio.common
-     * .repository.ImportArchiveData,
-     * org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     protected DiagramFileStore doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
@@ -302,12 +274,16 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         if (diagramfileStore == null) {
             return null;
         }
-        final MainProcess content = diagramfileStore.getContent();
-        if (content == null) {
+        try {
+            MainProcess content = diagramfileStore.getContent();
+            if (content == null) {
+                diagramfileStore.delete();
+                return null;
+            }
+        } catch (ReadFileStoreException e) {
             diagramfileStore.delete();
             return null;
         }
-
         return diagramfileStore;
     }
 
@@ -395,13 +371,18 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                 BonitaStudioLog.error(e);
             }
             if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
-                final MainProcess diagram = fStore.getContent();
-                for (final Element pool : diagram.getElements()) {
-                    if (pool instanceof Pool
-                            && processUUID.equals(ModelHelper
-                                    .getEObjectID(pool))) {
-                        return (AbstractProcess) pool;
+                try {
+                    MainProcess diagram = fStore.getContent();
+                    for (final Element pool : diagram.getElements()) {
+                        if (pool instanceof Pool
+                                && processUUID.equals(ModelHelper
+                                        .getEObjectID(pool))) {
+                            return (AbstractProcess) pool;
+                        }
                     }
+                } catch (ReadFileStoreException e) {
+                   BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
+                   return null;
                 }
             }
         }
@@ -483,7 +464,12 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                 ProcessConfigurationFileStore file = confStore.getChild(ModelHelper.getEObjectID(process) + ".conf",
                         true);
                 if (file != null) {
-                    synchronizer.synchronize(process, file.getContent());
+                    try {
+                        Configuration configuration = file.getContent();
+                        synchronizer.synchronize(process, configuration);
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(file.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
+                    }
                 }
                 process.getConfigurations().stream().forEach(conf -> synchronizer.synchronize(process, conf));
             }

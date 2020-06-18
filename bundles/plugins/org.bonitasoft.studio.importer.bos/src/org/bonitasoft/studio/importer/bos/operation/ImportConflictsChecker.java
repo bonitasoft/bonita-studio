@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -99,9 +100,13 @@ public class ImportConflictsChecker {
         try (InputStream inputStream = bosArchive.getZipFile().getInputStream(entry)) {
             Properties properties = new Properties();
             properties.load(inputStream);
-            importedPropertiesFile.setStatus(properties.equals(currentPropertiesFile.getContent())
-                    ? ConflictStatus.SAME_CONTENT
-                    : ConflictStatus.CONFLICTING);
+            try {
+                importedPropertiesFile.setStatus(properties.equals(currentPropertiesFile.getContent())
+                        ? ConflictStatus.SAME_CONTENT
+                        : ConflictStatus.CONFLICTING);
+            } catch (ReadFileStoreException e) {
+                importedPropertiesFile.setStatus(ConflictStatus.CONFLICTING);
+            }
             importedPropertiesFile.setImportAction(importedPropertiesFile.isConflicting()
                     ? ImportAction.KEEP
                     : ImportAction.OVERWRITE);

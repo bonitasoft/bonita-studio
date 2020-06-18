@@ -47,6 +47,7 @@ import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
@@ -103,7 +104,7 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
+public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDeployable, IRenamable, IBuildable {
 
     public static final String PROC_EXT = "proc";
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
@@ -115,13 +116,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
 
     private static final Pattern diagramNamePattern = Pattern.compile("(.*)-(.*)");
 
-    public DiagramFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
+    public DiagramFileStore(final String fileName, IRepositoryStore<? extends EMFFileStore<MainProcess>> store) {
         super(fileName, store);
-    }
-
-    @Override
-    public synchronized MainProcess getContent() {
-        return (MainProcess) super.getContent();
     }
 
     @Override
@@ -215,7 +211,11 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
             diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
         }
         if (diagram == null) {
-            diagram = getContent();
+            try {
+                diagram = getContent();
+            } catch (ReadFileStoreException e) {
+                return Collections.emptyList();
+            }
         }
         final List<AbstractProcess> allProcesses = ModelHelper.getAllProcesses(diagram);
         final List<AbstractProcess> processes = new ArrayList<>();
@@ -254,8 +254,12 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     protected IWorkbenchPart doOpen() {
         IEditorPart part = null;
         final Resource emfResource = getEMFResource();
-        final MainProcess content = getContent();
-        Assert.isLegal(content != null);
+        MainProcess content;
+        try {
+            content = getContent();
+        } catch (ReadFileStoreException e) {
+           return null;
+        }
         Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
         part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram).trimFragment()));
@@ -334,8 +338,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     @Override
-    public Set<IRepositoryFileStore> getRelatedFileStore() {
-        final Set<IRepositoryFileStore> result = new HashSet<>();
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository()
                 .getRepositoryStore(
                         ProcessConfigurationRepositoryStore.class);

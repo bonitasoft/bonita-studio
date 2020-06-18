@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.ITenantResource;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
@@ -77,7 +78,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class OrganizationFileStore extends EMFFileStore implements IDeployable, IRenamable, ITenantResource {
+public class OrganizationFileStore extends EMFFileStore<Organization>
+        implements IDeployable, IRenamable, ITenantResource {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
     private static final String ORGANIZATION_EXT = ".organization";
@@ -92,7 +94,12 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
 
     @Override
     public String getDisplayName() {
-        return getContent().getName();
+        try {
+            return getContent().getName();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            return getName();
+        }
     }
 
     @Override
@@ -101,8 +108,8 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     @Override
-    public Organization getContent() {
-        final DocumentRoot root = (DocumentRoot) super.getContent();
+    protected Organization doGetContent() throws ReadFileStoreException {
+        final DocumentRoot root = (DocumentRoot) super.doGetContent();
         if (root != null) {
             return root.getOrganization();
         }
@@ -134,7 +141,12 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     @Override
     public IStatus export(String targetAbsoluteFilePath) throws IOException {
         checkWritePermission(new File(targetAbsoluteFilePath));
-        Organization organization = getContent();
+        Organization organization;
+        try {
+            organization = getContent();
+        } catch (ReadFileStoreException e) {
+            return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, e.getMessage());
+        }
         DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
         Organization exportedCopy = EcoreUtil.copy(organization);
         exportedCopy.setName(null);
@@ -173,7 +185,13 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final Wizard newWizard = new ManageOrganizationWizard(getContent());
+        Wizard newWizard;
+        try {
+            newWizard = new ManageOrganizationWizard(getContent());
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            return null;
+        }
         final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), newWizard) {
 
             @Override
@@ -192,8 +210,13 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     public boolean isCorrectlySyntaxed() {
-        if (getContent() == null) {
-            return false;
+        try {
+            if (getContent() == null) {
+                return false;
+            }
+        } catch (ReadFileStoreException e) {
+          BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+          return false;
         }
         return true;
     }
@@ -207,7 +230,13 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
 
     @Override
     public void rename(String newName) {
-        Organization organization = getContent();
+        Organization organization;
+        try {
+            organization = getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            return;
+        }
         String oldName = organization.getName();
         String newNameWithoutExtension = stripExtension(newName, ORGANIZATION_EXT);
         organization.setName(newNameWithoutExtension);
@@ -244,18 +273,29 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
     }
 
     public boolean isActiveOrganization() {
-        Organization organization = getContent();
-        return organization != null && Objects.equals(activeOrganizationProvider.getActiveOrganization(), organization.getName());
+        Organization organization = null;
+        try {
+            organization = getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+        }
+        return organization != null
+                && Objects.equals(activeOrganizationProvider.getActiveOrganization(), organization.getName());
     }
 
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         final String activeOrganization = activeOrganizationProvider.getActiveOrganization();
-        Organization organization = getContent();
+        Organization organization;
+        try {
+            organization = getContent();
+        } catch (ReadFileStoreException e1) {
+           return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, e1.getMessage());
+        }
         PublishOrganizationOperation operation = Objects.equals(organization.getName(), activeOrganization)
                 ? new UpdateOrganizationOperation(organization)
                 : new CleanPublishOrganizationOperation(organization);
-        if(!PlatformUtil.isACommunityBonitaProduct()) {
+        if (!PlatformUtil.isACommunityBonitaProduct()) {
             operation.doNotApplyAllProfileToUsers();
         }
         operation.setSession(session);
@@ -267,14 +307,15 @@ public class OrganizationFileStore extends EMFFileStore implements IDeployable, 
                     organization.getName()));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, "An error occured while depoying the Organization", e);
+            return new Status(IStatus.ERROR, ActorsPlugin.PLUGIN_ID, "An error occured while depoying the Organization",
+                    e);
         }
     }
-    
+
     protected void updateDefaultUserPreference(Organization organization,
             String userName) {
-        if(userName == null || userName.isEmpty()) {
-            if(!organization.getUsers().getUser().isEmpty()) {
+        if (userName == null || userName.isEmpty()) {
+            if (!organization.getUsers().getUser().isEmpty()) {
                 User user = organization.getUsers().getUser().get(0);
                 userName = user.getUserName();
             }

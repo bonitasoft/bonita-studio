@@ -28,6 +28,7 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.model.organization.Users;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -41,7 +42,7 @@ public class OrganizationFileStoreTest {
     private OrganizationFileStore ofs;
 
     @Test
-    public void testExport() throws IOException {
+    public void testExport() throws IOException, ReadFileStoreException {
         final Organization orga = OrganizationFactory.eINSTANCE.createOrganization();
         final User user = OrganizationFactory.eINSTANCE.createUser();
         user.setFirstName("ブリヂストンプラントエンジニアリング(株)");

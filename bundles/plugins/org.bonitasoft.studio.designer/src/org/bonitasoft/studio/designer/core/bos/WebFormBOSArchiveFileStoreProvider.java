@@ -86,9 +86,9 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     }
 
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process,
             final Configuration configuration) {
-        final Set<IRepositoryFileStore> result = new HashSet<>();
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         final List<FormMapping> allFormMappings = getAllItemsOfType(process, ProcessPackage.Literals.FORM_MAPPING);
         for (final WebPageFileStore fStore : transform(filter(allFormMappings, withInternalType()),
                 formMappingToFileStore())) {
@@ -176,10 +176,10 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         return mapping -> mapping.getType() == FormMappingType.INTERNAL && mapping.getTargetForm().hasContent();
     }
 
-    public Set<IRepositoryFileStore> getRelatedFileStore(final WebPageFileStore webPageFileStore)
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore(final WebPageFileStore webPageFileStore)
             throws BarResourceCreationException, IOException {
         final Set<String> zipEntries = findFormRelatedEntries(webPageFileStore);
-        final Set<IRepositoryFileStore> result = new HashSet<>();
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         result.addAll(relatedFragments(zipEntries));
         result.addAll(relatedWidgets(zipEntries));
         return result;

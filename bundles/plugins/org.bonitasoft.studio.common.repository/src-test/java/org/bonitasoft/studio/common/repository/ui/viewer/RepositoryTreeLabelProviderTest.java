@@ -29,10 +29,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class RepositoryTreeLabelProviderTest {
 
     @Mock
-    IRepositoryStore<IRepositoryFileStore> repoStore;
+    IRepositoryStore<?> repoStore;
 
     @Mock
-    IRepositoryFileStore repoFileStore;
+    IRepositoryFileStore<?> repoFileStore;
 
     @Test
     public void testGetTextForIRepositoryStore() {

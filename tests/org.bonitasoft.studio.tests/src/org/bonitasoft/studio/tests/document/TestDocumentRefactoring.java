@@ -25,6 +25,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
@@ -71,7 +72,7 @@ public class TestDocumentRefactoring {
     }
 
     @Test
-    public void testDocumentRefactoring() throws IOException, InvocationTargetException, InterruptedException {
+    public void testDocumentRefactoring() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         final MainProcess diagram = importDiagramAndOpen();
         final List<Pool> pools = ModelHelper.getChildrenProcess(diagram);
         assertEquals(pools.size(), 1);
@@ -143,7 +144,7 @@ public class TestDocumentRefactoring {
         assertEquals(expr.getContent(), empty);
     }
 
-    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
+    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestDocumentRefactoring.class.getResource(diagramName + ".bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());

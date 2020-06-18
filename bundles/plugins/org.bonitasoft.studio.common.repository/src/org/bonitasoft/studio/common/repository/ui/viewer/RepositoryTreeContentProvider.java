@@ -38,8 +38,8 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
     public Object[] getChildren(final Object parentElement) {
         if (parentElement instanceof IRepositoryStore) {
             if (!cache.containsKey(parentElement)) {
-                final List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>();
-                for (final IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()) {
+                final List<IRepositoryFileStore<?>> result = new ArrayList<>();
+                for (final IRepositoryFileStore<?> child : ((IRepositoryStore<?>) parentElement).getChildren()) {
                     if (child != null && child.canBeExported()) {
                         result.add(child);
                     }
@@ -61,7 +61,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object getParent(final Object element) {
         if (element instanceof IRepositoryFileStore) {
-            return ((IRepositoryFileStore) element).getParentStore();
+            return ((IRepositoryFileStore<?>) element).getParentStore();
         }
         return null;
     }

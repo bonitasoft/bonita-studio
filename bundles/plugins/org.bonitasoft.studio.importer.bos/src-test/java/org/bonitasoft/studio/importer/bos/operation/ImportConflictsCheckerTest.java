@@ -98,16 +98,16 @@ public class ImportConflictsCheckerTest {
         final List<IRepositoryFileStore> fileStoreList = new ArrayList<>();
         fileStoreList.add(fileStore);
 
-        final IRepositoryStore<IRepositoryFileStore> diagramStore = createRepositoryStore("diagrams");
+        final IRepositoryStore diagramStore = createRepositoryStore("diagrams");
         when(diagramStore.getChildren()).thenReturn(fileStoreList);
 
-        final IRepositoryStore<IRepositoryFileStore> appRessourcesStore = createRepositoryStore("application_resources");
+        final IRepositoryStore appRessourcesStore = createRepositoryStore("application_resources");
         when(appRessourcesStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final IRepositoryStore<IRepositoryFileStore> libStore = createRepositoryStore("lib");
+        final IRepositoryStore libStore = createRepositoryStore("lib");
         when(libStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> storeList = new ArrayList<>();
+        final List storeList = new ArrayList<>();
         storeList.add(diagramStore);
         storeList.add(appRessourcesStore);
         storeList.add(libStore);
@@ -171,8 +171,8 @@ public class ImportConflictsCheckerTest {
         return bosArchive;
     }
 
-    private IRepositoryStore<IRepositoryFileStore> createRepositoryStore(String name) throws UnsupportedEncodingException {
-        final IRepositoryStore<IRepositoryFileStore> store = mock(IRepositoryStore.class);
+    private IRepositoryStore createRepositoryStore(String name) throws UnsupportedEncodingException {
+        final IRepositoryStore store = mock(IRepositoryStore.class);
         final IFolder folder = createIFolder(name);
 
         when(store.getName()).thenReturn(name);

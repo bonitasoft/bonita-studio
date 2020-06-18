@@ -22,12 +22,14 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Paths;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.json.JSONObject;
@@ -35,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -44,7 +47,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class WebWidgetFileStoreTest {
 
     @Mock
-    private IRepositoryStore<? extends IRepositoryFileStore> parentStore;
+    private IRepositoryStore parentStore;
 
     private WebWidgetFileStore webWidgetFileStore;
     @Mock
@@ -68,6 +71,8 @@ public class WebWidgetFileStoreTest {
         jsonResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(folderResource).when(webWidgetFileStore).getResource();
         doReturn(jsonResource).when(folderResource).getFile("pbButton.json");
+        when(parentStore.validate(Mockito.anyString(), Mockito.any(InputStream.class)))
+        .thenReturn(ValidationStatus.ok());
     }
 
     @Test

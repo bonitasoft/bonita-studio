@@ -19,14 +19,17 @@ import java.util.Optional;
 
 import javax.inject.Named;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.model.organization.Users;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class FindUserPasswordHandler {
@@ -36,7 +39,14 @@ public class FindUserPasswordHandler {
         String activeOrganizationFileName = new ActiveOrganizationProvider().getActiveOrganizationFileName();
         return Optional.ofNullable(repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
                 .getChild(activeOrganizationFileName, true))
-                .map(OrganizationFileStore::getContent)
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                       BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+                       return null;
+                    }
+                })
                 .map(Organization::getUsers)
                 .map(Users::getUser)
                 .map(users -> users.stream()

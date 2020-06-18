@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
@@ -39,7 +40,7 @@ import org.junit.Test;
 public class TestTestConnectorOperation {
 
 	@Test
-	public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException{
+	public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException{
 		TestConnectorOperation testConnectorOperation = createOperation();
 		
 		testConnectorOperation.run(new NullProgressMonitor());
@@ -48,7 +49,7 @@ public class TestTestConnectorOperation {
 		Assert.assertEquals("The result is not right", "Expected Result", testConnectorOperation.getResult().values().iterator().next());
 	}
 
-	private TestConnectorOperation createOperation() {
+	private TestConnectorOperation createOperation() throws ReadFileStoreException {
 		TestConnectorOperation testConnectorOperation = new TestConnectorOperation();
 		ConnectorConfiguration configuration = createConnectorConfiguration();
 		testConnectorOperation.setConnectorConfiguration(configuration);
@@ -61,7 +62,7 @@ public class TestTestConnectorOperation {
 		return testConnectorOperation;
 	}
 
-	private ConnectorImplementation createConnectorImplementation() {
+	private ConnectorImplementation createConnectorImplementation() throws ReadFileStoreException {
 		ConnectorImplRepositoryStore c = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		return c.getChild("scripting-groovy.impl", true).getContent();
 	}

@@ -43,7 +43,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public abstract class SelectionPage<T extends IRepositoryStore<? extends IRepositoryFileStore>> implements ControlSupplier {
+public abstract class SelectionPage<T extends IRepositoryStore<? extends IRepositoryFileStore<?>>> implements ControlSupplier {
 
     private static final int TABLE_WIDTH_HINT = 600;
 
@@ -51,15 +51,14 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
 
     protected TableViewer tableViewer;
 
-    protected Class<T> type;
+    protected T store;
 
     private FileStoreLabelProvider labelProvider;
 
-    private Optional<List<IRepositoryFileStore>> unselectableElements = Optional.empty();
+    private Optional<List<IRepositoryFileStore<?>>> unselectableElements = Optional.empty();
 
-    public SelectionPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider labelProvider) {
-        this.repositoryAccessor = repositoryAccessor;
-        this.type = type;
+    public SelectionPage(T store, FileStoreLabelProvider labelProvider) {
+        this.store = store;
         this.labelProvider = labelProvider;
     }
 
@@ -79,7 +78,7 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
 
         ColumnViewerToolTipSupport.enableFor(tableViewer);
 
-        IObservableList<IRepositoryFileStore> multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
+        IObservableList<IRepositoryFileStore<?>> multiSelection = ViewersObservables.observeMultiSelection(tableViewer);
         ctx.addValidationStatusProvider(new MultiValidator() {
 
             @Override
@@ -96,13 +95,13 @@ public abstract class SelectionPage<T extends IRepositoryStore<? extends IReposi
         return mainComposite;
     }
 
-    protected List<? extends IRepositoryFileStore> getInput() {
-        return repositoryAccessor.getRepositoryStore(type).getChildren();
+    protected List<? extends IRepositoryFileStore<?>> getInput() {
+        return store.getChildren();
     }
 
     protected abstract TableViewer createTableViewer(Composite mainComposite);
 
-    public Stream<IRepositoryFileStore> getSelection() {
+    public Stream<IRepositoryFileStore<?>> getSelection() {
         return ((IStructuredSelection) tableViewer.getSelection()).toList().stream();
     }
 

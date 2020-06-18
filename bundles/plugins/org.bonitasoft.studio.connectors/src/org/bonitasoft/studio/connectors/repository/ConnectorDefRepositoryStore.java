@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
@@ -76,7 +77,11 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         if (definition != null) {
             final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,
                     getBundle());
-            reloadCategories(definition.getContent(), resourceProvider);
+            try {
+                reloadCategories(definition.getContent(), resourceProvider);
+            } catch (ReadFileStoreException e) {
+                return definition;
+            }
         }
         return definition;
     }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +50,9 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -81,7 +84,8 @@ import com.google.common.io.ByteStreams;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelFileStore extends AbstractBDMFileStore implements ISmartImportable {
+public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessObjectModel>
+        implements ISmartImportable {
 
     public static final String DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG = "DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG";
     public static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
@@ -96,13 +100,14 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
     private CommandExecutor commandExecutor;
 
-    public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
+    public BusinessObjectModelFileStore(final String fileName,
+            final IRepositoryStore<? extends AbstractBDMFileStore> store) {
         super(fileName, store);
         commandExecutor = new CommandExecutor();
     }
 
     @Override
-    public BusinessObjectModel getContent() {
+    protected BusinessObjectModel doGetContent() throws ReadFileStoreException {
         final IFile resource = getResource();
         if (!resource.exists()) {
             cachedBusinessObjectModel.clear();
@@ -175,10 +180,14 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
         if (!descriptor.exists()) {
             BDMArtifactDescriptor defautDescriptor = new BDMArtifactDescriptor();
             String groupId = DEFAULT_GROUP_ID;
-            BusinessObjectModel businessObjectModel = getContent();
-            if (businessObjectModel != null && !businessObjectModel.getBusinessObjectsClassNames().isEmpty()) {
-                groupId = NamingUtils
-                        .getPackageName(businessObjectModel.getBusinessObjectsClassNames().iterator().next());
+            try {
+                BusinessObjectModel businessObjectModel = getContent();
+                if (businessObjectModel != null && !businessObjectModel.getBusinessObjectsClassNames().isEmpty()) {
+                    groupId = NamingUtils
+                            .getPackageName(businessObjectModel.getBusinessObjectsClassNames().iterator().next());
+                }
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
             }
             defautDescriptor.setGroupId(groupId);
             saveArtifactDescriptor(defautDescriptor);
@@ -263,7 +272,13 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     public List<BusinessObject> getBusinessObjects() {
-        final BusinessObjectModel content = getContent();
+        BusinessObjectModel content;
+        try {
+            content = getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            return Collections.emptyList();
+        }
         Assert.isNotNull(content);
         return content.getBusinessObjects();
     }
@@ -279,10 +294,16 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     public BusinessObject getBusinessObject(final String qualifiedName) {
-        for (final BusinessObject bo : getContent().getBusinessObjects()) {
-            if (bo.getQualifiedName().equals(qualifiedName)) {
-                return bo;
+        try {
+            BusinessObjectModel model = getContent();
+            for (final BusinessObject bo : model.getBusinessObjects()) {
+                if (bo.getQualifiedName().equals(qualifiedName)) {
+                    return bo;
+                }
             }
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            return null;
         }
         return null;
     }
@@ -327,13 +348,19 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore implement
     }
 
     public boolean sameContentAs(final BusinessObjectModel businessObjectModel) {
-        final BusinessObjectModel originalContent = getContent();
-        if (businessObjectModel == null && originalContent == null) {
-            return true;
-        } else if (businessObjectModel != null) {
-            return businessObjectModel.equals(originalContent);
+        try {
+            BusinessObjectModel originalContent = getContent();
+            if (businessObjectModel == null && originalContent == null) {
+                return true;
+            } else if (businessObjectModel != null) {
+                return businessObjectModel.equals(originalContent);
+            }
+            return false;
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            return false;
         }
-        return false;
+
     }
 
     @Override

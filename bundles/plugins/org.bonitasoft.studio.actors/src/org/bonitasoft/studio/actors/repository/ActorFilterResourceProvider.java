@@ -44,8 +44,8 @@ public class ActorFilterResourceProvider implements IBOSArchiveFileStoreProvider
      * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>();
 
         final ActorFilterDefRepositoryStore filterDefSotre = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         final ActorFilterImplRepositoryStore filterImplStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);

@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -63,24 +64,48 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractFileStore
-        implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
+public abstract class AbstractFileStore<T>
+        implements IRepositoryFileStore<T>, IFileStoreChangeNotifier, IPartListener {
 
     public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
     private String name;
-    protected final IRepositoryStore<? extends IRepositoryFileStore> store;
+    protected final IRepositoryStore<? extends IRepositoryFileStore<T>> store;
     private IWorkbenchPart activePart;
     private Map<String, Object> parameters;
     private RepositoryAccessor repositoryAccessor;
     private CommandExecutor commandExecutor = new CommandExecutor();
 
     public AbstractFileStore(final String fileName,
-            final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+            final IRepositoryStore<? extends IRepositoryFileStore<T>> parentStore) {
         name = fileName;
         store = parentStore;
         initParameters();
     }
+
+    public T getContent() throws ReadFileStoreException {
+        if(getResource() != null && getResource().exists()) {
+            try (InputStream is = openInputStream()) {
+                IStatus status = getParentStore().validate(getName(), is);
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new ReadFileStoreException(status.getMessage());
+                }
+            } catch (IOException | CoreException e) {
+                throw new ReadFileStoreException(e.getMessage(), e);
+            }
+        }
+        return doGetContent();
+    }
+
+    protected InputStream openInputStream() throws CoreException {
+        if (getResource() instanceof IFile) {
+            return ((IFile) getResource()).getContents();
+        } else {
+            throw new IllegalStateException(String.format("Cannot open an InputStream for %s", getClass().getName()));
+        }
+    }
+
+    protected abstract T doGetContent() throws ReadFileStoreException;
 
     private void initParameters() {
         parameters = new HashMap<>();
@@ -95,7 +120,7 @@ public abstract class AbstractFileStore
     protected void setName(final String name) {
         this.name = name;
     }
-    
+
     @Override
     public IResource getResource() {
         return getParentStore().getResource().getFile(getName());
@@ -128,7 +153,7 @@ public abstract class AbstractFileStore
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getParentStore() {
+    public IRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
         return store;
     }
 
@@ -393,8 +418,8 @@ public abstract class AbstractFileStore
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof IRepositoryFileStore) {
-            return getName().equals(((IRepositoryFileStore) obj).getName())
-                    && getParentStore().equals(((IRepositoryFileStore) obj).getParentStore());
+            return getName().equals(((IRepositoryFileStore<?>) obj).getName())
+                    && getParentStore().equals(((IRepositoryFileStore<?>) obj).getParentStore());
         }
         return super.equals(obj);
     }
@@ -414,7 +439,7 @@ public abstract class AbstractFileStore
     }
 
     @Override
-    public Set<IRepositoryFileStore> getRelatedFileStore() {
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
         return Collections.emptySet();
     }
 

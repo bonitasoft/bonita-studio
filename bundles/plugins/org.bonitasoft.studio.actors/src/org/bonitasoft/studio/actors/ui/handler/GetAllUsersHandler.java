@@ -18,11 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class GetAllUsersHandler {
@@ -34,14 +37,19 @@ public class GetAllUsersHandler {
             OrganizationFileStore fileStore = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class)
                     .getChild(fileName, true);
             if (fileStore != null) {
-                return fileStore.getContent().getUsers().getUser()
-                        .stream()
-                        .map(User::getUserName)
-                        .sorted()
-                        .collect(Collectors.toList());
+                try {
+                    return fileStore.getContent().getUsers().getUser()
+                            .stream()
+                            .map(User::getUserName)
+                            .sorted()
+                            .collect(Collectors.toList());
+                } catch (ReadFileStoreException e) {
+                    BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+                    return Collections.emptyList();
+                }
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     protected String getActiveOrgaFileName() {

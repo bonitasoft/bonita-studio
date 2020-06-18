@@ -50,7 +50,7 @@ public class RepositoryAccessor {
         return this;
     }
 
-    public <T extends IRepositoryStore<? extends IRepositoryFileStore>> T getRepositoryStore(final Class<T> storeClass) {
+    public <T extends IRepositoryStore<?>> T getRepositoryStore(final Class<T> storeClass) {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 

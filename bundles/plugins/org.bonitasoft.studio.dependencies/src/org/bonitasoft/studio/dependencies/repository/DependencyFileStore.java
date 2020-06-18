@@ -20,8 +20,7 @@ import java.util.Map;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -35,9 +34,9 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class DependencyFileStore extends AbstractFileStore {
+public class DependencyFileStore extends AbstractFileStore<InputStream> {
 
-    public DependencyFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public DependencyFileStore(final String fileName, final DependencyRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
@@ -50,12 +49,8 @@ public class DependencyFileStore extends AbstractFileStore {
         return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public InputStream getContent() {
+    protected InputStream doGetContent() throws ReadFileStoreException {
         try {
             return getResource().getContents();
         } catch (final CoreException e) {

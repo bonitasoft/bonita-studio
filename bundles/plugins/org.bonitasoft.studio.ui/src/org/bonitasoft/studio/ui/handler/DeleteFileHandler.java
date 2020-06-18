@@ -48,19 +48,19 @@ public abstract class DeleteFileHandler {
                 });
     }
 
-    protected abstract WizardBuilder<Stream<IRepositoryFileStore>> createWizard(
-            WizardBuilder<Stream<IRepositoryFileStore>> newWizard,
+    protected abstract WizardBuilder<Stream<IRepositoryFileStore<?>>> createWizard(
+            WizardBuilder<Stream<IRepositoryFileStore<?>>> newWizard,
             RepositoryAccessor repositoryAccessor,
             Shell activeShell);
 
-    protected Optional<Stream<IRepositoryFileStore>> deleteFinish(
-            SelectionPage<? extends IRepositoryStore<? extends IRepositoryFileStore>> selectPage, Shell activeShell) {
+    protected Optional<Stream<IRepositoryFileStore<?>>> deleteFinish(
+            SelectionPage<? extends IRepositoryStore<?>> selectPage, Shell activeShell) {
         return MessageDialog.openConfirm(activeShell, Messages.deleteConfirmation,
                 String.format(Messages.deleteConfirmationMessage, getListToDelete(selectPage)))
                         ? Optional.ofNullable(selectPage.getSelection()) : Optional.empty();
     }
 
-    private String getListToDelete(SelectionPage<? extends IRepositoryStore<? extends IRepositoryFileStore>> selectPage) {
+    private String getListToDelete(SelectionPage<? extends IRepositoryStore<? extends IRepositoryFileStore<?>>> selectPage) {
         return selectPage.getSelection()
                 .map(selection -> "\n" + selection.getName())
                 .collect(Collectors.joining());

@@ -24,9 +24,11 @@ import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -39,15 +41,15 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class ConnectorImplFileStore extends EMFFileStore {
+public class ConnectorImplFileStore extends EMFFileStore<ConnectorImplementation> {
 
     public ConnectorImplFileStore(String fileName, IRepositoryStore<ConnectorImplFileStore> store) {
         super(fileName, store);
     }
 
     @Override
-    public ConnectorImplementation getContent() {
-        DocumentRoot root = (DocumentRoot) super.getContent();
+    protected ConnectorImplementation doGetContent() throws ReadFileStoreException {
+        DocumentRoot root = (DocumentRoot) super.doGetContent();
         if (root != null) {
             return root.getConnectorImplementation();
         }
@@ -59,10 +61,6 @@ public class ConnectorImplFileStore extends EMFFileStore {
         return unloadableImpl;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
     @Override
     protected void doSave(Object content) {
         if (content instanceof ConnectorImplementation) {
@@ -86,7 +84,12 @@ public class ConnectorImplFileStore extends EMFFileStore {
 
     @Override
     protected IWorkbenchPart doOpen() {
-        ConnectorImplementationWizard wizard = new ConnectorImplementationWizard(getContent());
+        ConnectorImplementationWizard wizard;
+        try {
+            wizard = new ConnectorImplementationWizard(getContent());
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
         WizardDialog wd = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
         wd.open();
         return null;
@@ -95,18 +98,25 @@ public class ConnectorImplFileStore extends EMFFileStore {
     @Override
     protected void doDelete() {
         if (FileActionDialog.confirmDeletionQuestion(getName())) {
-            ConnectorImplementation implementation = getContent();
+            ConnectorImplementation implementation = null;
+            try {
+                implementation = getContent();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ConnectorPlugin.PLUGIN_ID);
+            }
             super.doDelete();
-            String className = implementation.getImplementationClassname();
-            ConnectorSourceRepositoryStore sourceStore = getRepositoryAccessor()
-                    .getRepositoryStore(ConnectorSourceRepositoryStore.class);
-            IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
-            String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
-            if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
-                sourceFile.delete();
-                if (abstractFile != null) {
-                    abstractFile.delete();
+            if (implementation != null) {
+                String className = implementation.getImplementationClassname();
+                ConnectorSourceRepositoryStore sourceStore = getRepositoryAccessor()
+                        .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+                IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
+                String abstarctClassName = ClassGenerator.getAbstractClassName(className);
+                IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
+                if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
+                    sourceFile.delete();
+                    if (abstractFile != null) {
+                        abstractFile.delete();
+                    }
                 }
             }
         }

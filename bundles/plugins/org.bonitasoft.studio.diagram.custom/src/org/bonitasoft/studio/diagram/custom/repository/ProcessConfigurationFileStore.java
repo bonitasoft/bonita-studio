@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
@@ -33,15 +32,10 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class ProcessConfigurationFileStore extends EMFFileStore implements IRepositoryFileStore {
+public class ProcessConfigurationFileStore extends EMFFileStore<Configuration> {
 
-    public ProcessConfigurationFileStore(final String folderName, final IRepositoryStore<? extends EMFFileStore> store) {
+    public ProcessConfigurationFileStore(final String folderName, final IRepositoryStore<ProcessConfigurationFileStore> store) {
         super(folderName, store);
-    }
-
-    @Override
-    public Configuration getContent() {
-        return (Configuration) super.getContent();
     }
 
     @Override
@@ -62,7 +56,6 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
             resource.save(options);
             resource.unload();
-
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
@@ -81,15 +74,6 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
     @Override
     public String getDisplayName() {
         return getName();
-        //        final Configuration conf =  getContent() ;
-        //        final DiagramRepositoryStore diagramStore =  RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        //        final String confId = getName().substring(0,getName().lastIndexOf(".")) ;
-        //        String confName = conf.getName() ;
-        //        if(confName == null){
-        //            confName = "Local" ;
-        //        }
-        //        final String processLabel = diagramStore.getLabelFor(confId);
-        //        return Messages.bind(Messages.configuration, confName,processLabel != null ? processLabel : confId);
     }
 
     @Override

@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.extension.IWidgetContribtution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
@@ -763,11 +764,16 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (nsCombo != null && !nsCombo.isDisposed()) {
             final List<XSDFileStore> allArtifacts = store.getChildren();
             for (final XSDFileStore artifact : allArtifacts) {
-                final String namespace = ((XSDSchema) artifact.getContent()).getTargetNamespace();
-                if (namespace != null) {
-                    nsCombo.add(namespace);
-                } else {
-                    nsCombo.add("No Namespace " + "(" + artifact.getName() + ")");
+                try {
+                    XSDSchema xsdSchema = artifact.getContent();
+                    final String namespace = xsdSchema.getTargetNamespace();
+                    if (namespace != null) {
+                        nsCombo.add(namespace);
+                    } else {
+                        nsCombo.add("No Namespace " + "(" + artifact.getName() + ")");
+                    }
+                } catch (ReadFileStoreException e1) {
+                   BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                 }
             }
 
@@ -1335,17 +1341,21 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         artifact.save(content);
                     }
                     nsCombo.removeAll();
-                    for (final IRepositoryFileStore artifact : store.getChildren()) {
-                        final XSDFileStore file = (XSDFileStore) artifact;
-                        final XSDSchema schema = (XSDSchema) file.getContent();
-                        String xmlNamespace = null;
-                        if (schema != null && schema.getTargetNamespace() != null
-                                && !schema.getTargetNamespace().isEmpty()) {
-                            xmlNamespace = schema.getTargetNamespace();
-                        } else {
-                            xmlNamespace = "No Namespace " + "(" + artifact.getName() + ")";
+                    for (final XSDFileStore artifact : store.getChildren()) {
+                        XSDSchema schema = null;
+                        try {
+                            schema = artifact.getContent();
+                            String xmlNamespace = null;
+                            if (schema != null && schema.getTargetNamespace() != null
+                                    && !schema.getTargetNamespace().isEmpty()) {
+                                xmlNamespace = schema.getTargetNamespace();
+                            } else {
+                                xmlNamespace = "No Namespace " + "(" + artifact.getName() + ")";
+                            }
+                            nsCombo.add(xmlNamespace);
+                        } catch (ReadFileStoreException e1) {
+                          BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                         }
-                        nsCombo.add(xmlNamespace);
                     }
                     nsCombo.setText(((XMLData) data).getNamespace());
                 }

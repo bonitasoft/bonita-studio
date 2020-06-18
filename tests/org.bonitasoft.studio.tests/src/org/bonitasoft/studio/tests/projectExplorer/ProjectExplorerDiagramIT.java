@@ -29,6 +29,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -162,7 +163,13 @@ public class ProjectExplorerDiagramIT {
     private String getNewDiagramName() {
         List<String> existingDiagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChildren()
                 .stream()
-                .map(DiagramFileStore::getContent)
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                       return null;
+                    }
+                })
                 .filter(diagram -> Objects.equals(diagram.getVersion(), DEFAULT_VERSION))
                 .map(MainProcess::getName)
                 .collect(Collectors.toList());

@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -72,7 +73,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessTextData() throws IOException {
+    public void testProcessTextData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
         final String dataType = DataTypeLabels.stringDataType;
@@ -85,7 +86,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessIntegerData() throws IOException {
+    public void testProcessIntegerData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Integer";
         final Data data = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
@@ -98,7 +99,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessDoubleData() throws IOException {
+    public void testProcessDoubleData() throws IOException, ReadFileStoreException {
         final Data data = createDoubleDataSample();
         final String dataType = DataTypeLabels.doubleDataType;
 
@@ -119,7 +120,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessBooleanData() throws IOException {
+    public void testProcessBooleanData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Boolean";
         final Data data = createBooleanDataSample(structureRef);
         final String dataType = DataTypeLabels.booleanDataType;
@@ -132,7 +133,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessDateData() throws IOException {
+    public void testProcessDateData() throws IOException, ReadFileStoreException {
         final Data data = ProcessFactory.eINSTANCE.createData();
         final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
         final String structureRef = "java.util.Date";
@@ -152,7 +153,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessJavaData() throws IOException {
+    public void testProcessJavaData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.util.List";
         final JavaObjectData data = createJavaDataSample(structureRef);
         final String dataType = DataTypeLabels.javaDataType;
@@ -166,7 +167,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testProcessXMLData() throws IOException {
+    public void testProcessXMLData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.util.List";
         final XMLData data = ProcessFactory.eINSTANCE.createXMLData();
         final Expression xmlDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -196,7 +197,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientTextData() throws IOException {
+    public void testStepTransientTextData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.String";
         final Data data = createTextDataSample(structureRef);
         data.setTransient(true);
@@ -211,7 +212,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientXMLData() throws IOException {
+    public void testStepTransientXMLData() throws IOException, ReadFileStoreException {
         XMLData data = anXMLData()
                 .havingDataType(XMLDataTypeBuilder.create())
                 .withName("zzz")
@@ -240,7 +241,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientTextDataWithScriptInitialValue() throws IOException {
+    public void testStepTransientTextDataWithScriptInitialValue() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.String";
         final Data data = ProcessFactory.eINSTANCE.createData();
         final Expression textDefaultValue = ExpressionFactory.eINSTANCE.createExpression();
@@ -262,7 +263,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientDoubleData() throws IOException {
+    public void testStepTransientDoubleData() throws IOException, ReadFileStoreException {
         final Data data = createDoubleDataSample();
         data.setTransient(true);
         final String dataType = DataTypeLabels.doubleDataType;
@@ -276,7 +277,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientIntegerData() throws IOException {
+    public void testStepTransientIntegerData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Long";
         final Data data = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
@@ -290,7 +291,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientJavaData() throws IOException {
+    public void testStepTransientJavaData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.util.List";
         final JavaObjectData initialData = createJavaDataSample(structureRef);
         initialData.setTransient(true);
@@ -304,7 +305,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepTransientBooleanData() throws IOException {
+    public void testStepTransientBooleanData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
         initialData.setTransient(true);
@@ -318,7 +319,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepBooleanData() throws IOException {
+    public void testStepBooleanData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Boolean";
         final Data initialData = createBooleanDataSample(structureRef);
         final String dataType = DataTypeLabels.booleanDataType;
@@ -330,7 +331,7 @@ public class BPMNDataExportImportTest {
         compareStepData(initialData, mainProcess);
     }
 
-    public void testStepJavaData() throws IOException {
+    public void testStepJavaData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.util.List";
         final JavaObjectData initialData = createJavaDataSample(structureRef);
         final String dataType = DataTypeLabels.javaDataType;
@@ -343,7 +344,7 @@ public class BPMNDataExportImportTest {
     }
 
     @Test
-    public void testStepIntegerData() throws IOException {
+    public void testStepIntegerData() throws IOException, ReadFileStoreException {
         final String structureRef = "java.lang.Integer";
         final Data initialData = createIntegerDataSample(structureRef);
         final String dataType = DataTypeLabels.integerDataType;
@@ -520,7 +521,7 @@ public class BPMNDataExportImportTest {
         assertEquals("The exported type is not the good one", structureRef, itemDef.getStructureRef().getLocalPart());
     }
 
-    private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws IOException {
+    private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws IOException, ReadFileStoreException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         Resource emfResource = newDiagramFileStore.getEMFResource();
@@ -548,7 +549,7 @@ public class BPMNDataExportImportTest {
         return BPMNTestUtil.exportToBpmn(emfResource);
     }
 
-    protected DocumentRoot exportToBPMNProcessWithData(final Data data, final String dataType) throws IOException {
+    protected DocumentRoot exportToBPMNProcessWithData(final Data data, final String dataType) throws IOException, ReadFileStoreException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         Resource emfResource = newDiagramFileStore.getEMFResource();

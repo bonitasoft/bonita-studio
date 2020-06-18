@@ -18,9 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Named;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
@@ -43,7 +46,11 @@ public class HeadlessDiagramValidationHandler {
                             new OffscreenEditPartFactory(
                                     org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                             new ValidationMarkerProvider()));
-            validationAction.addProcess(diagramFileStore.getContent());
+            try {
+                validationAction.addProcess(diagramFileStore.getContent());
+            } catch (ReadFileStoreException e1) {
+               BonitaStudioLog.warning(e1.getMessage(), ValidationPlugin.PLUGIN_ID);
+            }
             try {
                 validationAction.run(new NullProgressMonitor());
                 return validationAction.getStatus();

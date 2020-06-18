@@ -18,12 +18,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.ui.wizard.FilterImplementationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
@@ -39,15 +41,15 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class ActorFilterImplFileStore extends EMFFileStore {
+public class ActorFilterImplFileStore extends EMFFileStore<ConnectorImplementation> {
 
     public ActorFilterImplFileStore(String fileName, AbstractEMFRepositoryStore<ActorFilterImplFileStore> store) {
         super(fileName, store);
     }
 
     @Override
-    public ConnectorImplementation getContent() {
-        DocumentRoot root = (DocumentRoot) super.getContent();
+    protected ConnectorImplementation doGetContent() throws ReadFileStoreException {
+        DocumentRoot root = (DocumentRoot) super.doGetContent();
         return root.getConnectorImplementation();
     }
 
@@ -78,27 +80,40 @@ public class ActorFilterImplFileStore extends EMFFileStore {
 
     @Override
     protected IWorkbenchPart doOpen() {
-        FilterImplementationWizard wizard = new FilterImplementationWizard(getContent());
-        WizardDialog wd = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
-        wd.open();
+        ConnectorImplementation connectorImplementation;
+        try {
+            connectorImplementation = getContent();
+            FilterImplementationWizard wizard = new FilterImplementationWizard(connectorImplementation);
+            WizardDialog wd = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
+            wd.open();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+        }
         return null;
     }
 
     @Override
     protected void doDelete() {
         if (FileActionDialog.confirmDeletionQuestion(getName())) {
-            ConnectorImplementation implementation = getContent();
+            ConnectorImplementation implementation = null;
+            try {
+                implementation = getContent();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            }
             super.doDelete();
-            String className = implementation.getImplementationClassname();
-            ActorFilterSourceRepositoryStore sourceStore = getRepositoryAccessor()
-                    .getRepositoryStore(ActorFilterSourceRepositoryStore.class);
-            IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
-            String abstarctClassName = ClassGenerator.getAbstractClassName(className);
-            IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
-            if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
-                sourceFile.delete();
-                if (abstractFile != null) {
-                    abstractFile.delete();
+            if (implementation != null) {
+                String className = implementation.getImplementationClassname();
+                ActorFilterSourceRepositoryStore sourceStore = getRepositoryAccessor()
+                        .getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+                IRepositoryFileStore sourceFile = sourceStore.getChild(className, true);
+                String abstarctClassName = ClassGenerator.getAbstractClassName(className);
+                IRepositoryFileStore abstractFile = sourceStore.getChild(abstarctClassName, true);
+                if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
+                    sourceFile.delete();
+                    if (abstractFile != null) {
+                        abstractFile.delete();
+                    }
                 }
             }
         }

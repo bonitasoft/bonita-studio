@@ -22,6 +22,7 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
@@ -46,7 +47,12 @@ public class CustomUserInfoNameExpressionProvider implements IExpressionNaturePr
     @Override
     public Expression[] getExpressions(final EObject context) {
         final OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName, true);
-        final Organization organization = organizationFileStore.getContent();
+        Organization organization;
+        try {
+            organization = organizationFileStore.getContent();
+        } catch (ReadFileStoreException e) {
+            return new Expression[0];
+        }
         final CustomUserInfoDefinitions infoDefContainer = organization.getCustomUserInfoDefinitions();
         return getExpressions(infoDefContainer);
     }

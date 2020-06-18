@@ -34,6 +34,9 @@ public class ModelVersionValidator implements IValidator<String> {
     @Override
     public IStatus validate(String modelVersion) {
         ArtifactVersion currentVersion = new DefaultArtifactVersion(currentModelVersion);
+        if(modelVersion == null) {
+            return ValidationStatus.error(incompatibilityErrorMessage);
+        }
         ArtifactVersion version = new DefaultArtifactVersion(modelVersion);
         switch (currentVersion.compareTo(version)) {
             case 0:

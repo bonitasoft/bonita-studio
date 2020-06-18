@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -69,8 +72,13 @@ public class ProcessContentProvider implements ITreeContentProvider {
         if (element.equals(OTHER_PROCESSES)) {
             final List<Object> result = new ArrayList<Object>();
             for (final DiagramFileStore file : diagramStore.getChildren()) {
-                if (!ModelHelper.getAllItemsOfType((EObject) file.getContent(), ProcessPackage.Literals.ABSTRACT_PROCESS).isEmpty()) {
-                    result.add(file.getContent());
+                try {
+                    MainProcess mainProcess = file.getContent();
+                    if (!ModelHelper.getAllItemsOfType(mainProcess, ProcessPackage.Literals.ABSTRACT_PROCESS).isEmpty()) {
+                        result.add(mainProcess);
+                    }
+                } catch (ReadFileStoreException e) {
+                   BonitaStudioLog.warning(e.getMessage(), ConfigurationPlugin.PLUGIN_ID);
                 }
             }
             return result.toArray();

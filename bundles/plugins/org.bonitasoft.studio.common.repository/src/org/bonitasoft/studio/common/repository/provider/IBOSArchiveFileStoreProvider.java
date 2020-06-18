@@ -29,7 +29,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
  */
 public interface IBOSArchiveFileStoreProvider {
 
-    Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration);
+    Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration);
 
     default boolean distinctByConfiguration() {
         return true;
