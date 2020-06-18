@@ -74,8 +74,11 @@ import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.util.ProcessValidationStatus;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -100,6 +103,7 @@ public class DeployArtifactsHandler {
     private RepositoryModel repositoryModel;
     private List<IRepositoryFileStore> defaultSelection;
     private final static List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
+    private RepositoryAccessor repositoryAccessor;
 
     static {
         REPO_STORE_DEPLOY_ORDER.add("organizations");
@@ -117,6 +121,7 @@ public class DeployArtifactsHandler {
             RepositoryAccessor repositoryAccessor, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
 
+        this.repositoryAccessor = repositoryAccessor;
         progressService.busyCursorWhile(monitor -> {
             repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);
         });
@@ -231,34 +236,57 @@ public class DeployArtifactsHandler {
             Map<String, Object> deployOptions,
             MultiStatus status) {
         return monitor -> {
-            new IndexingUIDOperation().run(monitor);
-            GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
-            apiSessionOperation.run(monitor);
-            try {
-                APISession session = apiSessionOperation.getSession();
-                DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
-                        artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
-                                .map(TenantArtifact.class::cast).collect(Collectors.toList()),
-                        session, deployOptions);
-                monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
-                deployTenantResourcesOperation.run(monitor);
-                addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
-                if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
-                    ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
-                    operation.run(monitor);
-                    status.add(operation.getStatus());
+            if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
+                validateModelFileCompatibility(monitor, artifactsToDeploy, status);
+            }
+            if (status.getSeverity() != IStatus.ERROR) {
+                new IndexingUIDOperation().run(monitor);
+                GetApiSessionOperation apiSessionOperation = new GetApiSessionOperation();
+                apiSessionOperation.run(monitor);
+                try {
+                    APISession session = apiSessionOperation.getSession();
+                    DeployTenantResourcesOperation deployTenantResourcesOperation = new DeployTenantResourcesOperation(
+                            artifactsToDeploy.stream().filter(TenantArtifact.class::isInstance)
+                                    .map(TenantArtifact.class::cast).collect(Collectors.toList()),
+                            session, deployOptions);
+                    monitor.beginTask(Messages.deploy, artifactsToDeploy.size());
+                    deployTenantResourcesOperation.run(monitor);
+                    addToMultiStatus(deployTenantResourcesOperation.getStatus(), status);
+                    if ((boolean) deployOptions.get(DeployOptions.RUN_VALIDATION)) {
+                        ValidateProjectOperation operation = new ValidateProjectOperation(artifactsToDeploy);
+                        operation.run(monitor);
+                        status.add(operation.getStatus());
+                    }
+                    if (status.getSeverity() != IStatus.ERROR) {
+                        addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
+                    }
+                } finally {
+                    monitor.done();
+                    apiSessionOperation.logout();
                 }
-                if (status.getSeverity() != IStatus.ERROR) {
-                    addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
-                }
-            } finally {
-                monitor.done();
-                apiSessionOperation.logout();
             }
             if (monitor.isCanceled()) {
                 status.add(ValidationStatus.cancel(Messages.abort));
             }
         };
+    }
+
+    private void validateModelFileCompatibility(IProgressMonitor monitor, Collection<Artifact> artifactsToDeploy,
+            MultiStatus status)
+            throws InvocationTargetException, InterruptedException {
+        ModelFileCompatibilityValidator validator = new ModelFileCompatibilityValidator(
+                repositoryAccessor.getCurrentRepository());
+        validator.addResourceMarkers();
+        artifactsToDeploy.stream()
+                .filter(FileStoreArtifact.class::isInstance)
+                .map(FileStoreArtifact.class::cast)
+                .map(FileStoreArtifact::getFileStore)
+                .map(IRepositoryFileStore::getResource)
+                .map(IResource::getLocation)
+                .map(IPath::toFile)
+                .forEach(validator::addFile);
+        validator.run(monitor);
+        addToMultiStatus(validator.getStatus(), status);
     }
 
     private void addToMultiStatus(IStatus status, MultiStatus multiStatus) {
