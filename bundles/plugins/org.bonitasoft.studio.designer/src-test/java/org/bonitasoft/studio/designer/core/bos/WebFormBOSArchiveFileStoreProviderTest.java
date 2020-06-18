@@ -97,7 +97,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
 
     @Test
     public void should_contains_web_form_fileStore_according_to_process_form_mapping() throws Exception {
-        final Set<IRepositoryFileStore> fileStores = webFormArtifactsFileStoreProvider.getFileStoreForConfiguration(aProcessWithFormMappings(),
+        final Set<IRepositoryFileStore<?>> fileStores = webFormArtifactsFileStoreProvider.getFileStoreForConfiguration(aProcessWithFormMappings(),
                 aConfiguration().build());
 
         assertThat(fileStores).contains(processFormFileStore, taskFormFileStore, customWidgetFileStore, fragmentFileStore);
@@ -105,7 +105,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
 
     @Test
     public void should_not_contains_fileStore_if_file_does_not_exists() throws Exception {
-        final Set<IRepositoryFileStore> fileStores = webFormArtifactsFileStoreProvider.getFileStoreForConfiguration(aProcessWithInvalidFormMappings(),
+        final Set<IRepositoryFileStore<?>> fileStores = webFormArtifactsFileStoreProvider.getFileStoreForConfiguration(aProcessWithInvalidFormMappings(),
                 aConfiguration().build());
 
         assertThat(fileStores).isEmpty();

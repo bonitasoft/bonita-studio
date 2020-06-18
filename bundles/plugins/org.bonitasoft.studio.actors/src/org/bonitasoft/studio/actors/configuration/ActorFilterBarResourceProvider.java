@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.configuration.ConnectorBarResourceProvider;
@@ -74,7 +75,7 @@ public class ActorFilterBarResourceProvider extends ConnectorBarResourceProvider
      */
     @Override
     protected void addImplementation(BusinessArchiveBuilder builder, String connectorImplementationFilename, EMFFileStore implementationFileStore,
-            Configuration configuration) throws IOException {
+            Configuration configuration) throws IOException, ReadFileStoreException {
         builder.addUserFilters(newBarResource(connectorImplementationFilename, implementationFileStore, configuration));
     }
 

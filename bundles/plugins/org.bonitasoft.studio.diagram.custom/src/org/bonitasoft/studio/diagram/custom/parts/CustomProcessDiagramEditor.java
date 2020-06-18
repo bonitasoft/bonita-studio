@@ -11,6 +11,7 @@ package org.bonitasoft.studio.diagram.custom.parts;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.ui.property.section.control.WebPageNameResourceChangeListener;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -41,7 +42,11 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         DiagramFileStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(input.getName(), true);
         if (store != null) {
-            webPageNameResourceChangeListener.setMainProcess(store.getContent());
+            try {
+                webPageNameResourceChangeListener.setMainProcess(store.getContent());
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), Activator.PLUGIN_ID);
+            }
             repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
         }
     }
@@ -68,7 +73,11 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
                 .getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(processName, true);
         if (fileStore != null && webPageNameResourceChangeListener != null) {
-            webPageNameResourceChangeListener.setMainProcess(fileStore.getContent());
+            try {
+                webPageNameResourceChangeListener.setMainProcess(fileStore.getContent());
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), Activator.PLUGIN_ID);
+            }
         }
     }
 

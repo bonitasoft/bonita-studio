@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -242,13 +244,19 @@ public class GroovyViewer implements IDocumentListener {
                 final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance()
                         .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
                 final ProcessConfigurationFileStore fileStore = store
-                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
+                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT,
+                                true);
                 if (fileStore != null) {
-                    final Configuration c = fileStore.getContent();
-                    for (final Parameter p : c.getParameters()) {
-                        if (p.getName().equals(v.getName())) {
-                            v.setDefaultValue(p.getValue());
+                    Configuration c;
+                    try {
+                        c = fileStore.getContent();
+                        for (final Parameter p : c.getParameters()) {
+                            if (p.getName().equals(v.getName())) {
+                                v.setDefaultValue(p.getValue());
+                            }
                         }
+                    } catch (ReadFileStoreException e1) {
+                        BonitaStudioLog.warning(e1.getMessage(), Activator.PLUGIN_ID);
                     }
                 }
             }

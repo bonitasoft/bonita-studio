@@ -22,8 +22,10 @@ import java.util.Set;
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
@@ -105,8 +107,13 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     protected ActorFilterDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final ActorFilterDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
-            reloadCategories(definition.getContent(), resourceProvider);
+            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,
+                    getBundle());
+            try {
+                reloadCategories(definition.getContent(), resourceProvider);
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            }
         }
         return definition;
     }
@@ -128,16 +135,17 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
         super.migrate(monitor);
-        if(PlatformUI.isWorkbenchRunning()) {
+        if (PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }
     }
-    
+
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if(filename != null & filename.endsWith("." + DEF_EXT)) {
-            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE, 
-                    Messages.incompatibleActorFilterDefinitionModel)).validate(inputStream);
+        if (filename != null & filename.endsWith("." + DEF_EXT)) {
+            return new XMLModelCompatibilityValidator(
+                    new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE,
+                            Messages.incompatibleActorFilterDefinitionModel)).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

@@ -25,9 +25,11 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.providers.CustomProcessViewProvider;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
@@ -107,7 +109,8 @@ public class NewDiagramFactory {
         monitor.worked(1);
 
         final View laneCompartmentView = (View) laneNode.getPersistedChildren().get(1);
-        final Node stepShape = processViewProvider.createTask_3005(domainElements.get(Task.class), laneCompartmentView, -1,
+        final Node stepShape = processViewProvider.createTask_3005(domainElements.get(Task.class), laneCompartmentView,
+                -1,
                 true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         final Bounds taskLayoutConstraint = (Bounds) stepShape.getLayoutConstraint();
@@ -169,7 +172,8 @@ public class NewDiagramFactory {
         final String processUUID = ModelHelper.getEObjectID(pool);
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
                 ProcessConfigurationRepositoryStore.class);
-        final IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID + ".conf");
+        final ProcessConfigurationFileStore confFile = processConfStore
+                .createRepositoryFileStore(processUUID + ".conf");
         final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
         conf.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         createDefaultActorMapping(conf);
@@ -228,8 +232,12 @@ public class NewDiagramFactory {
     private List<AbstractProcess> getAllProcess(final DiagramRepositoryStore diagramStore) {
         final List<AbstractProcess> l = new ArrayList<>();
         for (final DiagramFileStore diagramFileStore : diagramStore.getChildren()) {
-            final MainProcess m = diagramFileStore.getContent();
-            l.addAll(ModelHelper.getAllProcesses(m));
+            try {
+                MainProcess m = diagramFileStore.getContent();
+                l.addAll(ModelHelper.getAllProcesses(m));
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(diagramFileStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
+            }
         }
         return l;
     }
@@ -260,7 +268,8 @@ public class NewDiagramFactory {
             final IProgressMonitor monitor) {
         final Map<Class<?>, EObject> domainElements = new HashMap<>();
         final String diagramName = NamingUtils
-                .convertToValidURI(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
+                .convertToValidURI(
+                        org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
         final MainProcess mainProcess = processFactory.createMainProcess();
         mainProcess.setName(diagramName);
         mainProcess.setVersion(BASE_VERSION);

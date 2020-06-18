@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.actors.ui.handler;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplFileStore;
 import org.bonitasoft.studio.actors.ui.wizard.ExportActorFilterWizard;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -41,7 +44,14 @@ public class ExportSingleActorFilterHandler extends AbstractHandler {
                 .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
                 .filter(ActorFilterImplFileStore.class::isInstance)
                 .map(ActorFilterImplFileStore.class::cast)
-                .map(ActorFilterImplFileStore::getContent)
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+                        return null;
+                    }
+                })
                 .ifPresent(impl -> {
                     WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),
                             new ExportActorFilterWizard(impl));

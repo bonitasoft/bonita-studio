@@ -40,10 +40,10 @@ public class ExportApplicationHandler extends AbstractHandler {
                 .open(activeShell, Messages.export);
     }
 
-    private WizardBuilder<IRepositoryFileStore> createWizard(WizardBuilder<IRepositoryFileStore> builder,
+    private WizardBuilder<IRepositoryFileStore<?>> createWizard(WizardBuilder<IRepositoryFileStore<?>> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
         final SelectionSinglePage<ApplicationRepositoryStore> exportApplicationDescriptorPage = new SelectionSinglePage<>(
-                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class), new ApplicationFileStoreLabelProvider());
         ExportApplicationFileAction exportApplicationFileAction = new ExportApplicationFileAction();
         return builder.withTitle(Messages.exportApplicationDescriptor)
                 .havingPage(newPage()

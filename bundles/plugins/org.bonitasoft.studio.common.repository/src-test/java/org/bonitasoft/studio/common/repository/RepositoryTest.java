@@ -116,8 +116,8 @@ public class RepositoryTest {
         when(workspace.getRoot()).thenReturn(root);
         when(resource2.getWorkspace()).thenReturn(workspace);
 
-        IRepositoryStore<IRepositoryFileStore> repositoryStore1 = mock(IRepositoryStore.class);
-        IRepositoryStore<IRepositoryFileStore> repositoryStore2 = mock(IRepositoryStore.class);
+        IRepositoryStore repositoryStore1 = mock(IRepositoryStore.class);
+        IRepositoryStore repositoryStore2 = mock(IRepositoryStore.class);
         IFolder container1 = mock(IFolder.class);
         IFolder container2 = mock(IFolder.class);
         when(repositoryStore1.getResource()).thenReturn(container1);

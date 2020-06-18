@@ -19,6 +19,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.model.OverwriteImportBdmModel;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
@@ -115,7 +116,7 @@ public class SmartImportBdmPageTest {
         return page;
     }
 
-    private RepositoryAccessor createRepositoryAccessor(BusinessObjectModel existingBdm) {
+    private RepositoryAccessor createRepositoryAccessor(BusinessObjectModel existingBdm) throws ReadFileStoreException {
         BusinessObjectModelFileStore fileStore = mock(BusinessObjectModelFileStore.class);
         when(fileStore.getContent()).thenReturn(existingBdm);
         when(fileStore.getAdapter(BusinessObjectModelFileStore.class)).thenReturn(fileStore);

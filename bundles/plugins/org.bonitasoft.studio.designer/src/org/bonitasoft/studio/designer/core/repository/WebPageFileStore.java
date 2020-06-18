@@ -104,7 +104,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
     }
 
     @Override
-    public Set<IRepositoryFileStore> getRelatedFileStore() {
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
         if (PlatformUtil.isHeadless() || !UIDesignerServerManager.getInstance().isStarted()) {
             return super.getRelatedFileStore();
         }

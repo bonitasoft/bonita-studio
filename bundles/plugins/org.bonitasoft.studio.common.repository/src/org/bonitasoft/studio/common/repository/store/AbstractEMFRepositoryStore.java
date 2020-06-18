@@ -32,7 +32,6 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -58,9 +57,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
-        extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
-
+public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
+        extends AbstractRepositoryStore<T> {
 
     private AdapterFactoryLabelProvider labelProvider;
 

@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -76,7 +77,11 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
             }
         }
         diagramFileStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion), true);
-        diagram = diagramFileStore.getContent();
+        try {
+            diagram = diagramFileStore.getContent();
+        } catch (ReadFileStoreException e) {
+            return ;
+        }
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagram);
 
         CompoundCommand compoundCommand = new CompoundCommand();

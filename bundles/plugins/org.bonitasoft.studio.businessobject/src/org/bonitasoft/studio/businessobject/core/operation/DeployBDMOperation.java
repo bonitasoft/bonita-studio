@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -136,7 +137,12 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             monitor = Repository.NULL_PROGRESS_MONITOR;
         }
 
-        final BusinessObjectModel bom = fileStore.getContent();
+        BusinessObjectModel bom;
+        try {
+            bom = fileStore.getContent();
+        } catch (ReadFileStoreException e2) {
+           throw new InvocationTargetException(e2);
+        }
         final String progressMessage = progressMessage(bom);
         monitor.beginTask(progressMessage, IProgressMonitor.UNKNOWN);
         BonitaStudioLog.debug(progressMessage, BusinessObjectPlugin.PLUGIN_ID);

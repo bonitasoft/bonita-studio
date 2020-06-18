@@ -58,12 +58,12 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author Romain Bioteau
  */
-public class SourceFileStore extends AbstractFileStore {
+public class SourceFileStore extends AbstractFileStore<InputStream> {
 
     private String qualifiedClassName;
     private IEditorPart editorPart;
 
-    public SourceFileStore(final String qualifiedClassName, final IRepositoryStore<?> parentStore) {
+    public SourceFileStore(final String qualifiedClassName, final IRepositoryStore parentStore) {
         super("", parentStore);
         this.qualifiedClassName = qualifiedClassName;
     }
@@ -92,12 +92,8 @@ public class SourceFileStore extends AbstractFileStore {
         return Pics.getImage("java.gif", CommonRepositoryPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public InputStream getContent() {
+    protected InputStream doGetContent() {
         try {
             return getResource().getContents();
         } catch (final CoreException e) {
@@ -105,11 +101,7 @@ public class SourceFileStore extends AbstractFileStore {
         }
         return null;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
-     */
+   
     @Override
     public IFile getResource() {
         final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();

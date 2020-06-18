@@ -38,8 +38,8 @@ public class DocumentFilseStoreProvider implements IBOSArchiveFileStoreProvider 
      * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
-        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
         if(process instanceof Pool){
             for(final Document doc :  ((Pool) process).getDocuments()){

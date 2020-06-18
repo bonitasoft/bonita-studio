@@ -16,6 +16,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel.ConflictResult;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
 import org.bonitasoft.studio.model.businessObject.FieldBuilder.SimpleFieldBuilder;
@@ -285,7 +286,7 @@ public class SmartImportBdmModelTest {
     }
 
     @Test
-    public void should_update_package_model_according_to_import_action() {
+    public void should_update_package_model_according_to_import_action() throws ReadFileStoreException {
         BusinessObjectModel existingBdm = new BusinessObjectModel();
         BusinessObject bo1 = BusinessObjectBuilder.aBO(String.format("%s.%s", IMPORTED_PACKAGE_1, IMPORTED_BO_1))
                 .withField(SimpleFieldBuilder.aStringField("otherField").build())

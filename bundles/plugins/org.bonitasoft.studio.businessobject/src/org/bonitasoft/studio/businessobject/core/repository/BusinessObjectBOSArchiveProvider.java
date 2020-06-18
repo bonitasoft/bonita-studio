@@ -33,9 +33,9 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 public class BusinessObjectBOSArchiveProvider implements IBOSArchiveFileStoreProvider {
 
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process,
             final Configuration configuration) {
-        final Set<IRepositoryFileStore> result = new HashSet<>();
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         final List<BusinessObjectData> allBusinessObjectData = ModelHelper.getAllItemsOfType(process,
                 ProcessPackage.Literals.BUSINESS_OBJECT_DATA);
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectDefinitionStore();

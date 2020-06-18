@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -183,7 +184,7 @@ public class TestMessageRefactoring {
                 .get();
     }
 
-    private void openDiagrams() {
+    private void openDiagrams() throws ReadFileStoreException {
         DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore diagram1 = diagramRepositoryStore.getDiagram(DIAGRAM_1_NAME, DIAGRAMS_VERSION);
         DiagramFileStore diagram2 = diagramRepositoryStore.getDiagram(DIAGRAM_2_NAME, DIAGRAMS_VERSION);

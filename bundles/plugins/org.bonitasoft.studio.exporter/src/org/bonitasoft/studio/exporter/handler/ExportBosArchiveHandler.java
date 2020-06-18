@@ -132,7 +132,11 @@ public class ExportBosArchiveHandler {
         DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(diagramToExport, true);
         if (fileStore != null) {
-            return fileStore.getContent();
+            try {
+                return fileStore.getContent();
+            } catch (ReadFileStoreException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
         }
         throw new IllegalArgumentException(String.format("The diagram '%s' doesn't exist", diagramToExport));
     }

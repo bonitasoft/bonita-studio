@@ -66,7 +66,7 @@ import com.google.common.base.Function;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> implements IRepositoryStore<T> {
+public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>> implements IRepositoryStore<T> {
 
     private static final String CLASS = "class";
     public static final IValidator<InputStream> DEFAULT_MODEL_VALIDATOR = is -> ValidationStatus.ok();
@@ -179,11 +179,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
     }
 
     @Override
-    public final T importIResource(final String fileName, final IResource resource) {
-        return doImportIResource(fileName, handlePreImport(fileName, resource));
-    }
-
-    @Override
     public T importArchiveData(String folderName, List<ImportArchiveData> importArchiveData, IProgressMonitor monitor)
             throws CoreException {
         importArchiveData.stream().forEach(data -> {
@@ -210,29 +205,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         } else {
             FileActionDialog.setNoToAll();
         }
-    }
-
-    protected T doImportIResource(final String fileName, final IResource resource) {
-        try {
-            if (resource instanceof IFile) {
-                return importInputStream(fileName, ((IFile) resource).getContents());
-            } else if (resource instanceof IFolder) {
-                final IPath path = getResource().getFullPath().append(fileName);
-                final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-                final IFolder targetFolder = root.getFolder(path);
-                if (targetFolder.exists()) {
-                    if (FileActionDialog.overwriteQuestion(fileName)) {
-                        targetFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                    } else {
-                        return createRepositoryFileStore(fileName);
-                    }
-                }
-                resource.copy(getResource().getFullPath().append(fileName), true, Repository.NULL_PROGRESS_MONITOR);
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-        return createRepositoryFileStore(fileName);
     }
 
     protected T doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)

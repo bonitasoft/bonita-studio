@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -135,7 +134,6 @@ public class DeleteHandler extends AbstractHandler {
         final MainProcess diagram = ModelHelper.getMainProcess(flow);
         Assert.isNotNull(diagram);
         final AbstractCatchMessageEvent catchEvent = flow.getTarget();
-        final ThrowMessageEvent thowEvent = flow.getSource();
         final EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(diagram);
         Assert.isNotNull(domain);
         final CompoundCommand cc = new CompoundCommand();

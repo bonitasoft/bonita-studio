@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Shell;
 public class DeleteApplicationHandler extends DeleteFileHandler {
 
     @Override
-    protected WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
+    protected WizardBuilder<Stream<IRepositoryFileStore<?>>> createWizard(WizardBuilder<Stream<IRepositoryFileStore<?>>> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
         SelectionMultiPage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionMultiPage<>(
-                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class), new ApplicationFileStoreLabelProvider());
         return builder.withTitle(Messages.deleteExistingApplication)
                 .havingPage(newPage()
                         .withTitle(Messages.deleteExistingApplication)

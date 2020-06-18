@@ -30,11 +30,14 @@ import org.apache.commons.io.FileUtils;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableModel;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
@@ -89,7 +92,12 @@ public class SmartImportBdmModel extends SmartImportableModel {
         if (current != null) {
             BusinessObjectModelFileStore currentFileStore = current.getAdapter(BusinessObjectModelFileStore.class);
             if (currentFileStore != null) {
-                return currentFileStore.getContent();
+                try {
+                    return currentFileStore.getContent();
+                } catch (ReadFileStoreException e) {
+                    BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+                  return null;
+                }
             }
         }
         return null;

@@ -49,6 +49,7 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
@@ -77,8 +78,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
-        extends AbstractRepositoryStore<AbstractBDMFileStore>
+public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?>>
+        extends AbstractRepositoryStore<AbstractBDMFileStore<?>>
         implements IBonitaProjectListener {
 
     private static final String STORE_NAME = "bdm";
@@ -106,7 +107,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public AbstractBDMFileStore createRepositoryFileStore(final String fileName) {
+    public AbstractBDMFileStore<?> createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
     }
 
@@ -181,7 +182,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
                 model = converter.unmarshall(bytes);
                 fStore.save(model);
             }
-        } catch (JAXBException | IOException | SAXException e) {
+        } catch (JAXBException | IOException | SAXException | ReadFileStoreException e) {
             BonitaStudioLog.error("Failed to perform namespace migration on Business data model", e);
         }
     }

@@ -71,7 +71,7 @@ public class DeployApplicationAction {
 
     private WizardBuilder<ApplicationNodeContainer> createWizard(WizardBuilder<ApplicationNodeContainer> builder) {
         SelectionSinglePage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionSinglePage<>(
-                repositoryAccessor, ApplicationRepositoryStore.class, new DeployApplicationFileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class), new DeployApplicationFileStoreLabelProvider());
         selectApplicationDescriptorPage.addUnselectableElements(getUnparsableFiles());
         return builder.withTitle(Messages.deployExistingApplication)
                 .havingPage(newPage()

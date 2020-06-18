@@ -40,10 +40,10 @@ public class OpenApplicationHandler {
                 .ifPresent(selection -> selection.forEach(IRepositoryFileStore::open));
     }
 
-    private WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
+    private WizardBuilder<Stream<IRepositoryFileStore<?>>> createWizard(WizardBuilder<Stream<IRepositoryFileStore<?>>> builder,
             RepositoryAccessor repositoryAccessor) {
         SelectionRenamePage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionRenamePage<>(
-                repositoryAccessor, ApplicationRepositoryStore.class, new ApplicationFileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class), new ApplicationFileStoreLabelProvider());
         return builder.withTitle(Messages.openExistingApplication)
                 .havingPage(newPage()
                         .withTitle(Messages.openExistingApplication)

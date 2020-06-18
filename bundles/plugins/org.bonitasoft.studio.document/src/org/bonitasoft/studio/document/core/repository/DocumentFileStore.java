@@ -16,9 +16,11 @@
  */
 package org.bonitasoft.studio.document.core.repository;
 
+import java.io.InputStream;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
@@ -31,7 +33,7 @@ import org.eclipse.ui.ide.IDE;
  * @author Romain Bioteau
  *
  */
-public class DocumentFileStore extends AbstractFileStore implements IRepositoryFileStore {
+public class DocumentFileStore extends AbstractFileStore<InputStream> {
 
 
     public DocumentFileStore(String fileName, DocumentRepositoryStore parentStore){
@@ -55,12 +57,8 @@ public class DocumentFileStore extends AbstractFileStore implements IRepositoryF
         return null;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public Object getContent() {
+    protected InputStream doGetContent() throws ReadFileStoreException {
         try {
             return getResource().getContents() ;
         } catch (CoreException e) {

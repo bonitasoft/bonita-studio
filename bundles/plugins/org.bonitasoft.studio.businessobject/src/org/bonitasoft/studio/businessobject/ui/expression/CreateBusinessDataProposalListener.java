@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.expression;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -22,7 +23,9 @@ import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizar
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -147,8 +150,13 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
                 .getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore child = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (child != null) {
-            final BusinessObjectModel content = child.getContent();
-            return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+            BusinessObjectModel content;
+            try {
+                content = child.getContent();
+                return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+            } catch (ReadFileStoreException e) {
+              BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            }
         }
         return Object.class.getName().equals(returnType);
 

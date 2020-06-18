@@ -19,11 +19,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class IResourceFakesBuilder<T extends IResource> {
 
@@ -65,6 +69,24 @@ public class IResourceFakesBuilder<T extends IResource> {
         }
         try {
             doReturn(resourceAsStream).when((IFile) resourceFake).getContents();
+        } catch (final CoreException e) {
+            return (IResourceFakesBuilder<IFile>) this;
+        }
+        return (IResourceFakesBuilder<IFile>) this;
+    }
+    
+    public IResourceFakesBuilder<IFile> withContentSupplier(Supplier<InputStream> inputStreamSupplier) {
+        if (!(resourceFake instanceof IFile)) {
+            throw new IllegalAccessError("Only IFile can have a content..");
+        }
+        try {
+            Mockito.when(((IFile) resourceFake).getContents()).thenAnswer(new Answer<InputStream>() {
+
+                @Override
+                public InputStream answer(InvocationOnMock invocation) throws Throwable {
+                    return inputStreamSupplier.get();
+                }
+            });
         } catch (final CoreException e) {
             return (IResourceFakesBuilder<IFile>) this;
         }
