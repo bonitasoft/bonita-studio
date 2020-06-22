@@ -377,7 +377,6 @@
 											value="${product.short.name}-${product.version}-x86_64.run" />
 										<property name="updated.project.file"
 											value="${basedir}/installer/installer_project_linux_x86_64.xml" />
-										<property name="jre.osx.archive.name" value="${jre.osx.url}.tar.gz" />
 										<property name="jre.folder.name" value="${jre.folder.name}" />
 										<ant antfile="createInstallerProject.xml" />
 									</target>
@@ -402,6 +401,7 @@
 										<property file="installer/installer.properties" />
 										<property name="installer.name"
 											value="${product.short.name}-${product.version}.app" />
+										<property name="jre.osx.archive.name" value="${jre.osx.url}.tar.gz" />
 										<property name="updated.project.file"
 											value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
 										<ant antfile="createInstallerProject.xml" />
