@@ -15126,5 +15126,8 @@
       </operation>
     </changes>
   </releases>
+  <releases xmi:id="_ULmOgLX-Eeq4FY7VcpLJTw" date="2020-06-23T11:25:27.494+0200" label="7.11.1-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_bGouALX-Eeq4FY7VcpLJTw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateLDAPConnectorVersionTo110"/>
+  </releases>
   <releases xmi:id="_tt2RcE8LEeq0LYHRol2p7w"/>
 </history:History>
