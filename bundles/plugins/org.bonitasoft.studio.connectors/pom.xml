@@ -21,7 +21,7 @@
         <connector.version.database>2.0.1</connector.version.database>
         <connector.version.email>1.2.2</connector.version.email>
         <connector.version.google-calendar-v3>1.0.0</connector.version.google-calendar-v3>
-        <connector.version.ldap>1.1.0</connector.version.ldap>
+        <connector.version.ldap>1.2.0</connector.version.ldap>
         <connector.version.salesforce>1.1.2</connector.version.salesforce>
         <connector.version.scripting>1.1.0</connector.version.scripting>
         <connector.version.twitter>1.2.0</connector.version.twitter>
