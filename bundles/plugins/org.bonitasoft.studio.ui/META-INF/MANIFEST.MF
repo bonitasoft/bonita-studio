@@ -1,11 +1,32 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Toolkit Plug In
-Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.ui;singleton:=true
 Bundle-Version: 7.12.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.ui.UIPlugin
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.ui.contribution,
+ org.bonitasoft.studio.ui.converter,
+ org.bonitasoft.studio.ui.databinding,
+ org.bonitasoft.studio.ui.dialog,
+ org.bonitasoft.studio.ui.editors,
+ org.bonitasoft.studio.ui.editors.contribution,
+ org.bonitasoft.studio.ui.editors.core,
+ org.bonitasoft.studio.ui.editors.xmlEditors,
+ org.bonitasoft.studio.ui.handler,
+ org.bonitasoft.studio.ui.i18n,
+ org.bonitasoft.studio.ui.notification,
+ org.bonitasoft.studio.ui.page,
+ org.bonitasoft.studio.ui.provider,
+ org.bonitasoft.studio.ui.styler,
+ org.bonitasoft.studio.ui.util,
+ org.bonitasoft.studio.ui.validator,
+ org.bonitasoft.studio.ui.viewer,
+ org.bonitasoft.studio.ui.widget,
+ org.bonitasoft.studio.ui.wizard,
+ org.bonitasoft.studio.ui.wizard.listener
 Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.eclipse.core.runtime;bundle-version="3.10.0",
  org.eclipse.core.databinding;bundle-version="1.4.2",
@@ -45,28 +66,7 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.10.1",
  org.eclipse.mylyn.commons.ui,
  org.bonitasoft.studio.preferences;bundle-version="7.11.0",
  org.bonitasoft.studio.pics;bundle-version="7.11.0"
-Export-Package: org.bonitasoft.studio.ui,
- org.bonitasoft.studio.ui.contribution,
- org.bonitasoft.studio.ui.converter,
- org.bonitasoft.studio.ui.databinding,
- org.bonitasoft.studio.ui.dialog,
- org.bonitasoft.studio.ui.editors,
- org.bonitasoft.studio.ui.editors.contribution,
- org.bonitasoft.studio.ui.editors.core,
- org.bonitasoft.studio.ui.editors.xmlEditors,
- org.bonitasoft.studio.ui.handler,
- org.bonitasoft.studio.ui.i18n,
- org.bonitasoft.studio.ui.notification,
- org.bonitasoft.studio.ui.page,
- org.bonitasoft.studio.ui.provider,
- org.bonitasoft.studio.ui.styler,
- org.bonitasoft.studio.ui.util,
- org.bonitasoft.studio.ui.validator,
- org.bonitasoft.studio.ui.viewer,
- org.bonitasoft.studio.ui.widget,
- org.bonitasoft.studio.ui.wizard,
- org.bonitasoft.studio.ui.wizard.listener
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.bonitasoft.studio.ui.UIPlugin
 Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.engine.api.result

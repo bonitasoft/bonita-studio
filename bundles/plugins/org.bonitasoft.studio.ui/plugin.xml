@@ -17,4 +17,13 @@
             productId="org.bonitasoft.studioEx.product">
       </statusHandlerProductBinding>
    </extension>
+   <extension
+         id="org.bonitasoft.studio.ui.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi"
+            apply="always">
+      </fragment>
+   </extension>
+
 </plugin>
