@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.diagram.custom.parts;
@@ -38,7 +35,6 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class CustomCallActivity2EditPart extends CallActivity2EditPart {
 
@@ -46,24 +42,27 @@ public class CustomCallActivity2EditPart extends CallActivity2EditPart {
         super(view);
     }
 
-
     @Override
     protected NodeFigure createNodePlate() {
-        DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.ACTIVITY_WIDTH, FiguresHelper.ACTIVITY_HEIGHT);
+        DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.ACTIVITY_WIDTH,
+                FiguresHelper.ACTIVITY_HEIGHT);
         return result;
     }
 
     @Override
     protected void setBackgroundColor(Color color) {
         if (primaryShape != null) {
-            ((CustomSVGFigure)primaryShape).setColor(ColorRegistry.getInstance().getColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),color);
+            ((CustomSVGFigure) primaryShape).setColor(ColorRegistry.getInstance().getColor(
+                    ((LineStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),
+                    color);
         }
     }
 
     @Override
     protected void setForegroundColor(Color color) {
         if (primaryShape != null) {
-            ((CustomSVGFigure)primaryShape).setColor(color,ColorRegistry.getInstance().getColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
+            ((CustomSVGFigure) primaryShape).setColor(color, ColorRegistry.getInstance().getColor(
+                    ((FillStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
         }
     }
 
@@ -73,7 +72,7 @@ public class CustomCallActivity2EditPart extends CallActivity2EditPart {
         if (preferenceStore instanceof IPreferenceStore) {
             if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
 
-                return FigureUtilities.RGBToInteger(new RGB(44,109,163));
+                return FigureUtilities.RGBToInteger(new RGB(44, 109, 163));
 
             } else if (feature == NotationPackage.eINSTANCE
                     .getFontStyle_FontColor()) {
@@ -85,7 +84,7 @@ public class CustomCallActivity2EditPart extends CallActivity2EditPart {
             } else if (feature == NotationPackage.eINSTANCE
                     .getFillStyle_FillColor()) {
 
-                return FigureUtilities.RGBToInteger(new RGB(184,185,218));
+                return FigureUtilities.RGBToInteger(new RGB(184, 185, 218));
 
             }
         }

@@ -128,18 +128,17 @@ public class SmartImportBdmPage extends AbstractImportPage {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createHeader(composite);
-        
-        
+
         Composite viewerComposite = new Composite(composite, SWT.None);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        
+
         CLabel previewDescLabel = new CLabel(viewerComposite, SWT.None);
         previewDescLabel.setLayoutData(GridDataFactory.fillDefaults().create());
         Image icon = JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
         previewDescLabel.setImage(icon);
         previewDescLabel.setText(Messages.previewDesc);
-        
+
         createMergeViewer(viewerComposite);
 
         return composite;
@@ -147,7 +146,8 @@ public class SmartImportBdmPage extends AbstractImportPage {
 
     private void createHeader(Composite parent) {
         Group composite = new Group(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).extendedMargins(0, 0, -5, 0).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2)
+                .extendedMargins(0, 0, -5, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         CLabel warning = new CLabel(composite, SWT.WRAP);
@@ -281,11 +281,14 @@ public class SmartImportBdmPage extends AbstractImportPage {
     private StyledString styledStringProvider(SmartImportableUnit element) {
         initStylers();
         if (isConflicting(element)) {
-            if(element instanceof SmartImportBusinessObjectModel ) {
-                if(!Objects.equals(((SmartImportBusinessObjectModel) element).getBusinessObject().getQualifiedName(),element.getConflictingObjectName())){
-                    return new StyledString(String.format(Messages.objectAlreadyExistsInAnotherPackage, element.getName(), NamingUtils.getPackageName(element.getConflictingObjectName())), conflictingStyler);
-                }else {
-                    return new StyledString(String.format(Messages.conflictingWithSameObject, element.getName()), conflictingStyler);
+            if (element instanceof SmartImportBusinessObjectModel) {
+                if (!Objects.equals(((SmartImportBusinessObjectModel) element).getBusinessObject().getQualifiedName(),
+                        element.getConflictingObjectName())) {
+                    return new StyledString(String.format(Messages.objectAlreadyExistsInAnotherPackage, element.getName(),
+                            NamingUtils.getPackageName(element.getConflictingObjectName())), conflictingStyler);
+                } else {
+                    return new StyledString(String.format(Messages.conflictingWithSameObject, element.getName()),
+                            conflictingStyler);
                 }
             }
             return new StyledString(element.getName(), conflictingStyler);

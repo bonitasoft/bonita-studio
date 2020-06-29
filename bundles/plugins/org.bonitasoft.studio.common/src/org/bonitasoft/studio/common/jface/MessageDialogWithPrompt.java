@@ -293,6 +293,7 @@ public class MessageDialogWithPrompt extends MessageDialogWithToggle {
                     Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX | Section.CLIENT_INDENT);
             section.setText(Messages.moreDetails);
             section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            section.setBackground(parent.getBackground());
 
             Composite client = new Composite(section, SWT.NONE);
             client.setLayoutData(GridDataFactory.fillDefaults().create());

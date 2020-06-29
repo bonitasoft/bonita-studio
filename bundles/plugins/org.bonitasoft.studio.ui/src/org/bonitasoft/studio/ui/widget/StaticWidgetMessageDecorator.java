@@ -28,6 +28,7 @@ public class StaticWidgetMessageDecorator extends WidgetMessageDecorator {
         this.composite = new Composite(parent, SWT.NONE);
         this.composite.setLayout(GridLayoutFactory.fillDefaults().create());
         this.composite.setLayoutData(GridDataFactory.fillDefaults().create());
+        this.composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
     }
 
     @Override

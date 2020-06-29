@@ -22,12 +22,14 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler;
 import org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -49,7 +51,10 @@ public class DeployContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.deploy);
         item.setToolTipText(Messages.deploy);
-        item.setImage(BusinessObjectPlugin.getImage("icons/deploy16.png"));
+        Image image = PreferenceUtil.isDarkTheme()
+                ? BusinessObjectPlugin.getImage("icons/deploy16_dark.png")
+                : BusinessObjectPlugin.getImage("icons/deploy16.png");
+        item.setImage(image);
         item.addListener(SWT.Selection, event -> deploy(false));
         item.setEnabled(isEnabled());
     }

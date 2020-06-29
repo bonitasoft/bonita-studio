@@ -186,7 +186,6 @@ public class AttributeEditionControl extends Composite {
         ColumnViewerToolTipSupport.enableFor(viewer);
         viewer.setUseHashlookup(true);
         viewer.getTable().setHeaderVisible(true);
-        viewer.getTable().setLinesVisible(true);
         viewer.addFilter(new SearchFilter<>(fieldToFilter));
 
         TableLayout layout = new TableLayout();

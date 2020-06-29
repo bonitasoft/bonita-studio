@@ -16,6 +16,7 @@ package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.VerticalLabel;
+import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.eclipse.draw2d.ColorConstants;
@@ -39,6 +40,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -68,9 +70,10 @@ public class CustomPoolEditPart extends PoolEditPart {
 
     public static int getDefaultWidth() {
         int width = 0;
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null 
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                 && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != null) {
-            width = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width - CONSTANT_RIGHT_MARGIN;
+            width = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getClientArea().width
+                    - CONSTANT_RIGHT_MARGIN;
         }
         return Math.max(MIN_POOL_WIDTH, width);
     }
@@ -185,11 +188,11 @@ public class CustomPoolEditPart extends PoolEditPart {
         figure.setUseLocalCoordinates(true);
         return primaryShape = figure;
     }
-    
+
     @Override
     protected NodeFigure createNodePlate() {
-         NodeFigure nodeFigure = new DefaultSizeNodeFigure(new Dimension(-1, 100));
-         nodeFigure.setMinimumSize(new Dimension(-1, 100));
+        NodeFigure nodeFigure = new DefaultSizeNodeFigure(new Dimension(-1, 100));
+        nodeFigure.setMinimumSize(new Dimension(-1, 100));
         return nodeFigure;
     }
 
@@ -230,7 +233,7 @@ public class CustomPoolEditPart extends PoolEditPart {
             setLocation(new Point(20, 20));
             createContents();
         }
-        
+
         @Override
         public void validate() {
             super.validate();
@@ -412,8 +415,18 @@ public class CustomPoolEditPart extends PoolEditPart {
             final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(),
                     font).height;
             font.dispose();
-           GridData labelGridData = ((CustomPoolFigure) getContentPane()).getLabelGridData();
-           labelGridData.widthHint = height + 8;
+            GridData labelGridData = ((CustomPoolFigure) getContentPane()).getLabelGridData();
+            labelGridData.widthHint = height + 8;
+        }
+    }
+
+    @Override
+    protected void setBackgroundColor(Color color) {
+        Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
+        if (preferenceStore instanceof IPreferenceStore) {
+            super.setBackgroundColor(DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore, color));
+        } else {
+            super.setBackgroundColor(color);
         }
     }
 

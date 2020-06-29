@@ -63,7 +63,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -132,7 +131,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public Image getIcon() {
-        return Pics.getImage(PicsConstants.diagram);
+        return Pics.getImage("ProcessDiagramFile.gif", Activator.getDefault());
     }
 
     @Override

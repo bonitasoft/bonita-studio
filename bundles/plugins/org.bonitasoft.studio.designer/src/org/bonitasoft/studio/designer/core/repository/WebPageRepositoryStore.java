@@ -110,11 +110,11 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
-            if(!PageUUIDResolver.indexFile(location.toFile()).exists()) {
+            if (!PageUUIDResolver.indexFile(location.toFile()).exists()) {
                 try {
                     new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
                 } catch (InvocationTargetException | InterruptedException e) {
-                   BonitaStudioLog.error(e);
+                    BonitaStudioLog.error(e);
                 }
             }
             String id = new PageUUIDResolver(location.toFile()).resolveUUID(uuid);
@@ -159,7 +159,8 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#migrate(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#migrate(org.eclipse.core.runtime.
+     * IProgressMonitor)
      */
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {

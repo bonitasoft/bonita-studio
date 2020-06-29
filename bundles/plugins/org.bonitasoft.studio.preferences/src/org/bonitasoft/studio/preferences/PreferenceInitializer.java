@@ -49,7 +49,6 @@ import com.google.common.io.Files;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer implements BonitaPreferenceConstants {
 
-
     @Override
     public void initializeDefaultPreferences() {
         initializeWorkbenchPreferences();
@@ -67,8 +66,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.SMALL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
-        store.setDefault(DEFAULT_USERXP_THEME, "default");
-        store.setDefault(DEFAULT_APPLICATION_THEME, "Default Application");
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         store.setDefault(SHOW_LEGACY_6X_MODE, false);

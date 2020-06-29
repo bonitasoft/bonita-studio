@@ -58,10 +58,10 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
             updateWebPageChangeListener(partName);
         }
     }
-    
+
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if(getSite() == null || getSite().getPage() == null) {
+        if (getSite() == null || getSite().getPage() == null) {
             //invalid editor
             return;
         }

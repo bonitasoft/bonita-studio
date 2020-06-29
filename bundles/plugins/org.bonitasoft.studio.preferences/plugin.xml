@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
 <plugin>
-  <extension-point id="preferenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/preferenceFieldEditorContribution.exsd"/>
-  <extension-point id="preferenceInitializerExtension" name="Preference Initializer Extension" schema="schema/preferenceInitializerExtension.exsd"/>
+
+   <extension-point id="preferenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/preferenceFieldEditorContribution.exsd"/>
+   <extension-point id="preferenceInitializerExtension" name="Preference Initializer Extension" schema="schema/preferenceInitializerExtension.exsd"/>
+
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -113,14 +114,23 @@
             label="%runKeywords">
       </keyword>
    </extension>
-	<extension
-           point="org.eclipse.core.expressions.propertyTesters">
-        <propertyTester
-              class="org.bonitasoft.studio.preferences.manager.ActivityPropertyTester"
-              id="org.eclipse.ui.activityPropertyTester"
-              namespace="org.bonitasoft"
-              properties="is6XLegacyEnabled"
-              type="org.eclipse.ui.IWorkbenchWindow">
-        </propertyTester>
-     </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.bonitasoft.studio.preferences.manager.ActivityPropertyTester"
+            id="org.eclipse.ui.activityPropertyTester"
+            namespace="org.bonitasoft"
+            properties="is6XLegacyEnabled"
+            type="org.eclipse.ui.IWorkbenchWindow">
+      </propertyTester>
+   </extension>
+   <extension
+         id="org.bonitasoft.studio.preferences.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi"
+            apply="always">
+      </fragment>
+   </extension>
+
 </plugin>

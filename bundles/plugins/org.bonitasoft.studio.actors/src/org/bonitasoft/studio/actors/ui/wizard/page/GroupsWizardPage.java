@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -50,8 +51,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -128,7 +131,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
     @Override
     protected StructuredViewer createViewer(final Composite parent) {
-        final FilteredTree fileredTree = new FilteredTree(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION, new PatternFilter(), true);
+        final FilteredTree fileredTree = new FilteredTree(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION,
+                new PatternFilter(), true);
         ((Text) ((Composite) fileredTree.getChildren()[0]).getChildren()[0]).setMessage(Messages.search);
         fileredTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(200, 200).create());
         fileredTree.getViewer().setContentProvider(new GroupContentProvider());
@@ -141,7 +145,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
                 /*
                  * (non-Javadoc)
-                 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse.emf.common.notify.Notification)
+                 * @see
+                 * org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse.emf.common.notify.Notification)
                  */
                 @Override
                 public void notifyChanged(Notification notification) {
@@ -187,7 +192,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
             @Override
             public String getText(final Object element) {
-                final String displayName = ((org.bonitasoft.studio.actors.model.organization.Group) element).getDisplayName();
+                final String displayName = ((org.bonitasoft.studio.actors.model.organization.Group) element)
+                        .getDisplayName();
                 if (displayName == null || displayName.isEmpty()) {
                     return ((org.bonitasoft.studio.actors.model.organization.Group) element).getName();
                 }
@@ -215,7 +221,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
     }
 
     protected void handleGroupNameChange(final Notification notification) {
-        final org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) notification.getNotifier();
+        final org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) notification
+                .getNotifier();
         final org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group);
         final Object oldValue = notification.getOldValue();
         if (oldValue != null) {
@@ -306,7 +313,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
     }
 
-    private void updateParentPath(final org.bonitasoft.studio.actors.model.organization.Group group, final String pathToReplace, final String newPath,
+    private void updateParentPath(final org.bonitasoft.studio.actors.model.organization.Group group,
+            final String pathToReplace, final String newPath,
             final ITreeContentProvider provider) {
         if (provider.hasChildren(group)) {
             for (final Object child : provider.getChildren(group)) {
@@ -328,21 +336,33 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
     @Override
     protected void configureInfoGroup(final Group group) {
         group.setText(Messages.details);
-        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create());
 
-        createNameField(group);
+        final Composite detailsComposite = new Composite(group, SWT.NONE);
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create());
 
-        createDisplayNameField(group);
+        IViewerObservableValue<Object> selection = ViewerProperties.singleSelection().observe(getViewer());
+        context.bindValue(WidgetProperties.visible().observe(detailsComposite), new ComputedValue<Boolean>() {
 
-        createPathField(group);
+            @Override
+            protected Boolean calculate() {
+                return selection.getValue() != null;
+            }
+        });
 
-        createDescriptionField(group);
+        createNameField(detailsComposite);
+
+        createDisplayNameField(detailsComposite);
+
+        createPathField(detailsComposite);
+
+        createDescriptionField(detailsComposite);
 
         getViewer().setSelection(new StructuredSelection());
         setControlEnabled(getInfoGroup(), false);
     }
 
-    private void createDescriptionField(final Group group) {
+    private void createDescriptionField(final Composite group) {
         final Label descriptionLabel = new Label(group, SWT.NONE);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
         descriptionLabel.setText(Messages.description);
@@ -350,12 +370,13 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
         final Text groupDescriptionText = new Text(group, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         groupDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).create());
 
-        final IObservableValue groupDescriptionValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+        final IObservableValue groupDescriptionValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                groupSingleSelectionObservable,
                 OrganizationPackage.Literals.GROUP__DESCRIPTION);
         context.bindValue(SWTObservables.observeText(groupDescriptionText, SWT.Modify), groupDescriptionValue);
     }
 
-    private void createDisplayNameField(final Group group) {
+    private void createDisplayNameField(final Composite group) {
         final Label displayNameLabel = new Label(group, SWT.NONE);
         displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         displayNameLabel.setText(Messages.displayName);
@@ -364,7 +385,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
         displayNamedText.setMessage(Messages.groupNameExample);
         displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final IObservableValue displayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+        final IObservableValue displayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                groupSingleSelectionObservable,
                 OrganizationPackage.Literals.GROUP__DISPLAY_NAME);
         final Binding binding = context.bindValue(SWTObservables.observeText(displayNamedText, SWT.Modify), displayNameValue,
                 UpdateStrategyFactory.updateValueStrategy()
@@ -383,7 +405,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
     }
 
-    private void createPathField(final Group group) {
+    private void createPathField(final Composite group) {
         final Label pathLabel = new Label(group, SWT.NONE);
         pathLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         pathLabel.setText(Messages.groupPath);
@@ -396,7 +418,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
                         OrganizationPackage.Literals.GROUP__PARENT_PATH));
     }
 
-    private void createNameField(final Group group) {
+    private void createNameField(final Composite group) {
         final Label groupNameLabel = new Label(group, SWT.NONE);
         groupNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         groupNameLabel.setText(Messages.name + " *");
@@ -405,12 +427,15 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
         groupNameText.setMessage(Messages.groupIdExample);
         groupNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create());
 
-        final IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+        final IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(),
+                groupSingleSelectionObservable,
                 OrganizationPackage.Literals.GROUP__PARENT_PATH);
 
-        final GroupParentPathLengthValidator groupParentPathLengthValidator = new GroupParentPathLengthValidator(groupParentPathValue);
+        final GroupParentPathLengthValidator groupParentPathLengthValidator = new GroupParentPathLengthValidator(
+                groupParentPathValue);
         final Binding binding = context.bindValue(SWTObservables.observeText(groupNameText, SWT.Modify),
-                EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__NAME),
+                EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+                        OrganizationPackage.Literals.GROUP__NAME),
                 updateValueStrategy().withValidator(
                         multiValidator()
                                 .addValidator(mandatoryValidator(Messages.name))
@@ -486,7 +511,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
             if (parentGoup.getParentPath() == null) {
                 group.setParentPath(GroupContentProvider.GROUP_SEPARATOR + parentGoup.getName());
             } else {
-                group.setParentPath(parentGoup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR + parentGoup.getName());
+                group.setParentPath(
+                        parentGoup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR + parentGoup.getName());
             }
         }
         groupList.add(group);
@@ -511,7 +537,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
                 final ITreeContentProvider contentProvider = (ITreeContentProvider) getViewer().getContentProvider();
                 if (contentProvider.hasChildren(sel)) {
                     if (groupList.contains(sel)) {
-                        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteGroupTitle, Messages.deleteGroupMsg)) {
+                        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteGroupTitle,
+                                Messages.deleteGroupMsg)) {
                             removeChildren(contentProvider, sel);
                         } else {
                             return;

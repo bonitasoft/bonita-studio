@@ -17,25 +17,18 @@ package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Task2EditPart;
-import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
-import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -53,7 +46,8 @@ public class CustomTask2EditPart extends Task2EditPart {
     protected void setBackgroundColor(Color color) {
         if (primaryShape != null) {
             backgroundColor = ColorRegistry.getInstance()
-                    .getColor(((LineStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+                    .getColor(((LineStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle()))
+                            .getLineColor());
             ((CustomSVGFigure) primaryShape).setColor(backgroundColor, color);
         }
     }
@@ -62,7 +56,8 @@ public class CustomTask2EditPart extends Task2EditPart {
     protected void setForegroundColor(Color color) {
         if (primaryShape != null) {
             foregroundColor = ColorRegistry.getInstance()
-                    .getColor(((FillStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+                    .getColor(((FillStyle) getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle()))
+                            .getFillColor());
             ((CustomSVGFigure) primaryShape).setColor(color, foregroundColor);
         }
     }

@@ -153,8 +153,6 @@ public interface BonitaPreferenceConstants {
     public static String PREF_MARGIN_RIGHT = "print.margin.right"; //$NON-NLS-1$
     // END PRINTING PREFERENCES
 
-    public static final String DEFAULT_USERXP_THEME = "defaultUserXPTheme";
-    public static final String DEFAULT_APPLICATION_THEME = "defaultAppliXPTheme";
     public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
     public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
     public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
@@ -168,5 +166,9 @@ public interface BonitaPreferenceConstants {
     public static final String DATA_REPOSITORY_PORT = "data.repository.port";
 
     public static final String HIDE_BDM_REFACTOR_PREVIEW = "hideBdmRefactorPreview";
+
+    public static final String STUDIO_THEME_PREFERENCE = "studioThemePreference";
+    public static final String LIGHT_THEME = "org.eclipse.e4.ui.css.theme.e4_default";
+    public static final String DARK_THEME = "org.eclipse.e4.ui.css.theme.e4_dark";
 
 }

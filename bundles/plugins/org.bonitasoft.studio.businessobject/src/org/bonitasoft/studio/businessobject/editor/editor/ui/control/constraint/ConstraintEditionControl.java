@@ -232,7 +232,7 @@ public class ConstraintEditionControl {
     private void createValidationLabel(Composite client) {
         Label validationLabel = formPage.getToolkit().createLabel(client, "", SWT.WRAP);
         validationLabel.setLayoutData(GridDataFactory.fillDefaults().create());
-        validationLabel.setForeground(errorColor);
+        validationLabel.addPaintListener(e -> validationLabel.setForeground(errorColor));
 
         attributesSetObservable.addChangeListener(e -> {
             if (selectedConstraintObservable.getValue() != null) {
@@ -331,7 +331,6 @@ public class ConstraintEditionControl {
         ColumnViewerToolTipSupport.enableFor(constraintViewer);
         constraintViewer.setUseHashlookup(true);
         constraintViewer.getTable().setHeaderVisible(true);
-        constraintViewer.getTable().setLinesVisible(true);
         constraintViewer.addFilter(createSearchFilter());
 
         TableLayout layout = new TableLayout();

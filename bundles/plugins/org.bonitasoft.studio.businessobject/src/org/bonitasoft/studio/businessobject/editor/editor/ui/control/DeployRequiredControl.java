@@ -16,12 +16,14 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.control;
 
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -39,7 +41,7 @@ public class DeployRequiredControl extends Composite {
         group.setLayout(GridLayoutFactory.fillDefaults().create());
         group.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        CLabel label = new CLabel(group, SWT.WRAP);
+        CustomCLabel label = new CustomCLabel(group, SWT.WRAP);
         label.setLayoutData(GridDataFactory.fillDefaults().create());
         label.setText(Messages.bdmDeployRequired);
         label.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
@@ -67,6 +69,28 @@ public class DeployRequiredControl extends Composite {
                 getParent().layout();
             }
         });
+    }
+
+}
+
+class CustomCLabel extends CLabel {
+
+    private Color warningColor;
+
+    public CustomCLabel(Composite parent, int style) {
+        super(parent, style);
+        this.warningColor = new Color(getDisplay(), ColorConstants.WARNING_RGB);
+    }
+
+    @Override
+    public Color getForeground() {
+        return warningColor;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        warningColor.dispose();
     }
 
 }

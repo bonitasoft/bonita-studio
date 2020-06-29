@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.intro,
+ org.bonitasoft.studio.intro.configurer,
  org.bonitasoft.studio.intro.content,
  org.bonitasoft.studio.intro.content.actions,
  org.bonitasoft.studio.intro.i18n

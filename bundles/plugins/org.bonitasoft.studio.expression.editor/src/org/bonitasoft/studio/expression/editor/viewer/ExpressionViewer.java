@@ -93,6 +93,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -257,18 +258,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     protected void createControl(final Composite composite, final int style,
             final TabbedPropertySheetWidgetFactory widgetFactory) {
-        control = new Composite(composite, SWT.INHERIT_DEFAULT) {
+        control = widgetFactory != null
+                ? widgetFactory.createComposite(composite)
+                : new Composite(composite, SWT.INHERIT_DEFAULT);
+        WidgetProperties.enabled().observe(control).addValueChangeListener(e -> updateEnablement(e.diff.getNewValue()));
 
-            @Override
-            public void setEnabled(final boolean enabled) {
-                super.setEnabled(enabled);
-                updateEnablement(enabled);
-            }
-
-        };
-        if (widgetFactory != null) {
-            widgetFactory.adapt(control);
-        }
         control.addDisposeListener(disposeListener);
         control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 0).create());
         createTextControl(style, widgetFactory);

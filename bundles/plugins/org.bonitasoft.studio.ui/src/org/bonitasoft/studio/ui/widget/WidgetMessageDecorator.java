@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
@@ -35,13 +36,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class WidgetMessageDecorator {
 
-    protected final CLabel messageLabel;
+    protected final CustomCLabel messageLabel;
     private Optional<String> defaultMessage;
     private final LocalResourceManager resourceManager;
     private final Color errorColor;
     private final Color warningColor;
     private Color foregroundColor;
     protected Composite composite;
+    private IStatus currentStatus;
 
     public WidgetMessageDecorator(Composite parent, Optional<String> defaultMessage) {
         createComposite(parent);
@@ -49,17 +51,21 @@ public class WidgetMessageDecorator {
         errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
         this.defaultMessage = defaultMessage;
-        messageLabel = new CLabel(composite, SWT.NONE);
+        messageLabel = new CustomCLabel(composite, SWT.NONE);
         messageLabel.setTopMargin(1);
         messageLabel.setLeftMargin(0);
         messageLabel.setFont(getMessageFont());
         messageLabel.setText(defaultMessage.orElse(""));
-        foregroundColor = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+        foregroundColor = PreferenceUtil.isDarkTheme()
+                ? Display.getDefault().getSystemColor(SWT.COLOR_GRAY)
+                : Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+        messageLabel.setForeground(foregroundColor);
         updateExpandState();
     }
 
     protected void createComposite(Composite parent) {
         this.composite = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
+        this.composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
     }
 
     private Font getMessageFont() {
@@ -90,15 +96,19 @@ public class WidgetMessageDecorator {
         toolkit.adapt(messageLabel, true, true);
         foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
         messageLabel.setForeground(foregroundColor);
+        if (PreferenceUtil.isDarkTheme()) {
+            messageLabel.setBackground(resourceManager.createColor(ColorConstants.DARK_MODE_EDITORS_BACKGROUND));
+        }
     }
 
     public void setStatus(IStatus status) {
+        this.currentStatus = status;
         if (status == null || status.isOK()) {
             messageLabel.setText(defaultMessage.orElse(""));
         } else {
             messageLabel.setText(status.getMessage());
         }
-        messageLabel.setForeground(getStatusColor(status));
+        messageLabel.setForeground(getStatusColor(currentStatus));
         messageLabel.setImage(getStatusImage(status));
         updateExpandState();
     }
@@ -137,4 +147,18 @@ public class WidgetMessageDecorator {
     public void setLayoutData(Object layoutData) {
         composite.setLayoutData(layoutData);
     }
+}
+
+/**
+ * When using themes, CLabel background doesn't fit when used in an editor
+ * because of a 'hack' that has been implemented in the eclipse theme css files to render selceted and unselected CTabItems.
+ * -> Extend the CLabel class is enough to solve the issue, because the problematic css rule isn't applied.
+ */
+class CustomCLabel extends CLabel {
+
+    public CustomCLabel(Composite parent, int style) {
+        super(parent, style);
+        setBackgroundMode(SWT.INHERIT_DEFAULT);
+    }
+
 }
