@@ -43,6 +43,8 @@ import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -78,9 +80,6 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
-import org.eclipse.wst.server.core.internal.SaveEditorPrompter;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-
 
 public class BOSWebServerManager implements IBonitaProjectListener {
 
@@ -439,8 +438,12 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     public void resetServer(IProgressMonitor monitor) {
+        BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
+                Messages.restartServerNotificationMessage);
         stopServer(monitor);
         startServer(RepositoryManager.getInstance().getCurrentRepository(), monitor);
+        BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
+                Messages.serverRunningNotificationMessage);
     }
 
     public synchronized void stopServer(final IProgressMonitor monitor) {
@@ -520,6 +523,13 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
         IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         if (!isLazyModeEnabled(preferenceStore)) {
+            BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
+                    Messages.engineLazyModeNotificationLink, e -> {
+                        BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
+                        dialog.create();
+                        dialog.setSelectedPreferencePage(BonitaPreferenceDialog.SERVER_SETTINGS_PAGE_ID);
+                        dialog.open();
+                    });
             final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
             job.setPriority(Job.LONG);
             job.setUser(false);
