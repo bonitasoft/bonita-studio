@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -56,6 +57,8 @@ public class RestartServerCommand extends AbstractHandler {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
+                BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
+                        Messages.restartServerNotificationMessage);
                 BOSEngineManager.getInstance().stop();
                 if (store.getBoolean(DROP_DB_KEY)) {
                     DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
@@ -67,6 +70,8 @@ public class RestartServerCommand extends AbstractHandler {
                     }
                 }
                 BOSEngineManager.getInstance().start();
+                BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
+                        Messages.serverRunningNotificationMessage);
                 return Status.OK_STATUS;
             }
         }.schedule();

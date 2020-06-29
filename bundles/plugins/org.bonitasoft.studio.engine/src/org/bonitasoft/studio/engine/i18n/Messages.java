@@ -189,6 +189,13 @@ public class Messages extends NLS {
     public static String deployWithWarningMessage;
     public static String additionalResourceProjectPathNotSet;
     public static String additionalResourceFileNotFound;
+    public static String restartServerNotificationTitle;
+    public static String restartServerNotificationMessage;
+    public static String restartServerCompletedNotificationTitle;
+    public static String serverRunningNotificationMessage;
+    public static String startServerNotificationTitle;
+    public static String startServerCompletedNotificationTitle;
+    public static String engineLazyModeNotificationLink;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
