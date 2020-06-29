@@ -45,30 +45,31 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Romain Bioteau
  */
-public class FormMappingRadioGroup extends Composite implements BonitaPreferenceConstants {
+public class FormMappingRadioGroup implements BonitaPreferenceConstants {
 
     private final SelectObservableValue mappingTypeObservable;
     private final InternalMappingComposite pageDesignerMappingComposite;
     private final URLMappingComposite urlMappingComposite;
     private final CustomStackLayout stackLayout;
     private final InfoMessageComposite noneComposite;
+    private Composite mainComposite;
 
     public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory,
             final IEclipsePreferences preferenceStore,
             final RepositoryAccessor repositoryAccessor,
             final FormReferenceExpressionValidator formReferenceExpressionValidator,
             final CreateOrEditFormProposalListener createOrEditFormListener) {
-        super(parent, SWT.NONE);
-        setLayout(GridLayoutFactory.swtDefaults().numColumns(4).extendedMargins(10, 10, 10, 10).create());
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        this.mainComposite = widgetFactory.createComposite(parent);
+        mainComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(4).extendedMargins(10, 10, 10, 10).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final Button uiDesignerRadio = widgetFactory.createButton(this, Messages.uiDesignerLabel, SWT.RADIO);
+        final Button uiDesignerRadio = widgetFactory.createButton(mainComposite, Messages.uiDesignerLabel, SWT.RADIO);
         uiDesignerRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
-        final Button externalRadio = widgetFactory.createButton(this, Messages.externalURL, SWT.RADIO);
+        final Button externalRadio = widgetFactory.createButton(mainComposite, Messages.externalURL, SWT.RADIO);
         externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
-        final Button noneRadio = widgetFactory.createButton(this, Messages.noForm, SWT.RADIO);
+        final Button noneRadio = widgetFactory.createButton(mainComposite, Messages.noForm, SWT.RADIO);
         noneRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
         mappingTypeObservable = new SelectObservableValue(FormMappingType.class);
@@ -76,7 +77,7 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         mappingTypeObservable.addOption(FormMappingType.INTERNAL, WidgetProperties.selection().observe(uiDesignerRadio));
         mappingTypeObservable.addOption(FormMappingType.URL, WidgetProperties.selection().observe(externalRadio));
 
-        final Composite stackedComposite = widgetFactory.createComposite(this);
+        final Composite stackedComposite = widgetFactory.createComposite(mainComposite);
         stackedComposite.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).span(4, 1).create());
 
         stackLayout = new CustomStackLayout(stackedComposite);
@@ -86,7 +87,6 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         pageDesignerMappingComposite = new InternalMappingComposite(stackedComposite, widgetFactory,
                 repositoryAccessor, formReferenceExpressionValidator, createOrEditFormListener);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
-        widgetFactory.adapt(this);
     }
 
     private Control compositeFor(final FormMappingType mappingType) {
@@ -124,23 +124,5 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
                 return mappingType != null ? compositeFor((FormMappingType) mappingType) : noneComposite;
             }
         };
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.swt.widgets.Widget#dispose()
-     */
-    @Override
-    public void dispose() {
-        if (pageDesignerMappingComposite != null) {
-            pageDesignerMappingComposite.dispose();
-        }
-        if (urlMappingComposite != null) {
-            urlMappingComposite.dispose();
-        }
-        if (noneComposite != null) {
-            noneComposite.dispose();
-        }
-        super.dispose();
     }
 }

@@ -31,21 +31,21 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public abstract class PropertySectionWithTabs extends AbstractModelerPropertySection {
 
-    private final List<AbstractBonitaDescriptionSection> sections = new ArrayList<AbstractBonitaDescriptionSection>();
-    private final List<String> titles = new ArrayList<String>();
+    private final List<AbstractBonitaDescriptionSection> sections = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
     private CTabFolder folder;
 
     /**
-	 *
-	 */
+     *
+     */
     public PropertySectionWithTabs() {
         super();
         addSections();
     }
 
     /**
-	 *
-	 */
+     *
+     */
     protected abstract void addSections();
 
     /**
@@ -81,7 +81,8 @@ public abstract class PropertySectionWithTabs extends AbstractModelerPropertySec
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
+     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#setInput(org.eclipse.ui.
+     * IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
      */
     @Override

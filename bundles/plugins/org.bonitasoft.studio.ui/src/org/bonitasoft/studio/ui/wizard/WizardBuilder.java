@@ -20,17 +20,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.i18n.Messages;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
@@ -44,8 +42,6 @@ public class WizardBuilder<T> {
     private String windowTitle;
     private final List<WizardPageBuilder> pages = new ArrayList<>();
     private FinishHandler<T> finishHandler;
-    private final ImageDescriptor imageDescriptor = ImageDescriptor.createFromFile(WizardBuilder.class,
-            "defaultPage.png");//$NON-NLS-N$
     private Optional<T> finishResult = Optional.empty();
     private boolean needProgress = false;
     private int width = SWT.DEFAULT;
@@ -128,7 +124,7 @@ public class WizardBuilder<T> {
         pages.stream().forEachOrdered(page -> wizard.addPage(page.asPage()));
         wizard.setNeedsProgressMonitor(needProgress);
         wizard.setWindowTitle(windowTitle);
-        wizard.setDefaultPageImageDescriptor(imageDescriptor);
+        wizard.setDefaultPageImageDescriptor(Pics.getWizban());
         wizard.setDialogSettings(WorkbenchPlugin.getDefault().getDialogSettings());
         return wizard;
     }
@@ -144,10 +140,10 @@ public class WizardBuilder<T> {
             @Override
             protected Point getInitialSize() {
                 final Point initialSize = super.getInitialSize();
-                if(initialSize.x > width) {
+                if (initialSize.x > width) {
                     width = initialSize.x;
                 }
-                if(initialSize. y > height) {
+                if (initialSize.y > height) {
                     height = initialSize.y;
                 }
                 final Point size = new Point(width == SWT.DEFAULT ? initialSize.x : width,

@@ -21,4 +21,13 @@ public interface ColorConstants {
     static final RGB SIMPLE_TYPE_RGB = new RGB(163, 163, 117);
     static final RGB COMPLEX_TYPE_RGB = new RGB(117, 163, 163);
 
+    static final RGB DARK_MODE_EDITORS_BACKGROUND = new RGB(47, 47, 47);
+    static final RGB DARK_MODE_DIAGRAMS_BACKGROUND = new RGB(60, 60, 60);
+    static final RGB DARK_MODE_DIAGRAMS_BACKGROUND_GRADIENT = new RGB(90, 90, 90);
+    static final RGB DARK_MODE_DIAGRAMS_FONT_COLOR = new RGB(200, 200, 200);
+    static final RGB DARK_MODE_DIAGRAMS_LINE_COLOR = new RGB(100, 100, 100);
+    static final RGB DARK_MODE_DIAGRAMS_TASK_FONT_COLOR = new RGB(64, 64, 64);
+
+    static final String DARK_MODE_ACTIVITY_GRADIENT_HEXA_COLOR = "#c8c8c8";
+
 }

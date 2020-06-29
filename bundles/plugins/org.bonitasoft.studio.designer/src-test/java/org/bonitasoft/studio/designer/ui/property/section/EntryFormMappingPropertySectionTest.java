@@ -21,9 +21,6 @@ import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.ui.property.section.EntryFormMappingPropertySection;
-import org.bonitasoft.studio.designer.ui.property.section.PageFlowAdaptableSelectionProvider;
-import org.bonitasoft.studio.designer.ui.property.section.control.FormMappingRadioGroup;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.resources.IWorkspace;
@@ -84,7 +81,6 @@ public class EntryFormMappingPropertySectionTest {
         section.createContent(parent);
 
         assertThat(parent.getChildren()).hasSize(1);
-        assertThat(parent.getChildren()[0]).isInstanceOf(FormMappingRadioGroup.class);
 
         section.dispose();
     }

@@ -12,8 +12,10 @@ import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -37,7 +39,10 @@ public class ImportBDMContributionItem extends ContributionItem {
         item = new ToolItem(parent, SWT.PUSH);
         item.setText(Messages.importActionName);
         item.setToolTipText(Messages.smartImportDesc);
-        item.setImage(BusinessObjectPlugin.getImage("icons/import-bdm.png"));
+        Image image = PreferenceUtil.isDarkTheme()
+                ? BusinessObjectPlugin.getImage("icons/import_16_dark.png")
+                : BusinessObjectPlugin.getImage("icons/import_16.png");
+        item.setImage(image);
         item.addListener(SWT.Selection, e -> onClick());
     }
 

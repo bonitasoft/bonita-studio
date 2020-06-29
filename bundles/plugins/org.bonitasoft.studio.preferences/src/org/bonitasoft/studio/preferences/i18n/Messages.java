@@ -71,4 +71,9 @@ public class Messages extends NLS {
     public static String noBrowserFoundTitle;
     public static String noBrowserFoundMsg;
     public static String BonitaPreferenceDialog_Validation;
+    public static String light;
+    public static String dark;
+    public static String theme;
+    public static String shouldRestartTitle;
+    public static String shouldRestart;
 }

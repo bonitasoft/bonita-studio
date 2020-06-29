@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -53,6 +51,7 @@ import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -72,9 +71,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -113,7 +114,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -300,13 +300,22 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         detailsComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create());
 
+        IViewerObservableValue<Object> selection = ViewerProperties.singleSelection().observe(getViewer());
+        context.bindValue(WidgetProperties.visible().observe(detailsComposite), new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return selection.getValue() != null;
+            }
+        });
+
         createUserNameField(detailsComposite);
 
         createPasswordField(detailsComposite);
 
         createManagerCombo(detailsComposite);
 
-        tab = new TabFolder(group, SWT.NONE);
+        tab = new TabFolder(detailsComposite, SWT.NONE);
         tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         tab.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
@@ -460,23 +469,23 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text passwordText = new Text(passwordComposite, SWT.BORDER | SWT.PASSWORD);
         passwordText.setLayoutData(
                 GridDataFactory.swtDefaults()
-                .align(SWT.FILL, SWT.CENTER)
-                .grab(true, false)
-                .indent(5, 0)
-                .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
-                .create());
+                        .align(SWT.FILL, SWT.CENTER)
+                        .grab(true, false)
+                        .indent(5, 0)
+                        .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
+                        .create());
         char echoChar = passwordText.getEchoChar();
 
-        if(!"macosx".equals(Platform.getOS())) {
+        if (!"macosx".equals(Platform.getOS())) {
             final Button viewPaswsordButton = new Button(passwordComposite, SWT.TOGGLE);
             viewPaswsordButton.setLayoutData(GridDataFactory.swtDefaults().create());
             viewPaswsordButton.setImage(Pics.getImage("view.png", ActorsPlugin.getDefault()));
             viewPaswsordButton.setToolTipText(Messages.showPassword);
             viewPaswsordButton.addSelectionListener(new SelectionAdapter() {
-    
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                        passwordText.setEchoChar(viewPaswsordButton.getSelection() ? CLEAR_CHAR : echoChar);
+                    passwordText.setEchoChar(viewPaswsordButton.getSelection() ? CLEAR_CHAR : echoChar);
                 }
             });
         }
@@ -1463,7 +1472,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         customUserInfoTable.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Table table = customUserInfoTable.getTable();
         table.setHeaderVisible(true);
-        table.setLinesVisible(true);
         customUserInfoTable.setContentProvider(new ObservableListContentProvider());
 
         final TableViewerColumn nameColumn = new TableViewerColumn(customUserInfoTable, SWT.NONE);
@@ -1575,7 +1583,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table generalDataTable = new Table(generalDataTableComposite, SWT.BORDER);
         generalDataTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        generalDataTable.setLinesVisible(true);
         generalDataTable.setHeaderVisible(true);
 
         final String[] generalDataItems = getGeneralDataItems();
@@ -1597,7 +1604,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         businessCardTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final Table businessCardTable = new Table(businessCardTableComposite, SWT.BORDER);
-        businessCardTable.setLinesVisible(true);
         businessCardTable.setHeaderVisible(true);
 
         final String[] businessCardTitles = getBusinessCardItems();
@@ -1619,7 +1625,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table personnalTable = new Table(personalTableComposite, SWT.BORDER);
         personnalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        personnalTable.setLinesVisible(true);
         personnalTable.setHeaderVisible(true);
 
         final String[] personalTitles = getPersonalItems();
@@ -1638,7 +1643,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table membershipTable = new Table(memberships, SWT.BORDER | SWT.FILL);
         membershipTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        membershipTable.setLinesVisible(true);
         membershipTable.setHeaderVisible(true);
 
         final TableColumn membershipColumn = new TableColumn(membershipTable, SWT.NONE | SWT.FILL);

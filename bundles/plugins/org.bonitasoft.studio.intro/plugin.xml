@@ -17,6 +17,7 @@
    <extension
          point="org.eclipse.ui.intro.config">
       <config
+            configurer="org.bonitasoft.studio.intro.configurer.BontaIntroConfigurer"
             content="content/introContent.xml"
             id="org.bonitasoft.studio.application.configId"
             introId="org.bonitasoft.studio.application.intro">
@@ -24,7 +25,8 @@
                home-page-id="root">
             <implementation
                   kind="html"
-                  os="win32,linux,macosx">
+                  os="win32,linux,macosx"
+                  style="$theme$">
             </implementation>
          </presentation>
       </config>

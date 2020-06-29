@@ -48,7 +48,6 @@ import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
 import org.bonitasoft.studio.migration.model.report.Report;
@@ -59,7 +58,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -129,7 +127,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         }
         return displayName;
     }
-    
+
     @Override
     public Object executeCommand(String command, Map<String, Object> parameters) {
         return super.executeCommand(command, parameters);
@@ -143,7 +141,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("ProcessDiagramFile.gif", Activator.getDefault());
+        return getParentStore().getIcon();
     }
 
     @Override
@@ -258,7 +256,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         try {
             content = getContent();
         } catch (ReadFileStoreException e) {
-           return null;
+            return null;
         }
         Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
@@ -427,7 +425,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         parameters.put("validateDiagram", Boolean.TRUE.toString());
         executeCommand(DEPLOY_DIAGRAM_COMMAND, parameters);
     }
-    
+
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         options.put("fileName", getName());
@@ -458,7 +456,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
             try {
                 processFolder.create(true, true, new NullProgressMonitor());
             } catch (CoreException e) {
-               return e.getStatus();
+                return e.getStatus();
             }
         }
 
@@ -469,7 +467,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), IStatus.ERROR)) {
-           return parseStatus(buildStatus);
+            return parseStatus(buildStatus);
         }
         return ValidationStatus.ok();
     }

@@ -253,7 +253,6 @@ public class IndexControl {
         ColumnViewerToolTipSupport.enableFor(indexViewer);
         indexViewer.setUseHashlookup(true);
         indexViewer.getTable().setHeaderVisible(true);
-        indexViewer.getTable().setLinesVisible(true);
         indexViewer.addFilter(createSearchFilter());
 
         TableLayout layout = new TableLayout();

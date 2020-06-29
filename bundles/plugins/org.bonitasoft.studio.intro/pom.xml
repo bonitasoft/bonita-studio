@@ -35,8 +35,25 @@
                             <goal>create-image</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>welcome-community-dark</id>
+                        <configuration>
+                            <baseImgPath>${basedir}/content/images/Logo-Welcome-Community-Dark-Without-Version.png</baseImgPath>
+                            <outputImagePath>${basedir}/content/images/logo-community-dark.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>192</xLocation>
+                            <yLocation>78</yLocation>
+                            <italic>true</italic>
+                            <fontSize>35</fontSize>
+                            <color>#4a5568</color>
+                            <bold>true</bold>
+                            <versionLabel>${project.version}</versionLabel>
+                        </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
                 </executions>
-
             </plugin>
         </plugins>
     </build>

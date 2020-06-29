@@ -24,6 +24,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.CustomLaneItemSemanticE
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomResizableEditPolicyEx;
 import org.bonitasoft.studio.diagram.custom.figures.VerticalLabel;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart.CustomPoolFigure;
+import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
@@ -55,6 +56,7 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -142,7 +144,9 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.Notification)
+     * @see
+     * org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.
+     * Notification)
      */
     @Override
     protected void handleNotificationEvent(final Notification notification) {
@@ -219,7 +223,8 @@ public class CustomLaneEditPart extends LaneEditPart {
                     width = getFigure().getMinimumSize().width + 25;
                 }
 
-                final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane()).getLabelGridData().widthHint;
+                final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane())
+                        .getLabelGridData().widthHint;
 
                 final Dimension size = new Dimension(width - getMapMode().DPtoLP(x), height);
                 getFigure().setPreferredSize(size);
@@ -240,28 +245,35 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     private void logWrongParent() {
         final EObject resolvedSemanticElement = resolveSemanticElement();
-        final String currentLaneName = resolvedSemanticElement instanceof Element ? ((Element) resolvedSemanticElement).getName() : resolvedSemanticElement
-                .toString();
+        final String currentLaneName = resolvedSemanticElement instanceof Element
+                ? ((Element) resolvedSemanticElement).getName() : resolvedSemanticElement
+                        .toString();
         final EObject parentResolvedSemanticElement = ((GraphicalEditPart) getParent()).resolveSemanticElement();
-        final String containerName = parentResolvedSemanticElement instanceof Element ? ((Element) parentResolvedSemanticElement).getName()
+        final String containerName = parentResolvedSemanticElement instanceof Element
+                ? ((Element) parentResolvedSemanticElement).getName()
                 : parentResolvedSemanticElement.toString();
-        BonitaStudioLog.warning("Warning: the lane" + currentLaneName + " is contained in another thing than a PoolCompartment. It is contained in: "
+        BonitaStudioLog.warning("Warning: the lane" + currentLaneName
+                + " is contained in another thing than a PoolCompartment. It is contained in: "
                 + containerName, Activator.PLUGIN_ID);
     }
 
     private int computeLaneHeight(final List<CustomLaneEditPart> poolLanes) {
         int height = 0;
-        if (poolLanes.size() == 0 && ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
+        if (poolLanes.size() == 0
+                && ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
             height = ((CustomPoolEditPart) getParent().getParent()).getFigure().getBounds().getCopy().height;
             if (height == 0) {
-                height = ((Integer) ((CustomPoolEditPart) getParent().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
-                        .intValue();
+                height = ((Integer) ((CustomPoolEditPart) getParent().getParent())
+                        .getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
+                                .intValue();
             }
-        } else if (poolLanes.size() == 1 && ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
+        } else if (poolLanes.size() == 1
+                && ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
             height = ((CustomPoolEditPart) getParent().getParent()).getFigure().getBounds().getCopy().height;
             if (height == 0) {
-                height = ((Integer) ((CustomPoolEditPart) getParent().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
-                        .intValue();
+                height = ((Integer) ((CustomPoolEditPart) getParent().getParent())
+                        .getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height()))
+                                .intValue();
             }
         } else {
             if (((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
@@ -454,7 +466,17 @@ public class CustomLaneEditPart extends LaneEditPart {
             final Font font = new Font(Display.getCurrent(), fontData);
             final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(), font).height;
             font.dispose();
-           ((CustomLaneFigure) getContentPane()).getLabelGridData().widthHint = height + 8;
+            ((CustomLaneFigure) getContentPane()).getLabelGridData().widthHint = height + 8;
+        }
+    }
+
+    @Override
+    protected void setBackgroundColor(Color color) {
+        Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
+        if (preferenceStore instanceof IPreferenceStore) {
+            super.setBackgroundColor(DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore, color));
+        } else {
+            super.setBackgroundColor(color);
         }
     }
 

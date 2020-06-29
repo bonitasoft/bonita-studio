@@ -163,7 +163,6 @@ public class IndexEditionControl extends Composite {
         formPage.getToolkit().adapt(availableAttributesTableViewer.getTable());
         ColumnViewerToolTipSupport.enableFor(availableAttributesTableViewer);
         availableAttributesTableViewer.setUseHashlookup(true);
-        availableAttributesTableViewer.getTable().setLinesVisible(true);
         availableAttributesTableViewer.setFilters(indexableFieldFilter, indexedFieldsFilter());
 
         TableLayout layout = new TableLayout();
@@ -238,7 +237,6 @@ public class IndexEditionControl extends Composite {
         formPage.getToolkit().adapt(indexedAttributesTableViewer.getTable());
         ColumnViewerToolTipSupport.enableFor(indexedAttributesTableViewer);
         indexedAttributesTableViewer.setUseHashlookup(true);
-        indexedAttributesTableViewer.getTable().setLinesVisible(true);
         indexedAttributesTableViewer.getTable().addMouseMoveListener(e -> updateCursor(e, indexedAttributesTableViewer));
 
         TableLayout layout = new TableLayout();
@@ -327,7 +325,7 @@ public class IndexEditionControl extends Composite {
 
         Label validationLabel = formPage.getToolkit().createLabel(this, "", SWT.WRAP);
         validationLabel.setLayoutData(GridDataFactory.fillDefaults().create());
-        validationLabel.setForeground(errorColor);
+        validationLabel.addPaintListener(e -> validationLabel.setForeground(errorColor));
 
         indexedFieldNameObservable.addChangeListener(e -> {
             if (selectedIndexObservable.getValue() != null) {
