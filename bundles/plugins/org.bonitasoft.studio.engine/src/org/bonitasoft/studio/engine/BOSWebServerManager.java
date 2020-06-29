@@ -71,6 +71,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -525,7 +526,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         if (!isLazyModeEnabled(preferenceStore)) {
             BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
                     Messages.engineLazyModeNotificationLink, e -> {
-                        BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
+                        BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
                         dialog.create();
                         dialog.setSelectedPreferencePage(BonitaPreferenceDialog.SERVER_SETTINGS_PAGE_ID);
                         dialog.open();

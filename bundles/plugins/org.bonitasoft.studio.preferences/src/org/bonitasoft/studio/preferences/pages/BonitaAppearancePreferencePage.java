@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
@@ -26,7 +29,6 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.ComboFieldEditor;
@@ -34,7 +36,6 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -46,6 +47,7 @@ import org.eclipse.ui.commands.ICommandService;
 public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage {
 
     private static final String APPEARANCE_CONTRIBUTOR_ID = "Appearance";
+    private static final String NOTIFY_COMMAND = "org.bonitasoft.studio.ui.notify.command";
 
     private RadioGroupFieldEditor coolbarFiled;
 
@@ -121,10 +123,11 @@ public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage
 
         if (engine.getActiveTheme() == null || !Objects.equals(value, engine.getActiveTheme().getId())) {
             engine.setTheme(value, true);
-            new CommandExecutor().executeCommand("org.bonitasoft.studio.application.resetWindowCommand", null);
-            MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-                    Messages.shouldRestartTitle,
-                    Messages.shouldRestart);
+            Map<String, Object> parameters = new HashMap();
+            parameters.put("title", Messages.themeChangedTitle);
+            parameters.put("content", Messages.themeChanged);
+            new CommandExecutor().executeCommand(NOTIFY_COMMAND, parameters);
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
         }
     }
 
