@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.ui.notification;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -30,6 +32,8 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
     private static final int MAX_WIDTH = 400;
     private static final int MIN_HEIGHT = 100;
     private static final int PADDING_EDGE = 10;
+
+    private static List<Shell> existingNotifications = new ArrayList<>();
 
     private String title;
     private String content;
@@ -68,9 +72,20 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
         int width = Math.min(initialSize.x, MAX_WIDTH);
 
         Point size = new Point(width, height);
-        getShell().setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y
+        getShell().setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, getInitialY(clArea, height) - size.y
                 - PADDING_EDGE);
         getShell().setSize(size);
+        existingNotifications.add(getShell());
+    }
+
+    private int getInitialY(Rectangle clArea, int height) {
+        int min = existingNotifications.stream()
+                .filter(shell -> !shell.isDisposed())
+                .map(Shell::getLocation)
+                .mapToInt(p -> p.y)
+                .min().orElse(0);
+        int initialY = min > height ? min : clArea.height + clArea.y;
+        return initialY;
     }
 
     /**
@@ -136,6 +151,18 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
             }
         }
         return location;
+    }
+
+    @Override
+    public boolean close() {
+        existingNotifications.remove(getShell());
+        return super.close();
+    }
+
+    @Override
+    public void closeFade() {
+        existingNotifications.remove(getShell());
+        super.closeFade();
     }
 
 }
