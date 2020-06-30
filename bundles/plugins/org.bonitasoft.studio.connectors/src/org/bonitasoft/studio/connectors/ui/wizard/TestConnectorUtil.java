@@ -18,6 +18,7 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.TestConnectorResultDialog;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -49,7 +51,9 @@ import org.eclipse.swt.widgets.Shell;
 
 public class TestConnectorUtil {
 
-	public static boolean testConnectorWithConfiguration(
+	private static final String BDM_JAR_NAME = "bdm-client-pojo.jar";
+
+    public static boolean testConnectorWithConfiguration(
 			final ConnectorConfiguration configuration,
 			final String connectorDefId,
 			final String connectorDefVersion,
@@ -80,7 +84,8 @@ public class TestConnectorUtil {
         DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
 		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, Repository.NULL_PROGRESS_MONITOR);
-        jars.add("bdm-client-pojo.jar");
+		//Always add BDM jar if present, so filtering it from selection dialog
+		jars.add(BDM_JAR_NAME);
         int retCode = Window.OK;
         ManageConnectorJarDialog jd = null;
         if (depStore.getChildren().stream().map(IRepositoryFileStore::getName).anyMatch(jar -> !jars.contains(jar))) {
@@ -105,7 +110,13 @@ public class TestConnectorUtil {
 			operation.setImplementation(impl) ;
 			operation.setConnectorConfiguration(configuration) ;
 			operation.setConnectorOutput(connector);
-            operation.setAdditionalJars(jd != null ? jd.getSelectedJars() : Collections.emptySet());
+			Set<IRepositoryFileStore> additionalJars = jd != null ? jd.getSelectedJars() :new HashSet<>();
+			//Always add BDM jar if present
+			DependencyFileStore bdmJarFileStore = depStore.getChild(BDM_JAR_NAME, false);
+            if(bdmJarFileStore != null) {
+			    additionalJars.add(bdmJarFileStore);
+			}
+            operation.setAdditionalJars(additionalJars);
 			Object result = null ;
 			try {
 				wd.run(true, false, operation) ;
