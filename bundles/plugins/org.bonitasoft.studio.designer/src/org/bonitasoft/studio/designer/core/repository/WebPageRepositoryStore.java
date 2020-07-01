@@ -16,6 +16,7 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Objects;
@@ -25,7 +26,10 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -38,6 +42,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.json.JSONException;
@@ -157,11 +162,6 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#migrate(org.eclipse.core.runtime.
-     * IProgressMonitor)
-     */
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
@@ -171,6 +171,11 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                 throw new MigrationException(e);
             }
         }
+    }
+    
+    @Override
+    protected String getIncompatibleErrorMessage() {
+        return Messages.incompatibleWebPageArtifact;
     }
 
 }

@@ -66,4 +66,8 @@ public class WebFragmentRepositoryStore extends WebArtifactRepositoryStore<WebFr
         return new WebFragmentFileStore(fileName, this);
     }
 
+    @Override
+    protected String getIncompatibleErrorMessage() {
+        return Messages.incompatibleWebFragmentArtifact;
+    }
 }
