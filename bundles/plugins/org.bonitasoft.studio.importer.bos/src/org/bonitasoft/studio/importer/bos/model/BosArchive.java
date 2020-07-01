@@ -145,6 +145,13 @@ public class BosArchive {
                 file.setDisplayName(String.format("%s (%s)", name, file.getFileName()));
                 file.getParent().ifPresent(parent -> parent
                         .setDisplayName(String.format("%s (%s)", name, parent.getFolderName())));
+                file.getParentRepositoryStore().ifPresent(repositoryStore -> {
+                    IStatus validationStatus = validateFile(file, repositoryStore);
+                    file.setValidationStatus(validationStatus);
+                    if (validationStatus.getSeverity() == IStatus.ERROR) {
+                        archiveModel.setValidationStatus(validationStatus);
+                    }
+                });
             }
             if (isFragment(file) && PlatformUtil.isACommunityBonitaProduct()) {
                 return;
@@ -186,7 +193,7 @@ public class BosArchive {
         return false;
     }
 
-    public IStatus validateFile(ImportFileStoreModel file, IRepositoryStore<IRepositoryFileStore> repositoryStore) {
+    public IStatus validateFile(AbstractFileModel file, IRepositoryStore<IRepositoryFileStore> repositoryStore) {
         try (ZipFile archive = getZipFile();
                 InputStream is = archive.getInputStream(archive.getEntry(file.getPath()));) {
             return repositoryStore.validate(file.getFileName(), is);
@@ -211,7 +218,9 @@ public class BosArchive {
     }
 
     private boolean isAWebRepositoryStore(AbstractFolderModel store) {
-        return store.getParentRepositoryStore().filter(repoWithName("web_page").or(repoWithName("web_fragments")))
+        return store.getParentRepositoryStore().filter(repoWithName("web_page")
+                .or(repoWithName("web_fragments"))
+                .or(repoWithName("web_widgets")))
                 .isPresent();
     }
 

@@ -35,6 +35,8 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -104,10 +106,14 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if(!filesToValidate.isEmpty() && !filesToValidate.contains( file.toFile())) {
+                    if(!filesToValidate.isEmpty() && !filesToValidate.contains(file.toFile())) {
                         return FileVisitResult.CONTINUE;
                     }
-                    IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = repository.getRepositoryStoreByName(file.toFile().getParentFile().getName()).get();
+                    IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = repository.getRepositoryStoreByName(file.toFile().getParentFile().getName())
+                            .orElse(repository.getRepositoryStoreByName(file.toFile().getParentFile().getParentFile().getName()).orElse(null));
+                    if(repositoryStore == null) {
+                        return FileVisitResult.CONTINUE;
+                    }
                     try(InputStream inputStream = new FileInputStream(file.toFile())){
                         IFile resource = null;
                         if(addResourceMarkers) {
@@ -166,10 +172,19 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
             if(Objects.equals(dir, projectRootFolder.toPath())) {
                 return FileVisitResult.CONTINUE;
             }
-            if (!repository.getRepositoryStoreByName(dir.toFile().getName()).isPresent()) {
+            if ( ".metadata".equals(dir.toFile().getName())) {
+                return FileVisitResult.SKIP_SUBTREE;
+            }
+            if (!repository.getRepositoryStoreByName(dir.toFile().getName()).isPresent() && !isWebArtifactRepositor(dir.toFile().getParentFile().getName())) {
                 return FileVisitResult.SKIP_SUBTREE;
             }
             return visitorDelegate.preVisitDirectory(dir, attrs);
+        }
+
+        private boolean isWebArtifactRepositor(String name) {
+            return WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME.equals(name) || 
+                    WebWidgetRepositoryStore.WEB_WIDGET_REPOSITORY_NAME.equals(name) || 
+                    "web_fragments".equals(name);
         }
 
         @Override

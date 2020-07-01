@@ -108,6 +108,10 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public URL newWidget() throws MalformedURLException {
         return new URL(baseURL() + "/rest/widgets/");
     }
+    
+    public URL artifactStatus() throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/status");
+    }
 
     private String host() {
         return "localhost";

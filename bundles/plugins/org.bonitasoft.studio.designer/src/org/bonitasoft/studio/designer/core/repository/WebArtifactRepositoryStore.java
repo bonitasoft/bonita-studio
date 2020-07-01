@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositorySto
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 
 
 public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore> extends AbstractFolderRepositoryStore<T> {
@@ -65,4 +67,14 @@ public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore>
         }
         return null;
     }
+    
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if (filename != null & filename.endsWith(".json")) {
+            return new UIDModelValidator(getIncompatibleErrorMessage()).validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
+    }
+
+    protected abstract String getIncompatibleErrorMessage();
 }
