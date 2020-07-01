@@ -105,7 +105,9 @@ public class DeployProcessOperation {
     }
 
     public IStatus run(final IProgressMonitor monitor) {
-        Assert.isTrue(!processes.isEmpty());
+        if(processes.isEmpty()) {
+            return ValidationStatus.error(Messages.noProcessToRun);
+        }
         try {
             status.add(undeploy(processes, monitor));
         } catch (final Exception e) {

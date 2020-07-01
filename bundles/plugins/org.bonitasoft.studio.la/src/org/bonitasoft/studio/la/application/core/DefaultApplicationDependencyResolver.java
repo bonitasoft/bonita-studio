@@ -43,8 +43,8 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
     }
     
     @Override
-    public List<IRepositoryFileStore> findDependencies(ApplicationFileStore fStore) {
-        List<IRepositoryFileStore> result = new ArrayList<>();
+    public List<IRepositoryFileStore<?>> findDependencies(ApplicationFileStore fStore) {
+        List<IRepositoryFileStore<?>> result = new ArrayList<>();
         try {
             WebPageRepositoryStore webStore = fStore.getRepository().getRepositoryStore(WebPageRepositoryStore.class);
             ApplicationNodeContainer applicationNodeContainer = fStore.getContent();
@@ -66,7 +66,7 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
         return result;
     }
 
-    protected List<IRepositoryFileStore> findPageDependencies(WebPageRepositoryStore webStore,
+    protected List<IRepositoryFileStore<?>> findPageDependencies(WebPageRepositoryStore webStore,
             ApplicationNodeContainer applicationNodeContainer) {
        return applicationNodeContainer
                 .getApplications()

@@ -161,8 +161,9 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         return Arrays.asList(status);
     }
 
-    public void setLevel(int level) {
+    public MultiStatusDialog setLevel(int level) {
         this.level = STATUS_LEVEL.get(level);
+        return this;
     }
 
     static class StatusSeverityComparator implements Comparator<IStatus> {

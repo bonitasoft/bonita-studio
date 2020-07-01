@@ -149,7 +149,7 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
     }
 
     @Override
-    public IStatus getStatus() {
+    public MultiStatus getStatus() {
         return status;
     }
 

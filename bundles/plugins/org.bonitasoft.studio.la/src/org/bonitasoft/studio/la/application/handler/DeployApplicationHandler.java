@@ -101,7 +101,7 @@ public class DeployApplicationHandler {
                 application);
         if (applicationFileStore.isPresent()) {
             DeployArtifactsHandler deployArtifactsHandler = new DeployArtifactsHandler();
-            List<IRepositoryFileStore> defaultSelection = new ArrayList<>();
+            List<IRepositoryFileStore<?>> defaultSelection = new ArrayList<>();
             ApplicationFileStore fileStore = applicationFileStore.get();
             defaultSelection.add(fileStore);
             defaultSelection.addAll(dependencyResolver.findDependencies(fileStore));
