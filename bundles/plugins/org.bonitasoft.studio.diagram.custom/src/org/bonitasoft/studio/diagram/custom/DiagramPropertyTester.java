@@ -75,9 +75,11 @@ public class DiagramPropertyTester extends PropertyTester {
     private boolean isDiagramFile(IAdaptable receiver, DiagramRepositoryStore store) {
         IFile file = receiver.getAdapter(IFile.class);
         if (file != null) {
-            return store.getChildren().stream()
-                    .map(DiagramFileStore::getResource)
-                    .anyMatch(file::equals);
+             return store.getChildren().stream()
+                    .filter( fStore -> Objects.equals(file,fStore.getResource()))
+                    .findFirst()
+                    .filter( fStore -> fStore.validate().isOK())
+                    .isPresent();
         }
         return false;
     }
