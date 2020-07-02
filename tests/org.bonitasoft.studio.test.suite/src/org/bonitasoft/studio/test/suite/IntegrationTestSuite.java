@@ -57,11 +57,9 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowConditionExport
 import org.bonitasoft.studio.tests.groovy.TestFunctionRepository;
 import org.bonitasoft.studio.tests.groovy.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.tests.importer.api.ProcBuilderTests;
-import org.bonitasoft.studio.tests.importer.bonita4.TestImportXPDL;
 import org.bonitasoft.studio.tests.importer.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.tests.importer.bpmn2.TestImportBPMN2;
 import org.bonitasoft.studio.tests.importer.extensions.TestImportExtensionPoint;
-import org.bonitasoft.studio.tests.importer.jpdl.TestJBPMImport;
 import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
 import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
 import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
@@ -105,10 +103,8 @@ import org.junit.runners.Suite;
         TestImportExportAndDeleteRepository.class,
         TestImportExtensionPoint.class,
         ProcBuilderTests.class,
-        TestImportXPDL.class,
         TestImportRepository.class,
         TestImportBPMN2.class,
-        TestJBPMImport.class,
         TestAddJar.class,
         TestJavaDoc.class,
         TestOperationHistory.class,

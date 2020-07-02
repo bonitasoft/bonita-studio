@@ -11,17 +11,6 @@
 <plugin>
    <extension-point id="import" name="import" schema="schema/import.exsd"/>
 
-   <extension
-         point="org.bonitasoft.studio.importer.import">
-      <importFactory
-            description="%import_XPDL_desc"
-            filterExtensions="*.xpdl"
-            importerFactoryClass="org.bonitasoft.studio.importer.bonita4.XPDLToProcFactory"
-            inputName="XPDL 1.0"
-            menuIcon="icon/XPDL-desc.png"
-            priorityDisplay="10">
-      </importFactory>
-   </extension>
       <extension
          point="org.bonitasoft.studio.importer.import">
       <importFactory

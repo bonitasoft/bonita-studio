@@ -58,7 +58,6 @@
         <module>org.bonitasoft.studio.la</module>
         <module>org.bonitasoft.studio.migration</module>
         <module>org.bonitasoft.studio.intro</module>
-        <module>org.bonitasoft.studio.jpdl</module>
         <module>org.bonitasoft.studio.model.edit.custom</module>
         <module>org.bonitasoft.studio.refactoring</module>
         <module>org.bonitasoft.studio.parameters</module>
@@ -72,7 +71,6 @@
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
         <module>org.bonitasoft.studio.xml</module>
-        <module>org.bonitasoft.studio.xpdl</module>
         <module>org.omg.schema.spec.bpmn</module>
         <module>org.bonitasoft.studio-product</module>
     </modules>
