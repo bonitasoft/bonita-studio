@@ -38,6 +38,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 
 public class DiagramCompatibilityValidator implements IValidator<InputStream> {
+    
+    
+    private String incompatibleModelMessage;
+
+    public DiagramCompatibilityValidator(String incompatibleModelMessage) {
+        this.incompatibleModelMessage = incompatibleModelMessage;
+    }
 
     @Override
     public IStatus validate(InputStream inputStream) {
@@ -58,8 +65,7 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
             String bonitaModelVersion = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID,
                     "process:MainProcess",
                     "bonitaModelVersion");
-            IStatus modelVersionStatus = new ModelVersionValidator(ModelVersion.CURRENT_DIAGRAM_VERSION,
-                    Messages.incompatibleProcessModel).validate(bonitaModelVersion);
+            IStatus modelVersionStatus = new ModelVersionValidator(ModelVersion.CURRENT_DIAGRAM_VERSION,incompatibleModelMessage).validate(bonitaModelVersion);
             if (modelVersionStatus.getSeverity() == IStatus.ERROR) {
                 return modelVersionStatus;
             } else {

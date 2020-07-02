@@ -289,4 +289,5 @@ public class Messages extends NLS {
     public static String overwriteAction;
     public static String smartImportAction;
     public static String migrationWillBreakRetroCompatibility;
+    public static String incompatibleModelVersion;
 }

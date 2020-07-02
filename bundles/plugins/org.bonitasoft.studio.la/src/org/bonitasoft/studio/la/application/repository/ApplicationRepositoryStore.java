@@ -152,7 +152,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename.endsWith("." + XML_EXTENSION)) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
-                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, Messages.incompatibleAppDescriptorModel))
+                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename)))
                             .validate(inputStream);
         }
         return super.validate(filename, inputStream);

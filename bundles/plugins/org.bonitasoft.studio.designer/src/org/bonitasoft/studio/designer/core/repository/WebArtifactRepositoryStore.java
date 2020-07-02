@@ -71,10 +71,9 @@ public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore>
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null & filename.endsWith(".json")) {
-            return new UIDModelValidator(getIncompatibleErrorMessage()).validate(inputStream);
+            return new UIDModelValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename)).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }
 
-    protected abstract String getIncompatibleErrorMessage();
 }

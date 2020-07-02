@@ -361,7 +361,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         XMLModelCompatibilityValidator validator = new XMLModelCompatibilityValidator(
-                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE, Messages.incompatibleBdmModel));
+                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE,  String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename)));
         if (Objects.equals(filename, BusinessObjectModelFileStore.BOM_FILENAME)) {
             return validator.validate(inputStream);
         }

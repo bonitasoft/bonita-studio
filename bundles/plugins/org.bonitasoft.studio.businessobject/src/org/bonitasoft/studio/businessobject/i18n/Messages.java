@@ -508,7 +508,6 @@ public class Messages extends NLS {
     public static String bdmVoyager;
     public static String deployCancelTitle;
     public static String deployCancel;
-    public static String incompatibleBdmModel;
 
     private Messages() {
     }

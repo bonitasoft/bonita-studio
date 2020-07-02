@@ -173,9 +173,4 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         }
     }
     
-    @Override
-    protected String getIncompatibleErrorMessage() {
-        return Messages.incompatibleWebPageArtifact;
-    }
-
 }

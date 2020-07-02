@@ -69,7 +69,6 @@ public class Messages extends NLS {
     public static String themeNotFound;
     public static String applicationPageNotFound;
     public static String appPageTokenNotFound;
-    public static String incompatibleAppDescriptorModel;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
