@@ -53,9 +53,4 @@ public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidg
         return new WebWidgetFileStore(widgetFolderName, this);
     }
     
-    @Override
-    protected String getIncompatibleErrorMessage() {
-        return Messages.incompatibleWebWidgetArtifact;
-    }
-
 }

@@ -78,10 +78,6 @@ public class Messages extends NLS {
     public static String buildingWebPage;
     public static String startingDataRepositoryService;
     public static String indexingUIDPages;
-    public static String incompatibleWebPageArtifact;
-    public static String incompatibleWebWidgetArtifact;
-    public static String incompatibleWebFragmentArtifact;
-
     static {
         NLS.initializeMessages("messages", Messages.class);
     }

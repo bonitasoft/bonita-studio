@@ -145,7 +145,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         if (filename != null & filename.endsWith("." + DEF_EXT)) {
             return new XMLModelCompatibilityValidator(
                     new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE,
-                            Messages.incompatibleActorFilterDefinitionModel)).validate(inputStream);
+                           String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

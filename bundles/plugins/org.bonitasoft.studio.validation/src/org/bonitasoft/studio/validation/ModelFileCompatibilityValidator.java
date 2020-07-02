@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -62,7 +63,7 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
         this.projectRootFolder = projectRootFolder;
         this.repository = repository;
     }
-    
+
     public ModelFileCompatibilityValidator(Repository currentRepository) {
         this(currentRepository.getProject().getLocation().toFile(), currentRepository);
     }
@@ -76,8 +77,7 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
         this.addResourceMarkers = true;
         return this;
     }
-    
-    
+
     public ModelFileCompatibilityValidator addFile(File fileToValidate) {
         this.filesToValidate.add(fileToValidate);
         return this;
@@ -86,14 +86,16 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         IProject project = repository.getProject();
-        if(addResourceMarkers) {
+        if (addResourceMarkers) {
             File projectRoot = project.getLocation().toFile();
-            if(!Objects.equals(projectRoot, projectRootFolder)) {
-                throw new InvocationTargetException(new IllegalArgumentException("Cannot use 'addResourceMarkers' option when the project does not exists in the worksapce."));
+            if (!Objects.equals(projectRoot, projectRootFolder)) {
+                throw new InvocationTargetException(new IllegalArgumentException(
+                        "Cannot use 'addResourceMarkers' option when the project does not exists in the worksapce."));
             }
         }
         try {
             BonitaModelVisitor fileCountVisitor = new BonitaModelVisitor(new SimpleFileVisitor<Path>() {
+
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     fileCount++;
@@ -102,24 +104,28 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
             });
             Files.walkFileTree(projectRootFolder.toPath(), fileCountVisitor);
             monitor.beginTask(Messages.checkingModelCompatibility, fileCount);
-            Files.walkFileTree(projectRootFolder.toPath(),  new BonitaModelVisitor(new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(projectRootFolder.toPath(), new BonitaModelVisitor(new SimpleFileVisitor<Path>() {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if(!filesToValidate.isEmpty() && !filesToValidate.contains(file.toFile())) {
+                    if (!filesToValidate.isEmpty() && !filesToValidate.contains(file.toFile())) {
                         return FileVisitResult.CONTINUE;
                     }
-                    IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = repository.getRepositoryStoreByName(file.toFile().getParentFile().getName())
-                            .orElse(repository.getRepositoryStoreByName(file.toFile().getParentFile().getParentFile().getName()).orElse(null));
-                    if(repositoryStore == null) {
+                    IRepositoryStore<? extends IRepositoryFileStore> repositoryStore = repository
+                            .getRepositoryStoreByName(file.toFile().getParentFile().getName())
+                            .orElse(repository
+                                    .getRepositoryStoreByName(file.toFile().getParentFile().getParentFile().getName())
+                                    .orElse(null));
+                    if (repositoryStore == null) {
                         return FileVisitResult.CONTINUE;
                     }
-                    try(InputStream inputStream = new FileInputStream(file.toFile())){
+                    try (InputStream inputStream = new FileInputStream(file.toFile())) {
                         IFile resource = null;
-                        if(addResourceMarkers) {
-                            IPath absolutePath = org.eclipse.core.runtime.Path.fromOSString(file.toFile().getAbsolutePath());
+                        if (addResourceMarkers) {
+                            IPath absolutePath = org.eclipse.core.runtime.Path
+                                    .fromOSString(file.toFile().getAbsolutePath());
                             resource = project.getFile(absolutePath.makeRelativeTo(project.getLocation()));
-                            if(resource != null && resource.exists()) {
+                            if (resource != null && resource.exists()) {
                                 try {
                                     resource.deleteMarkers(MODEL_VERSION_MARKER_TYPE, true, IResource.DEPTH_ONE);
                                 } catch (CoreException e) {
@@ -128,14 +134,14 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
                             }
                         }
                         IStatus status = repositoryStore.validate(file.toFile().getName(), inputStream);
-                        if(status.getSeverity() == IStatus.ERROR) {
+                        if (status.getSeverity() == IStatus.ERROR) {
                             ModelFileCompatibilityValidator.this.status.add(status);
-                            if(resource != null && resource.exists()) {
+                            if (resource != null && resource.exists()) {
                                 try {
                                     IMarker marker = resource.createMarker(MODEL_VERSION_MARKER_TYPE);
                                     marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
                                     marker.setAttribute(IMarker.MESSAGE, status.getMessage());
-                                    marker.setAttribute(IMarker.LOCATION, "Diagram");
+                                    marker.setAttribute(IMarker.LOCATION, "");
                                 } catch (CoreException e) {
                                     BonitaStudioLog.error(e);
                                 }
@@ -160,42 +166,42 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
     }
 
     class BonitaModelVisitor extends SimpleFileVisitor<Path> {
-        
+
         private FileVisitor<Path> visitorDelegate;
 
         public BonitaModelVisitor(FileVisitor<Path> visitorDelegate) {
             this.visitorDelegate = visitorDelegate;
         }
-        
+
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            if(Objects.equals(dir, projectRootFolder.toPath())) {
+            if (Objects.equals(dir, projectRootFolder.toPath())) {
                 return FileVisitResult.CONTINUE;
             }
-            if ( ".metadata".equals(dir.toFile().getName())) {
+            if (".metadata".equals(dir.toFile().getName())) {
                 return FileVisitResult.SKIP_SUBTREE;
             }
-            if (!repository.getRepositoryStoreByName(dir.toFile().getName()).isPresent() && !isWebArtifactRepositor(dir.toFile().getParentFile().getName())) {
+            if (!repository.getRepositoryStoreByName(dir.toFile().getName()).isPresent()
+                    && !isWebArtifactRepositor(dir.toFile().getParentFile().getName())) {
                 return FileVisitResult.SKIP_SUBTREE;
             }
             return visitorDelegate.preVisitDirectory(dir, attrs);
         }
 
         private boolean isWebArtifactRepositor(String name) {
-            return WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME.equals(name) || 
-                    WebWidgetRepositoryStore.WEB_WIDGET_REPOSITORY_NAME.equals(name) || 
-                    "web_fragments".equals(name);
+            return WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME.equals(name) ||
+                    WebWidgetRepositoryStore.WEB_WIDGET_REPOSITORY_NAME.equals(name) ||
+                    WebFragmentRepositoryStore.WEB_FRAGMENT_REPOSITORY_NAME.equals(name);
         }
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            if(file.toFile().getParentFile().equals(projectRootFolder)) {
+            if (file.toFile().getParentFile().equals(projectRootFolder)) {
                 return FileVisitResult.CONTINUE;
             }
             return visitorDelegate.visitFile(file, attrs);
         }
-        
-    }
 
+    }
 
 }

@@ -141,7 +141,7 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     public IStatus validate(String filename, InputStream inputStream) {
         if(filename != null & filename.endsWith("."+ IMPL_EXT)) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
-                    Messages.incompatibleActorFilterImplementationModel)).validate(inputStream);
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }
