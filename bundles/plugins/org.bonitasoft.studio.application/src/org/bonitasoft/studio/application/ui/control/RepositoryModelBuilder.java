@@ -38,6 +38,7 @@ import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.core.runtime.IStatus;
 
 public class RepositoryModelBuilder {
 
@@ -68,6 +69,10 @@ public class RepositoryModelBuilder {
     }
 
     private Artifact createArtifact(RepositoryStore parent, IRepositoryFileStore fStore) {
+        if( fStore.validate().getSeverity() == IStatus.ERROR) {
+            //Do not display invalid artifacts
+            return null;
+        }
         if (fStore instanceof OrganizationFileStore) {
             return new OrganizationArtifact(parent, fStore);
         } else if (fStore instanceof BusinessObjectModelFileStore) {
