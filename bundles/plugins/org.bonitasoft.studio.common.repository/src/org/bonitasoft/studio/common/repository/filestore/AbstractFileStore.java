@@ -84,6 +84,11 @@ public abstract class AbstractFileStore<T>
     }
 
     public T getContent() throws ReadFileStoreException {
+        doCheckModelVersion();
+        return doGetContent();
+    }
+
+    protected void doCheckModelVersion() throws ReadFileStoreException {
         if(getResource() != null && getResource().exists()) {
             try (InputStream is = openInputStream()) {
                 IStatus status = getParentStore().validate(getName(), is);
@@ -94,7 +99,6 @@ public abstract class AbstractFileStore<T>
                 throw new ReadFileStoreException(e.getMessage(), e);
             }
         }
-        return doGetContent();
     }
 
     protected InputStream openInputStream() throws CoreException {
@@ -505,7 +509,7 @@ public abstract class AbstractFileStore<T>
     public IStatus validate() {
         IResource resource = getResource();
         if (resource instanceof IFile) {
-            try (InputStream is = ((IFile) resource).getContents()) {
+            try (InputStream is = openInputStream()) {
                 return getParentStore().validate(resource.getName(), is);
             } catch (IOException | CoreException e) {
                 BonitaStudioLog.error(e);
