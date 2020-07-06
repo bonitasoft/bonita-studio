@@ -16,6 +16,7 @@ package org.bonitasoft.studio.tests.connectors;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
     private ConnectorImplRepositoryStore connectorImplStore;
     private DefinitionResourceProvider connectorResourceProvider;
 
+    private List<String> connectorsToSkip = Arrays.asList("uipath-add-queueItem", "uipath-getjob", "uipath-startjob");
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -61,6 +64,10 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                 if (!(definition.getId() != null && !definition.getId().isEmpty())) {
                     testReport.append("\n");
                     testReport.append("Missing definition id for " + resourceName);
+                }
+
+                if (connectorsToSkip.contains(definition.getId())) {
+                    continue;
                 }
 
                 if (!(definition.getVersion() != null && !definition.getVersion().isEmpty())) {
@@ -89,7 +96,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     testReport.append("The definition should belong to at least one category for " + resourceName);
                 }
 
-                final List<String> inputs = new ArrayList<String>();
+                final List<String> inputs = new ArrayList<>();
                 for (final Input in : definition.getInput()) {
                     inputs.add(in.getName());
                 }
@@ -99,7 +106,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                         testReport.append("Input " + inputName + " is duplicated in " + resourceName);
                     }
                 }
-                final List<String> bindInputs = new ArrayList<String>();
+                final List<String> bindInputs = new ArrayList<>();
                 for (final Page p : definition.getPage()) {
 
                     if (!(p.getId() != null && !p.getId().isEmpty())) {
@@ -136,7 +143,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     }
                 }
 
-                final List<String> outputs = new ArrayList<String>();
+                final List<String> outputs = new ArrayList<>();
                 for (final String outputName : outputs) {
                     if (Collections.frequency(outputs, outputName) != 1) {
                         testReport.append("\n");
@@ -219,7 +226,8 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     testReport.append("Missing definition version for " + resourceName);
                 }
 
-                if (connectorDefStore.getDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion()) == null) {
+                if (connectorDefStore.getDefinition(implementation.getDefinitionId(),
+                        implementation.getDefinitionVersion()) == null) {
                     testReport.append("\n");
                     testReport.append("Connector definition not found for implementation " + resourceName);
                 }

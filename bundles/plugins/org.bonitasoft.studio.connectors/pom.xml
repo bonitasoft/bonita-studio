@@ -27,6 +27,7 @@
         <connector.version.twitter>1.2.0</connector.version.twitter>
         <connector.version.webservice>1.3.0</connector.version.webservice>
         <connector.version.rest>1.0.7</connector.version.rest>
+        <connector.version.uipath>2.1.0</connector.version.uipath>
     </properties>
 
 
@@ -157,6 +158,14 @@
                                     <groupId>org.bonitasoft.connectors</groupId>
                                     <artifactId>bonita-connector-rest</artifactId>
                                     <version>${connector.version.rest}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--UIPATH CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-uipath</artifactId>
+                                    <version>${connector.version.uipath}</version>
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
