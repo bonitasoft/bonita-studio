@@ -30,6 +30,7 @@
         <module>org.bonitasoft.studio.common.repository</module>
         <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.configuration</module>
+		<module>org.bonitasoft.studio.connector.wizard.office</module>
         <module>org.bonitasoft.studio.connector.wizard.uipath</module>
         <module>org.bonitasoft.studio.connectors</module>
         <module>org.bonitasoft.studio.connectors.database.drivers</module>

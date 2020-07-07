@@ -28,6 +28,8 @@
         <connector.version.webservice>1.3.0</connector.version.webservice>
         <connector.version.rest>1.0.7</connector.version.rest>
         <connector.version.uipath>2.1.0</connector.version.uipath>
+        <connector.version.document-templating>2.1.0</connector.version.document-templating>
+        <connector.version.document-converter>2.1.0</connector.version.document-converter>
     </properties>
 
 
@@ -169,6 +171,21 @@
                                     <classifier>all</classifier>
                                     <type>zip</type>
                                 </artifactItem>
+                                <!--OFFICE CONNECTORS -->
+								<artifactItem>
+									<groupId>org.bonitasoft.connectors</groupId>
+									<artifactId>bonita-connector-document-templating</artifactId>
+									<version>${connector.version.document-templating}</version>
+									<classifier>all</classifier>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.connectors</groupId>
+									<artifactId>bonita-connector-document-converter</artifactId>
+									<version>${connector.version.document-converter}</version>
+									<classifier>all</classifier>
+									<type>zip</type>
+								</artifactItem>
                             </artifactItems>
                             <outputDirectory>${connectors.tmp.dir}</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
