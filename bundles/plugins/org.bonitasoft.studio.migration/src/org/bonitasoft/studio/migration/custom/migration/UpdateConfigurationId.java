@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.migration.custom.migration;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -44,7 +43,6 @@ public class UpdateConfigurationId extends CustomMigration {
 			diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
 			mainProc.set("bonitaVersion", ProductVersion.CURRENT_VERSION);
 			mainProc.set("bonitaModelVersion", ModelVersion.CURRENT_DIAGRAM_VERSION);
-			mainProc.set("configId",ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
 		}
 	}
 
