@@ -851,13 +851,6 @@
       </perspective>
       </extension>
 <extension
-      point="org.bonitasoft.studio.common.configurationIdProvider">
-   <configurationIdProvider
-         configurationIdProvider="org.bonitasoft.studio.diagram.custom.ConfigurationIdProvider"
-         priority="1">
-   </configurationIdProvider>
-</extension>
-<extension
       point="org.eclipse.gmf.runtime.common.ui.services.editorProviders">
    <EditorProvider
          class="org.bonitasoft.studio.diagram.custom.providers.DiagramEditorProvider">

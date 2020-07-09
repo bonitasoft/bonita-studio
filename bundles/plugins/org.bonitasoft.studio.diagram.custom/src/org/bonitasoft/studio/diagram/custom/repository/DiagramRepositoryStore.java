@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -445,11 +444,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             if (diagram == null) {
                 throw new IOException("Resource content is null.");
             }
-
-            if (!ConfigurationIdProvider.getConfigurationIdProvider()
-                    .isConfigurationIdValid(diagram)) {
-                return openError(fileName);
-            }
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
@@ -503,9 +497,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
             diagram.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         }
-        diagram.setConfigId(ConfigurationIdProvider
-                .getConfigurationIdProvider().getConfigurationId(
-                        diagram));
         if (diagram.getAuthor() == null) {
             diagram.setAuthor(System.getProperty("user.name",
                     "Unknown"));

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -137,10 +136,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         }
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
         changeProcessNameAndVersion(newDiagram, editingDomain, diagramName, diagramVersion);
-        editingDomain.getCommandStack().execute(
-                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID,
-                        ConfigurationIdProvider
-                                .getConfigurationIdProvider().getConfigurationId(newDiagram)));
         duplicateConfigurations(diagram, newDiagram);
         return store;
     }

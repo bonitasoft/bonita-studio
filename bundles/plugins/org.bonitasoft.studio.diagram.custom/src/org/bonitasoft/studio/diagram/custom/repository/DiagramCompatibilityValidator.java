@@ -22,7 +22,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -33,8 +32,6 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 
 public class DiagramCompatibilityValidator implements IValidator<InputStream> {
@@ -59,9 +56,6 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
             if (mainProcessUUID == null) {
                 return ValidationStatus.ok();
             }
-            String configId = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID, "process:MainProcess",
-                    "configId");
-            String name = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID, "process:MainProcess", "name");
             String bonitaModelVersion = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID,
                     "process:MainProcess",
                     "bonitaModelVersion");
@@ -70,13 +64,6 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
                 return modelVersionStatus;
             } else {
                 result.add(modelVersionStatus);
-            }
-            String bonitaVersion = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID, "process:MainProcess",
-                    "bonitaVersion");
-            if (!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(
-                    EcoreUtil.createFromString(EcorePackage.Literals.EJAVA_OBJECT, configId), name,
-                    bonitaModelVersion, bonitaVersion)) {
-                return ValidationStatus.error(Messages.spDiagramCannotBeImportedError);
             }
             for (String uuid : emfResourceUtil.getEObectIfFromEObjectType("process:FormMapping")) {
                 String formMappingType = emfResourceUtil.getFeatureValueFromEObjectId(uuid, "process:FormMapping",

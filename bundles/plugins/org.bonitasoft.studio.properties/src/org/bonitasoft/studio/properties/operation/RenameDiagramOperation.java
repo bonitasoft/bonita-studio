@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -87,10 +86,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         CompoundCommand compoundCommand = new CompoundCommand();
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             changeProcessNameAndVersion(diagram, compoundCommand, diagramName, diagramVersion, editingDomain);
-            editingDomain.getCommandStack().execute(
-                    SetCommand.create(editingDomain, diagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID,
-                            ConfigurationIdProvider
-                                    .getConfigurationIdProvider().getConfigurationId(diagramName,diagram.getBonitaModelVersion(),diagram.getBonitaVersion())));
         }
         for (final ProcessesNameVersion pnv : pools) {
             final AbstractProcess fromPool = pnv.getAbstractProcess();

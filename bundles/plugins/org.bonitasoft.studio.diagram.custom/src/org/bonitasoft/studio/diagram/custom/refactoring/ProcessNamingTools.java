@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
@@ -86,9 +85,6 @@ public class ProcessNamingTools {
         if (process instanceof MainProcess) {
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process,
                     ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, System.getProperty("user.name", "Unknown")));
-            editingDomain.getCommandStack()
-                    .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID,
-                            ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) process)));
         }
     }
 

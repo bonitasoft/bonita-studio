@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
@@ -276,7 +275,6 @@ public class NewDiagramFactory {
         mainProcess.setBonitaVersion(ProductVersion.CURRENT_VERSION);
         mainProcess.setBonitaModelVersion(modelVersion);
         mainProcess.setEnableValidation(true);
-        mainProcess.setConfigId(getConfigurationId(mainProcess));
         ModelHelper.addDataTypes(mainProcess);
         domainElements.put(MainProcess.class, mainProcess);
 
@@ -319,10 +317,6 @@ public class NewDiagramFactory {
         domainElements.put(SequenceFlow.class, sequenceFlow);
 
         return domainElements;
-    }
-
-    protected Object getConfigurationId(final MainProcess proc) {
-        return ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(proc);
     }
 
     public void setDefaultPoolWidth(final int defaultWidth) {

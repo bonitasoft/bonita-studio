@@ -64,7 +64,6 @@ public class NewDiagramFactoryTest {
     public void setUp() throws Exception {
         newDiagramFactory = spy(new NewDiagramFactory(repository));
 
-        doReturn(null).when(newDiagramFactory).getConfigurationId(any(MainProcess.class));
         when(repository.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramRepositoryStore);
         when(diagramRepositoryStore.getChild(anyString(), any(Boolean.class))).thenReturn(null);
     }
