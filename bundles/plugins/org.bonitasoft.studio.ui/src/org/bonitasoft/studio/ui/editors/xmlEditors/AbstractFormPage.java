@@ -14,14 +14,12 @@
  */
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.UIPlugin;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -89,9 +87,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
     protected void createFormContent(IManagedForm managedForm) {
         toolkit = managedForm.getToolkit();
         darkModeBg = new Color(Display.getDefault(), ColorConstants.DARK_MODE_EDITORS_BACKGROUND);
-        String themeMode = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getString(BonitaPreferenceConstants.STUDIO_THEME_PREFERENCE);
-        if (Objects.equals(themeMode, BonitaPreferenceConstants.DARK_THEME)) {
+        if (PreferenceUtil.isDarkTheme()) {
             toolkit.setBackground(darkModeBg);
         }
         scrolledForm = managedForm.getForm();

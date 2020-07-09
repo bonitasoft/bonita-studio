@@ -44,7 +44,7 @@ public class TogglePropertyHelpContributionItem extends ContributionItem impleme
     private int wellSeverity;
 
     public TogglePropertyHelpContributionItem(final FormToolkit toolkit,
-            final Form form, 
+            final Form form,
             final String helpContent,
             int wellSeverity,
             final PropertySectionHistory propertySectionHistory) {

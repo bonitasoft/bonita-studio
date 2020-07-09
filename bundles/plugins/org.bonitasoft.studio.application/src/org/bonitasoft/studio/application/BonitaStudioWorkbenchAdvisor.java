@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -44,6 +45,8 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
@@ -66,6 +69,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -427,6 +431,55 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         executeContributions();
     }
 
+    @Override
+    public void postStartup() {
+        super.postStartup();
+        IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+        synchroniseTheme(engine);
+        applyTheme(engine);
+    }
+
+    /**
+     * Synchronise active eclipse theme with the Bonita preference,
+     * to ensure that specifics adjustments for Dark theme are applied.
+     * The preference value can be outdated if the user update the theme from the eclipse preference panel.
+     */
+    private void synchroniseTheme(IThemeEngine engine) {
+        String currentValue = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
+        String activeTheme = engine.getActiveTheme() == null
+                ? null
+                : engine.getActiveTheme().getId();
+        if (!themeIsValid(activeTheme)) {
+            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .setValue(BonitaThemeConstants.STUDIO_THEME_PREFERENCE, BonitaThemeConstants.LIGHT_THEME);
+        } else if (!Objects.equals(currentValue, engine.getActiveTheme().getId())) {
+            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                    .setValue(BonitaThemeConstants.STUDIO_THEME_PREFERENCE, engine.getActiveTheme().getId());
+        }
+    }
+
+    private boolean themeIsValid(String themeId) {
+        if (!Strings.isNullOrEmpty(themeId)) {
+            return Objects.equals(themeId, BonitaThemeConstants.LIGHT_THEME)
+                    || Objects.equals(themeId, BonitaThemeConstants.DARK_THEME);
+        }
+        return false;
+    }
+
+    /**
+     * Apply the theme if required (usually on first start).
+     */
+    private void applyTheme(IThemeEngine engine) {
+        String expectedTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
+        if (engine.getActiveTheme() == null
+                || !Objects.equals(expectedTheme, engine.getActiveTheme().getId())) {
+            BonitaStudioLog.info(String.format("Applying theme %s", expectedTheme), ApplicationPlugin.PLUGIN_ID);
+            engine.setTheme(expectedTheme, true);
+        }
+    }
+
     protected void initXMLandHTMLValidationPreferences() {
         IEclipsePreferences xmlNode = DefaultScope.INSTANCE
                 .getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
@@ -574,7 +627,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         preLoad();
-        
+
         // Fix issue with asciidoctor plugin overriding text content-type
         final EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry();
         IFileEditorMapping[] fileEditorMappings = editorRegistry.getFileEditorMappings();
@@ -582,9 +635,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         FileEditorMapping mapping = new FileEditorMapping("*", "log");
         mapping.setDefaultEditor(editorRegistry.findEditor("org.eclipse.ui.DefaultTextEditor"));
         mappings.add(mapping);
-        Display.getDefault().asyncExec(()-> editorRegistry.setFileEditorMappings(mappings.toArray(new FileEditorMapping[] {})));
+        Display.getDefault()
+                .asyncExec(() -> editorRegistry.setFileEditorMappings(mappings.toArray(new FileEditorMapping[] {})));
         editorRegistry.setDefaultEditor("*.txt", "org.eclipse.ui.DefaultTextEditor");
-        
+
         final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
                 ApplicationPlugin.PLUGIN_ID);

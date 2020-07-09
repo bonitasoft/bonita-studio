@@ -125,12 +125,53 @@
       </propertyTester>
    </extension>
    <extension
-         id="org.bonitasoft.studio.preferences.fragment"
-         point="org.eclipse.e4.workbench.model">
-      <fragment
-            uri="fragment.e4xmi"
-            apply="always">
-      </fragment>
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/light_mac.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme macos"
+            os="macosx">
+      </theme>
+      <theme
+            basestylesheeturi="css/light_windows.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme windows"
+            os="win32">
+      </theme>
+      <theme
+            basestylesheeturi="css/light_linux.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme linux"
+            os="linux">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_mac.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme macos"
+            os="macosx">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_windows.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme windows"
+            os="win32">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_linux.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme linux"
+            os="linux">
+      </theme>
+      <stylesheet
+            uri="css/dark_preferencestyle.css">
+         <themeid
+               refid="org.bonitasoft.studio.preferences.theme.dark">
+         </themeid>
+      </stylesheet>
+      <themeAssociation
+            colorAndFontId="org.bonitasoft.studio.preferences.themeAssociation2"
+            themeId="org.bonitasoft.studio.preferences.themeAssociation2">
+      </themeAssociation>
    </extension>
 
 </plugin>

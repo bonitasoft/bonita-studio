@@ -8,10 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.intro.configurer;
 
-import java.util.Objects;
-
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.ui.intro.config.IntroConfigurer;
 import org.eclipse.ui.intro.config.IntroElement;
 
@@ -21,18 +18,12 @@ public class BontaIntroConfigurer extends IntroConfigurer {
     public String getVariable(String variableName) {
         switch (variableName) {
             case "theme":
-                return isDarkTheme()
+                return PreferenceUtil.isDarkTheme()
                         ? "themes/dark_theme.css"
                         : "themes/default_theme.css";
             default:
                 return null;
         }
-    }
-
-    private boolean isDarkTheme() {
-        String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getString(BonitaPreferenceConstants.STUDIO_THEME_PREFERENCE);
-        return Objects.equals(value, BonitaPreferenceConstants.DARK_THEME);
     }
 
     @Override

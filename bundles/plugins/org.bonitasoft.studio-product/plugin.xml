@@ -41,10 +41,6 @@
                value="0,0,0,0">
          </property>
          <property
-			name="applicationCSS"
-			value="org.eclipse.e4.ui.css.theme.e4_default">
-		 </property>
-         <property
                name="applicationXMI"
                value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
          </property>

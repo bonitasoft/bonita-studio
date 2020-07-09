@@ -1,0 +1,19 @@
+.widgetBackground {
+   background-color: COLOR-WIDGET-BACKGROUND;
+   background-color-titlebar: COLOR-WIDGET-BACKGROUND;
+}
+
+#wellInfoLabel {
+	background-color: rgb(229, 245, 255);
+	color: rgb(51, 102, 153);
+}
+
+#wellWarningLabel {
+	background-color: rgb(255, 255, 204);
+	color: rgb(120, 110, 30);
+}
+
+#wellErrorLabel {
+	background-color: rgb(255, 229, 229);
+	color: rgb(204, 0, 0);
+}
