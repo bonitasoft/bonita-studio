@@ -18,14 +18,13 @@ import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -40,6 +39,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.google.common.base.Objects;
@@ -56,6 +56,10 @@ public class Well extends Composite {
 
     static Color errorSeprator = new Color(Display.getDefault(), 204, 0, 0);
     static Color errorBackground = new Color(Display.getDefault(), 255, 229, 229);
+
+    static final String WELL_INFO = "wellInfoLabel";
+    static final String WELL_WARNING = "wellWarningLabel";
+    static final String WELL_ERROR = "wellErrorLabel";
 
     private final Link label;
     private Link moreInformationLink;
@@ -78,41 +82,29 @@ public class Well extends Composite {
 
     public Well(final Composite parent, final String text, final String moreDetails, final FormToolkit toolkit,
             final int severity) {
+
         super(parent, SWT.NONE);
         severityObservable = new WritableValue<>(severity, Integer.class);
         setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 8).spacing(0, 3).create());
         setLayoutData(GridDataFactory.fillDefaults().create());
-        addPaintListener(new PaintListener() {
-
-            @Override
-            public void paintControl(final PaintEvent e) {
-                final Control source = (Control) e.getSource();
-                final Rectangle bounds = source.getBounds();
-                final Rectangle borderBounds = new Rectangle(0, 0, bounds.width - 2, bounds.height - 2);
-                e.gc.setAntialias(SWT.ON);
-                e.gc.setBackground(backgroundColor(severityObservable.getValue()));
-                e.gc.fillRoundRectangle(0, 0, bounds.width - 1, bounds.height - 1, ARC_SIZE, ARC_SIZE);
-                e.gc.setForeground(separatorColor(severityObservable.getValue()));
-                e.gc.setLineAttributes(new LineAttributes(1, SWT.CAP_ROUND, SWT.JOIN_ROUND));
-                e.gc.setLineWidth(1);
-                e.gc.drawRoundRectangle(0, 0, borderBounds.width, borderBounds.height, ARC_SIZE, ARC_SIZE);
-            }
-
+        addPaintListener(e -> {
+            final Control source = (Control) e.getSource();
+            final Rectangle bounds = source.getBounds();
+            final Rectangle borderBounds = new Rectangle(0, 0, bounds.width - 2, bounds.height - 2);
+            e.gc.setAntialias(SWT.ON);
+            e.gc.setBackground(backgroundColor(severityObservable.getValue()));
+            e.gc.fillRoundRectangle(0, 0, bounds.width - 1, bounds.height - 1, ARC_SIZE, ARC_SIZE);
+            e.gc.setForeground(separatorColor(severityObservable.getValue()));
+            e.gc.setLineAttributes(new LineAttributes(1, SWT.CAP_ROUND, SWT.JOIN_ROUND));
+            e.gc.setLineWidth(1);
+            e.gc.drawRoundRectangle(0, 0, borderBounds.width, borderBounds.height, ARC_SIZE, ARC_SIZE);
         });
 
         label = new Link(this, SWT.WRAP);
+        label.setData("org.eclipse.e4.ui.css.id", getLabelCssId(severity));
         if (text != null) {
             label.setText(text);
         }
-
-        label.addPaintListener(e -> {
-            Control source = (Control) e.getSource();
-            Rectangle bounds = source.getBounds();
-            e.gc.setBackground(backgroundColor(severityObservable.getValue()));
-            e.gc.fillRectangle(0, 0, bounds.width, bounds.height);
-            e.gc.setForeground(separatorColor(severityObservable.getValue()));
-            e.gc.drawText(labelTextObservable.getValue(), 0, 2);
-        });
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         labelTextObservable = WidgetProperties.text().observe(label);
         labelTextObservable.addValueChangeListener(e -> {
@@ -120,6 +112,9 @@ public class Well extends Composite {
         });
 
         severityObservable.addValueChangeListener(e -> {
+            IStylingEngine stylingEngine = PlatformUI.getWorkbench().getService(IStylingEngine.class);
+            stylingEngine.setId(label, getLabelCssId(e.diff.getNewValue()));
+            stylingEngine.style(label);
             getParent().getParent().layout(true, true);
         });
 
@@ -164,8 +159,8 @@ public class Well extends Composite {
 
                         @Override
                         public void run() {
-                            if (!Well.this.isDisposed()) {
-                                Well.this.redraw();
+                            if (!isDisposed()) {
+                                redraw();
                             }
                             defaultToolTip.setVisible(false);
                             getDisplay().removeFilter(SWT.MouseUp, mouseUpFilter);
@@ -181,8 +176,8 @@ public class Well extends Composite {
 
                         @Override
                         public void run() {
-                            if (!Well.this.isDisposed()) {
-                                Well.this.redraw();
+                            if (!isDisposed()) {
+                                redraw();
                             }
                             defaultToolTip.setVisible(false);
                             getDisplay().removeFilter(SWT.MouseUp, mouseUpFilter);
@@ -230,6 +225,18 @@ public class Well extends Composite {
             case IStatus.INFO:
             default:
                 return infoBackground;
+        }
+    }
+
+    private String getLabelCssId(int style) {
+        switch (style) {
+            case IStatus.WARNING:
+                return WELL_WARNING;
+            case IStatus.ERROR:
+                return WELL_ERROR;
+            case IStatus.INFO:
+            default:
+                return WELL_INFO;
         }
     }
 

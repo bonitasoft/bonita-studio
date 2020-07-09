@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -70,7 +71,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -396,9 +396,9 @@ public class PageComponentSwitchBuilder {
             if (input.isMandatory()) {
                 viewer.setMandatoryField(getLabel(object.getId()));
             }
-            if(ExpressionConstants.PATTERN_TYPE.equals(exp.getType())){
+            if (ExpressionConstants.PATTERN_TYPE.equals(exp.getType())) {
                 viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
-            }else {
+            } else {
                 viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
             }
             viewer.setExpression(exp);
@@ -507,17 +507,17 @@ public class PageComponentSwitchBuilder {
 
     public Section createGroupControl(final Composite composite, final Group object) {
         final String desc = getDescription(object.getId());
-        int style = Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE | Section.CLIENT_INDENT;
+        int style = Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE;
         if (desc != null && !desc.isEmpty()) {
             style = style | Section.DESCRIPTION;
         }
         final Section groupSection = new Section(composite, style);
+        groupSection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
         groupSection.setText(getLabel(object.getId()));
         groupSection.setFont(BonitaStudioFontRegistry.getBoldFont());
         if (desc != null && !desc.isEmpty()) {
             groupSection.setDescription(desc);
         }
-        groupSection.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         groupSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         return groupSection;
     }

@@ -24,8 +24,8 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
@@ -84,11 +84,11 @@ public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage
 
         final Composite themeComposite = new Composite(getFieldEditorParent(), SWT.NONE);
         themeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        ComboFieldEditor themeField = new ComboFieldEditor(BonitaPreferenceConstants.STUDIO_THEME_PREFERENCE,
+        ComboFieldEditor themeField = new ComboFieldEditor(BonitaThemeConstants.STUDIO_THEME_PREFERENCE,
                 Messages.theme,
                 new String[][] {
-                        { Messages.light, BonitaPreferenceConstants.LIGHT_THEME },
-                        { Messages.dark, BonitaPreferenceConstants.DARK_THEME } },
+                        { Messages.light, BonitaThemeConstants.LIGHT_THEME },
+                        { Messages.dark, BonitaThemeConstants.DARK_THEME } },
                 themeComposite);
         themeComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
@@ -119,9 +119,10 @@ public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage
     private void applyThemePreference() {
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                .getString(BonitaPreferenceConstants.STUDIO_THEME_PREFERENCE);
+                .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
 
         if (engine.getActiveTheme() == null || !Objects.equals(value, engine.getActiveTheme().getId())) {
+            BonitaStudioLog.info(String.format("Applying theme %s", value), BonitaStudioPreferencesPlugin.PLUGIN_ID);
             engine.setTheme(value, true);
             Map<String, Object> parameters = new HashMap();
             parameters.put("title", Messages.themeChangedTitle);

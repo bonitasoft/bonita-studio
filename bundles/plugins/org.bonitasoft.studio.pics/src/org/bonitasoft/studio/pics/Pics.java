@@ -92,7 +92,7 @@ public class Pics extends AbstractUIPlugin {
         try {
             IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
             if (engine.getActiveTheme() != null
-                    && Objects.equals(engine.getActiveTheme().getId(), "org.eclipse.e4.ui.css.theme.e4_dark")) {
+                    && Objects.equals(engine.getActiveTheme().getId(), "org.bonitasoft.studio.preferences.theme.dark")) {
                 return true;
             }
         } catch (IllegalStateException e) {

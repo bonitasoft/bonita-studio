@@ -41,8 +41,8 @@ public class PreferenceUtil {
     public static boolean isDarkTheme() {
         if (BonitaStudioPreferencesPlugin.getDefault() != null) {
             String theme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .getString(BonitaPreferenceConstants.STUDIO_THEME_PREFERENCE);
-            return Objects.equals(theme, BonitaPreferenceConstants.DARK_THEME);
+                    .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
+            return Objects.equals(theme, BonitaThemeConstants.DARK_THEME);
         }
         return false;
     }

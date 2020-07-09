@@ -80,7 +80,9 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
             indent = 18;
         }
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
-        setBackground(parent.getBackground());
+        setBackground(PreferenceUtil.isDarkTheme()
+                ? parent.getBackground()
+                : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         textControl = new Text(this, style | SWT.SINGLE);
         textControl.setBackground(getBackground());
         textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
