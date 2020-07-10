@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pics for Bonitasoft
 Bundle-SymbolicName: org.bonitasoft.studio.pics.bonitasoft
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.W28
 Fragment-Host: org.bonitasoft.studio.pics;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BonitaSoft S.A.
