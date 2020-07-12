@@ -434,6 +434,19 @@
       <extension
          point="org.bonitasoft.studio.connectors.connectorWizard">
       <connectorWizard
+            DefinitionId="webservice"
+            canBeUsedProvider="org.bonitasoft.studio.connectors.ui.wizard.custom.webservice.IsConnectorEditing"
+            priority="1"
+            useDefaultGeneratedPages="true"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.webservice.SecuredWSConnectorWizardPage">
+          </configurationPage>
+      </connectorWizard>
+   </extension>
+<extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
             DefinitionId="email"
             priority="5"
             useDefaultGeneratedPages="false"
