@@ -28,11 +28,11 @@ public class GroovyExpressionPartitioner extends FastPartitioner {
     private static final String GROOVY_END_TAG = "}";
 
     public GroovyExpressionPartitioner() {
-        super(createDefaultScanner(), new String[] { PatternExpressionViewer.GROOVY_EXPRESSION_CONTENT_TYPE });
+        super(createDefaultScanner(), new String[] { TextViewerDocumentViewerDelegate.GROOVY_EXPRESSION_CONTENT_TYPE });
     }
 
     private static IPartitionTokenScanner createDefaultScanner() {
-        final IToken string = new Token(PatternExpressionViewer.GROOVY_EXPRESSION_CONTENT_TYPE);
+        final IToken string = new Token(TextViewerDocumentViewerDelegate.GROOVY_EXPRESSION_CONTENT_TYPE);
         final RuleBasedPartitionScanner scanner = new RuleBasedPartitionScanner();
         scanner.setPredicateRules(new IPredicateRule[] {
                 new MultiLineRule(GROOVY_START_TAG, GROOVY_END_TAG, string)

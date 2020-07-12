@@ -22,6 +22,7 @@ Export-Package: org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.expression.editor.operation,
  org.bonitasoft.studio.expression.editor.pattern,
  org.bonitasoft.studio.expression.editor.pattern.contentAssist,
+ org.bonitasoft.studio.expression.editor.pattern.richtext,
  org.bonitasoft.studio.expression.editor.provider,
  org.bonitasoft.studio.expression.editor.viewer,
  org.bonitasoft.studio.expression.editor.widget
@@ -62,7 +63,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide;bundle-version="3.13.0",
  org.codehaus.groovy.eclipse.ui,
  org.bonitasoft.studio.ui,
- org.bonitasoft.studio.preferences
+ org.bonitasoft.studio.preferences,
+ org.eclipse.nebula.widgets.richtext;bundle-version="1.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",

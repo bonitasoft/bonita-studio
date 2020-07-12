@@ -65,7 +65,7 @@ public class GroovyUtil {
 
     private static Map<String, Expression> expressions;
 
-    private static ViewerFilter NO_FILTER = new ViewerFilter() {
+    private static final ViewerFilter NO_FILTER = new ViewerFilter() {
 
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
