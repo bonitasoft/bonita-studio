@@ -431,4 +431,25 @@
             icon="icons/connector_implem-new.png">
       </image>
    </extension>
+      <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="email"
+            priority="5"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.MailContentWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage">
+         </configurationPage>
+      </connectorWizard>
+   </extension>
 </plugin>

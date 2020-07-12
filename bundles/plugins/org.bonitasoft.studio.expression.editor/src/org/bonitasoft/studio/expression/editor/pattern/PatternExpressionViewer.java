@@ -38,10 +38,10 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -52,9 +52,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -62,7 +59,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -72,336 +68,279 @@ import org.eclipse.swt.widgets.Link;
 
 import com.google.common.collect.Sets;
 
-/**
- * @author Romain Bioteau
- */
 public class PatternExpressionViewer extends Composite {
 
-	public static final String GROOVY_EXPRESSION_CONTENT_TYPE = "__groovy_partition_content_type";
-	private static final int UNDO_REDO_HISTORY_SIZE = 25;
-	private TextViewer viewer;
-	private ExpressionViewer expressionViewer;
-	private final IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
-	private final Set<ViewerFilter> filters = new HashSet<>();
-	protected Expression expression;
-	private ControlDecoration hintDecoration;
-	private final MagicComposite mc;
-	private EMFDataBindingContext context;
-	protected String mandatoryFieldLabel;
-	private EObject contextInput;
-	private Binding patternBinding;
-	private ControlDecoration helpDecoration;
-	private Object input;
-	private PatternExpressionModelBuilder patternExpressionModelBuilder;
+    private static final int UNDO_REDO_HISTORY_SIZE = 25;
+    private IDocumentViewer viewer;
+    private ExpressionViewer expressionViewer;
+    private final IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
+    private final Set<ViewerFilter> filters = new HashSet<>();
+    protected Expression expression;
+    protected ControlDecoration hintDecoration;
+    protected final MagicComposite mc;
+    protected EMFDataBindingContext context;
+    protected String mandatoryFieldLabel;
+    private EObject contextInput;
+    protected Binding patternBinding;
+    protected ControlDecoration helpDecoration;
+    private Object input;
+    private PatternExpressionModelBuilder patternExpressionModelBuilder;
 
-	public PatternExpressionViewer(final Composite parent, final int style) {
-		super(parent, style);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-		mc = new MagicComposite(this, SWT.INHERIT_DEFAULT);
-		mc.setLayout(
-				GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
-		mc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		createTextViewer();
-		createExpressionViewer();
-		createEditorSwitch();
-		mc.hide(getViewerControl());
-		mc.show(expressionViewer.getControl());
+    public PatternExpressionViewer(final Composite parent, final int style) {
+        super(parent, style);
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        mc = new MagicComposite(this, SWT.INHERIT_DEFAULT);
+        mc.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+        mc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createTextViewer();
+        createExpressionViewer();
+        createEditorSwitch();
+        mc.hide(getViewerControl());
+        mc.show(expressionViewer.getControl());
+    }
+    
+    private void createEditorSwitch() {
+        final Link switchControl = new Link(mc, SWT.NONE);
+        switchControl.setText(Messages.switchEditor);
+        switchControl.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
+        switchControl.addSelectionListener(new SelectionAdapter() {
 
-	}
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                switchEditorType();
+            }
+        });
+    }
 
-	private void createEditorSwitch() {
-		final Link switchControl = new Link(mc, SWT.NONE);
-		switchControl.setText(Messages.switchEditor);
-		switchControl.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
-		switchControl.addSelectionListener(new SelectionAdapter() {
+    protected void initializeEditorType() {
+        if (ExpressionConstants.PATTERN_TYPE.equals(expression.getType())) {
+            expression.setName("<pattern-expression>");
+            mc.hide(expressionViewer.getControl());
+            mc.show(getViewerControl());
+            helpDecoration.show();
+            mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0)
+                    .create());
+            bindPatternExpression();
+        } else {
+            mc.hide(getViewerControl());
+            mc.show(expressionViewer.getControl());
+            helpDecoration.hide();
+            mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+            bindExpressionViewer();
+        }
+        mc.layout(true, true);
+    }
 
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				switchEditorType();
-			}
-		});
-	}
+    protected void switchEditorType() {
+        if (MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle, Messages.eraseExpressionMsg)) {
+            if (!expressionMode()) {
+                showExpressionViewer();
+                bindExpressionViewer();
+                mc.layout(true, true);
+            } else {
+                showTextViewer();
+                bindPatternExpression();
+            }
+        }
+    }
 
-	protected void initializeEditorType() {
-		if (ExpressionConstants.PATTERN_TYPE.equals(expression.getType())) {
-			expression.setName("<pattern-expression>");
-			mc.hide(expressionViewer.getControl());
-			mc.show(getViewerControl());
-			helpDecoration.show();
-			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0)
-					.create());
-			bindPatternExpression();
-		} else {
-			mc.hide(getViewerControl());
-			mc.show(expressionViewer.getControl());
-			helpDecoration.hide();
-			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-			bindExpressionViewer();
-		}
-		mc.layout(true, true);
-	}
+    protected void showTextViewer() {
+        mc.hide(expressionViewer.getControl());
+        mc.show(getViewerControl());
+        expression.setContent("");
+        expression.setName("<pattern-expression>");
+        expression.setInterpreter(null);
+        expression.setType(ExpressionConstants.PATTERN_TYPE);
+        bindPatternExpression();
+        mc.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+        mc.layout(true, true);
+        helpDecoration.show();
+        if (hintDecoration.getDescriptionText() != null) {
+            hintDecoration.show();
+        }
+    }
 
-	protected void switchEditorType() {
-		if (MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle, Messages.eraseExpressionMsg)) {
-			if (!expressionMode()) {
-				showExpressionViewer();
-				bindExpressionViewer();
-				mc.layout(true, true);
-			} else {
-				showTextViewer();
-				bindPatternExpression();
-			}
-		}
-	}
+    protected Control getViewerControl() {
+        return viewer.getControl();
+    }
 
-	protected void showTextViewer() {
-		mc.hide(expressionViewer.getControl());
-		mc.show(getViewerControl());
-		expression.setContent("");
-		expression.setName("<pattern-expression>");
-		expression.setInterpreter(null);
-		expression.setType(ExpressionConstants.PATTERN_TYPE);
-		bindPatternExpression();
-		mc.setLayout(
-				GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
-		mc.layout(true, true);
-		helpDecoration.show();
-		if (hintDecoration.getDescriptionText() != null) {
-			hintDecoration.show();
-		}
-	}
+    protected void showExpressionViewer() {
+        helpDecoration.hide();
+        hintDecoration.hide();
+        mc.hide(getViewerControl());
+        mc.show(expressionViewer.getControl());
+        expression.setContent("");
+        expression.setName("");
+        expression.setInterpreter(null);
+        expression.setType(ExpressionConstants.CONSTANT_TYPE);
+        expression.getReferencedElements().clear();
+        expressionViewer.setSelection(new StructuredSelection(expression));
+        mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+    }
 
-	protected Control getViewerControl() {
-		return viewer.getControl();
-	}
+    protected boolean expressionMode() {
+        return expressionViewer.getControl().isVisible();
+    }
 
-	protected void showExpressionViewer() {
-		helpDecoration.hide();
-		hintDecoration.hide();
-		mc.hide(getViewerControl());
-		mc.show(expressionViewer.getControl());
-		expression.setContent("");
-		expression.setName("");
-		expression.setInterpreter(null);
-		expression.setType(ExpressionConstants.CONSTANT_TYPE);
-		expression.getReferencedElements().clear();
-		expressionViewer.setSelection(new StructuredSelection(expression));
-		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-	}
+    private void bindExpressionViewer() {
+        expressionViewer.setContext(contextInput);
+        expressionViewer.setInput(input);
+        if (mandatoryFieldLabel != null) {
+            expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
+        }
+        expressionViewer.setExternalDataBindingContext(context);
+        expressionViewer.setSelection(new StructuredSelection(expression));
+    }
 
-	protected boolean expressionMode() {
-		return expressionViewer.getControl().isVisible();
-	}
+    protected void bindPatternExpression() {
+        final UpdateValueStrategy startegy = new UpdateValueStrategy();
+        if (mandatoryFieldLabel != null) {
+            startegy.setAfterConvertValidator(new EmptyInputValidator(mandatoryFieldLabel));
+        }
+        configurePatternExpressionModelBuilder();
+        IObservableValue expressionContentObserveValue = EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        viewer.bindExpressionContentValue(context, expressionContentObserveValue, startegy);
+        fireDocumentChanged();
+    }
 
-	private void bindExpressionViewer() {
-		expressionViewer.setContext(contextInput);
-		expressionViewer.setInput(input);
-		if (mandatoryFieldLabel != null) {
-			expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
-		}
-		expressionViewer.setExternalDataBindingContext(context);
-		expressionViewer.setSelection(new StructuredSelection(expression));
-	}
+    protected void fireDocumentChanged() {
+        final DocumentEvent event = new DocumentEvent();
+        event.fDocument = viewer.getDocument();
+        patternExpressionModelBuilder.documentChanged(event);
+    }
 
-	protected void bindPatternExpression() {
-		final UpdateValueStrategy startegy = new UpdateValueStrategy();
-		if (mandatoryFieldLabel != null) {
-			startegy.setAfterConvertValidator(new EmptyInputValidator(mandatoryFieldLabel));
-		}
-		if (patternBinding != null) {
-			patternBinding.dispose();
-			patternBinding = null;
-		}
-		configurePatternExpressionModelBuilder();
-		patternBinding = context.bindValue(SWTObservables.observeText(viewer.getTextWidget(), SWT.Modify),
-				EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT), startegy,
-				null);
-		fireDocumentChanged();
-	}
+    protected void configurePatternExpressionModelBuilder() {
+        patternExpressionModelBuilder.setExpression(expression);
+    }
 
-	protected void fireDocumentChanged() {
-		final DocumentEvent event = new DocumentEvent();
-		event.fDocument = viewer.getDocument();
-		patternExpressionModelBuilder.documentChanged(event);
-	}
+    protected void createExpressionViewer() {
+        expressionViewer = new ExpressionViewer(mc, SWT.BORDER);
+        expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    }
 
-	protected void configurePatternExpressionModelBuilder() {
-		patternExpressionModelBuilder.setExpression(expression);
-	}
+    protected void createTextViewer() {
+        viewer = createViewer(mc);
+        viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        configureTextViewer();
+        addLineStyleListener();
+        helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT, this) {
+            
+            @Override
+            public String getDescriptionText() {
+                return viewer.getHelpMessage();
+            }
+        };
+        helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
+        helpDecoration.setDescriptionText(viewer.getHelpMessage());
+        helpDecoration.setMarginWidth(2);
+        helpDecoration.hide();
 
-	protected void createExpressionViewer() {
-		expressionViewer = new ExpressionViewer(mc, SWT.BORDER);
-		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-	}
+        hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT, this);
+        hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        hintDecoration.setMarginWidth(2);
+        hintDecoration.setShowHover(true);
+        hintDecoration.setShowOnlyOnFocus(true);
+        hintDecoration.hide();
 
-	protected void createTextViewer() {
-		viewer = createViewer(mc);
-		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		configureTextViewer();
-		addLineStyleListener();
-		helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT, this);
-		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
-		helpDecoration.setDescriptionText(Messages.patternViewerHint);
-		helpDecoration.setMarginWidth(2);
-		helpDecoration.hide();
+        viewer.addTextListener(event -> viewer.getControl().notifyListeners(SWT.Modify, new Event()));
 
-		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT, this);
-		hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
-		hintDecoration.setMarginWidth(2);
-		hintDecoration.setShowHover(true);
-		hintDecoration.setShowOnlyOnFocus(true);
-		hintDecoration.hide();
+        helpDecoration.show();
+    }
 
-		viewer.addTextListener(new ITextListener() {
+    protected void addLineStyleListener() {
+        if (viewer.getControl() instanceof StyledText) {
+            ((StyledText) viewer.getControl()).addLineStyleListener(new PatternLineStyleListener(viewer.getDocument()));
+        }
+    }
 
-			@Override
-			public void textChanged(final TextEvent event) {
-				viewer.getTextWidget().notifyListeners(SWT.Modify, new Event());
-			}
-		});
+    protected void configureTextViewer() {
+        IDocument document = viewer.getDocument();
+        if (document == null) {
+            document = new Document();
+            viewer.setDocument(document);
+        }
+        addDocumentPartitioner(document);
+        patternExpressionModelBuilder = new PatternExpressionModelBuilder();
+        document.addDocumentListener(patternExpressionModelBuilder);
+        viewer.connect(new TextViewerUndoManager(UNDO_REDO_HISTORY_SIZE));
+    }
 
-		helpDecoration.show();
-	}
+    protected void addDocumentPartitioner(final IDocument document) {
+        final IDocumentPartitioner partitioner = new GroovyExpressionPartitioner();
+        partitioner.connect(document);
+        document.setDocumentPartitioner(partitioner);
+    }
 
-	protected void addLineStyleListener() {
-		viewer.getTextWidget().addLineStyleListener(new PatternLineStyleListener(viewer.getDocument()));
-	}
+    protected IDocumentViewer createViewer(final Composite parent) {
+        return new TextViewerDocumentViewerDelegate(
+                new SourceViewer(parent, null, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));
+    }
 
-	protected void configureTextViewer() {
-		IDocument document = viewer.getDocument();
-		if (document == null) {
-			document = new Document();
-			viewer.setDocument(document);
-		}
-		addDocumentPartitioner(document);
-		patternExpressionModelBuilder = new PatternExpressionModelBuilder();
-		document.addDocumentListener(patternExpressionModelBuilder);
-		final TextViewerUndoManager undoManager = new TextViewerUndoManager(UNDO_REDO_HISTORY_SIZE);
-		viewer.setUndoManager(undoManager);
-		undoManager.connect(viewer);
-		viewer.getTextWidget().addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+    public void setContextInput(final EObject input) {
+        contextInput = input;
+        final List<Expression> filteredExpressions = getFilteredExpressions();
+        patternExpressionModelBuilder.setScope(filteredExpressions);
+        viewer.configureContentAssist(filteredExpressions);
+    }
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.KeyAdapter#keyPressed(org.eclipse.swt.events.KeyEvent)
-			 */
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if ((e.stateMask == SWT.MOD1) && e.keyCode == 'z') {
-					undoManager.undo();
-				} else if ((e.stateMask == SWT.MOD1) && e.keyCode == 'y') {
-					undoManager.redo();
-				} else if ((e.stateMask == SWT.MOD1 + SWT.SHIFT) && e.keyCode == 'z') {
-					undoManager.redo();
-				}
-			}
-		});
+    public void setExpression(final Expression expression) {
+        this.expression = expression;
+        initializeEditorType();
+    }
 
-	}
+    private List<Expression> getFilteredExpressions() {
+        final List<Expression> filteredExpressions = new ArrayList<>();
+        final Expression[] expressions = expressionNatureProvider.getExpressions(contextInput);
+        if (expressions != null) {
+            filteredExpressions.addAll(Arrays.asList(expressions));
+            if (contextInput != null) {
+                for (final Expression exp : expressions) {
+                    for (final ViewerFilter filter : filters) {
+                        if (filter != null && !filter.select(expressionViewer, input, exp)) {
+                            filteredExpressions.remove(exp);
+                        }
+                    }
+                }
+            }
+        }
+        GroovyUtil.getBonitaConstantsFor(contextInput, filters.toArray(new ViewerFilter[] {}), false).stream()
+                .map(ec -> ExpressionHelper.createExpression(ec.getEngineConstantName(), ec.getEngineConstantName(),
+                        ExpressionConstants.ENGINE_CONSTANT_TYPE, ec.getReturnType(), true))
+                .forEach(filteredExpressions::add);
+        return filteredExpressions;
+    }
 
-	protected void addDocumentPartitioner(final IDocument document) {
-		final IDocumentPartitioner partitioner = new GroovyExpressionPartitioner();
-		partitioner.connect(document);
-		document.setDocumentPartitioner(partitioner);
-	}
+    public void addFilter(final ViewerFilter viewerFilter) {
+        filters.add(viewerFilter);
+        expressionViewer.addFilter(viewerFilter);
+    }
 
-	protected TextViewer createViewer(final Composite parent) {
-		return new SourceViewer(parent,null,SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-	}
+    public void setHint(final String hint) {
+        hintDecoration.setDescriptionText(hint);
+        hintDecoration.show();
+        expressionViewer.setMessage(hint);
+    }
 
-	public void setContextInput(final EObject input) {
-		contextInput = input;
-		final List<Expression> filteredExpressions = getFilteredExpressions();
-		patternExpressionModelBuilder.setScope(filteredExpressions);
-		final ContentAssistant assistant = new ContentAssistant();
-		final PatternExpressionCompletionProcessor javaCompletionProcessor = new PatternExpressionCompletionProcessor(
-				new FakeEditorPart(), filteredExpressions);
-		javaCompletionProcessor.setCompletionProposalAutoActivationCharacters(new char[] { '.' });
-		assistant.setContentAssistProcessor(javaCompletionProcessor, GROOVY_EXPRESSION_CONTENT_TYPE);
-		assistant.setShowEmptyList(true);
-		assistant.enableAutoActivation(true);
+    public void setEMFBindingContext(final EMFDataBindingContext context) {
+        this.context = context;
+    }
 
-		final ExpressionContentAssistProcessor contentAssisProcessor = new ExpressionContentAssistProcessor();
-		contentAssisProcessor.setExpressions(Sets.newHashSet(filteredExpressions));
-		assistant.setContentAssistProcessor(contentAssisProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setShowEmptyList(true);
-		assistant.install(viewer);
+    public void setMandatoryField(final String mandatoryFieldLabel) {
+        this.mandatoryFieldLabel = mandatoryFieldLabel;
+    }
 
-		viewer.getTextWidget().addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+    public void setInput(final Object input) {
+        this.input = input;
+        expressionViewer.setInput(input);
+    }
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.KeyAdapter#keyPressed(org.eclipse.swt.events.KeyEvent)
-			 */
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == SWT.SPACE) {
-					assistant.showPossibleCompletions();
-				}
-			}
-		});
-	}
+    public void setExpressionNameResolver(final ExpressionNameResolver expressionNameResolver) {
+        expressionViewer.setExpressionNameResolver(expressionNameResolver);
+    }
 
-	public void setExpression(final Expression expression) {
-		this.expression = expression;
-		initializeEditorType();
-	}
-
-	private List<Expression> getFilteredExpressions() {
-		final List<Expression> filteredExpressions = new ArrayList<>();
-		final Expression[] expressions = expressionNatureProvider.getExpressions(contextInput);
-		if (expressions != null) {
-			filteredExpressions.addAll(Arrays.asList(expressions));
-			if (contextInput != null) {
-				for (final Expression exp : expressions) {
-					for (final ViewerFilter filter : filters) {
-						if (filter != null && !filter.select(expressionViewer, input, exp)) {
-							filteredExpressions.remove(exp);
-						}
-					}
-				}
-			}
-		}
-		GroovyUtil.getBonitaConstantsFor(contextInput, filters.toArray(new ViewerFilter[] {}), false).stream()
-				.map(ec -> ExpressionHelper.createExpression(ec.getEngineConstantName(), ec.getEngineConstantName(),
-						ExpressionConstants.ENGINE_CONSTANT_TYPE, ec.getReturnType(), true))
-				.forEach(filteredExpressions::add);
-		return filteredExpressions;
-	}
-
-	public void addFilter(final ViewerFilter viewerFilter) {
-		filters.add(viewerFilter);
-		expressionViewer.addFilter(viewerFilter);
-	}
-
-	public StyledText getTextControl() {
-		return viewer.getTextWidget();
-	}
-
-	public void setHint(final String hint) {
-		hintDecoration.setDescriptionText(hint);
-		hintDecoration.show();
-		expressionViewer.setMessage(hint);
-	}
-
-	public void setEMFBindingContext(final EMFDataBindingContext context) {
-		this.context = context;
-	}
-
-	public void setMandatoryField(final String mandatoryFieldLabel) {
-		this.mandatoryFieldLabel = mandatoryFieldLabel;
-	}
-
-	public void setInput(final Object input) {
-		this.input = input;
-		expressionViewer.setInput(input);
-	}
-
-	public void setExpressionNameResolver(final ExpressionNameResolver expressionNameResolver) {
-		expressionViewer.setExpressionNameResolver(expressionNameResolver);
-	}
+    public ITextControl getTextControl() {
+        return viewer.getTextControl();
+    }
 }
