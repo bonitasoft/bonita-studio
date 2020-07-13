@@ -97,10 +97,14 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(String.format("%s/rest/pages/%s/resources", baseURL(), pageId));
     }
 
-    public URL migrate() throws MalformedURLException {
+    public URL migrateAll() throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration");
     }
-    
+
+    public URL migratePage(final String pageId) throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/page/" + pageId);
+    }
+
     public URL indexation() throws MalformedURLException {
         return new URL(baseURL() + "/rest/indexing");
     }
@@ -108,7 +112,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     public URL newWidget() throws MalformedURLException {
         return new URL(baseURL() + "/rest/widgets/");
     }
-    
+
     public URL artifactStatus() throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration/status");
     }
