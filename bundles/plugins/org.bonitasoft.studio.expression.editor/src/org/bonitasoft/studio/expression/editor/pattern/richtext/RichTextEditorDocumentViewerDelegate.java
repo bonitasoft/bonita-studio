@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.pattern.richtext;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -23,15 +24,13 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.nebula.widgets.richtext.RichTextEditor;
 import org.eclipse.nebula.widgets.richtext.RichTextEditorConfiguration;
 import org.eclipse.nebula.widgets.richtext.toolbar.ToolbarButton;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.ProgressAdapter;
-import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -41,13 +40,37 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
     private RichTextEditor richTextEditor;
     private IDocument document;
     private IObservableValue<String> expressionContentObserveValue;
+    private InsertVariableButton insertVariableButton;
 
     public RichTextEditorDocumentViewerDelegate(Composite tabFolder) {
         RichTextEditorConfiguration richTextEditorConfiguration = new RichTextEditorConfiguration();
         richTextEditorConfiguration.setToolbarCollapsible(true);
-        richTextEditorConfiguration.setRemovePasteFromWord(false);
-        richTextEditorConfiguration.setToolbarInitialExpanded(false);
+        richTextEditorConfiguration.setRemovePasteFromWord(true);
+        richTextEditorConfiguration.setRemovePasteText(true);
+        richTextEditorConfiguration.setRemoveFormat(false);
+        richTextEditorConfiguration.setToolbarInitialExpanded(true);
+        richTextEditorConfiguration.setOption(RichTextEditorConfiguration.REMOVE_PLUGINS, "elementspath");
+        richTextEditorConfiguration.setOption(RichTextEditorConfiguration.TOOLBAR_GROUPS, "["
+                + "{ name: 'styles' },"
+                + "{ name: 'basicstyles', groups: [ 'basicstyles','colors', 'cleanup' ] },"
+                + "{ name: 'paragraph', groups: [ 'list', 'indent', 'align' ] },"
+                + "{ name: 'links' },"
+                + "{ name: 'other' },"
+                + "{ name: 'insert' }"
+                + "]");
+        List<String> hiddenButtons = Arrays.asList("Flash","PageBreak","Iframe","Smiley","Subscript","Anchor");
+        if("osx".equals(Platform.getOS())) {
+            hiddenButtons.add("TextColor");
+            hiddenButtons.add("BGColor");
+            hiddenButtons.add("Styles");
+            hiddenButtons.add("Font");
+            hiddenButtons.add("FontSize");
+        }
+        richTextEditorConfiguration.removeDefaultToolbarButton(hiddenButtons.toArray(new String[] {}));
+        insertVariableButton = new InsertVariableButton();
+        richTextEditorConfiguration.addToolbarButton(insertVariableButton);
         this.richTextEditor = new RichTextEditor(tabFolder, richTextEditorConfiguration);
+        richTextEditor.addModifyListener(e -> updateExpressionContent());
     }
 
     @Override
@@ -73,7 +96,7 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
 
     @Override
     public void addTextListener(ITextListener object) {
-
+        // N/A
     }
 
     @Override
@@ -115,26 +138,20 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
 
     @Override
     public void configureContentAssist(List<Expression> filteredExpressions) {
-        Browser browser = richTextEditor.getEditorConfiguration().getBrowser();
-        browser.addProgressListener(new ProgressAdapter() {
-
-            @Override
-            public void completed(ProgressEvent event) {
-                richTextEditor.addModifyListener(e -> updateExpressionContent());
-                richTextEditor.addToolbarButton(new InsertVariableButton(filteredExpressions));
-                richTextEditor.updateToolbar();
-            }
-
-        });
+        insertVariableButton.setFilteredExpressions(filteredExpressions);
     }
 
     class InsertVariableButton extends ToolbarButton {
 
         private List<Expression> filteredExpressions;
 
-        public InsertVariableButton(List<Expression> filteredExpressions) {
+        public InsertVariableButton() {
             super("insertVariableButton", "insertVariableCommand", Messages.insertVariableButton, "other",
                     RichPatternExpressionViewer.class.getResource("/icons/Data.gif"));
+        }
+        
+        
+        public void setFilteredExpressions(List<Expression> filteredExpressions) {
             this.filteredExpressions = filteredExpressions;
         }
 
