@@ -41,37 +41,37 @@ public class UIDModelValidator implements IValidator<InputStream> {
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private String incompatibleErrorMessage;
-    
+
     public UIDModelValidator(PageDesignerURLFactory pageDesignerURLFactory, String incompatibleErrorMessage) {
         pageDesignerURLBuilder = pageDesignerURLFactory;
         this.incompatibleErrorMessage = incompatibleErrorMessage;
     }
-    
+
     public UIDModelValidator(String incompatibleErrorMessage) {
-      this(new PageDesignerURLFactory(getPreferenceStore()), incompatibleErrorMessage);
+        this(new PageDesignerURLFactory(getPreferenceStore()), incompatibleErrorMessage);
     }
 
     @Override
     public IStatus validate(InputStream inputStream) {
         String artifactContent = new BufferedReader(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining(System.lineSeparator()));
+                        .lines()
+                        .collect(Collectors.joining(System.lineSeparator()));
         try {
             Representation response = new ClientResource(pageDesignerURLBuilder.artifactStatus().toURI())
-                .post(artifactContent);
+                    .post(artifactContent);
             String repsonseBody = new BufferedReader(
                     new InputStreamReader(response.getStream(), StandardCharsets.UTF_8))
-                    .lines()
-                    .collect(Collectors.joining(System.lineSeparator()));
+                            .lines()
+                            .collect(Collectors.joining(System.lineSeparator()));
             JSONObject status = new JSONObject(repsonseBody);
-            if(!status.getBoolean("compatible")) {
+            if (!status.getBoolean("compatible")) {
                 return ValidationStatus.error(incompatibleErrorMessage);
             }
-            if(status.getBoolean("migration")) {
+            if (status.getBoolean("migration")) {
                 return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
             }
-        }catch (ResourceException | URISyntaxException | IOException | JSONException e) {
+        } catch (ResourceException | URISyntaxException | IOException | JSONException e) {
             BonitaStudioLog.error(e);
         }
         return ValidationStatus.ok();

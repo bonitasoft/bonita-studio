@@ -16,7 +16,6 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,10 +25,7 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
-import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -166,11 +162,15 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
-                new MigrateUIDOperation().run(monitor);
+                MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
+                migrateUIDOperation.run(monitor);
+                if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
+                    throw new MigrationException(Messages.UIDMigrationFailedMessage, new Exception());
+                }
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new MigrationException(e);
             }
         }
     }
-    
+
 }

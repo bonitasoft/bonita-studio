@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+
+import com.google.common.base.Objects;
 
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
@@ -143,16 +146,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private Comparator<? super ImportStoreModel> srcStoresFirst() {
         return (f1, f2) -> {
-            if(f1.getFolderName().startsWith("src")) {
+            if (f1.getFolderName().startsWith("src")) {
                 return -1;
             }
-            if(f2.getFolderName().startsWith("src")) {
+            if (f2.getFolderName().startsWith("src")) {
                 return 1;
             }
-            if(f1.getFolderName().equals("diagrams")) {
+            if (f1.getFolderName().equals("diagrams")) {
                 return 1;
             }
-            if(f2.getFolderName().equals("diagrams")) {
+            if (f2.getFolderName().equals("diagrams")) {
                 return -1;
             }
             return f1.getFolderName().compareTo(f2.getFolderName());
@@ -161,7 +164,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     protected void migrateUID(IProgressMonitor monitor) {
         try {
-            new MigrateUIDOperation().run(monitor);
+            MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
+            migrateUIDOperation.run(monitor);
+            Arrays.asList(migrateUIDOperation.getStatus().getChildren()).stream()
+                    .filter(s -> Objects.equal(s.getSeverity(), IStatus.ERROR))
+                    .forEach(status::add);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
@@ -172,7 +179,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         try (ZipFile zipFile = bosArchive.getZipFile();) {
             repositoryFileStore = unit.doImport(zipFile,
                     monitor);
-            if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel) && ((ImportFileStoreModel) unit).isStoreResource()) {
+            if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel)
+                    && ((ImportFileStoreModel) unit).isStoreResource()) {
                 status.add(ValidationStatus
                         .error(String.format("Failed to import %s", ((ImportFileStoreModel) unit).getFileName()))); // TODO The ImportFileStoreModel should have a status ...
             }
