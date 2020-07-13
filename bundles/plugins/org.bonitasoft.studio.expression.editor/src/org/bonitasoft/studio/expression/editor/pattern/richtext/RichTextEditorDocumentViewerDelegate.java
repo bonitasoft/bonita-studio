@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.pattern.richtext;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -58,8 +58,14 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
                 + "{ name: 'other' },"
                 + "{ name: 'insert' }"
                 + "]");
-        List<String> hiddenButtons = Arrays.asList("Flash","PageBreak","Iframe","Smiley","Subscript","Anchor");
-        if("osx".equals(Platform.getOS())) {
+        List<String> hiddenButtons = new ArrayList();
+        hiddenButtons.add("Flash");
+        hiddenButtons.add("PageBreak");
+        hiddenButtons.add("Iframe");
+        hiddenButtons.add("Smiley");
+        hiddenButtons.add("Subscript");
+        hiddenButtons.add("Anchor");
+        if (Platform.OS_MACOSX.equals(Platform.getOS())) {
             hiddenButtons.add("TextColor");
             hiddenButtons.add("BGColor");
             hiddenButtons.add("Styles");
@@ -149,8 +155,7 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
             super("insertVariableButton", "insertVariableCommand", Messages.insertVariableButton, "other",
                     RichPatternExpressionViewer.class.getResource("/icons/Data.gif"));
         }
-        
-        
+
         public void setFilteredExpressions(List<Expression> filteredExpressions) {
             this.filteredExpressions = filteredExpressions;
         }

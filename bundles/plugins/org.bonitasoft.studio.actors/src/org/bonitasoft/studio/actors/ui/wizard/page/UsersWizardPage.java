@@ -472,7 +472,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                         .align(SWT.FILL, SWT.CENTER)
                         .grab(true, false)
                         .indent(5, 0)
-                        .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
+                        .span(Platform.OS_MACOSX.equals(Platform.getOS()) ? 2 : 1, 1)
                         .create());
         char echoChar = passwordText.getEchoChar();
 
