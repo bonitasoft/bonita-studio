@@ -19,7 +19,6 @@
 		<connectors.deps.target>${basedir}/dependencies</connectors.deps.target>
 		<connectors.tmp.dir>${basedir}/connectors</connectors.tmp.dir>
 		<!-- connectors versions -->
-		<connector.version.alfresco>2.0.1</connector.version.alfresco>
 		<connector.version.cmis>3.0.3</connector.version.cmis>
 		<connector.version.database>2.0.1</connector.version.database>
 		<connector.version.email>1.2.2</connector.version.email>
@@ -84,14 +83,6 @@
 						</goals>
 						<configuration>
 							<artifactItems>
-								<!--ALFRESCO CONNECTORS -->
-								<artifactItem>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-alfresco</artifactId>
-									<version>${connector.version.alfresco}</version>
-									<classifier>all</classifier>
-									<type>zip</type>
-								</artifactItem>
 								<!--CMIS CONNECTORS -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
