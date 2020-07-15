@@ -41,6 +41,12 @@ import org.bonitasoft.studio.tests.connectors.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorOutputMode;
 import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration;
 import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceConnection;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceCreateObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceDeleteObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceQueryObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceRetrieveObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceUpdateObject;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.deploy.DeployWizardIT;
@@ -159,7 +165,13 @@ import org.junit.runners.Suite;
         BPMNEventSubProcessExportImportTest.class,
         DeployWizardIT.class,
         OrganizationCreationTest.class,
-        SmartImportBdmIT.class
+        SmartImportBdmIT.class,
+        TestSForceConnection.class,
+        TestSForceCreateObject.class,
+        TestSForceDeleteObject.class,
+        TestSForceQueryObject.class,
+        TestSForceRetrieveObject.class,
+        TestSForceUpdateObject.class
 })
 public class SWTBotTestSuite {
 
