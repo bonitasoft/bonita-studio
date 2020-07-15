@@ -49,7 +49,7 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
         richTextEditorConfiguration.setRemovePasteText(true);
         richTextEditorConfiguration.setRemoveFormat(false);
         richTextEditorConfiguration.setToolbarInitialExpanded(true);
-        richTextEditorConfiguration.setOption(RichTextEditorConfiguration.REMOVE_PLUGINS, "elementspath");
+        richTextEditorConfiguration.setOption(RichTextEditorConfiguration.REMOVE_PLUGINS, "elementspath,flash");
         richTextEditorConfiguration.setOption(RichTextEditorConfiguration.TOOLBAR_GROUPS, "["
                 + "{ name: 'styles' },"
                 + "{ name: 'basicstyles', groups: [ 'basicstyles','colors', 'cleanup' ] },"
@@ -58,13 +58,7 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
                 + "{ name: 'other' },"
                 + "{ name: 'insert' }"
                 + "]");
-        List<String> hiddenButtons = new ArrayList();
-        hiddenButtons.add("Flash");
-        hiddenButtons.add("PageBreak");
-        hiddenButtons.add("Iframe");
-        hiddenButtons.add("Smiley");
-        hiddenButtons.add("Subscript");
-        hiddenButtons.add("Anchor");
+        List<String> hiddenButtons = new ArrayList<>();
         if (Platform.OS_MACOSX.equals(Platform.getOS())) {
             hiddenButtons.add("TextColor");
             hiddenButtons.add("BGColor");
@@ -72,6 +66,13 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
             hiddenButtons.add("Font");
             hiddenButtons.add("FontSize");
         }
+        hiddenButtons.add("Flash");
+        hiddenButtons.add("PageBreak");
+        hiddenButtons.add("Iframe");
+        hiddenButtons.add("Smiley");
+        hiddenButtons.add("Subscript");
+        hiddenButtons.add("Anchor");
+
         richTextEditorConfiguration.removeDefaultToolbarButton(hiddenButtons.toArray(new String[] {}));
         insertVariableButton = new InsertVariableButton();
         richTextEditorConfiguration.addToolbarButton(insertVariableButton);
