@@ -188,7 +188,7 @@ public class Messages extends NLS {
     public static String unSelectAll;
     public static String DebugProcessButtonLabel;
     public static String debugProcessWizardtitle;
-    
+
     public static String wsdlLocation;
     public static String readWSDL;
     public static String operation;
@@ -201,6 +201,17 @@ public class Messages extends NLS {
     public static String configureXMLWebServiceTitle;
     public static String errorIntrospectTitle;
     public static String errorIntrospectMessage;
+
+    public static String charactersLeft;
+    public static String searchUserButton;
+    public static String searchUserEmptyField;
+    public static String searchUserTitle;
+    public static String searchUserLastTweetsTitle;
+    public static String testValideInformationButtonLabel;
+    public static String testValideInformationError;
+    public static String testValideInformationSuccess;
+    public static String testValideInformationExplanation;
+    public static String testValideInformationTitle;
 
     /**
      * @param event
