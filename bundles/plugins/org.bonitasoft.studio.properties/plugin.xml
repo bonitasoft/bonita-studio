@@ -262,6 +262,14 @@
                       tab="tab.transitionordering"
                       viewID="org.bonitasoft.studio.views.properties.process.general">
                 </propertySection>
+                 <propertySection
+		              class="org.bonitasoft.studio.properties.sections.message.ThrowEventSection"
+		              enablesFor="1"
+		              filter="org.bonitasoft.studio.properties.filters.ThrowMessageEventFilter"
+		              id="ThrowMessageSection"
+		              tab="tab.throwMessage"
+		              viewID="org.bonitasoft.studio.views.properties.process.general">
+        </propertySection>
       </propertySections>
    </extension>
 </plugin>
