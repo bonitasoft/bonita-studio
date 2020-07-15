@@ -68,7 +68,6 @@
         <module>org.bonitasoft.studio.pics.bonitasoft</module>
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
-        <module>org.bonitasoft.studio.properties.bos</module>
         <module>org.bonitasoft.studio.scripting</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
