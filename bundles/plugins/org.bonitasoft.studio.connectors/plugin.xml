@@ -465,4 +465,31 @@
          </configurationPage>
       </connectorWizard>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="twitter-direct"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.twitter.TwitterConnectionWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.twitter.TwitterDirectMessageWizardPage">
+         </configurationPage>
+      </connectorWizard>
+      <connectorWizard
+            DefinitionId="twitter-update-status"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.twitter.TwitterConnectionWizardPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.twitter.TwitterUpdateStatusWizardPage">
+         </configurationPage>
+      </connectorWizard>
+    </extension>
 </plugin>
