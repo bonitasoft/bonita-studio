@@ -79,7 +79,7 @@ public class MigrateUIDOperationTest {
         NullProgressMonitor monitor = new NullProgressMonitor();
         PageDesignerURLFactory urlBuilder = mock(PageDesignerURLFactory.class);
         MigrateUIDOperation op = spy(new MigrateUIDOperation());
-        doReturn(ValidationStatus.ok()).when(op).migrateFileStore(any(), any(), any());
+        doReturn(ValidationStatus.ok()).when(op).migratePage(any(), any(), any());
 
         WebPageRepositoryStore repositoryStore = mock(WebPageRepositoryStore.class);
         WebPageFileStore fStore1 = mock(WebPageFileStore.class);
@@ -87,9 +87,9 @@ public class MigrateUIDOperationTest {
         WebPageFileStore fStore3 = mock(WebPageFileStore.class);
         when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fStore1, fStore2, fStore3));
         op.migrate(monitor, urlBuilder, repositoryStore);
-        verify(op).migrateFileStore(urlBuilder, fStore1, monitor);
-        verify(op).migrateFileStore(urlBuilder, fStore2, monitor);
-        verify(op).migrateFileStore(urlBuilder, fStore3, monitor);
+        verify(op).migratePage(urlBuilder, fStore1, monitor);
+        verify(op).migratePage(urlBuilder, fStore2, monitor);
+        verify(op).migratePage(urlBuilder, fStore3, monitor);
     }
 
 }

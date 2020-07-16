@@ -142,10 +142,11 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if (filename != null & filename.endsWith("." + DEF_EXT)) {
+        if (filename != null && filename.endsWith("." + DEF_EXT)) {
             return new XMLModelCompatibilityValidator(
                     new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE,
-                           String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename))).validate(inputStream);
+                           String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                           String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

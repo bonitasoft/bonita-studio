@@ -134,7 +134,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
         for (ApplicationFileStore fileStore : getChildren()) {
             try {
                 ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
-                applicationNodeContainer.getApplications().forEach(application -> updateBonitaTheme(application));
+                applicationNodeContainer.getApplications().forEach(this::updateBonitaTheme);
                 fileStore.save(applicationNodeContainer);
             } catch (ReadFileStoreException e) {
                 BonitaStudioLog.error(e);
@@ -150,9 +150,11 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if (filename.endsWith("." + XML_EXTENSION)) {
+        if (filename != null && filename.endsWith("." + XML_EXTENSION)) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
-                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename)))
+                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, 
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
                             .validate(inputStream);
         }
         return super.validate(filename, inputStream);

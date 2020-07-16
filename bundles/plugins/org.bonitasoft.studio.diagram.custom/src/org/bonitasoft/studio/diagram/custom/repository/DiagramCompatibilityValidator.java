@@ -38,9 +38,11 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
     
     
     private String incompatibleModelMessage;
+    private String migrationWarningMessage;
 
-    public DiagramCompatibilityValidator(String incompatibleModelMessage) {
+    public DiagramCompatibilityValidator(String incompatibleModelMessage, String migrationWarningMessage) {
         this.incompatibleModelMessage = incompatibleModelMessage;
+        this.migrationWarningMessage = migrationWarningMessage;
     }
 
     @Override
@@ -59,8 +61,10 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
             String bonitaModelVersion = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID,
                     "process:MainProcess",
                     "bonitaModelVersion");
-            IStatus modelVersionStatus = new ModelVersionValidator(ModelVersion.CURRENT_DIAGRAM_VERSION,incompatibleModelMessage).validate(bonitaModelVersion);
-            if (modelVersionStatus.getSeverity() == IStatus.ERROR) {
+            IStatus modelVersionStatus = new ModelVersionValidator(ModelVersion.CURRENT_DIAGRAM_VERSION,
+                    incompatibleModelMessage,
+                    migrationWarningMessage).validate(bonitaModelVersion);
+            if (modelVersionStatus.getSeverity() == IStatus.ERROR || modelVersionStatus.getSeverity() == IStatus.WARNING) {
                 return modelVersionStatus;
             } else {
                 result.add(modelVersionStatus);

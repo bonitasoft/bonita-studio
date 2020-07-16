@@ -4,7 +4,6 @@ import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.Messages;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class ModelNamespaceValidatorTest {
     
     @Before
     public void setUp() throws Exception {
-        validator = new ModelNamespaceValidator(NAMESPACE, "error", Collections.singleton(LEGACY_NAMESPACE));
+        validator = new ModelNamespaceValidator(NAMESPACE, "error","warning", Collections.singleton(LEGACY_NAMESPACE));
     }
 
     @Test
@@ -40,14 +39,14 @@ public class ModelNamespaceValidatorTest {
     public void should_be_warning_when_namespace_is_a_legacy_namespace() {
         assertThat(validator.validate(LEGACY_NAMESPACE))
                 .isWarning()
-                .hasMessage(Messages.migrationWillBreakRetroCompatibility);
+                .hasMessage("warning");
     }
 
     @Test
     public void should_be_warning_when_a_migration_is_required() {
         assertThat(validator.validate("a/namespace/1.0"))
                 .isWarning()
-                .hasMessage(Messages.migrationWillBreakRetroCompatibility);
+                .hasMessage("warning");
     }
     
 

@@ -210,9 +210,10 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if (filename != null & filename.endsWith("." + ORGANIZATION_EXT) || filename.toLowerCase().endsWith(".xml")) {
+        if (filename != null && filename.endsWith("." + ORGANIZATION_EXT) || filename.toLowerCase().endsWith(".xml")) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_ORGANIZATION_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename),
                     LEGACY_ORGA_NAMESPACES)).validate(inputStream);
         }
         return super.validate(filename, inputStream);

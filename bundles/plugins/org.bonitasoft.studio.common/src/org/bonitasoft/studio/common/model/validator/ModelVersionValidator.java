@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.model.validator;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -25,10 +24,12 @@ public class ModelVersionValidator implements IValidator<String> {
 
     private String currentModelVersion;
     private String incompatibilityErrorMessage;
+    private String migrationWarningMessage;
 
-    public ModelVersionValidator(String currentModelVersion, String incompatibilityErrorMessage) {
+    public ModelVersionValidator(String currentModelVersion, String incompatibilityErrorMessage, String migrationWarningMessage) {
         this.incompatibilityErrorMessage = incompatibilityErrorMessage;
         this.currentModelVersion = currentModelVersion;
+        this.migrationWarningMessage = migrationWarningMessage;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ModelVersionValidator implements IValidator<String> {
             case 0:
                 return ValidationStatus.ok();
             case 1:
-                return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
+                return ValidationStatus.warning(migrationWarningMessage);
             case -1:
             default:
                 return ValidationStatus.error(incompatibilityErrorMessage);

@@ -564,8 +564,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if (filename != null & filename.endsWith(".proc")) {
-            return new DiagramCompatibilityValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename)).validate(inputStream);
+        if (filename != null && filename.endsWith(".proc")) {
+            return new DiagramCompatibilityValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

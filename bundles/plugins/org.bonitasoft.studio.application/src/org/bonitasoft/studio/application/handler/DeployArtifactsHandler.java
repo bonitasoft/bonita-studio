@@ -77,6 +77,7 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -84,6 +85,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -117,26 +119,36 @@ public class DeployArtifactsHandler {
     public void deploy(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
             RepositoryAccessor repositoryAccessor, IProgressService progressService)
             throws InvocationTargetException, InterruptedException {
-        progressService.busyCursorWhile(monitor -> {
-            repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);
-        });
-
         ModelFileCompatibilityValidator validator = new ModelFileCompatibilityValidator(
                 repositoryAccessor.getCurrentRepository());
         validator.addResourceMarkers();
-        progressService.busyCursorWhile(monitor -> validator.run(monitor));
-        if (validator.getStatus().getSeverity() == IStatus.ERROR) {
-            new MultiStatusDialog(activeShell, Messages.incompatibleModelFoundTitle, Messages.incompatibleModelFoundMsg,
-                    new String[] { IDialogConstants.OK_LABEL }, validator.getStatus())
-                            .setLevel(IStatus.ERROR)
+        progressService.busyCursorWhile(validator::run);
+        boolean shouldUpdateModels = Stream.of(validator.getStatus().getChildren()).anyMatch(s -> s.matches(IStatus.WARNING));
+        if (validator.getStatus().matches(IStatus.ERROR) || shouldUpdateModels) {
+            int result = new MultiStatusDialog(activeShell, Messages.incompatibleModelFoundTitle, Messages.incompatibleModelFoundMsg,
+                    shouldUpdateModels ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels, IDialogConstants.ABORT_LABEL} :  new String[] {IDialogConstants.PROCEED_LABEL}, validator.getStatus())
+                            .setLevel(IStatus.WARNING)
                             .open();
+            if(result == 1) {
+                return;
+            }
+            if (Stream.of(validator.getStatus().getChildren()).anyMatch(s -> s.matches(IStatus.WARNING))) {
+                progressService.busyCursorWhile(monitor -> {
+                    try {
+                        repositoryAccessor.getCurrentRepository().migrate(monitor);
+                        validator.run(monitor);
+                    } catch (CoreException | MigrationException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
+            }
         }
-
+        progressService.busyCursorWhile(monitor -> repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor));
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
                 new EnvironmentProviderFactory().getEnvironmentProvider());
         if (defaultSelection != null) {
             page.setDefaultSelectedElements(defaultSelection.stream()
-                    .map(fStore -> asArtifact(fStore))
+                    .map(this::asArtifact)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet()));
         }

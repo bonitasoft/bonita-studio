@@ -134,12 +134,12 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
                             }
                         }
                         IStatus status = repositoryStore.validate(file.toFile().getName(), inputStream);
-                        if (status.getSeverity() == IStatus.ERROR) {
+                        if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
                             ModelFileCompatibilityValidator.this.status.add(status);
                             if (resource != null && resource.exists()) {
                                 try {
                                     IMarker marker = resource.createMarker(MODEL_VERSION_MARKER_TYPE);
-                                    marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+                                    marker.setAttribute(IMarker.SEVERITY, toMarkerSeverity(status));
                                     marker.setAttribute(IMarker.MESSAGE, status.getMessage());
                                     marker.setAttribute(IMarker.LOCATION, "");
                                 } catch (CoreException e) {
@@ -153,11 +153,21 @@ public class ModelFileCompatibilityValidator implements IRunnableWithStatus {
                     monitor.worked(1);
                     return FileVisitResult.CONTINUE;
                 }
+               
             }));
         } catch (IOException e) {
             throw new InvocationTargetException(e);
         }
 
+    }
+    
+    private int toMarkerSeverity(IStatus status) {
+        switch (status.getSeverity()) {
+            case IStatus.ERROR: return IMarker.SEVERITY_ERROR;
+            case IStatus.WARNING: return IMarker.SEVERITY_WARNING;
+            default:
+                return IMarker.SEVERITY_INFO;
+        }
     }
 
     @Override
