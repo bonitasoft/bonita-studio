@@ -47,8 +47,12 @@ import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
@@ -258,6 +262,24 @@ public abstract class AbstractFileStore<T>
                 MessageDialog.openError(display.getActiveShell(), Messages.invalidFile, status.getMessage());
                 return null;
             case IStatus.WARNING:
+                MessageDialog dialog = new MessageDialog(display.getActiveShell(), 
+                        Messages.migrationConfirmationTitle,
+                        null,  
+                        Messages.migrationConfirmationMsg, 
+                        MessageDialog.WARNING,
+                        0,
+                        Messages.continueLabel,
+                        IDialogConstants.CANCEL_LABEL);
+                if(dialog.open() == Dialog.OK) {
+                    try {
+                        getParentStore().migrate(this, Repository.NULL_PROGRESS_MONITOR);
+                    } catch (CoreException | MigrationException e) {
+                        MessageDialog.openError(display.getActiveShell(), Messages.migrationError, e.getMessage());
+                        return null;
+                    }
+                    break;
+                }
+                return null;
             default:
                 break;
         }

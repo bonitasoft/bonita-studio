@@ -30,8 +30,12 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -64,25 +68,101 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        monitor.subTask(Messages.migratingUID);
         PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
                 ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
         WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebPageRepositoryStore.class);
         migrate(monitor, urlBuilder, repositoryStore);
+        WebFragmentRepositoryStore fragmentStore = RepositoryManager.getInstance()
+                .getRepositoryStore(WebFragmentRepositoryStore.class);
+        WebWidgetRepositoryStore widgetStore = RepositoryManager.getInstance()
+                .getRepositoryStore(WebWidgetRepositoryStore.class);
+        migrateUnusedFragments(urlBuilder, fragmentStore , monitor);
+        migrateUnusedWidgets(urlBuilder, widgetStore , monitor);
+    }
+
+    private void migrateUnusedWidgets(PageDesignerURLFactory urlBuilder, WebWidgetRepositoryStore widgetStore,
+            IProgressMonitor monitor) throws InvocationTargetException {
+        List<WebWidgetFileStore> children = widgetStore.getChildren();
+        for (WebWidgetFileStore fileStore : children) {
+            if(fileStore.validate().matches(IStatus.WARNING)) {
+                status.add(migrateWidget(urlBuilder, fileStore, monitor));
+            }
+        }
+    }
+
+    private void migrateUnusedFragments(PageDesignerURLFactory urlBuilder, WebFragmentRepositoryStore repositoryStore,
+            IProgressMonitor monitor) throws InvocationTargetException {
+        List<WebFragmentFileStore> children = repositoryStore.getChildren();
+        for (WebFragmentFileStore fileStore : children) {
+            if(fileStore.validate().matches(IStatus.WARNING)) {
+                status.add(migrateFragment(urlBuilder, fileStore, monitor));
+            }
+        }
+    }
+
+    private IStatus migrateFragment(PageDesignerURLFactory urlBuilder, WebFragmentFileStore fileStore,
+            IProgressMonitor monitor) throws InvocationTargetException {
+        URI uri = null;
+        String fragmentId = fileStore.getId();
+        try {
+            uri = urlBuilder.migrateFragment(fragmentId).toURI();
+        } catch (MalformedURLException | URISyntaxException e1) {
+            throw new InvocationTargetException(new MigrationException(e1));
+        }
+        Context currentContext = Context.getCurrent();
+        try {
+            ClientResource clientResource = new ClientResource(uri);
+            clientResource.setRetryOnError(true);
+            clientResource.setRetryDelay(500);
+            clientResource.setRetryAttempts(5);
+            Representation response = clientResource.put(new EmptyRepresentation());
+            return parseMigrationResponse(fragmentId, response);
+        } catch (ResourceException e) {
+            throw new InvocationTargetException(new MigrationException(e),
+                    "Failed to post on " + uri);
+        } finally {
+            Context.setCurrent(currentContext);
+        }
+    }
+    
+    private IStatus migrateWidget(PageDesignerURLFactory urlBuilder, WebWidgetFileStore fileStore,
+            IProgressMonitor monitor) throws InvocationTargetException {
+        URI uri = null;
+        String widgetId = fileStore.getId();
+        try {
+            uri = urlBuilder.migrateWidget(widgetId).toURI();
+        } catch (MalformedURLException | URISyntaxException e1) {
+            throw new InvocationTargetException(new MigrationException(e1));
+        }
+        Context currentContext = Context.getCurrent();
+        try {
+            ClientResource clientResource = new ClientResource(uri);
+            clientResource.setRetryOnError(true);
+            clientResource.setRetryDelay(500);
+            clientResource.setRetryAttempts(5);
+            Representation response = clientResource.put(new EmptyRepresentation());
+            return parseMigrationResponse(widgetId, response);
+        } catch (ResourceException e) {
+            throw new InvocationTargetException(new MigrationException(e),
+                    "Failed to post on " + uri);
+        } finally {
+            Context.setCurrent(currentContext);
+        }
     }
 
     protected void migrate(IProgressMonitor monitor, PageDesignerURLFactory urlBuilder,
             WebPageRepositoryStore repositoryStore) throws InvocationTargetException {
         List<WebPageFileStore> children = repositoryStore.getChildren();
-        monitor.subTask(Messages.migratingUID);
         monitor.beginTask("", children.size());
         for (WebPageFileStore fileStore : children) {
-            status.add(migrateFileStore(urlBuilder, fileStore, monitor));
+            status.add(migratePage(urlBuilder, fileStore, monitor));
             monitor.worked(1);
-        } ;
+        }
     }
 
-    protected IStatus migrateFileStore(PageDesignerURLFactory urlBuilder, WebPageFileStore fileStore,
+    protected IStatus migratePage(PageDesignerURLFactory urlBuilder, WebPageFileStore fileStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         URI uri = null;
         String pageId = fileStore.getId();
@@ -108,7 +188,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
         }
     }
 
-    protected IStatus parseMigrationResponse(String pageId, Representation response) {
+    protected IStatus parseMigrationResponse(String artifactId, Representation response) {
         try {
             String repsonseBody = new BufferedReader(
                     new InputStreamReader(response.getStream(), StandardCharsets.UTF_8))
@@ -117,11 +197,11 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
             JSONObject status = new JSONObject(repsonseBody);
             switch (status.getString("status")) {
                 case "incompatible":
-                    return ValidationStatus.error(String.format(Messages.migrationNotPossible, pageId));
+                    return ValidationStatus.error(String.format(Messages.migrationNotPossible, artifactId));
                 case "error":
-                    return ValidationStatus.error(String.format(Messages.migrationError, pageId));
+                    return ValidationStatus.error(String.format(Messages.migrationError, artifactId));
                 case "warning":
-                    return ValidationStatus.warning(String.format(Messages.migrationWarning, pageId));
+                    return ValidationStatus.warning(String.format(Messages.migrationWarning, artifactId));
                 case "success":
                 case "none:":
                 default:

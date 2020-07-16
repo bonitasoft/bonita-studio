@@ -48,12 +48,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -342,26 +339,31 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
 
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        List<IFile> filesToMigrate = getChildren().stream()
+        List<T> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
                 .filter(IRepositoryFileStore::canBeShared)
-                .map(IRepositoryFileStore::getResource)
-                .filter(IFile.class::isInstance)
-                .map(IFile.class::cast)
-                .filter(IFile::exists)
                 .collect(Collectors.toList());
 
-        for (IFile file : filesToMigrate) {
-            monitor.subTask(file.getName());
-            InputStream newIs;
-            try (final InputStream is = file.getContents()) {
-                newIs = handlePreImport(file.getName(), is);
+        for (T fStore : filesToMigrate) {
+            migrate(fStore, monitor);
+        }
+    }
+    
+    @Override
+    public void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException {
+        IResource resource = fileStore.getResource();
+        if(resource instanceof IFile 
+                && resource.exists() 
+                && validate(resource.getName(), ((IFile) resource).getContents()).getSeverity() != IStatus.ERROR) {
+            try (final InputStream is = ((IFile) resource).getContents()) {
+                monitor.subTask(fileStore.getName());
+                InputStream newIs = handlePreImport(resource.getName(), is);
                 if (!is.equals(newIs)) {
-                    file.setContents(newIs, IResource.FORCE, monitor);
-                    file.refreshLocal(IResource.DEPTH_ONE, monitor);
+                    ((IFile) resource).setContents(newIs, IResource.FORCE, monitor);
+                    resource.refreshLocal(IResource.DEPTH_ONE, monitor);
                 }
             } catch (final IOException e) {
-                throw new MigrationException("Cannot migrate resource " + file.getName() + " (not a valid file)", e);
+                throw new MigrationException("Cannot migrate resource " + resource.getName() + " (not a valid file)", e);
             }
         }
     }

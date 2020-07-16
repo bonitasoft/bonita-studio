@@ -17,6 +17,7 @@ package org.bonitasoft.studio.validation.handler;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -34,8 +35,10 @@ import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
@@ -107,12 +110,17 @@ public class BatchValidationHandler extends AbstractHandler {
                                 .closeEditor(currentDiagramStore.getOpenedEditor(), false));
             }
         } else if (shouldDisplayReportDialog(parameters)) {
-            showReport(aggregatedStatus, checkAllModelVersion);
+            showReport(aggregatedStatus, checkAllModelVersion, validateModelCompatibility);
         }
 
         refreshViewerPropertyPart();
 
         return aggregatedStatus;
+    }
+
+    private boolean showMigrateButton(ModelFileCompatibilityValidator validateModelCompatibility) {
+        return Stream.of(validateModelCompatibility.getStatus().getChildren())
+                .anyMatch(s -> s.matches(IStatus.WARNING));
     }
 
     private boolean checkAllModelVersion(final Map<?, ?> parameters) {
@@ -194,19 +202,39 @@ public class BatchValidationHandler extends AbstractHandler {
         return files.trim().split(",");
     }
 
-    private void showReport(MultiStatus aggregatedStatus, boolean checkAllModelVersion) {
+    private void showReport(MultiStatus aggregatedStatus, boolean checkAllModelVersion,
+            ModelFileCompatibilityValidator validator) {
         if (checkAllModelVersion) {
-            if (statusContainsError(aggregatedStatus)) {
+            boolean showMigrateButton = showMigrateButton(validator);
+            if (statusContainsError(aggregatedStatus) || showMigrateButton) {
                 MultiStatusDialog multiStatusDialog = new MultiStatusDialog(Display.getDefault().getActiveShell(),
-                        Messages.validationFailedTitle,
-                        Messages.validationErrorMessage,
-                        new String[] { IDialogConstants.CLOSE_LABEL },
+                        Messages.validationTitle,
+                        statusContainsError(aggregatedStatus) ? Messages.validationErrorMessage
+                                : Messages.validationWarningMessage,
+                        showMigrateButton ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels, IDialogConstants.CLOSE_LABEL }
+                                : new String[] { IDialogConstants.CLOSE_LABEL },
                         aggregatedStatus);
-                multiStatusDialog.setLevel(IStatus.ERROR);
-                multiStatusDialog.open();
+                multiStatusDialog.setLevel(IStatus.WARNING);
+                if (multiStatusDialog.open() == 0) {
+                    IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                    try {
+                        service.run(true, false, monitor -> {
+                            try {
+                                RepositoryManager.getInstance().getCurrentRepository().migrate(monitor);
+                            } catch (CoreException | MigrationException e) {
+                                throw new InvocationTargetException(e);
+                            }
+                            validator.run(monitor);
+                        });
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        BonitaStudioLog.error(e);
+                        MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                org.bonitasoft.studio.common.repository.Messages.migrationError, e.getMessage());
+                    }
+                }
             } else {
                 MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-                        Messages.validationSuccessTitle,
+                        Messages.validationTitle,
                         Messages.validationSuccessMsg);
             }
         } else if (statusContainsError(aggregatedStatus)) {
@@ -223,16 +251,11 @@ public class BatchValidationHandler extends AbstractHandler {
                 }
                 final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 activePage.activate(openedEditor);
-
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            activePage.showView("org.bonitasoft.studio.validation.view");
-                        } catch (final PartInitException e) {
-                            BonitaStudioLog.error(e);
-                        }
+                Display.getDefault().asyncExec(() -> {
+                    try {
+                        activePage.showView("org.bonitasoft.studio.validation.view");
+                    } catch (final PartInitException e) {
+                        BonitaStudioLog.error(e);
                     }
                 });
             }
@@ -241,11 +264,7 @@ public class BatchValidationHandler extends AbstractHandler {
 
     private boolean statusContainsError(final IStatus validationStatus) {
         if (validationStatus != null) {
-            for (final IStatus s : validationStatus.getChildren()) {
-                if (s.getSeverity() == IStatus.ERROR) {
-                    return true;
-                }
-            }
+            return Stream.of(validationStatus.getChildren()).anyMatch(s -> s.matches(IStatus.ERROR));
         }
         return false;
     }

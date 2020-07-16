@@ -21,7 +21,6 @@ import java.util.Collections;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.model.NamespaceUtil;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -32,29 +31,33 @@ public class ModelNamespaceValidator implements IValidator<String> {
     private String currentNamespace;
     private String incompatibilityErrorMessage;
     private Collection<String> legacyNamespaces;
+    private String migrationWarningMessage;
 
-    public ModelNamespaceValidator(String currentNamespace, String incompatibilityErrorMessage,
+    public ModelNamespaceValidator(String currentNamespace, 
+            String incompatibilityErrorMessage,
+            String migrationWarningMessage,
             Collection<String> legacyNamespaces) {
         this.currentNamespace = currentNamespace;
         this.incompatibilityErrorMessage = incompatibilityErrorMessage;
+        this.migrationWarningMessage = migrationWarningMessage;
         this.legacyNamespaces = legacyNamespaces;
     }
 
-    public ModelNamespaceValidator(String currentNamespace, String incompatibilityErrorMessage) {
-        this(currentNamespace, incompatibilityErrorMessage, Collections.emptyList());
+    public ModelNamespaceValidator(String currentNamespace, String incompatibilityErrorMessage,  String migrationWarningMessage) {
+        this(currentNamespace, incompatibilityErrorMessage,migrationWarningMessage, Collections.emptyList());
     }
 
     @Override
     public IStatus validate(String namespace) {
         if (namespace == null || namespace.isEmpty()) {
             // No namespace in the imported artifact -> A namespace will be added during migration (BDM specificity).
-            return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
+            return ValidationStatus.warning(migrationWarningMessage);
         }
         if (namespace.endsWith("/")) {
             namespace = namespace.substring(0, namespace.length() - 1);
         }
         if (legacyNamespaces.contains(namespace)) {
-            return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
+            return ValidationStatus.warning(migrationWarningMessage);
         }
         if (!namespace.startsWith(NamespaceUtil.namespaceRoot(currentNamespace) + "/")) {
             return ValidationStatus.error(incompatibilityErrorMessage);
@@ -70,7 +73,7 @@ public class ModelNamespaceValidator implements IValidator<String> {
             case 0:
                 return ValidationStatus.ok();
             case 1:
-                return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
+                return ValidationStatus.warning(migrationWarningMessage);
             case -1:
             default:
                 return ValidationStatus.error(incompatibilityErrorMessage);

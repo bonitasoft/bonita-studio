@@ -63,6 +63,8 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDi
     void refresh();
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
+    
+    void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException;
 
     void close();
 

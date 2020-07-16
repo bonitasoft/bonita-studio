@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -30,7 +29,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -38,18 +36,14 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -64,9 +58,6 @@ import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -152,19 +143,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
                         UIDesignerPlugin.PLUGIN_ID);
-                MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation(pageDesignerURLBuilder);
-                migrateUIDOperation.run(monitor);
-                if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
-                    Display.getDefault().syncExec(() -> {
-                        new MultiStatusDialog(Display.getDefault().getActiveShell(),
-                                Messages.UIDMigrationFailed,
-                                Messages.UIDMigrationFailedMessage,
-                                MessageDialog.ERROR,
-                                new String[] { IDialogConstants.CLOSE_LABEL }, (MultiStatus) migrateUIDOperation.getStatus())
-                                        .open();
-                    });
-                }
-            } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
+            } catch (final CoreException | IOException  e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
                 monitor.done();

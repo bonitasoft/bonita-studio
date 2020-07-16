@@ -236,8 +236,9 @@ public class Messages extends NLS {
     public static String deprecatedConnectorDefinition;
     public static String checkingModelCompatibility;
     public static String validationErrorMessage;
-    public static String validationSuccessTitle;
+    public static String validationTitle;
     public static String validationSuccessMsg;
+    public static String validationWarningMessage;
     
     static {
         // initialize resource bundle

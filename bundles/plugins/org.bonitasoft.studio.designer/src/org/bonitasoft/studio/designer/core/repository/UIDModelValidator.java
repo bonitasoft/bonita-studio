@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -41,14 +40,18 @@ public class UIDModelValidator implements IValidator<InputStream> {
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
     private String incompatibleErrorMessage;
+    private String migrationNeededMessage;
 
-    public UIDModelValidator(PageDesignerURLFactory pageDesignerURLFactory, String incompatibleErrorMessage) {
+    public UIDModelValidator(PageDesignerURLFactory pageDesignerURLFactory, 
+            String incompatibleErrorMessage,
+            String migrationNeededMessage) {
         pageDesignerURLBuilder = pageDesignerURLFactory;
         this.incompatibleErrorMessage = incompatibleErrorMessage;
+        this.migrationNeededMessage = migrationNeededMessage;
     }
 
-    public UIDModelValidator(String incompatibleErrorMessage) {
-        this(new PageDesignerURLFactory(getPreferenceStore()), incompatibleErrorMessage);
+    public UIDModelValidator(String incompatibleErrorMessage, String migrationNeededMessage) {
+        this(new PageDesignerURLFactory(getPreferenceStore()), incompatibleErrorMessage, migrationNeededMessage);
     }
 
     @Override
@@ -69,7 +72,7 @@ public class UIDModelValidator implements IValidator<InputStream> {
                 return ValidationStatus.error(incompatibleErrorMessage);
             }
             if (status.getBoolean("migration")) {
-                return ValidationStatus.warning(Messages.migrationWillBreakRetroCompatibility);
+                return ValidationStatus.warning(migrationNeededMessage);
             }
         } catch (ResourceException | URISyntaxException | IOException | JSONException e) {
             BonitaStudioLog.error(e);
