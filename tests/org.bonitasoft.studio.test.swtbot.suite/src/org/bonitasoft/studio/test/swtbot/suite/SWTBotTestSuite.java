@@ -31,6 +31,7 @@ import org.bonitasoft.studio.tests.businessobject.SmartImportBdmIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
 import org.bonitasoft.studio.tests.configuration.JavaDependenciesConfigurationIT;
+import org.bonitasoft.studio.tests.connectors.AdvancedDBConnectorsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionTranslationsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
@@ -171,7 +172,8 @@ import org.junit.runners.Suite;
         TestSForceDeleteObject.class,
         TestSForceQueryObject.class,
         TestSForceRetrieveObject.class,
-        TestSForceUpdateObject.class
+        TestSForceUpdateObject.class,
+        AdvancedDBConnectorsTest.class
 })
 public class SWTBotTestSuite {
 

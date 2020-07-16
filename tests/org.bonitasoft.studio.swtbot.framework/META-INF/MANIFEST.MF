@@ -47,7 +47,9 @@ Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.dependencies.i18n,
  org.bonitasoft.studio.designer.i18n,
  org.bonitasoft.studio.diagram.custom.i18n,
- org.bonitasoft.studio.properties.i18n
+ org.bonitasoft.studio.properties.i18n,
+ org.bonitasoft.studio.sqlbuilder.ex,
+ org.eclipse.datatools.sqltools.sqlbuilder
 Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.application,
  org.bonitasoft.studio.swtbot.framework.application.editor,

@@ -41,6 +41,7 @@
         <module>org.bonitasoft.studio.condition.ui</module>
         <module>org.bonitasoft.studio.connectors.model.edit</module>
         <module>org.bonitasoft.studio.data</module>
+        <module>org.bonitasoft.studio.datatools</module>
         <module>org.bonitasoft.studio.decision.table</module>
         <module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
@@ -69,6 +70,7 @@
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
         <module>org.bonitasoft.studio.scripting</module>
+        <module>org.bonitasoft.studio.sqlbuilder.ex</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
