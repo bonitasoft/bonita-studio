@@ -46,6 +46,70 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </license>
 
    <includes
+         id="org.eclipse.datatools.enablement.apache.derby.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.hsqldb.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.ibm.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.ingres.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.jdbc.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.msft.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.mysql.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.oracle.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.postgresql.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.sqlite.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.sybase.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.modelbase.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_es"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_fr"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_ja"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.sqldevtools.sqlbuilder.feature"
+         version="0.0.0"/>
+
+   <includes
          id="org.codehaus.groovy24.feature"
          version="0.0.0"/>
 
@@ -550,6 +614,13 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.connector.wizard.sforce"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.datatools.modelbase.sql.query"
          download-size="0"
          install-size="0"
          version="0.0.0"
