@@ -31,6 +31,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialo
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
+import org.bonitasoft.studio.swtbot.framework.team.BotTeamMenu;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -211,5 +212,11 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     public BotDeployDialog openDeploy() {
         bot.menu("File").menu("Deploy...").click();
         return new BotDeployDialog(bot);
+    }
+
+    public BotTeamMenu teamMenu() {
+        waitForMainShell(bot);
+        openMenu("Team");
+        return new BotTeamMenu(bot);
     }
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -61,7 +61,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
                 diagramStore);
         if (nameDialog.open() == Dialog.OK) {
             getDiagramEditor().filter(IEditorPart::isDirty)
-                    .ifPresent(editor -> editor.doSave(Repository.NULL_PROGRESS_MONITOR));
+                    .ifPresent(editor -> editor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR));
             RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
             renameDiagramOperation.setDiagramToDuplicate(diagram);
             Identifier identifier = nameDialog.getIdentifier();

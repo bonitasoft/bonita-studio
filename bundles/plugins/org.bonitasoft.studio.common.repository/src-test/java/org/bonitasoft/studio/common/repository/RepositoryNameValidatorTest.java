@@ -38,7 +38,7 @@ public class RepositoryNameValidatorTest {
     @Mock
     private RepositoryManager repoManager;
     @Mock
-    private Repository repo;
+    private AbstractRepository repo;
     @Mock
     private IProject project;
     @Mock

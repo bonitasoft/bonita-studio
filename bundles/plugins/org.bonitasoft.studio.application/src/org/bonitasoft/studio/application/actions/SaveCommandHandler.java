@@ -27,7 +27,7 @@ import org.bonitasoft.studio.common.diagram.Identifier;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -128,7 +128,7 @@ public class SaveCommandHandler extends SaveHandler {
         try {
             final IEditorPart editorToSave = editorPart;
             if (changed && oldArtifact != null) {
-                editorToSave.doSave(Repository.NULL_PROGRESS_MONITOR);
+                editorToSave.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
                 ((DiagramDocumentEditor) editorToSave).close(true);
                 final Set<String> formIds = new HashSet<String>();
                 for (final DiagramDocumentEditor diagramDocumentEditor : editorsWithSameResourceSet) {
@@ -147,7 +147,7 @@ public class SaveCommandHandler extends SaveHandler {
                         fileStore.save(editorPart);
                     }
                 } else {
-                    editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+                    editorPart.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
 
             }
@@ -239,7 +239,7 @@ public class SaveCommandHandler extends SaveHandler {
                         SetCommand.create(editingDomain,
                                 ((DiagramEditor) editorPart).getDiagramEditPart().resolveSemanticElement(),
                                 ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
-                editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+                editorPart.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
                 final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
                 renameDiagramOperation.setDiagramToDuplicate(proc);
                 final Identifier identifier = nameDialog.getIdentifier();

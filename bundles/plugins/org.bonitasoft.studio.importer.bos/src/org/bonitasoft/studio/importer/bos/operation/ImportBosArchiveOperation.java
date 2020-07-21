@@ -30,8 +30,8 @@ import java.util.zip.ZipFile;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -65,7 +65,7 @@ import com.google.common.base.Objects;
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private File archive;
-    private Repository currentRepository;
+    private AbstractRepository currentRepository;
     private IStatus validationStatus;
     private final boolean launchValidationafterImport;
 
@@ -76,6 +76,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<>();
     private final List<IRepositoryFileStore> importedProcesses = new ArrayList<>();
     private final List<IRepositoryFileStore> importedFileStores = new ArrayList<>();
+    private RepositoryAccessor repositoryAccessor;
 
     public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
             ImportArchiveModel importArchiveModel, RepositoryAccessor repositoryAccessor) {
@@ -96,6 +97,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public ImportBosArchiveOperation(final boolean launchValidationafterImport, RepositoryAccessor repositoryAccessor) {
         this.launchValidationafterImport = launchValidationafterImport;
+        this.repositoryAccessor = repositoryAccessor;
         currentRepository = repositoryAccessor.getCurrentRepository();
     }
 
@@ -199,7 +201,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private Supplier<? extends ImportArchiveModel> parseArchive(final File archive, final Repository repository,
+    private Supplier<? extends ImportArchiveModel> parseArchive(final File archive, final AbstractRepository repository,
             final IProgressMonitor monitor) {
         return () -> {
             final ParseBosArchiveOperation parseBosArchiveOperation = newParseBosOperation(archive, repository);
@@ -212,7 +214,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         };
     }
 
-    protected ParseBosArchiveOperation newParseBosOperation(final File archive, final Repository repository) {
+    protected ParseBosArchiveOperation newParseBosOperation(final File archive, final AbstractRepository repository) {
         return new ParseBosArchiveOperation(archive, repository);
     }
 
@@ -260,7 +262,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return validators;
     }
 
-    public void setCurrentRepository(final Repository currentRepository) {
+    public void setCurrentRepository(final AbstractRepository currentRepository) {
         this.currentRepository = currentRepository;
     }
 
@@ -301,6 +303,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     public List<IRepositoryFileStore> getImportedFileStores() {
         return importedFileStores;
+    }
+
+    public RepositoryAccessor getRepositoryAccessor() {
+        return repositoryAccessor;
     }
 
 }

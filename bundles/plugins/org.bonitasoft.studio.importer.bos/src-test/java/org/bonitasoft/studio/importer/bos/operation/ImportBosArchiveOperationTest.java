@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -30,7 +30,7 @@ public class ImportBosArchiveOperationTest {
     private ImportBosArchiveOperation operationUnserTest;
 
     @Mock
-    private Repository repostioty;
+    private AbstractRepository repostioty;
 
     private File archiveFile;
 
@@ -52,7 +52,7 @@ public class ImportBosArchiveOperationTest {
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());
         when(parseOpeation.getImportArchiveModel()).thenReturn(mock(ImportArchiveModel.class));
         doReturn(parseOpeation).when(operationUnserTest).newParseBosOperation(Matchers.any(File.class),
-                Matchers.any(Repository.class));
+                Matchers.any(AbstractRepository.class));
         doReturn(Collections.emptyList()).when(operationUnserTest).getValidators();
     }
 

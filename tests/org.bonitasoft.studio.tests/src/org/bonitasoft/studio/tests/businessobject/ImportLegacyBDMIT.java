@@ -24,7 +24,7 @@ import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -66,7 +66,7 @@ public class ImportLegacyBDMIT {
         operation.setArchiveFile(
                 new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/legacyBDM.bos")).getFile())
                         .getAbsolutePath());
-        operation.run(Repository.NULL_PROGRESS_MONITOR);
+        operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
         assertThat(defStore.getResource().getFile(BusinessObjectModelFileStore.ZIP_FILENAME).getLocation().toFile().exists())
@@ -87,7 +87,7 @@ public class ImportLegacyBDMIT {
         operation.setArchiveFile(
                 new File(FileLocator.toFileURL(ImportLegacyBDMIT.class.getResource("/bdmWithoutNamespace.bos")).getFile())
                         .getAbsolutePath());
-        operation.run(Repository.NULL_PROGRESS_MONITOR);
+        operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
 

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -59,7 +59,7 @@ public class UIDesignerWorkspaceIntegrationIT {
     @Before
     @After
     public void clean_all_web_stores() throws Exception {
-        final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         final WebPageRepositoryStore webPageRepositoryStore = currentRepository
                 .getRepositoryStore(WebPageRepositoryStore.class);
         for (final WebPageFileStore fStore : webPageRepositoryStore.getChildren()) {

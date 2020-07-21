@@ -23,7 +23,7 @@ import java.util.jar.JarEntry;
 
 import org.bonitasoft.studio.common.JarInputStreamIFileFriendly;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.groovy.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -107,9 +107,9 @@ public class GroovyRepositoryStore extends SourceRepositoryStore<GroovyFileStore
             IFile jar = getResource().getFile("tmpGroovyScripts.jar");
             try {
                 if (jar.exists()){
-                    jar.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                    jar.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
-                jar.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                jar.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 inputStream.close();
 
                 JarInputStreamIFileFriendly ji = new JarInputStreamIFileFriendly(jar.getContents());
@@ -122,7 +122,7 @@ public class GroovyRepositoryStore extends SourceRepositoryStore<GroovyFileStore
                 }
                 ji.forceClose();
                 if (jar.exists()){
-                    jar.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                    jar.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
 
             } catch (Exception e) {

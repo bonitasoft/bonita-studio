@@ -40,7 +40,7 @@ import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
@@ -232,13 +232,13 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         try {
             OperationHistoryFactory.getOperationHistory().execute(
                     new SaveDiagramResourceCommand(content, editingDomain, resource),
-                    Repository.NULL_PROGRESS_MONITOR,
+                    AbstractRepository.NULL_PROGRESS_MONITOR,
                     null);
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }
         if (content instanceof DiagramDocumentEditor) {
-            ((DiagramDocumentEditor) content).doSave(Repository.NULL_PROGRESS_MONITOR);
+            ((DiagramDocumentEditor) content).doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
 
         try {

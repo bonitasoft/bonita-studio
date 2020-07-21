@@ -19,7 +19,7 @@ import java.util.List;
 import org.bonitasoft.studio.application.actions.SaveCommandHandler;
 import org.bonitasoft.studio.application.actions.UndoCommandHandler;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -89,7 +89,7 @@ public class TestParametersRefactoring {
                 .toFileURL(TestParametersRefactoring.class.getResource("testParametersRefactoring-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild("testParametersRefactoring-1.0.proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();

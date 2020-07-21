@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -96,7 +96,7 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
         }
         final IPackageFragment packageFragment = getPackageFragment();
         try {
-            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(Repository.NULL_PROGRESS_MONITOR);
+            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final JavaModelException e) {
             throw new InvocationTargetException(e, "Failed to retrieve compilation units from package frgament");
         }

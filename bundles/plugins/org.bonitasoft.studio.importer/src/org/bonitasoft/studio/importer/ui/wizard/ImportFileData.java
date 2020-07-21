@@ -21,6 +21,52 @@ public class ImportFileData {
     private String filePath;
     private ImporterFactory importerFactory;
 
+    public enum RepositoryMode {
+        CURRENT, NEW, EXISTING
+    }
+
+    private String newRepositoryName;
+
+    private String selectedRepositoryName;
+
+    private RepositoryMode mode = RepositoryMode.CURRENT;
+
+    public String getNewRepositoryName() {
+        return newRepositoryName;
+    }
+
+    public void setNewRepositoryName(String newRepositoryName) {
+        this.newRepositoryName = newRepositoryName;
+    }
+
+    public String getSelectedRepositoryName() {
+        return selectedRepositoryName;
+    }
+
+    public void setSelectedRepositoryName(String selectedRepositoryName) {
+        this.selectedRepositoryName = selectedRepositoryName;
+    }
+
+    public RepositoryMode getMode() {
+        return mode;
+    }
+
+    public void setMode(RepositoryMode mode) {
+        this.mode = mode;
+    }
+
+    public String getRepositoryName() {
+        switch (getMode()) {
+            case NEW:
+                return getNewRepositoryName();
+            case EXISTING:
+                return getSelectedRepositoryName();
+            case CURRENT:
+            default:
+                return null;
+        }
+    }
+
     public ImporterFactory getImporterFactory() {
         return importerFactory;
     }

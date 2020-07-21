@@ -28,7 +28,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
@@ -91,7 +91,7 @@ public class ImportConflictsCheckerTest {
                 .orElseThrow(() -> new Exception(fileName + " diagram not found"));
     }
 
-    private Repository createRepository() throws Exception {
+    private AbstractRepository createRepository() throws Exception {
         final IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
         when(fileStore.getName()).thenReturn("Customer Support-2.0.proc");
 
@@ -112,7 +112,7 @@ public class ImportConflictsCheckerTest {
         storeList.add(appRessourcesStore);
         storeList.add(libStore);
 
-        final Repository repo = mock(Repository.class);
+        final AbstractRepository repo = mock(AbstractRepository.class);
         when(repo.getAllStores()).thenReturn(storeList);
         when(repo.getRepositoryStoreByName(anyString())).thenReturn(Optional.empty());
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));

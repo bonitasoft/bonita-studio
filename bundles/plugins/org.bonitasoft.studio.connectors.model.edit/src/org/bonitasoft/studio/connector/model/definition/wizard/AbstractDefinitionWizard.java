@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
@@ -179,7 +179,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 try {
                     if (iconFile.exists()
                             && !iconFile.getLocation().toFile().getAbsolutePath().equals(imageFile.getAbsolutePath())) {
-                        iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        iconFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                     }
                     BufferedImage image = ImageIO.read(imageFile);
                     image = FileUtil.resizeImage(image, 16);
@@ -187,7 +187,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 } catch (final Exception ex) {
                     BonitaStudioLog.error(ex);
                     try {
-                        iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        iconFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (final CoreException e) {
                         BonitaStudioLog.error(e);
                     }
@@ -249,7 +249,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         if (!oldDefId.equals(defId)) {
             final String oldId = oldDefId + ".properties";
             try {
-                defStore.getResource().getFile(oldId).delete(true, Repository.NULL_PROGRESS_MONITOR);
+                defStore.getResource().getFile(oldId).delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -267,7 +267,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                                 final String newLocaleFile = defId + "_" + l.toString() + ".properties";
                                 IPath tarhetPath = r.getFullPath().removeLastSegments(1);
                                 tarhetPath = tarhetPath.append(newLocaleFile);
-                                r.move(tarhetPath, true, Repository.NULL_PROGRESS_MONITOR);
+                                r.move(tarhetPath, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                             }
                         }
                     }
@@ -329,7 +329,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                                 final FileOutputStream fos = new FileOutputStream(r.getLocation().toFile());
                                 oldProperties.store(fos, null);
                                 fos.close();
-                                r.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
+                                r.refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
                                 filesToOpen.add((IFile) r);
                             } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
@@ -352,7 +352,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 final FileOutputStream fos = new FileOutputStream(file.getLocation().toFile());
                 messages.store(fos, null);
                 fos.close();
-                file.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
+                file.refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
                 filesToOpen.add(file);
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);

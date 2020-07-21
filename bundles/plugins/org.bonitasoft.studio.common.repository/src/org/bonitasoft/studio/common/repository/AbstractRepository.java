@@ -97,7 +97,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.Version;
 import org.xml.sax.InputSource;
 
-public class Repository implements IRepository, IJavaContainer, IRenamable {
+public abstract class AbstractRepository implements IRepository, IJavaContainer, IRenamable {
 
     private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 
@@ -115,6 +115,8 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         LEGACY_REPOSITORIES.add("validators");
         LEGACY_REPOSITORIES.add("src-validators");
         LEGACY_REPOSITORIES.add("simulation");
+        LEGACY_REPOSITORIES.add("customTypes");
+        LEGACY_REPOSITORIES.add("src-customTypes");
     }
 
     private static final String CLASS = "class";
@@ -143,7 +145,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
 
     private boolean enableOpenIntroListener = true;
 
-    public Repository(final IWorkspace workspace,
+    public AbstractRepository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
@@ -165,7 +167,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
     }
 
     @Override
-    public Repository create(final IProgressMonitor monitor) {
+    public AbstractRepository create(final IProgressMonitor monitor) {
         final long init = System.currentTimeMillis();
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
@@ -243,7 +245,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
      * @see org.bonitasoft.studio.common.repository.IRepository#open()
      */
     @Override
-    public Repository open(final IProgressMonitor monitor) {
+    public AbstractRepository open(final IProgressMonitor monitor) {
         try {
             if (!project.isOpen()) {
                 BonitaStudioLog.log("Opening project: " + project.getName());
@@ -880,7 +882,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
                         protected void execute(IProgressMonitor monitor)
                                 throws CoreException, InvocationTargetException, InterruptedException {
                             closeAllEditors();
-                            projectListeners.stream().forEach(l -> l.projectClosed(Repository.this, monitor));
+                            projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
                             disableBuild();
                             getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
                             RepositoryManager.getInstance().setRepository(newName, monitor);
@@ -906,6 +908,7 @@ public class Repository implements IRepository, IJavaContainer, IRenamable {
         return Optional.empty();
     }
 
+    @Override
     public void addProjectListener(IBonitaProjectListener listener) {
         if (!projectListeners.contains(listener)) {
             projectListeners.add(listener);

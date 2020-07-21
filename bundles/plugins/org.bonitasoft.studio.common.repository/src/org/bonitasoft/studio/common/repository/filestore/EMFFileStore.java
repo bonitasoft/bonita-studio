@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -121,7 +121,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
         final Resource eResource = getEMFResource();
         doClose();
         try {
-            getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
+            getResource().delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }

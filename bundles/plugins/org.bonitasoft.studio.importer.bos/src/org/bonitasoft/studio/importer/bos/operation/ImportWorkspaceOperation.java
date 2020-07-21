@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -70,7 +70,7 @@ public class ImportWorkspaceOperation implements IRunnableWithProgress {
             workingCopy.setAttribute(IPDELauncherConstants.LOCATION,
                     new File(System.getProperty("java.io.tmpdir"), ScanWorkspaceOperation.TMP_WS_FOLDER).getAbsolutePath());
             workingCopy.setAttribute(IPDELauncherConstants.USE_PRODUCT, false);
-            final ILaunch launch = workingCopy.launch("run", Repository.NULL_PROGRESS_MONITOR);
+            final ILaunch launch = workingCopy.launch("run", AbstractRepository.NULL_PROGRESS_MONITOR);
             launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
 
                 @Override

@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URLDecoder;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IContainer;
@@ -78,7 +78,7 @@ public class OpenH2ConsoleHandlerTest {
         when(launchManager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE))
                 .thenReturn(lanchConfigurationType);
         when(lanchConfigurationType.newInstance(any(IContainer.class), notNull(String.class))).thenReturn(workingCopy);
-        when(workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR)).thenReturn(launch);
+        when(workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR)).thenReturn(launch);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class OpenH2ConsoleHandlerTest {
         verify(workingCopy).setAttribute(eq(IExternalToolConstants.ATTR_TOOL_ARGUMENTS), captor.capture());
         assertThat(captor.getValue()).contains("-jar \"h2.jar\" -browser -webPort",
                 "-tcp -user sa -url \"jdbc:h2:file:/test/h2_db/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;\" -driver org.h2.Driver");
-        verify(workingCopy).launch("run", Repository.NULL_PROGRESS_MONITOR);
+        verify(workingCopy).launch("run", AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
 }

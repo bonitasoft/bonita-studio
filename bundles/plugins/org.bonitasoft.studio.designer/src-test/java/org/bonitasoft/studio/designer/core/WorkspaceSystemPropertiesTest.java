@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.net.InetAddress;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
@@ -67,7 +67,7 @@ public class WorkspaceSystemPropertiesTest {
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Mock
-    private Repository repository;
+    private AbstractRepository repository;
 
     /**
      * @throws java.lang.Exception

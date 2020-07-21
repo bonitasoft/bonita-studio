@@ -37,7 +37,9 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.eclipse.jgit;bundle-version="4.10.0",
  org.bonitasoft.studio.common;bundle-version="7.8.0",
  org.bonitasoft.studio.diagram,
- org.bonitasoft.studio.application
+ org.bonitasoft.studio.application,
+ org.bonitasoft.studio.team;bundle-version="7.12.0",
+ org.bonitasoft.studio.team.git;bundle-version="7.12.0"
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.connector.model.i18n,
@@ -85,6 +87,8 @@ Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.organization,
  org.bonitasoft.studio.swtbot.framework.projectExplorer,
  org.bonitasoft.studio.swtbot.framework.rule,
+ org.bonitasoft.studio.swtbot.framework.team,
+ org.bonitasoft.studio.swtbot.framework.team.git,
  org.bonitasoft.studio.swtbot.framework.widget
 
 

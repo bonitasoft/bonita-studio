@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,7 +46,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PojoBrowserContentProvider implements ITreeContentProvider {
 
-    private final Repository repository;
+    private final AbstractRepository repository;
 
     public PojoBrowserContentProvider() {
         repository = RepositoryManager.getInstance().getCurrentRepository();

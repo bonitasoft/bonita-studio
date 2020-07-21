@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -777,8 +777,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
             }
         });
         bot.styledText().setFocus();
-        Job.getJobManager().join(ValidationJob.XTEXT_VALIDATION_FAMILY, Repository.NULL_PROGRESS_MONITOR);//Wait for ValidationJob
-        Job.getJobManager().join(XtextReconciler.class.getName(), Repository.NULL_PROGRESS_MONITOR);//Wait for Reconciler Job
+        Job.getJobManager().join(ValidationJob.XTEXT_VALIDATION_FAMILY, AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for ValidationJob
+        Job.getJobManager().join(XtextReconciler.class.getName(), AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for Reconciler Job
         bot.sleep(600);
         return bot.styledText().getStyle(line, column);
     }

@@ -30,7 +30,7 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -243,7 +243,7 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
         Properties properties = new Properties();
         try {
             byte[] content = BOSEngineManager.getInstance().getTenantConfigResourceContent(
-                    BOSEngineManager.CONSOLE_CONFIG_PROPERTIES, Repository.NULL_PROGRESS_MONITOR);
+                    BOSEngineManager.CONSOLE_CONFIG_PROPERTIES, AbstractRepository.NULL_PROGRESS_MONITOR);
             try (InputStream is = new ByteArrayInputStream(content)) {
                 properties.load(is);
             }

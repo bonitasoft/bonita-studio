@@ -32,7 +32,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.beans,
  org.bonitasoft.studio.ui,
- org.eclipse.e4.core.commands
+ org.eclipse.e4.core.commands,
+ org.eclipse.core.databinding.property;bundle-version="1.7.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,

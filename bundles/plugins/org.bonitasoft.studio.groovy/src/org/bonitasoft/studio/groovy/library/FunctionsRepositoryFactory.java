@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.Messages;
@@ -51,7 +51,7 @@ public class FunctionsRepositoryFactory {
     private static FunctionCategory bonitaCat;
     private static ArrayList<String> funcName;
 
-    private static synchronized void createFunctionCatgories(Repository repository) {
+    private static synchronized void createFunctionCatgories(AbstractRepository repository) {
         try {
             IJavaProject javaProject = repository.getJavaProject();
             IType defaultType = javaProject.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods"); //$NON-NLS-1$
@@ -95,7 +95,7 @@ public class FunctionsRepositoryFactory {
 
     }
 
-    public static synchronized IFunctionsCategories getFunctionCatgories(Repository repository) {
+    public static synchronized IFunctionsCategories getFunctionCatgories(AbstractRepository repository) {
         if(categories == null){
             createFunctionCatgories(repository);
         }

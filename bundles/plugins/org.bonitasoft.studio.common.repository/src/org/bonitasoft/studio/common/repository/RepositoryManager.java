@@ -51,7 +51,7 @@ public class RepositoryManager {
     private static RepositoryManager INSTANCE;
 
     private List<IBonitaProjectListener> projectListeners = new ArrayList<>();
-    private Repository repository;
+    private AbstractRepository repository;
     private IPreferenceStore preferenceStore;
     private IConfigurationElement repositoryImplementationElement;
 
@@ -112,11 +112,11 @@ public class RepositoryManager {
 
     }
 
-    public Repository createRepository(final String name, final boolean migrationEnabled) {
+    public AbstractRepository createRepository(final String name, final boolean migrationEnabled) {
         try {
             final IRepositoryFactory repositoryFactory = (IRepositoryFactory) repositoryImplementationElement
                     .createExecutableExtension(CLASS);
-            Repository newRepository = repositoryFactory.newRepository(name, migrationEnabled);
+            AbstractRepository newRepository = repositoryFactory.newRepository(name, migrationEnabled);
             for (IBonitaProjectListener listener : projectListeners) {
                 newRepository.addProjectListener(listener);
             }
@@ -138,7 +138,7 @@ public class RepositoryManager {
         return preferenceStore;
     }
 
-    public Repository getCurrentRepository() {
+    public AbstractRepository getCurrentRepository() {
         return repository;
     }
 
@@ -146,11 +146,11 @@ public class RepositoryManager {
         return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
     }
 
-    public Repository getRepository(final String repositoryName) {
+    public AbstractRepository getRepository(final String repositoryName) {
         return getRepository(repositoryName, false);
     }
 
-    public Repository getRepository(final String repositoryName, final boolean migrationEnabled) {
+    public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
         if (project == null || !project.exists()) {
@@ -159,7 +159,7 @@ public class RepositoryManager {
         boolean toClose = false;
         try {
             if (!project.isAccessible()) {
-                project.open(Repository.NULL_PROGRESS_MONITOR);
+                project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
                 toClose = true;
             }
             if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
@@ -171,7 +171,7 @@ public class RepositoryManager {
         } finally {
             if (toClose) {
                 try {
-                    project.close(Repository.NULL_PROGRESS_MONITOR);
+                    project.close(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
@@ -195,7 +195,7 @@ public class RepositoryManager {
                             try {
                                 boolean close = false;
                                 if (!p.isOpen()) {
-                                    p.open(Repository.NULL_PROGRESS_MONITOR);
+                                    p.open(AbstractRepository.NULL_PROGRESS_MONITOR);
                                     close = true;
                                 }
                                 if (p.getDescription().hasNature(BonitaProjectNature.NATURE_ID)) {
@@ -204,7 +204,7 @@ public class RepositoryManager {
                                     }
                                 }
                                 if (close) {
-                                    p.close(Repository.NULL_PROGRESS_MONITOR);
+                                    p.close(AbstractRepository.NULL_PROGRESS_MONITOR);
                                 }
                             } catch (final CoreException e) {
                                 BonitaStudioLog.error(e);
@@ -212,7 +212,7 @@ public class RepositoryManager {
                         }
                     }
                 }
-            }, Repository.NULL_PROGRESS_MONITOR);
+            }, AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
         }
@@ -225,7 +225,7 @@ public class RepositoryManager {
     }
 
     public void setRepository(final String repositoryName, final boolean migrationEnabled, final IProgressMonitor monitor) {
-        Repository currentRepository = getCurrentRepository();
+        AbstractRepository currentRepository = getCurrentRepository();
         if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
             return;
         } else if (currentRepository != null) {
@@ -259,8 +259,8 @@ public class RepositoryManager {
         return repository != null;
     }
 
-    public void setCurrentRepository(Repository repository) {
-       this.repository = repository;
+    public void setCurrentRepository(AbstractRepository repository) {
+        this.repository = repository;
     }
 
 }

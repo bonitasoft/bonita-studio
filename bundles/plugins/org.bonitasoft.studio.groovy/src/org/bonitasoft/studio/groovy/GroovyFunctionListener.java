@@ -15,20 +15,20 @@
 package org.bonitasoft.studio.groovy;
 
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class GroovyFunctionListener implements IBonitaProjectListener {
 
     @Override
-    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         FunctionsRepositoryFactory.reset();
         FunctionsRepositoryFactory.getFunctionCatgories(repository);
     }
 
     @Override
-    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
 
     }
 

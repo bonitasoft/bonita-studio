@@ -29,7 +29,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -258,9 +258,9 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                 final IFile file = folder.getFile(messageFile.getName());
                 try {
                     if (file.exists() && FileActionDialog.confirmDeletionQuestion(messageFile.getName())) {
-                        file.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        file.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                     }
-                    file.create(new FileInputStream(messageFile), true, Repository.NULL_PROGRESS_MONITOR);
+                    file.create(new FileInputStream(messageFile), true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
@@ -277,9 +277,9 @@ public class ImportConnectorArchiveOperation implements IRunnableWithProgress {
                 final IFile file = folder.getFile(iconFile.getName());
                 try {
                     if (file.exists() && FileActionDialog.confirmDeletionQuestion(iconFile.getName())) {
-                        file.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        file.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                     }
-                    file.create(new FileInputStream(iconFile), true, Repository.NULL_PROGRESS_MONITOR);
+                    file.create(new FileInputStream(iconFile), true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }

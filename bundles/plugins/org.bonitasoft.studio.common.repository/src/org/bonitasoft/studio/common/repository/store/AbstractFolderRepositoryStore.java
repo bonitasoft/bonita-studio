@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -47,7 +47,7 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     protected void refresh(final IFolder folder) {
         if (!folder.isSynchronized(IResource.DEPTH_ONE)) {
             try {
-                folder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                folder.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
                  BonitaStudioLog.error(e);
             }

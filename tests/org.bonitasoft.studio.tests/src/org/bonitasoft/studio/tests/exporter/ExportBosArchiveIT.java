@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
@@ -62,7 +62,7 @@ public class ExportBosArchiveIT {
         final CreateFormOperation createFormOperation = new CreateFormOperation(
                 new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)),
                 repositoryAccessor);
-        createFormOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        createFormOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final String pageName = createFormOperation.getNewPageName();
         final String pageId = createFormOperation.getNewArtifactId();
 

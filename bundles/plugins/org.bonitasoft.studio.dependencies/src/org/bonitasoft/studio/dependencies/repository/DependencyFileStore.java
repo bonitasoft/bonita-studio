@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
@@ -68,9 +68,9 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
         if (content instanceof InputStream) {
             try {
                 if (getResource().exists()) {
-                    getResource().setContents((InputStream) content, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                    getResource().setContents((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    getResource().create((InputStream) content, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                    getResource().create((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
@@ -101,12 +101,12 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
         try {
             final IResource r = getResource();
             if (r != null && r.exists()) {
-                r.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                final Repository repository = getRepository();
+                r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                final AbstractRepository repository = getRepository();
                 final IProject project = repository.getProject();
-                project.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                project.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 if (repository.isBuildEnable()) {
-                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
 
             }

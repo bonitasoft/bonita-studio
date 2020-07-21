@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
@@ -113,7 +113,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         if (location != null) {
             if (!PageUUIDResolver.indexFile(location.toFile()).exists()) {
                 try {
-                    new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
+                    new IndexingUIDOperation().run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (InvocationTargetException | InterruptedException e) {
                     BonitaStudioLog.error(e);
                 }

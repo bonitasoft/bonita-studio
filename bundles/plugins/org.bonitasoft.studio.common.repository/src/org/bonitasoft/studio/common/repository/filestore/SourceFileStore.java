@@ -24,7 +24,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
@@ -176,7 +176,7 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
         jarPackakeData.setOverwrite(true);
         jarPackakeData.setUseSourceFolderHierarchy(includeSources);
         final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null);
-        runnable.run(Repository.NULL_PROGRESS_MONITOR);
+        runnable.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     protected JarPackageData createJarPackageData() {
@@ -198,13 +198,13 @@ public class SourceFileStore extends AbstractFileStore<InputStream> {
         try {
             final IRepositoryStore<?> store = getParentStore();
             final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
-            root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR);
+            root.createPackageFragment(packageName, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             final IPackageFragment targetContainer = project
                     .findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
             final IType type = project.findType(qualifiedClassName);
             if (type != null) {
                 type.getCompilationUnit().move(targetContainer, null, className + ".java", true,
-                        Repository.NULL_PROGRESS_MONITOR);
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
                 qualifiedClassName = newQualifiedClassName;
             }
         } catch (final Exception e) {

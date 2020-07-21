@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.filesystem.EFS;
@@ -73,7 +73,7 @@ public class OpenH2ConsoleHandler {
                     Joiner.on(" ").join(buildCommand(repositoryAccessor)));
             workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
             workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, logFile().getAbsolutePath());
-            ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
+            ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
             IProcess[] processes = launch.getProcesses();
             if (processes != null && processes.length == 1) {
                 currentProcess = processes[0];
@@ -114,7 +114,7 @@ public class OpenH2ConsoleHandler {
 
     protected File logFile() throws CoreException {
         final IFileStore fileStore = EFS.getLocalFileSystem().getStore(Platform.getLogFileLocation());
-        return fileStore.toLocalFile(EFS.NONE, Repository.NULL_PROGRESS_MONITOR);
+        return fileStore.toLocalFile(EFS.NONE, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     protected String pathToDBFolder(final RepositoryAccessor repositoryAccessor) {

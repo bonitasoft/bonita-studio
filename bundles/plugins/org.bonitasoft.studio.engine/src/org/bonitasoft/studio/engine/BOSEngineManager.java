@@ -47,17 +47,21 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +69,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class BOSEngineManager {
 
     public static final String CUSTOM_PERMISSIONS_MAPPING_PROPERTIES = "custom-permissions-mapping.properties";
-    
+
     public static final String CONSOLE_CONFIG_PROPERTIES = "console-config.properties";
 
     private static final String POSTSTARTUP_CONTIBUTION_ID = "org.bonitasoft.studio.engine.postEngineAction";
@@ -102,7 +106,7 @@ public class BOSEngineManager {
 
     protected BOSEngineManager(final IProgressMonitor monitor) {
         if (monitor == null) {
-            this.monitor = Repository.NULL_PROGRESS_MONITOR;
+            this.monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         } else {
             this.monitor = monitor;
         }
@@ -132,12 +136,26 @@ public class BOSEngineManager {
         return new BOSEngineManager(monitor);
     }
 
-    public synchronized void start(Repository repository) {
+    public synchronized void start(AbstractRepository repository) {
         if (!isRunning() || !BOSWebServerManager.getInstance().serverIsStarted()) {
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
+            if (!isLazyModeEnabled(EnginePlugin.getDefault().getPreferenceStore())) {
+                BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
+                        Messages.engineLazyModeNotificationLink, e -> {
+                            BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
+                            dialog.create();
+                            dialog.setSelectedPreferencePage(BonitaPreferenceDialog.SERVER_SETTINGS_PAGE_ID);
+                            dialog.open();
+                        });
+            }
             BOSWebServerManager.getInstance().startServer(repository, monitor);
             isRunning = postEngineStart();
         }
+    }
+
+    private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
+        return preferenceStore.getBoolean(EnginePreferenceConstants.LAZYLOAD_ENGINE)
+                || System.getProperty(EnginePreferenceConstants.LAZYLOAD_ENGINE) != null;
     }
 
     public synchronized void start() {
@@ -153,6 +171,8 @@ public class BOSEngineManager {
                 tenantManagementAPI.resume();
             }
             executePostStartupContributions();
+            BonitaNotificator.openNotification(Messages.startServerCompletedNotificationTitle,
+                    Messages.serverRunningNotificationMessage);
         } catch (final Exception e) {
             return handlePostEngineStartException(e);
         }

@@ -42,12 +42,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ImportOtherHandler extends AbstractHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
-     */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         execute();
@@ -100,7 +94,10 @@ public class ImportOtherHandler extends AbstractHandler {
 
     protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
             final SkippableProgressMonitorJobsDialog progressManager) {
-        return new ImportFileOperation(importFileWizard.getSelectedTransfo(), selectedFile, progressManager);
+        ImportFileOperation importFileOperation = new ImportFileOperation(importFileWizard.getSelectedTransfo(),
+                selectedFile, progressManager);
+        importFileOperation.setRepositroy(importFileWizard.getRepository());
+        return importFileOperation;
     }
 
     protected ImportFileWizard createImportWizard() {

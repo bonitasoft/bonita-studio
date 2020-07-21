@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -33,9 +33,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ImportConflictsChecker {
 
     private static final String LEGACY_BDM_FILENAME = "bdm.zip";
-    private final Repository currentRepository;
+    private final AbstractRepository currentRepository;
 
-    public ImportConflictsChecker(Repository currentRepository) {
+    public ImportConflictsChecker(AbstractRepository currentRepository) {
         Objects.requireNonNull(currentRepository);
         this.currentRepository = currentRepository;
     }

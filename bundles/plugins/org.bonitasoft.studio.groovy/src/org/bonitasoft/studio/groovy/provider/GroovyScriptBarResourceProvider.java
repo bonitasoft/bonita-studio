@@ -35,7 +35,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
@@ -133,7 +133,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
             final File targetJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), exportedProvidedJarName);
             final CreateJarOperation createJarOperation = new CreateJarOperation(targetJar,
                     toArray(compilationUnits, ICompilationUnit.class));
-            createJarOperation.run(Repository.NULL_PROGRESS_MONITOR);
+            createJarOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             final IStatus status = createJarOperation.getStatus();
             if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.CANCEL) {
                 targetJar.delete();

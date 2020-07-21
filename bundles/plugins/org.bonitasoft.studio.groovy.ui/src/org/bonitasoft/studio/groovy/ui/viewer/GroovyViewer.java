@@ -28,7 +28,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
@@ -152,7 +152,7 @@ public class GroovyViewer implements IDocumentListener {
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
             groovyEditorContext.set(ISources.ACTIVE_SITE_NAME, site);
             editor.init(site, this.input);
-            editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+            editor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
             ASTProvider astProvider = JavaPlugin.getDefault().getASTProvider();
             org.eclipse.jdt.groovy.core.util.ReflectionUtils.executePrivateMethod(ASTProvider.class,
                     "activeJavaEditorChanged", new Class[] { IWorkbenchPart.class }, astProvider,

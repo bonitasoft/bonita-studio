@@ -17,8 +17,6 @@ package org.bonitasoft.studio.engine.server;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -39,8 +37,6 @@ public class StartEngineJob extends Job {
     protected IStatus run(IProgressMonitor monitor) {
         try {
             BOSEngineManager.getInstance(monitor).start();
-            BonitaNotificator.openNotification(Messages.startServerCompletedNotificationTitle,
-                    Messages.serverRunningNotificationMessage);
         } catch (Exception e) {
             BonitaStudioLog.error(e);
             return Status.CANCEL_STATUS;

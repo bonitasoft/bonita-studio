@@ -35,7 +35,7 @@ import org.bonitasoft.engine.bdm.model.field.FieldType;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.After;
@@ -111,8 +111,8 @@ public class DeployBDMOperationTest {
     @Test
     public void shouldRun_DeployBDRInEngine_CallDeployBusinessDataRepository() throws Exception {
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
-        operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
-        verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        operationUnderTest.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        verify(manager).loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
         final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();
@@ -125,8 +125,8 @@ public class DeployBDMOperationTest {
     public void shouldRun_DeployBDRInEngine_CallCleanAndUndeployBusinessDataRepository() throws Exception {
         doReturn(true).when(operationUnderTest).dropDBOnInstall();
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
-        operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
-        verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        operationUnderTest.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        verify(manager).loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
         final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();
@@ -141,8 +141,8 @@ public class DeployBDMOperationTest {
         final BusinessObjectModel emptyBom = new BusinessObjectModel();
         doReturn(emptyBom).when(bdmFileStore).getContent();
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
-        operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
-        verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        operationUnderTest.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        verify(manager).loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
         final InOrder inOrder = inOrder(tenantAdminAPI);
         inOrder.verify(tenantAdminAPI).pause();

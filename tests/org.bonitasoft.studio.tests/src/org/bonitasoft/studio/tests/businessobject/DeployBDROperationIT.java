@@ -27,7 +27,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -61,7 +61,7 @@ public class DeployBDROperationIT {
     @SuppressWarnings("unchecked")
     @Before
     public void setUp() throws Exception {
-        PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), AbstractRepository.NULL_PROGRESS_MONITOR);
         depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         bomRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip", true);

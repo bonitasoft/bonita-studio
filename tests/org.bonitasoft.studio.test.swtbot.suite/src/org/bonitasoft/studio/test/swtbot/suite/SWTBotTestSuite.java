@@ -79,6 +79,7 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
+import org.bonitasoft.studio.tests.importer.bos.ImportBosArchiveIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
@@ -90,6 +91,7 @@ import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
+import org.bonitasoft.studio.tests.repository.TestSeveralLocalRepositories;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.junit.runner.RunWith;
@@ -173,7 +175,9 @@ import org.junit.runners.Suite;
         TestSForceQueryObject.class,
         TestSForceRetrieveObject.class,
         TestSForceUpdateObject.class,
-        AdvancedDBConnectorsTest.class
+        AdvancedDBConnectorsTest.class,
+        ImportBosArchiveIT.class,
+        TestSeveralLocalRepositories.class
 })
 public class SWTBotTestSuite {
 

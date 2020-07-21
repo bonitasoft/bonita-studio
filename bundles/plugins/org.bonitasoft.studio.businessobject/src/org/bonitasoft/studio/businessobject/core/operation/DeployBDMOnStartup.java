@@ -18,7 +18,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.extension.IEngineAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
@@ -34,7 +34,7 @@ public class DeployBDMOnStartup implements IEngineAction {
             new GenerateBDMOperation(fileStore);
             new DeployBDMOperation(fileStore)
                     .reuseSession(session)
-                    .run(Repository.NULL_PROGRESS_MONITOR);
+                    .run(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
     }
 

@@ -16,6 +16,6 @@ package org.bonitasoft.studio.common.repository;
 
 public interface IRepositoryFactory {
 
-    Repository newRepository(String name, boolean migrationEnabled);
+    AbstractRepository newRepository(String name, boolean migrationEnabled);
 
 }
