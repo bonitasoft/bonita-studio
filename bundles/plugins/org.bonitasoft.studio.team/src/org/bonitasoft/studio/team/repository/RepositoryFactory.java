@@ -12,9 +12,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository;
+package org.bonitasoft.studio.team.repository;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
+import org.bonitasoft.studio.common.repository.IRepositoryFactory;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -24,10 +26,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 public class RepositoryFactory implements IRepositoryFactory {
 
     @Override
-    public Repository newRepository(final String name, final boolean migrationEnabled) {
+    public AbstractRepository newRepository(final String name, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         return new Repository(workspace, workspace.getRoot().getProject(name),
                 new ExtensionContextInjectionFactory(), new JDTTypeHierarchyManager(), new ProjectManifestFactory(), new ProjectClasspathFactory(),
                 migrationEnabled);
     }
+
 }

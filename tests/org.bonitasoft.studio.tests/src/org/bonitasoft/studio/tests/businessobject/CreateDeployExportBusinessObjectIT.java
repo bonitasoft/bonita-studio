@@ -26,7 +26,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.A
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -63,7 +63,7 @@ public class CreateDeployExportBusinessObjectIT {
 
     @Before
     public void setUp() throws Exception {
-        BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         String layout = "EN_US";
         if (Platform.getOS().equals(Platform.OS_MACOSX)) {
             layout = "MAC_" + layout;

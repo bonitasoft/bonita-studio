@@ -17,7 +17,7 @@ package org.bonitasoft.studio.validation.ui.view;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
@@ -82,7 +82,7 @@ public class ValidationViewAction extends Action {
                         RepositoryManager.getInstance().getCurrentRepository())
                                 .addResourceMarkers()
                                 .addFile(store.getChild(filename, false).getResource().getLocation().toFile());
-                modelValidator.run(Repository.NULL_PROGRESS_MONITOR);
+                modelValidator.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 IStatus status = modelValidator.getStatus();
                 if (status.getSeverity() == IStatus.ERROR) {
                     MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,

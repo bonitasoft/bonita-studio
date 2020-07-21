@@ -30,8 +30,8 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -52,7 +52,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
@@ -87,13 +86,14 @@ public abstract class AbstractFileStore<T>
         initParameters();
     }
 
+    @Override
     public T getContent() throws ReadFileStoreException {
         doCheckModelVersion();
         return doGetContent();
     }
 
     protected void doCheckModelVersion() throws ReadFileStoreException {
-        if(getResource() != null && getResource().exists()) {
+        if (getResource() != null && getResource().exists()) {
             try (InputStream is = openInputStream()) {
                 IStatus status = getParentStore().validate(getName(), is);
                 if (status.getSeverity() == IStatus.ERROR) {
@@ -156,7 +156,7 @@ public abstract class AbstractFileStore<T>
         return new StyledString(getName());
     }
 
-    public Repository getRepository() {
+    public AbstractRepository getRepository() {
         return RepositoryManager.getInstance().getCurrentRepository();
     }
 
@@ -221,7 +221,7 @@ public abstract class AbstractFileStore<T>
             boolean exists = resource.exists();
             doSave(content);
             try {
-                getResource().refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
+                getResource().refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -262,17 +262,17 @@ public abstract class AbstractFileStore<T>
                 MessageDialog.openError(display.getActiveShell(), Messages.invalidFile, status.getMessage());
                 return null;
             case IStatus.WARNING:
-                MessageDialog dialog = new MessageDialog(display.getActiveShell(), 
+                MessageDialog dialog = new MessageDialog(display.getActiveShell(),
                         Messages.migrationConfirmationTitle,
-                        null,  
-                        Messages.migrationConfirmationMsg, 
+                        null,
+                        Messages.migrationConfirmationMsg,
                         MessageDialog.WARNING,
                         0,
                         Messages.continueLabel,
                         IDialogConstants.CANCEL_LABEL);
-                if(dialog.open() == Dialog.OK) {
+                if (dialog.open() == Dialog.OK) {
                     try {
-                        getParentStore().migrate(this, Repository.NULL_PROGRESS_MONITOR);
+                        getParentStore().migrate(this, AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (CoreException | MigrationException e) {
                         MessageDialog.openError(display.getActiveShell(), Messages.migrationError, e.getMessage());
                         return null;
@@ -332,7 +332,7 @@ public abstract class AbstractFileStore<T>
             }
             try {
                 getResource().move(getParentStore().getResource().getFullPath().append(newName), true,
-                        Repository.NULL_PROGRESS_MONITOR);
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -345,7 +345,7 @@ public abstract class AbstractFileStore<T>
         try {
             final IResource r = getResource();
             if (r != null && r.exists()) {
-                r.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -362,12 +362,12 @@ public abstract class AbstractFileStore<T>
             final File target = new File(to, file.getName());
             if (target.exists()) {
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
-                    PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                    PlatformUtil.delete(target, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     return ValidationStatus.cancel("");
                 }
             }
-            PlatformUtil.copyResource(to, file.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+            PlatformUtil.copyResource(to, file.getLocation().toFile(), AbstractRepository.NULL_PROGRESS_MONITOR);
             return ValidationStatus.ok();
         }
         return ValidationStatus.error(String.format(Messages.failedToRetrieveResourceToExport, getName()));

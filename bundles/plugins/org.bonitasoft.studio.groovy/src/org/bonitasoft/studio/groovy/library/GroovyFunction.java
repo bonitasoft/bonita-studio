@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.groovy.Messages;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.eclipse.jdt.core.Flags;
@@ -61,7 +61,7 @@ public class GroovyFunction implements IFunction {
             if(methodNode.getSource()!= null){
                 final IDocument source =  new Document(methodNode.getSource());
                 if(methodNode.getJavadocRange() != null){
-                    javadoc = methodNode.getAttachedJavadoc(Repository.NULL_PROGRESS_MONITOR);
+                    javadoc = methodNode.getAttachedJavadoc(AbstractRepository.NULL_PROGRESS_MONITOR);
                     if(javadoc == null){
                         javadoc = source.get(0,methodNode.getJavadocRange().getLength());
                         javadoc = javadoc.replace("/*", "");

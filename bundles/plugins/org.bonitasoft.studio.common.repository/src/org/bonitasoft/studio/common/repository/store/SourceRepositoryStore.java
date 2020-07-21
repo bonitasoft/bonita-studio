@@ -23,7 +23,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
@@ -71,7 +71,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
             if (!packageFolder.exists()) {
                 try {
                     packageFolder.getLocation().toFile().mkdirs();
-                    packageFolder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                    packageFolder.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                     packageStore = (PackageFileStore) getChild(packageName, true);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
@@ -84,15 +84,15 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
         if (file.exists()) {
             if (FileActionDialog.overwriteQuestion(fileName)) {
                 try {
-                    file.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                    file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                    file.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
             }
         } else {
             try {
-                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -123,7 +123,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
     }
 
     private void addChildren(final IResource r, final List<T> result) throws CoreException {
-        final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         if (r instanceof IFolder && !r.isHidden() && !r.getName().startsWith(".")) {
             if (containsSourceFile((IFolder) r)) {
                 final IPackageFragment pk = currentRepository.getJavaProject().findPackageFragment(r.getFullPath());
@@ -194,7 +194,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
                         .toCharArray(),
                 SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS_AND_INTERFACE, searchScope, nameRequestor,
                 IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-                Repository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
         return nameRequestor.isFound();
     }
 

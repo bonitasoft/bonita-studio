@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -76,7 +76,7 @@ public class NewDiagramFactoryTest {
         final Map<Class<?>, EObject> domainElements = newDiagramFactory.createlModel(ProcessFactory.eINSTANCE, "",
                 elementInitalizers,
                 "7.5.0-001",
-                Repository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(domainElements).containsKey(MainProcess.class);
         assertThat(domainElements).containsKey(Pool.class);
         assertThat(domainElements).containsKey(Lane.class);

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -67,7 +67,7 @@ public class BatchValidationHandler extends AbstractHandler {
             return IStatus.OK;
         }
         final Map<?, ?> parameters = event.getParameters();
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         ProcessValidationOperation validateOperation = new ProcessValidationOperation().forceMarkerUpdate();
         ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
                 currentRepository.getProject().getLocation().toFile(), currentRepository)
@@ -155,7 +155,7 @@ public class BatchValidationHandler extends AbstractHandler {
     }
 
     private void addAllProjectDiagrams(final ProcessValidationOperation validateOperation,
-            Repository currentRepository) {
+            AbstractRepository currentRepository) {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         diagramRepositoryStore.getChildren().stream()

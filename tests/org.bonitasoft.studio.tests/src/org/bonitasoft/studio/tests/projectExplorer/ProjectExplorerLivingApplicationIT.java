@@ -26,7 +26,7 @@ import org.bonitasoft.engine.business.application.Application;
 import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -102,7 +102,7 @@ public class ProjectExplorerLivingApplicationIT {
         BOSEngineManager engineManager = BOSEngineManager.getInstance();
         APISession session = null;
         try {
-            session = engineManager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            session = engineManager.loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             ApplicationAPI applicationAPI = engineManager.getApplicationAPI(session);
             ICondition applicationDeployedCondition = new ConditionBuilder()
                     .withTest(() -> {

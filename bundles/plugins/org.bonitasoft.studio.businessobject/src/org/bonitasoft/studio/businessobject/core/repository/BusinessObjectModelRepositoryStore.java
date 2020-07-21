@@ -47,7 +47,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -189,7 +189,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     protected IStatus generateJar(F fileStore) {
         try {
-            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(AbstractRepository.NULL_PROGRESS_MONITOR);
             return Status.OK_STATUS;
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
@@ -236,7 +236,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+                    new DeployBDMOperation(fileStore).run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final InvocationTargetException | InterruptedException e) {
                     return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to deploy BDM", e);
                 }
@@ -272,7 +272,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
         ITypeHierarchy newTypeHierarchy = null;
         try {
             newTypeHierarchy = javaProject.newTypeHierarchy(daoType, newRegion,
-                    Repository.NULL_PROGRESS_MONITOR);
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(String.format("Failed to compute %s hierarchy", daoType.getElementName()), e);
         }
@@ -337,7 +337,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         Job job = new Job(Messages.generatingJarFromBDMModel) {
 
             @Override
@@ -354,7 +354,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
         //Nothing to do
     }
 

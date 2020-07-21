@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Display;
 
 public class ProjectFileChangeListener implements IResourceChangeListener {
 
-    protected Repository repository;
+    protected AbstractRepository repository;
 
-    public ProjectFileChangeListener(Repository repository) {
+    public ProjectFileChangeListener(AbstractRepository repository) {
         this.repository = repository;
     }
 

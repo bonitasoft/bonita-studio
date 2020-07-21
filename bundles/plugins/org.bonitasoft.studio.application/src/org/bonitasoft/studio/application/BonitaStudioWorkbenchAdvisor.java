@@ -37,7 +37,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
@@ -417,7 +417,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             BonitaStudioLog.error(e);
         }
         if (monitor == null) {
-            monitor = Repository.NULL_PROGRESS_MONITOR;
+            monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         }
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
@@ -580,7 +580,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     @Override
     public void postShutdown() {
         super.postShutdown();
-        disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
+        disconnectFromWorkspace(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Override

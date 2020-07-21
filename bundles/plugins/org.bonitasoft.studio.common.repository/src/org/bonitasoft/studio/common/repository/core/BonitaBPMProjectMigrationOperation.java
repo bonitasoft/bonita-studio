@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -35,9 +35,9 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
     private final IProject project;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
-    private final Repository repository;
+    private final AbstractRepository repository;
 
-    public BonitaBPMProjectMigrationOperation(final IProject project, final Repository repository) {
+    public BonitaBPMProjectMigrationOperation(final IProject project, final AbstractRepository repository) {
         this.project = project;
         this.repository = repository;
     }

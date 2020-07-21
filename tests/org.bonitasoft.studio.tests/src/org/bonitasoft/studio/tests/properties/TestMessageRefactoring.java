@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -199,7 +199,7 @@ public class TestMessageRefactoring {
                 .toFileURL(TestMessageRefactoring.class.getResource("TestRefactoringMessage.bos"));
         op.setArchiveFile(FileLocator.toFileURL(bosArchiveURL).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
 }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFolder;
@@ -33,7 +33,7 @@ public class DeleteHandlerTest {
         IStructuredSelection selection = new StructuredSelection(selectionContent);
 
         IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
-        Repository currentRepository = mock(Repository.class);
+        AbstractRepository currentRepository = mock(AbstractRepository.class);
         when(currentRepository.getFileStore(resource)).thenReturn(fileStore);
 
         when(fileStore.canBeDeleted()).thenReturn(true);
@@ -50,7 +50,7 @@ public class DeleteHandlerTest {
         when(selectionContent.getAdapter(IResource.class)).thenReturn(resource);
         IStructuredSelection selection = new StructuredSelection(selectionContent);
 
-        Repository currentRepository = mock(Repository.class);
+        AbstractRepository currentRepository = mock(AbstractRepository.class);
 
         when(currentRepository.getProject()).thenReturn(resource);
         assertThat(deleteHandler.selectionCanBeDeleted(selection, currentRepository)).isFalse();
@@ -67,7 +67,7 @@ public class DeleteHandlerTest {
         when(selectionContent.getAdapter(IResource.class)).thenReturn(resource);
         IStructuredSelection selection = new StructuredSelection(selectionContent);
 
-        Repository currentRepository = mock(Repository.class);
+        AbstractRepository currentRepository = mock(AbstractRepository.class);
         IRepositoryStore repositoryStore = mock(IRepositoryStore.class);
 
         when(currentRepository.getRepositoryStore(resource)).thenReturn(repositoryStore);

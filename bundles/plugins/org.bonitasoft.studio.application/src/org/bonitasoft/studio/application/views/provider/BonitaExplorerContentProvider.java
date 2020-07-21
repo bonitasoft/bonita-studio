@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IFile;
@@ -92,7 +92,7 @@ public class BonitaExplorerContentProvider extends JavaNavigatorContentProvider 
     @Override
     protected void postAdd(Object parent, Object element, Collection<Runnable> runnables) {
         super.postAdd(parent, element, runnables);
-        Repository currentRepository = RepositoryManager.getInstance()
+        AbstractRepository currentRepository = RepositoryManager.getInstance()
                 .getCurrentRepository();
         if (viewer.testFindItem(parent) == null
                 && currentRepository.isLoaded()

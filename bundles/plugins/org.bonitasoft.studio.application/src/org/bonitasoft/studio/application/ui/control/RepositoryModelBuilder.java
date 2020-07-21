@@ -28,7 +28,7 @@ import org.bonitasoft.studio.application.ui.control.model.RepositoryModel;
 import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -43,13 +43,13 @@ import org.eclipse.core.runtime.IStatus;
 public class RepositoryModelBuilder {
 
     public RepositoryModel create(RepositoryAccessor repositoryAccessor) {
-        Repository currentRepository = repositoryAccessor.getCurrentRepository();
+        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
         currentRepository.getAllStores();
         List<RepositoryStore> stores = createStore(currentRepository);
         return new RepositoryModel(currentRepository.getName(), stores);
     }
 
-    private List<RepositoryStore> createStore(Repository repository) {
+    private List<RepositoryStore> createStore(AbstractRepository repository) {
         return repository.getAllStores()
                 .stream()
                 .filter(repositoryStore -> repositoryStore.getChildren().stream()

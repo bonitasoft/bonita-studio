@@ -42,7 +42,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.NamespaceUtil;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -137,12 +137,12 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
         try {
             if (file.exists()) {
                 if (FileActionDialog.overwriteQuestion(newFileName)) {
-                    file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
+                    file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     inputStream.close();
                 }
             } else {
-                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             fileStore = createRepositoryFileStore(newFileName);
             if (file != null && fileStore != null) {
@@ -178,7 +178,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
         migrator.setLevel(ValidationLevel.RELEASE);
         final ResourceSet rSet = migrator.migrateAndLoad(
                 Collections.singletonList(resourceURI), release,
-                null, Repository.NULL_PROGRESS_MONITOR);
+                null, AbstractRepository.NULL_PROGRESS_MONITOR);
         if (!rSet.getResources().isEmpty()) {
             FileOutputStream fos = null;
             try {

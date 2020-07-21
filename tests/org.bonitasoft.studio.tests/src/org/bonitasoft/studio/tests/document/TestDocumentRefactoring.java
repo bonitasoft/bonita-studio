@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -149,7 +149,7 @@ public class TestDocumentRefactoring {
         final URL fileURL1 = FileLocator.toFileURL(TestDocumentRefactoring.class.getResource(diagramName + ".bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild(diagramName + ".proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();

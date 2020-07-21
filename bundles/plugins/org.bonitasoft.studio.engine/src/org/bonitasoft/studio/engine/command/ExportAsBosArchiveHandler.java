@@ -28,7 +28,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -99,7 +99,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         final DiagramEditPart diagram = ((DiagramEditor) part).getDiagramEditPart();
         if (part.isDirty()) {
             if (acceptSave()) {
-                part.doSave(Repository.NULL_PROGRESS_MONITOR);
+                part.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 return null;
             }
@@ -123,7 +123,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
 
         final String archiveName = mainProcess.getName() + "_" + mainProcess.getVersion();
         final File tmpDir = new File(TMP_DIR, archiveName);
-        PlatformUtil.delete(tmpDir, Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.delete(tmpDir, AbstractRepository.NULL_PROGRESS_MONITOR);
         tmpDir.mkdirs();
 
         try {
@@ -161,7 +161,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         } catch (Exception e) {
             BonitaStudioLog.error(e);
         } finally {
-            PlatformUtil.delete(tmpDir, Repository.NULL_PROGRESS_MONITOR);
+            PlatformUtil.delete(tmpDir, AbstractRepository.NULL_PROGRESS_MONITOR);
         }
         return null;
     }

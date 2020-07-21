@@ -71,6 +71,8 @@
         <module>org.bonitasoft.studio.properties</module>
         <module>org.bonitasoft.studio.scripting</module>
         <module>org.bonitasoft.studio.sqlbuilder.ex</module>
+        <module>org.bonitasoft.studio.team</module>
+        <module>org.bonitasoft.studio.team.git</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>

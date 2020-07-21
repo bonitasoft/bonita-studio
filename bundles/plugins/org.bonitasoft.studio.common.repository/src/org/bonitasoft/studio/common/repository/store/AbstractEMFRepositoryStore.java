@@ -30,7 +30,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
@@ -243,7 +243,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
         loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         try {
             migrator.migrateAndSave(Collections.singletonList(resourceURI),
-                    release, null, Repository.NULL_PROGRESS_MONITOR, loadOptions);
+                    release, null, AbstractRepository.NULL_PROGRESS_MONITOR, loadOptions);
         } catch (RuntimeException e) {
             throw new MigrationException(String.format("Failed to migrate %s", resourceURI), e);
         }

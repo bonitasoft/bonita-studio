@@ -30,8 +30,8 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
@@ -43,7 +43,6 @@ import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.engine.server.WatchdogManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -71,7 +70,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -167,7 +165,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
     }
 
-    public synchronized void startServer(Repository repository, IProgressMonitor monitor) {
+    public synchronized void startServer(AbstractRepository repository, IProgressMonitor monitor) {
         if (!serverIsStarted()) {
             BonitaHomeUtil.configureBonitaClient();
             copyTomcatBundleInWorkspace(monitor);
@@ -181,8 +179,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 
             try {
-                final IProject confProject = createServerConfigurationProject(Repository.NULL_PROGRESS_MONITOR);
-                final IRuntime runtime = createServerRuntime(type, Repository.NULL_PROGRESS_MONITOR);
+                final IProject confProject = createServerConfigurationProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+                final IRuntime runtime = createServerRuntime(type, AbstractRepository.NULL_PROGRESS_MONITOR);
                 tomcat = createServer(monitor, confProject, runtime);
                 UIDesignerServerManager uidManager = UIDesignerServerManager.getInstance();
                 if (uidManager.getPortalPort() != portConfigurator.getHttpPort()) {
@@ -190,8 +188,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     uidManager.stop();
                     uidManager.start(repository, monitor);
                 }
-                createLaunchConfiguration(tomcat, Repository.NULL_PROGRESS_MONITOR);
-                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+                createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
+                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
                 startResult = null;
                 tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                 waitServerRunning();
@@ -235,7 +233,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
                 }
                 try {
-                    copy.save(true, Repository.NULL_PROGRESS_MONITOR);
+                    copy.save(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
                 }
@@ -302,16 +300,16 @@ public class BOSWebServerManager implements IBonitaProjectListener {
 
     protected void createLaunchConfiguration(final IServer server, final IProgressMonitor monitor)
             throws CoreException {
-        ILaunchConfiguration conf = server.getLaunchConfiguration(false, Repository.NULL_PROGRESS_MONITOR);
+        ILaunchConfiguration conf = server.getLaunchConfiguration(false, AbstractRepository.NULL_PROGRESS_MONITOR);
         if (conf == null) {
             conf = server.getLaunchConfiguration(true,
-                    Repository.NULL_PROGRESS_MONITOR);
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
         }
         ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
         final String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "");
         if (!args.contains(tomcatInstanceLocation)) {
             conf = server.getLaunchConfiguration(true,
-                    Repository.NULL_PROGRESS_MONITOR);
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
         configureLaunchConfiguration(workingCopy);
@@ -352,13 +350,13 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 .getFolder("tomcat_conf");
         final File sourceFolder = new File(tomcatInstanceLocation, "conf");
         PlatformUtil.copyResource(configurationFolder.getLocation().toFile(),
-                sourceFolder, Repository.NULL_PROGRESS_MONITOR);
+                sourceFolder, AbstractRepository.NULL_PROGRESS_MONITOR);
         configurationFolder.refreshLocal(IResource.DEPTH_INFINITE,
-                Repository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
         final IServer server = configureServer(runtime, sType, file,
                 configurationFolder, monitor);
         portConfigurator = newPortConfigurator(server);
-        portConfigurator.configureServerPort(Repository.NULL_PROGRESS_MONITOR);
+        portConfigurator.configureServerPort(AbstractRepository.NULL_PROGRESS_MONITOR);
         return server;
     }
 
@@ -407,8 +405,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject confProject = workspace.getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
         if (!confProject.exists()) {
-            confProject.create(Repository.NULL_PROGRESS_MONITOR);
-            confProject.open(Repository.NULL_PROGRESS_MONITOR);
+            confProject.create(AbstractRepository.NULL_PROGRESS_MONITOR);
+            confProject.open(AbstractRepository.NULL_PROGRESS_MONITOR);
             final ProjectProperties projectProperties = new ProjectProperties(confProject);
             confProject.getWorkspace().run(new IWorkspaceRunnable() {
 
@@ -418,7 +416,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 }
             }, monitor);
         }
-        confProject.open(Repository.NULL_PROGRESS_MONITOR);
+        confProject.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         return confProject;
     }
 
@@ -480,7 +478,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     public void cleanBeforeShutdown() throws IOException {
-        final Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         final DatabaseHandler bonitaHomeHandler = currentRepository.getDatabaseHandler();
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)) {
@@ -518,19 +516,12 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     @Override
-    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         if (PlatformUtil.isHeadless()) {
             return;
         }
         IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         if (!isLazyModeEnabled(preferenceStore)) {
-            BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
-                    Messages.engineLazyModeNotificationLink, e -> {
-                        BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
-                        dialog.create();
-                        dialog.setSelectedPreferencePage(BonitaPreferenceDialog.SERVER_SETTINGS_PAGE_ID);
-                        dialog.open();
-                    });
             final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
             job.setPriority(Job.LONG);
             job.setUser(false);
@@ -544,7 +535,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     @Override
-    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
         stopServer(monitor);
     }
 

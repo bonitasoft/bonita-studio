@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2020 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.sqlbuilder.ex.wizard;
 
@@ -31,7 +28,7 @@ import java.util.Properties;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -95,7 +92,8 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnectorConfigurationWizardPage implements IContentChangeListener {
+public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnectorConfigurationWizardPage
+        implements IContentChangeListener {
 
     private static final String BONITA_SQL_TMP_FILE = ".bonita.sql";
     private static final String DRIVER_CLASSNAME_INPUT = "driver";
@@ -181,7 +179,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         radioGroupObservable.addOption(Boolean.TRUE.toString(), SWTObservables.observeSelection(useGraphical));
         radioGroupObservable.addOption(Boolean.FALSE.toString(), SWTObservables.observeSelection(useTextual));
 
-        context.bindValue(radioGroupObservable, EMFObservables.observeValue(param.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT));
+        context.bindValue(radioGroupObservable,
+                EMFObservables.observeValue(param.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT));
 
         updateButtons();
 
@@ -203,7 +202,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         final IFile f = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BONITA_SQL_TMP_FILE);
         if (f.exists()) {
             try {
-                f.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                f.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -249,7 +248,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
                                     if (profile != null) {
                                         profile.disconnect();
                                     }
-                                    profile = connect(dialog.getClassName(), dialog.getJdbcUrl(), dialog.getUsername(), dialog.getPassword());
+                                    profile = connect(dialog.getClassName(), dialog.getJdbcUrl(), dialog.getUsername(),
+                                            dialog.getPassword());
                                 } catch (final ConnectionProfileException e) {
                                     BonitaStudioLog.error(e, SQLBuilderExPlugin.PLUGIN_ID);
                                 } catch (final ClassNotFoundException e) {
@@ -262,8 +262,10 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
                         });
                         if (isConnected()) {
                             boolean update = true;
-                            if (showConfirmation(dialog.getClassName(), dialog.getJdbcUrl(), dialog.getUsername(), dialog.getPassword())) {
-                                if (!MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.updateConfigurationTitle,
+                            if (showConfirmation(dialog.getClassName(), dialog.getJdbcUrl(), dialog.getUsername(),
+                                    dialog.getPassword())) {
+                                if (!MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                                        Messages.updateConfigurationTitle,
                                         Messages.updateConfigurationMsg)) {
                                     update = false;
                                 }
@@ -319,7 +321,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         return group;
     }
 
-    protected boolean showConfirmation(final String driverClassName, final String jdbcUrl, final String username, final String password) {
+    protected boolean showConfirmation(final String driverClassName, final String jdbcUrl, final String username,
+            final String password) {
         boolean atLeastOnExpressionisConstant = false;
         final Expression dExp = (Expression) getDriverclassNameParameter().getExpression();
         if (dExp != null
@@ -365,7 +368,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
 
     }
 
-    protected IConnectionProfile connect(final String className, final String jdbcUrl, final String username, final String password)
+    protected IConnectionProfile connect(final String className, final String jdbcUrl, final String username,
+            final String password)
             throws ConnectionProfileException, ClassNotFoundException, UnsupportedEncodingException {
         final IConnectionProfile profile = getConnectionProfile(className, jdbcUrl, username, password);
         final IStatus connectionStatus = profile.connectWithoutJob();
@@ -374,7 +378,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
 
                 @Override
                 public void run() {
-                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.connect, Messages.connectionSuccessMsg);
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.connect,
+                            Messages.connectionSuccessMsg);
                 }
             });
 
@@ -384,19 +389,23 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
                 @Override
                 public void run() {
                     if (connectionStatus.isOK()) {
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.connect, Messages.connectionFailedMsg, new Status(IStatus.ERROR,
-                                SQLBuilderExPlugin.PLUGIN_ID, Messages.connectionFailedMsg), IStatus.ERROR).open();
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.connect,
+                                Messages.connectionFailedMsg, new Status(IStatus.ERROR,
+                                        SQLBuilderExPlugin.PLUGIN_ID, Messages.connectionFailedMsg),
+                                IStatus.ERROR).open();
                     } else {
                         IStatus errorStaus = connectionStatus;
                         if (connectionStatus instanceof MultiStatus) {
                             if (((MultiStatus) connectionStatus).getChildren().length > 0) {
-                                errorStaus = new Status(IStatus.ERROR, ((MultiStatus) connectionStatus).getChildren()[0].getPlugin(),
+                                errorStaus = new Status(IStatus.ERROR,
+                                        ((MultiStatus) connectionStatus).getChildren()[0].getPlugin(),
                                         ((MultiStatus) connectionStatus).getChildren()[0].getMessage());
 
                             }
                         }
-                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.connect, Messages.connectionFailedMsg, errorStaus, IStatus.ERROR
-                                | IStatus.WARNING).open();
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.connect,
+                                Messages.connectionFailedMsg, errorStaus, IStatus.ERROR
+                                        | IStatus.WARNING).open();
                     }
 
                 }
@@ -404,7 +413,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
             return null;
         }
 
-        final IFile f = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BONITA_SQL_TMP_FILE); //$NON-NLS-1$
+        final IFile f = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(BONITA_SQL_TMP_FILE);
         String currentQuery = getQuery();
         if (currentQuery == null) {
             currentQuery = "";
@@ -429,16 +438,19 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
             }
         }
 
-        final SQLBuilderStorageEditorInput editorInput = EditorInputUtil.createSQLBuilderStorageEditorInputFromStringViaFile(f);
+        final SQLBuilderStorageEditorInput editorInput = EditorInputUtil
+                .createSQLBuilderStorageEditorInputFromStringViaFile(f);
         final OmitSchemaInfo schemaInfo = new OmitSchemaInfo();
         schemaInfo.setOmitCurrentSchema(true);
         editorInput.setOmitSchemaInfo(schemaInfo);
         final Properties connectionProperties = profile
                 .getBaseProperties();
         editorInput.setConnectionInfo(new SQLEditorConnectionInfo(
-                new DatabaseVendorDefinitionId(connectionProperties.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID),
+                new DatabaseVendorDefinitionId(
+                        connectionProperties.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID),
                         connectionProperties.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID)),
-                ConnectionProfileUtil.DEFAULT_PROFILE_NAME, connectionProperties.getProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID)));
+                ConnectionProfileUtil.DEFAULT_PROFILE_NAME,
+                connectionProperties.getProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID)));
         try {
             _sqlBuilder.setInput(editorInput);
         } catch (final PartInitException e) {
@@ -448,7 +460,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
 
                 @Override
                 public void run() {
-                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.unparsableQueryTitle, Messages.unparsableQueryMsg, e).open();
+                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.unparsableQueryTitle,
+                            Messages.unparsableQueryMsg, e).open();
                 }
             });
             BonitaStudioLog.error(e, SQLBuilderExPlugin.PLUGIN_ID);
@@ -560,7 +573,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         return null;
     }
 
-    public abstract IConnectionProfile getConnectionProfile(String className, String jdbcUrl, String username, String password)
+    public abstract IConnectionProfile getConnectionProfile(String className, String jdbcUrl, String username,
+            String password)
             throws ConnectionProfileException, ClassNotFoundException, UnsupportedEncodingException;
 
     public boolean useQueryBuilder() {
@@ -584,7 +598,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
     }
 
     private List<Expression> getFilteredExpressions() {
-        final List<Expression> filteredExpressions = new ArrayList<Expression>();
+        final List<Expression> filteredExpressions = new ArrayList<>();
         if (expressionNatureProvider != null) {
             final Expression[] expressions = expressionNatureProvider.getExpressions(getElementContainer());
             final EObject input = getElementContainer();

@@ -30,7 +30,7 @@ import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContai
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
@@ -107,10 +107,10 @@ public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeConta
                 final IFile resource = getResource();
                 if (!resource.exists()) {
                     resource.create(is, IResource.FORCE,
-                            Repository.NULL_PROGRESS_MONITOR);
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     resource.setContents(is, IResource.KEEP_HISTORY | IResource.FORCE,
-                            Repository.NULL_PROGRESS_MONITOR);
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             }
         } catch (JAXBException | IOException | SAXException | CoreException e) {

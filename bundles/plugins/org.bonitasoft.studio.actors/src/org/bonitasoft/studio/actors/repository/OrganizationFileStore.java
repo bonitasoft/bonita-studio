@@ -39,7 +39,7 @@ import org.bonitasoft.studio.actors.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
@@ -167,7 +167,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         }
         if (target.exists()) {
             if (FileActionDialog.overwriteQuestion(target.getName())) {
-                PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                PlatformUtil.delete(target, AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 return ValidationStatus.cancel("");
             }

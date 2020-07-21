@@ -31,7 +31,7 @@ import org.bonitasoft.engine.business.application.ApplicationState;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeBuilder;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -80,7 +80,7 @@ public class ApplicationFileStoreTest {
                         .create());
 
         verify(resource).create(notNull(ByteArrayInputStream.class), eq(IResource.FORCE),
-                eq(Repository.NULL_PROGRESS_MONITOR));
+                eq(AbstractRepository.NULL_PROGRESS_MONITOR));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ApplicationFileStoreTest {
                         .create());
 
         verify(resource).setContents(notNull(ByteArrayInputStream.class), eq(IResource.FORCE | IResource.KEEP_HISTORY),
-                eq(Repository.NULL_PROGRESS_MONITOR));
+                eq(AbstractRepository.NULL_PROGRESS_MONITOR));
     }
 
     @Test(expected = IllegalArgumentException.class)

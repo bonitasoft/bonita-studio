@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -54,7 +54,7 @@ public class ProjectExplorerViewerComparator extends JavaElementComparator {
 
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         IProject project = currentRepository.getProject();
         IResource resource = Adapters.adapt(e1, IResource.class);
         if (resource != null && !Objects.equals(resource.getProject(), project)) {
@@ -66,7 +66,7 @@ public class ProjectExplorerViewerComparator extends JavaElementComparator {
         return super.compare(viewer, e1, e2);
     }
 
-    private int compareWebPages(Repository currentRepository, Viewer viewer, IResource webPage1, IResource webPage2) {
+    private int compareWebPages(AbstractRepository currentRepository, Viewer viewer, IResource webPage1, IResource webPage2) {
         Optional<WebPageFileStore> fileStore1 = fileStoreFinder.findFileStore(webPage1,
                 currentRepository).filter(WebPageFileStore.class::isInstance).map(WebPageFileStore.class::cast);
         Optional<WebPageFileStore> fileStore2 = fileStoreFinder.findFileStore(webPage2,

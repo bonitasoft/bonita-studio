@@ -42,7 +42,7 @@ import org.bonitasoft.engine.profile.ProfileNotFoundException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
@@ -87,7 +87,7 @@ public class DeployedAppContentProvider {
         applicationItem.setProfileName(profile.getName());
         applicationItem.setProfileId(profile.getId());
         try {
-            applicationItem.setURL(new PortalURLBuilder().withProfile(profile.getId()).toURL(Repository.NULL_PROGRESS_MONITOR));
+            applicationItem.setURL(new PortalURLBuilder().withProfile(profile.getId()).toURL(AbstractRepository.NULL_PROGRESS_MONITOR));
         } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
             BonitaStudioLog.error(e);
             return null;
@@ -144,7 +144,7 @@ public class DeployedAppContentProvider {
                     applicationItem.setProfileId(application.getProfileId());
                     applicationItem.setProfileName(profileAPI.getProfile(application.getProfileId()).getName());
                     applicationItem.setURL(new ApplicationURLBuilder(appToken)
-                            .toURL(Repository.NULL_PROGRESS_MONITOR));
+                            .toURL(AbstractRepository.NULL_PROGRESS_MONITOR));
                     return applicationItem;
                 }
             }

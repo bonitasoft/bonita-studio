@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
@@ -104,12 +104,12 @@ public class GroovyFileStore extends AbstractFileStore<String> {
                 final InputStream is = new ByteArrayInputStream(scriptContent.getBytes(UTF_8));
                 final IFile sourceFile = getResource();
                 if (sourceFile.exists() && FileActionDialog.overwriteQuestion(getName())) {
-                    sourceFile.setContents(is, IResource.FOLDER, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.setContents(is, IResource.FOLDER, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    sourceFile.create(is, true, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
                 if (!UTF_8.equals(sourceFile.getCharset())) {
-                    sourceFile.setCharset(UTF_8, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.setCharset(UTF_8, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);

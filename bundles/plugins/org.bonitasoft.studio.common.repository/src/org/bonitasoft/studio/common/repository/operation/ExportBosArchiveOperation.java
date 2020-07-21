@@ -33,7 +33,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.resources.IFile;
@@ -95,7 +95,7 @@ public class ExportBosArchiveOperation {
         try {
             op.run(monitor);
             if (manifestFile != null && manifestFile.exists()) {
-                manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                manifestFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException | InterruptedException | InvocationTargetException e) {
             status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
@@ -111,7 +111,7 @@ public class ExportBosArchiveOperation {
                 .getFile(BOS_ARCHIVE_MANIFEST);
         if (manifestFile.exists()) {
             try {
-                manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                manifestFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
                 return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
@@ -144,7 +144,7 @@ public class ExportBosArchiveOperation {
 
         final InputStream source = new ByteArrayInputStream(w.toString().getBytes());
         try {
-            manifestFile.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+            manifestFile.create(source, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final CoreException e1) {
             return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e1.getMessage(), e1);
         }
@@ -184,7 +184,7 @@ public class ExportBosArchiveOperation {
         if (resource instanceof IFile) {
             resourcesToExport.add(resource);
         } else if (resource instanceof IFolder && !isMetadataFolder(resource) && !isBuildOutputFolder(resource)) {
-            resource.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+            resource.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
             for (final IResource r : ((IFolder) resource).members()) {
                 addChildrenFile(r, resourcesToExport);
             }

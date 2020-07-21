@@ -35,7 +35,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
@@ -79,9 +79,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             try {
                 if (!this.folder.getParent().exists()) {
                      this.folder.getLocation().toFile().mkdirs();
-                     this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                     this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    this.folder.create(true, true, Repository.NULL_PROGRESS_MONITOR);
+                    this.folder.create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
                 processDefaultContribution();
             } catch (final CoreException e) {
@@ -164,10 +164,10 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             final File file = iFile.getLocation().toFile();
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
-                getResource().refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+                getResource().refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             if (!iFile.exists()) {
-                iFile.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                iFile.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -256,9 +256,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             final File f = file.getLocation().toFile();
             if (!f.getParentFile().exists()) {
                 f.getParentFile().mkdirs();
-                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+                folder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
-            file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+            file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
@@ -266,7 +266,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     }
 
     protected void handleOverwrite(final IFile file) throws CoreException {
-        file.delete(true, false, Repository.NULL_PROGRESS_MONITOR);
+        file.delete(true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Override
@@ -296,7 +296,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         final IFile file = getResource().getFile(fileName);
         if (force && !file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()) {
             try {
-                file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                file.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -312,7 +312,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     public void refresh() {
         if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
             try {
-                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+                folder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
                 BonitaStudioLog.warning(String.format("An error occured wihle refreshing folder %s: %s",folder.getName(),e1.getMessage()),CommonRepositoryPlugin.PLUGIN_ID);
             }

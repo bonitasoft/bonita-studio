@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
@@ -133,7 +133,7 @@ public class BosArchiveTest {
         return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(),"UTF-8"));
     }
 
-    private Repository createRepository() throws CoreException {
+    private AbstractRepository createRepository() throws CoreException {
 
         final IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
         when(fileStore.getName()).thenReturn("Customer Support-2.0.proc");
@@ -158,7 +158,7 @@ public class BosArchiveTest {
         storeList.add(appRessourcesStore);
         storeList.add(libStore);
 
-        final Repository repo = mock(Repository.class);
+        final AbstractRepository repo = mock(AbstractRepository.class);
         when(repo.getAllStores()).thenReturn(storeList);
         when(repo.getRepositoryStoreByName(anyString())).thenReturn(Optional.empty());
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));

@@ -32,7 +32,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -140,7 +140,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                             process.getName() + " (" + process.getVersion() + ")");
                 }
                 if (FileActionDialog.overwriteQuestion(fileNameLabel)) {
-                    file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
+                    file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     return createRepositoryFileStore(fileName);
                 }
@@ -150,7 +150,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                     f.getParentFile().mkdirs();
                     refresh();
                 }
-                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+                file.create(inputStream, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);

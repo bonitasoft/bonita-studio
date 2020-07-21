@@ -33,7 +33,7 @@ import org.bonitasoft.engine.search.Order;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -110,13 +110,13 @@ public class TestDeployCommand {
         final CompoundCommand cc = new CompoundCommand();
         cc.append(SetCommand.create(domain, parentProcess, ProcessPackage.eINSTANCE.getElement_Name(), "ParentRenamed"));
         domain.getCommandStack().execute(cc);
-        processEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
+        processEditor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
         /* Retry to deploy */
         runProcessCommand.execute(null);
 
         APISession session = null;
         try {
-            session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             final ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session);
             final int nbProcess = (int) processAPI.getNumberOfProcessDeploymentInfos();
             final List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess,
@@ -159,7 +159,7 @@ public class TestDeployCommand {
         final RunProcessCommand runProcessCommand1 = new RunProcessCommand(true);
         runProcessCommand1.execute(ProcessSelector.createExecutionEvent(toDeploy));
 
-        final APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        final APISession session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final long processId = processApi.getProcessDefinitionId(processName, processVersion);
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);

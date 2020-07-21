@@ -46,7 +46,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
@@ -156,9 +156,9 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
             final ByteArrayInputStream source = new ByteArrayInputStream(xml);
             final IFile resource = getResource();
             if (resource.exists()) {
-                resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                resource.setContents(source, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
-                resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                resource.create(source, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             cachedBusinessObjectModel.clear();
             cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
@@ -217,7 +217,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         IFile artifactDescriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
         if (artifactDescriptor.exists()) {
             try {
-                artifactDescriptor.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                artifactDescriptor.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -318,7 +318,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
             final File target = new File(to, ZIP_FILENAME);
             if (target.exists()) {
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
-                    PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                    PlatformUtil.delete(target, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     return ValidationStatus.cancel("");
                 }

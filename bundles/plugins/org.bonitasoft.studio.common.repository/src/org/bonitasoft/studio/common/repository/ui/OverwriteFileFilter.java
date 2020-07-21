@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 
 public class OverwriteFileFilter {
@@ -45,7 +45,7 @@ public class OverwriteFileFilter {
         final File target = new File(new File(targetFolderPath), fileStore.getName());
         if (target.exists()) {
             if (FileActionDialog.overwriteQuestion(fileStore.getName())) {
-                PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                PlatformUtil.delete(target, AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 return false;
             }

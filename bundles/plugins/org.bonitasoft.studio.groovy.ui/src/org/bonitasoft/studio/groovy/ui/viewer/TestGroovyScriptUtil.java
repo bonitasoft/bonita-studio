@@ -34,7 +34,7 @@ import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.engine.expression.ExpressionEvaluationException;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -207,7 +207,7 @@ public class TestGroovyScriptUtil {
         operation.setExpression(ExpressionHelper.createGroovyScriptExpression(expression, returnType));
         operation.setContextMap(variableMap);
         operation.setAdditionalJars(additionalJars);
-        operation.run(Repository.NULL_PROGRESS_MONITOR);
+        operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         return operation.getResult();
     }
 

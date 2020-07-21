@@ -33,7 +33,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
@@ -180,10 +180,10 @@ public class ExportConnectorArchiveOperation {
     private IFolder createClasspathFolder(final IRepositoryStore implStore, final List<IResource> resourcesToExport) throws CoreException {
         final IFolder classpathFolder = implStore.getResource().getFolder(CLASSPATH_DIR) ;
         if(classpathFolder.exists()){
-            classpathFolder.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+            classpathFolder.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
         }
 
-        classpathFolder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
+        classpathFolder.create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
         resourcesToExport.add(classpathFolder) ;
         cleanAfterExport.add(classpathFolder) ;
         return classpathFolder;
@@ -193,7 +193,7 @@ public class ExportConnectorArchiveOperation {
         for(final IResource r : cleanAfterExport){
             if(r.exists()){
                 try {
-                    r.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+                    r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e) ;
                 }
@@ -215,16 +215,16 @@ public class ExportConnectorArchiveOperation {
             if(includeSources){
                 final IFolder srcFolder = implStore.getResource().getFolder(SRC_DIR) ;
                 if(srcFolder.exists()){
-                    srcFolder.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+                    srcFolder.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 }
-                srcFolder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
+                srcFolder.create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 cleanAfterExport.add(srcFolder) ;
 
                 final IPath path = file.getResource().getFullPath().makeRelativeTo(sourceStore.getResource().getFullPath()) ;
                 final IFolder newFolder = srcFolder.getFolder(path) ;
                 newFolder.getLocation().toFile().getParentFile().mkdirs() ;
-                srcFolder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR) ;
-                file.getResource().copy(newFolder.getFullPath(),true, Repository.NULL_PROGRESS_MONITOR) ;
+                srcFolder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR) ;
+                file.getResource().copy(newFolder.getFullPath(),true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
 
 
                 resourcesToExport.add(srcFolder) ;
@@ -253,7 +253,7 @@ public class ExportConnectorArchiveOperation {
         final IFile descFile =  sourceStore.getResource().getFile(DESCRIPTOR_FILE) ;
         if(descFile.exists()){
             try {
-                descFile.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+                descFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e) ;
             }
@@ -296,7 +296,7 @@ public class ExportConnectorArchiveOperation {
             final File f = new File(file.getEMFResource().getURI().toFileString()) ;
             if(f.exists()){
                 final IFile defFile =  store.getResource().getFile(f.getName()) ;
-                defFile.create(new FileInputStream(f), true, Repository.NULL_PROGRESS_MONITOR) ;
+                defFile.create(new FileInputStream(f), true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 resourcesToExport.add(defFile) ;
                 cleanAfterExport.add(defFile) ;
             }
@@ -317,7 +317,7 @@ public class ExportConnectorArchiveOperation {
                 final IFile f = store.getResource().getFile(newFilename) ;
                 if(!f.exists()){
                     final FileInputStream fis = new FileInputStream(propertyFile) ;
-                    f.create(fis,true,Repository.NULL_PROGRESS_MONITOR) ;
+                    f.create(fis,true,AbstractRepository.NULL_PROGRESS_MONITOR) ;
                     fis.close() ;
                     cleanAfterExport.add(f) ;
                 }
@@ -346,7 +346,7 @@ public class ExportConnectorArchiveOperation {
                         final IFile f = store.getResource().getFile(def.getIcon()) ;
                         if(!f.exists()){
                             final InputStream is = url.openStream() ;
-                            f.create(is, true, Repository.NULL_PROGRESS_MONITOR) ;
+                            f.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                             if(!resourcesToExport.contains(f)){
                                 resourcesToExport.add(f) ;
                             }
@@ -375,7 +375,7 @@ public class ExportConnectorArchiveOperation {
                             final IFile f = store.getResource().getFile(c.getIcon()) ;
                             if(!f.exists()){
                                 final InputStream is = url.openStream() ;
-                                f.create(is, true, Repository.NULL_PROGRESS_MONITOR) ;
+                                f.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                                 if(!resourcesToExport.contains(f)){
                                     resourcesToExport.add(f) ;
                                 }
@@ -399,7 +399,7 @@ public class ExportConnectorArchiveOperation {
             final File f = new File(fileStore.getEMFResource().getURI().toFileString()) ;
             if(f.exists()){
                 final IFile implFile =  store.getResource().getFile(f.getName()) ;
-                implFile.create(new FileInputStream(f), true, Repository.NULL_PROGRESS_MONITOR) ;
+                implFile.create(new FileInputStream(f), true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 resourcesToExport.add(implFile) ;
                 cleanAfterExport.add(implFile) ;
             }
@@ -432,7 +432,7 @@ public class ExportConnectorArchiveOperation {
                 if(file.getResource().exists()){
                     if(!classpathFolder.getFile(file.getName()).exists()){
                         try {
-                            file.getResource().copy(classpathFolder.getFullPath().append(file.getName()), true, Repository.NULL_PROGRESS_MONITOR) ;
+                            file.getResource().copy(classpathFolder.getFullPath().append(file.getName()), true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                         } catch (final CoreException e) {
                             BonitaStudioLog.error(e) ;
                         }
@@ -443,7 +443,7 @@ public class ExportConnectorArchiveOperation {
                 if(is != null){
                     final IFile jarFile = classpathFolder.getFile(jarName) ;
                     if(!jarFile.exists()){
-                        jarFile.create(is, true, Repository.NULL_PROGRESS_MONITOR) ;
+                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                     }
                 }else{
                     return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;
@@ -459,7 +459,7 @@ public class ExportConnectorArchiveOperation {
                 if(file.getResource().exists()){
                     if(!classpathFolder.getFile(file.getName()).exists()){
                         try {
-                            file.getResource().copy(classpathFolder.getFullPath().append(file.getName()), true, Repository.NULL_PROGRESS_MONITOR) ;
+                            file.getResource().copy(classpathFolder.getFullPath().append(file.getName()), true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                         } catch (final CoreException e) {
                             BonitaStudioLog.error(e) ;
                         }
@@ -470,7 +470,7 @@ public class ExportConnectorArchiveOperation {
                 if(is != null){
                     final IFile jarFile = classpathFolder.getFile(jarName) ;
                     if(!jarFile.exists()){
-                        jarFile.create(is, true, Repository.NULL_PROGRESS_MONITOR) ;
+                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
                     }
                 }else{
                     return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;

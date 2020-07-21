@@ -27,7 +27,7 @@ import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoSearchDescriptor;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -105,7 +105,7 @@ public class ProjectExplorerDiagramIT {
         BOSEngineManager manager = BOSEngineManager.getInstance();
         APISession session = null;
         try {
-            session = manager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            session = manager.loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session);
             List<ProcessDeploymentInfo> result = processAPI
                     .searchProcessDeploymentInfos(new SearchOptionsBuilder(0, 10)

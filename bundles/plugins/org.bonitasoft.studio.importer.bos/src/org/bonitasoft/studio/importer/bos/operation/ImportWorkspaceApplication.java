@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
@@ -70,7 +70,7 @@ public class ImportWorkspaceApplication implements IApplication {
         final File exportTargetFolder = new File(System.getProperty("java.io.tmpdir"), IMPORT_CACHE_FOLDER);
         if (export.isPresent()) {
             if (exportTargetFolder.exists()) {
-                PlatformUtil.delete(exportTargetFolder, Repository.NULL_PROGRESS_MONITOR);
+                PlatformUtil.delete(exportTargetFolder, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             exportTargetFolder.mkdirs();
         }
@@ -100,14 +100,14 @@ public class ImportWorkspaceApplication implements IApplication {
         return IApplication.EXIT_OK;
     }
 
-    private void migrateAndExportRepository(final File targetFolder, Repository repository) {
+    private void migrateAndExportRepository(final File targetFolder, AbstractRepository repository) {
         System.out.println(
                 String.format("$EXPORT_PROGRESS_%s",
                         String.format(Messages.exportingWorkspace, repository.getName())));
         final boolean closed = !repository.getProject().isOpen();
         repositoryAccessor.setRepository(repository.getName());
         try {
-            repository.migrate(Repository.NULL_PROGRESS_MONITOR);
+            repository.migrate(AbstractRepository.NULL_PROGRESS_MONITOR);
             repository
                     .exportToArchive(
                             new File(targetFolder, repository.getName() + ".bos")
@@ -122,7 +122,7 @@ public class ImportWorkspaceApplication implements IApplication {
         }
     }
 
-    private String findEdition(Repository repository) {
+    private String findEdition(AbstractRepository repository) {
         File repoDir = repository.getProject().getLocation().toFile();
         File fragRepo = new File(repoDir, WebFragmentRepositoryStore.WEB_FRAGMENT_REPOSITORY_NAME);
         if (fragRepo.listFiles(f -> !f.getName().startsWith(".") && f.isDirectory()).length > 0) {
@@ -156,7 +156,7 @@ public class ImportWorkspaceApplication implements IApplication {
         return process.getConfigId().toString().contains("sp");
     }
 
-    private String connected(Repository repository) {
+    private String connected(AbstractRepository repository) {
         File git = new File(repository.getProject().getLocation().toFile(), ".git");
         File svn = new File(repository.getProject().getLocation().toFile(), ".svn");
         return svn.exists() || git.exists() ? "Shared" : "Local";
@@ -166,14 +166,14 @@ public class ImportWorkspaceApplication implements IApplication {
         return project -> {
             final boolean closed = !project.isOpen();
             try {
-                project.open(Repository.NULL_PROGRESS_MONITOR);
+                project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
                 return project.hasNature(BonitaProjectNature.NATURE_ID);
             } catch (final CoreException e) {
                 return false;
             } finally {
                 if (closed) {
                     try {
-                        project.close(Repository.NULL_PROGRESS_MONITOR);
+                        project.close(AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (final CoreException e) {
                         return false;
                     }

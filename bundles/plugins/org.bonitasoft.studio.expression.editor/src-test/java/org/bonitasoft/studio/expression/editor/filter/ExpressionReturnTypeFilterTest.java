@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -45,7 +45,7 @@ public class ExpressionReturnTypeFilterTest {
     private IJavaProject javaProject;
 
     @Mock
-    private Repository javaContainer;
+    private AbstractRepository javaContainer;
 
     @Mock
     private JDTTypeHierarchyManager typeHierarchyManager;

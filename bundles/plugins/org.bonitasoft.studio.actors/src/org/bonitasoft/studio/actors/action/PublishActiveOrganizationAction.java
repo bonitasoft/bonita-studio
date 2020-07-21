@@ -29,7 +29,7 @@ import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.extension.IEngineAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -66,7 +66,7 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             }
             final PublishOrganizationOperation op = new UpdateOrganizationOperation(organizationFileStore.getContent());
             op.setSession(session);
-            op.run(Repository.NULL_PROGRESS_MONITOR);
+            op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
     }
 

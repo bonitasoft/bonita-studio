@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.resources.IFile;
@@ -49,7 +49,7 @@ public class DiagramFileStoreTest {
     private DiagramRepositoryStore store;
 
     @Mock
-    private Repository repository;
+    private AbstractRepository repository;
 
     @Mock
     private IFile resource;

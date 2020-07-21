@@ -32,7 +32,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -61,8 +61,8 @@ public class DeployWizardIT {
     @Before
     public void cleanRepository() throws Exception {
         new UndeployProcessOperation(BOSEngineManager.getInstance())
-                .undeployAll().run(Repository.NULL_PROGRESS_MONITOR);
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                .undeployAll().run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         currentRepository.getAllStores().stream().filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
                 .flatMap(store -> store.getChildren().stream())
                 .filter(fStore -> fStore.canBeDeleted()).forEach(IRepositoryFileStore::delete);
@@ -138,7 +138,7 @@ public class DeployWizardIT {
     private void checkDeployedContent() throws LoginException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException, ProcessDefinitionNotFoundException, PageNotFoundException, SearchException {
         BOSEngineManager manager = BOSEngineManager.getInstance();
-        APISession apiSession = manager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        APISession apiSession = manager.loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         try {
             ProcessAPI processAPI = manager.getProcessAPI(apiSession);
             PageAPI pageAPI = manager.getPageAPI(apiSession);

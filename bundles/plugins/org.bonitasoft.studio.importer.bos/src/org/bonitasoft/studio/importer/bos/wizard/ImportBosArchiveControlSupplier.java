@@ -12,6 +12,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUp
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,36 +21,49 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
+import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.importer.ImporterPlugin;
+import org.bonitasoft.studio.importer.bos.handler.SwitchRepositoryStrategy;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.SmartImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
+import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler;
+import org.bonitasoft.studio.importer.bos.validator.RepositoryNameValidator;
+import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.ColorConstants;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.validator.PathValidator;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
+import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -65,6 +79,7 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -84,6 +99,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
 
     protected TreeViewer viewer;
+    private Section repositorySection;
     protected String filePath;
     protected ButtonWidget overwriteButton;
     protected ButtonWidget keepAllButton;
@@ -104,17 +120,39 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
     protected final ExceptionDialogHandler exceptionDialogHandler;
     private IObservableValue filePathObserveValue;
     private URLTempPath urlTempPath;
+    private SelectObservableValue repositoryModeObservable;
+
+    private String newTargetRepo = "";
+    private String existingTargetRepo = "";
+    private IObservableValue<String> newRepoObservable;
+    private IObservableValue<String> existingRepoObservable;
+    private Composite newRepositoryComposite;
+    private Composite existingRepositoryComposite;
+    private RepositoryNameValidator validator;
+    private TextWidget newRepoText;
+    private SwitchRepositoryStrategy switchRepositoryStrategy;
+    private RepositoryMode mode = RepositoryMode.EXISTING;
 
     public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
+            SwitchRepositoryStrategy switchRepositoryStrategy,
             ExceptionDialogHandler exceptionDialogHandler) {
-        this(repositoryAccessor, exceptionDialogHandler, null);
+        this(repositoryAccessor, switchRepositoryStrategy, exceptionDialogHandler, null);
     }
 
     public ImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
-            ExceptionDialogHandler exceptionDialogHandler, String filePath) {
+            SwitchRepositoryStrategy switchRepositoryStrategy,
+            ExceptionDialogHandler exceptionDialogHandler,
+            String filePath) {
         this.repositoryAccessor = repositoryAccessor;
         this.exceptionDialogHandler = exceptionDialogHandler;
         this.filePath = filePath;
+        newRepoObservable = PojoProperties.<ImportBosArchiveControlSupplier, String> value("newTargetRepo").observe(this);
+        existingRepoObservable = PojoProperties.<ImportBosArchiveControlSupplier, String> value("existingTargetRepo")
+                .observe(this);
+        this.switchRepositoryStrategy = switchRepositoryStrategy;
+        if (switchRepositoryStrategy.isSwitchRepository()) {
+            newRepoObservable.setValue(switchRepositoryStrategy.getTargetRepository());
+        }
     }
 
     @Override
@@ -129,7 +167,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         this.errorColor = resourceManager.createColor(ColorConstants.ERROR_RGB);
         this.successColor = resourceManager.createColor(ColorConstants.SUCCESS_RGB);
         doFileLocationBrowser(mainComposite, ctx);
-        doCreateAdditionalControl(mainComposite, ctx);
+        doCreateSwitchRepositoryControl(mainComposite, ctx);
         doCreateFileTree(mainComposite, ctx);
 
         treeSection.setVisible(filePath != null);
@@ -143,6 +181,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     @Override
     public void pageChanged(PageChangedEvent event) {
+        repositoryModeObservable.setValue(
+                !newRepoObservable.getValue().isEmpty() ? RepositoryMode.NEW : RepositoryMode.EXISTING);
         if (filePath != null) {
             Display.getDefault().asyncExec(() -> {
                 File myFile = new File(filePath);
@@ -150,7 +190,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                     try {
                         myFile = fetchArchive(filePath);
                     } catch (FetchRemoteBosArchiveException e) {
-                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,e.getLocalizedMessage())));
+                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                                .error(String.format(Messages.cannotImportRemoteArchive, e.getLocalizedMessage())));
                         return;
                     }
                 }
@@ -169,8 +210,218 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         }
     }
 
-    protected void doCreateAdditionalControl(Composite mainComposite, DataBindingContext ctx) {
-        // should be overwritten in subclasses
+    protected void doCreateSwitchRepositoryControl(Composite parent, DataBindingContext ctx) {
+        repositorySection = new Section(parent, Section.TREE_NODE);
+        repositorySection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
+        repositorySection.setLayout(GridLayoutFactory.fillDefaults().create());
+        repositorySection.setLayoutData(GridDataFactory.fillDefaults().create());
+        repositorySection.setText(org.bonitasoft.studio.importer.i18n.Messages.targetRepository);
+        repositorySection.addExpansionListener(new UpdateLayoutListener(parent));
+        repositorySection.setExpanded(!newRepoObservable.getValue().isEmpty());
+        final Composite mainComposite = doCreateRadioButtons(repositorySection);
+        doCreateStackLayout(mainComposite, ctx);
+
+        repositorySection.setClient(mainComposite);
+    }
+
+    private void doCreateStackLayout(Composite parent, DataBindingContext ctx) {
+        final Composite stackComposite = new Composite(parent, SWT.NONE);
+        stackComposite.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, true).create());
+
+        final CustomStackLayout stackLayout = new CustomStackLayout(stackComposite);
+        stackComposite.setLayout(stackLayout);
+
+        doCreateComposites(stackComposite, ctx);
+
+        ctx.bindValue(PojoProperties.value("topControl").observe(stackLayout), repositoryModeObservable,
+                UpdateStrategyFactory.neverUpdateValueStrategy().create(),
+                UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(repoModeToCompositeConverter()).create());
+    }
+
+    private IConverter repoModeToCompositeConverter() {
+        return new Converter(RepositoryMode.class, Composite.class) {
+
+            @Override
+            public Object convert(Object fromObject) {
+                return fromObject != null ? compositeFor((RepositoryMode) fromObject) : null;
+            }
+        };
+    }
+
+    private Control compositeFor(final RepositoryMode repoMode) {
+        switch (repoMode) {
+            case NEW:
+                return newRepositoryComposite;
+            case EXISTING:
+            default:
+                return existingRepositoryComposite;
+        }
+    }
+
+    private void doCreateComposites(Composite parent, DataBindingContext ctx) {
+        doCreateExistingRepositoryComposite(parent, ctx);
+        doCreateNewRepositoryComposite(parent, ctx);
+    }
+
+    private void doCreateExistingRepositoryComposite(Composite parent, DataBindingContext ctx) {
+        existingRepositoryComposite = new Composite(parent, SWT.NONE);
+        existingRepositoryComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        existingRepositoryComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        final String[] repositories = repositoryAccessor.getAllRepositories().stream()
+                .map(repo -> {
+                    if (Objects.equals(repo.getName(), repositoryAccessor.getCurrentRepository().getName())) {
+                        return getCurrentRepoNameWithInfo();
+                    }
+                    return repo.getName();
+                })
+                .toArray(String[]::new);
+
+        existingRepoObservable.setValue(getCurrentRepoNameWithInfo());
+
+        new CComboWidget.Builder()
+                .withItems(repositories)
+                .labelAbove()
+                .readOnly()
+                .widthHint(500)
+                .bindTo(existingRepoObservable)
+                .inContext(ctx)
+                .createIn(existingRepositoryComposite);
+    }
+
+    private String getCurrentRepoNameWithInfo() {
+        return repositoryAccessor.getCurrentRepository().getName() + " " + Messages.currentRepoinfo;
+    }
+
+    private void doCreateNewRepositoryComposite(Composite parent, DataBindingContext ctx) {
+        newRepositoryComposite = new Composite(parent, SWT.NONE);
+        newRepositoryComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        newRepositoryComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        newRepoText = new TextWidget.Builder()
+                .widthHint(500)
+                .labelAbove()
+                .withId("newRepoTextWidget")
+                .bindTo(newRepoObservable)
+                .withTargetToModelStrategy(updateValueStrategy().withValidator(validator))
+                .inContext(ctx)
+                .withDelay(500)
+                .createIn(newRepositoryComposite);
+
+        newRepoText.getValueBinding().getValidationStatus().addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                if (!newRepoText.getStatus().isOK()) {
+                    switchRepositoryStrategy.setTargetRepository(newRepoText.getText());
+                    resetTree();
+                }
+            }
+        });
+    }
+
+    private void resetTree() {
+        descriptionLabel.setText("");
+        viewer.setInput(null);
+        treeSection.setExpanded(false);
+        keepAllButton.disable();
+        overwriteButton.disable();
+    }
+
+    private Composite doCreateRadioButtons(Composite parent) {
+        final Composite radioGroup = new Composite(parent, SWT.NONE);
+        radioGroup.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 0).numColumns(2).create());
+        radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        final Button existingRepositoryButton = new Button(radioGroup, SWT.RADIO);
+        existingRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository);
+        existingRepositoryButton.setEnabled(repositoryAccessor.getAllRepositories().size() > 0);
+        existingRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        final Button newRepositoryButton = new Button(radioGroup, SWT.RADIO);
+        newRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository);
+        newRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        repositoryModeObservable = new SelectObservableValue();
+        repositoryModeObservable.addOption(RepositoryMode.EXISTING,
+                WidgetProperties.buttonSelection().observe(existingRepositoryButton));
+        repositoryModeObservable.addOption(RepositoryMode.NEW,
+                WidgetProperties.buttonSelection().observe(newRepositoryButton));
+        repositoryModeObservable.addValueChangeListener(this::repositoryModeChanged);
+
+        validator = new org.bonitasoft.studio.importer.bos.validator.RepositoryNameValidator(repositoryModeObservable);
+
+        return radioGroup;
+    }
+
+    private void repositoryModeChanged(ValueChangeEvent event) {
+        newRepoText.getValueBinding().validateTargetToModel();
+        mode = (RepositoryMode) event.diff.getNewValue();
+        switchRepositoryStrategy.setRebuildModel(mode == RepositoryMode.NEW);
+        updateTargetRepository(targetRepository(mode));
+        if (mode == RepositoryMode.NEW && !newRepoText.getStatus().isOK()) {
+            resetTree();
+        }
+    }
+
+    private void refreshArchiveModel(String targetRepository) {
+        try {
+            wizardContainer.run(true, false, monitor -> updateArchiveModel(targetRepository, monitor));
+            Display.getDefault().asyncExec(() -> {
+                importActionSelector.setArchiveModel(archiveModel);
+                viewer.setInput(archiveModel);
+                openTree();
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                    "Failed to update archive model.",
+                    e);
+        }
+    }
+
+    protected void updateArchiveModel(String targetRepository, IProgressMonitor monitor) {
+        if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
+            final AbstractRepository newRepository = repositoryAccessor.getRepository(targetRepository);
+            newRepository.open(monitor);
+            final ImportConflictsChecker conflictChecker = new ImportConflictsChecker(newRepository);
+            try {
+                setArchiveModel(conflictChecker.checkConflicts(archiveModel.getBosArchive(), monitor));
+            } catch (final IOException e) {
+                exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                        Messages.errorReadArchive,
+                        e);
+            } finally {
+                if (!Objects.equals(repositoryAccessor.getCurrentRepository().getName(),
+                        newRepository.getName())) {
+                    newRepository.close();
+                }
+            }
+        } else if (archiveModel != null) {
+            archiveModel.resetStatus();
+        }
+    }
+
+    public void updateTargetRepository(String targetRepository) {
+        final boolean repoChanged = !switchRepositoryStrategy.getTargetRepository().equals(targetRepository);
+        switchRepositoryStrategy.setTargetRepository(targetRepository);
+        if (!targetRepository.isEmpty() && archiveModel != null && repoChanged) {
+            refreshArchiveModel(targetRepository);
+        }
+    }
+
+    private String targetRepository(RepositoryMode mode) {
+        switch (mode) {
+            case NEW:
+                return newRepoText.getStatus().isOK()
+                        ? newTargetRepo
+                        : newTargetRepo.isEmpty() && archiveModel != null
+                                ? ""
+                                : switchRepositoryStrategy.getTargetRepository();
+            case EXISTING:
+            default:
+                return existingTargetRepo;
+        }
     }
 
     private void doCreateFileTree(Composite parent, DataBindingContext dbc) {
@@ -184,6 +435,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private void createTreeHeader(Composite parent, DataBindingContext ctx) {
         treeSection = new Section(parent, Section.TREE_NODE);
+        treeSection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
         treeSection.setLayout(GridLayoutFactory.fillDefaults().create());
         treeSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         treeSection.setText(Messages.importDetails);
@@ -355,7 +607,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 try {
                     myFile = fetchArchive(filePath);
                 } catch (FetchRemoteBosArchiveException ex) {
-                    textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,ex.getLocalizedMessage())));
+                    textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                            .error(String.format(Messages.cannotImportRemoteArchive, ex.getLocalizedMessage())));
                     return;
                 }
             }
@@ -377,7 +630,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, ex);
         }
-        if(!operation.getStatus().isOK()) {
+        if (!operation.getStatus().isOK()) {
             throw new FetchRemoteBosArchiveException(operation.getStatus().getException());
         }
         urlTempPath = operation.getURLTempPath();
@@ -401,9 +654,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         return operation.getImportArchiveModel();
     }
 
-    protected ParseBosArchiveOperation newParseOperation(final File selectedFile) {
+    private ParseBosArchiveOperation newParseOperation(File selectedFile) {
         return new ParseBosArchiveOperation(selectedFile,
-                repositoryAccessor.getCurrentRepository());
+                mode == RepositoryMode.NEW ? repositoryAccessor.getCurrentRepository()
+                        : repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository()));
     }
 
     protected void openTree() {
@@ -439,6 +693,9 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             overwriteButton.disable();
         }
         treeSection.setExpanded(true);
+        if (archiveModel.isConflicting()) {
+            repositorySection.setExpanded(true);
+        }
     }
 
     protected String getAlreadyPresentMessage() {
@@ -503,6 +760,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         this.archiveStatus = archiveStatus;
     }
 
+    protected void setTextWidgetText(String text) {
+        textWidget.setText(text);
+    }
+
     protected class UpdateLayoutListener implements IExpansionListener {
 
         private final Composite toLayout;
@@ -511,25 +772,41 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             this.toLayout = toLayout;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see
-         * org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanging(org.eclipse.ui.forms.events.ExpansionEvent)
-         */
         @Override
         public void expansionStateChanging(ExpansionEvent e) {
             //NOTHING TO DO
         }
 
-        /*
-         * (non-Javadoc)
-         * @see
-         * org.eclipse.ui.forms.events.IExpansionListener#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
-         */
         @Override
         public void expansionStateChanged(ExpansionEvent e) {
             toLayout.layout();
         }
 
+    }
+
+    public String getExistingTargetRepo() {
+        if (Objects.equals(existingTargetRepo, repositoryAccessor.getCurrentRepository().getName())) {
+            return getCurrentRepoNameWithInfo();
+        }
+        return existingTargetRepo;
+    }
+
+    public void setExistingTargetRepo(String existingTargetRepo) {
+        this.existingTargetRepo = existingTargetRepo.endsWith(Messages.currentRepoinfo)
+                ? repositoryAccessor.getCurrentRepository().getName() : existingTargetRepo;
+        if (!this.existingTargetRepo.isEmpty() && repositoryModeObservable.getValue() == RepositoryMode.EXISTING) {
+            updateTargetRepository(this.existingTargetRepo);
+        }
+    }
+
+    public String getNewTargetRepo() {
+        return newTargetRepo;
+    }
+
+    public void setNewTargetRepo(String newTargetRepo) {
+        this.newTargetRepo = newTargetRepo;
+        if (!newTargetRepo.isEmpty() && archiveModel != null) {
+            updateTargetRepository(newTargetRepo);
+        }
     }
 }

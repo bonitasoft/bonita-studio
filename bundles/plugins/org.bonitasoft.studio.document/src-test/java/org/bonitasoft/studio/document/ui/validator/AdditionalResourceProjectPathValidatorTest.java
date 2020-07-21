@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.Resource;
@@ -26,7 +26,7 @@ public class AdditionalResourceProjectPathValidatorTest {
         IFile knownFile = mock(IFile.class);
         IFile unknownFile = mock(IFile.class);
         IProject project = mock(IProject.class);
-        Repository repository = mock(Repository.class);
+        AbstractRepository repository = mock(AbstractRepository.class);
         RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         validator.repositoryAccessor = repositoryAccessor;
 

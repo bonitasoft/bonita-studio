@@ -54,12 +54,12 @@ public class RepositoryAccessor {
         return repositoryManagerInstance.getRepositoryStore(storeClass);
     }
 
-    public Repository getCurrentRepository() {
+    public AbstractRepository getCurrentRepository() {
         return repositoryManagerInstance.getCurrentRepository();
     }
 
     public IRepository start(final IProgressMonitor monitor) {
-        Repository repository = getCurrentRepository();
+        AbstractRepository repository = getCurrentRepository();
         if (!repository.exists()) {
             repository.create(monitor);
         }
@@ -70,12 +70,12 @@ public class RepositoryAccessor {
         return ResourcesPlugin.getWorkspace();
     }
 
-    public Repository getRepository(String targetRepository) {
+    public AbstractRepository getRepository(String targetRepository) {
         return repositoryManagerInstance.getRepository(targetRepository);
     }
 
     public void setRepository(final String repositoryName) {
-        repositoryManagerInstance.setRepository(repositoryName, false, Repository.NULL_PROGRESS_MONITOR);
+        repositoryManagerInstance.setRepository(repositoryName, false, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     public List<IRepository> getAllRepositories() {

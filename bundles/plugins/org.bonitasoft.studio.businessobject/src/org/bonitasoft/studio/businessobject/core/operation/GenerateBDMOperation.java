@@ -35,7 +35,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -71,7 +71,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
 
     protected void doGenerateBDM(IProgressMonitor monitor) throws InvocationTargetException {
         if (monitor == null) {
-            monitor = Repository.NULL_PROGRESS_MONITOR;
+            monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         }
         BusinessObjectModel model;
         try {
@@ -157,7 +157,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             }
             final DependencyFileStore bdmJarFileStore = store.createRepositoryFileStore(fileStore.getDependencyName());
             bdmJarFileStore.save(is);
-            fileStore.getRepository().build(Repository.NULL_PROGRESS_MONITOR);
+            fileStore.getRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (IOException e) {
             throw new InvocationTargetException(e);
         }

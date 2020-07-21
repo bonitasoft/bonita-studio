@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.handler;
 import java.util.Optional;
 
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
@@ -68,7 +68,7 @@ public class DeployHandler extends AbstractHandler {
                 && selection.get().getFirstElement() instanceof IAdaptable) {
             IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
             if (resource != null) {
-                Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
                 boolean resourceMatch = selectionFinder.findElementToDeploy(resource, currentRepository)
                         .isPresent();
                 if (!resourceMatch) {

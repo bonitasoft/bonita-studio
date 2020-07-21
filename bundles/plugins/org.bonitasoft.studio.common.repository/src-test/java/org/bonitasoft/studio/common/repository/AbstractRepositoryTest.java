@@ -48,7 +48,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RepositoryTest {
+public class AbstractRepositoryTest {
 
     @Mock
     private IWorkspace workspace;
@@ -71,7 +71,7 @@ public class RepositoryTest {
 
     @Test
     public void should_open_trigger_project_manifest_factory() throws Exception {
-        final Repository repository = newRepository();
+        final AbstractRepository repository = newRepository();
 
         repository.open(monitor);
 
@@ -80,7 +80,7 @@ public class RepositoryTest {
 
     @Test
     public void should_open_trigger_project_classpath_factory() throws Exception {
-        final Repository repository = newRepository();
+        final AbstractRepository repository = newRepository();
 
         repository.open(monitor);
 
@@ -89,7 +89,7 @@ public class RepositoryTest {
 
     @Test
     public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
-        final Repository repository = newRepository();
+        final AbstractRepository repository = newRepository();
 
         repository.delete(monitor);
 
@@ -98,7 +98,7 @@ public class RepositoryTest {
 
     @Test
     public void should_refresh_project_when_deleting_an_open_repository() throws Exception {
-        final Repository repository = newRepository();
+        final AbstractRepository repository = newRepository();
         doReturn(true).when(repository).isBuildEnable();
         doReturn(true).when(project).isOpen();
 
@@ -130,15 +130,15 @@ public class RepositoryTest {
         when(repositoryStore1.getChild("name.xml", false)).thenReturn(fileStore1);
         when(repositoryStore2.getChild("name.xml", false)).thenReturn(fileStore2);
 
-        Repository repository = newRepository();
+        AbstractRepository repository = newRepository();
         doReturn(Arrays.asList(repositoryStore1, repositoryStore2)).when(repository).getAllStores();
 
         assertThat(repository.getFileStore(resource1)).isEqualTo(fileStore1);
         assertThat(repository.getFileStore(resource2)).isEqualTo(fileStore2);
     }
 
-    private Repository newRepository() throws CoreException, MigrationException {
-        final Repository repo = spy(new Repository(workspace, project, extensionContextInjectionFactory,
+    private AbstractRepository newRepository() throws CoreException, MigrationException {
+        final AbstractRepository repo = spy(new TestRepository(workspace, project, extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, projectManifestFactory,
                 bonitaBPMProjectClasspath, true));
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
@@ -147,6 +147,18 @@ public class RepositoryTest {
         doNothing().when(repo).updateCurrentRepositoryPreference();
         doNothing().when(repo).migrate(any(IProgressMonitor.class));
         return repo;
+    }
+
+}
+
+class TestRepository extends AbstractRepository {
+
+    public TestRepository(IWorkspace workspace, IProject project,
+            ExtensionContextInjectionFactory extensionContextInjectionFactory,
+            JDTTypeHierarchyManager jdtTypeHierarchyManager, ProjectManifestFactory projectManifestFactory,
+            ProjectClasspathFactory bonitaBPMProjectClasspath, boolean migrationEnabled) {
+        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
+                bonitaBPMProjectClasspath, migrationEnabled);
     }
 
 }

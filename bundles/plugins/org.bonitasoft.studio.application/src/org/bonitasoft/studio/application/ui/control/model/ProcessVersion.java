@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -105,7 +105,7 @@ public class ProcessVersion extends BuildableArtifact implements ArtifactVersion
         return status;
     }
 
-    private Repository getRepository() {
+    private AbstractRepository getRepository() {
         return RepositoryManager.getInstance().getCurrentRepository();
     }
 

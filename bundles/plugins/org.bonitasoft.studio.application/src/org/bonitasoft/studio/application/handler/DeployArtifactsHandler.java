@@ -58,7 +58,7 @@ import org.bonitasoft.studio.application.ui.control.model.RepositoryStore;
 import org.bonitasoft.studio.application.ui.control.model.TenantArtifact;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
@@ -391,7 +391,7 @@ public class DeployArtifactsHandler {
 
     private void openSuccessDialog(Shell activeShell, IStatus status)
             throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         DeployedAppContentProvider contentProvider = new DeployedAppContentProvider(status,
                 BOSEngineManager.getInstance().getApplicationAPI(session),
                 BOSEngineManager.getInstance().getProfileAPI(session),

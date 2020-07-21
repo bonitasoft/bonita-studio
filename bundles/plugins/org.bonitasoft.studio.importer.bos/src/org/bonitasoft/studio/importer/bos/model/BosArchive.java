@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -60,7 +60,7 @@ public class BosArchive {
         this.archiveFile = archiveFile;
     }
 
-    public ImportArchiveModel toImportModel(Repository repository, IProgressMonitor monitor) throws IOException {
+    public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor) throws IOException {
         final IStatus validationStatus = validate();
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
         archiveModel.setValidationStatus(validationStatus);
@@ -95,7 +95,7 @@ public class BosArchive {
     }
 
     private boolean isLegacyFormRepo(String segment) {
-        return Repository.LEGACY_REPOSITORIES.contains(segment);
+        return AbstractRepository.LEGACY_REPOSITORIES.contains(segment);
     }
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
@@ -113,7 +113,7 @@ public class BosArchive {
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
-        } else if (Repository.LEGACY_REPOSITORIES.contains(segment)) {
+        } else if (AbstractRepository.LEGACY_REPOSITORIES.contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
         } else {
             archiveModel.addStore(new RootFileModel(segment, Joiner.on('/').join(parentSegments)));

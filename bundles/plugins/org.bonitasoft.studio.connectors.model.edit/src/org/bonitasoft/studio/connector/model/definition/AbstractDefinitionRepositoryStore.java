@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -188,7 +188,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         migrator.setLevel(ValidationLevel.NONE);
         final ResourceSet rSet = migrator.migrateAndLoad(
                 Collections.singletonList(resourceURI), release,
-                null, Repository.NULL_PROGRESS_MONITOR);
+                null, AbstractRepository.NULL_PROGRESS_MONITOR);
         if (!rSet.getResources().isEmpty()) {
             FileOutputStream fos = null;
             try {
