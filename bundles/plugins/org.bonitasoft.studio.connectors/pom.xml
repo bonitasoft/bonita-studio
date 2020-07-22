@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
+        <version>7.10.6-SNAPSHOT</version>
+    </parent>
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.bonitasoft.studio.connectors</artifactId>
+    <packaging>eclipse-plugin</packaging>
+    <properties>
+        <connectors.impl.target>${basedir}/connectors-impl</connectors.impl.target>
+        <connectors.def.target>${basedir}/connectors-def</connectors.def.target>
+        <connectors.deps.target>${basedir}/dependencies</connectors.deps.target>
+        <connectors.tmp.dir>${basedir}/connectors</connectors.tmp.dir>
+        <!-- connectors versions -->
+        <connector.version.alfresco>2.0.1</connector.version.alfresco>
+        <connector.version.cmis>3.0.3</connector.version.cmis>
+        <connector.version.database>2.0.1</connector.version.database>
+        <connector.version.email>1.2.1</connector.version.email>
+        <connector.version.google-calendar-v3>1.0.0</connector.version.google-calendar-v3>
+        <connector.version.ldap>1.1.0</connector.version.ldap>
+        <connector.version.salesforce>1.1.2</connector.version.salesforce>
+        <connector.version.scripting>1.1.0</connector.version.scripting>
+        <connector.version.twitter>1.2.0</connector.version.twitter>
+        <connector.version.webservice>1.2.5</connector.version.webservice>
+        <connector.version.rest>1.0.6</connector.version.rest>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Retrieve connectors</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <!--ALFRESCO CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-alfresco</artifactId>
+                                    <version>${connector.version.alfresco}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--CMIS CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-cmis</artifactId>
+                                    <version>${connector.version.cmis}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--DATABASE CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-database</artifactId>
+                                    <version>${connector.version.database}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--EMAIL CONNECTOR -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-email</artifactId>
+                                    <version>${connector.version.email}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--GOOGLE CALENDAR CONNECTOR -->
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-create-event-impl</artifactId>
+                                    <version>${connector.version.google-calendar-v3}</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-get-event-impl</artifactId>
+                                    <version>${connector.version.google-calendar-v3}</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-delete-event-impl</artifactId>
+                                    <version>${connector.version.google-calendar-v3}</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-update-event-impl</artifactId>
+                                    <version>${connector.version.google-calendar-v3}</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-move-event-impl</artifactId>
+                                    <version>${connector.version.google-calendar-v3}</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <!--LDAP CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-ldap</artifactId>
+                                    <version>${connector.version.ldap}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--SALESFORCE CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-salesforce</artifactId>
+                                    <version>${connector.version.salesforce}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--SCRIPTING CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-scripting</artifactId>
+                                    <version>${connector.version.scripting}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--TWITTER CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-twitter</artifactId>
+                                    <version>${connector.version.twitter}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <!--WEBSERVICE CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-webservice</artifactId>
+                                    <version>${connector.version.webservice}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                                 <!--REST CONNECTORS -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-rest</artifactId>
+                                    <version>${connector.version.rest}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${connectors.tmp.dir}</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${connectors.def.target}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${connectors.impl.target}</directory>
+                        </fileset>
+                         <fileset>
+                            <directory>${connectors.deps.target}</directory>
+                        </fileset>
+                           <fileset>
+                            <directory>${connectors.tmp.dir}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Configure generated resources</id>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <target>
+                                <unzip dest="${connectors.tmp.dir}">
+                                    <fileset dir="${connectors.tmp.dir}" includes="*.zip" />
+                                </unzip>
+                                <delete failonerror="false">
+                                    <fileset dir="${connectors.tmp.dir}" includes="*.zip" />
+                                </delete>
+
+                                <copy todir="${connectors.deps.target}">
+                                    <fileset dir="${connectors.tmp.dir}/classpath" includes="*.jar" />
+                                </copy>
+                                <delete dir="${connectors.tmp.dir}/classpath" failonerror="false" />
+
+                                <copy todir="${connectors.def.target}">
+                                    <fileset dir="${connectors.tmp.dir}" excludes="*.impl" />
+                                </copy>
+                                <copy todir="${connectors.impl.target}">
+                                    <fileset dir="${connectors.tmp.dir}" includes="*.impl" />
+                                </copy>
+                                <delete dir="${connectors.tmp.dir}" failonerror="false" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

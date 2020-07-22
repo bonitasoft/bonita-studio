@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Bonita Studio" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="7.10.6.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=1.8 -Dfile.encoding=UTF8
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread
+      </vmArgsMac>
+      <vmArgsWin>-Dgreclipse.nonlocking=true
+      </vmArgsWin>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <splash
+      location="org.bonitasoft.studio"
+      startupProgressRect="4,345,679,5"
+      startupMessageRect="223,190,250,25"
+      startupForegroundColor="FFFCFC" />
+   <launcher name="BonitaStudioCommunity">
+      <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
+      <win useIco="true">
+         <ico path="icons/bonitasoft.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
+   </vm>
+
+   <license>
+        <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+        <text>
+   Copyright (C) 2019 BonitaSoft S.A.
+BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2.0 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="studio-feature"/>
+      <feature id="studio-bos-specific-feature"/>
+      <feature id="bos-branding-feature"/>
+      <feature id="rootfiles-feature"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
+      <property name="eclipse.log.level" value="INFO" />
+      <property name="engine.version" value="${engine.version}" />
+      <property name="file.encoding" value="UTF-8" />
+      <property name="osgi.instance.area" value="@noDefault" />
+      <property name="osgi.nls.warnings" value="ignore" />
+      <property name="portal.version" value="${bundle.version}" />
+      <property name="product.version" value="${project.version}" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>
