@@ -401,11 +401,13 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
             final StringBuilder report = new StringBuilder("");
             final List<String> alreadyInReport = new ArrayList<>(selectedList.size());
             for (final IStatus s : status.getChildren()) {
-                final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
-                if (!alreadyInReport.contains(fileName)) {
-                    report.append(fileName);
-                    report.append("\n");
-                    alreadyInReport.add(fileName);
+                if(s.getMessage() != null && s.getMessage().indexOf(":") != -1) {
+                    final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
+                    if (!alreadyInReport.contains(fileName)) {
+                        report.append(fileName);
+                        report.append("\n");
+                        alreadyInReport.add(fileName);
+                    }
                 }
             }
             if (!FileActionDialog.getDisablePopup()) {
