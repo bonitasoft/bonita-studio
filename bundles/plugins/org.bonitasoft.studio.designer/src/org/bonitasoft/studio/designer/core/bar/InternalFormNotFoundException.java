@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.designer.core.bar;
 
-import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.model.process.FormMapping;
-import org.eclipse.osgi.util.NLS;
 
 public class InternalFormNotFoundException extends FormMappingException {
 
@@ -26,7 +24,10 @@ public class InternalFormNotFoundException extends FormMappingException {
 
     @Override
     public String getMessage() {
-        return NLS.bind(Messages.internalFormMappingUndefined, containerName());
+        if(formId() != null) {
+            return String.format("UIDesigner form with id '%s' has not been found for '%s' %s.", formId(), containerName(), containerType());
+        }
+        return String.format("No UIDesigner form  is undefined on '%s' %s.", formId(), containerName(), containerType());
     }
 
 }
