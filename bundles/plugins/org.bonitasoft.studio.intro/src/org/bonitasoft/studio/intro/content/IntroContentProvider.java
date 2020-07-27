@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2019 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.intro.content;
 
@@ -54,8 +51,6 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         CONTENT_PROVIDERS.add(new RecentFilesContentProvider());
         CONTENT_PROVIDERS.add(new LogoContentProvider());
 
-        
-  
         CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("new-diagram-action",
                 "org.bonitasoft.studio.diagram.command.newDiagram", Messages.newProcess));
         CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("open-diagram-action",
@@ -63,6 +58,13 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("import-action",
                 "org.bonitasoft.studio.importer.bos.command", Messages.importLabel));
 
+        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("new-project-action",
+                "org.bonitasoft.studio.repository.ex.createLocal",
+                Messages.newProject));
+        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("clone-action",
+                "org.bonitasoft.studio.team.git.command.clone", Messages.clone));
+        CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("switch-action",
+                "org.bonitasoft.studio.repository.switch", Messages.switchProject));
 
         try {
             CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("procurement-example-link",
@@ -135,7 +137,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
     protected static Map<String, Object> buildImportParameters(String redirectId, String projectName)
             throws UnsupportedEncodingException, MalformedURLException, IOException {
-        Map<String, Object> procurementParam = new HashMap<String, Object>();
+        Map<String, Object> procurementParam = new HashMap<>();
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.file",
                 URLEncoder.encode(resolveRedirection(new URL(redirectUrl(redirectId))).toString(), "UTF-8"));
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName", projectName);
