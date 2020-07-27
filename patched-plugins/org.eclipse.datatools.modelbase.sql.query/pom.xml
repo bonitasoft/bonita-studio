@@ -9,6 +9,6 @@
   </parent>
   <groupId>org.eclipse.datatools.plugins</groupId>
   <artifactId>org.eclipse.datatools.modelbase.sql.query</artifactId>
-  <version>1.3.201-SNAPSHOT</version>
+  <version>1.3.201.201811012051</version>
   <packaging>eclipse-plugin</packaging>
 </project>

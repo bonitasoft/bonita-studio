@@ -67,12 +67,12 @@ public class TabbedPropertyTitle
 		this.factory = factory;
 
 		this.addPaintListener(e -> {
-				if (image == null && (text == null || text.equals(BLANK))) {
-					label.setVisible(false);
-				} else {
-					label.setVisible(true);
-				}
-				drawTitleBackground(e);
+			if (image == null && (text == null || text.equals(BLANK))) {
+				label.setVisible(false);
+			} else {
+				label.setVisible(true);
+			}
+			drawTitleBackground(e);
 		});
 
 		factory.getColors().initializeSectionToolBarColors();
