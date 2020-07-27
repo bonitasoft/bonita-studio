@@ -635,6 +635,30 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
+         id="ch.qos.logback.slf4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+  
+  <plugin
+         id="ch.qos.logback.classic"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+  
+    <plugin
+         id="ch.qos.logback.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+  
+   <plugin
          id="org.bonitasoft.studio.team"
          download-size="0"
          install-size="0"
@@ -647,7 +671,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+  
    <plugin
          id="org.eclipse.egit.core.nl_es"
          download-size="0"

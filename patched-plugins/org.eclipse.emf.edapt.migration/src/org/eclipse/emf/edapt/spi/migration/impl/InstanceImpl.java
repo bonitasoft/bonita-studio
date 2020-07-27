@@ -1,9 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2007, 2010 BMW Car IT, Technische Universitaet Muenchen, and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
  * Contributors:
  * BMW Car IT - Initial API and implementation
  * Technische Universitaet Muenchen - Major refactoring and extension
@@ -219,8 +222,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             if (msgs != null) {
                 msgs.dispatch();
             }
-        } 
-        else if (eNotificationRequired()) {
+        } else if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, MigrationPackage.INSTANCE__TYPE, newType, newType));
         }
     }
@@ -420,7 +422,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
                     if (isSet(feature) && oldValue != null) {
                         this.remove(feature, oldValue);
                     }
-                    if (newValue != null) {
+                    if (newValue != null || feature.isUnsettable()) {
                         this.add(feature, newValue);
                     }
                 }

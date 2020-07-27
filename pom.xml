@@ -10,8 +10,8 @@
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<tychoVersion>1.6.0</tychoVersion>
-		<tychoExtrasVersion>1.6.0</tychoExtrasVersion>
+		<tychoVersion>1.7.0</tychoVersion>
+		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.12.16</ui.designer.version>

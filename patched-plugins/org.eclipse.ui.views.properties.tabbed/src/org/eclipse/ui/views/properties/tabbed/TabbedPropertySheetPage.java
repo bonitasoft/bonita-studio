@@ -510,8 +510,8 @@ public class TabbedPropertySheetPage
 			registry = null;
 		}
 
-        contributor = null;
-        currentSelection = null;
+		contributor = null;
+		currentSelection = null;
 	}
 
 	@Override
@@ -614,7 +614,7 @@ public class TabbedPropertySheetPage
 	 * entries corresponding to the disposed TabContents objects are also
 	 * removed.
 	 *
-	 * @param tabs
+	 * @param tabs tabs to dispose
 	 * @since 3.6
 	 */
 	protected void disposeTabs(Collection tabs) {
@@ -634,8 +634,7 @@ public class TabbedPropertySheetPage
 	protected int getLastTabSelection(IWorkbenchPart part, ISelection input) {
 		ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
 		if (descriptors.length != 0) {
-			for (Iterator<String> iter = selectionQueue.iterator(); iter.hasNext();) {
-				String text = iter.next();
+			for (String text : selectionQueue) {
 				for (int i = 0; i < descriptors.length; i++) {
 					if (text.equals(descriptors[i].getLabel())) {
 						return i;
@@ -782,8 +781,7 @@ public class TabbedPropertySheetPage
 			 */
 			return;
 		}
-		for (Iterator<ITabSelectionListener> i = tabSelectionListeners.iterator(); i.hasNext();) {
-			ITabSelectionListener listener = i.next();
+		for (ITabSelectionListener listener : tabSelectionListeners) {
 			listener.tabSelected(tabDescriptor);
 		}
 	}
@@ -857,13 +855,13 @@ public class TabbedPropertySheetPage
 		refreshTitleBar();
 	}
 
-    /**
-     * Retrieve the contributor from the selection.
-     *
-     * @param object -
-     *            the selected element
-     * @return the TabbedPropertySheetPageContributor or null if not applicable
-     */
+	/**
+	 * Retrieve the contributor from the selection.
+	 *
+	 * @param object -
+	 *            the selected element
+	 * @return the TabbedPropertySheetPageContributor or null if not applicable
+	 */
 	private ITabbedPropertySheetPageContributor getTabbedPropertySheetPageContributor(Object object) {
 		return Adapters.adapt(object, ITabbedPropertySheetPageContributor.class);
 	}
@@ -1001,8 +999,7 @@ public class TabbedPropertySheetPage
 		@SuppressWarnings("unchecked")
 		List<ITabDescriptor> elements = tabbedPropertyViewer.getElements();
 		if (elements != null && elements.size() > 0) {
-			for (Iterator<ITabDescriptor> i = elements.iterator(); i.hasNext();) {
-				ITabDescriptor tabDescriptor = i.next();
+			for (ITabDescriptor tabDescriptor : elements) {
 				if (tabDescriptor.getId() != null &&
 						tabDescriptor.getId().equals(id)) {
 					tabbedPropertyViewer.setSelection(new StructuredSelection(
