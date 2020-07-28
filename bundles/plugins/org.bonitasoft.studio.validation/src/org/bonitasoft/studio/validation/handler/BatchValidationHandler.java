@@ -211,11 +211,13 @@ public class BatchValidationHandler extends AbstractHandler {
                         Messages.validationTitle,
                         statusContainsError(aggregatedStatus) ? Messages.validationErrorMessage
                                 : Messages.validationWarningMessage,
-                        showMigrateButton ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels, IDialogConstants.CLOSE_LABEL }
+                        showMigrateButton
+                                ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels,
+                                        IDialogConstants.CLOSE_LABEL }
                                 : new String[] { IDialogConstants.CLOSE_LABEL },
                         aggregatedStatus);
                 multiStatusDialog.setLevel(IStatus.WARNING);
-                if (multiStatusDialog.open() == 0) {
+                if (multiStatusDialog.open() == 0 && showMigrateButton) {
                     IProgressService service = PlatformUI.getWorkbench().getProgressService();
                     try {
                         service.run(true, false, monitor -> {
