@@ -29,7 +29,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.op.CloneOperation.PostCloneTask;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.swt.widgets.Display;
 
 public class ValidateClonedRepository implements PostCloneTask {
 
@@ -61,27 +63,58 @@ public class ValidateClonedRepository implements PostCloneTask {
         }
         if (!ProductVersion.sameMinorVersion(version)) {
             if (!ProductVersion.canBeMigrated(version)) {
-               throw new CoreException(new Status(IStatus.ERROR, TeamPlugin.PLUGIN_ID,
+                throw new CoreException(new Status(IStatus.ERROR, TeamPlugin.PLUGIN_ID,
                         String.format(Messages.cannotMigrateRepository,
                                 version, ProductVersion.CURRENT_VERSION, ProductVersion.CURRENT_VERSION)));
             }
+            confirmMigration();
         }
         if (ProductVersion.sameMinorVersion(version)) {
             try {
-                ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(repository.getDirectory().getParentFile(), RepositoryManager.getInstance().getCurrentRepository());
+                ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
+                        repository.getDirectory().getParentFile(), RepositoryManager.getInstance().getCurrentRepository());
                 validateModelCompatibility.run(monitor);
-                if(validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
-                    throw new CoreException(ValidationStatus.error(String.format(Messages.clonedBranchContentIsNotCompatible, repository.getBranch())));
+                if (validateModelCompatibility.getStatus().getSeverity() == IStatus.ERROR) {
+                    throw new CoreException(ValidationStatus
+                            .error(String.format(Messages.clonedBranchContentIsNotCompatible, repository.getBranch())));
+                } else if (validateModelCompatibility.getStatus().getSeverity() == IStatus.WARNING) {
+                    confirmMigration();
                 }
             } catch (InvocationTargetException | InterruptedException | IOException e) {
-                throw new CoreException(new Status(IStatus.ERROR, TeamPlugin.PLUGIN_ID, "Failed to check models version", e));
+                throw new CoreException(
+                        new Status(IStatus.ERROR, TeamPlugin.PLUGIN_ID, "Failed to check models version", e));
             }
         }
     }
- 
+
+    private void confirmMigration() throws CoreException {
+        ConfirmMigrationRunnable confirmMigrationRunnable = new ConfirmMigrationRunnable();
+        Display.getDefault().syncExec(confirmMigrationRunnable);
+        if (confirmMigrationRunnable.isCancelled()) {
+            throw new CoreException(
+                    new Status(IStatus.CANCEL, TeamPlugin.PLUGIN_ID, Messages.cloneOperationCancelled));
+        }
+    }
 
     public String getVersion() {
         return version;
     }
 
+}
+
+class ConfirmMigrationRunnable implements Runnable {
+
+    boolean cancelled = false;
+
+    @Override
+    public void run() {
+        if (!MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.confirmMigratonTitle,
+                Messages.confirmMigraton)) {
+            cancelled = true;
+        }
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
 }

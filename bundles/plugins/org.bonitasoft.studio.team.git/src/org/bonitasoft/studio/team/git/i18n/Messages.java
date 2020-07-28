@@ -64,6 +64,9 @@ public class Messages extends NLS {
     public static String repositoryStatus;
     public static String legacyFormsRemoved;
     public static String clonedBranchContentIsNotCompatible;
+    public static String confirmMigratonTitle;
+    public static String confirmMigraton;
+    public static String cloneOperationCancelled;
 
     static {
         // initialize resource bundle
