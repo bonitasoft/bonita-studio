@@ -42,6 +42,7 @@ import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
+import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
@@ -205,7 +206,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
                 .openBufferedStream();) {
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());
-        } catch (IOException e) {
+        } catch (PageIncompatibleException | IOException e) {
             return ValidationStatus.error(String.format("An error occured while building %s", getName()), e);
         } catch (CoreException e) {
             return e.getStatus();
@@ -246,13 +247,13 @@ public class WebPageFileStore extends InFolderJSONFileStore
                     PageDesignerURLFactory.INSTANCE.resources(getId()).toURI());
             clientResource.getLogger().setLevel(Level.OFF);
             final Representation representation = clientResource.get();
-            return representation != null ? parseExtensionResources( representation.getText() ) : Collections.emptyList();
+            return representation != null ? parseExtensionResources(representation.getText()) : Collections.emptyList();
         } catch (URISyntaxException | IOException e) {
             BonitaStudioLog.error(e);
             return null;
         }
     }
-    
+
     private Collection<String> parseExtensionResources(String resources) {
         Set<String> result = new HashSet<>();
         if (resources != null) {

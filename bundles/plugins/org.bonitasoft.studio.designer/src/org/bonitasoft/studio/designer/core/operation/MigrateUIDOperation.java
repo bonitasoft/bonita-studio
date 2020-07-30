@@ -78,15 +78,15 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
                 .getRepositoryStore(WebFragmentRepositoryStore.class);
         WebWidgetRepositoryStore widgetStore = RepositoryManager.getInstance()
                 .getRepositoryStore(WebWidgetRepositoryStore.class);
-        migrateUnusedFragments(urlBuilder, fragmentStore , monitor);
-        migrateUnusedWidgets(urlBuilder, widgetStore , monitor);
+        migrateUnusedFragments(urlBuilder, fragmentStore, monitor);
+        migrateUnusedWidgets(urlBuilder, widgetStore, monitor);
     }
 
     private void migrateUnusedWidgets(PageDesignerURLFactory urlBuilder, WebWidgetRepositoryStore widgetStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         List<WebWidgetFileStore> children = widgetStore.getChildren();
         for (WebWidgetFileStore fileStore : children) {
-            if(fileStore.validate().matches(IStatus.WARNING)) {
+            if (fileStore.validate().matches(IStatus.WARNING)) {
                 status.add(migrateWidget(urlBuilder, fileStore, monitor));
             }
         }
@@ -96,7 +96,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
             IProgressMonitor monitor) throws InvocationTargetException {
         List<WebFragmentFileStore> children = repositoryStore.getChildren();
         for (WebFragmentFileStore fileStore : children) {
-            if(fileStore.validate().matches(IStatus.WARNING)) {
+            if (fileStore.validate().matches(IStatus.WARNING)) {
                 status.add(migrateFragment(urlBuilder, fileStore, monitor));
             }
         }
@@ -126,7 +126,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
             Context.setCurrent(currentContext);
         }
     }
-    
+
     private IStatus migrateWidget(PageDesignerURLFactory urlBuilder, WebWidgetFileStore fileStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         URI uri = null;

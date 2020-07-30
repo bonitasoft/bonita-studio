@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.restlet.Context;
 import org.restlet.representation.Representation;
@@ -54,14 +55,14 @@ public class CustomPageBarResourceFactory {
         try {
             return new BarResource(BAR_CUSTOMPAGES_LOCATION + "/" + targetFormCustomPageId + ".zip",
                     export(formId));
-        } catch (ResourceException | IOException e) {
+        } catch (ResourceException | PageIncompatibleException | IOException e) {
             throw new BarResourceCreationException(
                     String.format("Failed to create a BarResource for form %s", targetFormCustomPageId), e);
         }
     }
 
-    public byte[] export(final String formId) throws IOException {
-        try (final InputStream is = get(pageDesignerURLFactory.exportPage(formId).toString())) {
+    public byte[] export(final String formId) throws IOException, PageIncompatibleException {
+        try (final InputStream is = get(pageDesignerURLFactory.exportPage(formId).toString(), formId)) {
             if (is == null) {
                 throw new IOException(String.format("Failed to export custom page for form %s", formId));
             }
@@ -69,10 +70,19 @@ public class CustomPageBarResourceFactory {
         }
     }
 
-    protected InputStream get(final String exportURL) throws IOException {
+    protected InputStream get(final String exportURL, String formId) throws IOException, PageIncompatibleException {
         ClientResource clientResource = new ClientResource(exportURL);
         clientResource.getLogger().setLevel(Level.OFF);
-        final Representation representation = clientResource.get();
-        return representation != null && representation.isAvailable() ? representation.getStream() : null;
+        try {
+            final Representation representation = clientResource.get();
+            return representation != null && representation.isAvailable() ? representation.getStream() : null;
+        } catch (ResourceException e) {
+            if (clientResource.getResponse().getStatus().getCode() == 422) {
+                throw new PageIncompatibleException(String.format(
+                        "Form '%s' is not compatible with the current UI-Designer version. check UI-Designer logs for more details.",
+                        formId));
+            }
+            throw e;
+        }
     }
 }
