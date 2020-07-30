@@ -11,6 +11,7 @@ Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.designer,
  org.bonitasoft.studio.designer.core,
  org.bonitasoft.studio.designer.core.bar,
+ org.bonitasoft.studio.designer.core.exception,
  org.bonitasoft.studio.designer.core.expression,
  org.bonitasoft.studio.designer.core.operation,
  org.bonitasoft.studio.designer.core.preference,

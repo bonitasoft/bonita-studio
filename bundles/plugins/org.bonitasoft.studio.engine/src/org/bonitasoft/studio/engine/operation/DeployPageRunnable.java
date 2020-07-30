@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -49,7 +50,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
             tmpFile = File.createTempFile(getCustomPageId(), ".zip");
             Files.write(customPageBarResourceFactory.export(pageFileStore.getId()), tmpFile);
             return tmpFile;
-        } catch (final IOException e) {
+        } catch (PageIncompatibleException | IOException e) {
             if (tmpFile != null) {
                 tmpFile.delete();
             }

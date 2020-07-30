@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.designer.core.bar;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 
@@ -24,7 +25,6 @@ import java.net.URL;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,9 +59,10 @@ public class CustomPageBarResourceFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        doReturn(new URL("http://localhost:8080/page-designer/export/")).when(pageDesignerURLFactory).exportPage(notNull(String.class));
+        doReturn(new URL("http://localhost:8080/page-designer/export/")).when(pageDesignerURLFactory)
+                .exportPage(notNull(String.class));
         is = new ByteArrayInputStream(ByteStreams.toByteArray(this.getClass().getResourceAsStream("/page-Step1.zip")));
-        doReturn(is).when(customPageBarResourceFactory).get(notNull(String.class));
+        doReturn(is).when(customPageBarResourceFactory).get(notNull(String.class), anyString());
     }
 
     @After
@@ -74,8 +75,10 @@ public class CustomPageBarResourceFactoryTest {
 
     @Test
     public void should_create_bar_resource_for_custompage() throws Exception {
-        final BarResource processFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--processForm", "process-form-id");
-        final BarResource taskFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--StepForm", "step-form-id");
+        final BarResource processFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--processForm",
+                "process-form-id");
+        final BarResource taskFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--StepForm",
+                "step-form-id");
 
         assertThat(processFormCustomPage.getName()).isEqualTo("customPages/Pool1--1.0--processForm.zip");
         assertThat(taskFormCustomPage.getName()).isEqualTo("customPages/Pool1--1.0--StepForm.zip");
