@@ -30,7 +30,6 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -77,9 +76,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
 
         createBusinessObjectList(leftComposite);
-        if (!PlatformUtil.isACommunityBonitaProduct()) {
-            createMavenArtifactPropertiesGroup(leftComposite, ctx);
-        }
+        createMavenArtifactPropertiesGroup(leftComposite, ctx);
         createBusinessObjectEditionControl(businessDataModelComposite);
     }
 
