@@ -512,7 +512,7 @@ public class PageComponentSwitchBuilder {
             style = style | Section.DESCRIPTION;
         }
         final Section groupSection = new Section(composite, style);
-        groupSection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
+        groupSection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         groupSection.setText(getLabel(object.getId()));
         groupSection.setFont(BonitaStudioFontRegistry.getBoldFont());
         if (desc != null && !desc.isEmpty()) {
