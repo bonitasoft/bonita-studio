@@ -27,7 +27,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
@@ -195,12 +194,6 @@ public class Repository extends AbstractRepository {
     @Override
     public boolean isShared(String providerId) {
         return RepositoryProvider.getProvider(getProject(), providerId) != null;
-    }
-
-    @Override
-    protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
-        return super.newProjectMigrationOperation(project)
-                .addNature("org.eclipse.emf.texo.eclipse.nature");
     }
 
     @Override
