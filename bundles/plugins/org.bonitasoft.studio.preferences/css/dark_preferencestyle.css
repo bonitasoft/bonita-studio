@@ -19,3 +19,6 @@
 
 /* Json css */
 @import url("platform:/plugin/org.eclipse.wst.json.ui/css/dark/preferencestyle.css");
+
+/* Git css */
+@import url("platform:/plugin/org.eclipse.egit.ui/css/e4-dark_egit_prefstyle.css");
