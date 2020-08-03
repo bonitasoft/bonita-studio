@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.bonitasoft.studio.bundles</groupId>
-    <version>7.11.1-SNAPSHOT</version>
+    <version>7.11.1</version>
     <artifactId>features</artifactId>
   </parent>
   <groupId>org.bonitasoft.studio.bundles.features</groupId>
