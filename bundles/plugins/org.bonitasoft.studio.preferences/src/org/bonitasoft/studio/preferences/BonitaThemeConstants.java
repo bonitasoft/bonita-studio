@@ -20,9 +20,14 @@ public interface BonitaThemeConstants {
     public static final String LIGHT_THEME = "org.bonitasoft.studio.preferences.theme.light";
     public static final String DARK_THEME = "org.bonitasoft.studio.preferences.theme.dark";
 
-    public static final String CSS_PROPERTY_NAME = "org.eclipse.e4.ui.css.CssClassName";
+    public static final String CSS_CLASS_PROPERTY_NAME = "org.eclipse.e4.ui.css.CssClassName";
+    public static final String CSS_ID_PROPERTY_NAME = "org.eclipse.e4.ui.css.id";
 
     // Custom css class
-    public static final String WIDGET_BACKGROUND = "widgetBackground";
+    public static final String WIDGET_BACKGROUND_CLASS = "widgetBackground";
+    public static final String EDITOR_FORM_BAKGROUND_CLASS = "editorFormBackground";
+
+    // Custom css id
+    public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
 
 }
