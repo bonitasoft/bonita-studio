@@ -212,7 +212,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     protected void doCreateSwitchRepositoryControl(Composite parent, DataBindingContext ctx) {
         repositorySection = new Section(parent, Section.TREE_NODE);
-        repositorySection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
+        repositorySection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         repositorySection.setLayout(GridLayoutFactory.fillDefaults().create());
         repositorySection.setLayoutData(GridDataFactory.fillDefaults().create());
         repositorySection.setText(org.bonitasoft.studio.importer.i18n.Messages.targetRepository);
@@ -435,7 +435,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private void createTreeHeader(Composite parent, DataBindingContext ctx) {
         treeSection = new Section(parent, Section.TREE_NODE);
-        treeSection.setData(BonitaThemeConstants.CSS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND);
+        treeSection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         treeSection.setLayout(GridLayoutFactory.fillDefaults().create());
         treeSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         treeSection.setText(Messages.importDetails);

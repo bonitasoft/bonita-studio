@@ -19,7 +19,10 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPro
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
@@ -60,7 +63,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabbedPropertySheetPage = aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
-        form = widgetFactory.createForm(parent);
+        form = new BonitaForm(parent, widgetFactory);
         form.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         form.setText(getSectionTitle());
@@ -70,7 +73,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
-                getSectionDescription(),getDescriptionSeverity(), propertySectionHistory);
+                getSectionDescription(), getDescriptionSeverity(), propertySectionHistory);
         updateToolbar(form.getToolBarManager());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
@@ -118,5 +121,19 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     }
 
     public abstract String getSectionDescription();
+
+}
+
+/**
+ * Custom class in order to apply easily some css rules on those specific forms
+ */
+class BonitaForm extends Form {
+
+    public BonitaForm(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory) {
+        super(parent, Window.getDefaultOrientation());
+        setBackground(widgetFactory.getColors().getBackground());
+        setForeground(widgetFactory.getColors().getColor(IFormColors.TITLE));
+        setFont(JFaceResources.getHeaderFont());
+    }
 
 }

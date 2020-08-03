@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.UIPlugin;
@@ -91,6 +92,8 @@ public abstract class AbstractFormPage<T> extends FormPage {
             toolkit.setBackground(darkModeBg);
         }
         scrolledForm = managedForm.getForm();
+        scrolledForm.getForm().setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EDITOR_FORM_BAKGROUND_CLASS);
         scrolledForm.setHeadClient(createHeader(scrolledForm.getForm()));
         scrolledForm.getBody().setLayout(GridLayoutFactory.swtDefaults().create());
         scrolledForm.getBody().setLayoutData(GridDataFactory.fillDefaults().create());
@@ -105,11 +108,9 @@ public abstract class AbstractFormPage<T> extends FormPage {
     private Control createHeader(Form form) {
         final Composite head = form.getHead();
         final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
+        toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
         toolBarManager = new ToolBarManager(toolBar);
         createHeaderContent(toolBar);
-
-        Label toolbarSeparator = new Label(form.getBody(), SWT.HORIZONTAL | SWT.SEPARATOR);
-        toolbarSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         return toolBar;
     }
 
