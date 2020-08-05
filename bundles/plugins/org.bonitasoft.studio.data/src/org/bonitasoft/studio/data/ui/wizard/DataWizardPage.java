@@ -45,7 +45,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -80,6 +79,7 @@ import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -773,7 +773,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         nsCombo.add("No Namespace " + "(" + artifact.getName() + ")");
                     }
                 } catch (ReadFileStoreException e1) {
-                   BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
+                    BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                 }
             }
 
@@ -850,6 +850,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         new Label(parent, SWT.NONE);
         moreSection = new Section(parent, ExpandableComposite.NO_TITLE_FOCUS_BOX | ExpandableComposite.TWISTIE);
         moreSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        moreSection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         moreSection.setText(Messages.additionalInformation);
         moreSection.addExpansionListener(new IExpansionListener() {
 
@@ -1048,7 +1049,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     protected void updateMoreSection(final DataType type) {
         if (moreSection != null && !moreSection.isDisposed()) {
             moreSection.setExpanded(false);
-            moreSection.setEnabled(false);
+            moreSection.setVisible(false);
 
             if (moreSection.getClient() != null) {
                 moreSection.getClient().dispose();
@@ -1056,15 +1057,15 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             if (type instanceof JavaType) {
                 moreSection.setClient(createJavaTypeSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else if (type instanceof XMLType) {
                 moreSection.setClient(createXMLTypeSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else if (type instanceof DateType) {
                 moreSection.setClient(createDateSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else {
                 moreSection.setClient(new Composite(moreSection, SWT.NONE));
@@ -1354,7 +1355,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                             }
                             nsCombo.add(xmlNamespace);
                         } catch (ReadFileStoreException e1) {
-                          BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
+                            BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                         }
                     }
                     nsCombo.setText(((XMLData) data).getNamespace());
