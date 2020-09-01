@@ -45,7 +45,9 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer#computeCompletionProposals(org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext,
+     * @see
+     * org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer#computeCompletionProposals(org.eclipse.jdt.ui.text.java.
+     * ContentAssistInvocationContext,
      * org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -110,13 +112,17 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         return new MethodProposalCreator();
     }
 
-    @SuppressWarnings("unchecked")
     protected List<ContractInput> getContractInputs(final ContentAssistInvocationContext context) {
         final ITextViewer viewer = context.getViewer();
-        List<ContractInput> inputs = (List<ContractInput>) viewer.getTextWidget().getData(INPUTS);
-        if (inputs == null) {
-            inputs = new ArrayList<ContractInput>();
-        }
+        List<ContractInput> inputs = new ArrayList<>();
+        viewer.getTextWidget().getDisplay().syncExec(() -> {
+            Object data = viewer.getTextWidget().getData(INPUTS);
+            if (data != null && data instanceof List) {
+                ((List) data).stream()
+                        .filter(ContractInput.class::isInstance)
+                        .forEach(input -> inputs.add((ContractInput) input));
+            }
+        });
         return inputs;
     }
 

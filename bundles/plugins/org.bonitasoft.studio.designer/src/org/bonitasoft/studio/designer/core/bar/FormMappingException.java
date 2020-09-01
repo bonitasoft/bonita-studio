@@ -16,6 +16,8 @@ package org.bonitasoft.studio.designer.core.bar;
 
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.Task;
 
 public abstract class FormMappingException extends Exception {
 
@@ -27,5 +29,17 @@ public abstract class FormMappingException extends Exception {
 
     protected String containerName() {
         return ((Element) formMapping.eContainer()).getName();
+    }
+    
+    protected String containerType() {
+        return formMapping.eContainer() instanceof Task ? "task" : formType();
+    }
+
+    private String formType() {
+        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature()) ? "overview form" : "instantiation form";
+    }
+    
+    protected String formId() {
+        return formMapping.getTargetForm().hasContent() ?  formMapping.getTargetForm().getContent() : null;
     }
 }
