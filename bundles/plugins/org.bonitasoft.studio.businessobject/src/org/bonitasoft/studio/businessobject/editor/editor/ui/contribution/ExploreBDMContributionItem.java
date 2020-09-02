@@ -14,10 +14,11 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -45,8 +46,8 @@ public class ExploreBDMContributionItem extends ContributionItem {
         item.setText(Messages.explore);
         item.setToolTipText(Messages.exploreTooltip);
         Image image = PreferenceUtil.isDarkTheme()
-                ? BusinessObjectPlugin.getImage("icons/explore_16_dark.png")
-                : BusinessObjectPlugin.getImage("icons/explore_16.png");
+                ? Pics.getImage(PicsConstants.explore_16_dark)
+                : Pics.getImage(PicsConstants.explore_16);
         item.setImage(image);
         item.addListener(SWT.Selection, event -> commandExecutor.executeCommand(EXPLORE_BDM_COMMAND, null));
         item.setEnabled(isEnabled());
