@@ -165,13 +165,14 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.fileMenu?before=org.bonitasoft.studio.application.ex.switchworkspace.menu">
+            locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.exporter.exportAs">
          <separator
                name="org.bonitasoft.studio.team.separator2"
                visible="true">
          </separator>
          <command
                commandId="org.bonitasoft.studio.repository.switch"
+               id="org.bonitasoft.studio.repository.switch.menu"
                style="push">
          </command>
          <separator
