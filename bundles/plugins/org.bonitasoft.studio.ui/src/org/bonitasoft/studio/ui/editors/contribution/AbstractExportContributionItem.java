@@ -14,8 +14,9 @@
  */
 package org.bonitasoft.studio.ui.editors.contribution;
 
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
-import org.bonitasoft.studio.ui.UIPlugin;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -43,8 +44,8 @@ public abstract class AbstractExportContributionItem<T extends AbstractFormPage>
         item.setText(Messages.export);
         item.setToolTipText(Messages.exportTooltips);
         Image image = PreferenceUtil.isDarkTheme()
-                ? UIPlugin.getImage("icons/export_16_dark.png")
-                : UIPlugin.getImage("icons/export_16.png");
+                ? Pics.getImage(PicsConstants.export_16_dark)
+                : Pics.getImage(PicsConstants.export_16);
         item.setImage(image);
         item.addListener(SWT.Selection, event -> onClick(parent.getShell()));
     }

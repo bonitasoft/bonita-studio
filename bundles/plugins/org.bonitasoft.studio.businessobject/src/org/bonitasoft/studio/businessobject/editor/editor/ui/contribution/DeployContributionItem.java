@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
@@ -22,6 +21,8 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler;
 import org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
@@ -52,8 +53,8 @@ public class DeployContributionItem extends ContributionItem {
         item.setText(Messages.deploy);
         item.setToolTipText(Messages.deploy);
         Image image = PreferenceUtil.isDarkTheme()
-                ? BusinessObjectPlugin.getImage("icons/deploy16_dark.png")
-                : BusinessObjectPlugin.getImage("icons/deploy16.png");
+                ? Pics.getImage(PicsConstants.deploy_16_dark)
+                : Pics.getImage(PicsConstants.deploy_16);
         item.setImage(image);
         item.addListener(SWT.Selection, event -> deploy(false));
         item.setEnabled(isEnabled());

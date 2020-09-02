@@ -8,10 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -40,8 +41,8 @@ public class ImportBDMContributionItem extends ContributionItem {
         item.setText(Messages.importActionName);
         item.setToolTipText(Messages.smartImportDesc);
         Image image = PreferenceUtil.isDarkTheme()
-                ? BusinessObjectPlugin.getImage("icons/import_16_dark.png")
-                : BusinessObjectPlugin.getImage("icons/import_16.png");
+                ? Pics.getImage(PicsConstants.import_16_dark)
+                : Pics.getImage(PicsConstants.import_16);
         item.setImage(image);
         item.addListener(SWT.Selection, e -> onClick());
     }
