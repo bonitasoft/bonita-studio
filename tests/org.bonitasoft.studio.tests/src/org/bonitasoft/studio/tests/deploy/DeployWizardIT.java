@@ -83,16 +83,39 @@ public class DeployWizardIT {
 
         botDeployDialog.runValidation(false);
 
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").expand();
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool").expand();
+
         //Check select none/all/latest
         botDeployDialog.selectNone();
         assertThat(botDeployDialog.isDeployEnabled()).isFalse();
         botDeployDialog.selectAll();
         assertThat(botDeployDialog.isDeployEnabled()).isTrue();
-        botDeployDialog.selectLatest();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isTrue();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
+
+        botDeployDialog.selectLatest();// Check 'selectLatestVersion' option -> Old process should not be checked anymore
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
                 .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
                 .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
+
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").check(); // Try to check the old process with the 'selectLatestVersion' option -> should not work
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
+
+        botDeployDialog.selectAllVersions();// Uncheck 'selectLatestVersion' option -> Old process can be checked/unchecked now
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").check();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isTrue();
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").uncheck();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
 
         //Check username validation
         botDeployDialog.setDefaultUser("john.doe");

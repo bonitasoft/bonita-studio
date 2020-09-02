@@ -90,16 +90,20 @@ public class BotDeployDialog extends BotDialog {
         bot.button(Messages.selectNone).click();
         return this;
     }
-    
+
     public BotDeployDialog selectAll() {
         bot.checkBox(Messages.selectLatestVersion).deselect();
         bot.button(Messages.selectAll).click();
         return this;
     }
-    
+
     public BotDeployDialog selectLatest() {
         bot.checkBox(Messages.selectLatestVersion).select();
-        bot.button(Messages.selectAll).click();
+        return this;
+    }
+
+    public BotDeployDialog selectAllVersions() {
+        bot.checkBox(Messages.selectLatestVersion).deselect();
         return this;
     }
 }
