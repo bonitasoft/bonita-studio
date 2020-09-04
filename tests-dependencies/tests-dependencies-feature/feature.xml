@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="tests-dependencies-feature"
+      label="Tests dependencies feature"
+      version="7.11.2.qualifier"
+      provider-name="BonitaSoft S.A.">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="org.eclipse.swtbot"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.gef"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.forms"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.test.junit"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.mockito"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.finder.nebula.tableCombo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

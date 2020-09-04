@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="tests-feature"
+      label="Feature for BonitaStudio tests"
+      version="7.11.2.qualifier"
+      provider-name="Bonitasoft S.A.">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="bos-branding-feature" version="7.11.0" match="equivalent"/>
+      <import feature="studio-bos-specific-feature" version="7.11.0" match="equivalent"/>
+      <import feature="tests-common-feature" version="7.11.0" match="equivalent"/>
+   </requires>
+
+</feature>
