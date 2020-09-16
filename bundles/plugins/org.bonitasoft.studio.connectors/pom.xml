@@ -32,6 +32,7 @@
 		<connector.version.uipath>2.1.1</connector.version.uipath>
 		<connector.version.document-templating>2.1.0</connector.version.document-templating>
 		<connector.version.document-converter>2.1.0</connector.version.document-converter>
+		<connector.version.sap>2.0.0</connector.version.sap>
 	</properties>
 
 
@@ -211,6 +212,14 @@
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-document-converter</artifactId>
 									<version>${connector.version.document-converter}</version>
+									<classifier>all</classifier>
+									<type>zip</type>
+								</artifactItem>
+								<!--SAP CONNECTOR -->
+								<artifactItem>
+									<groupId>org.bonitasoft.connectors</groupId>
+									<artifactId>bonita-connector-sap</artifactId>
+									<version>${connector.version.sap}</version>
 									<classifier>all</classifier>
 									<type>zip</type>
 								</artifactItem>

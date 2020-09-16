@@ -45,7 +45,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
     private ConnectorImplRepositoryStore connectorImplStore;
     private DefinitionResourceProvider connectorResourceProvider;
 
-    private List<String> connectorsToSkip = Arrays.asList("uipath-add-queueItem", "uipath-getjob", "uipath-startjob");
+    private List<String> connectorsToSkip = Arrays.asList("uipath-add-queueItem", "uipath-getjob", "uipath-startjob", "sap-jco3-callfunction");
 
     @Override
     protected void setUp() throws Exception {
