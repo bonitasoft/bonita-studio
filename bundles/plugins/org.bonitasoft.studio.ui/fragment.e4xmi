@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_8P4lsLoCEeq0s7tuge-i9g">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_9aOR4LoCEeq0s7tuge-i9g" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_Fk3_ILoDEeq0s7tuge-i9g" elementId="org.bonitasoft.studio.ui.notify.command" commandName="Notify">
+      <parameters xmi:id="_HmYj4LoDEeq0s7tuge-i9g" elementId="title" name="Notification title" optional="false"/>
+      <parameters xmi:id="_NXe_0LoDEeq0s7tuge-i9g" elementId="content" name="Notification content" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_EhyxgLoDEeq0s7tuge-i9g" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_QmX9sLoDEeq0s7tuge-i9g" elementId="org.bonitasoft.studio.ui.notify.handler" contributionURI="bundleclass://org.bonitasoft.studio.ui/org.bonitasoft.studio.ui.notification.OpenNotificationHandler" command="_Fk3_ILoDEeq0s7tuge-i9g"/>
+  </fragments>
+</fragment:ModelFragments>
