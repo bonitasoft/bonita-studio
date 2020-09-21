@@ -91,6 +91,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         if (!isJavaVersionSupported(display)) {
             return IApplication.EXIT_OK;
         }
+
         initWorkspaceLocation();
         executePreStartupContributions();
 
@@ -113,7 +114,6 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
                 .map(IPreStartupContribution.class::cast)
                 .filter(IPreStartupContribution::canExecute)
                 .forEach(IPreStartupContribution::execute);
-
     }
 
     private int sortContribution(final IConfigurationElement e1, final IConfigurationElement e2) {
@@ -241,18 +241,18 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
             }
         }
         File installLocation = new File(Platform.getInstallLocation().getURL().getPath());
-        File jre11Location = new File(installLocation,"jre");
+        File jre11Location = new File(installLocation, "jre");
         IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
         if (!Objects.equals(Platform.getOS(), Platform.OS_MACOSX) && jre11Location.exists()) {
             if (defaultVMInstall.getName() != null
                     && !Objects.equals(defaultVMInstall.getName(), HOTSPOT_JRE_11)
-                    && Objects.equals(defaultVMInstall.getInstallLocation(),installLocation)) { //Remove invalid JRE 
+                    && Objects.equals(defaultVMInstall.getInstallLocation(), installLocation)) { //Remove invalid JRE 
                 defaultVMInstall.getVMInstallType().disposeVMInstall(defaultVMInstall.getId());
             }
             IVMInstallType type = JavaRuntime
                     .getVMInstallType("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType");
             IVMInstall jre11Install = type.findVMInstall(HOTSPOT_JRE_11);
-            if(jre11Install == null) {
+            if (jre11Install == null) {
                 jre11Install = type.createVMInstall(HOTSPOT_JRE_11);
                 jre11Install.setName(HOTSPOT_JRE_11);
                 jre11Install.setInstallLocation(jre11Location);
