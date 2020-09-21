@@ -18,7 +18,7 @@
         <!-- connectors versions -->
         <connector.version.alfresco>2.0.1</connector.version.alfresco>
         <connector.version.cmis>3.0.3</connector.version.cmis>
-        <connector.version.database>2.0.1</connector.version.database>
+        <connector.version.database>2.0.3</connector.version.database>
         <connector.version.email>1.2.2</connector.version.email>
         <connector.version.google-calendar-v3>1.0.0</connector.version.google-calendar-v3>
         <connector.version.ldap>1.2.0</connector.version.ldap>
