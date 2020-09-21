@@ -31,6 +31,7 @@
         <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.configuration</module>
 		<module>org.bonitasoft.studio.connector.wizard.office</module>
+        <module>org.bonitasoft.studio.connector.wizard.sapjco3</module>
 		<module>org.bonitasoft.studio.connector.wizard.sforce</module>
         <module>org.bonitasoft.studio.connector.wizard.uipath</module>
         <module>org.bonitasoft.studio.connectors</module>
@@ -69,6 +70,8 @@
         <module>org.bonitasoft.studio.pics.bonitasoft</module>
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
+        <module>org.bonitasoft.studio.sap.dependency</module>
+        <module>org.bonitasoft.studio.sap.mock</module>
         <module>org.bonitasoft.studio.scripting</module>
         <module>org.bonitasoft.studio.sqlbuilder.ex</module>
         <module>org.bonitasoft.studio.team</module>

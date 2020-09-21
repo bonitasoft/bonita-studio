@@ -75,6 +75,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IStartup;
@@ -424,11 +425,25 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         disableGroovyDSL();
         initXMLandHTMLValidationPreferences();
+        setSystemProperties();
         //Avoid deadlock and thread timeout at startup
         new GroovyConsoleLineTracker();
         repositoryAccessor.start(monitor);
 
         executeContributions();
+    }
+
+    protected void setSystemProperties() {
+        Location instanceLocation = Platform.getInstanceLocation();
+        if (instanceLocation != null) {
+            String workspaceLocation = new File(instanceLocation.getURL().getFile()).getPath();
+            System.setProperty("bonita.tomcat.lib.dir", String.format("%s%stomcat%sserver%slib", workspaceLocation,
+                    File.separator, File.separator, File.separator));
+            BonitaStudioLog.info("bonita.tomcat.lib.dir=" + System.getProperty("bonita.tomcat.lib.dir"),
+                    ApplicationPlugin.PLUGIN_ID);
+        } else {
+            BonitaStudioLog.warning("Property 'bonita.tomcat.lib.dir' has not been set.", ApplicationPlugin.PLUGIN_ID);
+        }
     }
 
     @Override
