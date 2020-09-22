@@ -88,10 +88,16 @@ public abstract class UpdateConnectorDefinitionMigration extends CustomMigration
         return null;
     }
 
-    protected abstract boolean shouldUpdateVersion(final String defId);
+    protected boolean shouldUpdateVersion(final String defId) {
+        return false;
+    }
 
-    protected abstract String getNewDefinitionVersion();
+    protected String getNewDefinitionVersion() {
+        throw new UnsupportedOperationException("Need to be overriden in subclass");
+    }
 
-    protected abstract String getOldDefinitionVersion();
+    protected String getOldDefinitionVersion() {
+        throw new UnsupportedOperationException("Need to be overriden in subclass");
+    }
 
 }
