@@ -19,15 +19,13 @@ import java.util.zip.ZipFile;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -153,9 +151,6 @@ public class BosArchive {
                     }
                 });
             }
-            if (isFragment(file) && PlatformUtil.isACommunityBonitaProduct()) {
-                return;
-            }
             store.addFile(file);
         } else if (segments.size() > 1 && directStoreChild) { // Folder
             final Iterable<String> folderParentSegments = concat(parentSegments, segments.subList(0, 1));
@@ -183,14 +178,6 @@ public class BosArchive {
             return new SmartImportFileStoreModel(this, filePath, parentStore, (ISmartImportable) fileStore.get());
         }
         return new ImportFileStoreModel(filePath, parentStore);
-    }
-
-    private boolean isFragment(ImportFileModel file) {
-        if (file.getParentRepositoryStore().isPresent()) {
-            IRepositoryStore repositoryStore = file.getParentRepositoryStore().get();
-            return repositoryStore instanceof WebFragmentRepositoryStore;
-        }
-        return false;
     }
 
     public IStatus validateFile(AbstractFileModel file, IRepositoryStore<IRepositoryFileStore> repositoryStore) {
