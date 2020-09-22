@@ -41,7 +41,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.0";resolution:=optional,
  org.bonitasoft.studio.model.edit,
  org.bonitasoft.studio.diagram,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.bonitasoft.studio.ui;bundle-version="7.11.3"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connectors,

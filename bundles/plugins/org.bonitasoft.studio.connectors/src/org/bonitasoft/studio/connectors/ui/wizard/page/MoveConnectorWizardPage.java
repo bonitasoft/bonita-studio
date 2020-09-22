@@ -15,7 +15,6 @@
 
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
 
 import java.util.Objects;
@@ -29,7 +28,8 @@ import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -41,13 +41,12 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -59,7 +58,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
 /**
  * @author Romain Bioteau
  */
-public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
+public class MoveConnectorWizardPage extends WizardPage {
 
     private final AbstractProcess sourceProcess;
     private final ComposedAdapterFactory adapterFactory;
@@ -103,19 +102,27 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
     }
 
     private void createProcessTreeControl(final EMFDataBindingContext dbc, final Composite parent) {
-        final Label label = new Label(parent, SWT.NONE);
+        Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 300).create());
+
+        final Label label = new Label(composite, SWT.NONE);
         label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
         label.setText(Messages.chooseTargetStepOrProcess);
 
-        final TreeViewer processTreeViewer = new FilteredTree(parent, SWT.BORDER | SWT.SINGLE, new PatternFilter(), true).getViewer();
-        processTreeViewer.getControl().getParent().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 300).create());
+        final TreeViewer processTreeViewer = new FilteredTree(composite, SWT.BORDER | SWT.SINGLE, new PatternFilter(), true,
+                true).getViewer();
+        processTreeViewer.getTree().setLayout(GridLayoutFactory.fillDefaults().create());
         processTreeViewer.setLabelProvider(new ElementLabelProvider(adapterFactory));
         processTreeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
         processTreeViewer.addFilter(new ConnectableElementViewerFilter(sourceProcess));
         processTreeViewer.setInput(ModelHelper.getMainProcess(sourceProcess));
         processTreeViewer.expandAll();
-        dbc.bindValue(ViewersObservables.observeSingleSelection(processTreeViewer), targetLocationObservable,
-                updateValueStrategy().withValidator(selectionValidator()).create(), null);
+        dbc.bindValue(ViewerProperties.singleSelection().observe(processTreeViewer),
+                targetLocationObservable,
+                UpdateStrategyFactory.updateValueStrategy().withValidator(selectionValidator()).create(),
+                null);
+        composite.layout();
     }
 
     private void createActionControl(final EMFDataBindingContext dbc, final Composite parent) {
@@ -131,9 +138,9 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
         final Button copyRadio = createRadioButton(actionRadioGroup, Messages.copy);
 
         final SelectObservableValue actionObservable = new SelectObservableValue(Boolean.class);
-        actionObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(moveRadio));
-        actionObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(copyRadio));
-        dbc.bindValue(actionObservable, PojoObservables.observeValue(this, "copy"));
+        actionObservable.addOption(Boolean.FALSE, WidgetProperties.buttonSelection().observe(moveRadio));
+        actionObservable.addOption(Boolean.TRUE, WidgetProperties.buttonSelection().observe(copyRadio));
+        dbc.bindValue(actionObservable, PojoProperties.value("copy").observe(this));
     }
 
     private void createExecutionEventControl(final EMFDataBindingContext dbc, final Composite parent) {
@@ -145,12 +152,14 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
         eventRadioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         eventRadioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(20, 0, 0, 15).create());
 
-        final Button inRadio = createRadioButton(eventRadioGroup, Messages.bind(Messages.connectorInChoice, ConnectorEvent.ON_ENTER.name()));
-        final Button outRadio = createRadioButton(eventRadioGroup, Messages.bind(Messages.connectorOutChoice, ConnectorEvent.ON_FINISH.name()));
+        final Button inRadio = createRadioButton(eventRadioGroup,
+                Messages.bind(Messages.connectorInChoice, ConnectorEvent.ON_ENTER.name()));
+        final Button outRadio = createRadioButton(eventRadioGroup,
+                Messages.bind(Messages.connectorOutChoice, ConnectorEvent.ON_FINISH.name()));
 
         final SelectObservableValue eventObservable = new SelectObservableValue(String.class);
-        eventObservable.addOption(ConnectorEvent.ON_ENTER.name(), SWTObservables.observeSelection(inRadio));
-        eventObservable.addOption(ConnectorEvent.ON_FINISH.name(), SWTObservables.observeSelection(outRadio));
+        eventObservable.addOption(ConnectorEvent.ON_ENTER.name(), WidgetProperties.buttonSelection().observe(inRadio));
+        eventObservable.addOption(ConnectorEvent.ON_FINISH.name(), WidgetProperties.buttonSelection().observe(outRadio));
         dbc.bindValue(eventObservable, connectorEventObservable);
     }
 
@@ -171,7 +180,8 @@ public class MoveConnectorWizardPage extends WizardPage implements IWizardPage {
                             return ValidationStatus.error(Messages.invalidTargetLocationMessages);
                         }
                         if (originalLocation instanceof Activity) {
-                            return !Objects.equals(originalLocation, value) ? ValidationStatus.warning(Messages.warningLocalVariableinConnector)
+                            return !Objects.equals(originalLocation, value)
+                                    ? ValidationStatus.warning(Messages.warningLocalVariableinConnector)
                                     : ValidationStatus.ok();
                         }
                         return ValidationStatus.ok();
