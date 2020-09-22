@@ -259,7 +259,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 javaData.setClassName(List.class.getName());
                 copyDataFeature(javaData);
                 data = javaData;
-                updateDatabinding();
             } else if (newType instanceof XMLType && !(data instanceof XMLData)) {
                 final XMLData xmlData = ProcessFactory.eINSTANCE.createXMLData();
                 xmlData.setDataType(newType);
