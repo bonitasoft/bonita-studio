@@ -109,6 +109,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
         final Composite head = form.getHead();
         final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
         toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+        toolBar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EDITOR_TOOLBAR_TEXT_COLOR);
         toolBarManager = new ToolBarManager(toolBar);
         createHeaderContent(toolBar);
         return toolBar;
