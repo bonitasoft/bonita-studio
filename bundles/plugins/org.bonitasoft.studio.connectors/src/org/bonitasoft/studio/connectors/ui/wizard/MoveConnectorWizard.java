@@ -32,13 +32,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
  * @author Romain Bioteau
  */
-public class MoveConnectorWizard extends Wizard implements IWizard {
+public class MoveConnectorWizard extends Wizard {
 
     private final AbstractProcess sourceProcess;
     private MoveConnectorWizardPage page;
@@ -87,7 +86,8 @@ public class MoveConnectorWizard extends Wizard implements IWizard {
         if (targetLocation.getValue() != null) {
             try {
                 operationHistory.execute(
-                        new ChangeConnectorContainerCommand(editingDomain, connectorsToMove, (ConnectableElement) targetLocation.getValue(),
+                        new ChangeConnectorContainerCommand(editingDomain, connectorsToMove,
+                                (ConnectableElement) targetLocation.getValue(),
                                 (String) connectorEventObservable.getValue(), page.isCopy()),
                         null, null);
             } catch (final ExecutionException e) {
