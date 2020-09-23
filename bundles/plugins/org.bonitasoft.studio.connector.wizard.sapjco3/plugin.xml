@@ -5,7 +5,6 @@
          point="org.bonitasoft.studio.connectors.connectorWizard">
       <connectorWizard
             DefinitionId="sap-jco3-callfunction"
-            canBeUsedProvider="org.bonitasoft.studio.connector.wizard.sapjco3.pages.SAPAdvancedWizardCanBeUsed"
             priority="1"
             useDefaultGeneratedPages="false"
             useDefaultOutputPage="true">
