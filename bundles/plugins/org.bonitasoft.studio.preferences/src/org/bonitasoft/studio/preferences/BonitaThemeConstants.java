@@ -26,6 +26,7 @@ public interface BonitaThemeConstants {
     // Custom css class
     public static final String WIDGET_BACKGROUND_CLASS = "widgetBackground";
     public static final String EDITOR_FORM_BAKGROUND_CLASS = "editorFormBackground";
+    public static final String EDITOR_TOOLBAR_TEXT_COLOR = "editorToolbarTextColor";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
