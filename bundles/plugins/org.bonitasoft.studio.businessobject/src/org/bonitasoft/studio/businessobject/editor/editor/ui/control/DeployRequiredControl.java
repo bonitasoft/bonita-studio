@@ -27,7 +27,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 
 public class DeployRequiredControl extends Composite {
 
@@ -37,12 +36,12 @@ public class DeployRequiredControl extends Composite {
         setLayoutData(gridData);
         formPage.getToolkit().adapt(this);
 
-        Group group = new Group(this, SWT.NONE);
-        group.setLayout(GridLayoutFactory.fillDefaults().create());
-        group.setLayoutData(GridDataFactory.fillDefaults().create());
+        Composite composite = new Composite(this, SWT.BORDER);
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        CustomCLabel label = new CustomCLabel(group, SWT.WRAP);
-        label.setLayoutData(GridDataFactory.fillDefaults().create());
+        CustomCLabel label = new CustomCLabel(composite, SWT.WRAP);
+        label.setLayout(GridLayoutFactory.fillDefaults().create());
         label.setText(Messages.bdmDeployRequired);
         label.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
 

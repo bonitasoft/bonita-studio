@@ -73,11 +73,6 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                     testReport.append("Missing definition version for "+resourceName);
                 }
 
-                if(!NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true).equals(resourceName)){
-                    testReport.append("\n");
-                    testReport.append("Resource name doesn't match id and version for "+resourceName);
-                }
-
                 if(!(definition.getIcon() != null && !definition.getIcon().isEmpty())){
                     if(!isKnownMissingIcon(resourceName)){
                         testReport.append("\n");
@@ -168,7 +163,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
     }
 
     private List<String> getKnownFiltersWithoutIcon() {
-        return Arrays.asList("single-user-1.0.0.def", "same-task-user-1.0.0.def", "user-manager-1.0.0.def", "custom-user-info-1.0.0.def");
+        return Arrays.asList("bonita-actorfilter-single-user.def", "bonita-actorfilter-same-task-user.def", "bonita-actorfilter-user-manager.def", "bonita-actorfilter-custom-user-info.def");
     }
 
     private void parsePageWidget(final Component component, final List<String> bindInputs,final String resourceName,final ConnectorDefinition def, final StringBuilder testReport) {
@@ -216,10 +211,6 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 if(implementation.getImplementationClassname() == null || implementation.getImplementationClassname().isEmpty()){
                     testReport.append("\n");
                     testReport.append("Missing implementation classname for "+resourceName);
-                }
-                if(!NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), true).equals(resourceName)){
-                    testReport.append("\n");
-                    testReport.append("Resource name doesn't match id and version for "+resourceName);
                 }
 
                 if(implementation.getDefinitionId() == null || implementation.getDefinitionId().isEmpty()){
