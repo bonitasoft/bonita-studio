@@ -36,7 +36,6 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,7 +52,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
     public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
 
-    private DataBindingContext ctx = new EMFDataBindingContext();
+    private DataBindingContext ctx = new DataBindingContext();
     private BusinessDataModelFormPage formPage;
     private BusinessObjectList businessObjectList;
     private BusinessObjectEditionControl businessObjectEditionControl;
