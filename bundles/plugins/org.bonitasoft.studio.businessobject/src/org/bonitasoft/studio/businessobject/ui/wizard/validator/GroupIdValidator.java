@@ -49,7 +49,7 @@ public class GroupIdValidator extends MavenIdValidator {
 
     @Override
     protected String workspaceNameErrorMessage() {
-        return fieldName + ": " + org.eclipse.m2e.core.ui.internal.Messages.wizardProjectPageMaven2ValidatorGroupIDinvalid;
+        return String.format("%s: %s", fieldName, Messages.invalidGroupId);
     }
 
     @Override
