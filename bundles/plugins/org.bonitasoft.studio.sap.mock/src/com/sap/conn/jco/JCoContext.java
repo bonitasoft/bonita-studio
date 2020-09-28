@@ -19,7 +19,7 @@ package com.sap.conn.jco;
  * This class is not packaged at build time.
  * Users are supposed to provide the third tier library to use the advanced sap feature.
  */
-public class JCoContext {
+public abstract class JCoContext {
 
     public static void begin(JCoDestination destination) throws JCoException {
         throw new JCoException();

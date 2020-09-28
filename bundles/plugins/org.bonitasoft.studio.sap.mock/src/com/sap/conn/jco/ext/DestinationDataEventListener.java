@@ -19,14 +19,9 @@ package com.sap.conn.jco.ext;
  * This class is not packaged at build time.
  * Users are supposed to provide the third tier library to use the advanced sap feature.
  */
-public class DestinationDataEventListener {
+public interface DestinationDataEventListener {
 
-    public void deleted(String p) {
-
-    }
-
-    public void updated(String p) {
-
-    }
+    public void deleted(String p);
+    public void updated(String p);
 
 }
