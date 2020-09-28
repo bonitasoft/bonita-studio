@@ -65,8 +65,7 @@ public class GroupIdValidatorTest {
         StatusAssert.assertThat(status)
                 .isNotOK()
                 .hasMessage(String.format("%s: %s", Messages.groupId, NLS.bind(
-                        org.eclipse.m2e.core.ui.internal.Messages.wizardProjectPageMaven2ValidatorGroupIDinvalid,
-                        "my*/id")));
+                        Messages.invalidGroupId, "my*/id")));
     }
 
     @Test
@@ -80,8 +79,7 @@ public class GroupIdValidatorTest {
         StatusAssert.assertThat(status)
                 .isNotOK()
                 .hasMessage(String.format("%s: %s", Messages.groupId, NLS.bind(
-                        org.eclipse.m2e.core.ui.internal.Messages.wizardProjectPageMaven2ValidatorGroupIDinvalid,
-                        "aProjectThatAlreadyExists")));
+                        Messages.invalidGroupId, "aProjectThatAlreadyExists")));
     }
 
     @Test

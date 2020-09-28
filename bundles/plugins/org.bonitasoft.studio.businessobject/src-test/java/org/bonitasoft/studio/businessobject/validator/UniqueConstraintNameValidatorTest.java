@@ -76,7 +76,7 @@ public class UniqueConstraintNameValidatorTest {
         StatusAssert.assertThat(status).isError();
         assertThat(Arrays.asList(status.getChildren()).stream().map(IStatus::getMessage))
                 .contains(org.bonitasoft.studio.common.Messages.bind(org.bonitasoft.studio.common.Messages.fieldIsTooLong,
-                        nameToLong, FieldNameValidator.MAX_COLUMN_NAME_LENGTH));
+                        nameToLong, UniqueConstraintNameValidator.MAX_COLUMN_NAME_LENGTH));
     }
 
     @Test

@@ -19,10 +19,8 @@ package com.sap.conn.jco;
  * This class is not packaged at build time.
  * Users are supposed to provide the third tier library to use the advanced sap feature.
  */
-public class JCoRepository {
+public interface JCoRepository {
 
-    public JCoFunctionTemplate getFunctionTemplate(String string) throws JCoException {
-        throw new JCoException();
-    }
+    JCoFunctionTemplate getFunctionTemplate(String string) throws JCoException;
 
 }
