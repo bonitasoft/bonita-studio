@@ -11,16 +11,17 @@ package org.eclipse.gmf.runtime.lite.svg;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.apache.xerces.parsers.SAXParser;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 public class CustomSAXSVGDocumentFactory extends SAXSVGDocumentFactory {
-
 
     public CustomSAXSVGDocumentFactory() {
         super(XMLResourceDescriptor.getXMLParserClassName());
@@ -33,7 +34,12 @@ public class CustomSAXSVGDocumentFactory extends SAXSVGDocumentFactory {
     @Override
     protected Document createDocument(InputSource is) throws IOException {
         try {
-            final XMLReader parser = new SAXParser();
+            XMLReader parser;
+            try {
+                parser = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+            } catch (ParserConfigurationException e) {
+                throw new RuntimeException(e);
+            }
 
             parser.setContentHandler(this);
             parser.setDTDHandler(this);
