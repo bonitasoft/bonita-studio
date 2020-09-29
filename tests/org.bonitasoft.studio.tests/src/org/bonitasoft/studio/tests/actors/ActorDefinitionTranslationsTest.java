@@ -201,6 +201,9 @@ public class ActorDefinitionTranslationsTest {
             throws Exception {
         SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget));
+        bot.activeShell().activate();
+        bot.activeShell().setFocus();
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Widget id*").setText(widgetId);

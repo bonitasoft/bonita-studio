@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.tests.diagram;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -24,18 +25,20 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
+import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,6 +53,9 @@ public class TestDeleteDiagrams {
     private static boolean disablePopup;
 
     private final SWTGefBot bot = new SWTGefBot();
+
+    @Rule
+    public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -104,26 +110,15 @@ public class TestDeleteDiagrams {
 
         bot.waitUntil(Conditions.shellIsActive(Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
-        bot.waitUntil(new ICondition() {
+        bot.waitUntil(new AssertionCondition() {
 
             @Override
-            public boolean test() throws Exception {
-                return nbEditors - 3 == bot.editors().size();
+            protected void makeAssert() throws Exception {
+                assertThat(((SWTWorkbenchBot) bot).editors().size()).isEqualTo(nbEditors - 3);
+                assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1,
+                        diagramStore.getChildren().size());
             }
-
-            @Override
-            public void init(final SWTBot bot) {
-
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "editors have not been closed after deleted diagrams";
-            }
-        }, 40000, 100);
-
-        assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1,
-                diagramStore.getChildren().size());
+        });
 
     }
 

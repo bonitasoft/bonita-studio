@@ -54,7 +54,6 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
@@ -1073,18 +1072,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
         }
         proposalShell.close();
         return result;
-    }
-
-    public static void pressUndo() {
-        getKeybord().pressShortcut(SWT.CTRL, 'z');
-    }
-
-    public static void pressRedo() {
-        if (System.getProperty("os.name").equals("Linux")) {
-            getKeybord().pressShortcut(SWT.SHIFT | SWT.CTRL, 'z');
-        } else {
-            getKeybord().pressShortcut(SWT.CTRL, 'y');
-        }
     }
 
 
