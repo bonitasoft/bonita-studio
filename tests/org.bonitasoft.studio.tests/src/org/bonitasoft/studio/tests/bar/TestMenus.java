@@ -14,17 +14,16 @@
  */
 package org.bonitasoft.studio.tests.bar;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,30 +39,15 @@ public class TestMenus {
     @Test
     public void should_have_only_valid_menus() {
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
-        final SWTBotMenu mainMenu = bot.menu("File");
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final Menu parent = mainMenu.widget.getParent();
-                String menus = "";
-                int nbRunMenus = 0;
-                for (final MenuItem item : parent.getItems()) {
-                    menus += "\n" + item.getText();
-                    if (item.getText().toLowerCase().trim().equals("run")) {
-                        nbRunMenus++;
-                    }
-                }
-                assertEquals("Run menu should not appears", 0, nbRunMenus);
-                if (Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")) {
-                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 9,
-                            parent.getItemCount());
-                } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
-                    assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menus), 7,
-                            parent.getItemCount());
-                }
-            }
-        });
+        List<String> menuItems = bot.menu().menuItems();
+        if (Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")) {
+            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 9,
+                    menuItems.size());
+        } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
+            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 8,
+                    menuItems.size());
+        }
+        assertThat(menuItems).doesNotContain("Run");
     }
 
 }
