@@ -79,7 +79,8 @@ public class TestDocument {
         botAddDocumentDialog.ok();
 
         //Delete
-        final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection.removeDocument("doc1Edited");
+        final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection
+                .removeDocument("doc1Edited");
         botRemoveDocumentDialog.ok();
 
         Assertions.assertThat(isErrorMessageForURLAppeared).isTrue();
@@ -101,7 +102,8 @@ public class TestDocument {
         botAddDocumentDialog.ok();
 
         //Delete
-        final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection.removeDocument("doc11Edited");
+        final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection
+                .removeDocument("doc11Edited");
         botRemoveDocumentDialog.ok();
     }
 
@@ -120,6 +122,7 @@ public class TestDocument {
         botFileStoreSelectDialog.ok();
         assertInitialContentNotEmpty(botAddDocumentDialog);
         botAddDocumentDialog.finish();
+        bot.saveAllEditors();
         store.getChild(fileName, true).delete();
     }
 
@@ -143,10 +146,10 @@ public class TestDocument {
 
         botAddDocumentDialog.cancel();
 
-        Assertions.assertThat(isErrorMessageForURLAppeared).isTrue();
-        Assertions.assertThat(errorMessageAlreadyExist).isTrue();
-        Assertions.assertThat(errorMessageNameEmpty).isTrue();
-        Assertions.assertThat(isErrorMessageFileAppeared).isTrue();
+        assertThat(isErrorMessageForURLAppeared).isTrue();
+        assertThat(errorMessageAlreadyExist).isTrue();
+        assertThat(errorMessageNameEmpty).isTrue();
+        assertThat(isErrorMessageFileAppeared).isTrue();
     }
 
     @Test
@@ -204,10 +207,12 @@ public class TestDocument {
     @Test
     public void testDocumentOperationSwitch() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow
+                .createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
                 .getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder
+                .selectDataTab()
                 .selectDocumentsTab();
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc1");
@@ -224,7 +229,8 @@ public class TestDocument {
         Assertions.assertThat(botOperationComposite.getSelectedOperator()).isEqualTo(expectedOperator);
 
         final BotExpressionEditorDialog editRightOperand = botOperationComposite.editRightOperand();
-        Assertions.assertThat(editRightOperand.selectScriptTab().getReturnType()).isEqualTo(DocumentValue.class.getName());
+        Assertions.assertThat(editRightOperand.selectScriptTab().getReturnType())
+                .isEqualTo(DocumentValue.class.getName());
 
         editRightOperand.cancel();
 
@@ -232,10 +238,12 @@ public class TestDocument {
 
     protected BotDocumentsPropertySection createDiagramAndGoToDocumentSection() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow
+                .createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective
                 .getDiagramPropertiesPart();
-        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectDataTab()
+        final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder
+                .selectDataTab()
                 .selectDocumentsTab();
         return botDocumentsPropertySection;
     }

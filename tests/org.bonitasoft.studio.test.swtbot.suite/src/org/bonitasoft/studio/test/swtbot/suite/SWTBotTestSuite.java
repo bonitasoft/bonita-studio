@@ -99,12 +99,14 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        DiagramTests.class,
+        TestDeleteDiagrams.class,
+        DeleteCommandTest.class,
         ProjectExplorerDiagramIT.class,
         ProjectExplorerOrganizationIT.class,
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
         ProjectExplorerConnectorIT.class,
-        DiagramTests.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
@@ -114,7 +116,6 @@ import org.junit.runners.Suite;
         TestLoadSaveConnectorConfiguration.class,
         TestConditionExpression.class,
         ConfigurationDialogIT.class,
-        TestDeleteDiagrams.class,
         ActorDefinitionTranslationsTest.class,
         ActorFilterDefinitionTest.class,
         ActorFilterDefinitionWizardPageTest.class,
@@ -135,7 +136,6 @@ import org.junit.runners.Suite;
         OpenNameAndVersionDiagramForDiagramTest.class,
         ConnectorDefinitionTranslationsTest.class,
         CopyPasteTests.class,
-        DeleteCommandTest.class,
         NewRunTest.class,
         DataWizardIT.class,
         SWTBOTTestConditions.class,

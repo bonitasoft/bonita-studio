@@ -10,6 +10,7 @@ package org.bonitasoft.studio.ui.notification;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
@@ -20,9 +21,12 @@ public class BonitaNotificator {
     }
 
     public static void openNotification(String title, String content, Listener selectionListener) {
-        Display display = Display.getDefault();
-        display.asyncExec(
-                () -> new BonitaNotificationPopup(display, title, content, Optional.ofNullable(selectionListener)).open());
+        if(!FileActionDialog.getDisablePopup()) {
+            Display display = Display.getDefault();
+            display.asyncExec(
+                    () -> new BonitaNotificationPopup(display, title, content, Optional.ofNullable(selectionListener)).open());
+        }
+   
     }
 
 }
