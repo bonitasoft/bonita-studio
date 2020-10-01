@@ -30,7 +30,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.groovy.core;bundle-version="2.9.1",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.ui;bundle-version="7.6.0"
+ org.bonitasoft.studio.ui;bundle-version="7.6.0",
+ org.bonitasoft.studio.preferences;bundle-version="7.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.parameters.action,org.bonitasoft

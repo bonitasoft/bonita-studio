@@ -26,18 +26,18 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ParameterValueEditingSupport extends EditingSupport {
 
     private final WizardPage page;
 
-    public ParameterValueEditingSupport(final ColumnViewer viewer,final WizardPage page) {
+    public ParameterValueEditingSupport(final ColumnViewer viewer, final WizardPage page) {
         super(viewer);
-        this.page =  page ;
+        this.page = page;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
      */
     @Override
@@ -45,71 +45,71 @@ public class ParameterValueEditingSupport extends EditingSupport {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
      */
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        final TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl()) ;
+        final TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl());
+        editor.getControl().setBackground(getViewer().getControl().getBackground());
         editor.setValidator(new ICellEditorValidator() {
 
             @Override
             public String isValid(final Object value) {
-                final String input = (String) value ;
-                final Parameter param = (Parameter) element ;
-                final String typeName = param.getTypeClassname() ;
+                final String input = (String) value;
+                final Parameter param = (Parameter) element;
+                final String typeName = param.getTypeClassname();
                 if (!input.isEmpty()) {
-                	if(typeName.equals(Integer.class.getName())){
-                		try{
-                			Integer.parseInt(input) ;
-                		}catch (final NumberFormatException e) {
-                			return Messages.invalidInteger ;
+                    if (typeName.equals(Integer.class.getName())) {
+                        try {
+                            Integer.parseInt(input);
+                        } catch (final NumberFormatException e) {
+                            return Messages.invalidInteger;
+                        }
+                    } else if (typeName.equals(Double.class.getName())) {
+                        try {
+                            Double.parseDouble(input);
+                        } catch (final NumberFormatException e) {
+                            return Messages.invalidDouble;
+                        }
                     }
-                	}else if(typeName.equals(Double.class.getName())){
-                		try{
-                			Double.parseDouble(input) ;
-                		}catch (final NumberFormatException e) {
-                        return Messages.invalidDouble ;
-                    }
-                }
                 }
                 return null;
             }
-        }) ;
+        });
 
-        return  editor;
+        return editor;
     }
 
-
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
     protected Object getValue(final Object element) {
-        if(element instanceof Parameter){
+        if (element instanceof Parameter) {
             final String paramValue = ((Parameter) element).getValue();
-            if(paramValue == null){
-                return "" ;
-            }else{
-                return paramValue ;
+            if (paramValue == null) {
+                return "";
+            } else {
+                return paramValue;
             }
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
     protected void setValue(final Object element, final Object value) {
-        if(element != null && value != null){
-            ((Parameter)element).setValue(value.toString()) ;
-            getViewer().refresh() ;
-            page.getWizard().getContainer().updateMessage() ;
+        if (element != null && value != null) {
+            ((Parameter) element).setValue(value.toString());
+            getViewer().refresh();
+            page.getWizard().getContainer().updateMessage();
         }
     }
-
 
 }
