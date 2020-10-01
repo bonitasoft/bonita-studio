@@ -170,8 +170,8 @@
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="https://dist.springsource.org/release/GRECLIPSE/e4.16"/>
-            <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.8.0.v202006301451-e2006-RELEASE"/>
-            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.8.0.v202006301451-e2006-RELEASE"/>
+            <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.9.0.v202009301404-e2006-RELEASE"/>
+            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.9.0.v202009301404-e2006-RELEASE"/>
         </location>
     </locations>
 </target>
