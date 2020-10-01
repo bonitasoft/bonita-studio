@@ -213,6 +213,94 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.wst.xml_ui.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.nebula.widgets.richtext.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.nebula.widgets.tablecombo.css.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.nebula.widgets.tablecombo.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.egit_es"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.egit_fr"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.egit_ja"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.egit_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.egit"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.egit.gitflow.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.compare.egit"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.diffmerge.egit.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.jgit_es"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.jgit_fr"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.jgit_ja"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_technology.jgit_pt_BR"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.gpg.bc"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.http.apache"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.lfs"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.ssh.apache"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.ssh.jsch"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.12.0" match="equivalent"/>
@@ -815,6 +903,20 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.connector.wizard.sapjco3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.jna.platform"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.jna"
          download-size="0"
          install-size="0"
          version="0.0.0"
