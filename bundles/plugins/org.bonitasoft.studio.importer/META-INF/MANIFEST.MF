@@ -2,9 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Import from other models to BOS
 Bundle-SymbolicName: org.bonitasoft.studio.importer;singleton:=true
-Bundle-Activator: org.bonitasoft.studio.importer.ImporterPlugin
 Bundle-Version: 7.12.0.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: org.bonitasoft.studio.importer.ImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.importer,
+ org.bonitasoft.studio.importer.bpmn,
+ org.bonitasoft.studio.importer.builder,
+ org.bonitasoft.studio.importer.handler,
+ org.bonitasoft.studio.importer.i18n,
+ org.bonitasoft.studio.importer.processors,
+ org.bonitasoft.studio.importer.ui.wizard
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.common.ui;bundle-version="1.2.1",
@@ -33,16 +42,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding.beans,
  org.bonitasoft.studio.ui,
  org.eclipse.e4.core.commands,
- org.eclipse.core.databinding.property;bundle-version="1.7.200"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.importer,
- org.bonitasoft.studio.importer.bpmn,
- org.bonitasoft.studio.importer.builder,
- org.bonitasoft.studio.importer.handler,
- org.bonitasoft.studio.importer.i18n,
- org.bonitasoft.studio.importer.processors,
- org.bonitasoft.studio.importer.ui.wizard
-Bundle-ClassPath: .
-Bundle-Localization: plugin
+ org.eclipse.core.databinding.property;bundle-version="1.7.200",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700.v20200113-1422",
+ org.eclipse.e4.core.di.annotations
 Import-Package: org.bonitasoft.engine.bpm.connector
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
