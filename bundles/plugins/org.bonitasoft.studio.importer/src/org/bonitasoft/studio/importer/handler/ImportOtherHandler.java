@@ -31,37 +31,16 @@ import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
  */
-public class ImportOtherHandler extends AbstractHandler {
+public class ImportOtherHandler {
 
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
-        execute();
-        return null;
-    }
-
-    private Runnable openStatusDialog(final ImportFileOperation operation) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                operation.getImportStatusDialogHandler(operation.getStatus()).open(Display.getDefault().getActiveShell());
-            }
-        };
-    }
-
-    protected DiagramRepositoryStore getDiagramRepositoryStore() {
-        return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-    }
-
+    @Execute
     public void execute() {
         final ImportFileWizard importFileWizard = createImportWizard();
         if (new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard, Messages.importButtonLabel)
@@ -90,6 +69,20 @@ public class ImportOtherHandler extends AbstractHandler {
             PlatformUtil.openIntroIfNoOtherEditorOpen();
             Display.getDefault().asyncExec(openStatusDialog(operation));
         }
+    }
+
+    private Runnable openStatusDialog(final ImportFileOperation operation) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                operation.getImportStatusDialogHandler(operation.getStatus()).open(Display.getDefault().getActiveShell());
+            }
+        };
+    }
+
+    protected DiagramRepositoryStore getDiagramRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     protected ImportFileOperation createImportFileOperation(final ImportFileWizard importFileWizard, final File selectedFile,
