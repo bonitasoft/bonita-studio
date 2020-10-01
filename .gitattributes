@@ -1,0 +1,2 @@
+# Declare files that will always have LF line ending on checkout
+*.properties text eol=lf

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_QYcKEPhPEeKwyvgazXLRgA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_QYcKEfhPEeKwyvgazXLRgA" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_QYcKEvhPEeKwyvgazXLRgA" elementId="org.bonitasoft.studio.validation.view" label="%ValidationView" iconURI="platform:/plugin/org.bonitasoft.studio.validation/icons/Accept-icon.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+      <menus xmi:id="_QYcKE_hPEeKwyvgazXLRgA" elementId="org.bonitasoft.studio.validation.view">
+        <tags>ViewMenu</tags>
+      </menus>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_gZNf0KxuEemr_7o5devgkg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_kFmSAKxuEemr_7o5devgkg" elementId="org.bonitasoft.studio.validation.command.headlessDiagramValidation" commandName="%headlessDiagramValidation">
+      <parameters xmi:id="_QLWUoKxvEemr_7o5devgkg" elementId="fileName" name="fileName" optional="false"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_h09FEKxuEemr_7o5devgkg" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_qkY6YKxuEemr_7o5devgkg" elementId="org.bonitasoft.studio.validation.handler.headlessDiagramValidation" contributionURI="bundleclass://org.bonitasoft.studio.validation/org.bonitasoft.studio.validation.handler.HeadlessDiagramValidationHandler" command="_kFmSAKxuEemr_7o5devgkg"/>
+  </fragments>
+</fragment:ModelFragments>
