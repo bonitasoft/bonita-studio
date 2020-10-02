@@ -22,7 +22,7 @@
 		<connector.version.cmis>3.0.3</connector.version.cmis>
 		<connector.version.database>2.0.1</connector.version.database>
 		<connector.version.email>1.2.3</connector.version.email>
-		<connector.version.google-calendar-v3>1.0.0</connector.version.google-calendar-v3>
+		<connector.version.google-calendar-v3>1.1.0</connector.version.google-calendar-v3>
 		<connector.version.ldap>1.2.0</connector.version.ldap>
 		<connector.version.salesforce>1.1.2</connector.version.salesforce>
 		<connector.version.scripting>1.1.0</connector.version.scripting>
@@ -111,39 +111,12 @@
 								<!--GOOGLE CALENDAR CONNECTOR -->
 								<dependency>
 									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-google-calendar-v3-create-event-impl</artifactId>
+									<artifactId>bonita-connector-google-calendar-v3</artifactId>
 									<version>${connector.version.google-calendar-v3}</version>
 									<type>zip</type>
-									<classifier>connector</classifier>
+									<classifier>all</classifier>
 								</dependency>
-								<dependency>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-google-calendar-v3-get-event-impl</artifactId>
-									<version>${connector.version.google-calendar-v3}</version>
-									<type>zip</type>
-									<classifier>connector</classifier>
-								</dependency>
-								<dependency>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-google-calendar-v3-delete-event-impl</artifactId>
-									<version>${connector.version.google-calendar-v3}</version>
-									<type>zip</type>
-									<classifier>connector</classifier>
-								</dependency>
-								<dependency>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-google-calendar-v3-update-event-impl</artifactId>
-									<version>${connector.version.google-calendar-v3}</version>
-									<type>zip</type>
-									<classifier>connector</classifier>
-								</dependency>
-								<dependency>
-									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-google-calendar-v3-move-event-impl</artifactId>
-									<version>${connector.version.google-calendar-v3}</version>
-									<type>zip</type>
-									<classifier>connector</classifier>
-								</dependency>
+								
 								<!--LDAP CONNECTORS -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
