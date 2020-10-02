@@ -15137,5 +15137,8 @@
     <changes xsi:type="history:MigrationChange" xmi:id="_BlCvoPy2EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCustomUserInfoActorFilterDefinition"/>
     <changes xsi:type="history:MigrationChange" xmi:id="_ENYq4Py2EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateSameTaskActorFilterDefinition"/>
   </releases>
+  <releases xmi:id="_cF18cATHEeucZo-Urx5qXw" date="2020-10-02T11:25:27.494+0200" label="7.12.0-002">
+    <changes xsi:type="history:MigrationChange" xmi:id="_cF18dgTHEeucZo-Urx5qXw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateGoogleCalendarDefinitionTo110"/>
+  </releases>
   <releases xmi:id="_tt2RcE8LEeq0LYHRol2p7w"/>
 </history:History>
