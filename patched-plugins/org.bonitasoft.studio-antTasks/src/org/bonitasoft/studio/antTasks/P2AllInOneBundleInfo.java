@@ -30,7 +30,9 @@ public class P2AllInOneBundleInfo extends Task {
 			final List<BundleInfo> bundleList = SimpleConfiguratorUtils.readConfiguration(stream, locationFile.toURI());
 			final File[] platformSpecificPlugins = pluginsFolder.listFiles(new FileFilter() {
 				public boolean accept(File file) {
-					return isPlatformSpecific(file);
+					 boolean platformSpecific = isPlatformSpecific(file);
+					 System.err.println(String.format("%s : %s",file.getName(), platformSpecific));
+					 return platformSpecific;
 				}
 			});
 			if(platformSpecificPlugins != null){
@@ -55,6 +57,7 @@ public class P2AllInOneBundleInfo extends Task {
 		return file.getName().contains("linux")
 				|| file.getName().contains("macosx")
 				|| file.getName().contains("win32")
+				|| file.getName().contains("win")
 				|| file.getName().contains("aix")
 				|| file.getName().contains("solaris")
 				|| file.getName().contains("hpux")

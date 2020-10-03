@@ -16,6 +16,7 @@ package org.bonitasoft.studio.tests.expressionEditor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,18 +80,40 @@ public class TestConnectorExpression implements SWTBotConstants {
         createWidget("Input6", "Text", 5);
         bot.button("Apply").click();
     }
-
+    
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
-        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
+        assertFalse("button ok should be disabled",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Widget id*").setText(widgetId);
         bot.comboBoxWithLabel("Widget type").setSelection(widgetType);
-        bot.comboBoxWithLabel("Input *").setSelection(inputIndex);
-        bot.textWithLabel("Display name").setText(widgetId);
+        if (!widgetType.equals("Group")) {
+            bot.comboBoxWithLabel("Input *").setSelection(inputIndex);
+        } else {
+            assertFalse("inputs combo box should be disabled for Group widget",
+                    bot.comboBoxWithLabel("Input *").isEnabled());
+        }
+        assertTrue("button ok should be enabled",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("New connector definition"));
     }
-
+    
     @Test
     public void testConnectorExpression() {
         final String id = "connectorExpressionTest";
