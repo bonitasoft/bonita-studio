@@ -700,11 +700,14 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
         final DataType type = (DataType) selectedType.getValue();
         if (type instanceof JavaType) {
-            final String className = ((JavaObjectData) data).getClassName();
-            if (className == null || className.isEmpty()) {
-                return String.class.getName();
+            if(data instanceof JavaObjectData){
+                final String className = ((JavaObjectData) data).getClassName();
+                if (className == null || className.isEmpty()) {
+                    return String.class.getName();
+                }
+                return className;
             }
-            return className;
+            return String.class.getName();
         } else if (type != null) {
             final String technicalTypeFor = DataUtil
                     .getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(

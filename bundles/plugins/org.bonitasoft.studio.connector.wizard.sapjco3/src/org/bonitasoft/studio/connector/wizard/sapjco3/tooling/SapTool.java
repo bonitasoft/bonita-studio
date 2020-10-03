@@ -84,7 +84,7 @@ public class SapTool {
         this.destinationName = destinationName;
     }
 
-    public JCoException connect() {
+    public Throwable connect() {
         try {
             if (destinationProvider != null) {
                 disconnect();
@@ -95,7 +95,7 @@ public class SapTool {
             destination = JCoDestinationManager.getDestination(destinationProvider.getDestinationName());
             JCoContext.begin(destination);
             return null;
-        } catch (JCoException e) {
+        } catch (RuntimeException | JCoException e) {
             return e;
         }
     }
@@ -111,7 +111,7 @@ public class SapTool {
     }
 
     public void tryConnect() {
-        final JCoException e = connect();
+        final Throwable e = connect();
         if (e != null) {
             connectionOK = false;
             connectionMessage = e.getMessage();
