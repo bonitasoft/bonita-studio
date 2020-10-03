@@ -35,7 +35,6 @@
 		<connector.version.sap>2.0.1</connector.version.sap>
 	</properties>
 
-
 	<build>
 		<plugins>
 			<plugin>
