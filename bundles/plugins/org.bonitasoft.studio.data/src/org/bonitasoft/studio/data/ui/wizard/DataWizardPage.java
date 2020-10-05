@@ -79,6 +79,8 @@ import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -229,7 +231,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     private boolean isOverviewContext = false;
 
-    final private Set<String> availableDataNames = new HashSet<>();
+    private final Set<String> availableDataNames = new HashSet<>();
 
     private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -252,39 +254,42 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         @Override
         public void handleValueChange(final ValueChangeEvent event) {
-            final DataType newType = (DataType) event.diff.getNewValue();
-            if (newType instanceof JavaType && !(data instanceof JavaObjectData)) {
-                final JavaObjectData javaData = ProcessFactory.eINSTANCE.createJavaObjectData();
-                javaData.setDataType(newType);
-                javaData.setClassName(List.class.getName());
-                copyDataFeature(javaData);
-                data = javaData;
-            } else if (newType instanceof XMLType && !(data instanceof XMLData)) {
-                final XMLData xmlData = ProcessFactory.eINSTANCE.createXMLData();
-                xmlData.setDataType(newType);
-                copyDataFeature(xmlData);
-                data = xmlData;
-            } else {
-                if (!data.eClass().equals(ProcessPackage.Literals.DATA)) {
-                    Data simpleData = ProcessFactory.eINSTANCE.createData();
-                    simpleData.setDataType(newType);
-                    copyDataFeature(simpleData);
-                    data = simpleData;
+            if (updateDataType) {
+                final DataType newType = (DataType) event.diff.getNewValue();
+                if (newType instanceof JavaType && !(data instanceof JavaObjectData)) {
+                    final JavaObjectData javaData = ProcessFactory.eINSTANCE.createJavaObjectData();
+                    javaData.setDataType(newType);
+                    javaData.setClassName(List.class.getName());
+                    copyDataFeature(javaData);
+                    data = javaData;
+                } else if (newType instanceof XMLType && !(data instanceof XMLData)) {
+                    final XMLData xmlData = ProcessFactory.eINSTANCE.createXMLData();
+                    xmlData.setDataType(newType);
+                    copyDataFeature(xmlData);
+                    data = xmlData;
                 } else {
-                    data.setDataType(newType);
+                    if (!data.eClass().equals(ProcessPackage.Literals.DATA)) {
+                        Data simpleData = ProcessFactory.eINSTANCE.createData();
+                        simpleData.setDataType(newType);
+                        copyDataFeature(simpleData);
+                        data = simpleData;
+                    } else {
+                        data.setDataType(newType);
+                    }
                 }
-            }
 
-            updateMoreSection(newType);
-            updateBrowseXMLButton(newType);
-            if (mainComposite != null && !mainComposite.isDisposed()) {
-                final Composite parent = mainComposite.getParent();
-                final Point defaultSize = parent.getSize();
-                final Point size = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-                parent.setSize(defaultSize.x, size.y);
-                parent.layout(true, true);
+                updateMoreSection(newType);
+                updateBrowseXMLButton(newType);
+                if (mainComposite != null && !mainComposite.isDisposed()) {
+                    final Composite parent = mainComposite.getParent();
+                    final Point defaultSize = parent.getSize();
+                    final Point size = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+                    parent.setSize(defaultSize.x, size.y);
+                    parent.layout(true, true);
+                }
+                updateDatabinding();
+                updateDataType = false;
             }
-            updateDatabinding();
         }
     };
 
@@ -299,6 +304,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     private IObservableValue returnTypeObservable;
 
     private CLabel transientDataWarning;
+
+    private boolean updateDataType;
 
     public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum,
             final boolean showIsTransient,
@@ -659,7 +666,19 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         modelObservable.addValueChangeListener(typeChangeListener);
 
         observeSingleSelectionTypeCombo = ViewersObservables.observeSingleSelection(typeCombo);
-        emfDatabindingContext.bindValue(observeSingleSelectionTypeCombo, modelObservable, null, null);
+        emfDatabindingContext.bindValue(observeSingleSelectionTypeCombo,
+                modelObservable,
+                UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(ConverterBuilder.<DataType, DataType> newConverter()
+                                .fromType(DataType.class)
+                                .toType(DataType.class)
+                                .withConvertFunction(dataType -> {
+                                    updateDataType = true;
+                                    return dataType;
+                                })
+                                .create())
+                        .create(),
+                null);
     }
 
     protected void bindDefaultValueViewer() {
