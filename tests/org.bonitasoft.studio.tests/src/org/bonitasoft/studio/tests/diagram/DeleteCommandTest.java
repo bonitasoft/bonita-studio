@@ -17,7 +17,6 @@ package org.bonitasoft.studio.tests.diagram;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -39,8 +38,6 @@ public class DeleteCommandTest {
 
     @Test
     public void deleteElementsInDiagram() throws Exception {
-        SWTBotTestUtil.pressEnter();
-
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(DeleteCommandTest.class.getResource("Elements2Delete-1.0.bos"))
                 .finish();
@@ -88,7 +85,6 @@ public class DeleteCommandTest {
         bot.button("Yes").click();
         step = editor1.getEditPart("Pool2Delete");
         assertNull("Pool2Delete should have been deleted", step);
-
     }
 
 }

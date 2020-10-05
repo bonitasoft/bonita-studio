@@ -36,6 +36,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -200,10 +201,23 @@ public class ConnectorDefinitionTranslationsTest {
         }, 30000);
     }
 
-    private void createWidget(String widgetId, String widgetType, int inputIndex)
-            throws Exception {
-        SWTBotShell activeShell = bot.activeShell();
+    private void createWidget(String widgetId, String widgetType, int inputIndex) {
         bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Widget id*").setText(widgetId);
@@ -217,7 +231,7 @@ public class ConnectorDefinitionTranslationsTest {
         assertTrue("button ok should be enabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("New connector definition"));
     }
 
 }

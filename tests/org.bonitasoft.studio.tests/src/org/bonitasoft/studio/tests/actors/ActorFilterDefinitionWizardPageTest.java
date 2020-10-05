@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
@@ -37,6 +38,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Rule;
@@ -172,11 +174,24 @@ public class ActorFilterDefinitionWizardPageTest {
                 + actorFilterId + " and page " + pageId
                 + " should be a text widget", widget5 instanceof Group);
     }
-
-    private void createWidget(String widgetId, String widgetType, int inputIndex)
-            throws Exception {
-        SWTBotShell activeShell = bot.activeShell();
+    
+    private void createWidget(String widgetId, String widgetType, int inputIndex) {
         bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Widget id*").setText(widgetId);
@@ -189,10 +204,8 @@ public class ActorFilterDefinitionWizardPageTest {
         }
         assertTrue("button ok should be enabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)), 5000);
         bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
-
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive(Messages.newFilterDefinition));
     }
 
 }
