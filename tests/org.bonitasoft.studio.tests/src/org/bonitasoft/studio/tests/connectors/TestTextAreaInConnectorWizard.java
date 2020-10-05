@@ -28,6 +28,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Assert;
@@ -144,6 +145,21 @@ public class TestTextAreaInConnectorWizard {
         bot.textWithLabel("Page id *").setText(pageId);
         SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
         bot.textWithLabel("Widget id*").setText(widgetId);
         bot.textWithLabel("Display name").setText("text");
         bot.waitUntil(new ICondition() {
@@ -176,7 +192,7 @@ public class TestTextAreaInConnectorWizard {
         bot.button("Add...").click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
-
+    
     private boolean containsWidget(final String widgetName) {
         final String[] widgets = bot.comboBoxWithLabel("Widget type").items();
         for (final String widget : widgets) {
