@@ -33,11 +33,10 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Test;
@@ -52,7 +51,6 @@ public class ConnectorDefinitionWizardPageTest {
         final String packageLang = "java.lang.";
         final String packageUtil = "java.util.";
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
-        Keyboard key = KeyboardFactory.getSWTKeyboard();
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
         SWTBotConnectorTestUtil.createConnectorDefinition(bot, id, "1.0.0");
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -63,27 +61,27 @@ public class ConnectorDefinitionWizardPageTest {
         bot.button("Add...").click();
         table.click(1, 2);
         bot.ccomboBox().setSelection(packageLang + "Boolean");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(2, 2);
         bot.ccomboBox().setSelection(packageLang + "Double");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(3, 2);
         bot.ccomboBox().setSelection(packageLang + "Float");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(4, 2);
         bot.ccomboBox().setSelection(packageLang + "Integer");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(5, 2);
         bot.ccomboBox().setSelection(packageUtil + "List");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button("Add...").click();
         table.click(6, 2);
         bot.ccomboBox().setSelection(packageUtil + "Map");
-        key.pressShortcut(Keystrokes.CR);
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
         bot.button(IDialogConstants.NEXT_LABEL).click();
 
     }
@@ -164,8 +162,22 @@ public class ConnectorDefinitionWizardPageTest {
     }
 
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
-        SWTBotShell activeShell = bot.activeShell();
         bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
         assertFalse("button ok should be disabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.textWithLabel("Widget id*").setText(widgetId);
@@ -179,8 +191,7 @@ public class ConnectorDefinitionWizardPageTest {
         assertTrue("button ok should be enabled",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
-
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("New connector definition"));
     }
 
     @Test
@@ -217,7 +228,22 @@ public class ConnectorDefinitionWizardPageTest {
         SWTBotShell activeShell = bot.activeShell();
         // ----- test widget id validity ------
         bot.button(Messages.Add).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.addWidget));
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
+        
         bot.comboBoxWithLabel(Messages.input + " *").setSelection(0);
 
         // valid text

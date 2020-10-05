@@ -49,6 +49,10 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotActorFilterExportTests {
 
+    private static final String INITIATOR_ACTORFILTER_IMPL_FILENAME = "initiator-impl-1.0.0.zip";
+
+    private static final String INITIATOR_ACTORFILTER_IMPL_LABEL = "initiator-impl (1.0.0) -- org.bonitasoft.userfilter.initiator.ProcessInitiatorUserFilter";
+
     private SWTGefBot bot = new SWTGefBot();
 
     @Rule
@@ -84,15 +88,15 @@ public class SWTBotActorFilterExportTests {
 
     @Test
     public void testBonitaActorFilterExport() throws Exception {
-        final String usermanager = "initiator-impl (1.0.0) -- org.bonitasoft.userfilter.initiator.ProcessInitiatorUserFilter";
-        final String fileName = "initiator-impl-1.0.0.zip";
+        final String usermanager = INITIATOR_ACTORFILTER_IMPL_LABEL;
+        final String fileName = INITIATOR_ACTORFILTER_IMPL_FILENAME;
         exportActorFilter(usermanager, fileName, true, false);
     }
 
     @Test
     public void testRewriteBonitaActorFilterExport() throws Exception {
-        final String usermanager = "initiator-impl (1.0.0) -- org.bonitasoft.userfilter.initiator.ProcessInitiatorUserFilter";
-        final String fileName = "initiator-impl-1.0.0.zip";
+        final String usermanager = INITIATOR_ACTORFILTER_IMPL_LABEL;
+        final String fileName = INITIATOR_ACTORFILTER_IMPL_FILENAME;
         exportActorFilter(usermanager, fileName, true, false);
         exportActorFilter(usermanager, fileName, true, false);
     }
