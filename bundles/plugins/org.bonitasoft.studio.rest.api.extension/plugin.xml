@@ -521,6 +521,27 @@
                pattern="*/node_modules/*">
          </ignore>
       </extension>
+      <extension
+            id="org.eclipse.wst.xml.core.xml.exclusion"
+            point="org.eclipse.wst.validation.exclude">
+         <validator
+               id="org.eclipse.wst.xml.core.xml">
+            <exclude>
+               <rules>
+                  <file
+                        caseSensitive="true"
+                        name="restAPIExtensions"
+                        type="folder">
+                  </file>
+                  <file
+                   		caseSensitive="true"
+                        name="themes"
+                        type="folder">
+                  </file>
+               </rules>
+            </exclude>
+         </validator>
+      </extension>
    
 
 </plugin>
