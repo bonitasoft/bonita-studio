@@ -16,7 +16,7 @@ public class RestAPIExtensionArchetype {
 
     public static final String ARTIFACT_ID = "bonita-rest-api-extension-archetype";
     public static final String GROUP_ID = "org.bonitasoft.archetypes";
-    public static String VERSION = "1.3.0";
+    public static String VERSION = "1.3.1";
     public static final  Archetype INSTANCE = new Archetype();
 
     static {
