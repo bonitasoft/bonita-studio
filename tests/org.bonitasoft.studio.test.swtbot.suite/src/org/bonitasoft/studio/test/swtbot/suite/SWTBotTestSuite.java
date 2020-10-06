@@ -87,6 +87,7 @@ import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
+import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerRestApiIT;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
@@ -107,6 +108,7 @@ import org.junit.runners.Suite;
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
         ProjectExplorerConnectorIT.class,
+        ProjectExplorerRestApiIT.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,

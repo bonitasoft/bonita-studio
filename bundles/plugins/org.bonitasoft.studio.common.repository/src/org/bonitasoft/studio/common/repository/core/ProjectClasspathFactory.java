@@ -64,6 +64,7 @@ public class ProjectClasspathFactory {
         options.put(CompilerOptions.OPTION_TargetPlatform, javaVersion);
         options.put(CompilerOptions.OPTION_Source, javaVersion);
         options.put(CompilerOptions.OPTION_Compliance, javaVersion);
+        options.put(CompilerOptions.OPTION_ReportMissingSerialVersion, CompilerOptions.IGNORE);
         JavaCore.setOptions(options);
     }
 

@@ -26,7 +26,7 @@ public class ProductVersion {
     //OEM Variable to be use for redirect urls
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = manifestVersion();
+    public static final String CURRENT_VERSION = manifestVersion(true);
     public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
     public static final String CURRENT_YEAR = "2020";
@@ -35,17 +35,28 @@ public class ProductVersion {
         return CURRENT_VERSION.equals(version);
     }
 
-    private static String manifestVersion() {
+    private static String manifestVersion(boolean stripQualifier) {
         Bundle bundle = FrameworkUtil.getBundle(ProductVersion.class);
         if (bundle == null) {
             String implementationVersion = ProductVersion.class.getPackage().getImplementationVersion();
             if (implementationVersion == null) {
                 return "7.6.0";//fake version used in unit test
             }
-            return stripSnaphot(implementationVersion);
+            return stripQualifier ? stripSnaphot(implementationVersion) : implementationVersion;
         }
         Version version = bundle.getVersion();
-        return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro());
+        return stripQualifier ? 
+                String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro())
+                :  convertQualifierToMavenFormat(version);
+    }
+
+    private static String convertQualifierToMavenFormat(Version version) {
+        return hasTimestampQualifier(version) ? String.format("%s.%s.%s-SNAPSHOT", version.getMajor(), version.getMinor(), version.getMicro()) : version.toString();
+    }
+
+   static boolean hasTimestampQualifier(Version version) {
+        String qualifier = version.getQualifier();
+        return qualifier != null && !qualifier.isEmpty() && (qualifier.matches("[0-9].*$") || "qualifier".equals(qualifier));
     }
 
     private static String stripSnaphot(String version) {
@@ -120,5 +131,8 @@ public class ProductVersion {
 
     public static String toMinorVersionString(Version version) {
         return String.format("%s.%s", version.getMajor(), version.getMinor());
+    }
+    public static String mavenVersion() {
+        return manifestVersion(false);
     }
 }

@@ -70,6 +70,7 @@
         <module>org.bonitasoft.studio.pics.bonitasoft</module>
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
+        <module>org.bonitasoft.studio.rest.api.extension</module>
         <module>org.bonitasoft.studio.sap.dependency</module>
         <module>org.bonitasoft.studio.sap.mock</module>
         <module>org.bonitasoft.studio.scripting</module>
