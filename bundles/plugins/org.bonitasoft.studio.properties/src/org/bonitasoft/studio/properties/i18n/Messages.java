@@ -479,6 +479,14 @@ public class Messages extends NLS {
     public static String maxVersionLength;
     public static String technicalNameTooltip;
     public static String maxDisplayNameLength;
+    
+    public static String searchIndexTypeLabel;
+    public static String indexName;
+    public static String indexValue;
+    public static String indexSearchDescription;
+    public static String updatingSearchIndexReferences;
+    public static String searchIndexUnicityError;
+
 
     static {
         // initialize resource bundle

@@ -32,10 +32,6 @@ public class EngineProcessBuilder extends AbstractProcessBuilder {
         builder = processBuilder;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.model.process.util.ProcessSwitch#casePool(org.bonitasoft.studio.model.process.Pool)
-     */
     @Override
     public Element casePool(final Pool pool) {
         if (pool.getDisplayName() != null) {
@@ -45,6 +41,7 @@ public class EngineProcessBuilder extends AbstractProcessBuilder {
         addActors(builder, pool);
         addData(builder, pool);
         addParameters(builder, pool);
+        addSearchIndex(builder, pool);
         addConnector(builder, pool);
         addKPIBinding(builder, pool);
         addContract(builder, pool);

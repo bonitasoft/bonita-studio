@@ -69,6 +69,12 @@ public class BotExpressionEditorDialog extends BotDialog {
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
         return new BotContractInputExpressionEditor(bot, this);
     }
+    
+    public BotParameterExpressionEditor selectParameterTab() {
+        bot.tableWithLabel(Messages.expressionTypeLabel).select("Parameter");
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
+        return new BotParameterExpressionEditor(bot, this);
+    }
 
     public BotTableWidget listAvailableTypes() {
         return new BotTableWidget(bot.tableWithLabel(Messages.expressionTypeLabel));
