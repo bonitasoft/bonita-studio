@@ -270,6 +270,20 @@
 		              tab="tab.throwMessage"
 		              viewID="org.bonitasoft.studio.views.properties.process.general">
         </propertySection>
+         <propertySection
+              class="org.bonitasoft.studio.properties.sections.index.IndexSection"
+              enablesFor="1"
+              filter="org.bonitasoft.studio.properties.sections.index.IndexFilter"
+              id="IndexSection"
+              tab="tab.index"
+              viewID="org.bonitasoft.studio.views.properties.process.general">
+        </propertySection>
       </propertySections>
    </extension>
+ <extension
+       point="org.bonitasoft.studio.expression.expressionProvider">
+    <expressionProvider
+          providerClass="org.bonitasoft.studio.properties.sections.index.SearchIndexExpressionProvider">
+    </expressionProvider>
+ </extension>
 </plugin>

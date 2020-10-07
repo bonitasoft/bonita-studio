@@ -48,6 +48,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 
@@ -89,6 +90,20 @@ public abstract class AbstractProcessBuilder extends ProcessSwitch<Element> {
         for (final Parameter p : process.getParameters()) {
             final String description = p.getDescription();
             builder.addParameter(p.getName(), p.getTypeClassname()).addDescription(description == null ? "" : description);
+        }
+    }
+    
+    protected void addSearchIndex(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
+        if (process instanceof Pool) {
+            final Pool pool = (Pool) process;
+            int i = 1;
+            for (final SearchIndex searchIndex : pool.getSearchIndexes()) {
+                final Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
+                if (searchIndex.getName().getContent() != null && !searchIndex.getName().getContent().isEmpty()) {
+                    builder.setStringIndex(i, searchIndex.getName().getContent(), expr);
+                    i++;
+                }
+            }
         }
     }
 

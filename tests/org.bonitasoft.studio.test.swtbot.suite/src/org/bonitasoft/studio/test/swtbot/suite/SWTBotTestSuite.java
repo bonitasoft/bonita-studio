@@ -93,6 +93,7 @@ import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.repository.TestSeveralLocalRepositories;
+import org.bonitasoft.studio.tests.searchindex.SearchIndexesTest;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.junit.runner.RunWith;
@@ -178,6 +179,7 @@ import org.junit.runners.Suite;
         TestSForceRetrieveObject.class,
         TestSForceUpdateObject.class,
         AdvancedDBConnectorsTest.class,
+        SearchIndexesTest.class,
         ImportBosArchiveIT.class,
         TestSeveralLocalRepositories.class
 })
