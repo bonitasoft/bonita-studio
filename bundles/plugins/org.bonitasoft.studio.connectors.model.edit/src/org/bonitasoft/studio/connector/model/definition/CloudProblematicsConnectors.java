@@ -21,20 +21,11 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
 
 public class CloudProblematicsConnectors {
 
-    public static final Map<String, String> WARNING_CONNECTORS;
+    public static final Map<String, String> WARNING_CONNECTORS = new HashMap<>();
 
     static {
-        WARNING_CONNECTORS = new HashMap<>();
-
         // system script
         WARNING_CONNECTORS.put("scripting-shell", Messages.connectorScriptingShellForbidden);
-
-        // calendar
-        WARNING_CONNECTORS.put("google-calendar-v3-create-event", Messages.connectorCalendarForbidden);
-        WARNING_CONNECTORS.put("google-calendar-v3-delete-event", Messages.connectorCalendarForbidden);
-        WARNING_CONNECTORS.put("google-calendar-v3-get-event", Messages.connectorCalendarForbidden);
-        WARNING_CONNECTORS.put("google-calendar-v3-move-event", Messages.connectorCalendarForbidden);
-        WARNING_CONNECTORS.put("google-calendar-v3-update-event", Messages.connectorCalendarForbidden);
 
         // SAP
         WARNING_CONNECTORS.put("sap-jco3-callfunction", Messages.jarSapConnector);
