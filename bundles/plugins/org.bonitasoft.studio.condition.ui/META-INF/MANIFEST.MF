@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.condition.ui
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.W41
 Bundle-SymbolicName: org.bonitasoft.studio.condition.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.bonitasoft.studio.condition;visibility:=reexport,
