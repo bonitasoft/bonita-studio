@@ -102,6 +102,7 @@ import org.junit.runners.Suite;
         EngineConfigurationIT.class,
         TestFullScenario.class,
         TestSubprocess.class,
+        TestRunSearchIndex.class,
         TestConditions.class,
         TestPathSize.class,
         TestImportConnector.class,
@@ -160,7 +161,6 @@ import org.junit.runners.Suite;
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,
         ExportRestAPIExtensionProjectIT.class,
-        TestRunSearchIndex.class,
         StudioShutdownIT.class
 })
 public class IntegrationTestSuite {
