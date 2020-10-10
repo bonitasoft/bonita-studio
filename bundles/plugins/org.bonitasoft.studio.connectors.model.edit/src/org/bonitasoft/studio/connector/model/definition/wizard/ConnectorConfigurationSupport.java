@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.omg.CORBA.OMGVMCID;
 
 public class ConnectorConfigurationSupport {
 
@@ -38,6 +39,9 @@ public class ConnectorConfigurationSupport {
     }
 
     public ConnectorParameter getConnectorParameter(final String inputName, final WidgetComponent object, final Input input) {
+        if(input == null) {
+            return null;
+        }
         for (final ConnectorParameter param : connectorConfiguration.getParameters()) {
             if (param.getKey().equals(inputName)) {
                 if (param.getExpression() == null) {
