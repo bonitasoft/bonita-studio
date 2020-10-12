@@ -40,8 +40,8 @@ import org.w3c.dom.Element;
 
 public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
-    protected final static List<DOMContentProvider> CONTENT_PROVIDERS = new ArrayList<>();
-    private final static Map<String, String> VIDEO_CAMP_SERIES_ID_BY_LOCALE = new HashMap<>();
+    protected static final List<DOMContentProvider> CONTENT_PROVIDERS = new ArrayList<>();
+    private static final Map<String, String> VIDEO_CAMP_SERIES_ID_BY_LOCALE = new HashMap<>();
     private static final String LOCATION_HEADER = "Location";
 
     static {
@@ -84,6 +84,13 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
             CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("user-application-link",
                     "org.bonitasoft.studio.importer.bos.command", Messages.importUserApplication,
                     buildImportParameters("713", null)));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        try {
+            CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("admin-application-link",
+                    "org.bonitasoft.studio.importer.bos.command", Messages.importAdminApplication,
+                    buildImportParameters("720", null)));
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
