@@ -23,22 +23,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class ProblemsDialog<T> extends MessageDialog {
-
-    private TableViewerColumn tableViewerColumn;
 
     public ProblemsDialog(Shell parentShell, String dialogTitle, String dialogMessage, int dialogImageType,
             String[] dialogButtonLabels) {
@@ -52,7 +45,7 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         if (input.isEmpty()) {
             return super.createCustomArea(parent);
         }
-        if(messageLabel != null) {
+        if (messageLabel != null) {
             GridData layoutData = (GridData) messageLabel.getLayoutData();
             layoutData.verticalAlignment = SWT.CENTER;
         }
@@ -62,28 +55,14 @@ public abstract class ProblemsDialog<T> extends MessageDialog {
         problemsViewer.setContentProvider(ArrayContentProvider.getInstance());
         problemsViewer.setComparator(getComparator());
 
-        TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1, false));
-        problemsViewer.getTable().setLayout(layout);
-
-        tableViewerColumn = new TableViewerColumn(problemsViewer, SWT.NONE);
         TypedLabelProvider<T> typedLabelProvider = getTypedLabelProvider();
         Assert.isNotNull(typedLabelProvider);
-        tableViewerColumn.setLabelProvider(new LabelProviderBuilder<T>()
+        problemsViewer.setLabelProvider(new LabelProviderBuilder<T>()
                 .withTextProvider(typedLabelProvider::getText)
                 .withImageProvider(typedLabelProvider::getImage)
                 .withTooltipProvider(typedLabelProvider::getToolTipText)
                 .createColumnLabelProvider());
 
-        problemsViewer.getTable().getShell().addControlListener(new ControlAdapter() {
-            
-            @Override
-            public void controlResized(ControlEvent e) {
-                tableViewerColumn.getColumn().pack();
-            }
-            
-        });
-        
         problemsViewer.setInput(input);
         ColumnViewerToolTipSupport.enableFor(problemsViewer);
 
