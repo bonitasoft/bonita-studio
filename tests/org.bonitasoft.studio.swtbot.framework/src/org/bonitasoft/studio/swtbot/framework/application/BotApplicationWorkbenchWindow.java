@@ -29,8 +29,10 @@ import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigure
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
+import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
+import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizardBot;
 import org.bonitasoft.studio.swtbot.framework.team.BotTeamMenu;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -188,6 +190,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
+    public SelectApplicationToDeployWizardBot deployApplicationFile() {
+        waitForMainShell(bot);
+        bot.menu("Development").menu("Application Descriptors").menu("Deploy...").click();
+        return new SelectApplicationToDeployWizardBot(bot, Messages.deployExistingApplication);
+    }
+
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
         waitForMainShell(bot);
         bot.menu("Development").menu("Application Descriptors").menu("Delete...").click();
@@ -218,5 +226,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         waitForMainShell(bot);
         openMenu("Team");
         return new BotTeamMenu(bot);
+    }
+
+    public BotApplicationEditor newApplicationContainer() {
+        waitForMainShell(bot);
+        bot.menu("Development").menu("Application Descriptors").menu("New...").click();
+        bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
+        return new BotApplicationEditor(bot, bot.activeEditor());
     }
 }

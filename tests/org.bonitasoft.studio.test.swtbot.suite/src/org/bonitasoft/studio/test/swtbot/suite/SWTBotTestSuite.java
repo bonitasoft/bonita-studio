@@ -23,6 +23,8 @@ import org.bonitasoft.studio.tests.actors.ActorFilterImplementationTest;
 import org.bonitasoft.studio.tests.actors.OrganizationCreationTest;
 import org.bonitasoft.studio.tests.actors.SWTBotActorFilterExportTests;
 import org.bonitasoft.studio.tests.actors.TestOrganizationPassword;
+import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorIT;
+import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorOverviewIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
 import org.bonitasoft.studio.tests.bar.BarExporterTest;
 import org.bonitasoft.studio.tests.bar.TestMenus;
@@ -181,7 +183,9 @@ import org.junit.runners.Suite;
         AdvancedDBConnectorsTest.class,
         SearchIndexesTest.class,
         ImportBosArchiveIT.class,
-        TestSeveralLocalRepositories.class
+        TestSeveralLocalRepositories.class,
+        ApplicationDescriptorOverviewIT.class,
+        ApplicationDescriptorIT.class
 })
 public class SWTBotTestSuite {
 

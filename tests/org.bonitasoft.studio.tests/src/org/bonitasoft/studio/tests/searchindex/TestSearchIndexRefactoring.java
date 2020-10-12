@@ -47,15 +47,11 @@ import org.junit.Test;
 
 public class TestSearchIndexRefactoring {
 
-    private final String diagramName = "searchIndexRefactoringTest-1.0.bos";
-
-    private final String mainProcessName = "searchIndexRefactoringTest";
-
-    private final String searchIndex1 = "search1";
-
-    private final String searchIndex2 = "search2";
-
-    private final String newSearchIndexValue = "searchRefactored";
+    private static final String DIAGRAM_NAME = "searchIndexRefactoringTest-1.0.bos";
+    private static final String MAIN_PROCESS_NAME = "searchIndexRefactoringTest";
+    private static final String SEARCH_INDEX_1 = "search1";
+    private static final String SEARCH_INDEX_2 = "search2";
+    private static final String NEW_SEARCH_INDEX_VALUE = "searchRefactored";
 
     private final DiagramRepositoryStore store = RepositoryManager.getInstance()
             .getRepositoryStore(DiagramRepositoryStore.class);
@@ -77,20 +73,20 @@ public class TestSearchIndexRefactoring {
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
-        final URL fileURL1 = FileLocator.toFileURL(TestRunSearchIndex.class.getResource(diagramName));
+        final URL fileURL1 = FileLocator.toFileURL(TestRunSearchIndex.class.getResource(DIAGRAM_NAME));
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild("searchIndexRefactoringTest-1.0.proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();
-        assertEquals(mainProcessName, mainProcess.getName());
+        assertEquals(MAIN_PROCESS_NAME, mainProcess.getName());
         return mainProcess;
     }
 
     private Pool getPool(final MainProcess mainProcess) {
         final List<EObject> pools = ModelHelper.getAllItemsOfType(mainProcess, ProcessPackage.Literals.POOL);
-        assertEquals("only one pool is defined in the diagram" + mainProcessName, 1, pools.size());
+        assertEquals("only one pool is defined in the diagram" + MAIN_PROCESS_NAME, 1, pools.size());
         return (Pool) pools.get(0);
     }
 
@@ -121,12 +117,12 @@ public class TestSearchIndexRefactoring {
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool);
         refactorOperation.setEditingDomain(editingDomain);
         final SearchIndex copy = EcoreUtil.copy(searchIndexToRefactor);
-        copy.getName().setContent(newSearchIndexValue);
-        copy.getName().setName(newSearchIndexValue);
+        copy.getName().setContent(NEW_SEARCH_INDEX_VALUE);
+        copy.getName().setName(NEW_SEARCH_INDEX_VALUE);
         refactorOperation.addItemToRefactor(copy, searchIndexToRefactor);
         refactorOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final String newLeftOperandValue = operationUsingSearchIndex.getLeftOperand().getContent();
-        assertEquals("refactoring of " + oldName + " was not completed correctly", newSearchIndexValue, newLeftOperandValue);
+        assertEquals("refactoring of " + oldName + " was not completed correctly", NEW_SEARCH_INDEX_VALUE, newLeftOperandValue);
         assertEquals("the value of " + searchIndex2Name + " should not have changed", searchIndex2Name,
                 searchIndexes.get(1).getName().getName());
         final String leftOperandValueofOperation2 = operations.get(1).getLeftOperand().getContent();
@@ -142,14 +138,14 @@ public class TestSearchIndexRefactoring {
         final Operation operationUsingSearchIndex = operations.get(0);
         final UndoCommandHandler undoCommand = new UndoCommandHandler();
         undoCommand.execute(new ExecutionEvent());
-        assertEquals("the undo operation on search index refactoring wasn't executed correctly", searchIndex1,
+        assertEquals("the undo operation on search index refactoring wasn't executed correctly", SEARCH_INDEX_1,
                 searchIndexRefactoredToUndo.getName().getName());
-        assertEquals("the undo operation on search index references refactoring wasn't executed correctly", searchIndex1,
+        assertEquals("the undo operation on search index references refactoring wasn't executed correctly", SEARCH_INDEX_1,
                 operationUsingSearchIndex
                         .getLeftOperand().getName());
-        assertEquals("the undo operation affected other search index", searchIndex2,
+        assertEquals("the undo operation affected other search index", SEARCH_INDEX_2,
                 searchIndexNotRefactored.getName().getName());
-        assertEquals("the undo operation affected other search index in operation", searchIndex2,
+        assertEquals("the undo operation affected other search index in operation", SEARCH_INDEX_2,
                 operations.get(1).getLeftOperand().getName());
 
     }
@@ -165,7 +161,6 @@ public class TestSearchIndexRefactoring {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         removeOperation.setEditingDomain(TransactionUtil.getEditingDomain(pool));
         service.busyCursorWhile(removeOperation);
-        // assertEquals("search index was not remove correctly","",searchIndexToRemove.getName().getName());
         assertEquals("search index reference in operation was not remove correctly", "",
                 operationUsingSearchIndexToRemove.getLeftOperand().getName());
 

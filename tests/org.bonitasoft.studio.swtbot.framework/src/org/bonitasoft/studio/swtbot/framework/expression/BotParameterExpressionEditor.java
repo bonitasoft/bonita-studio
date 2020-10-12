@@ -17,8 +17,6 @@
 package org.bonitasoft.studio.swtbot.framework.expression;
 
 import org.bonitasoft.studio.swtbot.framework.exception.ReadOnlyWidgetException;
-import org.bonitasoft.studio.swtbot.framework.expression.AbstractBotExpressionEditor;
-import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 

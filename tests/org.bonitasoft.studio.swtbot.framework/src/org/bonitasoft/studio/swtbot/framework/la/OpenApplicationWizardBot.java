@@ -37,6 +37,11 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
         return this;
     }
 
+    @Override
+    public OpenApplicationWizardBot select(String... appToSelect) {
+        return (OpenApplicationWizardBot) super.select(appToSelect);
+    }
+
     /**
      * click on open
      */
@@ -47,5 +52,10 @@ public class OpenApplicationWizardBot extends SelectApplicationWizardEditorBot {
         bot.button(Messages.open).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
         bot.sleep(500); //Multipage xml editor run an asynchronous sanity check on the resource. Let him finish first.
+    }
+
+    public BotApplicationEditor open() {
+        finish();
+        return new BotApplicationEditor(bot, bot.activeEditor());
     }
 }
