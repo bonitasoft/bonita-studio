@@ -231,4 +231,18 @@
             icon="icons/applicationStore.gif">
       </image>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bonitasoft.studio.la.application.ui.editor.ApplicationEditor"
+            default="false"
+            extensions="xml"
+            icon="icons/applicationStore.gif"
+            id="org.bonitasoft.studio.la.editor"
+            name="%applicationEditor">
+         <contentTypeBinding
+               contentTypeId="org.bonitasoft.studio.la.applicationDescriptor">
+         </contentTypeBinding>
+      </editor>
+   </extension>
 </plugin>

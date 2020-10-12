@@ -22,7 +22,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -59,13 +59,13 @@ public class OpenApplicationPage implements ControlSupplier {
                 .setInput(repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class).getChildren());
 
         ColumnViewerToolTipSupport.enableFor(applicationsTableViewer);
-
-        ctx.bindList(ViewersObservables.observeMultiSelection(applicationsTableViewer), applicationFileStoreObservable);
+        ctx.bindList(ViewerProperties.multipleSelection().observe(applicationsTableViewer), applicationFileStoreObservable);
         ctx.addValidationStatusProvider(new org.eclipse.core.databinding.validation.MultiValidator() {
 
             @Override
             protected IStatus validate() {
-                return applicationFileStoreObservable.isEmpty() ? ValidationStatus.error("No selection")
+                return applicationFileStoreObservable.isEmpty()
+                        ? ValidationStatus.error("No selection")
                         : ValidationStatus.ok();
             }
         });

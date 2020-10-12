@@ -81,6 +81,7 @@ import org.bonitasoft.studio.tests.restApiExtension.CreateRestAPIExtensionProjec
 import org.bonitasoft.studio.tests.restApiExtension.ExportRestAPIExtensionProjectIT;
 import org.bonitasoft.studio.tests.restApiExtension.RestAPIExtensionMarkerResolutionIT;
 import org.bonitasoft.studio.tests.searchindex.TestRunSearchIndex;
+import org.bonitasoft.studio.tests.searchindex.TestSearchIndexRefactoring;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.tests.validation.TestTokenDispatcher;
@@ -103,6 +104,7 @@ import org.junit.runners.Suite;
         TestFullScenario.class,
         TestSubprocess.class,
         TestRunSearchIndex.class,
+        TestSearchIndexRefactoring.class,
         TestConditions.class,
         TestPathSize.class,
         TestImportConnector.class,

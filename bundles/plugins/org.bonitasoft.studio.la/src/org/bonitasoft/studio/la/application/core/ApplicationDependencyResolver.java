@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -29,28 +31,33 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.DependencyResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
+import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
+import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
-public class DefaultApplicationDependencyResolver implements DependencyResolver<ApplicationFileStore> {
-    
+public class ApplicationDependencyResolver implements DependencyResolver<ApplicationFileStore> {
+
     @PostConstruct
     public void inject(IEclipseContext context) {
-        if(!context.containsKey(DependencyResolver.class)) {
+        if (!context.containsKey(DependencyResolver.class)) {
             context.set(DependencyResolver.class, this);
         }
     }
-    
+
     @Override
     public List<IRepositoryFileStore<?>> findDependencies(ApplicationFileStore fStore) {
         List<IRepositoryFileStore<?>> result = new ArrayList<>();
         try {
             WebPageRepositoryStore webStore = fStore.getRepository().getRepositoryStore(WebPageRepositoryStore.class);
+            ThemeRepositoryStore themeRepositoryStore = fStore.getRepository()
+                    .getRepositoryStore(ThemeRepositoryStore.class);
             ApplicationNodeContainer applicationNodeContainer = fStore.getContent();
             //Application Pages
             result.addAll(findPageDependencies(webStore, applicationNodeContainer));
-            
+
             //Layout
             applicationNodeContainer
                     .getApplications()
@@ -60,6 +67,16 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
                     .map(customPage -> webStore.findByPageId(customPage).orElse(null))
                     .filter(Objects::nonNull)
                     .forEach(result::add);
+
+            //Theme
+            applicationNodeContainer
+                    .getApplications()
+                    .stream()
+                    .map(ApplicationNode::getTheme)
+                    .map(theme -> themeRepositoryStore.findTheme(theme).orElse(null))
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .forEach(result::add);
         } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(e);
         }
@@ -68,7 +85,7 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
 
     protected List<IRepositoryFileStore<?>> findPageDependencies(WebPageRepositoryStore webStore,
             ApplicationNodeContainer applicationNodeContainer) {
-       return applicationNodeContainer
+        List<IRepositoryFileStore<?>> pageDependencies = applicationNodeContainer
                 .getApplications()
                 .stream()
                 .map(ApplicationNode::getApplicationPages)
@@ -78,6 +95,28 @@ public class DefaultApplicationDependencyResolver implements DependencyResolver<
                 .map(customPage -> webStore.findByPageId(customPage).orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        List<IRepositoryFileStore<?>> restApiDependencies = pageDependencies.stream()
+                .filter(WebPageFileStore.class::isInstance)
+                .map(WebPageFileStore.class::cast)
+                .flatMap(page -> findRestAPIDependencies(page,
+                        page.getRepository().getRepositoryStore(RestAPIExtensionRepositoryStore.class)))
+                .collect(Collectors.toList());
+        pageDependencies.addAll(restApiDependencies);
+
+        return pageDependencies;
+    }
+
+    protected Stream<IRepositoryFileStore<?>> findRestAPIDependencies(WebPageFileStore page,
+            RestAPIExtensionRepositoryStore restApiStore) {
+        if (page instanceof WebPageFileStore) {
+            Collection<String> extensionResources = page.getPageResources();
+            return extensionResources.stream()
+                    .map(resource -> restApiStore.findByRestResource(resource))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get);
+        }
+        return Stream.empty();
     }
 
 }

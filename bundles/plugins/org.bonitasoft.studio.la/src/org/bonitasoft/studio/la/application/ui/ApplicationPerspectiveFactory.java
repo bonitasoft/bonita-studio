@@ -17,10 +17,10 @@ package org.bonitasoft.studio.la.application.ui;
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.la.application.ui.editor.ApplicationEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
@@ -36,7 +36,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
         leftFolder.addView(IPageLayout.ID_OUTLINE);
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
         bottomLeft.addView(PROBLEM_VIEW_ID);
-        
+
         final IFolderLayout bottomfolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.7f, editorArea); //$NON-NLS-1$
         if (RepositoryManager.getInstance().getCurrentRepository().isShared("org.eclipse.egit.core.GitProvider")) {
             bottomfolder.addView("org.eclipse.egit.ui.StagingView");
@@ -46,7 +46,7 @@ public class ApplicationPerspectiveFactory extends AbstractPerspectiveFactory {
 
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return part instanceof XMLMultiPageEditorPart;
+        return part instanceof ApplicationEditor;
     }
 
     @Override
