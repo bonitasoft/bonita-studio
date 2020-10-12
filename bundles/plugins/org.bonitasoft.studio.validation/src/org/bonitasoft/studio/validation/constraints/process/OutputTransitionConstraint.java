@@ -25,6 +25,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Baptiste Mesta
@@ -36,9 +37,9 @@ public class OutputTransitionConstraint extends AbstractLiveValidationMarkerCons
         final EObject eObj = ctx.getTarget();
         if (eObj instanceof SourceElement) {
             final SourceElement sourceElement = (SourceElement) eObj;
-            final Set<SequenceFlow> flowWithConditions = new HashSet<SequenceFlow>();
-            final Set<SequenceFlow> flowWithoutConditions = new HashSet<SequenceFlow>();
-            final Set<SequenceFlow> flowWithDefaultConditions = new HashSet<SequenceFlow>();
+            final Set<SequenceFlow> flowWithConditions = new HashSet<>();
+            final Set<SequenceFlow> flowWithoutConditions = new HashSet<>();
+            final Set<SequenceFlow> flowWithDefaultConditions = new HashSet<>();
             for (final Connection c : sourceElement.getOutgoing()) {
                 if (c instanceof SequenceFlow) {
                     if (((SequenceFlow) c).isIsDefault()) {
@@ -50,15 +51,14 @@ public class OutputTransitionConstraint extends AbstractLiveValidationMarkerCons
                     }
                 }
             }
-            if (!flowWithConditions.isEmpty()) {
-                if (flowWithDefaultConditions.isEmpty()) {
-                    return ctx.createFailureStatus(Messages.bind(Messages.missingDefaultSequenceFlow, sourceElement.getName()));
-                }
+            if (!flowWithConditions.isEmpty() && flowWithoutConditions.isEmpty() && flowWithDefaultConditions.isEmpty()) {
+                return ctx.createFailureStatus(NLS.bind(Messages.missingDefaultSequenceFlow, sourceElement.getName()));
             }
         }
 
         return ctx.createSuccessStatus();
     }
+
 
     @Override
     protected String getConstraintId() {
