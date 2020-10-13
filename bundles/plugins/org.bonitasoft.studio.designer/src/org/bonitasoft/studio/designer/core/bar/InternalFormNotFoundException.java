@@ -27,7 +27,7 @@ public class InternalFormNotFoundException extends FormMappingException {
         if(formId() != null) {
             return String.format("UIDesigner form with id '%s' has not been found for '%s' %s.", formId(), containerName(), containerType());
         }
-        return String.format("No UIDesigner form  is undefined on '%s' %s.", formId(), containerName(), containerType());
+        return String.format("No UIDesigner form is defined on '%s' %s.", containerName(), containerType());
     }
 
 }

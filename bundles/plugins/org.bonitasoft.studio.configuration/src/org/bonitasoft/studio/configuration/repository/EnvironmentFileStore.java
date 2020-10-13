@@ -99,4 +99,5 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
         }
         return styledString;
     }
+    
 }
