@@ -998,4 +998,25 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.bonitasoft.studio.sqlbuilder.ex"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.connector.wizard.uipath"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.datatools"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

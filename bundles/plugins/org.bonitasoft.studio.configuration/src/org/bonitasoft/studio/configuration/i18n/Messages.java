@@ -76,4 +76,18 @@ public class Messages extends NLS {
     public static String javaDependencies;
     public static String javaDependenciesConfigurationDescription;
     public static String unknownUser;
+    public static String environments;
+    public static String qualificationEnvironmentDescription;
+    public static String prodEnvironmentDescription;
+    public static String environmentTitle;
+    public static String environmentDesc;
+    public static String name;
+    public static String descripiton;
+    public static String localEnvironmentDesc;
+    public static String newEnvironmentLabel;
+    public static String emptyName;
+    public static String alreadyExists;
+    public static String defaultEnvName;
+    public static String manageEnvironmentTitle;
+    public static String activeConfiguration;
 }

@@ -8,8 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.tests.connectors;
 
-import java.io.UnsupportedEncodingException;
-
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
@@ -79,7 +77,7 @@ public class AdvancedDBConnectorsTest {
     }
 
     protected void createConnectorWithQueryUsingData(final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow,
-            final BotProcessDiagramPerspective diagramPerspective) throws UnsupportedEncodingException {
+            final BotProcessDiagramPerspective diagramPerspective) {
         final BotAddConnectorDialog connectorWizard = diagramPerspective.getDiagramPropertiesPart().selectExecutionTab()
                 .selectConnectorsInTab()
                 .addConnector();

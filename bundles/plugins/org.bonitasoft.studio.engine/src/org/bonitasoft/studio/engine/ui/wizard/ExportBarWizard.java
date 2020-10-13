@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -64,7 +65,7 @@ public class ExportBarWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IStatus status = page.finish() ;
+			IStatus status = page.finish(createExportBarOperation()) ;
 			if(status.getSeverity() == IStatus.CANCEL){
 				return false;
 			}
@@ -86,7 +87,11 @@ public class ExportBarWizard extends Wizard {
 		return false;
 	}
 
-	private boolean statusContainsError(IStatus validationStatus) {
+	protected ExportBarOperation createExportBarOperation() {
+        return new ExportBarOperation();
+    }
+
+    private boolean statusContainsError(IStatus validationStatus) {
 		if(validationStatus != null){
 			if(validationStatus.getChildren().length > 0){
 				for(IStatus s : validationStatus.getChildren()){

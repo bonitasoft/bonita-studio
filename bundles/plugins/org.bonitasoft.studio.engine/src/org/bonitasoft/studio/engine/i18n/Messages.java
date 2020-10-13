@@ -196,6 +196,8 @@ public class Messages extends NLS {
     public static String startServerNotificationTitle;
     public static String startServerCompletedNotificationTitle;
     public static String engineLazyModeNotificationLink;
+    public static String none;
+    public static String configuration;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

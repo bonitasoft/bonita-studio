@@ -47,3 +47,4 @@ Export-Package: org.bonitasoft.studio.sqlbuilder.ex,org.bonitasoft.stu
  org.bonitasoft.studio.sqlbuilder.ex.builder.viewer.provider,org.bonit
  asoft.studio.sqlbuilder.ex.util,org.bonitasoft.studio.sqlbuilder.ex.w
  izard
+Automatic-Module-Name: org.bonitasoft.studio.sqlbuilder.ex

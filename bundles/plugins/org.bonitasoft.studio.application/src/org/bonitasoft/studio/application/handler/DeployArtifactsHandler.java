@@ -102,7 +102,7 @@ public class DeployArtifactsHandler {
 
     private RepositoryModel repositoryModel;
     private List<IRepositoryFileStore<?>> defaultSelection;
-    private final static List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
+    private static final List<String> REPO_STORE_DEPLOY_ORDER = new ArrayList<>();
 
     static {
         REPO_STORE_DEPLOY_ORDER.add("organizations");
