@@ -18,7 +18,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
@@ -142,16 +141,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotConfigureDialog configure() {
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.waitUntil(Conditions
-                    .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
-            bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        } else {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
-            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        }
+        bot.waitUntil(Conditions
+                .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
+        bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         final DiagramEditor editor = (DiagramEditor) bot.activeEditor().getReference().getEditor(true);
-        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
+        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts()
+                .get(0);
         final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
         return new BotConfigureDialog(bot, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
     }

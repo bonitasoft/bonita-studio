@@ -31,7 +31,6 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -42,9 +41,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotDeployDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -125,17 +122,6 @@ public class DeployWizardIT {
 
         botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].uncheck();
         assertThat(botDeployDialog.isDefaultUserEnabled()).isTrue();
-
-        long timeout = SWTBotPreferences.TIMEOUT;
-        try {
-            SWTBotPreferences.TIMEOUT = 500;
-            bot.ccomboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions);
-            fail("Environment combo should not be visible in community edition");
-        } catch (WidgetNotFoundException e) {
-            // Environment combo should not be there in community
-        } finally {
-            SWTBotPreferences.TIMEOUT = timeout;
-        }
 
         botDeployDialog.deploy();
         assertThat(bot.button(IDialogConstants.OPEN_LABEL).isEnabled()).isTrue();

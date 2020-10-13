@@ -25,6 +25,16 @@ public class BotDeployDialog extends BotDialog {
     public BotDeployDialog(final SWTGefBot bot) {
         super(bot, Messages.selectArtifactToDeployTitle);
     }
+    
+    public BotDeployDialog selectEnvironment(String environment) {
+        bot.comboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions).setSelection(environment);
+        return this;
+    }
+
+    public String getSelectedEnvironment() {
+        return bot.comboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions).getText();
+    }
+
 
     public BotDeployDialog searchArtifacts(final String searchText) {
         bot.text(0).setText(searchText);
