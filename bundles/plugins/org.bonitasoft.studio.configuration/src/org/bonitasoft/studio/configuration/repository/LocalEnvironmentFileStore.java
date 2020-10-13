@@ -13,6 +13,8 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.environment.Environment;
 import org.bonitasoft.studio.configuration.environment.EnvironmentFactory;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * The purpose of this class is to display an element "Local.xml" in the project explorer.
@@ -43,5 +45,10 @@ public class LocalEnvironmentFileStore extends EnvironmentFileStore {
     @Override
     public String getDisplayName() {
         return ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON;
+    }
+    
+    @Override
+    public IStatus validate() {
+        return ValidationStatus.ok();
     }
 }
