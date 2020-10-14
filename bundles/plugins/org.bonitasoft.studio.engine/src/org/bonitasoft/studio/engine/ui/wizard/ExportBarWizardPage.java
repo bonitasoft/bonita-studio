@@ -422,7 +422,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 
         operation.setTargetFolder(getDetinationPath());
         if (noneButton != null && noneButton.getSelection()) {
-            operation.setConfigurationId(null);
+            operation.setConfigurationId(ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
         } else {
             operation.setConfigurationId(getConfigurationId());
         }
