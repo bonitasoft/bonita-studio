@@ -241,7 +241,7 @@ public abstract class AbstractFileStore<T>
 
     private void checkParentExists(IResource resource) {
         IContainer parent = resource.getParent();
-        if(!parent.exists() && parent instanceof IFolder) {
+        if(parent != null && !parent.exists() && parent instanceof IFolder) {
             try {
                 ((IFolder)parent).create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
