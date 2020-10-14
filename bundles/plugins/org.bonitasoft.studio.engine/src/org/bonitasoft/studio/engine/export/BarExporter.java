@@ -21,6 +21,7 @@ import static com.google.common.collect.Maps.uniqueIndex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -70,7 +71,7 @@ public class BarExporter {
     private static BarExporter INSTANCE;
     private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
-    private BarExporter() {
+    protected BarExporter() {
         extensionContextInjectionFactory = new ExtensionContextInjectionFactory();
     }
 
@@ -107,13 +108,15 @@ public class BarExporter {
         MultiStatus resourceConfigurationStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, 0, null, null);
         for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
             try {
-                resourceConfigurationStatus.addAll(resourceProvider.addResourcesForConfiguration(builder, process, configuration));
+                resourceConfigurationStatus
+                        .addAll(resourceProvider.addResourcesForConfiguration(builder, process, configuration));
             } catch (final Exception e) {
                 throw new BarCreationException("Failed to add Process resources from configuration.", e);
             }
         }
-        if(!resourceConfigurationStatus.isOK()) {
-            throw new BarCreationException("Failed to add Process resources from configuration.", resourceConfigurationStatus);
+        if (!resourceConfigurationStatus.isOK()) {
+            throw new BarCreationException("Failed to add Process resources from configuration.",
+                    resourceConfigurationStatus);
         }
 
         //Add forms resources
@@ -185,8 +188,7 @@ public class BarExporter {
 
     public Configuration getConfiguration(final AbstractProcess process, String configurationId) {
         Configuration configuration = null;
-        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(
-                ProcessConfigurationRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore processConfStore = getProcessConfigurationRepositoryStore();
         if (configurationId == null) {
             configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
                     .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
@@ -206,6 +208,8 @@ public class BarExporter {
             } catch (final ReadFileStoreException e) {
                 BonitaStudioLog.error("Failed to read process configuration", e);
             }
+        } else if (Objects.equals(configurationId, ConfigurationPreferenceConstants.NONE_CONFIGURAITON)) {
+            configuration = createEmptyConfiguration(configurationId);
         } else {
             for (final Configuration conf : process.getConfigurations()) {
                 if (configurationId.equals(conf.getName())) {
@@ -214,14 +218,27 @@ public class BarExporter {
             }
         }
 
-        //TODO Remove configuration sync when all bar artifacts will be live update friendly (connectors, dependencies, parameters...) ? 
         if (configuration == null) {
-            configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-            configuration.setName(configurationId);
-            configuration.setVersion(ModelVersion.CURRENT_VERSION);
+            configuration = createEmptyConfiguration(configurationId);
         }
+        synchronizeConfiguration(process, configuration);
+        return configuration;
+    }
+
+    protected void synchronizeConfiguration(final AbstractProcess process, Configuration configuration) {
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize();
+    }
+
+    protected ProcessConfigurationRepositoryStore getProcessConfigurationRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(
+                ProcessConfigurationRepositoryStore.class);
+    }
+
+    protected Configuration createEmptyConfiguration(String id) {
+        Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        configuration.setName(id);
+        configuration.setVersion(ModelVersion.CURRENT_VERSION);
         return configuration;
     }
 
@@ -229,7 +246,6 @@ public class BarExporter {
         return Maps.newHashMap(
                 transformValues(uniqueIndex(configuration.getParameters(), Parameter::getName), Parameter::getValue));
     }
-
 
     protected BARResourcesProvider getBARApplicationResourcesProvider() {
         BARResourcesProvider result = null;
@@ -267,7 +283,5 @@ public class BarExporter {
         }
         return res;
     }
-
-
 
 }
