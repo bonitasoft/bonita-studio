@@ -41,7 +41,9 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
@@ -219,6 +221,7 @@ public abstract class AbstractFileStore<T>
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this));
             IResource resource = getResource();
             boolean exists = resource.exists();
+            checkParentExists(resource);
             doSave(content);
             try {
                 getResource().refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -233,6 +236,17 @@ public abstract class AbstractFileStore<T>
             Display.getDefault().syncExec(
                     () -> MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
                             Messages.bind(Messages.readOnlyFileWarning, getDisplayName())));
+        }
+    }
+
+    private void checkParentExists(IResource resource) {
+        IContainer parent = resource.getParent();
+        if(!parent.exists() && parent instanceof IFolder) {
+            try {
+                ((IFolder)parent).create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
         }
     }
 
