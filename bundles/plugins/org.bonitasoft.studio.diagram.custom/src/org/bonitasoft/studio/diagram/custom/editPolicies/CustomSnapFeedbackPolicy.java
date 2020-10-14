@@ -94,7 +94,7 @@ public class CustomSnapFeedbackPolicy extends GraphicalEditPolicy {
 			Color temp = FigureUtilities.mixColors(super.getLocalBackgroundColor(), getParent().getBackgroundColor(),
 					(double) opacity / FRAMES);
 
-			if (temp.equals(localBgColor)) {
+			if (localBgColor != null && !localBgColor.isDisposed() && temp.equals(localBgColor)) {
 				/*
 				 * if it's the same than previous, just dispose the just new
 				 * created
