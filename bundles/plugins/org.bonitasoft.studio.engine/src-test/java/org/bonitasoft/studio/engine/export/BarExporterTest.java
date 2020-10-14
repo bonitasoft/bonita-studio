@@ -23,12 +23,20 @@ import static org.bonitasoft.studio.model.configuration.builders.MembershipBuild
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aBooleanParameter;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aStringParameter;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.anIntegerParameter;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor;
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping;
+import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.junit.Test;
 
 public class BarExporterTest {
@@ -43,23 +51,26 @@ public class BarExporterTest {
                 aBooleanParameter("useHTTPs", true),
                 aStringParameter("parameterNotSet", null))
                 .build());
-        
-        assertThat(parameters).contains(entry("host", "localhost"), entry("port", "8080"), entry("useHTTPs", "true"), entry("parameterNotSet", null));
+
+        assertThat(parameters).contains(entry("host", "localhost"), entry("port", "8080"), entry("useHTTPs", "true"),
+                entry("parameterNotSet", null));
     }
-    
-    
+
     @Test
     public void should_transform_actor_mappings_in_configuration_as_engine_actor_mappings() throws Exception {
         final BarExporter barExporter = BarExporter.getInstance();
 
         final ActorMapping actorMapping = barExporter.getActorMapping(aConfiguration()
-                .havingActorMapping(anActorMappingsType().havingMapping(anActorMapping().withActor("Employee").havingUsers("romain").havingGroups("/root").havingRoles("manager","dev").havingMemberships(aMembership("/root/rd","dev")))).build());
-        
+                .havingActorMapping(anActorMappingsType()
+                        .havingMapping(anActorMapping().withActor("Employee").havingUsers("romain").havingGroups("/root")
+                                .havingRoles("manager", "dev").havingMemberships(aMembership("/root/rd", "dev"))))
+                .build());
+
         final Actor employeeActor = new Actor("Employee");
         employeeActor.addUser("romain");
         employeeActor.addGroup("/root");
-        employeeActor.addRoles(Arrays.asList("manager","dev"));
-        employeeActor.addMembership("/root/rd","dev");
+        employeeActor.addRoles(Arrays.asList("manager", "dev"));
+        employeeActor.addMembership("/root/rd", "dev");
         assertThat(actorMapping.getActors()).containsExactly(employeeActor);
     }
 
@@ -72,7 +83,14 @@ public class BarExporterTest {
         assertThat(actorMapping).isEqualTo(new org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping());
     }
 
-
-
+    @Test
+    public void should_create_empty_configuration_when_confId_is_none() throws Exception {
+        BarExporter exporter = spy(BarExporter.class);
+        AbstractProcess process = mock(AbstractProcess.class);
+        doReturn(null).when(exporter).getProcessConfigurationRepositoryStore();
+        doNothing().when(exporter).synchronizeConfiguration(any(), any());
+        exporter.getConfiguration(process, ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
+        verify(exporter).createEmptyConfiguration(ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
+    }
 
 }
