@@ -90,4 +90,10 @@ public class Messages extends NLS {
     public static String defaultEnvName;
     public static String manageEnvironmentTitle;
     public static String activeConfiguration;
+    public static String missingParameterValue;
+    public static String invalidIntegerForParameter;
+    public static String invalidDoulbeForParameter;
+    public static String actorHasNoMapping;
+    public static String invalidImplementationFor;
+    public static String missingInternalFormMapping;
 }

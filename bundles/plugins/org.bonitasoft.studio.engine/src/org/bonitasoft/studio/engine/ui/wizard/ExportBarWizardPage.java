@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -101,6 +102,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     private CheckboxTreeViewer viewer;
 
     private Button noneButton;
+
+    private Button configButton;
 
     protected ExportBarWizardPage() {
         super(ExportBarWizardPage.class.getName());
@@ -241,9 +244,11 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
 
-        noneButton = new Button(radioComposite, SWT.RADIO);
-        noneButton.setText(Messages.none);
-        final Button configButton = new Button(radioComposite, SWT.RADIO);
+        if (barWithoutConfigIsSupported()) {
+            noneButton = new Button(radioComposite, SWT.RADIO);
+            noneButton.setText(Messages.none);
+            configButton = new Button(radioComposite, SWT.RADIO);
+        }
 
         final ComboViewer configurationCombo = new ComboViewer(radioComposite, SWT.READ_ONLY | SWT.BORDER);
         configurationCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -251,26 +256,32 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         configurationCombo.setLabelProvider(new LabelProvider());
         configurationCombo.setInput(new Object());
         configurationCombo.getCombo().setEnabled(true);
-        configButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                configurationCombo.getCombo().setEnabled(configButton.getSelection());
-            }
-        });
-
-        noneButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                configurationCombo.getCombo().setEnabled(configButton.getSelection());
-            }
-        });
-        noneButton.setSelection(false);
 
         dbc.bindValue(ViewersObservables.observeSingleSelection(configurationCombo),
                 PojoProperties.value(ExportBarWizardPage.class, "configurationId").observe(this));
-        configButton.setSelection(true);
+
+        if (barWithoutConfigIsSupported()) {
+            configButton.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    configurationCombo.getCombo().setEnabled(configButton.getSelection());
+                }
+            });
+            noneButton.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    configurationCombo.getCombo().setEnabled(configButton.getSelection());
+                }
+            });
+            noneButton.setSelection(false);
+            configButton.setSelection(true);
+        }
+    }
+
+    private boolean barWithoutConfigIsSupported() {
+        return !PlatformUtil.isACommunityBonitaProduct();
     }
 
     protected void createDestination(final Composite group) {
@@ -441,6 +452,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         return operation.getStatus();
     }
 
+ 
+
     /**
      *
      */
@@ -452,7 +465,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
             final StringBuilder report = new StringBuilder("");
             final List<String> alreadyInReport = new ArrayList<>(selectedList.size());
             for (final IStatus s : status.getChildren()) {
-                if(s.getMessage() != null && s.getMessage().indexOf(":") != -1) {
+                if (s.getMessage() != null && s.getMessage().indexOf(":") != -1) {
                     final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
                     if (!alreadyInReport.contains(fileName)) {
                         report.append(fileName);
@@ -462,7 +475,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
                 }
             }
             if (!FileActionDialog.getDisablePopup()) {
-                String generalMessage = status.getSeverity() == IStatus.ERROR ? Messages.errorValidationInDiagramToExport
+                String generalMessage = status.getSeverity() == IStatus.ERROR
+                        ? Messages.errorValidationInDiagramToExport
                         : Messages.warningValidationInDiagramToExport;
                 String errorMessage = String.format("%s\n%s%s", generalMessage, report,
                         Messages.errorValidationContinueAnywayMessage);

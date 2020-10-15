@@ -34,7 +34,8 @@ public class ActorMappingsTypeBuilder implements Buildable<ActorMappingsType> {
         return new ActorMappingsTypeBuilder(ActorMappingFactory.eINSTANCE.createActorMappingsType());
     }
 
-    public ActorMappingsTypeBuilder havingMapping(final Buildable<? extends ActorMapping>... mappings) {
+    @SafeVarargs
+    public final ActorMappingsTypeBuilder havingMapping(final Buildable<? extends ActorMapping>... mappings) {
         for (final Buildable<? extends ActorMapping> mapping : mappings) {
             actorMappingsType.getActorMapping().add(mapping.build());
         }

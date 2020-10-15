@@ -66,6 +66,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -274,11 +275,11 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                 final String implementationId = association.getImplementationId();
                 final String implementationVersion = association.getImplementationVersion();
                 if(implementationId == null || implementationVersion == null){
-                    return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId()) ;
+                    return NLS.bind(Messages.invalidImplementationFor, association.getDefinitionId()) ;
                 }
                 final ConnectorImplementation impl = getImplStore().getImplementation(implementationId,implementationVersion) ;
                 if(impl == null){
-                    return Messages.bind(Messages.implementationNotFound, implementationId +" ("+implementationVersion+")") ;
+                    return NLS.bind(Messages.implementationNotFound, implementationId +" ("+implementationVersion+")") ;
                 }
 
             }
