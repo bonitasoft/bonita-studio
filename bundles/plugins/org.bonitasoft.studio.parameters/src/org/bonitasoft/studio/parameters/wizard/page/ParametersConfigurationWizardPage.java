@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.parameters.wizard.page;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.configuration.ConfigurationValidator;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -27,7 +28,6 @@ import org.bonitasoft.studio.parameters.property.section.provider.ParameterTypeL
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -59,6 +59,7 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
     private ParameterValueEditingSupport valueEditingSupport;
     private AbstractProcess process;
     private Configuration configuration;
+    private ConfigurationValidator configurationValidator;
 
     public ParametersConfigurationWizardPage() {
         super(ParametersConfigurationWizardPage.class.getName());
@@ -131,7 +132,7 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
         final TableViewerColumn columnValueViewer = new TableViewerColumn(parameterTableViewer, SWT.NONE);
         columnValueViewer.setLabelProvider(new LabelProviderBuilder<Parameter>()
                 .withTextProvider(Parameter::getValue)
-                .withStatusProvider(this::validateParameter)
+                .withStatusProvider(p -> configurationValidator.validateParameter(p, false))
                 .createColumnLabelProvider());
         valueEditingSupport = new ParameterValueEditingSupport(columnValueViewer.getViewer(), this);
 
@@ -150,6 +151,7 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
     public void updatePage(final AbstractProcess process, final Configuration configuration) {
         this.process = process;
         this.configuration = configuration;
+        configurationValidator = new ConfigurationValidator(process);
         if (process != null && configuration != null && parameterTableViewer != null
                 && !parameterTableViewer.getTable().isDisposed()) {
             parameterTableViewer.setInput(configuration.getParameters());
@@ -194,37 +196,17 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
 
     @Override
     public String isConfigurationPageValid(final Configuration configuration) {
-        if (configuration != null) {
-            for (final Parameter p : configuration.getParameters()) {
-                IStatus status = validateParameter(p);
-                if (!status.isOK()) {
-                    return status.getMessage();
+        if (configuration != null && configurationValidator != null) {
+            IStatus status = configurationValidator.validateParameters(configuration, false);
+            for (final IStatus s : status.getChildren()) {
+                if (!s.isOK()) {
+                    return s.getMessage();
                 }
             }
         }
         return null;
     }
 
-    private IStatus validateParameter(Parameter p) {
-        final String input = p.getValue();
-        final String typeName = p.getTypeClassname();
-        if (input == null || input.isEmpty()) {
-            return ValidationStatus.warning(Messages.bind(Messages.missingParameterValue, p.getName()));
-        } else if (typeName.equals(Integer.class.getName())) {
-            try {
-                Integer.parseInt(input);
-            } catch (final NumberFormatException e) {
-                return ValidationStatus.error(Messages.bind(Messages.invalidIntegerForParameter, p.getName()));
-            }
-        } else if (typeName.equals(Double.class.getName())) {
-            try {
-                Double.parseDouble(input);
-            } catch (final NumberFormatException e) {
-                return ValidationStatus.error(Messages.bind(Messages.invalidDoulbeForParameter, p.getName()));
-            }
-        }
-        return ValidationStatus.ok();
-    }
 
     @Override
     public Image getConfigurationImage() {

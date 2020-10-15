@@ -198,6 +198,7 @@ public class Messages extends NLS {
     public static String engineLazyModeNotificationLink;
     public static String none;
     public static String configuration;
+    public static String invalidConfigurationForEnv;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

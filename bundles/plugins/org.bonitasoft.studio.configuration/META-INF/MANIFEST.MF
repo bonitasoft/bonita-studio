@@ -42,3 +42,4 @@ Export-Package: org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.configuration.preferences,
  org.bonitasoft.studio.configuration.repository,
  org.bonitasoft.studio.configuration.ui.handler
+Import-Package: org.bonitasoft.engine.form
