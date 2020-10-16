@@ -297,7 +297,7 @@
 			</activation>
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
-				<jre.url>http://artifacts.rd.lan/tools/studio-tools</jre.url>
+				<jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
 				<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.7_10</jre.winx86.x64.url>
 				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.7_10</jre.linuxx86.x64.url>
 				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.7_10</jre.osx.url>
