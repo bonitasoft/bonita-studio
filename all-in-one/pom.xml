@@ -298,10 +298,10 @@
 			<properties>
 				<if.task>net.sf.antcontrib.logic.IfTask</if.task>
 				<jre.url>http://artifacts.rd.lan/tools/studio-tools</jre.url>
-				<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.7_10</jre.winx86.x64.url>
-				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.7_10</jre.linuxx86.x64.url>
-				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.7_10</jre.osx.url>
-				<jre.folder.name>jdk-11.0.7+10-jre</jre.folder.name>
+				<jre.winx86.x64.url>OpenJDK11U-jre_x64_windows_hotspot_11.0.2_9</jre.winx86.x64.url>
+				<jre.linuxx86.x64.url>OpenJDK11U-jre_x64_linux_hotspot_11.0.2_9</jre.linuxx86.x64.url>
+				<jre.osx.url>OpenJDK11U-jre_x64_mac_hotspot_11.0.2_9</jre.osx.url>
+				<jre.folder.name>jdk-11.0.2+9-jre</jre.folder.name>
 			</properties>
 			<build>
 				<plugins>
