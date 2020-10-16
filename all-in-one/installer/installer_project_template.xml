@@ -286,60 +286,6 @@
                 </platformTest>
             </conditionRuleList>
         </if>
-        <createDirectory>
-            <path>${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre</path>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </createDirectory>
-        <runProgram>
-            <program>tar</program>
-            <programArguments>-xzf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/@jre.osx.archive.name@" -C "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre"</programArguments>
-            <progressText>Installing JRE...</progressText>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-        <runProgram>
-            <program>mkdir</program>
-            <programArguments>-p "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-        <runProgram>
-            <program>mv</program>
-            <programArguments>"${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/@jre.folder.name@/Contents/" "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/"</programArguments>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-         <runProgram>
-            <program>rm</program>
-            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/@jre.folder.name@"</programArguments>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
-        <runProgram>
-            <program>rm</program>
-            <programArguments>-rf "${installdir}/@mac.shortcut.name@/Contents/Eclipse/@jre.osx.archive.name@"</programArguments>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
         <substitute>
             <encoding>utf-8</encoding>
             <files>${installdir}/@mac.shortcut.name@/Contents/Eclipse/@product.short.name@.ini</files>
