@@ -15143,5 +15143,8 @@
   <releases xmi:id="_By8VUAo2Eeuyz_cP-Eh7FA" date="2020-10-09T11:25:27.494+0200" label="7.12.0-003">
     <changes xsi:type="history:MigrationChange" xmi:id="_By8VUQo2Eeuyz_cP-Eh7FA" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateEmailConnectorVersionTo120"/>
   </releases>
+  <releases xmi:id="_JE4CPo2IhfYz_Ev-OD6UY" date="2020-14-09T11:25:27.494+0200" label="7.12.0-004">
+    <changes xsi:type="history:MigrationChange" xmi:id="_JE4CPo2IhfYz_Ev-OD6UY" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateDeprecatedGroovyConnector"/>
+  </releases>
   <releases xmi:id="_tt2RcE8LEeq0LYHRol2p7w"/>
 </history:History>

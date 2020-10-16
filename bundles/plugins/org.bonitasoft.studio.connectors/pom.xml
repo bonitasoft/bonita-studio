@@ -25,7 +25,8 @@
 		<connector.version.google-calendar-v3>1.1.0</connector.version.google-calendar-v3>
 		<connector.version.ldap>1.2.1</connector.version.ldap>
 		<connector.version.salesforce>1.1.3</connector.version.salesforce>
-		<connector.version.scripting>1.1.0</connector.version.scripting>
+		<connector.version.shell>1.1.1</connector.version.shell>
+        <connector.version.groovy>1.1.2</connector.version.groovy>
 		<connector.version.twitter>1.2.1</connector.version.twitter>
 		<connector.version.webservice>1.3.1</connector.version.webservice>
 		<connector.version.rest>1.0.8</connector.version.rest>
@@ -132,14 +133,22 @@
 									<classifier>all</classifier>
 									<type>zip</type>
 								</artifactItem>
-								<!--SCRIPTING CONNECTORS -->
+								<!--Shell CONNECTOR -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
-									<artifactId>bonita-connector-scripting</artifactId>
-									<version>${connector.version.scripting}</version>
+									<artifactId>bonita-connector-shell-script</artifactId>
+									<version>${connector.version.shell}</version>
 									<classifier>all</classifier>
 									<type>zip</type>
 								</artifactItem>
+                                <!--Groovy CONNECTOR -->
+                                <artifactItem>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-groovy</artifactId>
+                                    <version>${connector.version.groovy}</version>
+                                    <classifier>all</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
 								<!--TWITTER CONNECTORS -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>

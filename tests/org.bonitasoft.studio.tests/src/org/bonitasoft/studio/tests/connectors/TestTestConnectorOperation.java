@@ -16,6 +16,10 @@
  */
 package org.bonitasoft.studio.tests.connectors;
 
+import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aGroovyScriptExpression;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -39,72 +43,83 @@ import org.junit.Test;
 
 public class TestTestConnectorOperation {
 
-	@Test
-	public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException{
-		TestConnectorOperation testConnectorOperation = createOperation();
-		
-		testConnectorOperation.run(new NullProgressMonitor());
-		
-		Assert.assertTrue("Test connector operation status is not ok", testConnectorOperation.getStatus().isOK());
-		Assert.assertEquals("The result is not right", "Expected Result", testConnectorOperation.getResult().values().iterator().next());
-	}
+    private static final String GROOVY_DEF_VERSION = "1.0.1";
+    private static final String GROOVY_DEF_ID = "scripting-groovy-script";
 
-	private TestConnectorOperation createOperation() throws ReadFileStoreException {
-		TestConnectorOperation testConnectorOperation = new TestConnectorOperation();
-		ConnectorConfiguration configuration = createConnectorConfiguration();
-		testConnectorOperation.setConnectorConfiguration(configuration);
-		
-		Connector connector = createConnectorOutput();
-		testConnectorOperation.setConnectorOutput(connector);
-		
-		ConnectorImplementation implementation = createConnectorImplementation();
-		testConnectorOperation.setImplementation(implementation);
-		return testConnectorOperation;
-	}
+    @Test
+    public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
+        TestConnectorOperation testConnectorOperation = createOperation();
 
-	private ConnectorImplementation createConnectorImplementation() throws ReadFileStoreException {
-		ConnectorImplRepositoryStore c = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		return c.getChild("scripting-groovy.impl", true).getContent();
-	}
+        testConnectorOperation.run(new NullProgressMonitor());
 
-	private Connector createConnectorOutput() {
-		Connector connector = ProcessFactory.eINSTANCE.createConnector();
-		connector.setDefinitionId("scripting-groovy");
-		connector.setDefinitionVersion("1.0.0");
-		connector.setName("Connector for test");
-		Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-		Operator op = ExpressionFactory.eINSTANCE.createOperator();
-		op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-		op.setExpression("=");
-		operation.setOperator(op);
-		Expression rightOperandExpression = ExpressionFactory.eINSTANCE.createExpression();
-		rightOperandExpression.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-		rightOperandExpression.setName("result");
-		rightOperandExpression.setContent("result");
-		operation.setRightOperand(rightOperandExpression);
-		Expression leftOperandExpression = ExpressionFactory.eINSTANCE.createExpression();
-		leftOperandExpression.setType(ExpressionConstants.VARIABLE_TYPE);
-		leftOperandExpression.setReturnType(String.class.getName());
-		leftOperandExpression.setName("var");
-		leftOperandExpression.setContent("var");
-		operation.setLeftOperand(leftOperandExpression);
-		connector.getOutputs().add(operation);
-		return connector;
-	}
+        Assert.assertTrue("Test connector operation status is not ok", testConnectorOperation.getStatus().isOK());
+        Assert.assertEquals("The result is not right", "Expected Result",
+                testConnectorOperation.getResult().values().iterator().next());
+    }
 
-	private ConnectorConfiguration createConnectorConfiguration() {
-		ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
-		configuration.setDefinitionId("scripting-groovy");
-		configuration.setVersion("1.0.0");
-		ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-		Expression expressionInput = ExpressionFactory.eINSTANCE.createExpression();
-		expressionInput.setType(ExpressionConstants.SCRIPT_TYPE);
-		expressionInput.setInterpreter(ExpressionConstants.GROOVY);
-		expressionInput.setContent("\"Expected Result\"");
-		parameter.setExpression(expressionInput );
-		parameter.setKey("script");
-		configuration.getParameters().add(parameter);
-		return configuration;
-	}
-	
+    private TestConnectorOperation createOperation() throws ReadFileStoreException {
+        TestConnectorOperation testConnectorOperation = new TestConnectorOperation();
+        ConnectorConfiguration configuration = createConnectorConfiguration();
+        testConnectorOperation.setConnectorConfiguration(configuration);
+
+        Connector connector = createConnectorOutput();
+        testConnectorOperation.setConnectorOutput(connector);
+
+        ConnectorImplementation implementation = createConnectorImplementation();
+        testConnectorOperation.setImplementation(implementation);
+        return testConnectorOperation;
+    }
+
+    private ConnectorImplementation createConnectorImplementation() throws ReadFileStoreException {
+        ConnectorImplRepositoryStore c = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorImplRepositoryStore.class);
+        return c.getChild(String.format("%s.impl", GROOVY_DEF_ID), true).getContent();
+    }
+
+    private Connector createConnectorOutput() {
+        Connector connector = ProcessFactory.eINSTANCE.createConnector();
+        connector.setDefinitionId(GROOVY_DEF_ID);
+        connector.setDefinitionVersion(GROOVY_DEF_VERSION);
+        connector.setName("Connector for test");
+        Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        Operator op = ExpressionFactory.eINSTANCE.createOperator();
+        op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        op.setExpression("=");
+        operation.setOperator(op);
+        Expression rightOperandExpression = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperandExpression.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        rightOperandExpression.setName("result");
+        rightOperandExpression.setContent("result");
+        operation.setRightOperand(rightOperandExpression);
+        Expression leftOperandExpression = ExpressionFactory.eINSTANCE.createExpression();
+        leftOperandExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        leftOperandExpression.setReturnType(String.class.getName());
+        leftOperandExpression.setName("var");
+        leftOperandExpression.setContent("var");
+        operation.setLeftOperand(leftOperandExpression);
+        connector.getOutputs().add(operation);
+        return connector;
+    }
+
+    private ConnectorConfiguration createConnectorConfiguration() {
+        ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        configuration.setDefinitionId(GROOVY_DEF_ID);
+        configuration.setVersion(GROOVY_DEF_VERSION);
+        ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
+        Expression expressionInput = ExpressionFactory.eINSTANCE.createExpression();
+        expressionInput.setType(ExpressionConstants.SCRIPT_TYPE);
+        expressionInput.setInterpreter(ExpressionConstants.GROOVY);
+        expressionInput.setContent("\"Expected Result\"");
+        parameter.setExpression(expressionInput);
+        parameter.setKey("script");
+        configuration.getParameters().add(parameter);
+
+        configuration.getParameters().add(aConnectorParameter().withKey("variables").havingExpression(
+                aConstantExpression().withName("").withContent("")).build());
+        configuration.getParameters().add(aConnectorParameter().withKey("fakeScriptExpression").havingExpression(
+                aGroovyScriptExpression().withName("scriptName").withContent("return \"Expected Result\";")).build());
+
+        return configuration;
+    }
+
 }
