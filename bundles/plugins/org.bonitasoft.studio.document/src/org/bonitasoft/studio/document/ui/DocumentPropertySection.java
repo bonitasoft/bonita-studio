@@ -31,7 +31,6 @@ import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.dialog.DocumentWizardDialog;
 import org.bonitasoft.studio.document.ui.wizard.DocumentWizard;
 import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -50,27 +49,20 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * @author Aurelien Pupier
@@ -78,7 +70,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 public class DocumentPropertySection extends AbstractBonitaDescriptionSection
         implements ISelectionChangedListener, IDoubleClickListener {
 
-    private ListViewer documentListViewer;
+    private TableViewer documentViewer;
     private EMFDataBindingContext emfDataBindingContext;
     private Button removeButton;
     private Button editButton;
@@ -89,52 +81,22 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
 
     protected void createMainComposite(final Composite mainComposite) {
         final Composite masterComposite = getWidgetFactory().createComposite(mainComposite);
-        masterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        masterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
         masterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        getWidgetFactory().createLabel(masterComposite, "");// filler
-        final Text documentListFilter = getWidgetFactory().createText(
-                masterComposite, "",
-                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL));
-        documentListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        documentListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
-        documentListFilter.addModifyListener(new ModifyListener() {
-
-            private ViewerFilter filter;
-
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                final String textForFiltering = documentListFilter.getText();
-                if (filter != null) {
-                    documentListViewer.removeFilter(filter);
-                }
-                if (textForFiltering != null && !textForFiltering.isEmpty()) {
-                    filter = new ViewerFilter() {
-
-                        @Override
-                        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                            return ((Element) element).getName().contains(textForFiltering);
-                        }
-                    };
-                    documentListViewer.addFilter(filter);
-                }
-
-            }
-        });
-
         createButtons(masterComposite);
-        documentListViewer = createList(masterComposite);
+        documentViewer = createList(masterComposite);
     }
 
-    private ListViewer createList(final Composite mainComposite) {
-        final List list = getWidgetFactory().createList(mainComposite,
-                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
-        list.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final ListViewer documentListViewer = new ListViewer(list);
-        documentListViewer.setLabelProvider(new ElementForIdLabelProvider());
-        documentListViewer.setContentProvider(new ObservableListContentProvider());
-        documentListViewer.addDoubleClickListener(this);
-        documentListViewer.addSelectionChangedListener(this);
-        documentListViewer.getList().addKeyListener(new KeyAdapter() {
+    private TableViewer createList(final Composite mainComposite) {
+        
+        TableViewer viewer = new TableViewer(getWidgetFactory().createTable(mainComposite,
+                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS)));
+        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
+        viewer.setLabelProvider(new ElementForIdLabelProvider());
+        viewer.setContentProvider(new ObservableListContentProvider<Document>());
+        viewer.addDoubleClickListener(this);
+        viewer.addSelectionChangedListener(this);
+        viewer.getTable().addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -145,7 +107,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
             }
         });
 
-        return documentListViewer;
+        return viewer;
     }
 
     private void createButtons(final Composite mainComposite) {
@@ -165,7 +127,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                editDocumentAction(documentListViewer.getSelection());
+                editDocumentAction(documentViewer.getSelection());
             }
         });
 
@@ -185,7 +147,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
                 final Dialog dialog = new DocumentWizardDialog(Display.getDefault().getActiveShell(), documentWizard, true);
                 if (IDialogConstants.OK_ID == dialog.open()) {
                     final Document newDocument = documentWizard.getDocumentWorkingCopy();
-                    documentListViewer.setSelection(new StructuredSelection(newDocument));
+                    documentViewer.setSelection(new StructuredSelection(newDocument));
                 }
             }
         });
@@ -207,14 +169,14 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
 
     protected void removeDocuments() {
         final int ok = 0;
-        if (ok == openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())) {
-            final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection())
+        if (ok == openOutlineDialog((IStructuredSelection) documentViewer.getSelection())) {
+            final Iterator<Document> selection = ((IStructuredSelection) documentViewer.getSelection())
                     .iterator();
             if (selection.hasNext()) {
                 final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
                 executeDeleteReactorOperation(rdo);
-                documentListViewer.refresh();
-                documentListViewer.setSelection(new StructuredSelection());
+                documentViewer.refresh();
+                documentViewer.setSelection(new StructuredSelection());
             }
         }
     }
@@ -249,7 +211,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
     protected void bindList() {
         final IObservableList documentsListObserved = EMFEditProperties
                 .list(getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS).observe(getPool());
-        documentListViewer.setInput(documentsListObserved);
+        documentViewer.setInput(documentsListObserved);
     }
 
     protected void resetDatabindingContext() {
@@ -297,8 +259,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
             final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard,
                     IDialogConstants.OK_LABEL);
             dialog.open();
-            documentListViewer.refresh();
-            documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocumentWorkingCopy()));
+            documentViewer.refresh();
+            documentViewer.setSelection(new StructuredSelection(documentWizard.getDocumentWorkingCopy()));
         }
     }
 
@@ -313,7 +275,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
             sb.delete(sb.length() - 1, sb.length());
         }
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        final java.util.List<Object> selectionList = ((IStructuredSelection) documentListViewer.getSelection()).toList();
+        final java.util.List<Object> selectionList = ((IStructuredSelection) documentViewer.getSelection()).toList();
         final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                 removalConfirmationDialogTitle, Display
                         .getCurrent().getSystemImage(SWT.ICON_WARNING),
@@ -328,6 +290,5 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createMainComposite(mainComposite);
-        documentListViewer.getList().setFocus();
     }
 }

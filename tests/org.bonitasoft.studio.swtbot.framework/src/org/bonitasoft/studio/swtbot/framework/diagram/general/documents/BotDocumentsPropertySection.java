@@ -63,7 +63,7 @@ public class BotDocumentsPropertySection extends BotBase {
      * @param pDocumentName
      */
     public void selectDocument(final String pDocumentName) {
-        bot.list(0).select(pDocumentName);
+        bot.table(0).select(pDocumentName);
     }
 
 }
