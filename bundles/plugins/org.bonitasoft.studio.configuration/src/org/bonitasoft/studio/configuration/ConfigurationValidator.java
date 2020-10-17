@@ -18,7 +18,6 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.configuration.i18n.Messages;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -47,9 +46,6 @@ public class ConfigurationValidator implements IValidator<Configuration> {
     public IStatus validate(Configuration configuration) {
         MultiStatus status = newMultiStatus();
         status.addAll(validateParameters(configuration, true));
-        if (configuration.getActorMappings() != null) {
-            status.addAll(validateActorMappings(configuration));
-        }
         status.addAll(validateDefinitionMappings(configuration));
         status.addAll(validateFormMappings());
         return status;
@@ -104,14 +100,6 @@ public class ConfigurationValidator implements IValidator<Configuration> {
                 .collect(StatusCollectors.toMultiStatus());
     }
 
-    public IStatus validateActorMappings(Configuration configuration) {
-        return configuration.getActorMappings().getActorMapping().stream()
-                .filter(this::mappingIsEmpty)
-                .map(mapping -> ValidationStatus
-                        .error(statusMessage(NLS.bind(Messages.actorHasNoMapping, mapping.getName()), true)))
-                .collect(StatusCollectors.toMultiStatus());
-    }
-
     public IStatus validateParameters(Configuration configuration, boolean forceValue) {
         return configuration.getParameters().stream()
                 .map(parameter -> validateParameter(parameter, forceValue))
@@ -141,26 +129,6 @@ public class ConfigurationValidator implements IValidator<Configuration> {
             }
         }
         return ValidationStatus.ok();
-    }
-
-    private boolean mappingIsEmpty(final ActorMapping mapping) {
-        boolean hasGroup = false;
-        if (mapping.getGroups() != null) {
-            hasGroup = !mapping.getGroups().getGroup().isEmpty();
-        }
-        boolean hasUser = false;
-        if (mapping.getUsers() != null) {
-            hasUser = !mapping.getUsers().getUser().isEmpty();
-        }
-        boolean hasRole = false;
-        if (mapping.getRoles() != null) {
-            hasRole = !mapping.getRoles().getRole().isEmpty();
-        }
-        boolean hasMembership = false;
-        if (mapping.getMemberships() != null) {
-            hasMembership = !mapping.getMemberships().getMembership().isEmpty();
-        }
-        return !hasGroup && !hasMembership && !hasUser && !hasRole;
     }
 
     private String statusMessage(String message, boolean prependProcessName) {

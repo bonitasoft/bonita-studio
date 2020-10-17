@@ -17,14 +17,12 @@
 package org.bonitasoft.studio.configuration;
 
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
-import static org.bonitasoft.studio.model.configuration.builders.ActorMappingsTypeBuilder.anActorMappingsType;
 import static org.bonitasoft.studio.model.configuration.builders.ConfigurationBuilder.aConfiguration;
 import static org.bonitasoft.studio.model.configuration.builders.DefinitionMappingBuilder.aDefinitionMapping;
 import static org.bonitasoft.studio.model.parameter.builders.ParameterBuilder.aParameter;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.builders.ActorMappingBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Test;
 
@@ -146,46 +144,6 @@ public class ConfigurationValidatorTest {
                         .withName("amount")
                         .withType(Integer.class.getName())
                         .withValue("1"))
-                .build();
-        
-        // When
-        IStatus status = validator.validate(configuration);
-        
-        // Then 
-        assertThat(status).isOK();
-    }
-    
-    @Test
-    public void should_fail_when_actor_is_not_mapped() throws Exception {
-        // Given
-        ConfigurationValidator validator = new ConfigurationValidator(aPool()
-                .withName("TestProcess")
-                .withVersion("1.0")
-                .build());
-        Configuration configuration = aConfiguration()
-                .havingActorMapping(anActorMappingsType()
-                        .havingMapping(ActorMappingBuilder.anActorMapping().withActor("Employee")))
-                .build();
-        
-        // When
-        IStatus status = validator.validate(configuration);
-        
-        // Then 
-        assertThat(status).hasSeverity(IStatus.ERROR);
-    }
-    
-    @Test
-    public void should_not_fail_when_actor_is_mapped() throws Exception {
-        // Given
-        ConfigurationValidator validator = new ConfigurationValidator(aPool()
-                .withName("TestProcess")
-                .withVersion("1.0")
-                .build());
-        Configuration configuration = aConfiguration()
-                .havingActorMapping(anActorMappingsType()
-                        .havingMapping(ActorMappingBuilder.anActorMapping()
-                                .withActor("Employee")
-                                .havingUsers("walter.bates")))
                 .build();
         
         // When
