@@ -121,16 +121,20 @@ public class RichTextEditorDocumentViewerDelegate implements IDocumentViewer {
     }
 
     public void updateExpressionContent() {
-        String text = richTextEditor.getText();
-        expressionContentObserveValue.setValue(text);
-        document.set(text);
+        if(expressionContentObserveValue != null) {
+            String text = richTextEditor.getText();
+            expressionContentObserveValue.setValue(text);
+            document.set(text);
+        }
     }
 
     @Override
     public void updateEditorContent(String text) {
-        richTextEditor.setText(text);
-        expressionContentObserveValue.setValue(text);
-        document.set(text);
+        if(expressionContentObserveValue != null) {
+            richTextEditor.setText(text);
+            expressionContentObserveValue.setValue(text);
+            document.set(text);
+        }
     }
 
     @Override
