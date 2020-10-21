@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -82,38 +81,22 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
         return null;
     }
 
-    protected void doLoad(final Resource eResource) {
+    protected void doLoad(Resource eResource) throws ReadFileStoreException {
         if (eResource != null) {
             final boolean loaded = eResource.isLoaded();
             if (!loaded) {
                 try {
                     final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
                     if (editingDomain != null) {
-                        editingDomain.runExclusive(eResourceLoader(eResource));
+                        editingDomain.getResourceSet().getResource(eResource.getURI(), true);
                     } else {
-                        eResource.load(Collections.EMPTY_MAP);
+                        eResource.load(Collections.emptyMap());
                     }
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                } catch (final IOException | RuntimeException e) {
+                    throw new ReadFileStoreException("Failed to load EMF Resource", e);
                 }
             }
         }
-    }
-
-    private Runnable eResourceLoader(final Resource resource) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    resource.load(Collections.EMPTY_MAP);
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-        };
     }
 
     @Override
@@ -126,27 +109,10 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
             BonitaStudioLog.error(e);
         }
         if (eResource != null) {
-            final Runnable deleteRunnable = new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        eResource.delete(Collections.EMPTY_MAP);
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-
-                }
-            };
-            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
-            if (editingDomain != null) {
-                try {
-                    editingDomain.runExclusive(deleteRunnable);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-            } else {
-                deleteRunnable.run();
+            try {
+                eResource.delete(Collections.emptyMap());
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
             }
         }
     }
@@ -183,10 +149,10 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
         try {
             return getLabelProvider().getText(getContent());
         } catch (ReadFileStoreException e) {
-           return getName();
+            return getName();
         }
     }
-    
+
     @Override
     public AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
         return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>>) super.getParentStore();
@@ -197,7 +163,7 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
         try {
             return getLabelProvider().getImage(getContent());
         } catch (ReadFileStoreException e) {
-           return null;
+            return null;
         }
     }
 
