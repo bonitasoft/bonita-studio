@@ -105,7 +105,8 @@ public class Well extends Composite {
         if (text != null) {
             label.setText(text);
         }
-        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .hint(parent.computeSize(SWT.DEFAULT, SWT.DEFAULT).x, SWT.DEFAULT).create());
         labelTextObservable = WidgetProperties.text().observe(label);
         labelTextObservable.addValueChangeListener(e -> {
             getParent().getParent().layout(true, true);
