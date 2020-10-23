@@ -16,9 +16,7 @@ package org.bonitasoft.studio.intro.content;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ import java.util.function.Predicate;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.intro.content.actions.ExecuteCommandContentProvider;
 import org.bonitasoft.studio.intro.i18n.Messages;
 import org.eclipse.swt.widgets.Composite;
@@ -90,7 +89,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         try {
             CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("admin-application-link",
                     "org.bonitasoft.studio.importer.bos.command", Messages.importAdminApplication,
-                    buildImportParameters("720", null)));
+                    buildImportParameters("720", productId(), null)));
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
@@ -143,10 +142,19 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
     }
 
     protected static Map<String, Object> buildImportParameters(String redirectId, String projectName)
-            throws UnsupportedEncodingException, MalformedURLException, IOException {
+            throws  IOException {
+        return buildImportParameters(redirectId, "bos", projectName);
+    }
+    
+    private static String productId() {
+        return PlatformUtil.isACommunityBonitaProduct() ? "bos" : "sp";
+    }
+
+    protected static Map<String, Object> buildImportParameters(String redirectId, String product, String projectName)
+            throws IOException {
         Map<String, Object> procurementParam = new HashMap<>();
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.file",
-                URLEncoder.encode(resolveRedirection(new URL(redirectUrl(redirectId))).toString(), "UTF-8"));
+                URLEncoder.encode(resolveRedirection(new URL(redirectUrl(redirectId, product))).toString(), "UTF-8"));
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName", projectName);
         return procurementParam;
     }
@@ -170,14 +178,20 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         }
         return false;
     }
-
+    
     public static String redirectUrl(String redirectId) {
+        return redirectUrl(redirectId, "bos");
+    }
+
+    public static String redirectUrl(String redirectId, String product) {
         return String.format(
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=bos&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
+                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
                 redirectId,
+                product,
                 ProductVersion.majorVersion(),
                 ProductVersion.maintenanceVersion());
     }
+
 
     @Override
     public void createContent(String id, Element parent) {
