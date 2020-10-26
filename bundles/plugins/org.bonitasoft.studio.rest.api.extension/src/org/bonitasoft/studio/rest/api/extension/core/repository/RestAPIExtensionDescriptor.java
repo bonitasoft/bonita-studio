@@ -18,12 +18,17 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
 import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 import com.google.common.base.Strings;
 
@@ -48,6 +53,18 @@ public class RestAPIExtensionDescriptor extends CustomPageMavenProjectDescriptor
                 if (!Strings.isNullOrEmpty(fileName)) {
                     final IPath path = Path.fromOSString(SRC_PROJECT_PATH + fileName);
                     result.add(project.getFile(path));
+                }
+                final String className = pageProperties.getProperty(name + ".className");
+                if (!Strings.isNullOrEmpty(className)) {
+                    IJavaProject javaProject = JavaCore.create(getProject());
+                    try {
+                        IType type = javaProject.findType(className);
+                        if (type != null && type.getCompilationUnit().getResource() instanceof IFile) {
+                            result.add((IFile) type.getCompilationUnit().getResource());
+                        }
+                    } catch (JavaModelException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         }
