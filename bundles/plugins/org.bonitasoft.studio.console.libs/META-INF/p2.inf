@@ -1,0 +1,7 @@
+#Processed using Jarprocessor
+jarprocessor.exclude.children = true
+instructions.install = \
+chmod(targetDir:@artifact,targetFile:tomcat/setup/setup.sh,permissions:755);
+
+instructions.install.import= \
+org.eclipse.equinox.p2.touchpoint.eclipse.chmod

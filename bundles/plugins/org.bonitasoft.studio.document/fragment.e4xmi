@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_58SxwFcCEeq3sORzKAb7gQ">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="__XHbsFcCEeq3sORzKAb7gQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_YW1ooFcDEeq3sORzKAb7gQ" elementId="org.bonitasoft.studio.document.import.command" commandName="%import"/>
+    <elements xsi:type="commands:Command" xmi:id="_0PivsFcVEeq3sORzKAb7gQ" elementId="org.bonitasoft.studio.document.manageResources.command" commandName="%manageResources"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_WJQWwFcDEeq3sORzKAb7gQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_f1hnwFcDEeq3sORzKAb7gQ" elementId="org.bonitasoft.studio.document.import.handler" contributionURI="bundleclass://org.bonitasoft.studio.document/org.bonitasoft.studio.document.handler.ImportResourceHandler" command="_YW1ooFcDEeq3sORzKAb7gQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_60GB0FcVEeq3sORzKAb7gQ" elementId="org.bonitasoft.studio.document.manageResources.handler" contributionURI="bundleclass://org.bonitasoft.studio.document/org.bonitasoft.studio.document.handler.ManageResourcesHandler" command="_0PivsFcVEeq3sORzKAb7gQ"/>
+  </fragments>
+</fragment:ModelFragments>
