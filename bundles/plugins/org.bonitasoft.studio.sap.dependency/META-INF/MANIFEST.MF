@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Sap dependency
 Bundle-SymbolicName: org.bonitasoft.studio.sap.dependency
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.W43
 Bundle-ClassPath: external:$bonita.tomcat.lib.dir$/sapjco3.jar
 Export-Package: com.sap.conn.jco,
  com.sap.conn.jco.ext
