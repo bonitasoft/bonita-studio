@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
@@ -145,6 +146,7 @@ public class GroovyUtil {
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             final ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
                     getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
+            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             result.add(scriptVariable);
         }
     }
@@ -290,7 +292,8 @@ public class GroovyUtil {
 
     public static ScriptVariable createScriptVariable(final Data d) {
         return new ScriptVariable(d.getName(),
-                org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d));
+                org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d), 
+                null, d.getDocumentation());
     }
 
     public static ScriptVariable createScriptVariable(final Output output) {
@@ -341,18 +344,18 @@ public class GroovyUtil {
     }
 
     public static ScriptVariable createScriptVariable(final Parameter p) {
-        return new ScriptVariable(p.getName(), p.getTypeClassname());
+        return new ScriptVariable(p.getName(), p.getTypeClassname(), null, p.getDescription());
     }
 
     public static ScriptVariable createScriptVariable(final Expression e, final EObject context) {
         if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(),null, Messages.multiInstanceIteratorDescription);
             scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE
                 .equals(e.getType())) {
             final ContractInput input = (ContractInput) e.getReferencedElements().get(0);
-            final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType(), null, input.getDescription());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
@@ -360,6 +363,9 @@ public class GroovyUtil {
             final ScriptVariable scriptVariable = createScriptVariable(data);
             final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
             boolean isProcessData = false;
+            String type = data instanceof BusinessObjectData
+                    ? org.bonitasoft.studio.common.ExpressionConstants.BUSINESS_DATA_TYPE
+                    : org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE;
             if (parentProcess != null) {
                 for (final Data d : parentProcess.getData()) {
                     if (d.getName().equals(data.getName())) {
@@ -368,12 +374,12 @@ public class GroovyUtil {
                     }
                 }
                 if (isProcessData) {
-                    scriptVariable.setCategory("process" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+                    scriptVariable.setCategory("process" + type);
                 } else {
-                    scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+                    scriptVariable.setCategory("step" + type);
                 }
             } else {
-                scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+                scriptVariable.setCategory(type);
             }
 
             return scriptVariable;
@@ -397,11 +403,11 @@ public class GroovyUtil {
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
@@ -410,6 +416,17 @@ public class GroovyUtil {
             return scriptVariable;
         }
         return null;
+    }
+
+    private static String expressionDocumentation(final Expression e) {
+        String description = null;
+        if(!e.getReferencedElements().isEmpty()) {
+            EObject document = e.getReferencedElements().get(0);
+            if(document instanceof Element) {
+                description = ((Element) document).getDocumentation();
+            }
+        }
+        return description;
     }
 
     private static String getEngineExpressionReturnType(final String name) {

@@ -34,6 +34,7 @@ public final class Messages extends NLS {
     public static String errorBuildingJarForGroovyScriptsForProcess;
     public static String errorBuildingJarForProvidedGroovyScriptsForProcess;
     public static String errorBuildingJarForGroovyScriptsFor6xApplication;
+    public static String multiInstanceIteratorDescription;
 
 	private Messages() {
 		// Do not instantiate

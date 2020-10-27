@@ -34,6 +34,11 @@ BonitaForm {
     text-background-color: #3c3c3c;
 }
 
+/* Table background color */
+.tableBackground {
+    background-color: #2F2F2F;
+}
+
 
  /* Customize background for toggled sections in Bonita editors */
 .MPart Section#editorSectionBackground,
@@ -59,5 +64,7 @@ BonitaForm {
 	color: rgb(204, 0, 0);
 }
 
-
-
+/* Vertical ruler for the Bonita  groovy editor (the one in the dialog)*/
+Composite#groovyViewer > * > * > * > * > * > * > * {
+    background-color: #2F2F2F;
+}

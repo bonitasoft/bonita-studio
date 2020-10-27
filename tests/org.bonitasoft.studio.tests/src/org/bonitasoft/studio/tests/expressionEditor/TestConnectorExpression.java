@@ -22,10 +22,11 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
@@ -80,11 +81,11 @@ public class TestConnectorExpression implements SWTBotConstants {
         createWidget("Input6", "Text", 5);
         bot.button("Apply").click();
     }
-    
+
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
         bot.button("Add...").click();
         bot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
                 bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
@@ -92,7 +93,7 @@ public class TestConnectorExpression implements SWTBotConstants {
                 activeShell.setFocus();
                 return activeShell.isActive();
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
@@ -113,7 +114,7 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("New connector definition"));
     }
-    
+
     @Test
     public void testConnectorExpression() {
         final String id = "connectorExpressionTest";
@@ -124,7 +125,7 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, 0).click();
-        bot.table().select("Constant");
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConstantType();
         bot.text().setText("Hello World");
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("wrong return type", bot.comboBoxWithLabel("Return type").selection(), String.class.getName());
@@ -142,14 +143,19 @@ public class TestConnectorExpression implements SWTBotConstants {
     private void editGroovyEditor(int buttonIndex, String inputName, String inputtype, String scriptName,
             String groovyScript) {
         SWTBotShell activeShell = bot.activeShell();
+
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
-        bot.table().select("Script");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
-        bot.textWithLabel("Name").setText(scriptName);
-        bot.styledText().setText(groovyScript);
+        BotScriptExpressionEditor editorDialog = new BotExpressionEditorDialog(bot, activeShell)
+                .selectScriptTab()
+                .setName(scriptName)
+                .setScriptContent(groovyScript);
+        //        bot.table().select("Script");
+        //        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
+        //        bot.textWithLabel("Name").setText(scriptName);
+        //        bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
-        bot.button(IDialogConstants.OK_LABEL).click();
+        editorDialog.ok();
         activeShell.setFocus();
         assertEquals("wrong value for " + inputName, bot.textWithLabel(inputName).getText(), scriptName);
     }

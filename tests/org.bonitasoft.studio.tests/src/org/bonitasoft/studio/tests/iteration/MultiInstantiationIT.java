@@ -48,7 +48,6 @@ import org.bonitasoft.studio.swtbot.framework.expression.BotConstantExpressionEd
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -168,7 +167,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
     }
 
     @Test
-    public void testMultiInstanceCardinality() throws ExecutionException {
+    public void testMultiInstanceCardinality() throws Exception {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot)
                 .createNewDiagram();
         final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
@@ -339,16 +338,15 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 multiInstantiable.getCollectionDataToMultiInstantiate());
         assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getIteratorExpression());
-       
+
         bot.waitUntil(new AssertionCondition() {
-			
-			@Override
-			protected void makeAssert() throws Exception {
-				 assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
-			}
-		});
-        
-      
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
+            }
+        });
+
         assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getOutputData());
         assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",

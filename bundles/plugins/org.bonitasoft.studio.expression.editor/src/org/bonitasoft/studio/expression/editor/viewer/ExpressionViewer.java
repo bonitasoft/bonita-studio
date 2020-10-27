@@ -520,7 +520,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected void openEditDialog(final EditExpressionDialog dialog) {
-        dialog.setIsPageFlowContext(isPageFlowContext);
         if (dialog.open() == Dialog.OK) {
             final Expression newExpression = dialog.getExpression();
             executeOperation(newExpression.getName());

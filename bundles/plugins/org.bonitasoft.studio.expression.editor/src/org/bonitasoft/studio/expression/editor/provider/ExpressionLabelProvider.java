@@ -37,20 +37,28 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
         }
         if (expression instanceof Expression) {
             final IExpressionProvider provider = ExpressionProviderService.getInstance()
-                    .getExpressionProvider(((Expression) expression).getType());
+                    .getExpressionProvider(getExpressionType(expression));
             if (provider != null) {
                 return provider.getIcon((Expression) expression);
             }
-            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType())
+            if (ExpressionConstants.CONSTANT_TYPE.equals(getExpressionType(expression))
                     && ((Expression) expression).getContent() != null
                     && !((Expression) expression).getContent().isEmpty()) {
                 return Pics.getImage(PicsConstants.constant);
             }
-            if (ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(((Expression) expression).getType())) {
+            if (ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(getExpressionType(expression))) {
                 return Pics.getImage(PicsConstants.engineConstant);
             }
         }
         return super.getImage(expression);
+    }
+
+    private String getExpressionType(Object expression) {
+        if( expression instanceof Expression) {
+            String type = ((Expression) expression).getType();
+            return ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(type) ? ExpressionConstants.VARIABLE_TYPE : type;
+        }
+       throw new IllegalArgumentException("Expression expected but found:" + expression);
     }
 
     @Override
@@ -60,15 +68,15 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
         }
         if (expression instanceof Expression) {
             final IExpressionProvider provider = ExpressionProviderService.getInstance()
-                    .getExpressionProvider(((Expression) expression).getType());
+                    .getExpressionProvider(getExpressionType(expression));
             if (provider != null) {
                 return provider.getProposalLabel((Expression) expression);
             }
-            if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType())
+            if (ExpressionConstants.CONSTANT_TYPE.equals(getExpressionType(expression))
                     && !((Expression) expression).getContent().isEmpty()) {
                 return ((Expression) expression).getName();
             }
-            if (ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(((Expression) expression).getType())
+            if (ExpressionConstants.ENGINE_CONSTANT_TYPE.equals(getExpressionType(expression))
                     && !((Expression) expression).getContent().isEmpty()) {
                 return ((Expression) expression).getName();
             }

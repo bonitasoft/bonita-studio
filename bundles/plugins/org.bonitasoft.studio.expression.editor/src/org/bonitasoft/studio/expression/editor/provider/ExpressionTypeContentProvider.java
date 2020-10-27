@@ -43,7 +43,7 @@ public class ExpressionTypeContentProvider implements IStructuredContentProvider
 
     @Override
     public Object[] getElements(Object context) {
-        Set<IExpressionProvider> expressionTypes = new HashSet<IExpressionProvider>() ;
+        Set<IExpressionProvider> expressionTypes = new HashSet<>() ;
         if(context == null){
             expressionTypes.add(ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.CONSTANT_TYPE));
             expressionTypes.add(ExpressionProviderService.getInstance().getExpressionProvider(ExpressionConstants.SCRIPT_TYPE));
