@@ -82,6 +82,10 @@ public final class Messages extends NLS {
 
     public static String deleteExistingGroovyScriptDescription;
 
+    public static String search;
+
+    public static String noDescription;
+
     private Messages() {
         // Do not instantiate
     }

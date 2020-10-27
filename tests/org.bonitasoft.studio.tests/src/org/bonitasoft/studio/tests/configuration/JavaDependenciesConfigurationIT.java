@@ -17,7 +17,6 @@ package org.bonitasoft.studio.tests.configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -25,7 +24,6 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigureDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -42,7 +40,7 @@ public class JavaDependenciesConfigurationIT {
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Test
-    public void testImportAndRunProcessWithLotOfDependencies() throws IOException, ExecutionException {
+    public void testImportAndRunProcessWithLotOfDependencies() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(JavaDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
                 .finish();

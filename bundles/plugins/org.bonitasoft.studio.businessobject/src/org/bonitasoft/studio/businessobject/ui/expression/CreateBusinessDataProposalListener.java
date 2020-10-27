@@ -37,12 +37,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -64,12 +65,15 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
                 TransactionUtil.getEditingDomain(context));
         Shell activeShell = Display
                 .getDefault().getActiveShell();
-        if (activeShell.getParent() != null) {
+        if (activeShell != null && activeShell.getParent() != null) {
             activeShell = activeShell.getParent().getShell();
+        }
+        if(activeShell == null) {
+            activeShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
         final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell,
                 newWizard, IDialogConstants.FINISH_LABEL);
-        if (wizardDialog.open() == Dialog.OK) {
+        if (wizardDialog.open() == Window.OK) {
             final EObject obj = newWizard.getBusinessObjectData();
             if (obj instanceof Data) {
                 final Data d = (Data) obj;

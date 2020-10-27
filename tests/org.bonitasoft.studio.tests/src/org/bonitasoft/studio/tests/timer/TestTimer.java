@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -27,8 +26,8 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -364,8 +363,7 @@ public class TestTimer implements SWTBotConstants {
 
         // wait for "Edit Expression" shell
         bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
-
-        bot.table().select("Script");
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectScriptTab();
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")));
         bot.textWithLabel("Name").setText("myScript");
@@ -384,7 +382,7 @@ public class TestTimer implements SWTBotConstants {
         bot.button(IDialogConstants.OK_LABEL).click();
 
         activeShell.setFocus();
-        
+
         assertEquals("xpression not created correctly", "myScript", bot.text().getText());
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -417,7 +415,7 @@ public class TestTimer implements SWTBotConstants {
         // wait for "Edit Expression" shell
         bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
 
-        bot.table().select("Constant");
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConstantType();
 
         final Matcher<Widget> matcher = WidgetMatcherFactory.withLabel("Value");
 
@@ -436,7 +434,7 @@ public class TestTimer implements SWTBotConstants {
         // in the shell editor for 'Every hour'
         bot.button(IDialogConstants.OK_LABEL).click();
         activeShell.setFocus();
-        
+
         Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());
         bot.button(IDialogConstants.FINISH_LABEL).click();
 

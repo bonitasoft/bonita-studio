@@ -21,7 +21,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -42,7 +41,7 @@ public class SearchIndexesTest {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
-    public void testSearchIndex() throws ExecutionException {
+    public void testSearchIndex() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();

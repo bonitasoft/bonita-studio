@@ -61,7 +61,7 @@ public class DataExpressionProvider implements IExpressionProvider {
 
     @Override
     public Set<Expression> getExpressions(final EObject context) {
-        final Set<Expression> result = new HashSet<Expression>();
+        final Set<Expression> result = new HashSet<>();
 
         for (final Data d : ModelHelper.getAccessibleData(context, true)) {
             result.add(createExpression(d));
@@ -79,7 +79,7 @@ public class DataExpressionProvider implements IExpressionProvider {
                     final Data d = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) parentFlowElement,
                             iteratorExpression,
                             mainProcess(parentFlowElement));
-                    result.add(createExpression(d));
+                    result.add(createExpression(d, ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE));
                 }
             }
         }
@@ -119,8 +119,12 @@ public class DataExpressionProvider implements IExpressionProvider {
     }
 
     private Expression createExpression(final Data d) {
+        return createExpression(d, getExpressionType());
+    }
+    
+    private Expression createExpression(final Data d, String expressionType) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setType(getExpressionType());
+        exp.setType(expressionType);
         exp.setContent(d.getName());
         exp.setName(d.getName());
         exp.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d));

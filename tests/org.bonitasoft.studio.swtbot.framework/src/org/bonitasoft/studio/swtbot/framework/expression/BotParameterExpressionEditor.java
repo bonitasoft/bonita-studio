@@ -37,7 +37,7 @@ public class BotParameterExpressionEditor extends AbstractBotExpressionEditor {
      * @param parameterType
      */
     public BotParameterExpressionEditor selectParameter(final String parameterName) {
-        bot.table(1).getTableItem(parameterName).select();
+        bot.table().getTableItem(parameterName).select();
         return this;
     }
 

@@ -8,6 +8,11 @@
     text-background-color: #ebebeb;
 }
 
+/* Table background color */
+.tableBackground {
+    background-color: #ffffff;
+}
+
 
  /* Customize background for toggled sections in Bonita editors */
 .MPart Section#editorSectionBackground,

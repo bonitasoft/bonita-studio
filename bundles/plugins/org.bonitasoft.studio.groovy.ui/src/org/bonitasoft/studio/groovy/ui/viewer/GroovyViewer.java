@@ -52,6 +52,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -303,6 +304,7 @@ public class GroovyViewer implements IDocumentListener {
             Collections.sort(expressions, new ExpressionComparator());
             for (final Expression e : expressions) {
                 final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+                scriptVariable.setCategory(ExpressionConstants.DAO_TYPE);
                 providedScriptVariable.add(scriptVariable);
             }
         }
@@ -377,6 +379,10 @@ public class GroovyViewer implements IDocumentListener {
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
         groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
         groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
+    }
+
+    public GroovyEditor getEditor() {
+        return editor;
     }
 
 }

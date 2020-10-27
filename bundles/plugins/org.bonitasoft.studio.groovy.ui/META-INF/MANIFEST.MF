@@ -80,7 +80,9 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.jdt.ui,
  org.bonitasoft.studio.ui;bundle-version="7.9.0",
  com.ibm.icu;bundle-version="63.1.0",
- org.codehaus.groovy.eclipse.quickfix;bundle-version="3.6.0"
+ org.codehaus.groovy.eclipse.quickfix;bundle-version="3.6.0",
+ org.eclipse.gef,
+ org.eclipse.core.databinding.property;bundle-version="1.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,

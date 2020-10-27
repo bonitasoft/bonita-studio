@@ -369,8 +369,8 @@ public class DataWizardIT {
         SWTBotShell activeShell = bot.activeShell();
         final BotExpressionEditorDialog editDefaultValueExpression = addData.editDefaultValueExpression();
         Assertions
-                .assertThat(editDefaultValueExpression.listAvailableTypes()
-                        .containsItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
+                .assertThat(editDefaultValueExpression
+                        .isTypeAvailable(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
                 .isFalse();
         editDefaultValueExpression.cancel();
         activeShell.setFocus();
