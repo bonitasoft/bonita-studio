@@ -5,8 +5,10 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.ImmutableClassNode;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.jdt.groovy.search.AbstractSimplifiedTypeLookup;
+import org.eclipse.jdt.groovy.search.TypeLookupResult.TypeConfidence;
 import org.eclipse.jdt.groovy.search.VariableScope;
 
 import groovy.lang.GroovyClassLoader;
@@ -25,8 +27,8 @@ public class BonitaConstantsTypeLookup extends AbstractSimplifiedTypeLookup {
                 .map(v -> {
                     GroovyClassLoader classLoader = unit.getModuleNode().getUnit().getClassLoader();
                     try {
-                        ClassNode type = new ClassNode(classLoader.loadClass(v.getType()));
-                        return new TypeAndDeclaration(type, null);
+                        Class<?> typeClass = classLoader.loadClass(v.getType());
+                        return new TypeAndDeclaration(new ImmutableClassNode(typeClass), null, declaringType, null, TypeConfidence.EXACT);
                     } catch (ClassNotFoundException e) {
                         BonitaStudioLog.error(e);
                     }
