@@ -273,10 +273,10 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         descriptionLabel.setText(noDecription());
         selectionObservable.addValueChangeListener(e -> {
             Object selection = e.diff.getNewValue();
-            if(selection instanceof ScriptProposal 
+            if (selection instanceof ScriptProposal
                     && ((ScriptProposal) selection).getDescription() != null
                     && !((ScriptProposal) selection).getDescription().isEmpty()) {
-                descriptionLabel.setText(htmlFormat(((ScriptProposal) selection).getDescription()),true);
+                descriptionLabel.setText(htmlFormat(((ScriptProposal) selection).getDescription()), true);
             } else {
                 descriptionLabel.setText(noDecription());
             }
@@ -285,10 +285,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     private String htmlFormat(String content) {
-        return String.format("<body style=\"background-color:%s;color: %s;\"><span style=\"font-size: small;\">%s</span></body>",
+        return String.format(
+                "<body style=\"background-color:%s;color: %s;\"><span style=\"font-size: small;\">%s</span></body>",
                 getBackgroundColor(),
                 getColor(),
-                content) ;
+                content);
     }
 
     private String getBackgroundColor() {
@@ -298,16 +299,17 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     private String getColor() {
         return PreferenceUtil.isDarkTheme() ? DARK_MODE_COLOR : LIGHT_MODE_COLOR;
     }
-    
+
     private String getNoDescriptionColor() {
         return PreferenceUtil.isDarkTheme() ? DARK_MODE_NO_DESC_COLOR : LIGHT_MODE_NO_DESC_COLOR;
     }
-    
+
     private String noDecription() {
-        return String.format("<body style=\"background-color:%s;color: %s;\"><span style=\"font-size: small;font-style: italic;\">%s</span></body>",
+        return String.format(
+                "<body style=\"background-color:%s;color: %s;\"><span style=\"font-size: small;font-style: italic;\">%s</span></body>",
                 getBackgroundColor(),
                 getNoDescriptionColor(),
-                Messages.noDescription) ;
+                Messages.noDescription);
     }
 
     private void createToolbarComposite(Composite parent) {
@@ -337,6 +339,9 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                         .filter(proposal -> !proposal.getName().toLowerCase().contains(search))
                         .forEach(proposalToFilter::add);
                 proposalsViewer.refresh();
+                if (!search.isEmpty()) {
+                    proposalsViewer.expandAll();
+                }
             });
         });
     }
