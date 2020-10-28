@@ -1,6 +1,3 @@
-/*METADATA
-Object evaluateXPathOnVariable(Object documentOrXML, String xpath)=Returns the result of evaluation of the given xpath on the given org.w3c.dom.Document or XML String. Result can be a string or a org.w3c.Node
-*/
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -19,13 +16,21 @@ import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 
+/**
+ *
+ * @deprecated This class will be removed in future Bonita version, use <a href="https://groovy-lang.org/processing-xml.html">Groovy XML language tooling</a> to manipulate xml format.
+ * @since 7.12.0
+ */
+@Deprecated
 public class BonitaXML {
     
     /**
+     *@deprecated Use <a href="https://groovy-lang.org/processing-xml.html">Groovy XML language tooling</a> to manipulate xml format.
      *@param documentOrXML, a String representing the XML or the org.w3C.dom.Document representing the XML
      *@param xpath, the xpath request to apply on the documentOrXML parameter
      *@return the result of the evaluation of the xpath request on the provided XML or the content of the provided document
      **/
+    @Deprecated
 	public static Object evaluateXPathOnVariable(Object documentOrXML, String xpath) {
 		Document doc = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

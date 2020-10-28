@@ -57,7 +57,6 @@ import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowConditionExportImportTest;
-import org.bonitasoft.studio.tests.groovy.TestFunctionRepository;
 import org.bonitasoft.studio.tests.importer.api.ProcBuilderTests;
 import org.bonitasoft.studio.tests.importer.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.tests.importer.bpmn2.TestImportBPMN2;
@@ -98,7 +97,6 @@ import org.junit.runners.Suite;
         ProductVersionIT.class,
         TestInitialWorkspace.class,
         TestExtensionProject.class,
-        TestFunctionRepository.class,
         EngineConfigurationIT.class,
         TestFullScenario.class,
         TestSubprocess.class,

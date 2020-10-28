@@ -1,9 +1,17 @@
-/*METADATA
-Map<Object,Object> toMap(List<List<Object>> table)=Converts a table (output of widget or connector) into a Map
-List<List<Object>> toTable(Map<?,?> map)=Converts a map into a table, to be the output of a Table widget or of a connector Array input
-*/
+/**
+ *
+ * @deprecated This class will be removed in future Bonita version, you may replace its usage using the 
+ * groovy language features for those functions.
+ * @since 7.12.0
+ */
+@Deprecated
 public class BonitaTypes {
 
+    /**
+     * @deprecated Use <pre>table.collectEntries()</pre> instead
+     * @since 7.12.0
+     */
+    @Deprecated
 	public static Map<Object,Object> toMap(List<List<Object>> table) {
 		def res = [:];
 		table.each {
@@ -12,6 +20,11 @@ public class BonitaTypes {
 		res
 	}
 	
+     /**
+     * @deprecated Use <pre>map.collect{ key, value -> [key, value] }</pre> instead
+     * @since 7.12.0
+     */
+    @Deprecated
 	public static List<List<Object>> toTable(Map<?,?> map) {
 		map.collect { key, value ->
 			[key, value]

@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
@@ -48,6 +49,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -64,7 +66,7 @@ public class EditExpressionDialog extends TrayDialog {
 
     private static final String EXPRESSION_TYPE_KEY = "expression.type";
     private static final int HEIGHT = 700;
-    private static final int WIDTH = 900;
+    private static final int WIDTH = 1000;
 
     protected Expression inputExpression;
     protected final EObject context;
@@ -208,14 +210,17 @@ public class EditExpressionDialog extends TrayDialog {
     private void createContentComposite(Composite parent) {
         contentComposite = new Composite(parent, SWT.NONE);
         contentComposite
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(WIDTH - 50, SWT.DEFAULT).create());
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+                .setLayoutData(GridDataFactory.fillDefaults()
+                        .grab(true, true)
+                        .create());
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 0, 10).create());
     }
 
     private String defaultExpressionType() {
         String expressionType = inputExpression.getType();
         if (ExpressionConstants.CONSTANT_TYPE.equals(expressionType)
-                && !isSupportedConstantType(inputExpression.getReturnType())) {
+                && (!isSupportedConstantType(inputExpression.getReturnType())
+                        || !inputExpression.hasContent())) {
             return ExpressionConstants.SCRIPT_TYPE;
         }
         return expressionType;
@@ -354,5 +359,6 @@ public class EditExpressionDialog extends TrayDialog {
     public void setExpressionNameResolver(ExpressionNameResolver expressionNameResolver) {
         this.expressionNameResolver = expressionNameResolver;
     }
+
 
 }

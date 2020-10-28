@@ -89,9 +89,6 @@ public class GroovyFunction implements IFunction {
             if(category.equals(FunctionsRepositoryFactory.getUserFunctionCatgory())){
                 category.addFunction(this);
                 return ;
-            }else if(category.equals(FunctionsRepositoryFactory.getBonitaFunctionCatgory())){
-                category.addFunction(this);
-                return ;
             }
         }
         for(final String type : methodNode.getParameterTypes()){
@@ -108,17 +105,6 @@ public class GroovyFunction implements IFunction {
                 }
             }
         }
-
-        if(isStringFunction){
-            FunctionsRepositoryFactory.getStringFunctionCatgory().addFunction(this);
-        }else if(isColletionFunction){
-            FunctionsRepositoryFactory.getCollectionFunctionCatgory().addFunction(this);
-        }else if(isNumberFunction){
-            FunctionsRepositoryFactory.getNumberFunctionCatgory().addFunction(this);
-        }else{
-            FunctionsRepositoryFactory.getOtherFunctionCatgory().addFunction(this);
-        }
-
     }
 
 

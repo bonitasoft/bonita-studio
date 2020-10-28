@@ -33,7 +33,11 @@ public class ScriptExpressionProposalContentProvider implements ITreeContentProv
     @Override
     public Object[] getChildren(Object parentElement) {
         if(parentElement instanceof Category) {
-            return ((Category) parentElement).getProposals().toArray();
+            if(((Category) parentElement).getSubcategories().isEmpty()) {
+                return ((Category) parentElement).getProposals().toArray();
+            }
+            return ((Category) parentElement).getSubcategories().toArray();
+           
         }
         return new Object[0];
     }
@@ -43,12 +47,17 @@ public class ScriptExpressionProposalContentProvider implements ITreeContentProv
         if(element instanceof ScriptProposal) {
             return ((ScriptProposal) element).getCategory();
         }
+        if(element instanceof Category) {
+            return ((Category) element).getParentCategory();
+        }
         return null;
     }
 
     @Override
     public boolean hasChildren(Object element) {
-        return element instanceof Category && !((Category)element).getProposals().isEmpty();
+        return element instanceof Category
+                && (!((Category)element).getProposals().isEmpty() 
+                || !((Category)element).getSubcategories().isEmpty());
     }
 
 }
