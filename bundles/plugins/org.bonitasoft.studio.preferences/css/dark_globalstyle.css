@@ -64,7 +64,8 @@ BonitaForm {
 	color: rgb(204, 0, 0);
 }
 
-/* Vertical ruler for the Bonita  groovy editor (the one in the dialog)*/
+/* Vertical ruler and editor background for the Bonita  groovy editor (the one in the dialog)*/
+Composite#groovyViewer > * > * > * > * > * > *,
 Composite#groovyViewer > * > * > * > * > * > * > * {
     background-color: #2F2F2F;
 }
