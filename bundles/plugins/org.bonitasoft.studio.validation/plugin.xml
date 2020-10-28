@@ -696,6 +696,24 @@
                      class="Connector:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
+             <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ProvidedScriptsDeprecationConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.providedScriptDeprecationConstraint"
+                  lang="java"
+                  mode="Batch"
+                  name="Deprecated provided Groovy script usage"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+               <target
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.BPMN2ValidationConstraint"
                   id="org.bonitasoft.studio.validation.constraints.bpmn2"

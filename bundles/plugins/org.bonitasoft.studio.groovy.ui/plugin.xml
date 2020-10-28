@@ -165,7 +165,8 @@
             class="org.codehaus.groovy.eclipse.quickfix.templates.GroovyContextType"
             id="groovy" />
       <include
-            file="templates/groovy-templates.xml">
+            file="templates/bonita-templates.xml"
+            translations="$nl$/templates/bonita-templates.properties">
       </include>
    </extension>
 

@@ -34,12 +34,13 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class ScriptExpressionProposalViewer extends TreeViewer {
 
     private Cursor cursorHand;
-    private Cursor cursorArrow;
     private IViewerObservableValue<Object> selectionObservable;
+    private Cursor cursorArrow;
 
     public ScriptExpressionProposalViewer(Composite parent, int style) {
         super(parent, style);
@@ -63,7 +64,8 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof Category) {
-                    return !((Category) element).getProposals().isEmpty();
+                    return !((Category) element).getProposals().isEmpty()
+                            || !((Category) element).getSubcategories().isEmpty();
                 }
                 return true;
             }
@@ -73,9 +75,9 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
     private void updateCursor(MouseEvent e) {
         ViewerCell cell = getCell(new Point(e.x, e.y));
         if (cell != null && cell.getElement() instanceof ScriptProposal) {
-            getTree().setCursor(cursorHand);
-        } else {
-            getTree().setCursor(cursorArrow);
+            cell.getControl().setCursor(cursorHand);
+        }else if(cell != null){
+            cell.getControl().setCursor(cursorArrow);
         }
     }
 
@@ -91,7 +93,7 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
             @Override
             public void dragSetData(DragSourceEvent event) {
                 event.doit = observable.getValue() instanceof ScriptProposal;
-                event.data = ((ScriptProposal) observable.getValue()).getName();
+                event.data = ((ScriptProposal) observable.getValue()).getId();
             }
         };
     }

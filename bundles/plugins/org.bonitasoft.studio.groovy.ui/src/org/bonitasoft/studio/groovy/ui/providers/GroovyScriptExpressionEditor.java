@@ -180,6 +180,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     private List<ScriptProposal> proposalToFilter = new ArrayList<>();
 
     private ScriptExpressionContext scriptExpressionContext;
+    private DropTarget dropTarget;
 
     public GroovyScriptExpressionEditor() {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -228,8 +229,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof Category) {
-                    return ((Category) element).getProposals().stream()
-                            .anyMatch(proposal -> !proposalToFilter.contains(proposal)); // TODO only first level -> add reccursion when we add children.
+                    if(((Category) element).getSubcategories().isEmpty()) {
+                        return ((Category) element).getProposals().stream()
+                                .anyMatch(proposal -> !proposalToFilter.contains(proposal));
+                    }
+                    return true;
                 }
                 return !proposalToFilter.contains(element);
             }
@@ -241,7 +245,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 proposalsViewer.setExpandedState(selectionObservable.getValue(),
                         !proposalsViewer.getExpandedState(selectionObservable.getValue()));
             } else if (selectionObservable.getValue() instanceof ScriptProposal) {
-                sourceViewer.getTextWidget().insert(" " + ((ScriptProposal) selectionObservable.getValue()).getName());
+                ScriptProposal proposal = (ScriptProposal) selectionObservable.getValue();
+                proposal.apply(groovyViewer.getEditor());
             }
         });
         createDescriptionComposite(ctx, proposalSash, selectionObservable);
@@ -434,9 +439,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         sourceViewer = groovyViewer.getSourceViewer();
         document = groovyViewer.getDocument();
 
-        DropTarget target = new DropTarget(sourceViewer.getTextWidget(), DND.DROP_MOVE);
-        target.setTransfer(new Transfer[] { TextTransfer.getInstance() });
-        target.addDropListener(new DropVariableTargetEffect(sourceViewer.getTextWidget()));
+        dropTarget = new DropTarget(sourceViewer.getTextWidget(), DND.DROP_MOVE);
+        dropTarget.setTransfer(TextTransfer.getInstance());
 
         groovyViewerComposite.getChildren()[0].setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
@@ -523,6 +527,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         input.addAll(nodes);
         scriptExpressionContext = ScriptExpressionContext.computeProposals(input);
         proposalsViewer.setInput(scriptExpressionContext);
+        dropTarget.addDropListener(new DropProposalTargetEffect(sourceViewer.getTextWidget(), getEditor(),scriptExpressionContext));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 

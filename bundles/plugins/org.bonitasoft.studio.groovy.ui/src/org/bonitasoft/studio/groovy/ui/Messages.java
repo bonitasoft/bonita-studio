@@ -21,70 +21,39 @@ public final class Messages extends NLS {
     private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
 
     public static String testButtonLabel;
-
     public static String functionDocTitle;
-
     public static String functionTitle;
-
     public static String categoriesTitle;
-
     public static String noProcessVariableAvailable;
-
     public static String processVariableLabel;
-
     public static String selectData;
-
     public static String groovyDocumentationLink;
-
     public static String browseJava;
-
     public static String scriptEvaluation;
-
     public static String returnType;
-
     public static String add;
-
     public static String remove;
-
     public static String automaticResolution;
-
-    public static String SelectProcessVariableLabel;
-
-    public static String SelectBonitasVariableLabel;
-
     public static String unknownVariableLabel;
-
     public static String groovyUnresolved;
-
     public static String evaluationResults;
-
     public static String testGroovyScriptDialogDescription;
-
     public static String nameHelp;
-
     public static String warningAssigningAVariableWithSameNameAsProcessVariable;
-
     public static String maxScriptLengthTitle;
-
     public static String maxScriptLength;
-
     public static String onlyReadOnly;
-
     public static String createNewGroovyFile;
-
     public static String open;
-
     public static String openExistingGroovyScript;
-
     public static String openExistingGroovyScriptDescription;
-
     public static String deleteExistingGroovyScript;
-
     public static String deleteExistingGroovyScriptDescription;
-
     public static String search;
-
     public static String noDescription;
+    public static String codeTemplates;
+    public static String usersTemplates;
+    public static String userDefined;
 
     private Messages() {
         // Do not instantiate

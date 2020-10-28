@@ -5,7 +5,6 @@
 package org.bonitasoft.studio.tests.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.common.Messages.bonitaName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +15,6 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
-import org.bonitasoft.studio.groovy.library.IFunctionCategory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -95,20 +92,6 @@ public class TestSwitchRepository extends TestCase {
         depRs = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         assertEquals(availableProcess.size(), drs.getAllProcesses().size()) ; //new repo should be empty
         assertEquals(jars.size(),depRs.getChildren().size());
-
-        IFunctionCategory bonitaCategory = null;
-        FunctionsRepositoryFactory.getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository());
-        for (final IFunctionCategory category : FunctionsRepositoryFactory
-                .getFunctionCatgories(RepositoryManager.getInstance().getCurrentRepository()).getCategories()) {
-            if (category.getName().equals(bonitaName)) {
-                bonitaCategory = category;
-            }
-        }
-        assertNotNull("Bonita functions category not found after Switch Workspace", bonitaCategory);
-        assertNotSame("Bonita function category is empty after Switch Workspace", 0, bonitaCategory.getFunctions().size());
-        final String doc = bonitaCategory.getFunctions().get(0).getDocumentation();
-        assertTrue("Doc for Bonita category methods not found after Switch Workspace", doc != null && doc.length() > 0);
-
     }
 
 }

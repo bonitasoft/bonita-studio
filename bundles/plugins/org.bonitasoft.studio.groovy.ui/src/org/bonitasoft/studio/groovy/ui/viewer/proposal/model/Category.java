@@ -8,9 +8,11 @@ import org.eclipse.swt.graphics.Image;
 public class Category {
 
     private List<ScriptProposal> proposals = new ArrayList<>();
+    private List<Category> subcategories = new ArrayList<>();
     private String name;
     private Image icon;
     private String id;
+    private Category parentCategory;
 
     public Category(String id, String name, Image icon) {
         this.id = id;
@@ -37,6 +39,23 @@ public class Category {
 
     public Image getIcon() {
         return icon;
+    }
+    
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void addSubcategory(Category subcategory) {
+        subcategory.setParentCategory(this);
+        subcategories.add(subcategory);
+    }
+    
+    public List<Category> getSubcategories() {
+        return subcategories;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+       this.parentCategory = parentCategory;
     }
 
 }

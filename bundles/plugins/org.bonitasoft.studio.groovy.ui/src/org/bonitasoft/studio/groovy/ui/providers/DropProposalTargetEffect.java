@@ -14,22 +14,29 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
+import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptExpressionContext;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.StyledTextDropTargetEffect;
 import org.eclipse.swt.dnd.DropTargetEvent;
 
-public class DropVariableTargetEffect extends StyledTextDropTargetEffect {
+public class DropProposalTargetEffect extends StyledTextDropTargetEffect {
 
-    public DropVariableTargetEffect(StyledText styledText) {
+    private GroovyEditor editor;
+    private ScriptExpressionContext context;
+
+    public DropProposalTargetEffect(StyledText styledText, GroovyEditor editor, ScriptExpressionContext context) {
         super(styledText);
+        this.editor = editor;
+        this.context = context;
     }
 
     @Override
     public void drop(DropTargetEvent event) {
         super.drop(event);
-
-        StyledText text = (StyledText) getControl();
-        text.insert(" " + (String) event.data);
+        String proposalId = (String) event.data;
+        ScriptExpressionContext.findProposalById(proposalId, context.getCategories())
+            .ifPresent(proposal -> proposal.apply(editor));
     }
 
 }
