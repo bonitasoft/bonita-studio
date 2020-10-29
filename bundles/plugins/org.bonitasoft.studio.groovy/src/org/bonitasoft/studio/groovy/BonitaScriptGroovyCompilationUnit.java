@@ -16,7 +16,6 @@ package org.bonitasoft.studio.groovy;
 
 import java.util.Map;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -39,14 +38,10 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
             ClassNode scriptClassDummy = moduleInfo.module.getScriptClassDummy();
             context.values().forEach(var -> {
                 String typeName = var.getType();
-                try {
-                    scriptClassDummy.addField(var.getName(),
-                            FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
-                            new ClassNode(moduleInfo.module.getUnit().getClassLoader().loadClass(typeName)),
-                            null);
-                } catch (ClassNotFoundException e) {
-                    BonitaStudioLog.error(e);
-                }
+                scriptClassDummy.addField(var.getName(),
+                        FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
+                        moduleInfo.resolver.resolve(typeName),
+                        null);
             });
 
         }
@@ -55,11 +50,11 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
 
     public void setContext(Map<String, ScriptVariable> context) {
         this.context = context;
-        
+
     }
 
     public Map<String, ScriptVariable> getContext() {
-      return context;
+        return context;
     }
 
 }
