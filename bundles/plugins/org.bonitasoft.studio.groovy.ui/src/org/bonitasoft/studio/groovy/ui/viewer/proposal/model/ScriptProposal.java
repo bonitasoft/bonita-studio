@@ -8,6 +8,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateProposal;
+import org.eclipse.swt.custom.StyledText;
 
 public class ScriptProposal {
 
@@ -80,7 +81,9 @@ public class ScriptProposal {
             new TemplateProposal(template, templateContext, region, null).apply(viewer, '.', 0,
                     viewer.getSelectedRange().x);
         } else {
-            viewer.getTextWidget().insert(" " + getName());
+            StyledText textWidget = viewer.getTextWidget();
+            textWidget.insert(" " + getName());
+            textWidget.setFocus();
         }
     }
 

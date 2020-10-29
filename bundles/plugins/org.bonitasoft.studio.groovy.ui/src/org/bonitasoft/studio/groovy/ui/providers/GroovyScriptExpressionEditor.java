@@ -263,24 +263,24 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         descriptionComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.TABLE_BACKGROUND_COLOR);
 
-        Browser descriptionLabel = new Browser(descriptionComposite, SWT.WRAP);
-        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults()
-                .align(SWT.FILL, SWT.TOP)
+        Browser descriptionBrowser = new Browser(descriptionComposite, SWT.WRAP);
+        descriptionBrowser.setLayoutData(GridDataFactory
+                .fillDefaults()
                 .grab(true, true)
                 .create());
-        descriptionLabel.setBackground(proposalsViewer.getTree().getBackground());
-        descriptionLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.TABLE_BACKGROUND_COLOR);
-        descriptionLabel.setText(noDecription());
+        descriptionBrowser.setBackground(proposalsViewer.getTree().getBackground());
+        descriptionBrowser.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.TABLE_BACKGROUND_COLOR);
+        descriptionBrowser.setText(noDecription());
         selectionObservable.addValueChangeListener(e -> {
             Object selection = e.diff.getNewValue();
             if (selection instanceof ScriptProposal
                     && ((ScriptProposal) selection).getDescription() != null
                     && !((ScriptProposal) selection).getDescription().isEmpty()) {
-                descriptionLabel.setText(htmlFormat(((ScriptProposal) selection).getDescription()), true);
+                descriptionBrowser.setText(htmlFormat(((ScriptProposal) selection).getDescription()), true);
             } else {
-                descriptionLabel.setText(noDecription());
+                descriptionBrowser.setText(noDecription());
             }
-            descriptionLabel.getParent().layout(true, true);
+            descriptionBrowser.getParent().layout(true, true);
         });
     }
 
