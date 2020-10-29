@@ -35,7 +35,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
@@ -49,7 +48,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -112,18 +110,18 @@ public class EditExpressionDialog extends TrayDialog {
     protected Control createContents(Composite parent) {
         configureContext();
         final Control content = super.createContents(parent);
-        if(tabFolder != null) {
-            TabItem tabItem = tabFolder.getSelection()[0];
-            showContent(tabItem, (String) tabItem.getData(EXPRESSION_TYPE_KEY));
-            updateOKButton();
-        }
+//        if(tabFolder != null) {
+//            TabItem tabItem = tabFolder.getSelection()[0];
+//            showContent(tabItem, (String) tabItem.getData(EXPRESSION_TYPE_KEY));
+//            updateOKButton();
+//        }
         return content;
     }
 
     protected void updateOKButton() {
         final Button okButton = getButton(OK);
         if (okButton != null && !okButton.isDisposed()) {
-            okButton.setEnabled(currentExpressionEditor != null ? currentExpressionEditor.canFinish() : false);
+            okButton.setEnabled(currentExpressionEditor != null && currentExpressionEditor.canFinish());
         }
     }
 
@@ -164,14 +162,6 @@ public class EditExpressionDialog extends TrayDialog {
 
         Composite folder = createTabFolder(composite);
         createContentComposite(folder);
-        
-
-        String expressionType = defaultExpressionType();
-        if(tabFolder != null) {
-            Stream.of(tabFolder.getItems())
-            .filter(item -> item.getData(EXPRESSION_TYPE_KEY).equals(expressionType))
-            .findFirst().ifPresent(tabFolder::setSelection);
-        }
 
         return composite;
     }
@@ -180,7 +170,17 @@ public class EditExpressionDialog extends TrayDialog {
         tabFolder = new TabFolder(parentForm, SWT.NONE);
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tabFolder.addSelectionListener(new SelectionAdapter() {
 
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TabItem item = tabFolder.getItem(tabFolder.getSelectionIndex());
+                if (item != null) {
+                    showContent(item, (String) item.getData(EXPRESSION_TYPE_KEY));
+                }
+            }
+
+        });
         ExpressionTypeContentProvider expressionTypeContentProvider = new ExpressionTypeContentProvider();
 
         Stream.of(expressionTypeContentProvider.getElements(expressionViewer.getInput()))
@@ -190,20 +190,6 @@ public class EditExpressionDialog extends TrayDialog {
                 .sorted((e1, e2) -> e1.getTypeLabel().compareTo(e2.getTypeLabel()))
                 .map(provider -> createTabItem(tabFolder, provider, inputExpression))
                 .collect(Collectors.toList());
-
-        tabFolder.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                TabItem item = tabFolder.getItem(tabFolder.getSelectionIndex());
-                if (item != null) {
-                    showContent(item, (String) item.getData(EXPRESSION_TYPE_KEY));
-                    tabFolder.layout(true, true);
-                }
-
-            }
-
-        });
         return tabFolder;
     }
 
@@ -233,6 +219,10 @@ public class EditExpressionDialog extends TrayDialog {
 
         IExpressionEditor expressionEditor = provider.getExpressionEditor(input, context);
         item.setData("editor", expressionEditor);
+        String defaultExpressionType = defaultExpressionType();
+        if(defaultExpressionType.equals(provider.getExpressionType())){
+            folder.setSelection(item);
+        }
         return item;
     }
 

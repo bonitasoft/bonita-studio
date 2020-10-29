@@ -38,9 +38,11 @@ import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
@@ -403,11 +405,11 @@ public class GroovyUtil {
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e, context));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e, context));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
@@ -418,15 +420,19 @@ public class GroovyUtil {
         return null;
     }
 
-    private static String expressionDocumentation(final Expression e) {
-        String description = null;
+    private static String expressionDocumentation(final Expression e, EObject context) {
         if(!e.getReferencedElements().isEmpty()) {
             EObject document = e.getReferencedElements().get(0);
             if(document instanceof Element) {
-                description = ((Element) document).getDocumentation();
+                Pool process = (Pool) ModelHelper.getParentProcess(context);
+               return  process.getDocuments().stream()
+                .filter(doc -> e.getName().equals(doc.getName()))
+                .map(Document::getDocumentation)
+                .findAny()
+                .orElse(null);
             }
         }
-        return description;
+        return null;
     }
 
     private static String getEngineExpressionReturnType(final String name) {
