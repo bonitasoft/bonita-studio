@@ -5,13 +5,6 @@
    <extension-point id="textordataFactory" name="TextOrData Factory" schema="schema/textordataFactory.exsd"/>
 
    <extension
-         point="org.codehaus.groovy.eclipse.ui.syntaxHighlightingExtension">
-      <highlightingExtender
-            extender="org.bonitasoft.studio.groovy.ui.contentassist.BonitaSyntaxHighlighting"
-            natureID="org.bonitasoft.studio.common.repository.bonitaNature">
-      </highlightingExtender>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.groovy.ui.comboElementProvider">
       <comboElementsProvider
             priority="9"
@@ -108,15 +101,6 @@
       <exportConfigurationAction
             class="org.bonitasoft.studio.groovy.ui.providers.ExportGroovyScriptAction">
       </exportConfigurationAction>
-   </extension>
-   <extension
-         point="org.eclipse.jdt.groovy.core.typeLookup">
-      <lookup
-            lookup="org.bonitasoft.studio.groovy.ui.contentassist.BonitaConstantsTypeLookup">
-         <appliesTo
-               projectNature="org.bonitasoft.studio.common.repository.bonitaNature">
-         </appliesTo>
-      </lookup>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
