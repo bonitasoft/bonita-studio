@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.bonitasoft.studio.repository.fileContribution">
+      <fileContribution
+            class="org.bonitasoft.studio.connectors.database.drivers.DriversAssociationFileStoreContribution">
+      </fileContribution>
+   </extension>
+
+</fragment>

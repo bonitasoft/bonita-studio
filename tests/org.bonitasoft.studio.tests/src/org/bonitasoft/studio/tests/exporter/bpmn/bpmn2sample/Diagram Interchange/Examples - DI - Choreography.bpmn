@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1275674668334" targetNamespace="http://www.trisotech.com/definitions/_1275674668334" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:choreography id="_6">
+        <semantic:participant name="Participant 1" id="_6_P1275674668568"/>
+        <semantic:participant name="Participant 2" id="_6_P1275674668569"/>
+        <semantic:participant name="Participant 3" id="_6_P1275674668709"/>
+        <semantic:messageFlow sourceRef="_6_P1275674668569" targetRef="_6_P1275674668568" id="_6__1275674669068"/>
+        <semantic:messageFlow sourceRef="_6_P1275674668568" targetRef="_6_P1275674668569" id="_6__1275674669071"/>
+        <semantic:messageFlow sourceRef="_6_P1275674668569" targetRef="_6_P1275674668568" id="_6__1275674669072"/>
+        <semantic:startEvent name="StartEvent" id="StartEvent_StartEvent">
+            <semantic:outgoing>SequenceFlow_a</semantic:outgoing>
+        </semantic:startEvent>
+        <semantic:choreographyTask initiatingParticipantRef="_6_P1275674668569" name="CT 1" id="ChoreographyTask_CT1">
+            <semantic:incoming>SequenceFlow_a</semantic:incoming>
+            <semantic:outgoing>SequenceFlow_b</semantic:outgoing>
+            <semantic:participantRef>_6_P1275674668568</semantic:participantRef>
+            <semantic:participantRef>_6_P1275674668569</semantic:participantRef>
+            <semantic:messageFlowRef>_6__1275674669068</semantic:messageFlowRef>
+            <semantic:messageFlowRef>_6__1275674669071</semantic:messageFlowRef>
+        </semantic:choreographyTask>
+        <semantic:choreographyTask initiatingParticipantRef="_6_P1275674668569" name="CT 2" id="ChoreographyTask_CT2">
+            <semantic:incoming>SequenceFlow_b</semantic:incoming>
+            <semantic:outgoing>SequenceFlow_c</semantic:outgoing>
+            <semantic:participantRef>_6_P1275674668568</semantic:participantRef>
+            <semantic:participantRef>_6_P1275674668569</semantic:participantRef>
+            <semantic:messageFlowRef>_6__1275674669072</semantic:messageFlowRef>
+        </semantic:choreographyTask>
+        <semantic:subChoreography initiatingParticipantRef="_6_P1275674668569" name="SC" id="SubChoreography_SC">
+            <semantic:incoming>SequenceFlow_c</semantic:incoming>
+            <semantic:outgoing>SequenceFlow_d</semantic:outgoing>
+            <semantic:participantRef>_6_P1275674668568</semantic:participantRef>
+            <semantic:participantRef>_6_P1275674668709</semantic:participantRef>
+            <semantic:participantRef>_6_P1275674668569</semantic:participantRef>
+        </semantic:subChoreography>
+        <semantic:endEvent name="EndEvent" id="EndEvent_EndEvent">
+            <semantic:incoming>SequenceFlow_d</semantic:incoming>
+        </semantic:endEvent>
+        <semantic:sequenceFlow sourceRef="StartEvent_StartEvent" targetRef="ChoreographyTask_CT1" name="a" id="SequenceFlow_a"/>
+        <semantic:sequenceFlow sourceRef="ChoreographyTask_CT1" targetRef="ChoreographyTask_CT2" name="b" id="SequenceFlow_b"/>
+        <semantic:sequenceFlow sourceRef="ChoreographyTask_CT2" targetRef="SubChoreography_SC" name="c" id="SequenceFlow_c"/>
+        <semantic:sequenceFlow sourceRef="SubChoreography_SC" targetRef="EndEvent_EndEvent" name="d" id="SequenceFlow_d"/>
+    </semantic:choreography>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="Choreography" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="_6">
+            <bpmndi:BPMNShape bpmnElement="StartEvent_StartEvent" id="Trisotech.Visio__6_StartEvent_StartEvent">
+                <dc:Bounds height="30.0" width="30.0" x="72.0" y="138.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="ChoreographyTask_CT1" id="Trisotech.Visio__6_ChoreographyTask_CT1">
+                <dc:Bounds height="114.0" width="96.0" x="156.0" y="96.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668568" choreographyActivityShape="Trisotech.Visio__6_ChoreographyTask_CT1" isMessageVisible="true" participantBandKind="top_non_initiating" id="P1275674669272">
+                <dc:Bounds height="20.0" width="96.0" x="156.0" y="96.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668569" choreographyActivityShape="Trisotech.Visio__6_ChoreographyTask_CT1" isMessageVisible="true" participantBandKind="bottom_initiating" id="P1275674669273">
+                <dc:Bounds height="20.0" width="96.0" x="156.0" y="190.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="ChoreographyTask_CT2" id="Trisotech.Visio__6_ChoreographyTask_CT2">
+                <dc:Bounds height="114.0" width="96.0" x="312.0" y="96.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668568" choreographyActivityShape="Trisotech.Visio__6_ChoreographyTask_CT2" isMessageVisible="false" participantBandKind="top_non_initiating" id="P1275674669274">
+                <dc:Bounds height="20.0" width="96.0" x="312.0" y="96.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668569" choreographyActivityShape="Trisotech.Visio__6_ChoreographyTask_CT2" isMessageVisible="true" participantBandKind="bottom_initiating" id="P1275674669275">
+                <dc:Bounds height="20.0" width="96.0" x="312.0" y="190.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SubChoreography_SC" isExpanded="false" id="Trisotech.Visio__6_SubChoreography_SC">
+                <dc:Bounds height="117.0" width="96.0" x="468.0" y="94.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668568" choreographyActivityShape="Trisotech.Visio__6_SubChoreography_SC" isMessageVisible="false" participantBandKind="top_non_initiating" id="P1275674669276">
+                <dc:Bounds height="20.0" width="96.0" x="468.0" y="94.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668709" choreographyActivityShape="Trisotech.Visio__6_SubChoreography_SC" isMessageVisible="false" participantBandKind="bottom_non_initiating" id="P1275674669277">
+                <dc:Bounds height="20.0" width="96.0" x="468.0" y="191.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="_6_P1275674668569" choreographyActivityShape="Trisotech.Visio__6_SubChoreography_SC" isMessageVisible="false" participantBandKind="middle_initiating" id="P1275674669278">
+                <dc:Bounds height="20.0" width="96.0" x="468.0" y="171.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="EndEvent_EndEvent" id="Trisotech.Visio__6_EndEvent_EndEvent">
+                <dc:Bounds height="32.0" width="32.0" x="624.0" y="137.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_b" id="Trisotech.Visio__6_SequenceFlow_b">
+                <di:waypoint x="252.0" y="153.0"/>
+                <di:waypoint x="312.0" y="153.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_d" id="Trisotech.Visio__6_SequenceFlow_d">
+                <di:waypoint x="564.0" y="153.0"/>
+                <di:waypoint x="624.0" y="153.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_a" id="Trisotech.Visio__6_SequenceFlow_a">
+                <di:waypoint x="102.0" y="153.0"/>
+                <di:waypoint x="156.0" y="153.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="SequenceFlow_c" id="Trisotech.Visio__6_SequenceFlow_c">
+                <di:waypoint x="408.0" y="153.0"/>
+                <di:waypoint x="468.0" y="153.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+

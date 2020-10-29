@@ -1,0 +1,95 @@
+/**
+ * Copyright (C) 2020 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.businessobject.editor.editor.ui.control;
+
+import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
+import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.ui.ColorConstants;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+
+public class DeployRequiredControl extends Composite {
+
+    public DeployRequiredControl(Composite parent, AbstractBdmFormPage formPage, GridData gridData) {
+        super(parent, SWT.NONE);
+        setLayout(GridLayoutFactory.fillDefaults().create());
+        setLayoutData(gridData);
+        formPage.getToolkit().adapt(this);
+
+        Composite composite = new Composite(this, SWT.BORDER);
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        CustomCLabel label = new CustomCLabel(composite, SWT.WRAP);
+        label.setLayout(GridLayoutFactory.fillDefaults().create());
+        label.setText(Messages.bdmDeployRequired);
+        label.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
+
+        boolean show = formPage.getEditorContribution().observeDeployRequired().getValue();
+        gridData.exclude = !show;
+        setVisible(show);
+    }
+
+    public void hide() {
+        Display.getDefault().asyncExec(() -> {
+            if (!isDisposed()) {
+                setVisible(false);
+                ((GridData) getLayoutData()).exclude = true;
+                getParent().layout();
+            }
+        });
+    }
+
+    public void show() {
+        Display.getDefault().asyncExec(() -> {
+            if (!isDisposed()) {
+                setVisible(true);
+                ((GridData) getLayoutData()).exclude = false;
+                getParent().layout();
+            }
+        });
+    }
+
+}
+
+class CustomCLabel extends CLabel {
+
+    private Color warningColor;
+
+    public CustomCLabel(Composite parent, int style) {
+        super(parent, style);
+        this.warningColor = new Color(getDisplay(), ColorConstants.WARNING_RGB);
+    }
+
+    @Override
+    public Color getForeground() {
+        return warningColor;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        warningColor.dispose();
+    }
+
+}
