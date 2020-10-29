@@ -11,7 +11,6 @@ Export-Package: org.bonitasoft.studio.groovy.ui;
    org.bonitasoft.studio.tests,
    org.bonitasoft.groovy.tests,
    org.bonitasoft.studio.repository.tests.ex",
- org.bonitasoft.studio.groovy.ui.contentassist,
  org.bonitasoft.studio.groovy.ui.dialog,
  org.bonitasoft.studio.groovy.ui.handler,
  org.bonitasoft.studio.groovy.ui.job,

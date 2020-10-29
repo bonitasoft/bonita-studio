@@ -43,7 +43,6 @@ import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
-import org.bonitasoft.studio.groovy.ui.contentassist.BonitaConstantsTypeLookup;
 import org.bonitasoft.studio.groovy.ui.dialog.BonitaVariableLabelProvider;
 import org.bonitasoft.studio.groovy.ui.dialog.GroovyEditorDocumentationDialogTray;
 import org.bonitasoft.studio.groovy.ui.dialog.TestGroovyScriptDialog;
@@ -550,7 +549,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dependencyJob.setContext(context);
         nodes.addAll(groovyViewer.getProvidedVariables(context, filters));
         dependencyJob.setNodes(nodes);
-        BonitaConstantsTypeLookup.setBonitaVariables(nodes);
 
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
         String content = inputExpression.getContent();
