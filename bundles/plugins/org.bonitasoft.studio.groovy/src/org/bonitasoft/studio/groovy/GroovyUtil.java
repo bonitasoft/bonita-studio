@@ -294,7 +294,7 @@ public class GroovyUtil {
 
     public static ScriptVariable createScriptVariable(final Data d) {
         return new ScriptVariable(d.getName(),
-                org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d), 
+                org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d),
                 null, d.getDocumentation());
     }
 
@@ -351,13 +351,15 @@ public class GroovyUtil {
 
     public static ScriptVariable createScriptVariable(final Expression e, final EObject context) {
         if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(),null, Messages.multiInstanceIteratorDescription);
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(), null,
+                    Messages.multiInstanceIteratorDescription);
             scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE
                 .equals(e.getType())) {
             final ContractInput input = (ContractInput) e.getReferencedElements().get(0);
-            final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType(), null, input.getDescription());
+            final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType(), null,
+                    input.getDescription());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
@@ -405,11 +407,13 @@ public class GroovyUtil {
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e, context));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null,
+                    expressionDocumentation(e, context));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
-            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null, expressionDocumentation(e, context));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType(), null,
+                    expressionDocumentation(e, context));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
@@ -421,15 +425,15 @@ public class GroovyUtil {
     }
 
     private static String expressionDocumentation(final Expression e, EObject context) {
-        if(!e.getReferencedElements().isEmpty()) {
+        if (!e.getReferencedElements().isEmpty()) {
             EObject document = e.getReferencedElements().get(0);
-            if(document instanceof Element) {
+            if (document instanceof Element) {
                 Pool process = (Pool) ModelHelper.getParentProcess(context);
-               return  process.getDocuments().stream()
-                .filter(doc -> e.getName().equals(doc.getName()))
-                .map(Document::getDocumentation)
-                .findAny()
-                .orElse(null);
+                return process.getDocuments().stream()
+                        .filter(doc -> e.getName().equals(doc.getName()))
+                        .map(Document::getDocumentation)
+                        .findAny()
+                        .orElse(null);
             }
         }
         return null;

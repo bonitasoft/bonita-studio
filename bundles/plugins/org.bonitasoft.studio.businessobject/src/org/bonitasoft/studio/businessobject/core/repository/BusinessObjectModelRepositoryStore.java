@@ -46,8 +46,8 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
-import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -139,9 +139,9 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     public Optional<BusinessObject> getBusinessObjectByQualifiedName(String qualifiedName) {
-        final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
-                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
-        return businessObjectFileStore.map(fileStore -> fileStore.getBusinessObject(qualifiedName));
+        return Optional
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true))
+                .map(fileStore -> fileStore.getBusinessObject(qualifiedName));
     }
 
     @Override
