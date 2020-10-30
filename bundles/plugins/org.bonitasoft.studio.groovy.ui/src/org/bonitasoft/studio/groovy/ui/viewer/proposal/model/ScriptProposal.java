@@ -19,9 +19,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class ScriptProposal implements DescriptionProvider {
 
-    private static final TemplateContextType CONTEXT_TYPE = GroovyQuickFixPlugin.getDefault()
-            .getTemplateContextRegistry()
-            .getContextType(GroovyQuickFixPlugin.GROOVY_CONTEXT_TYPE);
+    private static final TemplateContextType CONTEXT_TYPE;
     private String name;
     private String type;
     private String description;
@@ -30,6 +28,13 @@ public class ScriptProposal implements DescriptionProvider {
     private List<ScriptProposal> children = new ArrayList<>();
     private Optional<ScriptProposal> parentProposal = Optional.empty();
     private Image icon = Pics.getImage("proposal.svg", Activator.getDefault());
+
+    static {
+        CONTEXT_TYPE = GroovyQuickFixPlugin.getDefault() != null
+                ? GroovyQuickFixPlugin.getDefault().getTemplateContextRegistry()
+                        .getContextType(GroovyQuickFixPlugin.GROOVY_CONTEXT_TYPE)
+                : null; // for test purpose
+    }
 
     public ScriptProposal(String name, String type) {
         this.name = name;
@@ -80,7 +85,7 @@ public class ScriptProposal implements DescriptionProvider {
     public void setCategory(Category category) {
         this.category = category;
     }
-    
+
     public void setIcon(Image icon) {
         this.icon = icon;
     }
@@ -134,6 +139,5 @@ public class ScriptProposal implements DescriptionProvider {
     public void setType(String type) {
        this.type = type;
     }
-
 
 }
