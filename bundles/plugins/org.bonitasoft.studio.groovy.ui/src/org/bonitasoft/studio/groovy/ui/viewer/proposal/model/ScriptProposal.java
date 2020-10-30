@@ -1,5 +1,9 @@
 package org.bonitasoft.studio.groovy.ui.viewer.proposal.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.quickfix.GroovyQuickFixPlugin;
 import org.codehaus.groovy.eclipse.quickfix.templates.GroovyContext;
@@ -9,6 +13,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Image;
 
 public class ScriptProposal {
 
@@ -20,6 +25,9 @@ public class ScriptProposal {
     private String description;
     private Category category;
     private Template template;
+    private List<ScriptProposal> children = new ArrayList<>();
+    private Optional<ScriptProposal> parentProposal = Optional.empty();
+    private Image icon;
 
     public ScriptProposal(String name, String type) {
         this.name = name;
@@ -30,7 +38,7 @@ public class ScriptProposal {
         this.name = name;
         this.template = template;
     }
-    
+
     public String getId() {
         StringBuilder sb = new StringBuilder();
         Category c = getCategory();
@@ -69,6 +77,10 @@ public class ScriptProposal {
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+    public void setIcon(Image icon) {
+        this.icon = icon;
+    }
 
     public void apply(GroovyEditor editor) {
         ISourceViewer viewer = editor.getViewer();
@@ -82,9 +94,39 @@ public class ScriptProposal {
                     viewer.getSelectedRange().x);
         } else {
             StyledText textWidget = viewer.getTextWidget();
-            textWidget.insert(" " + getName());
+            textWidget.insert(toGroovyExpression());
             textWidget.setFocus();
         }
     }
+
+    protected String toGroovyExpression() {
+        String expression = getName();
+        if (parentProposal.isPresent()) {
+            expression = String.format("%s.%s", parentProposal.get().toGroovyExpression(), expression);
+        }
+        return expression;
+    }
+
+    public void addChild(ScriptProposal child) {
+        children.add(child);
+        child.setParentProposal(this);
+    }
+
+    public List<ScriptProposal> getChildren() {
+        return children;
+    }
+
+    public void setParentProposal(ScriptProposal parent) {
+        this.parentProposal = Optional.ofNullable(parent);
+    }
+
+    public Optional<ScriptProposal> getParentProposal() {
+        return parentProposal;
+    }
+
+    public Image getIcon() {
+        return icon;
+    }
+
 
 }

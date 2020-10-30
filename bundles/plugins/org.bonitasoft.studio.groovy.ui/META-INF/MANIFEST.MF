@@ -85,7 +85,10 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.bdm.dao,
+ org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.flownode,

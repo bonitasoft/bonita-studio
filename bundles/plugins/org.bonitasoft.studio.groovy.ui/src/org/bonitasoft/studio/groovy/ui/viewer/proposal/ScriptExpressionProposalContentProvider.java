@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer.proposal;
 
+import java.util.Optional;
+
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.Category;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptExpressionContext;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptProposal;
@@ -23,31 +25,32 @@ public class ScriptExpressionProposalContentProvider implements ITreeContentProv
 
     @Override
     public Object[] getElements(Object inputElement) {
-        if(inputElement instanceof ScriptExpressionContext) {
+        if (inputElement instanceof ScriptExpressionContext) {
             return ((ScriptExpressionContext) inputElement).getCategories().toArray();
         }
-       throw new IllegalArgumentException("Only ScriptExpressionContext is supported");
+        throw new IllegalArgumentException("Only ScriptExpressionContext is supported");
     }
-
 
     @Override
     public Object[] getChildren(Object parentElement) {
-        if(parentElement instanceof Category) {
-            if(((Category) parentElement).getSubcategories().isEmpty()) {
+        if (parentElement instanceof Category) {
+            if (((Category) parentElement).getSubcategories().isEmpty()) {
                 return ((Category) parentElement).getProposals().toArray();
             }
             return ((Category) parentElement).getSubcategories().toArray();
-           
+        } else if (parentElement instanceof ScriptProposal) {
+            return ((ScriptProposal) parentElement).getChildren().toArray();
         }
         return new Object[0];
     }
 
     @Override
     public Object getParent(Object element) {
-        if(element instanceof ScriptProposal) {
-            return ((ScriptProposal) element).getCategory();
+        if (element instanceof ScriptProposal) {
+            Optional parentProposal = ((ScriptProposal) element).getParentProposal();
+            return parentProposal.orElse(((ScriptProposal) element).getCategory());
         }
-        if(element instanceof Category) {
+        if (element instanceof Category) {
             return ((Category) element).getParentCategory();
         }
         return null;
@@ -55,9 +58,13 @@ public class ScriptExpressionProposalContentProvider implements ITreeContentProv
 
     @Override
     public boolean hasChildren(Object element) {
-        return element instanceof Category
-                && (!((Category)element).getProposals().isEmpty() 
-                || !((Category)element).getSubcategories().isEmpty());
+        if (element instanceof Category) {
+            return (!((Category) element).getProposals().isEmpty()
+                    || !((Category) element).getSubcategories().isEmpty());
+        }
+        return element instanceof ScriptProposal
+                && !((ScriptProposal) element).getChildren().isEmpty();
+
     }
 
 }

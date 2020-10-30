@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserC
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
@@ -103,7 +104,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -181,10 +181,13 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
     private ScriptExpressionContext scriptExpressionContext;
     private DropTarget dropTarget;
+    private RepositoryAccessor repositoryAccessor;
 
     public GroovyScriptExpressionEditor() {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+        repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
     }
 
     @Override
@@ -229,7 +232,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof Category) {
-                    if(((Category) element).getSubcategories().isEmpty()) {
+                    if (((Category) element).getSubcategories().isEmpty()) {
                         return ((Category) element).getProposals().stream()
                                 .anyMatch(proposal -> !proposalToFilter.contains(proposal));
                     }
@@ -530,9 +533,10 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         input = groovyViewer.getProvidedVariables(context, filters);
         input.addAll(nodes);
-        scriptExpressionContext = ScriptExpressionContext.computeProposals(input);
+        scriptExpressionContext = ScriptExpressionContext.computeProposals(repositoryAccessor, input);
         proposalsViewer.setInput(scriptExpressionContext);
-        dropTarget.addDropListener(new DropProposalTargetEffect(sourceViewer.getTextWidget(), getEditor(),scriptExpressionContext));
+        dropTarget.addDropListener(
+                new DropProposalTargetEffect(sourceViewer.getTextWidget(), getEditor(), scriptExpressionContext));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 

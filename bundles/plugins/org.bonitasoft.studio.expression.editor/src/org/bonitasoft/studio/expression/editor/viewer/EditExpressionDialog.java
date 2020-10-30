@@ -217,10 +217,11 @@ public class EditExpressionDialog extends TrayDialog {
         IExpressionEditor expressionEditor = provider.getExpressionEditor(input, context);
         nativeItem.getItem().setData("editor", expressionEditor);
         String defaultExpressionType = defaultExpressionType();
-        if(defaultExpressionType.equals(provider.getExpressionType())){
+        if (defaultExpressionType.equals(provider.getExpressionType())) {
             folder.setSelection(nativeItem);
         }
         return nativeItem;
+
     }
 
     private ViewerFilter filterEditor() {
@@ -346,6 +347,5 @@ public class EditExpressionDialog extends TrayDialog {
     public void setExpressionNameResolver(ExpressionNameResolver expressionNameResolver) {
         this.expressionNameResolver = expressionNameResolver;
     }
-
 
 }
