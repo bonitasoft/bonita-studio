@@ -304,6 +304,13 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
                 </platformTest>
             </ruleList>
         </substitute>
+        <changePermissions permissions="0755" files="${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/{lib/*,bin/*}"> 
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </changePermissions>
     </postInstallationActionList>
     <finalPageActionList>
         <runProgram>
@@ -391,18 +398,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
                             <origin>@studio.dir@/**</origin>
                         </distributionDirectory>
                     </distributionFileList>
-                </folder>
-                <folder>
-                    <description>Linux Program Files x64</description>
-                    <destination>${installdir}</destination>
-                    <name>linux_programfiles_64</name>
-                    <platforms>linux-x64</platforms>
-                    <distributionFileList>
-                        <distributionDirectory allowWildcards="1">
-                            <origin>@studio.dir@/**</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
+                </folder>             
                  <folder>
                     <description>Windows Program Files</description>
                     <destination>${installdir}</destination>
@@ -414,7 +410,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
-                  <folder>
+                <folder>
                     <description>OSX Program Files</description>
                     <destination>${installdir}</destination>
                     <name>osx_programfiles</name>
