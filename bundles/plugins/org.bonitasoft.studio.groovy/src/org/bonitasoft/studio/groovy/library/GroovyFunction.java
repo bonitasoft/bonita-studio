@@ -18,10 +18,12 @@
 
 package org.bonitasoft.studio.groovy.library;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -221,27 +223,13 @@ public class GroovyFunction implements IFunction {
 
 
     @Override
-    public String getParameters() {
-        final List<String> paramNames = new ArrayList<String>();
-        String result = "" ; //$NON-NLS-1$
-
+    public List<String> getParameterNames() {
         try {
-            for(final String s : methodNode.getParameterNames()) {
-                paramNames.add(s);
-            }
+            return Stream.of(methodNode.getParameterNames()).collect(Collectors.toList());
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(e);
+            return Collections.emptyList();
         }
-
-        for(final String name : paramNames){
-            result = result.concat(name+","); //$NON-NLS-1$
-        }
-
-        result = result.substring(0, result.lastIndexOf(",")); //$NON-NLS-1$
-
-
-        return  result ;
-
     }
 
     @Override

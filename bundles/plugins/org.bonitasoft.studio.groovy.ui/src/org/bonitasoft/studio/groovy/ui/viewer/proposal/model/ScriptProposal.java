@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.groovy.ui.Activator;
+import org.bonitasoft.studio.pics.Pics;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.quickfix.GroovyQuickFixPlugin;
 import org.codehaus.groovy.eclipse.quickfix.templates.GroovyContext;
@@ -15,7 +17,7 @@ import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
 
-public class ScriptProposal {
+public class ScriptProposal implements DescriptionProvider {
 
     private static final TemplateContextType CONTEXT_TYPE = GroovyQuickFixPlugin.getDefault()
             .getTemplateContextRegistry()
@@ -27,7 +29,7 @@ public class ScriptProposal {
     private Template template;
     private List<ScriptProposal> children = new ArrayList<>();
     private Optional<ScriptProposal> parentProposal = Optional.empty();
-    private Image icon;
+    private Image icon = Pics.getImage("proposal.svg", Activator.getDefault());
 
     public ScriptProposal(String name, String type) {
         this.name = name;
@@ -66,6 +68,7 @@ public class ScriptProposal {
         this.description = description;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
@@ -84,6 +87,7 @@ public class ScriptProposal {
 
     public void apply(GroovyEditor editor) {
         ISourceViewer viewer = editor.getViewer();
+        StyledText textWidget = viewer.getTextWidget();
         if (template != null) {
             GroovyContext templateContext = new GroovyContext(CONTEXT_TYPE, viewer.getDocument(),
                     editor.getCaretOffset(), 0, editor.getGroovyCompilationUnit());
@@ -93,10 +97,9 @@ public class ScriptProposal {
             new TemplateProposal(template, templateContext, region, null).apply(viewer, '.', 0,
                     viewer.getSelectedRange().x);
         } else {
-            StyledText textWidget = viewer.getTextWidget();
             textWidget.insert(toGroovyExpression());
-            textWidget.setFocus();
         }
+        textWidget.setFocus();
     }
 
     protected String toGroovyExpression() {
@@ -126,6 +129,10 @@ public class ScriptProposal {
 
     public Image getIcon() {
         return icon;
+    }
+
+    public void setType(String type) {
+       this.type = type;
     }
 
 

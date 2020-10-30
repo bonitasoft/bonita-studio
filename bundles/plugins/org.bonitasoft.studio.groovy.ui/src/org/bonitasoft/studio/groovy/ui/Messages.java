@@ -54,6 +54,24 @@ public final class Messages extends NLS {
     public static String codeTemplates;
     public static String usersTemplates;
     public static String userDefined;
+    public static String businessQueries;
+    public static String documents;
+    public static String stepVariables;
+    public static String processVariables;
+    public static String parameterCategoryDescription;
+    public static String contractInputCategoryDescription;
+    public static String connectorOutputCategoryDescription;
+    public static String stepVariablesCategoryDescription;
+    public static String processVariablesCategoryDescription;
+    public static String businessVariables;
+    public static String businessVariablesCategoryDescription;
+    public static String businessQueriesCategoryDescription;
+    public static String documentsCategoryDescription;
+    public static String executionContext;
+    public static String executionContextCategoryDescription;
+    public static String codeTemplatesCategoryDescription;
+    public static String userDefinedCategoryDescription;
+    public static String usersTemplatesCategoryDescription;
 
     private Messages() {
         // Do not instantiate

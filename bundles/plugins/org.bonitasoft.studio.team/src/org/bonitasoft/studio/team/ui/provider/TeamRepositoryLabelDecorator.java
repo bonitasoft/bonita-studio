@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.team.i18n.Messages;
@@ -78,19 +77,8 @@ public class TeamRepositoryLabelDecorator implements ILabelDecorator {
     public String decorateText(String text, final Object element) {
         if (element instanceof IRepositoryFileStore) {
             final IRepositoryFileStore fileStore = (IRepositoryFileStore) element;
-            text = getMigrationTextForDiagram(fileStore, text);
             if (lockStatus != null) {
                 text = getResourceOwnerText(fileStore, text);
-            }
-        }
-        return text;
-    }
-
-    private String getMigrationTextForDiagram(final IRepositoryFileStore fileStore,String text){
-        if (fileStore instanceof DiagramFileStore) {
-
-            if (((DiagramFileStore) fileStore).hasMigrationReport()) {
-                text = text + " -- " + Messages.migrationOngoing;
             }
         }
         return text;

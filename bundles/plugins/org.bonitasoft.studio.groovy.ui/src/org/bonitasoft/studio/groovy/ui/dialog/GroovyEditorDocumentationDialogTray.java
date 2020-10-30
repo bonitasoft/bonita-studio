@@ -181,7 +181,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
                         }
                         toInsert += "." + f.getName();
                         if (f.getParametersCount() > 0) {
-                            toInsert += "(" + f.getParameters() + ")";
+                            toInsert += "(" + f.getParameterNames() + ")";
                         } else {
                             toInsert += "()";
                         }

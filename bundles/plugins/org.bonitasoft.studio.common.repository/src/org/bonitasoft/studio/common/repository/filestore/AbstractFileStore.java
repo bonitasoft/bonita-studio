@@ -544,7 +544,7 @@ public abstract class AbstractFileStore<T>
     @Override
     public IStatus validate() {
         IResource resource = getResource();
-        if (resource instanceof IFile) {
+        if (resource instanceof IFile && resource.exists()) {
             try (InputStream is = openInputStream()) {
                 return getParentStore().validate(resource.getName(), is);
             } catch (IOException | CoreException e) {

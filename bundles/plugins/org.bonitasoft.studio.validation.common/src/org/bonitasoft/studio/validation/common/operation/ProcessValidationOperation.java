@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.validation.common.operation;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +39,22 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
     private boolean forceMarkerUpdate = false;
 
     public ProcessValidationOperation addProcess(final AbstractProcess process) {
+        if(process.eResource() == null) {
+            throw new IllegalArgumentException(String.format("Process %s (%s) is not in an EMF Resource",
+                    process.getName(),
+                    process.getVersion()));
+        }
         listOfProcessesToValidate.add(process);
         return this;
     }
     
     public ProcessValidationOperation forceMarkerUpdate() {
-        this.forceMarkerUpdate = true;;
+        this.forceMarkerUpdate = true;
         return this;
     }
 
     public ProcessValidationOperation addProcesses(final List<AbstractProcess> processes) {
-        listOfProcessesToValidate.addAll(newArrayList(processes));
+        processes.stream().forEach(this::addProcess);
         return this;
     }
 

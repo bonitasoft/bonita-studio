@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 
-public class Category {
+public class Category implements DescriptionProvider{
 
     private List<ScriptProposal> proposals = new ArrayList<>();
     private List<Category> subcategories = new ArrayList<>();
@@ -13,6 +13,7 @@ public class Category {
     private Image icon;
     private String id;
     private Category parentCategory;
+    private String description;
 
     public Category(String id, String name, Image icon) {
         this.id = id;
@@ -56,6 +57,15 @@ public class Category {
 
     public void setParentCategory(Category parentCategory) {
        this.parentCategory = parentCategory;
+    }
+
+    public void setDescription(String description) {
+       this.description = description;
+    }
+    
+    @Override
+    public String getDescription() {
+        return description;
     }
 
 }

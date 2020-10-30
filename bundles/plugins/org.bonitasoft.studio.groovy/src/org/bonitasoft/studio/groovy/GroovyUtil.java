@@ -147,9 +147,44 @@ public class GroovyUtil {
         final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element, filters, isPageFlowContext);
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             final ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
-                    getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
+                    getEngineExpressionReturnType(expressionConstants.getEngineConstantName()), 
+                    null,
+                    getDescriptionForEngineVariable(expressionConstants.getEngineConstantName()));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             result.add(scriptVariable);
+        }
+    }
+
+    private static String getDescriptionForEngineVariable(String engineConstantName) {
+        ExpressionConstants expressionConstants = Stream.of(ExpressionConstants.values())
+                .filter(c -> c.getEngineConstantName().equals(engineConstantName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown ExpressionConstants: "+engineConstantName));
+        switch (expressionConstants) {
+            case API_ACCESSOR:
+                return Messages.apiAccessorDescription;
+            case ACTIVITY_INSTANCE_ID:
+                return Messages.activityInstanceIdDescription;
+            case LOOP_COUNTER:
+                return Messages.loopCounterDescription;
+            case NUMBER_OF_ACTIVE_INSTANCES:
+                return Messages.nbActiveInstancesDescription;
+            case NUMBER_OF_COMPLETED_INSTANCES:
+                return Messages.nbCompletedInstancesDescription;
+            case NUMBER_OF_INSTANCES:
+                return Messages.nbInstancesDescription;
+            case NUMBER_OF_TERMINATED_INSTANCES:
+                return Messages.nbTerminatedInstancesDescription;
+            case PROCESS_DEFINITION_ID:
+                return Messages.processDefinitionIdDescription;
+            case PROCESS_INSTANCE_ID:
+                return Messages.processInstanceIdDescription;
+            case ROOT_PROCESS_INSTANCE_ID:
+                return Messages.rootProcessInstanceIdDescription;
+            case TASK_ASSIGNEE_ID:
+                return Messages.taskAssigneeIdDescription;
+            default:
+                return null;
         }
     }
 
@@ -240,8 +275,7 @@ public class GroovyUtil {
             throws JavaModelException {
         final IJavaProject project = RepositoryManager.getInstance()
                 .getCurrentRepository().getJavaProject();
-        final IType t = project.findType(className);
-        return t;
+        return project.findType(className);
     }
 
     public static boolean isMultipleData(final Element container,

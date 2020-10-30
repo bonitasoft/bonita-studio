@@ -50,12 +50,17 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
     }
 
     public RunProcessesValidationOperation addProcess(final AbstractProcess process) {
+        if (process.eResource() == null) {
+            throw new IllegalArgumentException(String.format("Process %s (%s) is not in an EMF Resource",
+                    process.getName(),
+                    process.getVersion()));
+        }
         listOfProcessesToValidate.add(process);
         return this;
     }
 
     public RunProcessesValidationOperation addProcesses(final List<AbstractProcess> processes) {
-        listOfProcessesToValidate.addAll(newArrayList(processes));
+        processes.stream().forEach(this::addProcess);
         return this;
     }
 
@@ -109,7 +114,8 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
         if (statusContainsError()) {
             final String errorMessage = Messages.errorValidationMessage
                     + getActiveEditorTitle();
-            final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
+            final int result = new ValidationDialog(Display.getDefault().getActiveShell(),
+                    Messages.validationFailedTitle,
                     errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
             if (result == ValidationDialog.SEE_DETAILS) {
