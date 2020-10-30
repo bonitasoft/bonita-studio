@@ -1,0 +1,231 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Patrik Suzzi <psuzzi@gmail.com> - Bug 489250
+ *******************************************************************************/
+package org.eclipse.ui.internal.views.properties.tabbed.view;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.di.InjectionException;
+import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewStatusCodes;
+import org.eclipse.ui.internal.views.properties.tabbed.l10n.TabbedPropertyMessages;
+import org.eclipse.ui.views.properties.tabbed.AbstractSectionDescriptor;
+import org.eclipse.ui.views.properties.tabbed.ISection;
+import org.eclipse.ui.views.properties.tabbed.ITypeMapper;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+
+/**
+ * Represents the default implementation of a section descriptor on the tabbed
+ * property sections extensions. This implementation assumes that we are
+ * interested in selected objects in an IStructuredSelection.
+ *
+ * @author Anthony Hunter
+ */
+public class SectionDescriptor extends AbstractSectionDescriptor {
+
+	private static final String ATT_ID = "id"; //$NON-NLS-1$
+
+	private static final String ATT_TARGET_TAB = "tab"; //$NON-NLS-1$
+
+	private static final String ATT_AFTER_SECTION = "afterSection"; //$NON-NLS-1$
+
+	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
+
+	private static final String ATT_SECTION_FILTER = "filter"; //$NON-NLS-1$
+
+	private static final String ATT_SECTION_ENABLES_FOR = "enablesFor"; //$NON-NLS-1$
+
+	private static final String ATT_INPUT_TYPE = "type"; //$NON-NLS-1$
+
+	private static final String ELEMENT_INPUT = "input"; //$NON-NLS-1$
+
+	private String id;
+
+	private String targetTab;
+
+	private String afterSection;
+
+	private List<String> inputTypes;
+
+	private IFilter filter;
+
+	private int enablesFor = ENABLES_FOR_ANY;
+
+	private IConfigurationElement configurationElement;
+
+	/**
+	 * Constructor for the section descriptor.
+	 *
+	 * @param configurationElement
+	 *            the configuration element for the section descriptor.
+	 * @param typeMapper
+	 *            The type mapper.
+	 */
+	protected SectionDescriptor(IConfigurationElement configurationElement,
+			ITypeMapper typeMapper) {
+		super(typeMapper);
+		this.configurationElement = configurationElement;
+
+		id = getConfigurationElement().getAttribute(ATT_ID);
+		targetTab = getConfigurationElement().getAttribute(ATT_TARGET_TAB);
+		afterSection = getConfigurationElement()
+				.getAttribute(ATT_AFTER_SECTION);
+		if (getConfigurationElement().getAttribute(ATT_SECTION_ENABLES_FOR) != null) {
+			String enablesForStr = getConfigurationElement().getAttribute(
+					ATT_SECTION_ENABLES_FOR);
+			int enablesForTest = Integer.parseInt(enablesForStr);
+			if (enablesForTest > 0) {
+				enablesFor = enablesForTest;
+			}
+		}
+
+		if (id == null || targetTab == null) {
+			// the section id and tab are mandatory - log error
+			handleSectionError(null);
+		}
+	}
+
+	/**
+	 * Handle the section error when an issue is found loading from the
+	 * configuration element.
+	 *
+	 * @param exception
+	 *            an optional CoreException
+	 */
+	private void handleSectionError(CoreException exception) {
+		String pluginId = getConfigurationElement().getDeclaringExtension()
+				.getContributor().getName();
+		String message = TabbedPropertyMessages.SectionDescriptor_Section_error;
+		if (exception == null) {
+			message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_Section_error, pluginId);
+		} else {
+			message = MessageFormat.format(TabbedPropertyMessages.SectionDescriptor_class_not_found_error, pluginId);
+		}
+		IStatus status = new Status(IStatus.ERROR, pluginId,
+				TabbedPropertyViewStatusCodes.SECTION_ERROR, message, exception);
+		Bundle bundle = FrameworkUtil.getBundle(SectionDescriptor.class);
+		Platform.getLog(bundle).log(status);
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public IFilter getFilter() {
+		if (filter == null) {
+			try {
+				if (getConfigurationElement().getAttribute(ATT_SECTION_FILTER) != null) {
+					filter = (IFilter) configurationElement
+							.createExecutableExtension(ATT_SECTION_FILTER);
+				}
+			} catch (CoreException exception) {
+				handleSectionError(exception);
+			}
+		}
+		return filter;
+	}
+
+	/**
+	 * Retrieves the value for section enablement which is a precise number of
+	 * items selected. For example: enablesFor=" 4" enables the action only when
+	 * 4 items are selected. If not specified, enable for all selections.
+	 *
+	 * @return the value for section enablement.
+	 */
+	@Override
+	public int getEnablesFor() {
+		return enablesFor;
+	}
+
+	@Override
+	public String getTargetTab() {
+		return targetTab;
+	}
+
+	@Override
+	public String getAfterSection() {
+		if (afterSection == null) {
+			return super.getAfterSection();
+		}
+		return afterSection;
+	}
+
+	/**
+	 * Creates an instance of a section described by this descriptor
+	 *
+	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getSectionClass()
+	 */
+	@Override
+    public ISection getSectionClass() {
+        ISection section = null;
+        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+        try {
+            section = (ISection) ContextInjectionFactory
+                    .make(Platform.getBundle(getConfigurationElement().getDeclaringExtension().getNamespaceIdentifier())
+                            .loadClass(
+                                    getConfigurationElement().getAttribute(ATT_CLASS)),
+                            workbench.getContext());
+        }catch (final InjectionException | ClassNotFoundException | InvalidRegistryObjectException e) {
+            handleSectionError(new CoreException(
+                    new Status(IStatus.ERROR, "org.eclipse.ui.views.properties.tabbed", e.getMessage(), e)));
+        }
+
+        return section;
+    }
+
+	/**
+	 * Gets the input types that are valid for this section.
+	 *
+	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getInputTypes()
+	 */
+	@Override
+	public List getInputTypes() {
+		if (inputTypes == null) {
+			inputTypes = new ArrayList<>();
+			IConfigurationElement[] elements = getConfigurationElement()
+					.getChildren(ELEMENT_INPUT);
+			for (IConfigurationElement element : elements) {
+				inputTypes.add(element.getAttribute(ATT_INPUT_TYPE));
+			}
+		}
+
+		return inputTypes;
+	}
+
+	@Override
+	public String toString() {
+		return getId();
+	}
+
+	/**
+	 * @return Returns the configurationElement.
+	 */
+	private IConfigurationElement getConfigurationElement() {
+		return configurationElement;
+	}
+}

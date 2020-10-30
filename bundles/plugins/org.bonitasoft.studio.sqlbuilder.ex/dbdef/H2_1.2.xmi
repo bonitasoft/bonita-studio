@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ASCII"?>
+<DBDefinition:DatabaseVendorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:DBDefinition="http:///org/eclipse/datatools/modelbase/dbdefinition/dbdefinition.ecore" vendor="H2" version="1.2" maximumIdentifierLength="64" viewTriggerSupported="true" maximumCommentLength="64" sequenceSupported="true" mQTSupported="true" aliasSupported="true">
+  <predefinedDataTypeDefinitions xmi:id="CHARACTER_1" lengthSupported="true" keyConstraintSupported="true" maximumLength="254" jdbcEnumType="1" javaClassName="java.lang.String">
+    <defaultValueTypes>CURRENT_USER</defaultValueTypes>
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>CHAR</name>
+    <name>CHARACTER</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="DECIMAL_1" scaleSupported="true" precisionSupported="true" keyConstraintSupported="true" identitySupported="true" primitiveType="DECIMAL" jdbcEnumType="3" javaClassName="java.math.BigDecimal">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>DECIMAL</name>
+    <name>DEC</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="DOUBLE_PRECISION_1" keyConstraintSupported="true" primitiveType="DOUBLE_PRECISION" jdbcEnumType="8" javaClassName="double">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>DOUBLE</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="INTEGER_1" keyConstraintSupported="true" identitySupported="true" primitiveType="INTEGER" jdbcEnumType="4" javaClassName="int">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>INTEGER</name>
+    <name>INT</name>
+  </predefinedDataTypeDefinitions>
+  <predefinedDataTypeDefinitions xmi:id="NUMERIC_1" scaleSupported="true" precisionSupported="true" keyConstraintSupported="true" primitiveType="NUMERIC" jdbcEnumType="2" javaClassName="java.math.BigDecimal">
+    <defaultValueTypes>NULL</defaultValueTypes>
+    <name>NUMERIC</name>
+    <name>NUM</name>
+  </predefinedDataTypeDefinitions>
+  <columnDefinition identitySupported="true" identityStartValueSupported="true" identityIncrementSupported="true" identityMinimumSupported="true" identityMaximumSupported="true" identityCycleSupported="true"/>
+  <constraintDefinition clusteredPrimaryKeySupported="true" clusteredUniqueConstraintSupported="true">
+    <parentUpdateDRIRuleType>RESTRICT</parentUpdateDRIRuleType>
+    <parentUpdateDRIRuleType>NO_ACTION</parentUpdateDRIRuleType>
+    <parentDeleteDRIRuleType>RESTRICT</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>CASCADE</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>SET_NULL</parentDeleteDRIRuleType>
+    <parentDeleteDRIRuleType>NO_ACTION</parentDeleteDRIRuleType>
+    <checkOption>NONE</checkOption>
+    <checkOption>LOCAL</checkOption>
+    <checkOption>CASCADE</checkOption>
+  </constraintDefinition>
+</DBDefinition:DatabaseVendorDefinition>
