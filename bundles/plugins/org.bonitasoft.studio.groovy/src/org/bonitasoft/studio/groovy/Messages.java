@@ -35,6 +35,17 @@ public final class Messages extends NLS {
     public static String errorBuildingJarForProvidedGroovyScriptsForProcess;
     public static String errorBuildingJarForGroovyScriptsFor6xApplication;
     public static String multiInstanceIteratorDescription;
+    public static String apiAccessorDescription;
+    public static String activityInstanceIdDescription;
+    public static String loopCounterDescription;
+    public static String nbActiveInstancesDescription;
+    public static String nbCompletedInstancesDescription;
+    public static String nbInstancesDescription;
+    public static String nbTerminatedInstancesDescription;
+    public static String processDefinitionIdDescription;
+    public static String processInstanceIdDescription;
+    public static String rootProcessInstanceIdDescription;
+    public static String taskAssigneeIdDescription;
 
 	private Messages() {
 		// Do not instantiate

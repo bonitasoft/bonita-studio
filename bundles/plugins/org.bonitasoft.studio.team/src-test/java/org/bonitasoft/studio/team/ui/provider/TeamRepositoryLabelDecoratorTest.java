@@ -38,12 +38,6 @@ public class TeamRepositoryLabelDecoratorTest {
     @Spy
     private TeamRepositoryLabelDecorator labelDecorator;
 
-    @Test
-    public void testDecorateTextForMigrationOnGoingDiagram() {
-        when(fileStore.hasMigrationReport()).thenReturn(true);
-        final String text = labelDecorator.decorateText("", fileStore);
-        assertEquals(text, " -- " + Messages.migrationOngoing);
-    }
 
     @Test
     public void testDecorateTextWithLockOwnerForOtherLocked() {

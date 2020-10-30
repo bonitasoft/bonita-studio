@@ -19,13 +19,11 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -103,11 +101,6 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
     protected void doDelete() {
         final Resource eResource = getEMFResource();
         doClose();
-        try {
-            getResource().delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
         if (eResource != null) {
             try {
                 eResource.delete(Collections.emptyMap());

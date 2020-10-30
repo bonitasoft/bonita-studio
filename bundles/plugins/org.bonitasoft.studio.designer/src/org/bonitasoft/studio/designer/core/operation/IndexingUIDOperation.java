@@ -25,7 +25,6 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.restlet.Context;
 import org.restlet.representation.EmptyRepresentation;
@@ -55,17 +54,14 @@ public class IndexingUIDOperation implements IRunnableWithProgress {
         try {
             uri = urlBuilder.indexation().toURI();
         } catch (MalformedURLException | URISyntaxException e1) {
-            throw new InvocationTargetException(new MigrationException(e1));
+            throw new InvocationTargetException(e1);
         }
         Context currentContext = Context.getCurrent();
         try {
             ClientResource clientResource = new ClientResource(uri);
-            clientResource.setRetryOnError(true);
-            clientResource.setRetryDelay(500);
-            clientResource.setRetryAttempts(10);
             clientResource.post(new EmptyRepresentation());
         } catch (ResourceException e) {
-            throw new InvocationTargetException(new MigrationException(e),
+            throw new InvocationTargetException(e,
                     "Failed to post on " + uri);
         }finally {
             Context.setCurrent(currentContext);

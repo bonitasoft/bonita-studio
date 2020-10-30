@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -63,11 +62,6 @@ public class DiagramLabelProvider extends StyledCellLabelProvider implements
             StyledString styledString = new StyledString();
 
             styledString.append(fileStoreLabelProvider.getText(filseStore), null);
-            if(filseStore.hasMigrationReport()){
-            	  styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
-            	  styledString.append( Messages.migrationOngoing ,StyledString.COUNTER_STYLER) ;
-            }
-        
             cell.setText(styledString.getString());
             cell.setImage(fileStoreLabelProvider.getImage(filseStore)) ;
             cell.setStyleRanges(styledString.getStyleRanges());

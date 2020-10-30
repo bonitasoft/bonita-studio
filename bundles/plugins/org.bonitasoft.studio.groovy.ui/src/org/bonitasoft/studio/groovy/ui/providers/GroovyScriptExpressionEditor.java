@@ -50,6 +50,7 @@ import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.ScriptExpressionProposalViewer;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.Category;
+import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.DescriptionProvider;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptExpressionContext;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.model.ScriptProposal;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -276,15 +277,19 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         descriptionBrowser.setText(noDecription());
         selectionObservable.addValueChangeListener(e -> {
             Object selection = e.diff.getNewValue();
-            if (selection instanceof ScriptProposal
-                    && ((ScriptProposal) selection).getDescription() != null
-                    && !((ScriptProposal) selection).getDescription().isEmpty()) {
-                descriptionBrowser.setText(htmlFormat(((ScriptProposal) selection).getDescription()), true);
+            if (hasDescription(selection)) {
+                descriptionBrowser.setText(htmlFormat(((DescriptionProvider) selection).getDescription()), true);
             } else {
                 descriptionBrowser.setText(noDecription());
             }
             descriptionBrowser.getParent().layout(true, true);
         });
+    }
+
+    private boolean hasDescription(Object selection) {
+        return selection instanceof DescriptionProvider
+                && ((DescriptionProvider) selection).getDescription() != null
+                && !((DescriptionProvider) selection).getDescription().isEmpty();
     }
 
     private String htmlFormat(String content) {
@@ -533,7 +538,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         input = groovyViewer.getProvidedVariables(context, filters);
         input.addAll(nodes);
-        scriptExpressionContext = ScriptExpressionContext.computeProposals(repositoryAccessor, input);
+        scriptExpressionContext = ScriptExpressionContext.computeProposals(repositoryAccessor, input, context);
         proposalsViewer.setInput(scriptExpressionContext);
         dropTarget.addDropListener(
                 new DropProposalTargetEffect(sourceViewer.getTextWidget(), getEditor(), scriptExpressionContext));

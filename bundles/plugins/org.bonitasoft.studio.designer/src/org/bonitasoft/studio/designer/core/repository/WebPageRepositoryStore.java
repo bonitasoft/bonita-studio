@@ -111,7 +111,8 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
-            if (!PageUUIDResolver.indexFile(location.toFile()).exists()) {
+            if (!PageUUIDResolver.indexFile(location.toFile()).exists() 
+                    && UIDesignerServerManager.getInstance().isStarted()) {
                 try {
                     new IndexingUIDOperation().run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (InvocationTargetException | InterruptedException e) {

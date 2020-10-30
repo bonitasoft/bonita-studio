@@ -159,9 +159,7 @@ public class BatchValidationHandler extends AbstractHandler {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         diagramRepositoryStore.getChildren().stream()
-                .forEach(fStore -> {
-                    validateOperation.addProcesses(fStore.getProcesses());
-                });
+                .forEach(fStore -> validateOperation.addProcesses(fStore.getProcesses()));
     }
 
     protected void computeDiagramsToValidate(final ExecutionEvent event,

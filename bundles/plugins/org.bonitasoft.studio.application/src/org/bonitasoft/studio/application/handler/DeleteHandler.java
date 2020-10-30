@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.designer.core.operation.DeleteUIDArtifactOperation;
 import org.bonitasoft.studio.designer.core.repository.InFolderJSONFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebResource;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -71,6 +73,11 @@ public class DeleteHandler extends AbstractHandler {
                            BonitaStudioLog.error(e);
                         }
                     }else {
+                        if(fileStore instanceof DiagramFileStore) {
+                            // Remove local process configuration
+                            Set<IRepositoryFileStore<?>> relatedFileStore = fileStore.getRelatedFileStore();
+                            relatedFileStore.stream().forEach(IRepositoryFileStore::delete);
+                        }
                         fileStore.delete();
                     }
                     
