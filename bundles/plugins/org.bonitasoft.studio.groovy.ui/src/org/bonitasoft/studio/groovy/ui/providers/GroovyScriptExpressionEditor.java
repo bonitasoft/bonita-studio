@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +44,7 @@ import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.contentassist.BonitaConstantsTypeLookup;
 import org.bonitasoft.studio.groovy.ui.dialog.GroovyEditorDocumentationDialogTray;
 import org.bonitasoft.studio.groovy.ui.dialog.TestGroovyScriptDialog;
+import org.bonitasoft.studio.groovy.ui.filter.ScriptProposalViewerFilter;
 import org.bonitasoft.studio.groovy.ui.job.ComputeScriptDependenciesJob;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
@@ -96,7 +96,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -228,20 +227,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         createToolbarComposite(proposalTreeComposite);
         proposalsViewer = new ScriptExpressionProposalViewer(proposalTreeComposite, SWT.BORDER);
 
-        proposalsViewer.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof Category) {
-                    if (((Category) element).getSubcategories().isEmpty()) {
-                        return ((Category) element).getProposals().stream()
-                                .anyMatch(proposal -> !proposalToFilter.contains(proposal));
-                    }
-                    return true;
-                }
-                return !proposalToFilter.contains(element);
-            }
-        });
+        proposalsViewer.addFilter(new ScriptProposalViewerFilter(proposalToFilter));
         IViewerObservableValue<Object> selectionObservable = ViewerProperties.singleSelection().observe(proposalsViewer);
 
         proposalsViewer.addDoubleClickListener(e -> {
@@ -273,7 +259,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 .grab(true, true)
                 .create());
         descriptionBrowser.setBackground(proposalsViewer.getTree().getBackground());
-        descriptionBrowser.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.TABLE_BACKGROUND_COLOR);
+        descriptionBrowser.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.TABLE_BACKGROUND_COLOR);
         descriptionBrowser.setText(noDecription());
         selectionObservable.addValueChangeListener(e -> {
             Object selection = e.diff.getNewValue();
@@ -341,17 +328,43 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             Display.getDefault().asyncExec(() -> {
                 String search = searchObservableValue.getValue().toLowerCase();
                 proposalToFilter.clear();
-                scriptExpressionContext.getCategories().stream()
-                        .map(Category::getProposals)
-                        .flatMap(Collection::stream) // TODO only first level -> improve behavior when we add children.
-                        .filter(proposal -> !proposal.getName().toLowerCase().contains(search))
-                        .forEach(proposalToFilter::add);
+                filterCategories(search, scriptExpressionContext.getCategories());
                 proposalsViewer.refresh();
                 if (!search.isEmpty()) {
                     proposalsViewer.expandAll();
                 }
             });
         });
+    }
+
+    private void filterCategories(String search, List<Category> categories) {
+        categories.forEach(category -> {
+            if (!category.getSubcategories().isEmpty()) {
+                filterCategories(search, category.getSubcategories());
+            }
+            filterProposals(search, category.getProposals());
+        });
+    }
+
+    /**
+     * Iterate over the the proposals and their children (recursively).
+     * - If a proposal match the search, then it's not added to the filter list and we don't iterate over its children.
+     * - If a proposal doesn't match the search, then it's added to the filter list if and only if none of its children match
+     * the search.
+     * 
+     * @return true if one of the proposals matchs the search.
+     */
+    private boolean filterProposals(String search, List<ScriptProposal> proposals) {
+        boolean anyMatch = false;
+        for (ScriptProposal proposal : proposals) {
+            if (proposal.getName().toLowerCase().contains(search)
+                    || filterProposals(search, proposal.getChildren())) {
+                anyMatch = true;
+            } else {
+                proposalToFilter.add(proposal);
+            }
+        }
+        return anyMatch;
     }
 
     private void createToolbar(Composite toolbarComposite) {
