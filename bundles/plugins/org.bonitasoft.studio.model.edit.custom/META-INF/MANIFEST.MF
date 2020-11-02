@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Customization of the generated model.edit
 Bundle-SymbolicName: org.bonitasoft.studio.model.edit.custom;singleton:=true
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.beta-02
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.emf.edit,
