@@ -27,7 +27,7 @@ public class ScriptProposal implements DescriptionProvider {
     private Template template;
     private List<ScriptProposal> children = new ArrayList<>();
     private Optional<ScriptProposal> parentProposal = Optional.empty();
-    private Image icon = Pics.getImage("proposal.svg", Activator.getDefault());
+    private Image icon = Pics.getImage("proposal.png", Activator.getDefault());
 
     static {
         CONTEXT_TYPE = GroovyQuickFixPlugin.getDefault() != null
@@ -137,7 +137,7 @@ public class ScriptProposal implements DescriptionProvider {
     }
 
     public void setType(String type) {
-       this.type = type;
+        this.type = type;
     }
 
 }
