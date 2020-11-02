@@ -188,7 +188,7 @@ public class EditExpressionDialog extends TrayDialog {
         return tabFolder;
     }
 
-    private void createContentComposite(Composite parent) {
+    protected void createContentComposite(Composite parent) {
         contentComposite = new Composite(parent, SWT.NONE);
         contentComposite
                 .setLayoutData(GridDataFactory.fillDefaults()
