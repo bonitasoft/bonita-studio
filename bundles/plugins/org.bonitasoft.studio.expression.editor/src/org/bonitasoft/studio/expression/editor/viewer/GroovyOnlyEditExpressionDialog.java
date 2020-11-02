@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +24,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabItem;
 
 /**
  * @author Romain Bioteau
@@ -47,6 +43,7 @@ public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
         Composite folder = new Composite(parentForm, SWT.NONE);
         folder.setLayout(GridLayoutFactory.fillDefaults().create());
         folder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createContentComposite(folder);
         return folder;
     }
 
