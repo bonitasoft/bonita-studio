@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bonitasoft.studio.tests-dependencies</groupId>
     <artifactId>tests-dependencies</artifactId>
-    <version>7.12.0-SNAPSHOT</version>
+    <version>7.12.0.deposit-03</version>
   </parent>
   <groupId>org.bonitasoft.studio.tests-dependencies</groupId>
   <artifactId>tests-dependencies-feature</artifactId>

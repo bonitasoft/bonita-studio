@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.connectors.model;singleton:=true
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.deposit-03
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.connector.model.ConnectorModelPlugin
 Bundle-Vendor: %providerName
