@@ -651,7 +651,13 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, e);
         }
-        return operation.getImportArchiveModel();
+        ImportArchiveModel importArchiveModel = operation.getImportArchiveModel();
+        if ((RepositoryMode) repositoryModeObservable.getValue() == RepositoryMode.NEW
+                && !newTargetRepo.isEmpty()) {
+            switchRepositoryStrategy.setTargetRepository(newTargetRepo);
+            importArchiveModel.resetStatus();
+        }
+        return importArchiveModel;
     }
 
     private ParseBosArchiveOperation newParseOperation(File selectedFile) {
