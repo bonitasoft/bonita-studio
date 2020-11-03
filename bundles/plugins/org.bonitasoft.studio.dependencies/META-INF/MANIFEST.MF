@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependencies plugin
+Bundle-SymbolicName: org.bonitasoft.studio.dependencies;singleton:=true
+Bundle-Version: 7.12.0.qualifier
+Bundle-Localization: plugin
+Bundle-Activator: org.bonitasoft.studio.dependencies.DependenciesPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.bonitasoft.studio.pics;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.7.100",
+ org.eclipse.jdt.core;bundle-version="3.7.1",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.eclipse.core.databinding;bundle-version="1.4.0",
+ org.eclipse.core.databinding.beans;bundle-version="1.2.100",
+ org.eclipse.core.databinding.property;bundle-version="1.4.0",
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.junit;bundle-version="4.8.2";resolution:=optional,
+ org.mockito;bundle-version="1.9.5";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.dependencies,org.bonitasoft.stud
+ io.dependencies.handler,org.bonitasoft.studio.dependencies.i18n;x-fri
+ ends:="org.bonitasoft.studio.connectors.test,org.bonitasoft.studio.gr
+ oovy.tests",org.bonitasoft.studio.dependencies.repository,org.bonitas
+ oft.studio.dependencies.ui,org.bonitasoft.studio.dependencies.ui.dial
+ og
+Import-Package: org.bonitasoft.engine.bpm.bar
