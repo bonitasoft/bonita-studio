@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <extension-point id="formOperationFactory" name="Form Operation Factory" schema="schema/formOperationFactory.exsd"/>
+
+
+<extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
+           <command
+                 commandId="org.bonitasoft.studio.pagedesigner.open.command"
+                 icon="icons/ui_designer_16x16.png"
+                 style="push">
+           </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.page"
+               label="%newApplicationPage"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.layout"
+               label="%newLayout"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.widget"
+               label="%newCustomWidget"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                  <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.fragment"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                     <iterate>
+	                        <instanceof
+	                              value="org.eclipse.core.resources.IProject">
+	                        </instanceof>
+	                        <test
+	                              property="org.bonitasoft.studio.application.isBonitaProject">
+	                        </test>
+	                     </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=additions">
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.page"
+               label="%newApplicationPage"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+                        value="1">
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.designer.isWebPageFolder">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.layout"
+               label="%newLayout"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+                        value="1">
+	                  </count>
+	                  <iterate>
+	                     <test
+	                           property="org.bonitasoft.studio.designer.isWebPageFolder">
+	                     </test>
+	                  </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+<extension
+      point="org.eclipse.ui.commands">
+   <command
+         defaultHandler="org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler"
+         id="org.bonitasoft.studio.pagedesigner.open.command"
+         name="%OpenPageDesigner">
+   </command>
+</extension>
+<extension
+      point="org.bonitasoft.studio.repositoryStore">
+   <repositoryStore
+         class="org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore">
+   </repositoryStore>
+   <repositoryStore
+         class="org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore">
+   </repositoryStore>
+   <repositoryStore
+         class="org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore">
+   </repositoryStore>
+</extension>
+<extension
+      point="org.eclipse.ui.propertiesView">
+   <excludeSources
+         id="org.bonitasoft.studio.pagedesigner.formMapping">
+   </excludeSources>
+</extension>
+<extension
+      point="org.bonitasoft.studio.expression.proposalListener">
+   <proposalListner
+         name="%createNewFormLabel"
+         providerClass="org.bonitasoft.studio.designer.core.expression.CreateNewFormProposalListener"
+         type="FORM_REFERENCE_TYPE">
+   </proposalListner>
+</extension>
+<extension
+      point="org.bonitasoft.studio.expression.expressionProvider">
+   <expressionProvider
+         providerClass="org.bonitasoft.studio.designer.core.expression.FormReferenceExpressionProvider">
+   </expressionProvider>
+</extension>
+<extension
+      point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+   <propertyTabs
+         contributorId="org.bonitasoft.studio.diagram">
+      <propertyTab
+            afterTab="tab.contract"
+            category="domain"
+            id="tab.form.mapping.entry"
+            label="%EntryFormMapping">
+      </propertyTab>
+      <propertyTab
+            afterTab="tab.contract"
+            category="domain"
+            id="tab.form.mapping.caseStart"
+            label="%CaseStartFormMapping">
+      </propertyTab>
+      <propertyTab
+            afterTab="tab.form.mapping.caseStart"
+            category="domain"
+            id="tab.form.mapping.overview"
+            label="%OverviewFormMapping">
+      </propertyTab>
+   </propertyTabs>
+</extension>
+<extension
+      point="org.eclipse.ui.views.properties.tabbed.propertySections">
+   <propertySections
+         contributorId="org.bonitasoft.studio.diagram">
+      <propertySection
+            class="org.bonitasoft.studio.designer.ui.property.section.EntryFormMappingPropertySection"
+            enablesFor="1"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.TaskFilter"
+            id="TaskEntryFormMapping"
+            tab="tab.form.mapping.entry"
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
+      </propertySection>
+      <propertySection
+            class="org.bonitasoft.studio.designer.ui.property.section.CaseStartFormMappingPropertySection"
+            enablesFor="1"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.PoolOrLaneFilter"
+            id="PoolEntryFormMapping"
+            tab="tab.form.mapping.caseStart"
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
+      </propertySection>
+      <propertySection
+            class="org.bonitasoft.studio.designer.ui.property.section.CaseOverviewFormMappingPropertySection"
+            filter="org.bonitasoft.studio.designer.ui.property.filter.PoolOrLaneFilter"
+            id="PoolOverviewFormMapping"
+            tab="tab.form.mapping.overview"
+            viewID="org.bonitasoft.studio.views.properties.process.execution">
+      </propertySection>
+   </propertySections>
+</extension>
+<extension
+      point="org.bonitasoft.studio.common.barResourcesProvider">
+   <barResourceProvider
+         providerClass="org.bonitasoft.studio.designer.core.bar.FormMappingBarResourceProvider">
+   </barResourceProvider>
+</extension>
+<extension
+      point="org.bonitasoft.studio.bosArchiveProvider">
+   <bosArchiveProvider
+         providerClass="org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider">
+   </bosArchiveProvider>
+</extension>
+<extension
+      point="org.bonitasoft.studio.coolbarContributionItem">
+   <coolbarItem
+         class="org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem"
+         toolbarPosition="9">
+   </coolbarItem>
+</extension>
+<extension
+      id="id1"
+      point="org.eclipse.e4.workbench.model">
+   <fragment
+         uri="fragment.e4xmi">
+   </fragment>
+</extension>
+<extension
+      point="org.eclipse.ui.handlers">
+   <handler
+         class="org.bonitasoft.studio.designer.ui.handler.CreateCustomWidgetHandler"
+         commandId="org.bonitasoft.studio.application.new">
+      <activeWhen>
+         <with
+               variable="activeMenuSelection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <test
+                        property="org.bonitasoft.studio.designer.isWebWidgetFolder">
+                  </test>
+               </iterate>
+            </and>
+         </with>
+      </activeWhen>
+   </handler>
+</extension>
+<extension
+      point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+         class="org.bonitasoft.studio.designer.core.propertytester.WebArtifactPropertyTester"
+         id="org.bonitasoft.studio.designer.propertyTester"
+         namespace="org.bonitasoft.studio.designer"
+         properties="isWebPageFolder,isWebWidgetFolder,isWebFragmentFolder"
+         type="org.eclipse.core.runtime.IAdaptable">
+   </propertyTester>
+</extension>
+<extension
+      point="org.eclipse.ui.commandImages">
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.page"
+         icon="icons/page.png">
+   </image>
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.widget"
+         icon="icons/custom_widget.png">
+   </image>
+   <image
+         commandId="org.bonitasoft.studio.designer.command.create.layout"
+         icon="icons/page.png">
+   </image>
+      <image
+            commandId="org.bonitasoft.studio.designer.command.create.fragment"
+            icon="icons/fragment.png">
+      </image>
+</extension>
+</plugin>
