@@ -34,6 +34,8 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
+import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -56,8 +58,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
@@ -81,7 +81,7 @@ public class EditExpressionDialog extends TrayDialog {
     private EMFModelUpdater<Expression> expressionUpdater;
     private Map<String, Expression> lastExpressionByType = new HashMap<>();
     private IExpressionEditor currentExpressionEditor;
-    private TabFolder tabFolder;
+    private NativeTabFolderWidget tabFolder;
 
     protected EditExpressionDialog(final Shell parentShell,
             final boolean isPassword,
@@ -156,27 +156,27 @@ public class EditExpressionDialog extends TrayDialog {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createTabFolder(composite);
-       
+
         return composite;
     }
 
     protected Composite createTabFolder(final Composite parentForm) {
-        tabFolder = new TabFolder(parentForm, SWT.NONE);
+        tabFolder = new NativeTabFolderWidget.Builder().createIn(parentForm);//new TabFolder(parentForm, SWT.NONE);
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                TabItem item = tabFolder.getItem(tabFolder.getSelectionIndex());
-                if (item != null && item.getData(EXPRESSION_TYPE_KEY) != null) {
-                    showContent(item, (String) item.getData(EXPRESSION_TYPE_KEY));
+                NativeTabItemWidget item = tabFolder.getItem(tabFolder.getSelectionIndex());
+                if (item != null && item.getItem().getData(EXPRESSION_TYPE_KEY) != null) {
+                    showContent(item, (String) item.getItem().getData(EXPRESSION_TYPE_KEY));
                     updateOKButton();
                 }
             }
 
         });
-        createContentComposite(tabFolder);
+        createContentComposite(tabFolder.getTabFolder());
         ExpressionTypeContentProvider expressionTypeContentProvider = new ExpressionTypeContentProvider();
         Stream.of(expressionTypeContentProvider.getElements(expressionViewer.getInput()))
                 .filter(provider -> Stream.of(viewerTypeFilters).allMatch(f -> f.select(null, null, provider)))
@@ -185,7 +185,7 @@ public class EditExpressionDialog extends TrayDialog {
                 .sorted((e1, e2) -> e1.getTypeLabel().compareTo(e2.getTypeLabel()))
                 .map(provider -> createTabItem(tabFolder, provider, inputExpression))
                 .collect(Collectors.toList());
-        return tabFolder;
+        return tabFolder.getTabFolder();
     }
 
     protected void createContentComposite(Composite parent) {
@@ -207,19 +207,19 @@ public class EditExpressionDialog extends TrayDialog {
         return expressionType;
     }
 
-    private TabItem createTabItem(TabFolder folder, IExpressionProvider provider, Expression input) {
-        TabItem item = new TabItem(folder, SWT.NONE);
-        item.setText(provider.getTypeLabel());
-        item.setData(EXPRESSION_TYPE_KEY, provider.getExpressionType());
+    private NativeTabItemWidget createTabItem(NativeTabFolderWidget folder, IExpressionProvider provider, Expression input) {
+        NativeTabItemWidget nativeItem = new NativeTabItemWidget.Builder().withText(provider.getTypeLabel())
+                .createIn(folder);
+        nativeItem.getItem().setData(EXPRESSION_TYPE_KEY, provider.getExpressionType());
 
         IExpressionEditor expressionEditor = provider.getExpressionEditor(input, context);
-        item.setData("editor", expressionEditor);
+        nativeItem.getItem().setData("editor", expressionEditor);
         String defaultExpressionType = defaultExpressionType();
-        if(defaultExpressionType.equals(provider.getExpressionType())){
-            folder.setSelection(item);
+        if (defaultExpressionType.equals(provider.getExpressionType())) {
+            folder.setSelection(nativeItem);
             folder.notifyListeners(SWT.Selection, new Event());
         }
-        return item;
+        return nativeItem;
     }
 
     private ViewerFilter filterEditor() {
@@ -248,8 +248,8 @@ public class EditExpressionDialog extends TrayDialog {
         return button;
     }
 
-    protected void showContent(TabItem item, final String type) {
-        if(type == null) {
+    protected void showContent(NativeTabItemWidget item, final String type) {
+        if (type == null) {
             return;
         }
         lastExpressionByType.put(inputExpression.getType(), EcoreUtil.copy(inputExpression));
@@ -293,7 +293,7 @@ public class EditExpressionDialog extends TrayDialog {
                     okButton.setEnabled(currentExpressionEditor.canFinish());
                 }
             });
-            if(item != null) {
+            if (item != null) {
                 item.setControl(contentComposite);
                 contentComposite.layout(true);
             }
