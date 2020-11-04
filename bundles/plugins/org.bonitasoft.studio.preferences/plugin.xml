@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension-point id="preferenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/preferenceFieldEditorContribution.exsd"/>
+   <extension-point id="preferenceInitializerExtension" name="Preference Initializer Extension" schema="schema/preferenceInitializerExtension.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage"
+            id="org.bonitasoft.studio.preferences.advanced"
+            name="advanced preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.repository.ex.keyword.svn">
+         </keywordReference>
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keyword.advanced">
+         </keywordReference>
+      </page>
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.BonitaDatabasePreferencePage"
+            id="org.bonitasoft.studio.preferences.database"
+            name="Database">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywordReference.database">
+         </keywordReference>
+      </page>
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.BonitaAppearancePreferencePage"
+            id="org.bonitasoft.studio.preferences.appearance"
+            name="Appearance">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywords.appearance">
+         </keywordReference>
+      </page>
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.BonitaLanguagePreferencePage"
+            id="org.bonitasoft.studio.preferences.language"
+            name="Language">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywords.language">
+         </keywordReference>
+      </page>
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.preferences.pages.BonitaRunPreferencePage"
+            id="org.bonitasoft.studio.preferences.run"
+            name="Run">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keyword.run">
+         </keywordReference>
+      </page>
+      <page
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.bonitasoft.studio.preferences.pages.CustomProxyPreferencePage"
+            id="org.eclipse.ui.net.custom.NetPreferences"
+            name="Network Connections">
+         <keywordReference
+               id="org.eclipse.ui.net.proxy">
+         </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.ParentBPMPreferencePage"
+            id="org.bonitasoft.studio.preferences.pages.BPM"
+            name="BPM">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.preferences.ShowBonitaPreferenceHandler"
+            commandId="org.eclipse.ui.window.preferences">
+         <activeWhen>
+            <reference
+                  definitionId="isBonitaPerspectiveActive">
+            </reference>
+         </activeWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywordReference.userXP"
+            label="%userXpKeyWords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywordReference.database"
+            label="%databaseKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keyword.advanced"
+            label="%advancedKeyWords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywords.appearance"
+            label="%appearanceKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywords.language"
+            label="%languageKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keyword.run"
+            label="%runKeywords">
+      </keyword>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.bonitasoft.studio.preferences.manager.ActivityPropertyTester"
+            id="org.eclipse.ui.activityPropertyTester"
+            namespace="org.bonitasoft"
+            properties="is6XLegacyEnabled"
+            type="org.eclipse.ui.IWorkbenchWindow">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/light_mac.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme macos"
+            os="macosx">
+      </theme>
+      <theme
+            basestylesheeturi="css/light_windows.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme windows"
+            os="win32">
+      </theme>
+      <theme
+            basestylesheeturi="css/light_linux.css"
+            id="org.bonitasoft.studio.preferences.theme.light"
+            label="Light theme linux"
+            os="linux">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_mac.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme macos"
+            os="macosx">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_windows.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme windows"
+            os="win32">
+      </theme>
+      <theme
+            basestylesheeturi="css/dark_linux.css"
+            id="org.bonitasoft.studio.preferences.theme.dark"
+            label="Dark theme linux"
+            os="linux">
+      </theme>
+      <stylesheet
+            uri="css/dark_preferencestyle.css">
+         <themeid
+               refid="org.bonitasoft.studio.preferences.theme.dark">
+         </themeid>
+      </stylesheet>
+      <themeAssociation
+            colorAndFontId="org.bonitasoft.studio.preferences.themeAssociation2"
+            themeId="org.bonitasoft.studio.preferences.themeAssociation2">
+      </themeAssociation>
+   </extension>
+
+</plugin>
