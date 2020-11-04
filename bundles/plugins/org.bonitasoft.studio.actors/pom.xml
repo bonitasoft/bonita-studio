@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+        <version>7.11.3-SNAPSHOT</version>
+	</parent>
+  <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+  <artifactId>org.bonitasoft.studio.actors</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  
+  <properties>
+		<userfilters.impl.target>${basedir}/filters-impl</userfilters.impl.target>
+		<userfilters.def.target>${basedir}/filters-def</userfilters.def.target>
+		<userfilters.deps.target>${basedir}/dependencies</userfilters.deps.target>
+		<userfilters.tmp.dir>${basedir}/userfilters</userfilters.tmp.dir>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Retrieve userfilters</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.userfilter</groupId>
+									<artifactId>bonita-userfilter-package</artifactId>
+									<version>${filters.version}</version>
+									<classifier>package</classifier>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${userfilters.tmp.dir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Clean generated resources</id>
+						<phase>clean</phase>
+						<configuration>
+							<target>
+								<delete dir="${userfilters.impl.target}" failonerror="false" />
+								<mkdir dir="${userfilters.impl.target}" />
+								<delete dir="${userfilters.deps.target}" failonerror="false" />
+								<mkdir dir="${userfilters.deps.target}" />
+								<delete dir="${userfilters.def.target}" failonerror="false" />
+								<mkdir dir="${userfilters.def.target}" />
+								<delete dir="${userfilters.tmp.dir}" failonerror="false" />
+								<mkdir dir="${userfilters.tmp.dir}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>Configure generated resources</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<unzip dest="${userfilters.tmp.dir}">
+									<fileset dir="${userfilters.tmp.dir}" includes="*.zip" />
+								</unzip>
+								<delete failonerror="false">
+									<fileset dir="${userfilters.tmp.dir}" includes="*.zip" />
+								</delete>
+
+								<copy todir="${userfilters.deps.target}">
+									<fileset dir="${userfilters.tmp.dir}/classpath" includes="*.jar" />
+								</copy>
+								<delete dir="${userfilters.tmp.dir}/classpath" failonerror="false" />
+
+								<copy todir="${userfilters.def.target}">
+									<fileset dir="${userfilters.tmp.dir}" excludes="*.impl" />
+								</copy>
+								<copy todir="${userfilters.impl.target}">
+									<fileset dir="${userfilters.tmp.dir}" includes="*.impl" />
+								</copy>
+								<delete dir="${userfilters.tmp.dir}" failonerror="false" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

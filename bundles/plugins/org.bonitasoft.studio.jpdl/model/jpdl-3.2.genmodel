@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bonitasoft.studio.jpdl/src"
+    modelPluginID="org.bonitasoft.studio.jpdl" modelName="Jpdl-3" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>jpdl32.ecore</foreignModel>
+  <genPackages prefix="jpdl32" basePackage="org.jbpm" resource="XML" disposableProviderFactory="true"
+      contentTypeIdentifier="" fileExtensions="xml" ecorePackage="jpdl32.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//BindingType">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BindingType/late"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BindingType/early"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//BooleanType">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/yes"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/no"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/true"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/false"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/on"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//BooleanType/off"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//ConfigType">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//ConfigType/field"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//ConfigType/bean"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//ConfigType/constructor"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//ConfigType/configurationProperty"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//PriorityTypeMember0">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//PriorityTypeMember0/highest"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//PriorityTypeMember0/high"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//PriorityTypeMember0/normal"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//PriorityTypeMember0/low"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//PriorityTypeMember0/lowest"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//SignalType">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/unsynchronized"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/never"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/first"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/firstWait"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/last"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//SignalType/lastWait"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="jpdl32.ecore#//TypeTypeMember1">
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/nodeEnter"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/nodeLeave"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/processStart"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/processEnd"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/taskCreate"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/taskAssign"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/taskStart"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/taskEnd"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/beforeSignal"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/afterSignal"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/superstateEnter"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/superstateLeave"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/timerCreate"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/subprocessCreated"/>
+      <genEnumLiterals ecoreEnumLiteral="jpdl32.ecore#//TypeTypeMember1/subprocessEnd"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//BindingTypeObject"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//BooleanTypeObject"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//ConfigTypeObject"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//PriorityType"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//PriorityTypeMember0Object"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//PriorityTypeMember1"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//PriorityTypeMember1Object"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//SignalTypeObject"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//TypeType"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//TypeTypeMember0"/>
+    <genDataTypes ecoreDataType="jpdl32.ecore#//TypeTypeMember1Object"/>
+    <genClasses ecoreClass="jpdl32.ecore#//ActionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/acceptPropagatedEvents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/configType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ActionType/refName"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//AssignmentType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//AssignmentType/actorId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//AssignmentType/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//AssignmentType/pooledActors"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//CancelTimerType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//CancelTimerType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ConditionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ConditionType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ConditionType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ConditionType/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ConditionType/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//CreateTimerType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//CreateTimerType/action"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//CreateTimerType/script"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//CreateTimerType/duedate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//CreateTimerType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//CreateTimerType/repeat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//CreateTimerType/transition"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//DecisionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DecisionType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DecisionType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DecisionType/handler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DecisionType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DecisionType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DecisionType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DecisionType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DecisionType/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DecisionType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//Delegation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//Delegation/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//Delegation/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//Delegation/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//Delegation/configType"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/action"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/assignment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/cancelTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/controller"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/createTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/decision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/endState"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/exceptionHandler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/fork"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/join"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/mail"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/mailNode"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/node"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/processDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/processState"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/recipients"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/startState"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/subject"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/superState"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/swimlane"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/task"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/taskNode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/template"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/timer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//DocumentRoot/to"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/transition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//DocumentRoot/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//EndStateType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EndStateType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EndStateType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EndStateType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EndStateType/exceptionHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EndStateType/endCompleteProcess"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EndStateType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//EventType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EventType/actionElements"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EventType/action"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EventType/script"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EventType/createTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EventType/cancelTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//EventType/mail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//EventType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ExceptionHandlerType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ExceptionHandlerType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ExceptionHandlerType/action"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ExceptionHandlerType/script"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ExceptionHandlerType/exceptionClass"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ForkType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ForkType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ForkType/script"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ForkType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ForkType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ForkType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ForkType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ForkType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ForkType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ForkType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//JoinType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//JoinType/nodeContentElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//JoinType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//JoinType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//JoinType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//JoinType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//JoinType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//JoinType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//JoinType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//MailNodeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/subject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//MailNodeType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//MailNodeType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//MailNodeType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//MailNodeType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/actors"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/subject1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/template"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/text1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailNodeType/to"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//MailType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/subject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/actors"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/subject1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/template"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/text1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//MailType/to"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//NodeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/action"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/createTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/cancelTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/mail"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//NodeType/nodeContentElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//NodeType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//NodeType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//NodeType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//NodeType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ProcessDefinitionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessDefinitionType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessDefinitionType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/swimlane"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/startState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/node"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/state"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/taskNode"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/superState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/processState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/fork"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/join"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/decision"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/endState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/mailNode"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/action"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/script"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/createTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/cancelTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/mail"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessDefinitionType/task"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessDefinitionType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ProcessStateType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessStateType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/subProcess"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/variable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessStateType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//ProcessStateType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessStateType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessStateType/binding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ProcessStateType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ReminderType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ReminderType/duedate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ReminderType/repeat"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//ScriptType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ScriptType/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ScriptType/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ScriptType/acceptPropagatedEvents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//ScriptType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//StartStateType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StartStateType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StartStateType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StartStateType/task"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StartStateType/transition"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StartStateType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StartStateType/exceptionHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StartStateType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//StateType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StateType/nodeContentElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StateType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StateType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StateType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StateType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//StateType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StateType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//StateType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//SubProcessType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SubProcessType/binding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SubProcessType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SubProcessType/version"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//SuperStateType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SuperStateType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/node"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/state"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/taskNode"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/superState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/processState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/fork"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/join"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/decision"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/endState"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/mailNode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SuperStateType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//SuperStateType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SuperStateType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SuperStateType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//SwimlaneType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//SwimlaneType/assignment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//SwimlaneType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//TaskNodeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskNodeType/task"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskNodeType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskNodeType/exceptionHandler"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskNodeType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskNodeType/transition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/async"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/createTasks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/endTasks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskNodeType/signal"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//TaskType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskType/assignment"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskType/controller"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskType/event"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskType/timer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TaskType/reminder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/blocking"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/description1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/duedate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/notify"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/signalling"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TaskType/swimlane"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//TimerType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//TimerType/action"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//TimerType/script"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//TimerType/createTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//TimerType/cancelTimer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jpdl32.ecore#//TimerType/mail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TimerType/duedate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TimerType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TimerType/repeat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TimerType/transition"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//TransitionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TransitionType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TransitionType/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/condition"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/action"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/script"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/createTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/cancelTimer"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/mail"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference jpdl32.ecore#//TransitionType/exceptionHandler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TransitionType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//TransitionType/to"/>
+    </genClasses>
+    <genClasses ecoreClass="jpdl32.ecore#//VariableType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute jpdl32.ecore#//VariableType/any"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//VariableType/access"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//VariableType/mappedName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute jpdl32.ecore#//VariableType/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
