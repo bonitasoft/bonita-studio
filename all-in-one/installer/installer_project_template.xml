@@ -398,7 +398,18 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
                             <origin>@studio.dir@/**</origin>
                         </distributionDirectory>
                     </distributionFileList>
-                </folder>             
+                </folder>
+                <folder>
+                    <description>Linux Program Files x64</description>
+                    <destination>${installdir}</destination>
+                    <name>linux_programfiles_64</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionDirectory allowWildcards="1">
+                            <origin>@studio.dir@/**</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
                  <folder>
                     <description>Windows Program Files</description>
                     <destination>${installdir}</destination>
