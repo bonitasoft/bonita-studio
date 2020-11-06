@@ -39,6 +39,7 @@ import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditionTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorImplementationTest;
+import org.bonitasoft.studio.tests.connectors.RichTextEditorIT;
 import org.bonitasoft.studio.tests.connectors.SWTBotConnectorDefinitionTest;
 import org.bonitasoft.studio.tests.connectors.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorOutputMode;
@@ -103,6 +104,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        RichTextEditorIT.class,
         DiagramTests.class,
         TestDeleteDiagrams.class,
         DeleteCommandTest.class,
