@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -80,14 +81,11 @@ public class ProcessInstantiationFormURLBuilderTest {
         verify(applicationURLBuilder).buildLoginUrl("william.jobs", "bpm");
     }
 
-    /**
-     * Test method for {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
-     */
     @Test
     public void shouldToURL_RetursAValidURLForSpecifConf() throws Exception {
         final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
         configuration.setUsername("userInAconf");
-        configuration.setPassword("passwordInCOnf");
+        doReturn(Optional.of("passwordInOrga")).when(applicationURLBuilder).retrieveUserPasswordFromActiveOrga("userInAconf");
         doReturn(configuration).when(applicationURLBuilder).getConfiguration();
 
         final URL url = applicationURLBuilder.toURL(AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -96,7 +94,7 @@ public class ProcessInstantiationFormURLBuilderTest {
         final String validProcessReference = "testPool%2520with%2520space%2520%2Fand%2520slash%2F1.0%2Fcontent";
         final String validProcDefId = URLEncoder.encode("id=12", "UTF-8");
         final String validLocale = URLEncoder.encode("locale=fr", "UTF-8");
-        verify(applicationURLBuilder).buildLoginUrl("userInAconf", "passwordInCOnf");
+        verify(applicationURLBuilder).buildLoginUrl("userInAconf", "passwordInOrga");
         assertThat(url.toString())
                 .contains(validApplicationPath)
                 .contains(validProcessReference)
