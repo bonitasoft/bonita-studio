@@ -56,7 +56,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -161,7 +160,7 @@ public class EditExpressionDialog extends TrayDialog {
     }
 
     protected Composite createTabFolder(final Composite parentForm) {
-        tabFolder = new NativeTabFolderWidget.Builder().createIn(parentForm);//new TabFolder(parentForm, SWT.NONE);
+        tabFolder = new NativeTabFolderWidget.Builder().createIn(parentForm);
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
@@ -170,7 +169,8 @@ public class EditExpressionDialog extends TrayDialog {
             public void widgetSelected(SelectionEvent e) {
                 NativeTabItemWidget item = tabFolder.getItem(tabFolder.getSelectionIndex());
                 if (item != null && item.getItem().getData(EXPRESSION_TYPE_KEY) != null) {
-                    showContent(item, (String) item.getItem().getData(EXPRESSION_TYPE_KEY));
+                    String expressionType = (String) item.getItem().getData(EXPRESSION_TYPE_KEY);
+                    showContent(item, expressionType);
                     updateOKButton();
                 }
             }
@@ -217,7 +217,6 @@ public class EditExpressionDialog extends TrayDialog {
         String defaultExpressionType = defaultExpressionType();
         if (defaultExpressionType.equals(provider.getExpressionType())) {
             folder.setSelection(nativeItem);
-            folder.notifyListeners(SWT.Selection, new Event());
         }
         return nativeItem;
     }
