@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_nebagAL0Eeum0aAGx6Q3ag">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tEgSMAL0Eeum0aAGx6Q3ag" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_2xacYAL0Eeum0aAGx6Q3ag" elementId="org.bonitasoft.studio.importer.other.command" commandName="%otherLabel"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_x6OD8AL0Eeum0aAGx6Q3ag" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_7CTp0AL0Eeum0aAGx6Q3ag" elementId="org.bonitasoft.studio.importer.other.handler" contributionURI="bundleclass://org.bonitasoft.studio.importer/org.bonitasoft.studio.importer.handler.ImportOtherHandler" command="_2xacYAL0Eeum0aAGx6Q3ag"/>
+  </fragments>
+</fragment:ModelFragments>
