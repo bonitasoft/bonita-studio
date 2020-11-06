@@ -54,6 +54,12 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         getTree().addMouseMoveListener(this::updateCursor);
+        getTree().addTraverseListener(e -> {
+            if (e.detail == SWT.TRAVERSE_RETURN) {
+                e.doit = false; //Do not close parent dialog
+            }
+        });
+
         addFilter(emptyCategory());
     }
 
@@ -75,7 +81,7 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
         ViewerCell cell = getCell(new Point(e.x, e.y));
         if (cell != null && cell.getElement() instanceof ScriptProposal) {
             cell.getControl().setCursor(cursorHand);
-        }else if(cell != null){
+        } else if (cell != null) {
             cell.getControl().setCursor(cursorArrow);
         }
     }
