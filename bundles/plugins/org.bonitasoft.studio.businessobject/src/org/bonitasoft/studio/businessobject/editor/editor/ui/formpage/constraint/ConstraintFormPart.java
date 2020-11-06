@@ -79,6 +79,7 @@ public class ConstraintFormPart extends AbstractFormPart {
 
         businessObjectList = new ReadOnlyBusinessObjectList(businessObjectListComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
+        businessObjectList.expandAll();
     }
 
     public void refreshConstraintList() {
