@@ -130,6 +130,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
     private void createBusinessObjectList(Composite businessDataModelComposite) {
         businessObjectList = new BusinessObjectList(businessDataModelComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
+        businessObjectList.expandAll();
     }
 
     public void updateTopControl() {
