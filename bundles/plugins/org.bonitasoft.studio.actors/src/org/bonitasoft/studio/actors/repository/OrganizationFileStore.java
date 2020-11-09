@@ -122,7 +122,20 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
             final Resource emfResource = getEMFResource();
             emfResource.getContents().clear();
             final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
-            root.setOrganization((Organization) EcoreUtil.copy((EObject) content));
+            Organization organization = (Organization) EcoreUtil.copy((EObject) content);
+            if(organization.getUsers() == null) {
+                organization.setUsers(OrganizationFactory.eINSTANCE.createUsers());
+            }
+            if(organization.getGroups() == null) {
+                organization.setGroups(OrganizationFactory.eINSTANCE.createGroups());
+            }
+            if(organization.getRoles() == null) {
+                organization.setRoles(OrganizationFactory.eINSTANCE.createRoles());
+            }
+            if(organization.getMemberships() == null) {
+                organization.setMemberships(OrganizationFactory.eINSTANCE.createMemberships());
+            }
+            root.setOrganization(organization);
             emfResource.getContents().add(root);
             try {
                 final Map<Object, Object> options = new HashMap<>();
