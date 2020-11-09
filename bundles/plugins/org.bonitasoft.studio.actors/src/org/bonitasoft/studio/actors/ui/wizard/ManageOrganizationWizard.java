@@ -111,7 +111,6 @@ public class ManageOrganizationWizard extends Wizard {
                 addActiveOrganizationAdapter(copy);
             }
             organizationsWorkingCopy.add(copy);
-
         }
     }
 
