@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Import from other models to BOS
 Bundle-SymbolicName: org.bonitasoft.studio.importer;singleton:=true
-Bundle-Version: 7.12.0.qualifier
+Bundle-Version: 7.12.0.beta-03
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.importer.ImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
