@@ -45,7 +45,8 @@ public class SelectDependencyDialog extends Dialog {
     private final List<EObject> deps;
     private final Set<Expression> filteredExpression;
 
-    public SelectDependencyDialog(final Shell parentShell, final Set<Expression> filteredExpression, final List<EObject> currentDepList) {
+    public SelectDependencyDialog(final Shell parentShell, final Set<Expression> filteredExpression,
+            final List<EObject> currentDepList) {
         super(parentShell);
         this.filteredExpression = filteredExpression;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -63,11 +64,12 @@ public class SelectDependencyDialog extends Dialog {
         final Composite composite = (Composite) super.createDialogArea(parent);
 
         dependenciesViewer = new TableViewer(composite, SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY | SWT.MULTI);
-        dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        dependenciesViewer.getControl()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
         dependenciesViewer.setContentProvider(new ArrayContentProvider());
         dependenciesViewer.setLabelProvider(adapterLabelProvider);
 
-        final List<EObject> input = new ArrayList<EObject>();
+        final List<EObject> input = new ArrayList<>();
         for (final Expression e : filteredExpression) {
             final EList<EObject> referencedElements = e.getReferencedElements();
             if (!referencedElements.isEmpty()) {

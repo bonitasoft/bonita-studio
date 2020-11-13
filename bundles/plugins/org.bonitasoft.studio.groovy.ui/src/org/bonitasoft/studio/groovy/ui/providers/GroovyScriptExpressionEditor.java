@@ -84,6 +84,8 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.DialogTray;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -388,7 +390,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         automaticResolutionButton = new Button(mainComposite, SWT.CHECK);
         automaticResolutionButton.setText(Messages.automaticResolution);
-        automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults().create());
         automaticResolutionButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -400,9 +402,16 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             }
         });
 
+        ControlDecoration controlDecoration = new ControlDecoration(automaticResolutionButton, SWT.RIGHT);
+        controlDecoration.setDescriptionText(Messages.automaticResolutionHint);
+        controlDecoration.setImage(FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
+        controlDecoration.show();
+
         depndencySection = new Section(mainComposite, Section.NO_TITLE);
         depndencySection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         depndencySection.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        depndencySection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
 
         final Composite dependenciesComposite = new Composite(depndencySection, SWT.NONE);
         dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -512,7 +521,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                     new TestGroovyScriptDialog(Display.getDefault().getActiveShell(), nodes, groovyViewer
                             .getGroovyCompilationUnit(), inputExpression.getReturnType(), variables).open();
                 }
-
             }
         });
     }

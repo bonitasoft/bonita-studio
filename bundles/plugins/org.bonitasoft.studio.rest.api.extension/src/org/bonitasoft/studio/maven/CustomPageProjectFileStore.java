@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.MavenProjectInfo;
@@ -73,9 +74,14 @@ import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjectDescriptor> extends AbstractFileStore<T> implements IDeployable, IBuildable {
 
     public static final String QUICK_DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.quickDeployCommand";
+    private JavaUILabelProvider javaUILabelProvider;
 
     public CustomPageProjectFileStore(String fileName, CustomPageProjectRepositoryStore parentStore) {
         super(fileName, parentStore);
+    }
+
+    JavaUILabelProvider createJavaUILabelProvider() {
+        return new JavaUILabelProvider();
     }
     
     @Override
@@ -133,6 +139,13 @@ public abstract class CustomPageProjectFileStore<T extends CustomPageMavenProjec
 
     @Override
     public Image getIcon() {
+        IProject project = getProject();
+        if(javaUILabelProvider == null) {
+            javaUILabelProvider = createJavaUILabelProvider();
+        }
+        if(javaUILabelProvider != null && project.isAccessible() && project.isOpen()) {
+            return javaUILabelProvider.getImage(project);
+        }
         return Pics.getImage("prj_obj.gif", RestAPIExtensionActivator.getDefault());
     }
 

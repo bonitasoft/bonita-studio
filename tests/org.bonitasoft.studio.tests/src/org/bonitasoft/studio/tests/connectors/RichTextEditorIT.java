@@ -20,10 +20,16 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotAddConnectorDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotBrowser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,13 +42,13 @@ public class RichTextEditorIT {
     public void should_rich_text_editor_write_html_output() throws Exception {
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         BotProcessDiagramPerspective diagramEditor = botApplicationWorkbenchWindow
-        .createNewDiagram();
-      
+                .createNewDiagram();
+
         BotAddConnectorDialog connectorDialog = diagramEditor.getDiagramPropertiesPart()
-        .selectExecutionTab()
-        .selectConnectorsInTab()
-        .addConnector();
-        
+                .selectExecutionTab()
+                .selectConnectorsInTab()
+                .addConnector();
+
         connectorDialog.selectConnectorInCategory("Messaging", "Email (SMTP)");
         connectorDialog.next();
         connectorDialog.setName("email notif");
@@ -51,21 +57,40 @@ public class RichTextEditorIT {
         bot.text(0).setText("from");
         bot.text(1).setText("to");
         connectorDialog.next(); // Message page
-        
+
         bot.text(0).setText("Title");
-        
+
         assertThat(bot.cTabItem("Rich text").isActive()).isTrue();
-        bot.browser().setFocus();
         bot.sleep(1000); // need to wait for CKEditor to be loaded
+
+        SWTBotBrowser browser = bot.browser();
+        Display.getDefault().syncExec(() -> {
+            Browser control = browser.widget;
+            Event event = new Event();
+            event.type = SWT.MouseMove;
+            Point textLocation = control.toDisplay(10, 150);
+            event.x = textLocation.x;
+            event.y = textLocation.y;
+            control.getDisplay().post(event);
+
+            event = new Event();
+            event.type = SWT.MouseDown;
+            event.button = 1;
+            control.getDisplay().post(event);
+
+            event = new Event();
+            event.type = SWT.MouseUp;
+            event.button = 1;
+            control.getDisplay().post(event);
+        });
         Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
-        keyboard.typeText("Hello world");
-        
+        keyboard.typeText("HELLO WORLD");
         bot.cTabItem("Plain text").activate();
         bot.waitUntil(new AssertionCondition() {
-            
+
             @Override
             protected void makeAssert() throws Exception {
-                assertThat(bot.styledText().getText()).contains("<p>Hello world</p>");
+                assertThat(bot.styledText().getText()).contains("<p>HELLO WORLD</p>");
             }
         });
         connectorDialog.finish();
