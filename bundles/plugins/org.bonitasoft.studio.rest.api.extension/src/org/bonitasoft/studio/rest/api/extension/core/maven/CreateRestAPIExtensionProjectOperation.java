@@ -8,19 +8,14 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.core.maven;
 
-import java.util.Set;
-
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
-import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
-import org.codehaus.jdt.groovy.model.GroovyNature;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
@@ -34,36 +29,20 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
     }
 
     @Override
-    protected Set<String> projectBuilders(final IProjectDescription description) {
-        final Set<String> builders = super.projectBuilders(description);
-        builders.add(JavaCore.BUILDER_ID);
-        builders.add(RestAPIBuilder.BUILDER_ID);
-        return builders;
-    }
-
-    @Override
-    protected Set<String> projectNatures(final IProjectDescription description) {
-        final Set<String> natures = super.projectNatures(description);
-        natures.add(GroovyNature.GROOVY_NATURE);
-        natures.add(JavaCore.NATURE_ID);
-        return natures;
-    }
-
-    @Override
-    protected IProject doRun(IProgressMonitor monitor) throws CoreException {
-        IProject project = super.doRun(monitor);
+    protected void projectCreated(IProject project) throws CoreException  {
         //archetype-post-generate.groovy doesn't work with m2e maven-archetype embedded version...
         //so we need to clean irrelevant generated files here
         RestAPIExtensionArchetypeConfiguration archetypeConfiguration = (RestAPIExtensionArchetypeConfiguration) getArchetypeConfiguration();
-        if(RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE.equals(archetypeConfiguration.getLanguage())){
-            cleanKotlinResources(monitor, project);
-            cleanGroovyResources(monitor, project);
-        }else if(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE.equals(archetypeConfiguration.getLanguage())) {
-            cleanKotlinResources(monitor, project);
-            cleanJavaResources(monitor, project);
-            project.getFile("groovy-pom.xml").move(Path.fromOSString("pom.xml"), true, monitor);
+        if (RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE.equals(archetypeConfiguration.getLanguage())) {
+            cleanKotlinResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
+            cleanGroovyResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
+        } else if (RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE
+                .equals(archetypeConfiguration.getLanguage())) {
+            cleanKotlinResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
+            cleanJavaResources(AbstractRepository.NULL_PROGRESS_MONITOR, project);
+            project.getFile("groovy-pom.xml").move(Path.fromOSString("pom.xml"), true,
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
         }
-        return project;
     }
 
     private void cleanJavaResources(IProgressMonitor monitor, IProject project) throws CoreException {

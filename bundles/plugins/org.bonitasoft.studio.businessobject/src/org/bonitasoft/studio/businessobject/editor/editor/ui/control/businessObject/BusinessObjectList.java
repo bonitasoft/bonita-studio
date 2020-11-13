@@ -507,6 +507,10 @@ public class BusinessObjectList {
         viewer.refresh();
     }
 
+    public void expandAll() {
+        viewer.expandAll();
+    }
+
     public void showBusinessObjectSelection() {
         viewer.expandToLevel(businessObjectSelectionObservable.getValue(), 1);
         selectionObservable.setValue(businessObjectSelectionObservable.getValue());

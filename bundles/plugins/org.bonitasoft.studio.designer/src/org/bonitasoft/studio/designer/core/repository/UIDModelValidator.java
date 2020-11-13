@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -56,6 +57,9 @@ public class UIDModelValidator implements IValidator<InputStream> {
 
     @Override
     public IStatus validate(InputStream inputStream) {
+        if(!UIDesignerServerManager.getInstance().isStarted()) {
+            return ValidationStatus.ok();
+        }
         String artifactContent = new BufferedReader(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))
                         .lines()

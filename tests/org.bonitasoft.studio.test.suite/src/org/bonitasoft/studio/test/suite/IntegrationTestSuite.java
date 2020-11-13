@@ -32,7 +32,7 @@ import org.bonitasoft.studio.tests.bar.TestExportProcessBar;
 import org.bonitasoft.studio.tests.bar.TestOperationHistory;
 import org.bonitasoft.studio.tests.bar.TestShowEngineLog;
 import org.bonitasoft.studio.tests.bug.TestBugs;
-import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
+import org.bonitasoft.studio.tests.businessobject.DeployBDMOperationIT;
 import org.bonitasoft.studio.tests.businessobject.ImportLegacyBDMIT;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.conditions.TestDecisionTableToGroovy;
@@ -144,7 +144,7 @@ import org.junit.runners.Suite;
         TestTokenDispatcher.class,
         DocumentMigrationIT.class,
         GroovyConnectorIT.class,
-        DeployBDROperationIT.class,
+        DeployBDMOperationIT.class,
         ImportLegacyBDMIT.class,
         TestProcessParameters.class,
         TestParametersRefactoring.class,

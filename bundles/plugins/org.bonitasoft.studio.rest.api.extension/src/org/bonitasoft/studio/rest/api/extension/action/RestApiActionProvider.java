@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.application.views.BonitaProjectExplorer;
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -37,7 +36,6 @@ import org.eclipse.ui.navigator.resources.GoIntoActionProvider;
 
 public class RestApiActionProvider extends CommonActionProvider {
 
-    private RepositoryAccessor repositoryAccessor;
     private GoIntoActionProvider goIntoActionProvider;
     private ActionContributionItem openTypeInHierarchyActionContributionItem;
     private GenerateActionGroup generateActionGroup;
@@ -47,8 +45,6 @@ public class RestApiActionProvider extends CommonActionProvider {
     @Override
     public void init(ICommonActionExtensionSite aSite) {
         super.init(aSite);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
         initActionProviders(aSite);
     }
 
@@ -126,7 +122,7 @@ public class RestApiActionProvider extends CommonActionProvider {
             final IResource resource = ((IAdaptable) firstSelectedElement).getAdapter(IResource.class);
             final IProject project = resource != null ? resource.getProject() : null;
             try {
-                return project != null ? project.hasNature(RestAPIExtensionNature.NATURE_ID) : false;
+                return project != null && project.hasNature(RestAPIExtensionNature.NATURE_ID);
             } catch (CoreException e) {
                 return false;
             }

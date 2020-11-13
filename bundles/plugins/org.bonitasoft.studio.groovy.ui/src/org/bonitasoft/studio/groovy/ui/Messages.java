@@ -72,6 +72,7 @@ public final class Messages extends NLS {
     public static String codeTemplatesCategoryDescription;
     public static String userDefinedCategoryDescription;
     public static String usersTemplatesCategoryDescription;
+    public static String automaticResolutionHint;
 
     private Messages() {
         // Do not instantiate

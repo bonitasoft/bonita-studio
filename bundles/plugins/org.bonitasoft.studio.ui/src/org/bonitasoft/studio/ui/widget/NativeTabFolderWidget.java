@@ -86,6 +86,9 @@ public class NativeTabFolderWidget {
     public void setSelection(NativeTabItemWidget tabItem) {
         if (isWindows()) {
             ((CTabFolder) tabFolder).setSelection((CTabItem) tabItem.getItem());
+            Event event = new Event();
+            event.item =  tabItem.getItem();
+            ((CTabFolder) tabFolder).notifyListeners(SWT.Selection, event);
         } else {
             ((TabFolder) tabFolder).setSelection((TabItem) tabItem.getItem());
         }

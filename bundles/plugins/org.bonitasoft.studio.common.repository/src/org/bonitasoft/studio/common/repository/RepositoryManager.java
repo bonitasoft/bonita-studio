@@ -242,6 +242,9 @@ public class RepositoryManager {
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
         Object resource = element instanceof IJavaElement ? ((IJavaElement) element).getResource() : element;
+        if(!hasActiveRepository() || !getCurrentRepository().isLoaded() || !getCurrentRepository().getProject().isOpen()) {
+            return Optional.empty();
+        }
         return getCurrentRepository().getAllStores().stream()
                 .filter(repo -> java.util.Objects.equals(resource, repo.getResource()))
                 .findFirst();
