@@ -60,14 +60,18 @@ public class SmartImportFileStoreModel extends ImportFileStoreModel {
                         smartImportable = true;
                     }
                 } catch (IOException e) {
-                    new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+                    Display.getDefault().syncExec(() -> {
+                        new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
+                                e);
+                    });
                 }
             }
         }
     }
 
     private File toFile(ZipFile zipFile) throws IOException {
-        File file = new File(getFileName());
+        File file = File.createTempFile(getFileName(), null);
+        file.deleteOnExit();
         FileUtils.copyInputStreamToFile(zipFile.getInputStream(zipFile.getEntry(getPath())), file);
         return file;
     }
