@@ -2,7 +2,7 @@
 <feature
       id="tests-feature"
       label="Feature for BonitaStudio tests"
-      version="7.13.0.qualifier"
+      version="7.12.0.W46"
       provider-name="Bonitasoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -18,9 +18,9 @@
    </license>
 
    <requires>
-      <import feature="bos-branding-feature" version="7.13.0" match="equivalent"/>
-      <import feature="studio-bos-specific-feature" version="7.13.0" match="equivalent"/>
-      <import feature="tests-common-feature" version="7.13.0" match="equivalent"/>
+      <import feature="bos-branding-feature" version="7.12.0.W46" match="equivalent"/>
+      <import feature="studio-bos-specific-feature" version="7.12.0.W46" match="equivalent"/>
+      <import feature="tests-common-feature" version="7.12.0.W46" match="equivalent"/>
    </requires>
 
 </feature>
