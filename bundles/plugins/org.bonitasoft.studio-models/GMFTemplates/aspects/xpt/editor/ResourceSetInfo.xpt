@@ -1,0 +1,349 @@
+﻿/*
+ * Copyright (c) 2007, 2010 Borland Software Corporation and others
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alexander Shatalin (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«REM»Inner class of DocumentProvider«ENDREM»
+«DEFINE ResourceSetInfo FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedClassComment»	
+public class ResourceSetInfo extends ElementInfo {
+
+	«EXPAND attributes-»
+	
+	«EXPAND _constructor-»
+
+	«EXPAND getModificationStamp-»
+
+	«EXPAND setModificationStamp-»
+	
+	«EXPAND getEditingDomain-»
+
+	«EXPAND getResourceSet-»
+	
+	«EXPAND getLoadedResourcesIterator-»
+
+	«EXPAND getEditorInput-»
+
+	«EXPAND dispose-»
+
+	«EXPAND isSynchronized-»
+
+	«IF null = editorGen.application-»
+		«EXPAND setUnSynchronized-»
+
+		«EXPAND setSynchronized-»
+
+		«EXPAND stopResourceListening-»
+
+		«EXPAND startResourceListening-»
+	
+	«ENDIF-»
+	«EXPAND isUpdateCache-»
+	
+	«EXPAND setUpdateCache-»
+	
+	«EXPAND isModifiable-»
+	
+	«EXPAND setModifiable-»
+	
+	«EXPAND isReadOnly-»
+	
+	«EXPAND setReadOnly-»
+
+	«IF null = editorGen.application-»
+		«EXPAND SynchronizerDelegate-»
+		
+	«ENDIF-»
+	«EXPAND additions-»
+}
+«ENDDEFINE»
+
+«DEFINE attributes FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+ 	private long myModificationStamp = «IF null = editorGen.application»org.eclipse.core.resources.IResource.NULL_STAMP«ELSE»0«ENDIF»;
+
+	«IF null = editorGen.application-»
+		«EXPAND xpt::Common::generatedMemberComment»
+		private java.util.Collection<org.eclipse.emf.ecore.resource.Resource> myUnSynchronizedResources = new java.util.ArrayList<org.eclipse.emf.ecore.resource.Resource>();
+
+	
+	«ENDIF-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument myDocument;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.ui.IEditorInput myEditorInput;
+		
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myUpdateCache = true;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myModifiable = false;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myReadOnly = true;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private ResourceSetModificationListener myResourceSetListener;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate sharedResourceSetInfoDelegate;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private SynchronizerDelegate synchronizerDelegate;
+«ENDDEFINE»
+
+«DEFINE _constructor FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+/**
+ * @Generated Bonitasoft
+ */
+public ResourceSetInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument document, org.eclipse.ui.IEditorInput editorInput) {
+	super(document);
+	myDocument = document;
+	myEditorInput = editorInput;
+	
+	synchronizerDelegate = new SynchronizerDelegate();
+	sharedResourceSetInfoDelegate = org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate.adapt(getEditingDomain());
+	sharedResourceSetInfoDelegate.addWorkspaceSynchronizerDelegate(synchronizerDelegate);
+	// set the dirty flag depending of the dirty state of the resource set
+	fCanBeSaved = sharedResourceSetInfoDelegate.resourceSetIsDirty(); 
+
+	myResourceSetListener = new ResourceSetModificationListener(this);
+	getResourceSet().eAdapters().add(myResourceSetListener);
+	«IF null = editorGen.application-»
+	startResourceListening();
+	«ENDIF-»
+}
+«ENDDEFINE»
+
+«DEFINE getModificationStamp FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+/**
+ * @Generated Bonitasoft
+ */
+public long getModificationStamp() {
+	return sharedResourceSetInfoDelegate.getModificationStamp();
+}
+«ENDDEFINE»
+
+«DEFINE setModificationStamp FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+/**
+ * @Generated Bonitasoft
+ */
+public void setModificationStamp(long modificationStamp) {
+	sharedResourceSetInfoDelegate.setModificationStamp(modificationStamp);
+}
+«ENDDEFINE»
+
+«DEFINE getEditingDomain FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public org.eclipse.emf.transaction.TransactionalEditingDomain getEditingDomain() {
+	return myDocument.getEditingDomain();
+}
+«ENDDEFINE»
+
+«DEFINE getResourceSet FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public org.eclipse.emf.ecore.resource.ResourceSet getResourceSet() {
+	return getEditingDomain().getResourceSet();
+}
+«ENDDEFINE»
+
+«REM»
+	XXX Would be nice to change API and to return List instead of Iterator - there seems to be little sense using latter.
+«ENDREM»
+«DEFINE getLoadedResourcesIterator FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public «EXPAND CodeStyle::G('java.util.Iterator', 'org.eclipse.emf.ecore.resource.Resource')» getLoadedResourcesIterator() {
+	return new «EXPAND CodeStyle::G('java.util.ArrayList', 'org.eclipse.emf.ecore.resource.Resource')»(getResourceSet().getResources()).iterator();
+}
+«ENDDEFINE»
+
+«DEFINE getEditorInput FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public org.eclipse.ui.IEditorInput getEditorInput() {
+	return myEditorInput;
+}
+«ENDDEFINE»
+
+«DEFINE dispose FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void dispose() {
+		sharedResourceSetInfoDelegate
+					.removeWorkspaceSynchronizerDelegate(synchronizerDelegate);
+	getResourceSet().eAdapters().remove(myResourceSetListener);
+	org.bonitasoft.studio.common.editingdomain.EditingDomainResourcesDisposer.disposeEditorInput(getResourceSet(), myEditorInput);
+}
+«ENDDEFINE»
+
+«DEFINE isSynchronized FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean isSynchronized() {
+	«IF null = editorGen.application-»
+	return myUnSynchronizedResources.size() == 0;
+	«ELSE-»
+	return getModificationStamp() == computeModificationStamp(this);
+	«ENDIF-»
+}
+«ENDDEFINE»
+
+«DEFINE setUnSynchronized FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void setUnSynchronized(org.eclipse.emf.ecore.resource.Resource resource) {
+	myUnSynchronizedResources.add(resource);
+}
+«ENDDEFINE»
+
+«DEFINE setSynchronized FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void setSynchronized(org.eclipse.emf.ecore.resource.Resource resource) {
+	myUnSynchronizedResources.remove(resource);
+}
+«ENDDEFINE»
+
+«DEFINE stopResourceListening FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public final void stopResourceListening() {
+	sharedResourceSetInfoDelegate.stopResourceListening();
+}
+«ENDDEFINE»
+
+«DEFINE startResourceListening FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public final void startResourceListening() {
+	sharedResourceSetInfoDelegate.startResourceListening();
+}
+«ENDDEFINE»
+
+«DEFINE isUpdateCache FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean isUpdateCache() {
+	return myUpdateCache;
+}
+«ENDDEFINE»
+
+«DEFINE setUpdateCache FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void setUpdateCache(boolean update) {
+	myUpdateCache = update;
+}
+«ENDDEFINE»
+	
+«DEFINE isModifiable FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean isModifiable() {
+	return myModifiable;
+}
+«ENDDEFINE»
+
+«DEFINE setModifiable FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void setModifiable(boolean modifiable) {
+	myModifiable = modifiable;
+}
+«ENDDEFINE»
+	
+«DEFINE isReadOnly FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean isReadOnly() {
+	return myReadOnly;
+}
+«ENDDEFINE»
+
+«DEFINE setReadOnly FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void setReadOnly(boolean readOnly) {
+	myReadOnly = readOnly;
+}
+«ENDDEFINE»
+
+«DEFINE SynchronizerDelegate FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedClassComment»	
+private class SynchronizerDelegate implements org.eclipse.emf.workspace.util.WorkspaceSynchronizer.Delegate {
+
+	«EXPAND disposeSD-»
+
+	«EXPAND handleResourceChangedSD-»
+
+	«EXPAND handleResourceDeletedSD-»
+
+	«EXPAND handleResourceMovedSD-»
+	
+	«EXPAND additionsSD-»
+}
+«ENDDEFINE»
+
+«DEFINE disposeSD FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public void dispose() {
+}
+«ENDDEFINE»	
+
+«DEFINE handleResourceChangedSD FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean handleResourceChanged(final org.eclipse.emf.ecore.resource.Resource resource) {
+	«EXPAND updateSynchStateSD-»
+	org.eclipse.swt.widgets.Display.getDefault().asyncExec(new java.lang.Runnable() {
+		public void run() {
+			handleElementChanged(ResourceSetInfo.this, resource, null);
+		}
+	});
+	return true;
+}
+«ENDDEFINE»
+
+«DEFINE handleResourceDeletedSD FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean handleResourceDeleted(org.eclipse.emf.ecore.resource.Resource resource) {
+	«EXPAND updateSynchStateSD-»
+	org.eclipse.swt.widgets.Display.getDefault().asyncExec(new java.lang.Runnable() {
+		public void run() {
+			fireElementDeleted(ResourceSetInfo.this.getEditorInput());
+		}
+	});
+	return true;
+}
+«ENDDEFINE»
+
+«DEFINE handleResourceMovedSD FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public boolean handleResourceMoved(org.eclipse.emf.ecore.resource.Resource resource, final org.eclipse.emf.common.util.URI newURI) {
+	«EXPAND updateSynchStateSD-»
+	if (myDocument.getDiagram().eResource() == resource) {
+		org.eclipse.swt.widgets.Display.getDefault().asyncExec(new java.lang.Runnable() {
+			public void run() {
+				handleElementMoved(ResourceSetInfo.this.getEditorInput(), newURI);
+			}
+		});
+	} else {
+		handleResourceDeleted(resource);
+	}
+	return true;
+}
+«ENDDEFINE»
+
+«DEFINE updateSynchStateSD FOR gmfgen::GenDiagram-»
+synchronized (ResourceSetInfo.this) {
+	if (ResourceSetInfo.this.fCanBeSaved) {
+		ResourceSetInfo.this.setUnSynchronized(resource);
+		return true;
+	}
+}
+«ENDDEFINE»
+
+«DEFINE additionsSD FOR gmfgen::GenDiagram-»
+«ENDDEFINE»
+
+«DEFINE additions FOR gmfgen::GenDiagram-»
+«ENDDEFINE»
