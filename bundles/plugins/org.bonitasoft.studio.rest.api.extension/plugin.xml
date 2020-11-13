@@ -208,13 +208,36 @@
 	                           value="1">
 	                     </count>
 	                        <iterate>
-	                           <test
-	                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
-	                           </test>
+                            <test
+                                  args="groovy"
+                                  property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
+                            </test>
 	                        </iterate>
 	                  </and>
 	               </with>
 	            </visibleWhen>
+            </command>
+            <command
+                  commandId="org.bonitasoft.studio.rest.api.extension.newJavaClass"
+                  icon="icons/newclass_wiz.png"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <and>
+                        <count
+                              value="1">
+                        </count>
+                        <iterate>
+                           <test
+                                 args="java"
+                                 property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiElement">
+                           </test>
+                        </iterate>
+                     </and>
+                  </with>
+               </visibleWhen>
             </command>
             <command
                   commandId="org.bonitasoft.studio.rest.api.extension.newPackage"

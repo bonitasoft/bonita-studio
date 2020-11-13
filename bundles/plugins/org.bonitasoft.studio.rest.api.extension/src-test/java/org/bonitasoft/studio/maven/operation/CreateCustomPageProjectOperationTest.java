@@ -42,6 +42,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
+import org.eclipse.m2e.core.project.IProjectCreationListener;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +81,7 @@ public class CreateCustomPageProjectOperationTest {
                 anyString(),
                 any(Properties.class),
                 any(ProjectImportConfiguration.class),
+                any(IProjectCreationListener.class),
                 eq(monitor))).thenReturn(Arrays.asList(newProject));
         final CreateCustomPageProjectOperation operation = spy(new CreateCustomPageProjectOperation(
                 repository,
