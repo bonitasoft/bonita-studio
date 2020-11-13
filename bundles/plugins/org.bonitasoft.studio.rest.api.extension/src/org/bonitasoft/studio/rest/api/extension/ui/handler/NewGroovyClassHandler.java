@@ -9,21 +9,17 @@
 package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
 import org.codehaus.groovy.eclipse.wizards.NewTypeWizard;
+import org.eclipse.jdt.internal.ui.wizards.NewClassCreationWizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.PlatformUI;
 
 public class NewGroovyClassHandler extends NewWizardHandler {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.rest.api.extension.ui.handler.NewWizardAction#createWizard(org.eclipse.jface.viewers.IStructuredSelection)
-     */
     @Override
     protected IWizard createWizard(IStructuredSelection selection) {
         final NewTypeWizard wizard = new NewTypeWizard();
         wizard.init(PlatformUI.getWorkbench(), selection);
         return wizard;
     }
-
 }

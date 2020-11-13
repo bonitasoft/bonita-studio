@@ -11,13 +11,16 @@ package org.bonitasoft.studio.maven;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.theme.ThemeRepositoryStore;
+import org.codehaus.jdt.groovy.model.GroovyNature;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 
 public class ProjectElementPropertyTester extends PropertyTester {
@@ -28,6 +31,8 @@ public class ProjectElementPropertyTester extends PropertyTester {
     public static final String NON_PROJECT_REST_API_FOLDER_PROPERTY = "isNonProjectRestApiFolder";
     public static final String THEME_ELEMENT_PROPERTY = "isThemeElement";
     public static final String THEME_FOLDER_PROPERTY = "isThemeFolder";
+    private static final String JAVA_KIND = "java";
+    private static final String GROOVY_KIND = "groovy";
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
@@ -37,7 +42,7 @@ public class ProjectElementPropertyTester extends PropertyTester {
                 .getRepositoryStore(ThemeRepositoryStore.class);
         switch (property) {
             case REST_API_ELEMENT_PROPERTY:
-                return isRestApiElement((IAdaptable) receiver, store);
+                return isRestApiElement((IAdaptable) receiver, store, args);
             case REST_API_FOLDER_PROPERTY:
                 return isRestApiFolder((IAdaptable) receiver, store);
             case THEME_ELEMENT_PROPERTY:
@@ -66,22 +71,38 @@ public class ProjectElementPropertyTester extends PropertyTester {
                 && folder.findMember("pom.xml") != null
                 && folder.findMember("pom.xml").exists()
                 && Optional.ofNullable(receiver.getAdapter(IResource.class))
-                .map(IResource::getName)
+                        .map(IResource::getName)
                         .map(name -> store.getResource().getWorkspace().getRoot().getProject(name))
                         .filter(project -> project == null || !project.exists())
-                .isPresent();
+                        .isPresent();
     }
 
     private boolean isRestApiFolder(IAdaptable receiver, RestAPIExtensionRepositoryStore store) {
         return Objects.equals(receiver.getAdapter(IFolder.class), store.getResource());
     }
 
-    private boolean isRestApiElement(IAdaptable receiver, RestAPIExtensionRepositoryStore store) {
-        return Optional.ofNullable(receiver.getAdapter(IResource.class))
+    private boolean isRestApiElement(IAdaptable receiver, RestAPIExtensionRepositoryStore store, Object[] args) {
+        IResource resource = receiver.getAdapter(IResource.class);
+        boolean isRestApiElement = Optional.ofNullable(resource)
                 .map(IResource::getProject)
                 .map(IProject::getName)
                 .filter(name -> store.getResource().getFolder(name).exists())
                 .isPresent();
+        if (args.length == 1) {
+            String kind = (String) args[0];
+            try {
+                boolean hasGroovyNature = resource.getProject().hasNature(GroovyNature.GROOVY_NATURE);
+                if (JAVA_KIND.equals(kind)) {
+                    return isRestApiElement && !hasGroovyNature;
+                }
+                if (GROOVY_KIND.equals(kind)) {
+                    return isRestApiElement && hasGroovyNature;
+                }
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return isRestApiElement;
     }
 
     private boolean isThemeFolder(IAdaptable receiver, ThemeRepositoryStore store) {

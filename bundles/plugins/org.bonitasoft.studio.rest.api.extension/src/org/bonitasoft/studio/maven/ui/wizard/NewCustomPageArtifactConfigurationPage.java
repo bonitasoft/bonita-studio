@@ -69,7 +69,7 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
     public void createControl(Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
 
         final DataBindingContext context = new DataBindingContext();
         WizardPageSupport.create(this, context);
@@ -97,7 +97,7 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
     protected void createMavenGroup(final Composite mainComposite, final DataBindingContext context) {
         final Group mavenGroup = new Group(mainComposite, SWT.NONE);
         mavenGroup.setText("Project");
-        mavenGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+        mavenGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         mavenGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final IObservableValue groupIdObservable = createGroupIdControl(mavenGroup, context);
@@ -125,7 +125,7 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
     protected void createPortalGroup(final Composite mainComposite, final DataBindingContext context) {
         final Group portalGroup = new Group(mainComposite, SWT.NONE);
         portalGroup.setText(Messages.portal);
-        portalGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+        portalGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         portalGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final Label descriptionLabel = widgetFactory.newLabel(portalGroup, Messages.portalDescription);
@@ -208,16 +208,17 @@ public class NewCustomPageArtifactConfigurationPage extends WizardPage {
         widgetFactory.newLabel(mainComposite, Messages.language);
         final Composite radioGroup = new Composite(mainComposite, SWT.NONE);
         radioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        radioGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
         
-        Button javaButton = new Button(radioGroup, SWT.RADIO);
-        javaButton.setText(Messages.java);
         Button groovyButton = new Button(radioGroup, SWT.RADIO);
         groovyButton.setText(Messages.groovy);
+        Button javaButton = new Button(radioGroup, SWT.RADIO);
+        javaButton.setText(Messages.java);
+       
         
         SelectObservableValue<String> languageSelectObservable = new SelectObservableValue<>();
-        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE, WidgetProperties.buttonSelection().observe(javaButton));
         languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE, WidgetProperties.buttonSelection().observe(groovyButton));
+        languageSelectObservable.addOption(RestAPIExtensionArchetypeConfiguration.JAVA_LANGUAGE, WidgetProperties.buttonSelection().observe(javaButton));
        
         context.bindValue(languageSelectObservable, PojoProperties.value("language", String.class).observe(configuration));
     }

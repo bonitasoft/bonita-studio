@@ -50,7 +50,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         configuration.setPageDescription(Messages.defaultAPIDisplayDescription);
         configuration.setGroupId("com.company.rest.api");
         configuration.setVersion("1.0.0-SNAPSHOT");
-        configuration.setLanguage(JAVA_LANGUAGE);
+        configuration.setLanguage(GROOVY_LANGUAGE);
         configuration.setHttpVerb("GET");
         configuration.getPermissions().add("myPermission");
         configuration.getUrlParameters().add("p");

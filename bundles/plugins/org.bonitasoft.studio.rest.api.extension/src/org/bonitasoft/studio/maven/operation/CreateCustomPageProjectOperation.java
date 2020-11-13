@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.RestAPIExtensionNature;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.ProjectDescriptionBuilder;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -31,6 +32,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IProjectConfigurationManager;
+import org.eclipse.m2e.core.project.IProjectCreationListener;
 import org.eclipse.m2e.core.project.ProjectImportConfiguration;
 
 public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdateOperation {
@@ -59,7 +61,7 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
     protected CustomPageArchetypeConfiguration getArchetypeConfiguration() {
         return archetypeConfiguration;
     }
-    
+
     @Override
     protected IProject doRun(final IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.creatingRestAPIExtensionProject, IProgressMonitor.UNKNOWN);
@@ -73,6 +75,17 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
                 archetypeConfiguration.getGroupId(),
                 archetypeConfiguration.toProperties(),
                 projectImportConfiguration,
+                new IProjectCreationListener() {
+
+                    @Override
+                    public void projectCreated(IProject project) {
+                        try {
+                            CreateCustomPageProjectOperation.this.projectCreated(project);
+                        } catch (CoreException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    }
+                },
                 monitor);
         final IProject project = projects.get(0);
         configure(project, monitor);
@@ -81,7 +94,11 @@ public class CreateCustomPageProjectOperation extends AbstractMavenProjectUpdate
         return project;
     }
 
-    private void configure(final IProject project, final IProgressMonitor monitor) throws CoreException {
+    protected void projectCreated(IProject project) throws CoreException {
+        // Can be implemented in subclass
+    }
+
+    protected void configure(final IProject project, final IProgressMonitor monitor) throws CoreException {
         IProjectDescription description = project.getDescription();
         checkArgument(description != null, "Project Description is null");
         description = new ProjectDescriptionBuilder().withProjectName(project.getName())
