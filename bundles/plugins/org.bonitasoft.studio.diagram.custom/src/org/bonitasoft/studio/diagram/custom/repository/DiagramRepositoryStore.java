@@ -558,7 +558,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public void close() {
-        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+         BonitaEditingDomainUtil.cleanEditingDomainRegistry();
         super.close();
     }
 
