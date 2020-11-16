@@ -41,6 +41,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationPageNode;
 import org.bonitasoft.engine.exception.AlreadyExistsException;
 import org.bonitasoft.engine.exception.ImportException;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -158,9 +159,10 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
                         .forEach(mStatus::add);
             }
         } catch (AlreadyExistsException | ImportException | IOException | JAXBException | SAXException e) {
+            BonitaStudioLog.error(e);
             if (status.isMultiStatus()) {
                 status.add(new Status(IStatus.ERROR, LivingApplicationPlugin.PLUGIN_ID,
-                        "Failed to deploy application.", e));
+                        Messages.deployFailed, e));
             }
         } finally {
             monitor.done();
