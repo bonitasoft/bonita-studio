@@ -107,18 +107,15 @@ public class ProcessSelector {
                         result.addAll(calledProcesses);
                     }
                 }
-            } else {
+            } else if(processInEditor != null) {
                 final Set<AbstractProcess> calledProcesses = new HashSet<>();
                 findCalledProcesses(processInEditor, calledProcesses);
                 if (!calledProcesses.isEmpty()) {
                     result.addAll(calledProcesses);
                 }
-                if (processInEditor != null) {
-                    result.add(processInEditor);
-                }
+                result.add(processInEditor);
             }
         }
-
         return result;
     }
 
@@ -158,13 +155,13 @@ public class ProcessSelector {
 
     public static MainProcess getProcessInEditor() {
         final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
-        if (isADiagram) {
+        if (editor instanceof DiagramEditor) {
             final EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-            final MainProcess mainProc = ModelHelper.getMainProcess(root);
-            return mainProc;
+            if(root.eResource() == null) {
+                return null;
+            }
+            return ModelHelper.getMainProcess(root);
         }
-
         return null;
     }
 
