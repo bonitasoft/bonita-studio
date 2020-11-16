@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.EngineNotificationSemaphore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.ui.notification.BonitaNotificator;
@@ -57,8 +58,7 @@ public class RestartServerCommand extends AbstractHandler {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
-                        Messages.restartServerNotificationMessage);
+                boolean notifying = notifyRestartServer();
                 BOSEngineManager.getInstance().stop();
                 if (store.getBoolean(DROP_DB_KEY)) {
                     DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
@@ -70,9 +70,21 @@ public class RestartServerCommand extends AbstractHandler {
                     }
                 }
                 BOSEngineManager.getInstance().start();
-                BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
-                        Messages.serverRunningNotificationMessage);
+                if (notifying) {
+                    BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
+                            Messages.serverRunningNotificationMessage);
+                    EngineNotificationSemaphore.getInstance().release();
+                }
                 return Status.OK_STATUS;
+            }
+
+            private boolean notifyRestartServer() {
+                if (EngineNotificationSemaphore.getInstance().tryAcquire()) {
+                    BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
+                            Messages.restartServerNotificationMessage);
+                    return true;
+                }
+                return false;
             }
         }.schedule();
         return null;

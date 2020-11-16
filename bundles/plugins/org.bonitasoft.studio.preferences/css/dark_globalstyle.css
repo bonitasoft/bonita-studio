@@ -69,3 +69,11 @@ Composite#groovyViewer > * > * > * > * > * > *,
 Composite#groovyViewer > * > * > * > * > * > * > * {
     background-color: #2F2F2F;
 }
+
+.notificationComposite,
+.notificationComposite > Composite, 
+.notificationComposite > Composite > *,
+.notificationComposite > Composite > * > * {
+    background-color: #2d3748;
+    color: #cbd5e0;
+}

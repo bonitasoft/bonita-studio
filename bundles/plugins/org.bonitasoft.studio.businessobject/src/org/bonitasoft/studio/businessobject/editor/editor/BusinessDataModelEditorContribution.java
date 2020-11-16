@@ -77,7 +77,6 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
     private IObservableValue<BusinessObject> boSelectedObservable;
     private int sourceEditorIndex;
     private BusinessObjectListValidator validator;
-    private IObservableValue<Boolean> deployRequiredObservable = new WritableValue<>(false, Boolean.class);
 
     @Override
     protected void addPages(AbstractMultiSourceFormEditor editor) throws PartInitException {
@@ -187,7 +186,6 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
             queryFormPage.doSave(monitor);
             indexFormPage.doSave(monitor);
             sourceEditor.doSave(monitor);
-            deployRequiredObservable.setValue(true);
         }
     }
 
@@ -306,10 +304,6 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         constraintFormPage.makeStale();
         queryFormPage.makeStale();
         indexFormPage.makeStale();
-    }
-
-    public IObservableValue<Boolean> observeDeployRequired() {
-        return deployRequiredObservable;
     }
 
 }

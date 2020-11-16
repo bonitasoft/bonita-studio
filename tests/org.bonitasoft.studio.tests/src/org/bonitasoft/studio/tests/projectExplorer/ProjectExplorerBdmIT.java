@@ -16,11 +16,13 @@ package org.bonitasoft.studio.tests.projectExplorer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.businessobject.core.repository.AbstractBDMFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.BDMProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -49,13 +51,15 @@ public class ProjectExplorerBdmIT {
 
     @Test
     public void should_manage_bdm_from_explorer() {
-        createBdmIfRequired();
-        ProjectExplorerBot projectExplorerBot = new ProjectExplorerBot(bot);
-        projectExplorerBot.bdm().openBdm().close();
-        projectExplorerBot.bdm().getBdmTreeItem().doubleClick();
+        createNewBdm();
+        BDMProjectExplorerBot projectExplorerBot = new ProjectExplorerBot(bot).bdm();
+        projectExplorerBot.setDeployRequired(true);
+        projectExplorerBot.openBdm().close();
+        projectExplorerBot.getBdmTreeItem().doubleClick();
         new BotBdmEditor(bot).close();
-        projectExplorerBot.bdm().deployBdm();
-        projectExplorerBot.bdm().deleteBdm();
+        projectExplorerBot.deployBdm();
+        projectExplorerBot.setDeployRequired(false);
+        projectExplorerBot.deleteBdm();
         validateBdmIsDeleted();
     }
 
@@ -68,13 +72,16 @@ public class ProjectExplorerBdmIT {
         bot.waitUntil(bdmDeletedCondition);
     }
 
-    private void createBdmIfRequired() {
-        if (repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class).getChild("bom.xml",
-                false) == null) {
-            new ProjectExplorerBot(bot).newBdm().close();
-            assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
-                    .getBusinessObjectByQualifiedName("com.company.model.BusinessObject")).isPresent();
+    private void createNewBdm() {
+        AbstractBDMFileStore fileStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
+                .getChild("bom.xml", false);
+        if (fileStore != null) {
+            fileStore.delete();
+            validateBdmIsDeleted();
         }
+        new ProjectExplorerBot(bot).newBdm().close();
+        assertThat(repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class)
+                .getBusinessObjectByQualifiedName("com.company.model.BusinessObject")).isPresent();
     }
 
 }

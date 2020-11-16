@@ -23,21 +23,20 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * @author Romain Bioteau
  */
 
-public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
+public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage {
 
     public static final String HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING = "HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING";
 
     private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
 
     private BooleanFieldEditor askSaveDiagramAfterFirstSave;
-
     private BooleanFieldEditor showConnectorEditionConfirmation;
+    private BooleanFieldEditor notifyBdmDeploymentRequired;
 
     public BonitaAdvancedPreferencePage() {
         super(GRID);
@@ -63,6 +62,10 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
                 HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING,
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
+
+        notifyBdmDeploymentRequired = new BooleanFieldEditor(BonitaPreferenceConstants.NOTIFY_BDM_DEPLOYMENT_REQUIRED,
+                Messages.notifyBdmDeploymentRequiredMessage, getFieldEditorParent());
+        addField(notifyBdmDeploymentRequired);
 
         new Label(getFieldEditorParent(), SWT.NONE);
         new Label(getFieldEditorParent(), SWT.NONE);

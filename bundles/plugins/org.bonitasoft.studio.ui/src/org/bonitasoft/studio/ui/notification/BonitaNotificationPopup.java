@@ -12,43 +12,109 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
+import org.bonitasoft.studio.ui.UIPlugin;
+import org.bonitasoft.studio.ui.notification.job.CloseJob;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil;
+import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.FadeJob;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.IFadeListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-public class BonitaNotificationPopup extends AbstractNotificationPopup {
+public class BonitaNotificationPopup extends Window {
 
     private static final int MAX_WIDTH = 400;
-    private static final int MIN_HEIGHT = 100;
+    private static final int MIN_HEIGHT = 120;
     private static final int PADDING_EDGE = 10;
+
+    private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
+    private long delayClose = DEFAULT_DELAY_CLOSE;
 
     private static List<Shell> existingNotifications = new ArrayList<>();
 
     private String title;
     private String content;
     private Optional<Listener> selectionListener;
+    private boolean fadingEnabled;
+    private FadeJob fadeJob;
+    private Display display;
+    private CloseJob closeJob;
 
     public BonitaNotificationPopup(Display display, String title, String content,
             Optional<Listener> selectionListener) {
-        super(display);
+        super(new Shell(display));
+        setShellStyle(SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
+        this.display = display;
         this.title = title;
         this.content = content;
         this.selectionListener = selectionListener;
+        this.closeJob = new CloseJob(this);
     }
 
-    @Override
-    protected void createContentArea(Composite parent) {
+    private void createTitleArea(Composite parent) {
+        Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+
+        Label iconLabel = new Label(composite, SWT.NONE);
+        iconLabel.setLayoutData(GridDataFactory.fillDefaults().span(1, 2).create());
+        Image image = PreferenceUtil.isDarkTheme()
+                ? UIPlugin.getImage("icons/notification_dark.png")
+                : UIPlugin.getImage("icons/notification_light.png");
+        iconLabel.setImage(image);
+
+        Label titleLabel = new Label(composite, SWT.NONE);
+        titleLabel.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).span(1, 2).align(SWT.FILL, SWT.CENTER).create());
+        titleLabel.setText(title);
+        titleLabel.setFont(CommonFonts.BOLD);
+
+        Label closeButton = new Label(composite, SWT.NONE);
+        closeButton.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
+        closeButton.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE_HOVER));
+            }
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                closeButton.setImage(CommonImages.getImage(CommonImages.NOTIFICATION_CLOSE));
+            }
+        });
+        closeButton.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                close();
+                setReturnCode(CANCEL);
+            }
+
+        });
+    }
+
+    private void createContentArea(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -59,7 +125,6 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
         selectionListener.ifPresent(listener -> link.addListener(SWT.Selection, listener));
     }
 
-    @Override
     protected String getPopupShellTitle() {
         return title;
     }
@@ -121,7 +186,7 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
                 }
 
                 if (alpha == 255) {
-                    scheduleAutoClose();
+                    closeJob.scheduleAutoClose();
                 }
             }
         });
@@ -154,15 +219,96 @@ public class BonitaNotificationPopup extends AbstractNotificationPopup {
     }
 
     @Override
+    protected Control createContents(Composite parent) {
+        ((GridLayout) parent.getLayout()).marginWidth = 1;
+        ((GridLayout) parent.getLayout()).marginHeight = 1;
+
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.NOTIFICATION_COMPOSITE);
+
+        Composite titleComposite = new Composite(mainComposite, SWT.NONE);
+        titleComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        createTitleArea(titleComposite);
+
+        Label label = new Label(mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR);
+        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        Composite contentComposite = new Composite(mainComposite, SWT.NONE);
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createContentArea(contentComposite);
+
+        return mainComposite;
+    }
+
+    @Override
     public boolean close() {
         existingNotifications.remove(getShell());
         return super.close();
     }
 
-    @Override
     public void closeFade() {
         existingNotifications.remove(getShell());
-        super.closeFade();
+        if (fadeJob != null) {
+            fadeJob.cancelAndWait(false);
+        }
+        fadeJob = AnimationUtil.fadeOut(getShell(), new IFadeListener() {
+
+            @Override
+            public void faded(Shell shell, int alpha) {
+                if (!shell.isDisposed()) {
+                    if (alpha == 0) {
+                        shell.close();
+                    } else if (isMouseOver(shell)) {
+                        if (fadeJob != null) {
+                            fadeJob.cancelAndWait(false);
+                        }
+                        fadeJob = AnimationUtil.fastFadeIn(shell, new IFadeListener() {
+
+                            @Override
+                            public void faded(Shell shell, int alpha) {
+                                if (shell.isDisposed()) {
+                                    return;
+                                }
+
+                                if (alpha == 255) {
+                                    closeJob.scheduleAutoClose();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
+    public boolean isMouseOver(Shell shell) {
+        if (display.isDisposed()) {
+            return false;
+        }
+        return shell.getBounds().contains(display.getCursorLocation());
+    }
+
+    public boolean isFadingEnabled() {
+        return fadingEnabled;
+    }
+
+    public void setFadingEnabled(boolean fadingEnabled) {
+        this.fadingEnabled = fadingEnabled;
+    }
+
+    public long getDelayClose() {
+        return delayClose;
+    }
+
+    public void setDelayClose(long delayClose) {
+        this.delayClose = delayClose;
+    }
+
+    public Display getDisplay() {
+        return display;
+    }
 }

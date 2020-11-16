@@ -47,7 +47,7 @@ import org.eclipse.ui.commands.ICommandService;
 public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage {
 
     private static final String APPEARANCE_CONTRIBUTOR_ID = "Appearance";
-    private static final String NOTIFY_COMMAND = "org.bonitasoft.studio.ui.notify.command";
+    private static final String NOTIFY_RESTART_COMMAND = "org.bonitasoft.studio.ui.notify.restart.command";
 
     private RadioGroupFieldEditor coolbarFiled;
 
@@ -127,7 +127,7 @@ public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage
             Map<String, Object> parameters = new HashMap();
             parameters.put("title", Messages.themeChangedTitle);
             parameters.put("content", Messages.themeChanged);
-            new CommandExecutor().executeCommand(NOTIFY_COMMAND, parameters);
+            new CommandExecutor().executeCommand(NOTIFY_RESTART_COMMAND, parameters);
             PlatformUtil.openIntroIfNoOtherEditorOpen();
         }
     }

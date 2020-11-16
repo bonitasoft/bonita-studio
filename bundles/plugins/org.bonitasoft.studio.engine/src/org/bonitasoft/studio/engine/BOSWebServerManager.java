@@ -437,12 +437,28 @@ public class BOSWebServerManager implements IBonitaProjectListener {
     }
 
     public void resetServer(IProgressMonitor monitor) {
-        BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
-                Messages.restartServerNotificationMessage);
+        boolean notifying = notifyRestartServer();
         stopServer(monitor);
         startServer(RepositoryManager.getInstance().getCurrentRepository(), monitor);
+        if (notifying) {
+            notifyRestartServerCompleted();
+        }
+
+    }
+
+    private void notifyRestartServerCompleted() {
         BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
                 Messages.serverRunningNotificationMessage);
+        EngineNotificationSemaphore.getInstance().release();
+    }
+
+    private boolean notifyRestartServer() {
+        if (EngineNotificationSemaphore.getInstance().tryAcquire()) {
+            BonitaNotificator.openNotification(Messages.restartServerNotificationTitle,
+                    Messages.restartServerNotificationMessage);
+            return true;
+        }
+        return false;
     }
 
     public synchronized void stopServer(final IProgressMonitor monitor) {

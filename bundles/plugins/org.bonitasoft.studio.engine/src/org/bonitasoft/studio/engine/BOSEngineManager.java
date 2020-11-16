@@ -138,7 +138,18 @@ public class BOSEngineManager {
 
     public synchronized void start(AbstractRepository repository) {
         if (!isRunning() || !BOSWebServerManager.getInstance().serverIsStarted()) {
+            boolean notifying = notifyStartServer();
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
+            BOSWebServerManager.getInstance().startServer(repository, monitor);
+            isRunning = postEngineStart();
+            if (notifying) {
+                notifyServerStarted();
+            }
+        }
+    }
+
+    private boolean notifyStartServer() {
+        if (EngineNotificationSemaphore.getInstance().tryAcquire()) {
             if (!isLazyModeEnabled(EnginePlugin.getDefault().getPreferenceStore())) {
                 BonitaNotificator.openNotification(Messages.startServerNotificationTitle,
                         Messages.engineLazyModeNotificationLink, e -> {
@@ -148,9 +159,9 @@ public class BOSEngineManager {
                             dialog.open();
                         });
             }
-            BOSWebServerManager.getInstance().startServer(repository, monitor);
-            isRunning = postEngineStart();
+            return true;
         }
+        return false;
     }
 
     private boolean isLazyModeEnabled(IPreferenceStore preferenceStore) {
@@ -171,12 +182,16 @@ public class BOSEngineManager {
                 tenantManagementAPI.resume();
             }
             executePostStartupContributions();
-            BonitaNotificator.openNotification(Messages.startServerCompletedNotificationTitle,
-                    Messages.serverRunningNotificationMessage);
         } catch (final Exception e) {
             return handlePostEngineStartException(e);
         }
         return true;
+    }
+
+    private void notifyServerStarted() {
+        BonitaNotificator.openNotification(Messages.startServerCompletedNotificationTitle,
+                Messages.serverRunningNotificationMessage);
+        EngineNotificationSemaphore.getInstance().release();
     }
 
     private boolean handlePostEngineStartException(final Exception e) {
