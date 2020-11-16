@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.index;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.DeployRequiredControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.ReadOnlyBusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.index.IndexControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
@@ -37,15 +36,11 @@ public class IndexFormPart extends AbstractFormPart {
     private IndexFormPage formPage;
     private ReadOnlyBusinessObjectList businessObjectList;
     private IndexControl indexControl;
-    private DeployRequiredControl deployRequiredControl;
 
     public IndexFormPart(Composite parent, IndexFormPage formPage) {
         this.formPage = formPage;
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        deployRequiredControl = new DeployRequiredControl(parent, formPage,
-                GridDataFactory.fillDefaults().span(2, 1).create());
 
         createBusinessObjectList(parent);
         createIndexEditionControl(parent);
@@ -90,14 +85,6 @@ public class IndexFormPart extends AbstractFormPart {
 
     public void showBusinessObjectSelection() {
         businessObjectList.showBusinessObjectSelection();
-    }
-
-    public void updateDeployRequiredComposite(Boolean deployRequired) {
-        if (deployRequired) {
-            deployRequiredControl.show();
-        } else {
-            deployRequiredControl.hide();
-        }
     }
 
 }

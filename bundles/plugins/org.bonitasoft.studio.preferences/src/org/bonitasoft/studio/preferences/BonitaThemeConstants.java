@@ -28,9 +28,9 @@ public interface BonitaThemeConstants {
     public static final String EDITOR_FORM_BAKGROUND_CLASS = "editorFormBackground";
     public static final String EDITOR_TOOLBAR_TEXT_COLOR = "editorToolbarTextColor";
     public static final String TABLE_BACKGROUND_COLOR = "tableBackground";
+    public static final String NOTIFICATION_COMPOSITE = "notificationComposite";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
-
 
 }

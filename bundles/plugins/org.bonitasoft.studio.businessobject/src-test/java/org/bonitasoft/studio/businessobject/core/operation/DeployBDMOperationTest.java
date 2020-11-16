@@ -89,6 +89,7 @@ public class DeployBDMOperationTest {
         doReturn(manager).when(operationUnderTest).getEngineManager();
         doNothing().when(operationUnderTest).uninstallBDMAccessControl(any(IProgressMonitor.class));
         doNothing().when(operationUnderTest).forceH2Drop();
+        doNothing().when(operationUnderTest).updateDeployRequiredProperty();
         parentFolder = new File("test");
         parentFolder.mkdirs();
         doReturn(parentFolder).when(operationUnderTest).getTargetFolder();
