@@ -58,5 +58,6 @@ public class Messages extends NLS {
     public static String skipValidation;
     public static String exportCancel;
     public static String exportCancelTitle;
+    public static String closeNotificationJobTitle;
 
 }

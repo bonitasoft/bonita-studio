@@ -50,7 +50,6 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
 import org.bonitasoft.studio.common.repository.model.DeployOptions;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
@@ -92,6 +91,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
     public static final String ZIP_FILENAME = "bdm.zip";
     public static final String BOM_FILENAME = "bom.xml";
     public static final String BDM_ARTIFACT_DESCRIPTOR = ".artifact-descriptor.properties";
+    public static final String BDM_DEPLOY_REQUIRED_PROPERTY = "bdmDeployRequired";
 
     private static final String BDM_DELETED_TOPIC = "bdm/deleted";
     private static final String CLEAN_ACCESS_CONTROL_CMD = "org.bonitasoft.studio.bdm.access.control.command.clean";
@@ -389,7 +389,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                         DO_NOT_SHOW_INSTALL_MESSAGE_DIALOG,
                         SWT.NONE);
             }
-            updateDeployRequiredState();
         } catch (InvocationTargetException | InterruptedException e) {
             throw new RuntimeException("An error occured while depoying the BDM", e);
         }
@@ -414,18 +413,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
             return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "An error occured while depoying the BDM",
                     e);
         }
-        updateDeployRequiredState();
         return ValidationStatus.info(Messages.businessDataModelDeployed);
-    }
-
-    private void updateDeployRequiredState() {
-        BusinessDataModelEditor openedEditor = getOpenedEditor();
-        if (openedEditor != null) {
-            openedEditor.getEditorContribution(BusinessDataModelEditorContribution.ID)
-                    .filter(BusinessDataModelEditorContribution.class::isInstance)
-                    .map(BusinessDataModelEditorContribution.class::cast)
-                    .ifPresent(contribution -> contribution.observeDeployRequired().setValue(false));
-        }
     }
 
     @Override

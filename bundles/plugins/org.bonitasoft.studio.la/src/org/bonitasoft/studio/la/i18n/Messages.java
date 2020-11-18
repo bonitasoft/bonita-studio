@@ -137,6 +137,7 @@ public class Messages extends NLS {
     public static String addChild;
     public static String up;
     public static String down;
+    public static String deployFailed;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

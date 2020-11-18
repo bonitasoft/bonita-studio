@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -76,6 +75,10 @@ public class RepositoryAccessor {
 
     public void setRepository(final String repositoryName) {
         repositoryManagerInstance.setRepository(repositoryName, false, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
+    public boolean hasActiveRepository() {
+        return repositoryManagerInstance.hasActiveRepository();
     }
 
     public List<IRepository> getAllRepositories() {

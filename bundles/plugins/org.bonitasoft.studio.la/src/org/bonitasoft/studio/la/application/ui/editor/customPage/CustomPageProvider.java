@@ -27,11 +27,6 @@ public class CustomPageProvider {
     static {
         DEFAULT_THEMES.add(CustomPageDescriptor.DEFAULT_THEME);
         DEFAULT_THEMES.add(new CustomPageDescriptor(CustomPageDescriptor.BONITA_THEME_ID, "Bonita theme", null));
-        DEFAULT_THEMES.add(new CustomPageDescriptor("custompage_superherotheme", "Superhero theme", null));
-        DEFAULT_THEMES.add(new CustomPageDescriptor("custompage_simplextheme", "Simplex theme", null));
-        DEFAULT_THEMES.add(new CustomPageDescriptor("custompage_readabletheme", "Readable theme", null));
-        DEFAULT_THEMES.add(new CustomPageDescriptor("custompage_flatlytheme", "Flatly theme", null));
-        DEFAULT_THEMES.add(new CustomPageDescriptor("custompage_cosmotheme", "Cosmo theme", null));
     }
 
     private final WebPageRepositoryStore webPageStore;

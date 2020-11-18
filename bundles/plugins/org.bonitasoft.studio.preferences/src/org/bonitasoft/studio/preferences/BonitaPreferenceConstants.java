@@ -166,4 +166,5 @@ public interface BonitaPreferenceConstants {
     public static final String DATA_REPOSITORY_PORT = "data.repository.port";
 
     public static final String HIDE_BDM_REFACTOR_PREVIEW = "hideBdmRefactorPreview";
+    public static final String NOTIFY_BDM_DEPLOYMENT_REQUIRED = "NOTIFY_BDM_DEPLOYMENT_REQUIRED";
 }

@@ -80,7 +80,6 @@ public class DeployContributionItem extends ContributionItem {
         } else {
             new DeployBDMHandler().deploy(formPage.getRepositoryAccessor(), Display.getDefault().getActiveShell());
         }
-        formPage.getEditorContribution().observeDeployRequired().setValue(false);
     }
 
     @Override

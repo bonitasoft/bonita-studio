@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.common.editingdomain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.EditingDomainManager;
 
@@ -26,8 +26,7 @@ public final class BonitaEditingDomainRegistry implements TransactionalEditingDo
 
     public static BonitaEditingDomainRegistry INSTANCE = new BonitaEditingDomainRegistry();
 
-    private final Map<String, TransactionalEditingDomain> domains =
-            new java.util.HashMap<String, TransactionalEditingDomain>();
+    private final Map<String, TransactionalEditingDomain> domains = new HashMap<>();
 
     // Documentation copied from the inherited specification
     @Override
@@ -94,9 +93,6 @@ public final class BonitaEditingDomainRegistry implements TransactionalEditingDo
             final TransactionalEditingDomain result = domains.remove(registeredId);
 
             if (result != null) {
-                for (final Resource r : result.getResourceSet().getResources()) {
-                    r.unload();
-                }
                 EditingDomainManager.getInstance().deconfigureListeners(registeredId, result);
             }
         }

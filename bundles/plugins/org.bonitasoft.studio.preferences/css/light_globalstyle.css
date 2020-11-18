@@ -48,3 +48,11 @@ CTabFolder {
     swt-shadow-visible: false;
     swt-selected-tab-highlight: none;
 }
+
+.notificationComposite,
+.notificationComposite > Composite, 
+.notificationComposite > Composite > *,
+.notificationComposite > Composite > * > * {
+    background-color: #ffffff;
+    color: #4a5568;
+}
