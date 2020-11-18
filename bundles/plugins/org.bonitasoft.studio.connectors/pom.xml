@@ -29,7 +29,7 @@
         <connector.version.groovy>1.1.2</connector.version.groovy>
 		<connector.version.twitter>1.2.1</connector.version.twitter>
 		<connector.version.webservice>1.3.2</connector.version.webservice>
-		<connector.version.rest>1.0.8</connector.version.rest>
+		<connector.version.rest>1.0.9</connector.version.rest>
 		<connector.version.uipath>2.1.1</connector.version.uipath>
 		<connector.version.document-templating>2.1.0</connector.version.document-templating>
 		<connector.version.document-converter>2.1.0</connector.version.document-converter>
