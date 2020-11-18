@@ -26,7 +26,7 @@
         <connector.version.scripting>1.1.0</connector.version.scripting>
         <connector.version.twitter>1.2.0</connector.version.twitter>
         <connector.version.webservice>1.3.2</connector.version.webservice>
-        <connector.version.rest>1.0.7</connector.version.rest>
+        <connector.version.rest>1.0.9</connector.version.rest>
     </properties>
 
 
