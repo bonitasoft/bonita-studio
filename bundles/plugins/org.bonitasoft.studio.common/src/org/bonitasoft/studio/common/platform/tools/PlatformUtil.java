@@ -167,6 +167,11 @@ public class PlatformUtil {
     }
 
     public static void showIntroPart(IWorkbenchPage page) {
+        IViewReference explorerView = page.findViewReference("org.bonitasoft.studio.application.project.explorer");
+        if(explorerView != null) {
+            page.activate(explorerView.getPart(true));
+        }
+        
         final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
         //colse intro to reload content if already opened
         hideIntroPart();
