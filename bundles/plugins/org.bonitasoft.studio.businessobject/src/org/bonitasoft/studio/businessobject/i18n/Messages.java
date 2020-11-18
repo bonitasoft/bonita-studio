@@ -502,6 +502,7 @@ public class Messages extends NLS {
     public static String validationStatus;
     public static String validatioNStatusDesc;
     public static String bdmValidMessage;
+    public static String bdmDeployRequiredTitle;
     public static String bdmDeployRequired;
     public static String explore;
     public static String exploreTooltip;
@@ -509,6 +510,7 @@ public class Messages extends NLS {
     public static String deployCancelTitle;
     public static String deployCancel;
     public static String invalidGroupId;
+    public static String bdmDeployMarker;
 
     private Messages() {
     }

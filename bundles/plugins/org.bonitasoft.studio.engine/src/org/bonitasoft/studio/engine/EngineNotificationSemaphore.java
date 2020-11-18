@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Bonitasoft S.A.
+ * Copyright (C) 2020 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,17 +12,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.ui.notification;
+package org.bonitasoft.studio.engine;
 
-import javax.inject.Named;
+import java.util.concurrent.Semaphore;
 
-import org.eclipse.e4.core.di.annotations.Execute;
+public class EngineNotificationSemaphore extends Semaphore {
 
-public class OpenNotificationHandler {
+    private static final long serialVersionUID = 5951263856148212058L;
+    private static final EngineNotificationSemaphore INSTANCE = new EngineNotificationSemaphore();
 
-    @Execute
-    public void execute(@Named("title") String title, @Named("content") String content) {
-        BonitaNotificator.openNotification(title, content);
+    public static EngineNotificationSemaphore getInstance() {
+        return INSTANCE;
+    }
+
+    private EngineNotificationSemaphore() {
+        super(1, true);
     }
 
 }

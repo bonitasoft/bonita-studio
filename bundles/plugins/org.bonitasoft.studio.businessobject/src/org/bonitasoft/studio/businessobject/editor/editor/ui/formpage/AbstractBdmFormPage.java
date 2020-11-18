@@ -64,11 +64,7 @@ public abstract class AbstractBdmFormPage extends AbstractFormPage<BusinessObjec
         super.init(workingCopyObservable.getValue(), document);
         this.workingCopyObservable = workingCopyObservable;
         this.boSelectedObservable = boSelectedObservable;
-        editorContribution.observeDeployRequired()
-                .addValueChangeListener(e -> updateDeployRequiredComposite(e.diff.getNewValue()));
     }
-
-    public abstract void updateDeployRequiredComposite(Boolean deployRequired);
 
     @Override
     protected void createHeaderContent(ToolBar toolBar) {

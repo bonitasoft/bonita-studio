@@ -37,7 +37,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
-import org.eclipse.ui.internal.ide.IDEPreferenceInitializer;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
 
@@ -72,12 +71,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         store.setDefault(UID_JVM_OPTS, "-Xmx256m");
         store.setDefault(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG, false);
         getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
+        store.setDefault(NOTIFY_BDM_DEPLOYMENT_REQUIRED, true);
 
         initDefaultDebugPreferences();
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
-        
+
         IPreferenceStore preferenceStore = getIDEPreferenceStore();
         try {
             preferenceStore.setDefault(

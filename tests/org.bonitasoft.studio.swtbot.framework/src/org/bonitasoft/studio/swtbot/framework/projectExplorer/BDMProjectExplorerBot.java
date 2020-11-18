@@ -24,8 +24,15 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class BDMProjectExplorerBot extends ProjectExplorerBot {
 
+    private boolean deployRequired = false;
+
     public BDMProjectExplorerBot(SWTGefBot bot) {
         super(bot);
+    }
+
+    public BDMProjectExplorerBot setDeployRequired(boolean deployRequired) {
+        this.deployRequired = deployRequired;
+        return this;
     }
 
     public BotBdmEditor openBdm() {
@@ -39,18 +46,22 @@ public class BDMProjectExplorerBot extends ProjectExplorerBot {
 
     public void deployBdm() {
         clickOnContextualMenu(getBdmTreeItem(), "Deploy");
-        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle),15000);
+        bot.activeShell().bot().waitUntil(Conditions.shellIsActive(Messages.bdmDeployedTitle), 15000);
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
 
     public SWTBotTreeItem getBdmFolderTreeItem() {
-        return getTreeItem(getProjectTreeItem(), "Business Data Model");
+        return deployRequired
+                ? getTreeItem(getProjectTreeItem(), String.format("Business Data Model - %s", Messages.bdmDeployMarker))
+                : getTreeItem(getProjectTreeItem(), "Business Data Model");
     }
 
     public SWTBotTreeItem getBdmTreeItem() {
-        return getTreeItem(getBdmFolderTreeItem(), "bom.xml");
+        return deployRequired
+                ? getTreeItem(getBdmFolderTreeItem(), String.format("bom.xml - %s", Messages.bdmDeployMarker))
+                : getTreeItem(getBdmFolderTreeItem(), "bom.xml");
     }
 
 }

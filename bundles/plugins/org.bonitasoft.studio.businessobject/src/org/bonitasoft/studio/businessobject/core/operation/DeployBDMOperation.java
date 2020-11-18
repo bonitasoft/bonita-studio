@@ -141,7 +141,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         try {
             bom = fileStore.getContent();
         } catch (ReadFileStoreException e2) {
-           throw new InvocationTargetException(e2);
+            throw new InvocationTargetException(e2);
         }
         final String progressMessage = progressMessage(bom);
         monitor.beginTask(progressMessage, IProgressMonitor.UNKNOWN);
@@ -167,6 +167,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
             }
             tenantManagementAPI.resume();
+            updateDeployRequiredProperty();
         } catch (final Throwable e) {
             try {
                 tenantManagementAPI.uninstallBusinessDataModel();
@@ -187,6 +188,11 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 session = null;
             }
         }
+    }
+
+    protected void updateDeployRequiredProperty() {
+        BusinessObjectPlugin.getDefault().getPreferenceStore()
+                .setValue(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY, false);
     }
 
     protected void forceH2Drop() {
