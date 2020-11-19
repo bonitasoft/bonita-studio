@@ -16,7 +16,6 @@ package org.bonitasoft.studio.businessobject.validator;
 
 import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.UniqueConstraint;
@@ -32,10 +31,10 @@ public class UniqueConstraintNameValidator implements IBDMValidator<UniqueConstr
 
     public static final int MAX_COLUMN_NAME_LENGTH = 20;
 
-    private SQLNameValidator sqlNameValidator;
+    private CustomSQLNameValidator sqlNameValidator;
 
     public UniqueConstraintNameValidator() {
-        this.sqlNameValidator = new SQLNameValidator(MAX_COLUMN_NAME_LENGTH);
+        this.sqlNameValidator = new CustomSQLNameValidator(MAX_COLUMN_NAME_LENGTH);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class UniqueConstraintNameValidator implements IBDMValidator<UniqueConstr
 
         status.add(validateJavaConvention(name));
         status.add(validateNameLength(name));
-        status.add(validateSqlValidity(name));
+        status.add(sqlNameValidator.validate(name));
         status.add(validateUniqueness(constraint));
 
         return status;
@@ -70,14 +69,6 @@ public class UniqueConstraintNameValidator implements IBDMValidator<UniqueConstr
 
     private IStatus validateNameLength(String name) {
         return new InputLengthValidator(name, MAX_COLUMN_NAME_LENGTH).validate(name);
-    }
-
-    private IStatus validateSqlValidity(String name) {
-        return sqlNameValidator.isValid(name)
-                ? ValidationStatus.ok()
-                : sqlNameValidator.isSQLKeyword(name)
-                        ? ValidationStatus.error(Messages.bind(Messages.reservedKeyWord, name))
-                        : ValidationStatus.error(Messages.bind(Messages.invalidSQLIdentifier, name));
     }
 
     @Override
