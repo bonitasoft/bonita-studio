@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.validator;
 import java.util.Collection;
 import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
@@ -36,13 +35,13 @@ public class IndexNameValidator implements IBDMValidator<Index> {
 
     public static final int MAX_INDEX_NAME_LENGTH = 20;
 
-    private SQLNameValidator sqlNameValidator;
+    private CustomSQLNameValidator sqlNameValidator;
 
     private IObservableValue<BusinessObjectModel> modelObservable;
 
     public IndexNameValidator(IObservableValue<BusinessObjectModel> modelObservable) {
         this.modelObservable = modelObservable;
-        this.sqlNameValidator = new SQLNameValidator(MAX_INDEX_NAME_LENGTH);
+        this.sqlNameValidator = new CustomSQLNameValidator(MAX_INDEX_NAME_LENGTH);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class IndexNameValidator implements IBDMValidator<Index> {
 
         status.add(validateJavaConvention(name));
         status.add(validateNameLength(name));
-        status.add(validateSqlValidity(name));
+        status.add(sqlNameValidator.validate(name));
         status.add(validateUniqueness(index));
 
         return status;
@@ -73,14 +72,6 @@ public class IndexNameValidator implements IBDMValidator<Index> {
             return ValidationStatus.error(Messages.indexNameAlreadyExists);
         }
         return ValidationStatus.ok();
-    }
-
-    private IStatus validateSqlValidity(String name) {
-        return sqlNameValidator.isValid(name)
-                ? ValidationStatus.ok()
-                : sqlNameValidator.isSQLKeyword(name)
-                        ? ValidationStatus.error(Messages.bind(Messages.reservedKeyWord, name))
-                        : ValidationStatus.error(Messages.bind(Messages.invalidSQLIdentifier, name));
     }
 
     private IStatus validateNameLength(String name) {
