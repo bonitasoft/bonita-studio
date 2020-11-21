@@ -21,6 +21,7 @@ import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
+import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -68,7 +69,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     protected List<Role> roleList;
     protected EMFDataBindingContext context;
     protected WizardPageSupport pageSupport;
-    protected TabFolder tabFolder;
+    protected NativeTabFolderWidget tabFolder;
     protected Composite mainComposite;
 
     protected AbstractOrganizationWizardPage(final String pageName) {
