@@ -33,7 +33,6 @@ import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
-import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
@@ -58,7 +57,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -150,7 +148,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                     try {
                         myFile = fetchArchive(filePath);
                     } catch (FetchRemoteBosArchiveException e) {
-                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,e.getLocalizedMessage())));
+                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                                .error(String.format(Messages.cannotImportRemoteArchive, e.getLocalizedMessage())));
                         return;
                     }
                 }
@@ -236,8 +235,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         final TreeViewerColumn archiveColumn = new TreeViewerColumn(viewer, SWT.NONE);
         archiveColumn.getColumn().setText(Messages.archiveColumn);
-        archiveColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ImportModelLabelProvider(
-                new ImportModelStyler())));
+
+        archiveColumn.setLabelProvider(new ImportModelLabelProvider());
 
         final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
         actionColumn.getColumn().setText(Messages.actionColumn);
@@ -355,7 +354,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
                 try {
                     myFile = fetchArchive(filePath);
                 } catch (FetchRemoteBosArchiveException ex) {
-                    textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus.error(String.format(Messages.cannotImportRemoteArchive,ex.getLocalizedMessage())));
+                    textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                            .error(String.format(Messages.cannotImportRemoteArchive, ex.getLocalizedMessage())));
                     return;
                 }
             }
@@ -377,7 +377,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, ex);
         }
-        if(!operation.getStatus().isOK()) {
+        if (!operation.getStatus().isOK()) {
             throw new FetchRemoteBosArchiveException(operation.getStatus().getException());
         }
         urlTempPath = operation.getURLTempPath();

@@ -14,13 +14,19 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.repository.model.IDisplayable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Event;
 
 public class DeployTreeLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -42,18 +48,38 @@ public class DeployTreeLabelProvider extends StyledCellLabelProvider implements 
 
     @Override
     public Image getImage(Object element) {
-        if(element instanceof IDisplayable) {
-            return ((IDisplayable) element).getIcon(); 
+        if (element instanceof IDisplayable) {
+            return ((IDisplayable) element).getIcon();
         }
         return null;
     }
 
     @Override
     public String getText(Object element) {
-        if(element instanceof IDisplayable) {
-            return ((IDisplayable) element).getDisplayName(); 
+        if (element instanceof IDisplayable) {
+            return ((IDisplayable) element).getDisplayName();
         }
         return element.toString();
+    }
+
+    @Override
+    protected void erase(Event event, Object element) {
+        super.erase(event, element);
+
+        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            Rectangle bounds = event.getBounds();
+            if ((event.detail & SWT.SELECTED) != 0) {
+                Color oldForeground = event.gc.getForeground();
+                event.gc.setForeground(event.item.getDisplay().getSystemColor(
+                        SWT.COLOR_LIST_SELECTION_TEXT));
+                event.gc.fillRectangle(bounds);
+                /* restore the old GC colors */
+                event.gc.setForeground(oldForeground);
+                event.detail &= ~SWT.SELECTED;
+            }
+        }
     }
 
 }

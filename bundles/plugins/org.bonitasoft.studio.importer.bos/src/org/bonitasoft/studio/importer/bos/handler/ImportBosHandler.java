@@ -36,7 +36,8 @@ public class ImportBosHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName") String projectName) {
         final ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier(
-                repositoryAccessor, exceptionDialogHandler, file, projectName == null ? repositoryAccessor.getCurrentRepository().getName() : projectName);
+                repositoryAccessor, exceptionDialogHandler, file,
+                projectName == null ? repositoryAccessor.getCurrentRepository().getName() : projectName);
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
                 .needProgress()
@@ -63,7 +64,8 @@ public class ImportBosHandler {
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
     }
 
-    protected void importArchive(Shell activeShell, ImportArchiveModel model, ImportBosArchiveControlSupplier bosArchiveControlSupplier,
+    protected void importArchive(Shell activeShell, ImportArchiveModel model,
+            ImportBosArchiveControlSupplier bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         File archiveFile = new File(bosArchiveControlSupplier.getFilePath());
@@ -74,8 +76,8 @@ public class ImportBosHandler {
             progressManager.run(true, false, operation);
         } catch (final InvocationTargetException | InterruptedException e) {
             throw new RuntimeException(e);
-        }finally {
-            if(bosArchiveControlSupplier.shouldDeleteTempFile()) {
+        } finally {
+            if (bosArchiveControlSupplier.shouldDeleteTempFile()) {
                 archiveFile.delete();
             }
         }

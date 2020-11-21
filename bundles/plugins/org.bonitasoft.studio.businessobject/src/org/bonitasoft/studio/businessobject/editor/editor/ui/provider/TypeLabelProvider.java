@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.provider;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.businessobject.editor.editor.ui.styler.DeprecatedTypeStyler;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.businessobject.validator.AttributeReferenceExitence
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -33,9 +36,12 @@ import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 
 public class TypeLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -120,6 +126,26 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
     @Override
     public String getText(Object element) {
         return getStyledString(element).getString();
+    }
+
+    @Override
+    protected void erase(Event event, Object element) {
+        super.erase(event, element);
+
+        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            Rectangle bounds = event.getBounds();
+            if ((event.detail & SWT.SELECTED) != 0) {
+                Color oldForeground = event.gc.getForeground();
+                event.gc.setForeground(event.item.getDisplay().getSystemColor(
+                        SWT.COLOR_LIST_SELECTION_TEXT));
+                event.gc.fillRectangle(bounds);
+                /* restore the old GC colors */
+                event.gc.setForeground(oldForeground);
+                event.detail &= ~SWT.SELECTED;
+            }
+        }
     }
 
     @Override
