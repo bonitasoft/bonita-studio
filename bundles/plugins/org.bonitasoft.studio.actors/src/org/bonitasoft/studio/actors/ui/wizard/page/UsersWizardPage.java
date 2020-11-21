@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -45,6 +43,8 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
+import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -53,6 +53,7 @@ import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -72,9 +73,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -107,13 +110,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -128,20 +128,20 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     CustomUserInfoDefinitions infoDefinitions;
 
-    private TabItem generalTab;
-    private TabItem personalTab;
-    private TabItem professionnalTab;
-    private TabFolder tab;
+    private NativeTabItemWidget generalTab;
+    private NativeTabItemWidget personalTab;
+    private NativeTabItemWidget professionnalTab;
+    private NativeTabFolderWidget tab;
     private final List<Membership> userMemberShips = new ArrayList<>();
-    private TabItem memberShipTab;
-    private TabItem customTab;
-    private TabItem infoTab;
+    private NativeTabItemWidget memberShipTab;
+    private NativeTabItemWidget customTab;
+    private NativeTabItemWidget infoTab;
 
     TableViewer customUserInfoTable;
     private IObservableList customUserInfoObservableList;
     private CustomUserInformationDefinitionNameEditingSupport customUserInformationDefinitionNameEditingSupport;
     private IViewerObservableValue userSingleSelectionObservable;
-    private TabItem userTab;
+    private NativeTabItemWidget userTab;
     private Composite labelComposite;
     private ComboViewer managerNameComboViewer;
     private SelectionAdapter selectionAdapter;
@@ -177,16 +177,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                     }
                 }
 
-                final TabItem item = tab.getSelection()[0];
+                final NativeTabItemWidget item = tab.getSelection();
                 if (item.equals(memberShipTab)) {
-                    for (final Control c : tab.getChildren()) {
-                        c.dispose();
-                    }
+                    disposeTabItemControl(memberShipTab);
                     refreshMembershipTab();
                 } else if (item.equals(customTab)) {
-                    for (final Control c : tab.getChildren()) {
-                        c.dispose();
-                    }
+                    disposeTabItemControl(customTab);
                     refreshCustomTab();
                 }
 
@@ -295,94 +291,107 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     protected void configureInfoGroup(final Group group) {
         group.setText(Messages.details);
 
-        final Composite detailsComposite = new Composite(group, SWT.NONE);
-        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        detailsComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create());
+        Composite detailsComposite = new Composite(group, SWT.NONE);
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        createUserNameField(detailsComposite);
+        IViewerObservableValue<Object> selection = ViewerProperties.singleSelection().observe(getViewer());
+        context.bindValue(WidgetProperties.visible().observe(detailsComposite), new ComputedValue<Boolean>() {
 
-        createPasswordField(detailsComposite);
+            @Override
+            protected Boolean calculate() {
+                return selection.getValue() != null;
+            }
+        });
 
-        createManagerCombo(detailsComposite);
+        Composite generalDetailsComposite = new Composite(detailsComposite, SWT.NONE);
+        generalDetailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        generalDetailsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 2).create());
 
-        tab = new TabFolder(group, SWT.NONE);
-        tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-        tab.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        createUserNameField(generalDetailsComposite);
+        createPasswordField(generalDetailsComposite);
+        createManagerCombo(generalDetailsComposite);
+
+        tab = new NativeTabFolderWidget.Builder().createIn(detailsComposite);
+        tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tab.setLayout(GridLayoutFactory.fillDefaults().create());
 
         selectionAdapter = new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 Control control = null;
-                final TabItem item = (TabItem) e.item;
-                for (final Control c : tab.getChildren()) {
-                    c.dispose();
-                }
+                Object item = e.item;
 
-                if (item.equals(generalTab)) {
+                if (item.equals(generalTab.getItem())) {
+                    disposeTabItemControl(generalTab);
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createGeneralControl(sc);
-                    updatedScrolMinSize(control, sc);
 
                     sc.setContent(control);
 
                     generalTab.setControl(sc);
 
-                } else if (item.equals(personalTab)) {
+                } else if (item.equals(personalTab.getItem())) {
+                    disposeTabItemControl(personalTab);
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createContactInfoControl(sc, OrganizationPackage.Literals.USER__PERSONAL_DATA);
-                    updatedScrolMinSize(control, sc);
 
                     sc.setContent(control);
                     personalTab.setControl(sc);
 
-                } else if (item.equals(professionnalTab)) {
+                } else if (item.equals(professionnalTab.getItem())) {
+                    disposeTabItemControl(professionnalTab);
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createContactInfoControl(sc, OrganizationPackage.Literals.USER__PROFESSIONAL_DATA);
-                    updatedScrolMinSize(control, sc);
 
                     sc.setContent(control);
                     professionnalTab.setControl(sc);
                 }
 
-                else if (item.equals(memberShipTab)) {
+                else if (item.equals(memberShipTab.getItem())) {
+                    disposeTabItemControl(memberShipTab);
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createMembershipControl(sc);
-                    updatedScrolMinSize(control, sc);
                     sc.setContent(control);
                     memberShipTab.setControl(sc);
                 }
 
-                else if (item.equals(customTab)) {
+                else if (item.equals(customTab.getItem())) {
+                    disposeTabItemControl(customTab);
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createCustomControl(sc);
-                    updatedScrolMinSize(control, sc);
                     sc.setContent(control);
 
                     customTab.setControl(sc);
                 }
-                getInfoGroup().layout(true, true);
             }
 
         };
 
         tab.addSelectionListener(selectionAdapter);
 
-        generalTab = new TabItem(tab, SWT.NONE);
-        generalTab.setText(Messages.general);
+        generalTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.general)
+                .createIn(tab);
 
-        memberShipTab = new TabItem(tab, SWT.SCROLL_LINE);
-        memberShipTab.setText(Messages.membership + " *");
+        memberShipTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.membership + " *")
+                .withStyle(SWT.SCROLL_LINE)
+                .createIn(tab);
 
-        personalTab = new TabItem(tab, SWT.NONE);
-        personalTab.setText(Messages.personalData);
+        personalTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.personalData)
+                .createIn(tab);
 
-        professionnalTab = new TabItem(tab, SWT.NONE);
-        professionnalTab.setText(Messages.professionalData);
+        professionnalTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.professionalData)
+                .createIn(tab);
 
-        customTab = new TabItem(tab, SWT.SCROLL_LINE);
-        customTab.setText(Messages.other);
+        customTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.other)
+                .withStyle(SWT.SCROLL_LINE)
+                .createIn(tab);
 
         tab.setSelection(generalTab);
 
@@ -460,23 +469,23 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final Text passwordText = new Text(passwordComposite, SWT.BORDER | SWT.PASSWORD);
         passwordText.setLayoutData(
                 GridDataFactory.swtDefaults()
-                .align(SWT.FILL, SWT.CENTER)
-                .grab(true, false)
-                .indent(5, 0)
-                .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
-                .create());
+                        .align(SWT.FILL, SWT.CENTER)
+                        .grab(true, false)
+                        .indent(5, 0)
+                        .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
+                        .create());
         char echoChar = passwordText.getEchoChar();
 
-        if(!"macosx".equals(Platform.getOS())) {
+        if (!"macosx".equals(Platform.getOS())) {
             final Button viewPaswsordButton = new Button(passwordComposite, SWT.TOGGLE);
             viewPaswsordButton.setLayoutData(GridDataFactory.swtDefaults().create());
             viewPaswsordButton.setImage(Pics.getImage("view.png", ActorsPlugin.getDefault()));
             viewPaswsordButton.setToolTipText(Messages.showPassword);
             viewPaswsordButton.addSelectionListener(new SelectionAdapter() {
-    
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                        passwordText.setEchoChar(viewPaswsordButton.getSelection() ? CLEAR_CHAR : echoChar);
+                    passwordText.setEchoChar(viewPaswsordButton.getSelection() ? CLEAR_CHAR : echoChar);
                 }
             });
         }
@@ -650,7 +659,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
      * @return
      */
     private ScrolledComposite createScrolledComposite() {
-        final ScrolledComposite sc = new ScrolledComposite(tab, SWT.V_SCROLL);
+        final ScrolledComposite sc = new ScrolledComposite(tab.getTabFolder(), SWT.V_SCROLL);
         sc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
         sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
         sc.setExpandHorizontal(true);
@@ -799,7 +808,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         m.setUserName(u.getUserName());
         membershipList.add(m);
         final Event ev = new Event();
-        ev.item = tab.getSelection()[0];
+        ev.item = tab.getSelection().getItem();
         tab.notifyListeners(SWT.Selection, ev);
     }
 
@@ -808,7 +817,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 Messages.deleteMembershipMsg)) {
             membershipList.remove(membership);
             final Event ev = new Event();
-            ev.item = tab.getSelection()[0];
+            ev.item = tab.getSelection().getItem();
             tab.notifyListeners(SWT.Selection, ev);
         }
     }
@@ -1290,13 +1299,15 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     @Override
     public void createControl(final Composite parent) {
 
-        tabFolder = new TabFolder(parent, SWT.TOP);
+        tabFolder = new NativeTabFolderWidget.Builder()
+                .createIn(parent);
+        //new TabFolder(parent, SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                if (e.item.equals(userTab)) {
+                if (e.item.equals(userTab.getItem())) {
                     refreshCustomTab();
                     refreshMembershipTab();
                 }
@@ -1304,16 +1315,22 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         });
 
-        super.createControl(tabFolder);
-        super.setControl(tabFolder);
+        Composite userTabComposite = new Composite(tabFolder.getTabFolder(), SWT.NONE);
+        userTabComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        userTabComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        userTab = new TabItem(tabFolder, SWT.NONE);
-        userTab.setText(Messages.listOfUsersTabTitle);
-        userTab.setControl(mainComposite);
+        userTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.listOfUsersTabTitle)
+                .withControl(userTabComposite)
+                .createIn(tabFolder);
 
-        infoTab = new TabItem(tabFolder, SWT.NONE);
-        infoTab.setText(Messages.customUserInformationTabTitle);
-        infoTab.setControl(addInformationComposite());
+        super.createControl(userTabComposite);
+        super.setControl(userTabComposite);
+
+        infoTab = new NativeTabItemWidget.Builder()
+                .withText(Messages.customUserInformationTabTitle)
+                .withControl(addInformationComposite())
+                .createIn(tabFolder);
 
         tabFolder.setSelection(userTab);
     }
@@ -1346,7 +1363,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
     private Composite addInformationComposite() {
-        final Composite infoCompo = new Composite(tabFolder, SWT.NONE);
+        final Composite infoCompo = new Composite(tabFolder.getTabFolder(), SWT.NONE);
         infoCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         infoCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
 
@@ -1700,5 +1717,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private boolean isNotUserSelected() {
         return userSingleSelectionObservable == null || userSingleSelectionObservable.getValue() == null;
+    }
+
+    private void disposeTabItemControl(NativeTabItemWidget item) {
+        Control c = item.getControl();
+        if (c != null && !c.isDisposed()) {
+            c.dispose();
+        }
     }
 }
