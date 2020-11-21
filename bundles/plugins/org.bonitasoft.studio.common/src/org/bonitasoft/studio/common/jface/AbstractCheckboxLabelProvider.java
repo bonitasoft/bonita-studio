@@ -14,18 +14,23 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
-public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
+public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider
+        implements ILabelProvider {
 
     public AbstractCheckboxLabelProvider(final ColumnViewer viewer) {
     }
@@ -54,20 +59,21 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         return true;
     }
 
-
     private Image checkboxImage(final boolean selected, final boolean enabled) {
         if (selected) {
-            return enabled ? Pics.getImage("/checkboxes/checkbox_yes.png") : Pics.getImage("/checkboxes/checkbox_yes_disabled.png");
+            return enabled ? Pics.getImage("/checkboxes/checkbox_yes.png")
+                    : Pics.getImage("/checkboxes/checkbox_yes_disabled.png");
         }
-        return enabled ? Pics.getImage("/checkboxes/checkbox_no.png") : Pics.getImage("/checkboxes/checkbox_no_disabled.png");
+        return enabled ? Pics.getImage("/checkboxes/checkbox_no.png")
+                : Pics.getImage("/checkboxes/checkbox_no_disabled.png");
     }
 
     @Override
     protected void paint(final Event event, final Object element) {
         final Image img = getImage(element);
         if (img != null) {
-            final Rectangle bounds = event.item instanceof TableItem ? ((TableItem) event.item).getBounds(event.index) :
-                    ((TreeItem) event.item).getBounds(event.index);
+            final Rectangle bounds = event.item instanceof TableItem ? ((TableItem) event.item).getBounds(event.index)
+                    : ((TreeItem) event.item).getBounds(event.index);
             final Rectangle imgBounds = img.getBounds();
             bounds.width /= 2;
             bounds.width -= imgBounds.width / 2;
@@ -91,7 +97,26 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         if (image != null) {
             event.height = image.getBounds().height;
         }
+    }
 
+    @Override
+    protected void erase(Event event, Object element) {
+        super.erase(event, element);
+
+        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            Rectangle bounds = event.getBounds();
+            if ((event.detail & SWT.SELECTED) != 0) {
+                Color oldForeground = event.gc.getForeground();
+                event.gc.setForeground(event.item.getDisplay().getSystemColor(
+                        SWT.COLOR_LIST_SELECTION_TEXT));
+                event.gc.fillRectangle(bounds);
+                /* restore the old GC colors */
+                event.gc.setForeground(oldForeground);
+                event.detail &= ~SWT.SELECTED;
+            }
+        }
     }
 
 }

@@ -18,14 +18,13 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
-import org.eclipse.jface.viewers.StyledString;
 import org.junit.Test;
 
 public class ImportModelLabelProviderTest {
 
     @Test
     public void should_display_folder_name() throws Exception {
-        final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider(new ImportModelStyler());
+        final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
 
         final String text = labelProvider.getText(new ImportStoreModel("myRepo", repositoryStore("myRepo")));
 
@@ -33,21 +32,15 @@ public class ImportModelLabelProviderTest {
     }
 
     @Test
-    public void should_apply_conflict_style() throws Exception {
-        final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider(new ImportModelStyler());
-
-        final StyledString styledText = labelProvider.getStyledText(conflictingImportFileModel());
-
-        assertThat(styledText.getStyleRanges()).hasSize(1);
+    public void should_detect_conflicting_status() throws Exception {
+        ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
+        assertThat(labelProvider.hasStatus(conflictingImportFileModel(), ConflictStatus.CONFLICTING)).isTrue();
     }
 
     @Test
-    public void should_apply_same_content_style() throws Exception {
-        final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider(new ImportModelStyler());
-
-        final StyledString styledText = labelProvider.getStyledText(sameContentImportFileModel());
-
-        assertThat(styledText.getStyleRanges()).hasSize(1);
+    public void should_detect_same_content_status() throws Exception {
+        final ImportModelLabelProvider labelProvider = new ImportModelLabelProvider();
+        assertThat(labelProvider.hasStatus(sameContentImportFileModel(), ConflictStatus.SAME_CONTENT)).isTrue();
     }
 
     private Object sameContentImportFileModel() {

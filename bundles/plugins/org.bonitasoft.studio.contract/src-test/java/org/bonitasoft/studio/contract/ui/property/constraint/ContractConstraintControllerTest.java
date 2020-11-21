@@ -66,7 +66,9 @@ public class ContractConstraintControllerTest {
         FileActionDialog.setDisablePopup(true);
         controller = spy(new ContractConstraintController(new WritableValue(aContract().build(), Contract.class)));
         contract = ProcessFactory.eINSTANCE.createContract();
-        when(viewer.getInput()).thenReturn(EMFObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
+        when(viewer.getInput())
+                .thenReturn(EMFObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
+        doReturn(false).when(controller).isMacos();
     }
 
     @Test

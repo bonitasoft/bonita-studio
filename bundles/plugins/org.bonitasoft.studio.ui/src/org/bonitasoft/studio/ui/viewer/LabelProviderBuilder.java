@@ -18,12 +18,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -36,10 +38,13 @@ import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 
 public class LabelProviderBuilder<T> {
 
@@ -161,6 +166,27 @@ public class LabelProviderBuilder<T> {
 
             private ColumnViewerEditorActivationListener refreshAllAfterEdit() {
                 return refreshAfterEditListener();
+            }
+
+            @Override
+            protected void erase(Event event, Object element) {
+                super.erase(event, element);
+
+                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+                // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+                if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+                    Rectangle bounds = event.getBounds();
+                    if ((event.detail & SWT.SELECTED) != 0) {
+                        Color oldForeground = event.gc.getForeground();
+                        event.gc.setForeground(event.item.getDisplay().getSystemColor(
+                                SWT.COLOR_LIST_SELECTION_TEXT));
+                        event.gc.fillRectangle(bounds);
+                        /* restore the old GC colors */
+                        event.gc.setForeground(oldForeground);
+                        /* ensure that default selection is not drawn */
+                        event.detail &= ~SWT.SELECTED;
+                    }
+                }
             }
 
             @Override

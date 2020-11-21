@@ -26,10 +26,10 @@ import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypePr
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.InputNameObservableEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.ContractInputTypeCellLabelProvider;
-import org.bonitasoft.studio.contract.ui.property.input.labelProvider.DescriptionCellLabelProvider;
-import org.bonitasoft.studio.contract.ui.property.input.labelProvider.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.input.labelProvider.MultipleInputCheckboxLabelProvider;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -42,6 +42,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -126,19 +127,19 @@ public class ContractInputTreeViewer extends TreeViewer {
                 new ContractInputObservableFactory(),
                 new ContractInputTreeStructureAdvisor());
         setContentProvider(contentProvider);
-        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
+        ColumnViewerToolTipSupport.enableFor(this);
+
+        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this,
+                inputController);
         final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this,
                 new FocusCellOwnerDrawHighlighter(
                         this),
                 cellNavigationStrategy);
-
         TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this),
                 ColumnViewerEditor.TABBING_HORIZONTAL |
                         ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
                         ColumnViewerEditor.TABBING_VERTICAL |
                         ColumnViewerEditor.KEYBOARD_ACTIVATION);
-
-        ColumnViewerToolTipSupport.enableFor(this);
 
         createColumns();
         configureTableLayout();
@@ -167,8 +168,9 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createInputNameColumn() {
         final TreeViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(propertySourceProvider,
-                knownElements()));
+        nameColumnViewer.setLabelProvider(new LabelProviderBuilder<ContractInput>()
+                .withStyledStringProvider(input -> new StyledString(input.getName()))
+                .createStyledCellLabelProvider());
         final InputNameObservableEditingSupport editingSupport = new InputNameObservableEditingSupport(this,
                 messageManager,
                 emfDataBindingContext,
@@ -183,7 +185,10 @@ public class ContractInputTreeViewer extends TreeViewer {
         final TreeColumn column = descriptionColumnViewer.getColumn();
         column.setToolTipText(Messages.contractInputDescriptionTooltip);
         column.setImage(sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK));
-        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider, knownElements()));
+        descriptionColumnViewer.setLabelProvider(new LabelProviderBuilder<ContractInput>()
+                .withStyledStringProvider(
+                        input -> new StyledString(input.getDescription() == null ? "" : input.getDescription()))
+                .createStyledCellLabelProvider());
         final DescriptionObservableEditingSupport editingSupport = new DescriptionObservableEditingSupport(this,
                 messageManager, emfDataBindingContext);
         editingSupport.setControlId(SWTBotConstants.SWTBOT_ID_INPUT_DESCRIPTION_TEXTEDITOR);
