@@ -18,8 +18,6 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
-import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpressionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintNameObservableEditingSupport;
@@ -33,17 +31,12 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.viewers.CellNavigationStrategy;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -79,21 +72,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
         propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTable().setHeaderVisible(true);
-        getTable().setLinesVisible(true);
         setContentProvider(new ObservableListContentProvider());
-
-        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this,
-                constraintController);
-        final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(this,
-                new FocusCellOwnerDrawHighlighter(
-                        this),
-                cellNavigationStrategy);
-
-        TableViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this),
-                ColumnViewerEditor.TABBING_HORIZONTAL |
-                        ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
-                        ColumnViewerEditor.TABBING_VERTICAL |
-                        ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         ColumnViewerToolTipSupport.enableFor(this);
         createColumns();

@@ -27,6 +27,7 @@ public interface ColorConstants {
     static final RGB DARK_MODE_DIAGRAMS_FONT_COLOR = new RGB(200, 200, 200);
     static final RGB DARK_MODE_DIAGRAMS_LINE_COLOR = new RGB(100, 100, 100);
     static final RGB DARK_MODE_DIAGRAMS_TASK_FONT_COLOR = new RGB(64, 64, 64);
+    static final RGB DARK_MODE_TABLE_SELECTED_UNFOCUS = new RGB(70, 70, 70);
 
     static final String DARK_MODE_ACTIVITY_GRADIENT_HEXA_COLOR = "#c8c8c8";
 
