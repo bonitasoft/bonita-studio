@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,6 +41,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 
 /**
  * @author Romain Bioteau
@@ -71,7 +73,8 @@ public class ContractConstraintController implements IViewerController {
     private String defaultConstraintName() {
         final Contract contract = (Contract) contractObservableValue.getValue();
         return NamingUtils.generateNewName(
-                newHashSet(transform(getAllElementOfTypeIn(contract, ContractConstraint.class), toConstraintName())), "constraint", 1);
+                newHashSet(transform(getAllElementOfTypeIn(contract, ContractConstraint.class), toConstraintName())),
+                "constraint", 1);
     }
 
     private Function<ContractConstraint, String> toConstraintName() {
@@ -101,27 +104,45 @@ public class ContractConstraintController implements IViewerController {
     public void moveUp(final ColumnViewer viewer) {
         final ContractConstraint selectedConstraint = getSelectedConstraint(viewer);
         final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
-        final IObservableList list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS);
+        final IObservableList list = CustomEMFEditObservables.observeList(contract,
+                ProcessPackage.Literals.CONTRACT__CONSTRAINTS);
         final int index = list.indexOf(selectedConstraint);
         if (index > 0) {
             list.move(index, index - 1);
             //refresh button enablement
             viewer.setSelection(new StructuredSelection());
             viewer.setSelection(new StructuredSelection(selectedConstraint));
+
+            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+            // TODO Hopefully this could be removed on the futur (current date: 20/11/2020)
+            if (isMacos()) {
+                viewer.getControl().redraw();
+            }
         }
+    }
+
+    protected boolean isMacos() {
+        return Objects.equal(Platform.getOS(), Platform.OS_MACOSX);
     }
 
     @Override
     public void moveDown(final ColumnViewer viewer) {
         final ContractConstraint selectedConstraint = getSelectedConstraint(viewer);
         final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
-        final IObservableList list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS);
+        final IObservableList list = CustomEMFEditObservables.observeList(contract,
+                ProcessPackage.Literals.CONTRACT__CONSTRAINTS);
         final int index = list.indexOf(selectedConstraint);
         if (index < list.size() - 1) {
             list.move(index, index + 1);
             //refresh button enablement
             viewer.setSelection(new StructuredSelection());
             viewer.setSelection(new StructuredSelection(selectedConstraint));
+
+            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+            // TODO Hopefully this could be removed on the futur (current date: 20/11/2020)
+            if (isMacos()) {
+                viewer.getControl().redraw();
+            }
         }
     }
 

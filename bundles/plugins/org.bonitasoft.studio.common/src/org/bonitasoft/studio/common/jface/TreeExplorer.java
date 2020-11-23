@@ -16,10 +16,12 @@ package org.bonitasoft.studio.common.jface;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -113,7 +115,13 @@ public class TreeExplorer extends Composite implements SWTBotConstants {
         leftTree.addSelectionChangedListener(event -> {
             final Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
             if (selection != null) {
-                rightTable.refresh(null);
+                rightTable.refresh();
+
+                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+                // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+                if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+                    rightTable.getTable().redraw();
+                }
             }
         });
 
