@@ -30,17 +30,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.osgi.util.NLS;
 
 public class BusinessObjectNameValidator implements IBDMValidator<BusinessObject> {
 
     public static final int MAX_TABLE_NAME_LENGTH = 30;
 
     private IObservableValue<BusinessObjectModel> modelObservable;
-    private SQLNameValidator sqlNameValidator;
+    private CustomSQLNameValidator sqlNameValidator;
 
     public BusinessObjectNameValidator(IObservableValue<BusinessObjectModel> modelObservable) {
         this.modelObservable = modelObservable;
-        this.sqlNameValidator = new SQLNameValidator(MAX_TABLE_NAME_LENGTH);
+        this.sqlNameValidator = new CustomSQLNameValidator(MAX_TABLE_NAME_LENGTH);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class BusinessObjectNameValidator implements IBDMValidator<BusinessObject
         status.add(validateUniqueness((businessObject), name));
         status.add(validateWhiteSpaceCharacter(name));
         status.add(validateUnderscoreCharacter(name));
-        status.add(validateSqlValidity(name));
+        status.add(sqlNameValidator.validate(name));
         status.add(validateJavaConvention(name));
 
         return status;
@@ -64,14 +65,6 @@ public class BusinessObjectNameValidator implements IBDMValidator<BusinessObject
 
     protected IStatus validateJavaConvention(String name) {
         return JavaConventions.validateJavaTypeName(name, JavaCore.VERSION_1_8, JavaCore.VERSION_1_8);
-    }
-
-    private IStatus validateSqlValidity(String name) {
-        return sqlNameValidator.isValid(name)
-                ? ValidationStatus.ok()
-                : sqlNameValidator.isSQLKeyword(name)
-                        ? ValidationStatus.error(Messages.bind(Messages.reservedKeyWord, name))
-                        : ValidationStatus.error(Messages.bind(Messages.invalidSQLIdentifier, name));
     }
 
     private IStatus validateWhiteSpaceCharacter(String name) {

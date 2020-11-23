@@ -54,7 +54,7 @@
   			<unit id="org.eclipse.mylyn.commons.ui" version="3.25.1.v20200511-1958"/>
   			<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="2.2.0.v202005251709"/>
   			<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="1.1.8.v202004230532"/>
-	  		<unit id="com.sun.jna.platform"	version="4.5.1.v20190425-1842" />
+	  		<unit id="com.sun.jna.platform" version="4.5.1.v20190425-1842"/>
          	<unit id="org.eclipse.emf.diffmerge.sdk.feature.feature.group" version="0.11.2.201906100817"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/>
