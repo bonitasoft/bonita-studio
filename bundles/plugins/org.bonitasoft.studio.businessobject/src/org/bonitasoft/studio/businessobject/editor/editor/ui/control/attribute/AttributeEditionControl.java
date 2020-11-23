@@ -147,6 +147,12 @@ public class AttributeEditionControl extends Composite {
                         .filter(field -> !field.getName().toLowerCase().contains(search))
                         .forEach(fieldToFilter::add);
                 viewer.refresh();
+
+                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+                // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
+                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
+                    viewer.getControl().redraw();
+                }
             });
         });
     }
