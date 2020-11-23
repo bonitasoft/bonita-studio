@@ -49,6 +49,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -299,6 +300,12 @@ public class QueryDetailsControl extends Composite {
                         .filter(param -> !param.getName().toLowerCase().contains(search))
                         .forEach(parametersToFilter::add);
                 parametersTableViewer.refresh();
+
+                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+                // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
+                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
+                    parametersTableViewer.getControl().redraw();
+                }
             });
         });
     }
@@ -375,6 +382,14 @@ public class QueryDetailsControl extends Composite {
         parametersMultipleSelectionObservable = ViewerProperties.multipleSelection(QueryParameter.class)
                 .observe(parametersTableViewer);
         parametersTableViewer.setInput(selectedQueryParameterObservableList);
+
+        querySelectedObservable.addValueChangeListener(e -> {
+            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+            // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
+            if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
+                parametersTableViewer.getControl().redraw();
+            }
+        });
     }
 
     private void createDescriptionColumn(TableViewer viewer) {
