@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.ui.widget;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -74,7 +76,7 @@ public class NativeTabItemWidget {
     }
 
     private void init() {
-        if (isWindows()) {
+        if (useCTabItem()) {
             createCTabItem();
         } else {
             createTabItem();
@@ -102,12 +104,12 @@ public class NativeTabItemWidget {
         this.item = cTabItem;
     }
 
-    private boolean isWindows() {
-        return Platform.getOS().contains("win");
+    private boolean useCTabItem() {
+        return Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS());
     }
 
     public void setControl(Control control) {
-        if (isWindows()) {
+        if (useCTabItem()) {
             ((CTabItem) item).setControl(control);
         } else {
             ((TabItem) item).setControl(control);

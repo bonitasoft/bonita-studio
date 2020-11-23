@@ -511,6 +511,7 @@ public class Messages extends NLS {
     public static String deployCancel;
     public static String invalidGroupId;
     public static String bdmDeployMarker;
+    public static String discouragedUsageOfKnownReservedKeyword;
 
     private Messages() {
     }

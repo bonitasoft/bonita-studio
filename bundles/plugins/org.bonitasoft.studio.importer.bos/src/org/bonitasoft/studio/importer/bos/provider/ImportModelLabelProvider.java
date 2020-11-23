@@ -3,6 +3,7 @@ package org.bonitasoft.studio.importer.bos.provider;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -15,52 +16,89 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractImportModel;
 import org.bonitasoft.studio.importer.bos.model.LegacyStoreModel;
-import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler.ConflictStyler;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.IToolTipProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
-public class ImportModelLabelProvider extends LabelProvider implements IStyledLabelProvider, IToolTipProvider {
+public class ImportModelLabelProvider extends ColumnLabelProvider {
 
-    private static final int START_OFFSET = 0;
     private final List<Image> toDispose = new ArrayList<>();
-    private final ConflictStyler conflictStyler;
-    private final Styler sameContentStyler;
-    private Styler notImportedStyle;
+    private Color conflictColor;
+    private Color notImportedColor;
 
-    public ImportModelLabelProvider(ImportModelStyler styler) {
-        this.conflictStyler = styler.createConflictStyler();
-        this.sameContentStyler = styler.createSameContentStyler();
-        this.notImportedStyle = styler.createNotImportedStyler();
+    @Override
+    protected void initialize(ColumnViewer viewer, ViewerColumn column) {
+        super.initialize(viewer, column);
+        LocalResourceManager localResourceManager = new LocalResourceManager(JFaceResources.getResources(),
+                viewer.getControl());
+        conflictColor = localResourceManager.createColor(ColorConstants.ERROR_RGB);
+        notImportedColor = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+        viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit(viewer));
+    }
+
+    private ColumnViewerEditorActivationListener refreshAllAfterEdit(ColumnViewer viewer) {
+        return new ColumnViewerEditorActivationListener() {
+
+            @Override
+            public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+            }
+
+            @Override
+            public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
+            }
+
+            @Override
+            public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+                if (viewer.getInput() instanceof Collection) {
+                    viewer.getControl().getDisplay().asyncExec(
+                            () -> {
+                                if (viewer != null && !viewer.getControl().isDisposed()
+                                        && viewer.getInput() != null) {
+                                    viewer.update(((Collection<Object>) viewer.getInput()).toArray(), null);
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
+            }
+        };
     }
 
     @Override
-    public StyledString getStyledText(Object element) {
-        String name = getText(element);
-        StyledString styledString = new StyledString(name);
+    public void update(ViewerCell cell) {
+        Object element = cell.getElement();
+        cell.setText(getText(element));
+        cell.setImage(getImage(element));
+
         if (hasStatus(element, ConflictStatus.CONFLICTING)) {
-            styledString.setStyle(START_OFFSET, name.length(), conflictStyler);
+            cell.setForeground(conflictColor);
         }
         if (hasStatus(element, ConflictStatus.SAME_CONTENT)) {
-            styledString.append(String.format(" (%s)", Messages.skipped));
-            styledString.setStyle(START_OFFSET, styledString.length(), sameContentStyler);
+            cell.setForeground(notImportedColor);
         }
         if (element instanceof LegacyStoreModel) {
-            styledString.setStyle(START_OFFSET, styledString.length(), notImportedStyle);
-            styledString.append(String.format(" (%s)", Messages.legacyFormsNotImported));
+            cell.setForeground(notImportedColor);
         }
-        return styledString;
     }
 
     public boolean hasStatus(Object element, ConflictStatus status) {
@@ -124,13 +162,6 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
-        conflictStyler.dispose();
-        toDispose.stream().forEach(Image::dispose);
-    }
-
-    @Override
     public String getToolTipText(Object element) {
         if (element instanceof AbstractImportModel) {
             AbstractImportModel importModel = (AbstractImportModel) element;
@@ -165,6 +196,12 @@ public class ImportModelLabelProvider extends LabelProvider implements IStyledLa
             return ((SmartImportableUnit) element).getToolTipText();
         }
         return null;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        toDispose.forEach(Image::dispose);
     }
 
 }

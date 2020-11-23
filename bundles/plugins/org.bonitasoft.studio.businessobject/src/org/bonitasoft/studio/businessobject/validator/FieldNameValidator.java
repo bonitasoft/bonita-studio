@@ -16,7 +16,6 @@ package org.bonitasoft.studio.businessobject.validator;
 
 import java.util.Objects;
 
-import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.Field;
@@ -27,15 +26,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.osgi.util.NLS;
 
 public class FieldNameValidator implements IBDMValidator<Field> {
 
     public static final int MAX_COLUMN_NAME_LENGTH = 50;
 
-    private SQLNameValidator sqlNameValidator;
+    private CustomSQLNameValidator sqlNameValidator;
 
     public FieldNameValidator() {
-        this.sqlNameValidator = new SQLNameValidator(MAX_COLUMN_NAME_LENGTH);
+        this.sqlNameValidator = new CustomSQLNameValidator(MAX_COLUMN_NAME_LENGTH);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FieldNameValidator implements IBDMValidator<Field> {
 
         status.add(validateJavaConvention(name));
         status.add(validateNameLength(name));
-        status.add(validateSqlValidity(name));
+        status.add(sqlNameValidator.validate(name));
         status.add(validateReservedFieldNames(name));
         status.add(validateUniqueness(field));
         status.add(validateFirstCharacter(name));
@@ -75,20 +75,12 @@ public class FieldNameValidator implements IBDMValidator<Field> {
     private IStatus validateReservedFieldNames(String name) {
         if (name.equalsIgnoreCase(org.bonitasoft.engine.bdm.model.field.Field.PERSISTENCE_ID)) {
             return ValidationStatus.error(
-                    Messages.bind(Messages.reservedKeyWord, org.bonitasoft.engine.bdm.model.field.Field.PERSISTENCE_ID));
+                    NLS.bind(Messages.reservedKeyWord, org.bonitasoft.engine.bdm.model.field.Field.PERSISTENCE_ID));
         } else if (name.equalsIgnoreCase(org.bonitasoft.engine.bdm.model.field.Field.PERSISTENCE_VERSION)) {
-            return ValidationStatus.error(Messages.bind(Messages.reservedKeyWord,
+            return ValidationStatus.error(NLS.bind(Messages.reservedKeyWord,
                     org.bonitasoft.engine.bdm.model.field.Field.PERSISTENCE_VERSION));
         }
         return ValidationStatus.ok();
-    }
-
-    private IStatus validateSqlValidity(String name) {
-        return sqlNameValidator.isValid(name)
-                ? ValidationStatus.ok()
-                : sqlNameValidator.isSQLKeyword(name)
-                        ? ValidationStatus.error(Messages.bind(Messages.reservedKeyWord, name))
-                        : ValidationStatus.error(Messages.bind(Messages.invalidSQLIdentifier, name));
     }
 
     private IStatus validateNameLength(String name) {

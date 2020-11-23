@@ -61,14 +61,14 @@ public class NativeTabFolderWidget {
     }
 
     private Composite createNativeTabFolder() {
-        if (isWindows()) {
+        if (useCTabFolder()) {
             return new CTabFolder(parent, SWT.TOP);
         }
         return new TabFolder(parent, SWT.TOP);
     }
 
-    private boolean isWindows() {
-        return Platform.getOS().contains("win");
+    private boolean useCTabFolder() {
+        return Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS());
     }
 
     public Composite getTabFolder() {
@@ -76,7 +76,7 @@ public class NativeTabFolderWidget {
     }
 
     public void addSelectionListener(SelectionListener listener) {
-        if (isWindows()) {
+        if (useCTabFolder()) {
             ((CTabFolder) tabFolder).addSelectionListener(listener);
         } else {
             ((TabFolder) tabFolder).addSelectionListener(listener);
@@ -84,10 +84,10 @@ public class NativeTabFolderWidget {
     }
 
     public void setSelection(NativeTabItemWidget tabItem) {
-        if (isWindows()) {
+        if (useCTabFolder()) {
             ((CTabFolder) tabFolder).setSelection((CTabItem) tabItem.getItem());
             Event event = new Event();
-            event.item =  tabItem.getItem();
+            event.item = tabItem.getItem();
             ((CTabFolder) tabFolder).notifyListeners(SWT.Selection, event);
         } else {
             ((TabFolder) tabFolder).setSelection((TabItem) tabItem.getItem());
@@ -99,7 +99,7 @@ public class NativeTabFolderWidget {
     }
 
     public NativeTabItemWidget getSelection() {
-        Object selection = isWindows()
+        Object selection = useCTabFolder()
                 ? ((CTabFolder) tabFolder).getSelection()
                 : ((TabFolder) tabFolder).getSelection()[0];
         return children.stream()
@@ -108,13 +108,13 @@ public class NativeTabFolderWidget {
     }
 
     public int getSelectionIndex() {
-        return isWindows()
+        return useCTabFolder()
                 ? ((CTabFolder) tabFolder).getSelectionIndex()
                 : ((TabFolder) tabFolder).getSelectionIndex();
     }
 
     public NativeTabItemWidget getItem(int index) {
-        Item item = isWindows()
+        Item item = useCTabFolder()
                 ? ((CTabFolder) tabFolder).getItem(index)
                 : ((TabFolder) tabFolder).getItem(index);
         return children.stream().filter(child -> Objects.equals(item, child.getItem())).findFirst().orElse(null);
@@ -125,7 +125,7 @@ public class NativeTabFolderWidget {
     }
 
     public void notifyListeners(int eventType, Event event) {
-        if (isWindows()) {
+        if (useCTabFolder()) {
             ((CTabFolder) tabFolder).notifyListeners(eventType, event);
         } else {
             ((TabFolder) tabFolder).notifyListeners(eventType, event);

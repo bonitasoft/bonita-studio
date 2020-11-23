@@ -16,6 +16,8 @@ package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Contract;
@@ -30,6 +32,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -67,8 +70,9 @@ public class ContractConstraintsTableViewerTest {
         parent = realm.createComposite();
         FileActionDialog.setDisablePopup(true);
         viewer = new ContractConstraintsTableViewer(parent, new FormToolkit(parent.getDisplay()));
-        final ContractConstraintController inputController = new ContractConstraintController(new WritableValue(aContract()
-                .build(), Contract.class));
+        ContractConstraintController inputController = spy(
+                new ContractConstraintController(new WritableValue(aContract().build(), Contract.class)));
+        doReturn(false).when(inputController).isMacos();
         viewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
@@ -81,7 +85,8 @@ public class ContractConstraintsTableViewerTest {
         constraint2.setName("c2");
         contract.getConstraints().add(constraint);
         contract.getConstraints().add(constraint2);
-        viewer.setInput(EMFObservables.observeList(Realm.getDefault(), contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
+        viewer.setInput(
+                EMFObservables.observeList(Realm.getDefault(), contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
     }
 
     @Test
@@ -94,7 +99,8 @@ public class ContractConstraintsTableViewerTest {
     }
 
     @Test
-    public void shoud_createRemoveListener_add_a_selection_listener_that_remove_selected_contract_constraints() throws Exception {
+    public void shoud_createRemoveListener_add_a_selection_listener_that_remove_selected_contract_constraints()
+            throws Exception {
         final Button button = new Button(parent, SWT.PUSH);
         viewer.createRemoveListener(button);
         viewer.setSelection(new StructuredSelection(constraint));
@@ -104,7 +110,8 @@ public class ContractConstraintsTableViewerTest {
     }
 
     @Test
-    public void shoud_createMoveUpListener_add_a_selection_listener_that_moveUp_selected_contract_constraint() throws Exception {
+    public void shoud_createMoveUpListener_add_a_selection_listener_that_moveUp_selected_contract_constraint()
+            throws Exception {
         final Button button = new Button(parent, SWT.PUSH);
         viewer.createMoveUpListener(button);
         assertThat(viewer.getTable().getItem(1).getData()).isEqualTo(constraint2);
@@ -114,13 +121,30 @@ public class ContractConstraintsTableViewerTest {
     }
 
     @Test
-    public void shoud_createMoveUpListener_add_a_selection_listener_that_moveDown_selected_contract_constraint() throws Exception {
+    public void shoud_createMoveUpListener_add_a_selection_listener_that_moveDown_selected_contract_constraint()
+            throws Exception {
         final Button button = new Button(parent, SWT.PUSH);
         viewer.createMoveDownListener(button);
         assertThat(viewer.getTable().getItem(0).getData()).isEqualTo(constraint);
         viewer.setSelection(new StructuredSelection(constraint));
         button.notifyListeners(SWT.Selection, new Event());
         assertThat(viewer.getTable().getItem(1).getData()).isEqualTo(constraint);
+    }
+
+    @Test
+    public void should_getStyledText_strip_expression_charriage() throws Exception {
+        final ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        constraint.setExpression("toto == true && \n titi == false \r");
+        final StyledString styledText = viewer.getExpressionStyledText(constraint);
+        assertThat(styledText.toString()).doesNotContain("\n").doesNotContain("\r");
+    }
+
+    @Test
+    public void should_getStyledText_supportNull() throws Exception {
+        final ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        constraint.setExpression(null);
+        final StyledString styledText = viewer.getExpressionStyledText(constraint);
+        assertThat(styledText.toString()).doesNotContain("\n").doesNotContain("\r");
     }
 
 }
