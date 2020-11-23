@@ -45,6 +45,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -57,6 +58,7 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -204,6 +206,12 @@ public class AttributeEditionControl extends Composite {
         viewer.setInput(fieldsObservable);
         selectedFieldObservable = ViewerProperties.singleSelection(Field.class).observe(viewer);
 
+        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            selectedBoObservable.addValueChangeListener(e -> viewer.getTable().redraw());
+        }
+
         addDragAndDropSupport();
     }
 
@@ -301,10 +309,10 @@ public class AttributeEditionControl extends Composite {
         FieldNameValidator fieldNameValidator = new FieldNameValidator();
 
         column.setLabelProvider(new LabelProviderBuilder<Field>()
-                .withTextProvider(element -> element.getName())
+                .withStyledStringProvider((element -> new StyledString(element.getName())))
                 .withStatusProvider(fieldNameValidator::validate)
                 .shouldRefreshAllLabels(viewer)
-                .createColumnLabelProvider());
+                .createStyledCellLabelProvider());
         column.setEditingSupport(new EditingSupportBuilder<Field>(viewer)
                 .withId(SWTBotConstants.SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR)
                 .withValueProvider(Field::getName)

@@ -38,7 +38,6 @@ import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.provider.ArchiveTreeContentProvider;
 import org.bonitasoft.studio.importer.bos.provider.ImportActionEditingSupport;
 import org.bonitasoft.studio.importer.bos.provider.ImportModelLabelProvider;
-import org.bonitasoft.studio.importer.bos.provider.ImportModelStyler;
 import org.bonitasoft.studio.importer.bos.validator.RepositoryNameValidator;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -72,7 +71,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -212,7 +210,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     protected void doCreateSwitchRepositoryControl(Composite parent, DataBindingContext ctx) {
         repositorySection = new Section(parent, Section.TREE_NODE);
-        repositorySection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
+        repositorySection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         repositorySection.setLayout(GridLayoutFactory.fillDefaults().create());
         repositorySection.setLayoutData(GridDataFactory.fillDefaults().create());
         repositorySection.setText(org.bonitasoft.studio.importer.i18n.Messages.targetRepository);
@@ -488,8 +487,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
         final TreeViewerColumn archiveColumn = new TreeViewerColumn(viewer, SWT.NONE);
         archiveColumn.getColumn().setText(Messages.archiveColumn);
-        archiveColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new ImportModelLabelProvider(
-                new ImportModelStyler())));
+
+        archiveColumn.setLabelProvider(new ImportModelLabelProvider());
 
         final TreeViewerColumn actionColumn = new TreeViewerColumn(viewer, SWT.NONE);
         actionColumn.getColumn().setText(Messages.actionColumn);

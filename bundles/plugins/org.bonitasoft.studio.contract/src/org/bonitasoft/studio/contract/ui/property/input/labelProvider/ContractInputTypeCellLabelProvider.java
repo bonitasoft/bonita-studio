@@ -14,17 +14,23 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 
 /**
  * @author Romain Bioteau
@@ -68,6 +74,27 @@ public class ContractInputTypeCellLabelProvider extends StyledCellLabelProvider 
                 return DateTypeLabels.DATE_TIME_WITH_TIMEZONE;
             default:
                 return type.name();
+        }
+    }
+
+    @Override
+    protected void erase(Event event, Object element) {
+        super.erase(event, element);
+
+        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            Rectangle bounds = event.getBounds();
+            if ((event.detail & SWT.SELECTED) != 0) {
+                Color oldForeground = event.gc.getForeground();
+                event.gc.setForeground(event.item.getDisplay().getSystemColor(
+                        SWT.COLOR_LIST_SELECTION_TEXT));
+                event.gc.fillRectangle(bounds);
+                /* restore the old GC colors */
+                event.gc.setForeground(oldForeground);
+                /* ensure that default selection is not drawn */
+                event.detail &= ~SWT.SELECTED;
+            }
         }
     }
 

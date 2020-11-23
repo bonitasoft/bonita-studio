@@ -307,11 +307,11 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         getEditingDomain().getCommandStack().execute(
                 AddCommand.create(getEditingDomain(), process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS, actor));
         refresh();
-        actorsViewer.editElement(actor, 0);
+        actorsViewer.editElement(actor, 1);
     }
 
     private String generateActorName(final AbstractProcess process) {
-        final Set<String> actorsName = new HashSet<String>();
+        final Set<String> actorsName = new HashSet<>();
         for (final Actor a : process.getActors()) {
             actorsName.add(a.getName());
         }
