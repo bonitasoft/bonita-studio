@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+   <extension-point id="import" name="import" schema="schema/import.exsd"/>
+
+   <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_XPDL_desc"
+            filterExtensions="*.xpdl"
+            importerFactoryClass="org.bonitasoft.studio.importer.bonita4.XPDLToProcFactory"
+            inputName="XPDL 1.0"
+            menuIcon="icon/XPDL-desc.png"
+            priorityDisplay="10">
+      </importFactory>
+   </extension>
+      <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_BPM2_desc"
+            filterExtensions="*.bpmn,*.xml"
+            importerFactoryClass="org.bonitasoft.studio.importer.bpmn.BPMNToProcFactory"
+            inputName="BPMN 2.0"
+            menuIcon="icon/bpmn-desc.png"
+            priorityDisplay="3">
+      </importFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.bonitasoft.studio.importer.other.command"
+            name="%otherLabel">
+      </command>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.importer.coolbar.ImportBarCoolbarItem"
+            priority="0"
+            toolbarPosition="4">
+      </coolbarItem>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.importer.handler.ImportOtherHandler"
+            commandId="org.bonitasoft.studio.importer.other.command">
+         <activeWhen>
+            <reference
+                  definitionId="isABonitaProduct">
+            </reference>
+         </activeWhen>
+      </handler>
+   </extension>
+
+</plugin>
