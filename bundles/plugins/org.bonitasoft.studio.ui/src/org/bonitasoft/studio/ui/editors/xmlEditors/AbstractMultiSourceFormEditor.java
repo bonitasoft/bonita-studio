@@ -28,6 +28,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.texteditor.DocumentProviderRegistry;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 
 public abstract class AbstractMultiSourceFormEditor extends FormEditor {
 
@@ -44,6 +46,8 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
         super.init(site, input);
         eclipseContext = ((WorkbenchWindow) getEditorSite().getWorkbenchWindow()).getModel().getContext();
         editorContributions = createEditorContributions();
+        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault().getDocumentProvider(input);
+        editorContributions.stream().forEach(documentProvider::addElementStateListener);
     }
 
     @Override
@@ -193,5 +197,12 @@ public abstract class AbstractMultiSourceFormEditor extends FormEditor {
     }
 
     public abstract String getEditorId();
+    
+    @Override
+    public void dispose() {
+        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault().getDocumentProvider(getEditorInput());
+        editorContributions.stream().forEach(documentProvider::removeElementStateListener);
+        super.dispose();
+    }
 
 }

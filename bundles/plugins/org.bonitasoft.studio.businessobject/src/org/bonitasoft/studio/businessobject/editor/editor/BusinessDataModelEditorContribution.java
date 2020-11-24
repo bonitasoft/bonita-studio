@@ -15,12 +15,14 @@
 package org.bonitasoft.studio.businessobject.editor.editor;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
@@ -46,7 +48,7 @@ import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
@@ -54,6 +56,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.part.NullEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -181,11 +184,11 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelNotSavableTitle,
                     Messages.modelNotSavable);
         } else {
-            modelFormPage.doSave(monitor);
-            constraintFormPage.doSave(monitor);
-            queryFormPage.doSave(monitor);
-            indexFormPage.doSave(monitor);
-            sourceEditor.doSave(monitor);
+                modelFormPage.doSave(monitor);
+                constraintFormPage.doSave(monitor);
+                queryFormPage.doSave(monitor);
+                indexFormPage.doSave(monitor);
+                sourceEditor.doSave(monitor);
         }
     }
 
@@ -201,11 +204,6 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
     @Override
     public String getId() {
         return ID;
-    }
-
-    @Override
-    public void resourceChanged(IResourceChangeEvent event) {
-        // Nothing to do here, used when a file can be renamed
     }
 
     @Override
@@ -306,4 +304,19 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
         indexFormPage.makeStale();
     }
 
+    @Override
+    protected void editorFileInputChanged(IFileEditorInput input) {
+        if(BusinessObjectModelFileStore.BOM_FILENAME.equals(input.getName())) {
+            BDMArtifactDescriptor artifactDescriptor = loadBdmArtifactDescriptor();
+            workingCopyObservable.getRealm().asyncExec(() -> {
+                try {
+                    String stringContent = IOUtils.toString(input.getAdapter(IFile.class).getContents(), StandardCharsets.UTF_8.name());
+                    workingCopyObservable
+                            .setValue(converter.toEmfModel(parser.unmarshall(stringContent.getBytes()), artifactDescriptor));
+                } catch (JAXBException | IOException | SAXException | CoreException e) {
+                    throw new RuntimeException("An error ocurred while updating Business Data Model working copy.", e);
+                }
+            });
+        }
+    }
 }
