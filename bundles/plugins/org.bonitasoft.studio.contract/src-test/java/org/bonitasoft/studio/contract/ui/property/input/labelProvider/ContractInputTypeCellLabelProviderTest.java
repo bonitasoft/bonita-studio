@@ -29,7 +29,7 @@ public class ContractInputTypeCellLabelProviderTest {
 
     @Before
     public void setUp() throws Exception {
-        contractInputTypeCellLabelProvider = new ContractInputTypeCellLabelProvider();
+        contractInputTypeCellLabelProvider = new ContractInputTypeCellLabelProvider(null);
     }
 
     @Test
