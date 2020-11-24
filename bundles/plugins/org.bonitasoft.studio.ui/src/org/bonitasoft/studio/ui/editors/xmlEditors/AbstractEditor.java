@@ -36,28 +36,33 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.DocumentProviderRegistry;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
-public abstract class AbstractEditor<T> extends FormEditor implements IResourceChangeListener {
+public abstract class AbstractEditor<T> extends FormEditor implements IElementStateListener {
 
     protected AbstractFormPage<T> formPage;
     protected StructuredTextEditor fSourceEditor;
     protected T workingCopy;
     private IEclipseContext context;
-    private boolean resourceChangeEventSkip = false;
     private Composite pageContainer;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         super.init(site, input);
         context = ((WorkbenchWindow) getEditorSite().getWorkbenchWindow()).getModel().getContext();
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault().getDocumentProvider(input);
+        documentProvider.addElementStateListener(this);
     }
 
     @Override
     public void dispose() {
+        IDocumentProvider documentProvider = DocumentProviderRegistry.getDefault()
+                .getDocumentProvider(getEditorInput());
+        documentProvider.removeElementStateListener(this);
         super.dispose();
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
     public T getWorkingCopy() {
@@ -113,13 +118,8 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        try {
-            resourceChangeEventSkip = true;
-            formPage.doSave(monitor);
-            fSourceEditor.doSave(monitor);
-        } finally {
-            resourceChangeEventSkip = false;
-        }
+        formPage.doSave(monitor);
+        fSourceEditor.doSave(monitor);
     }
 
     @Override
@@ -138,28 +138,27 @@ public abstract class AbstractEditor<T> extends FormEditor implements IResourceC
     }
 
     @Override
-    public void resourceChanged(IResourceChangeEvent e) {
-        IResourceDelta delta = e.getDelta();
-        final FileEditorInput fInput = (FileEditorInput) getEditorInput();
-        final IFile file = fInput.getFile();
-        if (delta != null) {
-            delta = delta.findMember(file.getFullPath());
-        }
-        if (delta != null) {
-            final int flags = delta.getFlags();
-            if (delta.getKind() == IResourceDelta.REMOVED && (IResourceDelta.MOVED_TO & flags) != 0) {
-                updateEditorInput(
-                        new FileEditorInput(file.getWorkspace().getRoot().getFile(delta.getMovedToPath())));
-            } else if (delta.getKind() == IResourceDelta.CHANGED) {
-                if ((flags & IResourceDelta.CONTENT) != 0 || (flags & IResourceDelta.REPLACED) != 0) {
-                    if (!resourceChangeEventSkip) {
-                        FileEditorInput newEditorInput = new FileEditorInput(delta.getResource().getAdapter(IFile.class));
-                        Display.getDefault().asyncExec(() -> updateEditorInput(newEditorInput));
-                    }
-                }
-            }
+    public void elementContentReplaced(Object element) {
+        initVariablesAndListeners();
+        formPage.recreateForm();
+        formPage.reflow();
+    }
+
+    @Override
+    public void elementMoved(Object originalElement, Object movedElement) {
+        if(originalElement.equals(getEditorInput())) {
+            updateEditorInput((IEditorInput) movedElement);
         }
     }
+
+    @Override
+    public void elementContentAboutToBeReplaced(Object element) {  }
+
+    @Override
+    public void elementDeleted(Object element) {  }
+
+    @Override
+    public void elementDirtyStateChanged(Object element, boolean isDirty) {  }
 
     public void updateEditorInput(IEditorInput input) {
         Display.getDefault().asyncExec(() -> {

@@ -9,12 +9,14 @@
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.texteditor.IElementStateListener;
 
-public abstract class AbstractEditorContribution implements IResourceChangeListener, Comparable<AbstractEditorContribution> {
+public abstract class AbstractEditorContribution
+        implements Comparable<AbstractEditorContribution>, IElementStateListener {
 
     protected IEditorInput input;
     protected RepositoryAccessor repositoryAccessor;
@@ -28,6 +30,32 @@ public abstract class AbstractEditorContribution implements IResourceChangeListe
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         return repositoryAccessor;
+    }
+
+    @Override
+    public void elementContentReplaced(Object element) {
+        if (element instanceof IFileEditorInput) {
+            editorFileInputChanged((IFileEditorInput) element);
+        }
+    }
+
+    protected abstract void editorFileInputChanged(IFileEditorInput input);
+
+    @Override
+    public void elementContentAboutToBeReplaced(Object element) {
+    }
+
+    @Override
+    public void elementDeleted(Object element) {
+    }
+
+    @Override
+    public void elementDirtyStateChanged(Object element, boolean isDirty) {
+    }
+
+    @Override
+    public void elementMoved(Object originalElement, Object movedElement) {
+
     }
 
     protected abstract IEditorInput initEditorInput();
