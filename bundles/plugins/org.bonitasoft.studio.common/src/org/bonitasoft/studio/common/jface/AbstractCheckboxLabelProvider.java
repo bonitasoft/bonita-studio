@@ -18,21 +18,39 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider
         implements ILabelProvider {
 
+    private boolean isDarkTheme = false;
+    private Color darkModeSelectLineUnfocused;
+    private ColumnViewer viewer;
+
     public AbstractCheckboxLabelProvider(final ColumnViewer viewer) {
+        this.viewer = viewer;
+        this.darkModeSelectLineUnfocused = new Color(viewer.getControl().getDisplay(), new RGB(70, 70, 70));
+        try {
+            IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+            if (engine.getActiveTheme() != null
+                    && Objects.equals(engine.getActiveTheme().getId(), "org.bonitasoft.studio.preferences.theme.dark")) {
+                isDarkTheme = true;
+            }
+        } catch (IllegalStateException e) {
+            // Workbench not created yet, ignored.
+        }
     }
 
     /*
@@ -106,17 +124,27 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
         // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
         if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            Rectangle bounds = event.getBounds();
             if ((event.detail & SWT.SELECTED) != 0) {
-                Color oldForeground = event.gc.getForeground();
-                event.gc.setForeground(event.item.getDisplay().getSystemColor(
-                        SWT.COLOR_LIST_SELECTION_TEXT));
+                Rectangle bounds = event.getBounds();
+                Color oldBg = event.gc.getBackground();
+                if (isDarkTheme
+                        && !Objects.equals(viewer.getControl(), viewer.getControl().getDisplay().getFocusControl())) {
+                    // Selected line background is white on dark theme is the table doesn't have the focus (only for Owner drawn cells ofc). 
+                    // We force it to a gray so it stays consistant with the theme (and became usable btw). 
+                    // Should be fixed on swt.cocoa.macosx soon (please). 
+                    event.gc.setBackground(darkModeSelectLineUnfocused);
+                }
                 event.gc.fillRectangle(bounds);
-                /* restore the old GC colors */
-                event.gc.setForeground(oldForeground);
+                event.gc.setBackground(oldBg);
                 event.detail &= ~SWT.SELECTED;
             }
         }
+    }
+
+    @Override
+    public void dispose() {
+        darkModeSelectLineUnfocused.dispose();
+        super.dispose();
     }
 
 }

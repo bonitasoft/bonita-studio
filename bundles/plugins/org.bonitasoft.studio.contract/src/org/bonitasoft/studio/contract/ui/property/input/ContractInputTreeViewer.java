@@ -18,8 +18,6 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.contract.core.refactoring.ContractInputRefactorOperationFactory;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
-import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypePropertyDescriptor;
@@ -37,17 +35,12 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
-import org.eclipse.jface.viewers.CellNavigationStrategy;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.TreeViewerEditor;
-import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -121,25 +114,12 @@ public class ContractInputTreeViewer extends TreeViewer {
         propertySourceProvider = new ContractInputTypePropertyDescriptor(adapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
-        getTree().setLinesVisible(true);
         addFilter(new ComplexTypeChildrenViewerFilter());
         final ObservableListTreeContentProvider contentProvider = new ObservableListTreeContentProvider(
                 new ContractInputObservableFactory(),
                 new ContractInputTreeStructureAdvisor());
         setContentProvider(contentProvider);
         ColumnViewerToolTipSupport.enableFor(this);
-
-        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this,
-                inputController);
-        final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this,
-                new FocusCellOwnerDrawHighlighter(
-                        this),
-                cellNavigationStrategy);
-        TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this),
-                ColumnViewerEditor.TABBING_HORIZONTAL |
-                        ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
-                        ColumnViewerEditor.TABBING_VERTICAL |
-                        ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         createColumns();
         configureTableLayout();
@@ -197,7 +177,7 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createInputTypeColumn() {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
-        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider());
+        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(typeColumnViewer.getViewer()));
         typeColumnViewer
                 .setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController,
                         new ContractInputRefactorOperationFactory(), progressService,
