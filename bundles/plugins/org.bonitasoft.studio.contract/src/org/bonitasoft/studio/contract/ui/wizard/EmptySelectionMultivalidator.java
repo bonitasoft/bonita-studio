@@ -28,6 +28,7 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 
@@ -41,19 +42,26 @@ public class EmptySelectionMultivalidator extends MultiValidator {
     private final EObject container;
     private final WritableValue selectedDataObservable;
     private IObservableValue<EditMode> editModeObservable;
+    private IObservableValue<WizardPage> activeWizardPageObservable;
 
-    public EmptySelectionMultivalidator(final WritableValue selectedDataObservable, final IObservableSet checkedElements,
-            final List<FieldToContractInputMapping> mappings, final EObject container, IObservableValue<EditMode> editModeObservable) {
+    public EmptySelectionMultivalidator(final WritableValue selectedDataObservable, 
+            final IObservableSet checkedElements,
+            final List<FieldToContractInputMapping> mappings,
+            final EObject container, 
+            IObservableValue<EditMode> editModeObservable,
+            IObservableValue<WizardPage> activeWizardPageObservable) {
         this.checkedElements = checkedElements;
         this.mappings = mappings;
         this.container = container;
         this.selectedDataObservable = selectedDataObservable;
         this.editModeObservable = editModeObservable;
+        this.activeWizardPageObservable = activeWizardPageObservable;
     }
 
     @Override
     protected IStatus validate() {
-        if (selectedDataObservable.getValue() instanceof BusinessObjectData) {
+        if (activeWizardPageObservable.getValue() instanceof CreateContractInputFromBusinessObjectWizardPage 
+                && selectedDataObservable.getValue() instanceof BusinessObjectData) {
             if (checkedElements.isEmpty()) {
                 return ValidationStatus.error(Messages.atLeastOneAttributeShouldBeSelectedError);
             } else if(editModeObservable.getValue() == EditMode.CREATE){

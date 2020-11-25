@@ -53,10 +53,14 @@ public class EmptySelectionMultivalidatorTest {
     public void shouldReturnErrorWhenNoElementsAreChecked() {
         final IObservableSet checkedElements = new WritableSet();
         final WritableValue selectedDataObservable = new WritableValue();
+        final WritableValue currentPageObservable = new WritableValue();
+        currentPageObservable.setValue(mock(CreateContractInputFromBusinessObjectWizardPage.class));
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                new ArrayList<FieldToContractInputMapping>(), aPool().build(), new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable,
+                checkedElements,
+                new ArrayList<FieldToContractInputMapping>(), aPool().build(),
+                new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class), currentPageObservable);
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
 
@@ -65,17 +69,23 @@ public class EmptySelectionMultivalidatorTest {
         final IObservableSet checkedElements = new WritableSet();
         checkedElements.add(mock(FieldToContractInputMapping.class));
         final WritableValue selectedDataObservable = new WritableValue();
+        final WritableValue currentPageObservable = new WritableValue();
+        currentPageObservable.setValue(mock(CreateContractInputFromBusinessObjectWizardPage.class));
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                new ArrayList<FieldToContractInputMapping>(), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable,
+                checkedElements,
+                new ArrayList<FieldToContractInputMapping>(), aPool().build(),
+                new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class), 
+                currentPageObservable);
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
 
     @Test
     public void shouldReturnWarningWhenOneElementIsMandatoryAndNotChecked() {
         final IObservableSet checkedElements = new WritableSet();
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
         final SimpleField simpleField1 = new SimpleField();
         simpleField1.setNullable(false);
         final SimpleField simpleField2 = new SimpleField();
@@ -85,22 +95,28 @@ public class EmptySelectionMultivalidatorTest {
         final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(simpleField2);
         rootMapping1.addChild(childMapping1);
         rootMapping1.addChild(childMapping2);
-        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
         checkedElements.add(rootMapping1);
         checkedElements.add(rootMapping2);
         checkedElements.add(childMapping2);
         final WritableValue selectedDataObservable = new WritableValue();
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
+        final WritableValue currentPageObservable = new WritableValue();
+        currentPageObservable.setValue(mock(CreateContractInputFromBusinessObjectWizardPage.class));
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable,
+                checkedElements,
+                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),
+                new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class),currentPageObservable);
         assertThat(multiValidator.validate().isOK()).isFalse();
     }
 
     @Test
     public void shouldReturnOkWhenElementIsMandatoryAndChecked() {
         final IObservableSet checkedElements = new WritableSet();
-        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final FieldToContractInputMapping rootMapping1 = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
         final SimpleField simpleField1 = new SimpleField();
         simpleField1.setNullable(false);
         final SimpleField simpleField2 = new SimpleField();
@@ -110,7 +126,8 @@ public class EmptySelectionMultivalidatorTest {
         final SimpleFieldToContractInputMapping childMapping2 = new SimpleFieldToContractInputMapping(simpleField2);
         rootMapping1.addChild(childMapping1);
         rootMapping1.addChild(childMapping2);
-        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(Mockito.mock(RelationField.class));
+        final FieldToContractInputMapping rootMapping2 = new RelationFieldToContractInputMapping(
+                Mockito.mock(RelationField.class));
         checkedElements.add(rootMapping1);
         checkedElements.add(rootMapping2);
         checkedElements.add(childMapping2);
@@ -118,8 +135,13 @@ public class EmptySelectionMultivalidatorTest {
         final WritableValue selectedDataObservable = new WritableValue();
         final BusinessObjectData businessObjectData = aBusinessData().withClassname("org.test.Employee").build();
         selectedDataObservable.setValue(businessObjectData);
-        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements,
-                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class));
+        final WritableValue currentPageObservable = new WritableValue();
+        currentPageObservable.setValue(mock(CreateContractInputFromBusinessObjectWizardPage.class));
+        final EmptySelectionMultivalidator multiValidator = new EmptySelectionMultivalidator(selectedDataObservable,
+                checkedElements,
+                Lists.newArrayList(rootMapping1, rootMapping2), aPool().build(),
+                new WritableValue<GenerationOptions.EditMode>(EditMode.CREATE, EditMode.class),
+                currentPageObservable);
         assertThat(multiValidator.validate().isOK()).isTrue();
     }
 
