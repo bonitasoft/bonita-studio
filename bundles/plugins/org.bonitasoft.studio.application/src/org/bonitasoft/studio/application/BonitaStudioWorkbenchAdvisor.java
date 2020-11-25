@@ -101,6 +101,8 @@ import com.google.common.base.Joiner;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
+    private static final String AWT_DRAW_STRING_AS_IMAGE = "drawStringAsImage";
+
     private final class PreShutdownStudio implements IRunnableWithProgress {
 
         @Override
@@ -438,6 +440,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         } else {
             BonitaStudioLog.warning("Property 'bonita.tomcat.lib.dir' has not been set.", ApplicationPlugin.PLUGIN_ID);
         }
+        // Workaround for STUDIO-3651
+        System.setProperty(AWT_DRAW_STRING_AS_IMAGE, System.getProperty(AWT_DRAW_STRING_AS_IMAGE, "true"));
     }
 
     @Override
