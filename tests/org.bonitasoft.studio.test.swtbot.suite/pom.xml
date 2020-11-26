@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.tests</groupId>
+		<artifactId>tests</artifactId>
+		<version>7.13.0-SNAPSHOT</version>
+	</parent>
+	
+	<groupId>org.bonitasoft.studio.tests</groupId>
+	<artifactId>org.bonitasoft.studio.test.swtbot.suite</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+	
+	<properties>
+		<target.test.dir>${test.workspace.dir}/community/swtbot/lé test</target.test.dir>
+	</properties>
+
+	<build>
+		<plugins>
+        <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tychoVersion}</version>
+                <configuration>
+                    <dependency-resolution>
+                        <extraRequirements>
+                             <requirement>
+                                <type>eclipse-feature</type>
+                                <id>tests-feature</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                            <requirement>
+                                <type>eclipse-feature</type>
+                                <id>studio-feature</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                        </extraRequirements>
+                    </dependency-resolution>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<configuration>
+					<useUIThread>false</useUIThread>
+					<useUIHarness>true</useUIHarness>
+					<application>org.bonitasoft.studio.application.application</application>
+					<product>org.bonitasoft.studio.product</product>
+					<includes>
+						<include>**/*TestSuite.java</include>
+					</includes>
+					<argLine>-Xmx1g -DLAZYLOAD_ENGINE -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
+					<appArgLine>-nl en -clean</appArgLine>
+					
+					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
+					<bundleStartLevel>
+						<bundle>
+							<id>org.eclipse.equinox.ds</id>
+							<level>1</level>
+							<autoStart>true</autoStart>
+						</bundle>
+					</bundleStartLevel>
+				</configuration>
+			</plugin>
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-clean-plugin</artifactId>
+    			<configuration>
+      			<filesets>
+       			 	<fileset>
+         				<directory>screenshots</directory>
+          				<followSymlinks>false</followSymlinks>
+        			</fileset>
+        			 <fileset>
+                             <directory>${target.test.dir}</directory>
+                             <includes>
+                                <include>**</include>
+                                </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+      			</filesets>
+    			</configuration>
+  			</plugin>
+		</plugins>
+	</build>
+</project>
