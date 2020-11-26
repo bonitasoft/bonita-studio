@@ -35,10 +35,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 public class BonitaNotificationPopup extends Window {
 
@@ -74,6 +76,7 @@ public class BonitaNotificationPopup extends Window {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        composite.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Label iconLabel = new Label(composite, SWT.NONE);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults().span(1, 2).create());
@@ -81,12 +84,14 @@ public class BonitaNotificationPopup extends Window {
                 ? UIPlugin.getImage("icons/notification_dark.png")
                 : UIPlugin.getImage("icons/notification_light.png");
         iconLabel.setImage(image);
+        iconLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Label titleLabel = new Label(composite, SWT.NONE);
         titleLabel.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).span(1, 2).align(SWT.FILL, SWT.CENTER).create());
         titleLabel.setText(title);
         titleLabel.setFont(CommonFonts.BOLD);
+        titleLabel.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Label closeButton = new Label(composite, SWT.NONE);
         closeButton.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
@@ -118,10 +123,12 @@ public class BonitaNotificationPopup extends Window {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.addListener(SWT.MouseUp, this::bringStudioToFront);
 
         Link link = new Link(composite, SWT.WRAP);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         link.setText(content);
+        link.addListener(SWT.MouseUp, this::bringStudioToFront);
         selectionListener.ifPresent(listener -> link.addListener(SWT.Selection, listener));
     }
 
@@ -310,5 +317,9 @@ public class BonitaNotificationPopup extends Window {
 
     public Display getDisplay() {
         return display;
+    }
+
+    private void bringStudioToFront(Event e) {
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().forceActive();
     }
 }
