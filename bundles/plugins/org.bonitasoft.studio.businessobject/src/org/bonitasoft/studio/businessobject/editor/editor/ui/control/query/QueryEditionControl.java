@@ -157,7 +157,7 @@ public class QueryEditionControl {
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .withPlaceholder(Messages.searchQuery)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
     }

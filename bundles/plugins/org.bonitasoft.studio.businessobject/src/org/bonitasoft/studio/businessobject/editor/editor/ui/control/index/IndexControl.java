@@ -164,7 +164,7 @@ public class IndexControl {
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .withPlaceholder(Messages.searchIndex)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
     }

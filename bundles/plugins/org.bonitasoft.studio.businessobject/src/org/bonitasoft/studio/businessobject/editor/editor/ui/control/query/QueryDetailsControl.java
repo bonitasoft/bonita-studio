@@ -314,7 +314,7 @@ public class QueryDetailsControl extends Composite {
         return new SearchWidget.Builder()
                 .labelAbove()
                 .widthHint(300)
-                .withPlaceholder(Messages.searchQueryParameter)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
     }

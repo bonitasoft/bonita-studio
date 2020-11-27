@@ -182,7 +182,7 @@ public class BusinessObjectList {
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .withPlaceholder(Messages.searchBusinessObject)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
     }

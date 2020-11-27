@@ -310,7 +310,7 @@ public class ConstraintEditionControl {
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .withPlaceholder(Messages.searchConstraint)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
     }

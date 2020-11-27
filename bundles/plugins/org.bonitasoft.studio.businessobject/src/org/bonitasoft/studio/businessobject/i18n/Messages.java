@@ -429,8 +429,7 @@ public class Messages extends NLS {
     public static String conflictingWithSameObject;
     public static String changePackageTip;
     public static String bdmDocumentationLink;
-    public static String searchBusinessObject;
-    public static String searchAttribute;
+    public static String search;
     public static String edition;
     public static String attributeNameRequired;
     public static String boNameRequired;
@@ -470,18 +469,14 @@ public class Messages extends NLS {
     public static String collapseAll;
     public static String addFieldTooltip;
     public static String deleteFieldTooltip;
-    public static String searchConstraint;
     public static String addConstraintTooltip;
     public static String deleteConstraintTooltip;
-    public static String searchQuery;
     public static String addQueryTooltip;
     public static String deleteQueryTooltip;
-    public static String searchQueryParameter;
     public static String addParameterTooltip;
     public static String deleteParameterTooltip;
     public static String addIndexTooltip;
     public static String deleteIndexTooltip;
-    public static String searchIndex;
     public static String dndIndexTooltip;
     public static String pakage;
     public static String fieldDescriptionPlaceholder;
