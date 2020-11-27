@@ -1,0 +1,938 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.eclipse.datatools.modelbase.sql.query; single
+ ton:=true
+Built-By: genie.datatools
+Require-Bundle: com.ibm.icu,org.eclipse.core.runtime,org.eclipse.datat
+ ools.modelbase.sql;visibility:=reexport
+Bundle-ManifestVersion: 2
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/datato
+ ols/org.eclipse.datatools.git;path="plugins/modelbase/org.eclipse.dat
+ atools.modelbase.sql.query";commitId=209258c8e9bf1b23d266aa518e478642
+ 50bb2bfe
+Bundle-Vendor: %providerName
+Export-Package: org.eclipse.datatools.modelbase.sql.query,org.eclipse.
+ datatools.modelbase.sql.query.helper,org.eclipse.datatools.modelbase.
+ sql.query.impl,org.eclipse.datatools.modelbase.sql.query.util
+Bundle-Name: %pluginName
+Bundle-Version: 1.3.201.201811012051
+Bundle-Localization: plugin
+Bundle-Activator: org.eclipse.datatools.modelbase.sql.query.util.SQLQu
+ eryModelPlugin
+Created-By: Apache Maven 3.5.4
+Build-Jdk: 1.8.0_162
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionDefault
+ Value.class
+SHA-256-Digest: ++YlG5hKruGeT83Vg2U8qdm70fagzTWudfYhy4nOZS8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdatabilityType.class
+SHA-256-Digest: 7m48mzgZja2m8mueae041EORASsW1hqzsIb0yUjCTCk=
+
+Name: org/eclipse/datatools/modelbase/sql/query/OrderingSpecType.class
+SHA-256-Digest: Mnvam92ji/mDzmAOFukRrL7+3u8qZxMNSJw5+OZIcc4=
+
+Name: plugin.xml
+SHA-256-Digest: ERmWTrYvv87tPR8Dw+R3E/NLAqP+lDaknJ90d1UVo24=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryExpressionRo
+ otImpl.class
+SHA-256-Digest: WiR1TR1xsd5GkafBJejh/1dP4xJqlA2qzvBX3S15H74=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingSetsEleme
+ ntImpl.class
+SHA-256-Digest: ipGgYR2CJnDSML1UKAJtNng01S5B7G7TZ/qy9NWRgbY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCo
+ mbinedImpl.class
+SHA-256-Digest: KCUsUe4ifE4t7HBKjMdMTJrqsrLU+4da0g0gBU1zqr8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryArrayData
+ TypeImpl.class
+SHA-256-Digest: p5aZJaI6mg/XYHJYKKKSNZQsbjwsgs0J5CVLiZBI/0Y=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/ValueExpression
+ Helper.class
+SHA-256-Digest: OJqwcEQ+GjmzBIkB2n1pcXrJDBRtDPT0AO7R5y9vUI0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdateAssignmentExpres
+ sion.class
+SHA-256-Digest: XCxFOgytrz5MhE5AO7NglB4LXT2Qz//iO9YyjB5mnOU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryStatement.class
+SHA-256-Digest: 6vZAXuMIoUr7+ndRj2AvBDN24DfozmKMitjPAPYJqvg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateComparisonOpe
+ rator.class
+SHA-256-Digest: q01tjrywngvWtnSpHuvEgg+fIihQ60dcqGT2zZQQgKI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionSi
+ mpleImpl.class
+SHA-256-Digest: RDrXkS6mEowaK5MsNa9SXjDkGbsMaG4zOXUqp++VUtw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateInValueR
+ owSelectImpl.class
+SHA-256-Digest: VYcw25dafgOORfhfahOR5RHJhgTzjlVEIskACECWJZI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SQLQueryModelFactory.c
+ lass
+SHA-256-Digest: QsZQkS5xQDz7jJ+9kdZ3G6mZNOV/sU4/CvuF62aHu0k=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SuperGroupElement.clas
+ s
+SHA-256-Digest: Rqipaa9bmYYDFE0SzjqCoR5N0M7qSN+wnVhna8gfY1w=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SQLQueryObjectImp
+ l.class
+SHA-256-Digest: dewK7wbwWZKY197Mey4bcmUY+AlDWhoWn8Znez0alRU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SQLQueryModelPackage.c
+ lass
+SHA-256-Digest: mUXTE28wUJl1FGhgDmsp1gdAz52V1h/7utOxwMFAUbw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/OrderByValueExpression
+ .class
+SHA-256-Digest: BZb9yT5iILWFzx8qSUOtIutkWDJ4IfnfwXSIdVcIWbc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/JoinHelper.clas
+ s
+SHA-256-Digest: xxlRvtIymERXZWxOjaXmw8hkGD045kwhCDr6wUbOZyo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableQueryLateral.clas
+ s
+SHA-256-Digest: L/yaLAiD+2U+yLIHEKNTo9zmBuopgvnlnaXsT5KbpS0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryExpressionRoot.cl
+ ass
+SHA-256-Digest: zAVhe212lnz42MSaeZNwCaqlyq3Fln8iiUoQlyJ/Lng=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seSearchImpl.class
+SHA-256-Digest: ZoGQntEQ7V6oUQCcUpSfUhx+zu17NsmvRLgj3I+65ZE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryMultisetD
+ ataType.class
+SHA-256-Digest: HDWRfO7jMyr5RkiKG8ZzXiFHa4ggp5Dr0nhQCzThnaE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/OrderByOrdinal.class
+SHA-256-Digest: l+E6fnHjcC360vg31yOGkF3Yy2s6bCa86GhD/hFJY0w=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ProcedureReference.cla
+ ss
+SHA-256-Digest: 2F2wxDvtzS48qOAXQIt6ww2HtdJcmul9SYJKb3Iy79A=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ResultColumn.class
+SHA-256-Digest: LthnLzpqUqqMzsoAMl9R/+GIW61YEn6kEcZUoJEd224=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SuperGroupElementSubli
+ st.class
+SHA-256-Digest: Dq8Z9JD7QzomOm7B5dYEGn7Cnfbz7p37850/6MmQUbM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeOperationSpecific
+ ation.class
+SHA-256-Digest: lJyXjy92gDYFmTYWlIvpjvhS2FTy+7WU55EmCK3KR/s=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdatabilityExpression
+ .class
+SHA-256-Digest: p5ZqWeIz0ecCtSsnF8/e+LZHpaLBPTTD/1/la5Romc4=
+
+Name: model/SQLQueryModel.ecore
+SHA-256-Digest: HhmbqhIzPGVQTVUPW+B7NU9A+hwmtqDIBvajL+eOcAM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCaseEls
+ e.class
+SHA-256-Digest: MHvPLVUXcP669nZXB7jD2h9R9QToY50EHc4muFOqVuM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateInValueSelect
+ .class
+SHA-256-Digest: AR5YXjMBgpSYXcWB18QBV/JNcCuB/VZgTElOL6uEpQc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/NullOrderingType.class
+SHA-256-Digest: liFKGYynLSTXhx4UY997LpWXskC6Y1Fd3lUApvr+hpM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/OrderBySpecificat
+ ionImpl.class
+SHA-256-Digest: zK0uK1SWJNLmEZl3GSbJ4WmAalSbsek4TX81nYIBOvk=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLSourceWriter.c
+ lass
+SHA-256-Digest: I+tv5Mqb9BwuwP3jmA3DfsbwXz/J0IQgLwUIMwJonG8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionLa
+ beledDurationImpl.class
+SHA-256-Digest: N6NZ+MgvXmdCa59uh3pOrTjbb9vpepkMCKuINIruve4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValuesRow.class
+SHA-256-Digest: JD2m45fxen0fwzETJ4SjY0clP4B6hSc5337PmycU17g=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdateSourceQuery
+ Impl.class
+SHA-256-Digest: UrvmMWiWdNpMcFE9tOvNcWoJTsvRKvzpY5xbyt2UN4w=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryInsertStatem
+ entImpl.class
+SHA-256-Digest: L684/NXDD//JW7LONm/95rlg5SX9rMNVYd5GyeKz30Q=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QuerySelect.class
+SHA-256-Digest: 5jFcTYU051MCbCU1mTimUiZy+i7EhuFDyukCzvejO80=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seSimpleImpl.class
+SHA-256-Digest: 2HvqGDG92bInB9bYxIDQdKeOzkOgqYvkhKILSd5+4zY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableNestedImpl.c
+ lass
+SHA-256-Digest: U2ebKCoeGaQ4TrzrpibGPyXa9RJeLjW39epwEE7BWe4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryResultSpecificati
+ on.class
+SHA-256-Digest: WvgSTKTQDvkZPOjoFZYCrc2w/GilqYrokkZEDFc8tp4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionRo
+ wImpl.class
+SHA-256-Digest: MCXCjTo4kxWmHszL+F5to4fs7b/lq5KMx0ZcadGb/Y4=
+
+Name: model/SQLQueryModel.genmodel
+SHA-256-Digest: m29oSs5AXvfhoHwM/umwIZh0RNTxonMJi4qmeibM+eg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableReference.class
+SHA-256-Digest: OK+fQ4KJieHnqPiuAybYNDCfuXpjZo9hV/orcM73tNs=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryUpdateStatem
+ entImpl.class
+SHA-256-Digest: 9GDxIq7hPsqVwHKBLnVHzrlYVqiIWwWhUnYOp0kCPxI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionNe
+ stedImpl.class
+SHA-256-Digest: GVJPsWD9owqctO+uOiW5x8OrRugq1d9aHhUaqNUldq8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateLike.class
+SHA-256-Digest: ml8Uy6tx3j6wz18kiBs53mNMo0IltuY/eyi3+s0Vtpc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCaseSea
+ rch.class
+SHA-256-Digest: 7mBgZ3ImM/v7Ch15HxPTUlUEl+ky+4kZDAT8rw5/kK0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingImpl.clas
+ s
+SHA-256-Digest: bKtPHVFWWAmcuOkJD/2CA5Kihvp1KRDRKpjx3BX3XNI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionLabeled
+ Duration.class
+SHA-256-Digest: qAKp6VSom0WlOSjmCJgm875tKnPbaDdaIo2byUjilrE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/OrderByResultColumn.cl
+ ass
+SHA-256-Digest: W+04Xw4c2bzJrCa2ociS7nkuWDMZO9vNnLHFKzM5Bs4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCo
+ lumnImpl.class
+SHA-256-Digest: aVhOKccIEKYxNt1+eKhn6hnivI13b/DNUiIGy6vB24I=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SearchConditionNe
+ stedImpl.class
+SHA-256-Digest: wPNHGzjRrbpo6xiZwisyKLkeSwDfXnPsrL8K99w21rw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeUpdateSpecif
+ icationImpl.class
+SHA-256-Digest: VhtN9/d0LNoZ2HDlCjf1Ta/ZAVlxfoCc/79yOwaGCOE=
+
+Name: model/SQLQueryModel.cat
+SHA-256-Digest: 7gNrKVGrnfmYrETZq/M41s2IA5S7hTE9r8A6I5zIf/I=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCase.cl
+ ass
+SHA-256-Digest: KhrZBc5dbsO1Clc/jf6GvaRFuSOEiCnQoOica7NLn3c=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingSpecifica
+ tionImpl.class
+SHA-256-Digest: YkYppptO3ixnnE9HXU3AxkB/pUFG5FZtI/cw9I1yPyg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/WithTableSpecific
+ ationImpl.class
+SHA-256-Digest: 30lSxqu22J+lQulBU5pGcrHS6y7PEUWVEHoOjiAVARg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateImpl.cla
+ ss
+SHA-256-Digest: wj3xTc4adafBxi7K0j+iGHrtaxg6z+XRD/sfcV8FPJE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdatabilityExpre
+ ssionImpl.class
+SHA-256-Digest: ouTFTVLKpdjNee1wNblfzFsFwUMt1bsR+4LodRDziRQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateInValueRowSel
+ ect.class
+SHA-256-Digest: h9yjhwgac4iTg4BRGufEBy0Hi9+3bID5YjJKCZH8xAA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionVariabl
+ e.class
+SHA-256-Digest: fRHB0iRyQHM/ljzLr+nQARDqvezPEVLSwHIwSOvQ7/0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionFu
+ nctionImpl.class
+SHA-256-Digest: bVdS36JQ0FPXoPTChHnvQvwOI8T1hUv30OMY+PuCrDU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryResultSpecif
+ icationImpl.class
+SHA-256-Digest: I5qEQhvr3nh2d0FWoAI13FNPX5Sa5hBab1bATC9pI2w=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/OrderByOrdinalImp
+ l.class
+SHA-256-Digest: RKMHJo7TJ4hON60pe/+TigR72Cw9DuCT0hAGZ68dBcA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateBetween.class
+SHA-256-Digest: ue/f80RoqTEaO1Q0gmj9kb7qEFKAoyZeFt1iL7y2OG4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionLabeled
+ DurationType.class
+SHA-256-Digest: CgoPo59SUHBSQ5ykDzUuhJ1srstO6OW65JU2NVQsb18=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQuerySourceFor
+ mat.class
+SHA-256-Digest: PSm7oMEiMLJmGKwqf5jm9RlejkhfihuHt1RGcV1iUNU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQuerySourceWri
+ ter.class
+SHA-256-Digest: EsfsoJOn1Dpn+UJqYR+Ip84Lngc8Fppjanqar+/CPEQ=
+
+Name: model/SQLQueryModel.mdl
+SHA-256-Digest: J3UP9alB/Ltex4lxsyG7ib3bcxl48O0V5GcAerMPAq0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryArrayData
+ Type.class
+SHA-256-Digest: q5F31+QeAaGzCo2CPlq649IuREj2xV3Rkb9k/BdRL6k=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SQLQueryModelPackage$L
+ iterals.class
+SHA-256-Digest: 079KyFuePZp6IRqhvS6UglC32W/IKc77IsvthV0j9Vw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdateSourceImpl.
+ class
+SHA-256-Digest: zOjYYTFTN5YtJGS0dg/XH+QqY6VipjHGAYXRHQ1JYnI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQuerySourceInf
+ o.class
+SHA-256-Digest: Z9euaLrpkZoQRQG4qfM+kPf5qni+RJS0RYz/5fhgRHc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableReferenceImp
+ l.class
+SHA-256-Digest: 7z7Rxq429CO+TAYJw2CLfhdffWVMUgUERVVRsVPby7s=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingSetsElement.cl
+ ass
+SHA-256-Digest: HrWjLBHzAeZdLPVJQwqgyRR4Q1UtUFWIVd3dCS+JT2E=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SQLQueryObject.class
+SHA-256-Digest: ZhKiKWOypVB7Q3rLy02C+RD3MnUuwz2sjZ0eGqVukJY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateBetweenI
+ mpl.class
+SHA-256-Digest: pspp2OseoAYuvCEONkWXEGLX6TtNoWcEUJLd67AifJg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryChangeStatem
+ entImpl.class
+SHA-256-Digest: GwugcPof0WADi6RGafWy5Iy0XRnzWsCazJRFVnZhMYc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingExpressio
+ nImpl.class
+SHA-256-Digest: ZUdfUSK383VfCRUEq7Nt71/mjfyGAT01c8RYApInA/c=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QuerySelectImpl.c
+ lass
+SHA-256-Digest: kM3cRsBgCRMmfopOB54q7lF6gs6C3EA33grd6mOh0vM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeUpdateSpecificati
+ on.class
+SHA-256-Digest: r3tYE933qdyFXIJkYF0BxFICkK0PamgJMCZSLoQMLDQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QuerySearchCondit
+ ionImpl.class
+SHA-256-Digest: EDfnuqa3cGhAxmZ4GtqQaQpG36cNWzi5v2gttIC6p+o=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdateOfColumnImp
+ l.class
+SHA-256-Digest: eNt5S0dXKxlLJuohSJpWRnlgUgX2lLGRWgqqJTKUkXk=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateBasic.class
+SHA-256-Digest: wRuEd+SRLRuY5k5DHrgoi9tbyaE0S4a53jfi9SFu9KU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryCombinedImpl
+ .class
+SHA-256-Digest: h0ftIN7TCJ+Y/Ub2E5dZ/ov4olOAXkefwoVCk23JExg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableInDatabase.class
+SHA-256-Digest: XWlPXkya5utps8CHS8cy/mDT2QXkg1AdViwCAlKbW/Y=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryLogger.cl
+ ass
+SHA-256-Digest: 8oaqiKtyT+pDctdaYcFb9XCfGp8D0t2/oJdL17ZSGwY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableExpressionIm
+ pl.class
+SHA-256-Digest: zb1YUSic74ecffUqPRwJVvZnbWpSluW+nxwUGijqIv0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateExists.class
+SHA-256-Digest: AiF9I1vag/M9sG6pzpbemWOTb6fU7fgqECfDNgMtIwA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryValueExpression.c
+ lass
+SHA-256-Digest: fTdvfH9CtyD2rfvHIcwWMsPdYBSnXVXvQThfz0qY4KU=
+
+Name: META-INF/maven/org.eclipse.datatools.plugins/org.eclipse.datatoo
+ ls.modelbase.sql.query/pom.properties
+SHA-256-Digest: iS+k5CEQx0AL64Psoc9Vztq4YVXFUF8cR8/9bJ5K5dY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateInValueL
+ istImpl.class
+SHA-256-Digest: LGnd6ot5tWQWtRyl7WeT0TiZyDEq+AMoTWFjeQnHjNY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionSc
+ alarSelectImpl.class
+SHA-256-Digest: NbvmISzDWerRAOy7SAi/FpALPEZZ+RQ0pP0SXcRpDWI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeTargetTableI
+ mpl.class
+SHA-256-Digest: I2KzhbpBgUDZIGar8cfJPn9zibLWk7w25P32Mo88KPo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateBasicImp
+ l.class
+SHA-256-Digest: AGDqlpzAAmXAh3twJpk3A+yXMqHK4+pYmrOaLZSdvcg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateQuantified.cl
+ ass
+SHA-256-Digest: nCDb2dOUCWsnIHfcKdZTmTSEbh7IvJtB9v/5oVcNRUQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateExistsIm
+ pl.class
+SHA-256-Digest: NnjjKPjKgbt0Bl0PUCTtjEnERW29wDTft+abtOZ8lls=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/CursorReferenceIm
+ pl.class
+SHA-256-Digest: dyT0ZPf4oCTdm57rO04LLgtSrZibTiFjeOVOzu6s3hE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCombine
+ dOperator.class
+SHA-256-Digest: zQoLYgHs18J1+eE2wTIOtn1weOXhbKm+Gk55Xp8d93k=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionScalarS
+ elect.class
+SHA-256-Digest: niaxbAm8wOEffmvTb6idMR4/S3B4ZNo6nlauFJAmUnI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateIn.class
+SHA-256-Digest: HKi+AYQ2WQNAkm/6+SB4PgIQY6TmaNV0Fhafpa2sHXg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableQueryLateral
+ Impl.class
+SHA-256-Digest: sak5EobIpJa7v2eTc7uQz43KSi/89gGmMl22l86dQdU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryNestedImpl.c
+ lass
+SHA-256-Digest: z/WCJJlcoCIkDipAHXQyUiwmZfXC7pyla9f3NS5zwkg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryMergeStateme
+ ntImpl.class
+SHA-256-Digest: Nm7tGP/nvfEzZ526iGXtwPLIPWNeU15DfrRfz8DnnXE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdateSourceQuery.clas
+ s
+SHA-256-Digest: 5DXdn9zKgx3kqWyFoOtZZPFLZ08Kq09lyAauRzkd39E=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingSpecification.
+ class
+SHA-256-Digest: m+vClRILeVYJgBaYwT97iixcHngzTMi4tMMzw2Ot5Eg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SearchConditionCombine
+ dOperator.class
+SHA-256-Digest: EmakCYsKixv2hQu5aUkx/8xKirt8rqWklAE3xuaHbX8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValuesRowImpl.cla
+ ss
+SHA-256-Digest: R7+bcgs3vJuNw2Uw7eFNe3nvRDG1w5QF1xmDUb7zII0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionNested.
+ class
+SHA-256-Digest: 7csryTMSJXxfmysCHPDm1LATTQJxzs+WZVoDaQwTR9M=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionColumn.
+ class
+SHA-256-Digest: zINWgPsD/anCnPywcYLTuwcsF9BFtUCDn3pkeUt9mIU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableFunction.class
+SHA-256-Digest: 3pQT5M6b5qUQejgmuyrkLVUv8rVcFp0hMuaPRuNAio8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCaseSim
+ pleContent.class
+SHA-256-Digest: aIVbXJp5NKNEienT4du8RRwMeo5tZTWxLc5jE9b9540=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateInImpl.c
+ lass
+SHA-256-Digest: XYgoA8gyN8iIj7g66OSgunvDu+5jPFfu2UYUttNDJT8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeSourceTable.class
+SHA-256-Digest: paPKsUclOl+cTv9fBr5Gnxi94yS/M6A8o9cBbiTTcgM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdateSourceExprL
+ istImpl.class
+SHA-256-Digest: yzqwcCEMwWN1PkdF1IdhA/mQG4R98qFm16E0Mn/2jTY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableExpression.class
+SHA-256-Digest: /CEO38MRT0HfB9Lwbo4RUaQN/7rxDhacUhK4iGkHqN4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionAt
+ omicImpl.class
+SHA-256-Digest: M3rMEDT2ABkoAhirmyHkErlfvWT2FRcPT0LZAhqfQGA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableCorrelation.class
+SHA-256-Digest: k88CvQPf6dbnuxoMFnO7ppAZOjeGP8Wk/H5sprGBy08=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ResultTableAllCol
+ umnsImpl.class
+SHA-256-Digest: 3sZ9BnVsvwEVn0raCBKOz5cReaiURER78GGFtT1C5d8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryInsertStatement.c
+ lass
+SHA-256-Digest: Z2OD20AOhVT6RkA6iAv12FiFCpxHj6/q9tOBovSardg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingSets.class
+SHA-256-Digest: ipNpauQOFIBkhrput+tiokduSwBGBnbeYCGe+G4V8QA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeInsertSpecificati
+ on.class
+SHA-256-Digest: m75pDLyTqM4Pu5sdG341WGfbvhNyTPCj1TWrw+IZ+pQ=
+
+Name: META-INF/maven/org.eclipse.datatools.plugins/org.eclipse.datatoo
+ ls.modelbase.sql.query/pom.xml
+SHA-256-Digest: 6HqNf2VxZGqnwwVNbQAt53XekXci78GgnoSEcW252m0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/Predicate.class
+SHA-256-Digest: uKOTUbvhPhDRRvUA4nPWzCtI72JCO3y+UmGQLYIQ7+4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionSimple.
+ class
+SHA-256-Digest: bLM2U8oTBQxE6PeJqBjgQQ6+HdGEYIoIMaQBQs/x7UU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingSetsElementSub
+ list.class
+SHA-256-Digest: Zh3/LcnH2jAyZMsSSmevyFgOMG5345Pq1DHZ4qBVEPQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ResultColumnImpl.
+ class
+SHA-256-Digest: IeJxtZSo/5BRF3adm2wxBOhkUUUWqUj2r+rT7QBdC7g=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdateSource.class
+SHA-256-Digest: rw+mD164B80W2LLmGKAYB1qrF2wuhLwyrHDtXLtCUW8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeOnCondition.class
+SHA-256-Digest: EEclk2JoCbd9NGc3dZUkHibxvdH2voe1xOj/wTcZFa0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/WithTableReferenc
+ eImpl.class
+SHA-256-Digest: vwFyef1MCtDR1sSXJV7tAvFeIgfnTnn9fqfxodmlk94=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryNested.class
+SHA-256-Digest: dxCSyKEPtuKDek6srMDKH8HMjTCeR7aoo4G0vsuQFn0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLComment.class
+SHA-256-Digest: baiia1rSK9IzNmACH+OjcpnNJbytCuPJkHOQ6LcZG/I=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingExpression.cla
+ ss
+SHA-256-Digest: gSpcVk+mhNbvt9tIItr5jEUqiQ/4SdX/Kvsbwf7GSXQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQuerySourceBuf
+ fer.class
+SHA-256-Digest: sS6n8o+TMYgGBTNj9gVof/9T8ELOz9AN6n3nuHUVdwM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryMultisetD
+ ataTypeImpl.class
+SHA-256-Digest: 01O1aUcOF54wsrQwe9LWFiI6eSFqN5Q2UhQ80N6g1Oo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/MergeTargetTable.class
+SHA-256-Digest: Fq7ftRYJjFWA2qt7Wd9ZqT562hyL2n3M7JGSYY6vlfs=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ stImpl.class
+SHA-256-Digest: XUxDelIiJxYKj6f7+0KZWdi2PMEM89u4kdGpwJgKkBg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableJoinedOperator.cl
+ ass
+SHA-256-Digest: BS1/EJ8RacU0UmowEMx1WhWD3jEa17HLbrl6qaU+kJU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SearchConditionCombine
+ d.class
+SHA-256-Digest: U4cMYm/ZiRR+/Q7RYtKt4nmzuZZXPy632mCjqE3Wi9U=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQuerySourceWri
+ terProvider.class
+SHA-256-Digest: 6tO7nxO7VyQgHMbZ/0LVliITz1tKg0lv33b9/DfR9sc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryStatementImp
+ l.class
+SHA-256-Digest: D85ieKCvGaX2fah4AcTJvH7oBLmuifxDg1T3m7Pipa8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QuerySelectStatem
+ entImpl.class
+SHA-256-Digest: kHhNaP6ued77AiCi0MZW0s3O27cjjG1l9BraUCBVPTc=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seSimpleContentImpl.class
+SHA-256-Digest: /urIFLFz9Aa+xG0IJkNdAoFNOjpJ8COCI+5ibwonx4I=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionUnaryOp
+ erator.class
+SHA-256-Digest: aa1NKzFe12a/UmTzghoA/CFYIjci/s3lST615MI7CkY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionFunctio
+ n.class
+SHA-256-Digest: xxc0RbbqoIkJRLywlm1bQoVE4l+12B3X10N/BVQrxag=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ColumnNameImpl.cl
+ ass
+SHA-256-Digest: oFhMj6M5NcwJQ5GPCEr5qZ1FhHenMQw7qijf/JR+qBw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/WithTableReference.cla
+ ss
+SHA-256-Digest: XyaRdipfYFnnYSIL6oaT/P/fkdCqdkYJM64czaVB+Uk=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateIsNullIm
+ pl.class
+SHA-256-Digest: +RgO8cp+TOrRC7CjMYqGPdmIG3kN9LHTR/CVqxU2IUQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/OrderByValueExpre
+ ssionImpl.class
+SHA-256-Digest: hi7XTnp3FQ1A3WM8znq7KNBvlwIWQociAzlmG1cm8Q0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ProcedureReferenc
+ eImpl.class
+SHA-256-Digest: kiHwAr0xY42V9r6Qrs0PizyA3Gm1x0KB74itb8/0IBU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryValuesImpl.c
+ lass
+SHA-256-Digest: PJB0AAlxm4dVj84cagxoENn04qtDTELb02xwT7pPP80=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SuperGroup.class
+SHA-256-Digest: 8mKBKzhEkGQ0b+Oq6KpBeuYVay3ja/uW5MTBGvvthPM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLLogUtil.class
+SHA-256-Digest: /HAZtRzrSHZvVlVr0OY1ZrEaWE2A0n5RQulN1VMOfIQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seImpl.class
+SHA-256-Digest: atsDPYU1gFmSzeBAc7318X47AQfLB7X0QeTDHhAzb8M=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdateSourceExprList.c
+ lass
+SHA-256-Digest: OYdrNVcpQliOyM3NJu+qa9cvoUXWJ6Q6rveHWodvrdo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SearchConditionNested.
+ class
+SHA-256-Digest: SYX436kkJviSoqUlEIKKoEjIsrinbbOGXyrOeuyNBQg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateQuantifiedRow
+ Select.class
+SHA-256-Digest: I23cFj6Gl8aXav1T0LqtSyvOjWdGFgvWEb4IYQaSUv0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/DataTypeHelper.
+ class
+SHA-256-Digest: WrWriaTY9Z1oLViEOMkl2YFPcq01U7dd4e3PvVX6S28=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateQuantifi
+ edImpl.class
+SHA-256-Digest: L2Zm9jhcSQvB8+i9QPLIqGCkuAD5qMB4kKvVZuexUas=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingSetsEleme
+ ntExpressionImpl.class
+SHA-256-Digest: 6v70tGtgtZRSqj/X6Al4aL/isEqAJp5aZ5Rq+uDNoxY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableFunctionImpl
+ .class
+SHA-256-Digest: XZiZt2jTGyqBaESpyBkY8fqeVf9n+34vgrQz03xGQh0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/StatementHelper
+ .class
+SHA-256-Digest: I1JV+jJ5O/m/NxtLhVhP+rBvRnJFY3KEJ2Kzzev5R2A=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/DatabaseHelper.
+ class
+SHA-256-Digest: YdTd4XV1r+pHXxgIBWzRRKbHZ61qjaZjRkQpd8ziuqI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCaseSea
+ rchContent.class
+SHA-256-Digest: 5op3hsP0cBUKvWu6HitSmuekEfxwYRf5C9Ux78cMbH4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/UpdateOfColumn.class
+SHA-256-Digest: njRYVhWv8WGgEuGanXBXO2OWrE2k82Z8avgEztIDUKs=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SuperGroupElement
+ Impl.class
+SHA-256-Digest: 2IckJIdHYSSgGnb7OccAhCtt2ehDo5mpRr2BCds8DJU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SuperGroupElementExpre
+ ssion.class
+SHA-256-Digest: WKFPMmyeoGkVRDQ/4qGRvzSn4AsRmB30Y/BDyOFgyqE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateInValueS
+ electImpl.class
+SHA-256-Digest: +YS2l9KBTgFzre59Ohi3PF9xIAODQ6kVxroGoa0tchE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QuerySearchCondition.c
+ lass
+SHA-256-Digest: 2wc5n0Yt4spzfEDQs+tArdQuN/Aga3SJpiu2Z6nceTE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableInDatabaseIm
+ pl.class
+SHA-256-Digest: 4QYTlqMYZyCqEJGMOOWZRh05FfrDEsfsPEfarYyV6LA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryCombinedOperator.
+ class
+SHA-256-Digest: 60GdkZRdA6tz81DZVt/MfCP3DBc+1fVRIg4ztNkQpW0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeOperationSpe
+ cificationImpl.class
+SHA-256-Digest: eHtLU/9fP9U469l67V4n6dzH/RzzDecRDgBek8yZk1M=
+
+Name: org/eclipse/datatools/modelbase/sql/query/Grouping.class
+SHA-256-Digest: Mp21pYmtbB1kFN4b114N5ZK0wkqP2yrIvEohg4TSvYg=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryDeleteStatem
+ entImpl.class
+SHA-256-Digest: /SFmIIFiQErBIFiGGurUDznRc/FAonkTwTwTaUX/h8w=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seSearchContentImpl.class
+SHA-256-Digest: EKhBbRVQ4vrr4c5zxldznLRAYBJsAgt7CMhpjcddZD0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryValueExpress
+ ionImpl.class
+SHA-256-Digest: u6mz7aKawCVuJjc7QNf3wm7/vHhPuN9t1tUG2bN/SPU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/SuperGroupType.class
+SHA-256-Digest: NHsSF3pnqwyxlb+VgojdiMzOlINHLdtl7e4FZgncwUw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ColumnName.class
+SHA-256-Digest: Dal9Ye5+Wp92GWNhaxh4spDE09uC9K6Av2fWURz9t/I=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryModelPlug
+ in.class
+SHA-256-Digest: t15Rs/OcNlgcmSOUbXqbpI8vP35nBnnw+6bXKErsgC0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SQLQueryModelPack
+ ageImpl.class
+SHA-256-Digest: x/oBD+Ay9iLjKs4yqTfNRfT2rGIt9FnLKO0sjWsFWgk=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SuperGroupImpl.cl
+ ass
+SHA-256-Digest: eereEbDB2rRDllYn2fGSkO0TKcZLEUVojwlEdFjhd08=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateInValueList.c
+ lass
+SHA-256-Digest: F3w3biODyiAYtx6h00pTaLrAod5PrW0fdta7g+iuCfo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionNullVal
+ ue.class
+SHA-256-Digest: Vl9r3UrIKnO45Nc/+5csNS5cBWouSPnk1bVu/YY0lT0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateQuantifiedVal
+ ueSelect.class
+SHA-256-Digest: nSlck2LJK6xK/C6r4P3/daOoh8EL3jAeOA6flugrk0M=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingSetsImpl.
+ class
+SHA-256-Digest: 8eiEz0mWDE0rJE/fspgVoOvoG2Zi958sE7ym4AfC3AM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/CursorReference.class
+SHA-256-Digest: rEvbf0WdtHfuQuT5apaQQkuzinfuL7NjPQ8LMWIUwZA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateLikeImpl
+ .class
+SHA-256-Digest: 6LkqWmyH1U5TbT4Z4QWm4wYccMLUWBKw7TEjxUyQGZ8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/GroupingSetsEleme
+ ntSublistImpl.class
+SHA-256-Digest: kArdeHHoPpXa876KYQEZLpoeSrMfwrfJolXVxpz0124=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableNested.class
+SHA-256-Digest: XSVkNqDMM09LFY70NeVdXL6NtfmQdBXcLFt4x4dL9uE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionRow.cla
+ ss
+SHA-256-Digest: LsxqqBSegX6NavPrgCZ+lJ+xr+JOD+nV5m6rj0GhufU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryModelAdap
+ terFactory.class
+SHA-256-Digest: r+2KwAxsGutEtvsTZKy1A++YZerhQ+uyfW2G7LXVafY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateQuantifi
+ edValueSelectImpl.class
+SHA-256-Digest: X1QPsSsNorNFgJgkDecDcrubm99uJEVQxe63EQ/HJ04=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryCombined.class
+SHA-256-Digest: Wil07PhpIhNhIhs5/902/TifQ3W3WbE3Vvh744m3JN0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableCorrelationI
+ mpl.class
+SHA-256-Digest: oxMSOVWg6aIhfm4zcuCwFwvQYmlrHDo/WU3TuI9v0RQ=
+
+Name: plugin.properties
+SHA-256-Digest: AGT2UZTNdhNiyMJnWUw7imAx9bgEgi+TzQuYdfUd3Eo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/StatementHelper
+ $ValueExpressionComparator.class
+SHA-256-Digest: 5WmBwA/jFAisVW66T7BY/RiE5cnJK0cMdMe5I16Yk/M=
+
+Name: org/eclipse/datatools/modelbase/sql/query/CallStatement.class
+SHA-256-Digest: Rz5oldWDZzpRUnENrmhSTjVctQfSigKjYh4IQTCEeeA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionAtomic.
+ class
+SHA-256-Digest: JgA3UlXxOmE9+rq29mUIBJOP8r9sDxBJvJnbyOwFCok=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionDe
+ faultValueImpl.class
+SHA-256-Digest: RqDkaBmYBgq3n+uaNBj5RGxs5aOZAqkffPgudhWmNyM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateIsNull.class
+SHA-256-Digest: qD31OEj8j48XGXA3MHEjSZ5WVDgbbAWNsa4IH2VBrPY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionVa
+ riableImpl.class
+SHA-256-Digest: H+K4Y4wbsEe+jgbb3oc40G7U9m01MbRWc6NFoRxRsGA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCombine
+ d.class
+SHA-256-Digest: JeufXJM91EJHn6dD9rvo0NDmBVCPuxc5dYZR933unOI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeOnConditionI
+ mpl.class
+SHA-256-Digest: SYxHlRUTd0iTUymYJm+iLnWcUS4KzG9Pjk0BWwDHoP4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/OrderByResultColu
+ mnImpl.class
+SHA-256-Digest: tO6jLinQqwHzc7Wcr6w9/chjeLvefkUrte6WsPz6IEE=
+
+Name: org/eclipse/datatools/modelbase/sql/query/TableJoined.class
+SHA-256-Digest: b+tx+BkBODOfVdkIxtQKSgXtWUunuadPNTBUCMVvGr8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryUpdateStatement.c
+ lass
+SHA-256-Digest: 9OnI+vf1YHC08xqs8gULD/fKNm8LrlYN3TxGFIKjTHA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryExpressionBody.cl
+ ass
+SHA-256-Digest: lCvxkN9jN32qAEuPlNAOv7Ju6ppnAE5JjqUKCewdLV0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/TableJoinedImpl.c
+ lass
+SHA-256-Digest: t/XMLmtRXyoE7xp15MnBynRZHJR2Ylo8Hd9r0x4aZLo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SearchConditionCo
+ mbinedImpl.class
+SHA-256-Digest: fRo+Lu56pcg4Sy+4JWAZC6xqIWPei6eJ5FmSIinTBl4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryMergeStatement.cl
+ ass
+SHA-256-Digest: qR1DhitLVsqM5hzfKBAHXCXYj9N/8rjRF3RIFj/NTt8=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/PredicateQuantifi
+ edRowSelectImpl.class
+SHA-256-Digest: zenJAr9tXWQqGRJyqJDKQwMaBuEfK5L2zDE9FOdCQJs=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SQLQueryModelFact
+ oryImpl.class
+SHA-256-Digest: C29LiYD3s2jQrzBD14xKUBfiHbBydx0QXwOGXmb3v+g=
+
+Name: org/eclipse/datatools/modelbase/sql/query/PredicateQuantifiedTyp
+ e.class
+SHA-256-Digest: QOKzA55K6jBLHQRsl+AIovmFFQq5Zrizb5V9+63LXzw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/QueryExpressionBo
+ dyImpl.class
+SHA-256-Digest: 2FzJ4cwSofMogSG6a8InDvMIDLI3rTbw8RV/lU1CtVU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryValues.class
+SHA-256-Digest: 6IBcm+g/bDM9ka6xuRyyFWt+MSxc5Ws3qHlsoa7q2hY=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeSourceTableI
+ mpl.class
+SHA-256-Digest: mDvCtLISBNfk7yDaQWxpsBD3c4rkjqlkl9ANGGybcko=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SuperGroupElement
+ ExpressionImpl.class
+SHA-256-Digest: jGi/eaj+jEguATbjvepTD5p4IMgX0+4F36/WEIjsACA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryDeleteStatement.c
+ lass
+SHA-256-Digest: fuPcudPYGepPweOdgP0mbv3s0ef6Vwg6DHWhUIjBuog=
+
+Name: org/eclipse/datatools/modelbase/sql/query/helper/TableHelper.cla
+ ss
+SHA-256-Digest: Q7WzodMvx/m5Ko9VYcxt2b3FeCS9hc2WeiR5zZETlbo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ResultTableAllColumns.
+ class
+SHA-256-Digest: jNCwLv02COuo7y4/yLbUPADFk1wqRc4OEixoe6zC5NQ=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionNu
+ llValueImpl.class
+SHA-256-Digest: I03gZoNn6V+nGTGyFYODvGLKbdxMSibDpSL5HUgo8ck=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCast.cl
+ ass
+SHA-256-Digest: JWDyXqkLN+sE/N1bI3ybQVhETtMdvJMNEgMQy3Mq3d4=
+
+Name: org/eclipse/datatools/modelbase/sql/query/ValueExpressionCaseSim
+ ple.class
+SHA-256-Digest: 9NOemFzPfverT4cu8eSaSuR2gNMXhj3MWkIG6s2UaDI=
+
+Name: org/eclipse/datatools/modelbase/sql/query/OrderBySpecification.c
+ lass
+SHA-256-Digest: qXZ4BSqO0JHndSeKZm7Tjji/Vf/XcrzriwRN2LDKxoU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/CallStatementImpl
+ .class
+SHA-256-Digest: oY4T1JuPs6w7c7yP+7Ufk10vNqnEuZko4ssPaOMgJxg=
+
+Name: about.html
+SHA-256-Digest: RllmOvuw6fgx1V5gXoynPizYvhXb3Bs6N0W4fdD2lFw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryModelSwit
+ ch.class
+SHA-256-Digest: mMO8RBbm17RvPFmz+bhnHAhITrf44DbrlJlAiKNIcpM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/WithTableSpecification
+ .class
+SHA-256-Digest: YSx4m0KTvZ43rvckeUh5274JTem/Ni+j5vqmYYYVauU=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/ValueExpressionCa
+ seElseImpl.class
+SHA-256-Digest: sg+D0vILxQGasjDQeI2r5svhi+U7aUVZ2O6FcGvIcog=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QuerySelectStatement.c
+ lass
+SHA-256-Digest: NVs07fokORnKULIUtxDmnuinStAAIVKESupdDtTZVdA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/MergeInsertSpecif
+ icationImpl.class
+SHA-256-Digest: dDGueGpqbAX1DxrVvtPg5rsHO4b62s+UmvnceCaUodw=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/SuperGroupElement
+ SublistImpl.class
+SHA-256-Digest: MCEu0bWNRJOKrXFBRmHk9eSHVwv+KSqE92Qo/TpZRyM=
+
+Name: org/eclipse/datatools/modelbase/sql/query/impl/UpdateAssignmentE
+ xpressionImpl.class
+SHA-256-Digest: Kn7X3N5VIhXvLZ6IOxxSn+WQWo2PR8kh1QEcKQgwuLA=
+
+Name: org/eclipse/datatools/modelbase/sql/query/util/SQLQueryModelAdap
+ terFactory$1.class
+SHA-256-Digest: 5lUkPMaj3XiNGc5R3fgSNqOEc2alphJBKmnW+g0AGS0=
+
+Name: org/eclipse/datatools/modelbase/sql/query/QueryChangeStatement.c
+ lass
+SHA-256-Digest: MIosnCNleOAC8TKxgah/4DM/qy/JRAMHpQmnmwruRzo=
+
+Name: org/eclipse/datatools/modelbase/sql/query/GroupingSetsElementExp
+ ression.class
+SHA-256-Digest: h54xZ91JNScdxhzyO1eRb6NBwNwLA966yXt4M7WW6Z4=
+
