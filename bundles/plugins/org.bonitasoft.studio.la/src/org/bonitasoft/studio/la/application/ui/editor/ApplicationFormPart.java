@@ -18,13 +18,18 @@ import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageProvider;
 import org.bonitasoft.studio.la.application.ui.editor.listener.AddApplicationDescriptorListener;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
+import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -43,10 +48,16 @@ public class ApplicationFormPart extends AbstractFormPart {
     private FormToolkit toolkit;
     private ApplicationFormPage formPage;
     private List<ApplicationDescriptorControl> applicationDescriptorControls = new ArrayList<>();
+    protected CustomPageProvider customPageProvider;
 
     public ApplicationFormPart(Composite parent, ApplicationFormPage formPage) {
         ApplicationNodeContainer workingCopy = formPage.getWorkingCopy();
         this.formPage = formPage;
+        RepositoryAccessor repositoryAccessor = formPage.getRepositoryAccessor();
+        this.customPageProvider = new CustomPageProvider(
+                repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class),
+                repositoryAccessor.getRepositoryStore(ThemeRepositoryStore.class));
+        customPageProvider.init();
         toolkit = formPage.getToolkit();
         if (workingCopy.getApplications().isEmpty()) {
             createNoApplicationsComposite(parent, formPage);
@@ -75,7 +86,8 @@ public class ApplicationFormPart extends AbstractFormPart {
         return new ApplicationDescriptorControl(
                 section,
                 application,
-                formPage);
+                formPage,
+                customPageProvider);
     }
 
     public void addApplicationToForm(Composite parent, ApplicationNode application) {
@@ -84,7 +96,8 @@ public class ApplicationFormPart extends AbstractFormPart {
         ApplicationDescriptorControl applicationDescriptorControl = new ApplicationDescriptorControl(
                 section,
                 application,
-                formPage);
+                formPage,
+                customPageProvider);
         applicationDescriptorControls.add(applicationDescriptorControl);
     }
 
@@ -134,7 +147,8 @@ public class ApplicationFormPart extends AbstractFormPart {
     public void expendApplication(List<String> applicationTokens) {
         applicationDescriptorControls
                 .stream()
-                .filter(applicationControl -> applicationTokens.contains(applicationControl.getTokenObservable().getValue()))
+                .filter(applicationControl -> applicationTokens
+                        .contains(applicationControl.getTokenObservable().getValue()))
                 .forEach(applicationControl -> applicationControl.getControl().setExpanded(true));
         if (applicationTokens.isEmpty()) {
             applicationDescriptorControls
@@ -151,6 +165,14 @@ public class ApplicationFormPart extends AbstractFormPart {
                 .map(ApplicationDescriptorControl::getTokenObservable)
                 .map(IObservableValue::getValue)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void dispose() {
+        if (customPageProvider != null) {
+            customPageProvider.dispose();
+        }
+        super.dispose();
     }
 
 }

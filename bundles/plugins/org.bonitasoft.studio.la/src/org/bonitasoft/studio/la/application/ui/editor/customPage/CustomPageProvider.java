@@ -14,14 +14,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
 import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 
-public class CustomPageProvider {
+public class CustomPageProvider implements IResourceChangeListener {
 
     public static final List<CustomPageDescriptor> DEFAULT_THEMES = new ArrayList<>();
     static {
@@ -31,6 +39,9 @@ public class CustomPageProvider {
 
     private final WebPageRepositoryStore webPageStore;
     private ThemeRepositoryStore themeStore;
+    private List<CustomPageDescriptor> pages;
+    private List<CustomPageDescriptor> layouts;
+    private List<CustomPageDescriptor> themes;
 
     public CustomPageProvider(WebPageRepositoryStore store, ThemeRepositoryStore themeStore) {
         this.webPageStore = store;
@@ -38,32 +49,36 @@ public class CustomPageProvider {
     }
 
     public List<CustomPageDescriptor> getLayouts() {
-        final List<CustomPageDescriptor> layouts = new ArrayList<>();
-        layouts.add(CustomPageDescriptor.DEFAULT_LAYOUT);
-        webPageStore.getChildren()
-                .stream()
-                .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(), WebPageFileStore.LAYOUT_TYPE))
-                .map(fileStore -> new CustomPageDescriptor(
-                        CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                        fileStore.getDisplayName(), fileStore.getDescription()))
-                .forEach(layouts::add);
-        layouts.add(CustomPageDescriptor.LEGACY_DEFAULT_LAYOUT);
+        if (layouts == null) {
+            layouts = new ArrayList<>();
+            layouts.add(CustomPageDescriptor.DEFAULT_LAYOUT);
+            webPageStore.getChildren()
+                    .stream()
+                    .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(),
+                            WebPageFileStore.LAYOUT_TYPE))
+                    .map(fileStore -> new CustomPageDescriptor(
+                            CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
+                            fileStore.getDisplayName(), fileStore.getDescription()))
+                    .forEach(layouts::add);
+            layouts.add(CustomPageDescriptor.LEGACY_DEFAULT_LAYOUT);
+        }
         return layouts;
     }
 
     public List<CustomPageDescriptor> getApplicationPages() {
-        final List<CustomPageDescriptor> pages = new ArrayList<>();
-        webPageStore.getChildren()
-                .stream()
-                .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(), WebPageFileStore.PAGE_TYPE))
-                .map(fileStore -> new CustomPageDescriptor(
-                        CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                        fileStore.getDisplayName(), fileStore.getDescription()))
-                .forEach(pages::add);
-        BonitaPagesRegistry.getInstance().getCustomPages().stream()
-                .map(p -> new CustomPageDescriptor(p.getPageId(), p.getDisplayName(), p.getDescription()))
-                .forEach(pages::add);
-
+        if (pages == null) {
+            pages = new ArrayList<>();
+            webPageStore.getChildren()
+                    .stream()
+                    .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(), WebPageFileStore.PAGE_TYPE))
+                    .map(fileStore -> new CustomPageDescriptor(
+                            CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
+                            fileStore.getDisplayName(), fileStore.getDescription()))
+                    .forEach(pages::add);
+            BonitaPagesRegistry.getInstance().getCustomPages().stream()
+                    .map(p -> new CustomPageDescriptor(p.getPageId(), p.getDisplayName(), p.getDescription()))
+                    .forEach(pages::add);
+        }
         return pages;
     }
 
@@ -104,7 +119,8 @@ public class CustomPageProvider {
                 .create();
     }
 
-    public static IConverter<String, String> getCustomPageDisplayNameConverter(Collection<CustomPageDescriptor> layouts) {
+    public static IConverter<String, String> getCustomPageDisplayNameConverter(
+            Collection<CustomPageDescriptor> layouts) {
         return ConverterBuilder.<String, String> newConverter()
                 .fromType(String.class)
                 .toType(String.class)
@@ -126,22 +142,59 @@ public class CustomPageProvider {
     }
 
     public Collection<CustomPageDescriptor> getThemes() {
-        final List<CustomPageDescriptor> pages = new ArrayList<>();
-        themeStore.getChildren()
-                .stream()
-                .filter(Objects::nonNull)
-                .filter(fileStore -> fileStore.getPageId() != null)
-                .map(fileStore -> new CustomPageDescriptor(
-                        fileStore.getPageId(),
-                        fileStore.getPageDisplayName(),
-                        fileStore.getDescription()))
-                .forEach(pages::add);
-        pages.addAll(DEFAULT_THEMES);
-        return pages;
+        if (themes == null) {
+            themes = new ArrayList<>();
+            themeStore.getChildren()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .filter(fileStore -> fileStore.getPageId() != null)
+                    .map(fileStore -> new CustomPageDescriptor(
+                            fileStore.getPageId(),
+                            fileStore.getPageDisplayName(),
+                            fileStore.getDescription()))
+                    .forEach(themes::add);
+            themes.addAll(DEFAULT_THEMES);
+        }
+        return themes;
     }
 
     public ThemeRepositoryStore getThemeStore() {
         return themeStore;
+    }
+
+    @Override
+    public void resourceChanged(IResourceChangeEvent event) {
+        try {
+            event.getDelta().accept(new IResourceDeltaVisitor() {
+
+                @Override
+                public boolean visit(IResourceDelta delta) throws CoreException {
+                    IResource resource = delta.getResource();
+                    if (resource != null && resource.getLocation() != null
+                            && webPageStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
+                        pages = null;
+                        layouts = null;
+                        return false;
+                    }
+                    if (resource != null && resource.getLocation() != null
+                            && themeStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
+                        themes = null;
+                        return false;
+                    }
+                    return true;
+                }
+            });
+        } catch (CoreException e) {
+           BonitaStudioLog.error(e);
+        }
+    }
+
+    public void dispose() {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+    }
+
+    public void init() {
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
 }

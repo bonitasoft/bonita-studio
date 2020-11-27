@@ -89,8 +89,7 @@ public class ApplicationNavigation extends Composite {
             ApplicationFormPage formPage,
             ApplicationNode applicationNode,
             FormToolkit toolkit,
-            WebPageRepositoryStore webPageStore,
-            ThemeRepositoryStore themeStore,
+            CustomPageProvider customPageProvider,
             IObservableValue<String> homePageObservable) {
         super(parent, SWT.NONE);
         toolkit.adapt(this);
@@ -100,7 +99,7 @@ public class ApplicationNavigation extends Composite {
         this.updateApplicationNodeOperation = new UpdateApplicationNodeOperation(applicationNode);
         this.toolkit = toolkit;
         this.homePageObservable = homePageObservable;
-        customPageProvider = new CustomPageProvider(webPageStore, themeStore);
+        this.customPageProvider = customPageProvider;
         this.ctx = new DataBindingContext();
 
         menuAndOrphanList = toNavigationConverter.toNavigationPageNodeList(applicationNode);
