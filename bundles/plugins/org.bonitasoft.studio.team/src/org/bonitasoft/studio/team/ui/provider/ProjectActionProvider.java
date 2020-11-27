@@ -20,11 +20,11 @@ public class ProjectActionProvider extends CommonActionProvider {
     @Override
     public void fillActionBars(IActionBars actionBars) {
         super.fillActionBars(actionBars);
-        IContributionItem item = actionBars.getToolBarManager().find(SWITCH_PROJECT_ACTION_ID);
+        IContributionItem item = actionBars.getMenuManager().find(SWITCH_PROJECT_ACTION_ID);
         if (item == null) {
             addSwitchProjectAction(actionBars);
         }
-        item = actionBars.getToolBarManager().find(NEW_PROJECT_ACTION_ID);
+        item = actionBars.getMenuManager().find(NEW_PROJECT_ACTION_ID);
         if (item == null) {
             addNewProjectAction(actionBars);
         }
@@ -46,7 +46,7 @@ public class ProjectActionProvider extends CommonActionProvider {
         };
         action.setId(SWITCH_PROJECT_ACTION_ID);
         action.setToolTipText(Messages.switchRepository);
-        actionBars.getToolBarManager().add(action);
+        actionBars.getMenuManager().add(action);
     }
 
     protected void addNewProjectAction(IActionBars actionBars) {
@@ -64,7 +64,7 @@ public class ProjectActionProvider extends CommonActionProvider {
         };
         action.setId(NEW_PROJECT_ACTION_ID);
         action.setToolTipText(Messages.createNewLocalRepo);
-        actionBars.getToolBarManager().add(action);
+        actionBars.getMenuManager().add(action);
     }
 
 

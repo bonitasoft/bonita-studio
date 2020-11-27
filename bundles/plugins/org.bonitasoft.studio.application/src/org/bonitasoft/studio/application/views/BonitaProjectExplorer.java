@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -51,7 +52,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -68,15 +71,22 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
+import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
+import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptor;
+import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptorManager;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
+import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 import org.eclipse.ui.navigator.NavigatorActionService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
@@ -110,10 +120,20 @@ public class BonitaProjectExplorer extends CommonNavigator {
     @Override
     public void createPartControl(Composite aParent) {
         super.createPartControl(aParent);
+        IActionBars actionBars = getViewSite().getActionBars();
+        IToolBarManager toolBarManager = actionBars.getToolBarManager();
+       Stream.of(toolBarManager.getItems())
+           .filter(ActionContributionItem.class::isInstance)
+           .map(ActionContributionItem.class::cast)
+           .filter(item -> item.getAction() instanceof LinkEditorAction)
+           .findFirst()
+           .ifPresent(toolBarManager::remove);
+       toolBarManager.update(true);
         setLinkingEnabled(true);
         activateNestedProjectsState();
         getNavigatorContentService().bindExtensions(
                 new String[] { "org.bonitasoft.studio.application.extendedResourceLinkHelper" }, false);
+       
         initContextMenu();
         getCommonViewer().expandToLevel(2);
         Job.getJobManager().addJobChangeListener(openIntroListener);
