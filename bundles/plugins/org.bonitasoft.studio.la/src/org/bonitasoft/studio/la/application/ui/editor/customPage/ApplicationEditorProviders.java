@@ -32,6 +32,7 @@ public class ApplicationEditorProviders {
         this.layoutProposalProvider = new LayoutProposalProvider(customPageProvider, true);
         this.themeProposalProvider = new ThemeProposalProvider(customPageProvider, true);
         this.profileProposalProvider = createProfileProposalProvider(repositoryAccessor);
+        this.customPageProvider.init();
         profileProposalProvider.setFiltering(true);
     }
 
@@ -58,5 +59,6 @@ public class ApplicationEditorProviders {
     public void dispose() {
         layoutProposalProvider.dispose();
         themeProposalProvider.dispose();
+        customPageProvider.dispose();
     }
 }
