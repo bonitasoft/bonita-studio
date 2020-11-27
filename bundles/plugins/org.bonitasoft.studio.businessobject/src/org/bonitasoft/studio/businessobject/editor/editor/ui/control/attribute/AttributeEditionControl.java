@@ -135,7 +135,7 @@ public class AttributeEditionControl extends Composite {
         TextWidget searchWidget = new SearchWidget.Builder()
                 .labelAbove()
                 .widthHint(300)
-                .withPlaceholder(Messages.searchAttribute)
+                .withPlaceholder(Messages.search)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
         IObservableValue<String> searchObservableValue = searchWidget.observeText(SWT.Modify);
