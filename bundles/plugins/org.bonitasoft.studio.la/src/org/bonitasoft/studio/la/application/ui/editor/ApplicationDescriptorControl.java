@@ -40,6 +40,7 @@ import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.core.ApplicationDependencyResolver;
 import org.bonitasoft.studio.la.application.handler.DeployApplicationHandler;
+import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageProvider;
 import org.bonitasoft.studio.la.application.ui.editor.listener.CloneApplicationDescriptorListener;
 import org.bonitasoft.studio.la.application.ui.editor.listener.DeleteApplicationDescriptorListener;
 import org.bonitasoft.studio.la.i18n.Messages;
@@ -78,8 +79,10 @@ public class ApplicationDescriptorControl {
     private Section control;
     private ApplicationNode application;
 
-    public ApplicationDescriptorControl(Section applicationSection, ApplicationNode application,
-            ApplicationFormPage formPage) {
+    public ApplicationDescriptorControl(Section applicationSection,
+            ApplicationNode application,
+            ApplicationFormPage formPage,
+            CustomPageProvider customPageProvider) {
 
         this.control = applicationSection;
         this.application = application;
@@ -169,8 +172,7 @@ public class ApplicationDescriptorControl {
                 formPage,
                 application,
                 toolkit,
-                formPage.getRepositoryAccessor().getRepositoryStore(WebPageRepositoryStore.class),
-                formPage.getRepositoryAccessor().getRepositoryStore(ThemeRepositoryStore.class),
+                customPageProvider,
                 homePageObservable);
         navigationSection.setClient(applicationNavigation);
 
