@@ -142,7 +142,7 @@ public class CreateAndEditFormContributionItemTest {
         doReturn(repositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         final PageFlow pagefLow = aTask().havingFormMapping(
                 aFormMapping().havingTargetForm(anExpression())).havingContract(aContract()).build();
-        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null);
+        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null, null);
         doReturn(
                 new StructuredSelection(pagefLow)).when(
                 selectionProvider)
@@ -164,7 +164,7 @@ public class CreateAndEditFormContributionItemTest {
         doReturn(repositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         final PageFlow pagefLow = aTask().havingFormMapping(
                 aFormMapping().havingTargetForm(anExpression())).havingContract(aContract().havingInput(aContractInput())).build();
-        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null);
+        doReturn("newForm").when(createNewFormListener).handleEvent(pagefLow.getFormMapping(), null, null);
         doReturn(
                 new StructuredSelection(pagefLow)).when(
                 selectionProvider)

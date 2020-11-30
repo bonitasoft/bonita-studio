@@ -288,10 +288,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         tips.addListener(SWT.Selection, e -> {
             if (Objects.equals(e.text, "documents")) {
                 documentProposalListener.handleEvent((EObject) poolSelectionProvider.getAdapter(EObject.class),
-                        "");
+                        "", null);
             } else {
                 createBusinessDataProposalListener.handleEvent((EObject) poolSelectionProvider.getAdapter(EObject.class),
-                        "");
+                        "", null);
             }
         });
         selectionProvider.addSelectionChangedListener(e -> tips.setText(getBdmTipsMessage()));

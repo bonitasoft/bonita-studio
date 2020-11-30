@@ -14,38 +14,71 @@
  */
 package org.bonitasoft.studio.parameters.wizard.page;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.configuration.EnvironmentProviderFactory;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.parameter.ParameterFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * @author Maxence Raoux
- */
 public class CreateParameterProposalListener implements IProposalListener {
 
-    private boolean isPageFlowContext = false;
-
-    public CreateParameterProposalListener() {
-    }
+    private EnvironmentProviderFactory environmentProviderFactory = new EnvironmentProviderFactory();
 
     @Override
-    public String handleEvent(final EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType, String defaultValue) {
         Assert.isNotNull(context);
         final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
+        Parameter parameter = ParameterFactory.eINSTANCE.createParameter();
+        parameter.setTypeClassname(getParameterType(fixedReturnType));
         final AddParameterWizard parameterWizard = new AddParameterWizard(parentProcess,
+                parameter,
                 TransactionUtil.getEditingDomain(context));
         final ParameterWizardDialog parameterDialog = new ParameterWizardDialog(
                 Display.getDefault().getActiveShell(), parameterWizard);
-        if (parameterDialog.open() == Dialog.OK) {
-            final Parameter param = parameterWizard.getNewParameter();
+        if (parameterDialog.open() == Window.OK) {
+            final Parameter param = EcoreUtil.copy(parameterWizard.getNewParameter());
+            if (defaultValue != null) {
+                param.setValue(defaultValue);
+                ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance()
+                        .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+                ProcessConfigurationFileStore configurationFileStore = store.getChild(
+                        ModelHelper.getEObjectID(parentProcess) + "." + ProcessConfigurationRepositoryStore.CONF_EXT,
+                        false);
+                if (configurationFileStore != null) {
+                    try {
+                        Configuration localConfiguration = configurationFileStore.getContent();
+                        localConfiguration.getParameters().add(EcoreUtil.copy(param));
+                        configurationFileStore.save(localConfiguration);
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+                environmentProviderFactory
+                        .getEnvironmentProvider()
+                        .getEnvironment()
+                        .stream()
+                        .forEach(env -> addParameterValue(parentProcess, env, param));
+            }
             if (param != null) {
                 return param.getName();
             }
@@ -53,51 +86,33 @@ public class CreateParameterProposalListener implements IProposalListener {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isPageFlowContext()
-     */
-    @Override
-    public boolean isPageFlowContext() {
-        return isPageFlowContext;
-
+    private String getParameterType(String returnType) {
+        if (Double.class.getName().equals(returnType)) {
+            return Double.class.getName();
+        }
+        if (Boolean.class.getName().equals(returnType)) {
+            return Boolean.class.getName();
+        }
+        if (Integer.class.getName().equals(returnType)) {
+            return Integer.class.getName();
+        }
+        return String.class.getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
-     */
-    @Override
-    public void setIsPageFlowContext(final boolean isPageFlowContext) {
-        this.isPageFlowContext = isPageFlowContext;
-
+    private void addParameterValue(AbstractProcess parentProcess, String envName, Parameter paramater) {
+        parentProcess.getConfigurations().stream()
+                .filter(conf -> Objects.equals(envName, conf.getName()))
+                .findFirst()
+                .ifPresent(conf -> {
+                    TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(parentProcess);
+                    editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, conf,
+                            ConfigurationPackage.Literals.CONFIGURATION__PARAMETERS, EcoreUtil.copy(paramater)));
+                });
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.
-     * EStructuralFeature)
-     */
     @Override
     public void setEStructuralFeature(final EStructuralFeature feature) {
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-     */
-    @Override
-    public boolean isOverViewContext() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-     */
-    @Override
-    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
     @Override

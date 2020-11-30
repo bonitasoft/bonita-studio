@@ -32,28 +32,32 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
-/**
- * @author Maxence Raoux
- *
- */
 public class AddParameterWizard extends Wizard {
-
-    private ParametersWizardPage addParameterPage;
 
     private final AbstractProcess container;
 
     private final Parameter parameterWorkingCopy;
 
     private final EditingDomain editingDomain;
-
+    
     public AddParameterWizard(final AbstractProcess container, final EditingDomain editingDomain) {
+        this(container, defaultParameter(),editingDomain);
+    }
+    
+    private static Parameter defaultParameter() {
+        Parameter parameter = ParameterFactory.eINSTANCE.createParameter();
+        parameter.setTypeClassname(String.class.getName());
+        return parameter;
+    }
+
+    public AddParameterWizard(final AbstractProcess container, Parameter parameterWorkingCopy, final EditingDomain editingDomain) {
         this.container = container;
         setWindowTitle(Messages.newParameter);
         setDefaultPageImageDescriptor(Pics.getWizban());
-        parameterWorkingCopy = ParameterFactory.eINSTANCE.createParameter();
-        parameterWorkingCopy.setTypeClassname(String.class.getName());
+        this.parameterWorkingCopy = parameterWorkingCopy;
         this.editingDomain = editingDomain;
     }
 
@@ -77,14 +81,14 @@ public class AddParameterWizard extends Wizard {
 
     @Override
     public void addPages() {
-        addParameterPage = new ParametersWizardPage(parameterWorkingCopy, getExistingParametersName());
-        addParameterPage.setTitle(Messages.bind(Messages.newParameterWizardTitle, container.getName()));
+        ParametersWizardPage addParameterPage = new ParametersWizardPage(parameterWorkingCopy, getExistingParametersName());
+        addParameterPage.setTitle(NLS.bind(Messages.newParameterWizardTitle, container.getName()));
         addParameterPage.setDescription(Messages.newParameterWizardDescription);
         addPage(addParameterPage);
     }
 
     protected Set<String> getExistingParametersName() {
-        final Set<String> params = new HashSet<String>();
+        final Set<String> params = new HashSet<>();
         for (final Parameter p : container.getParameters()) {
             params.add(p.getName());
         }

@@ -75,6 +75,7 @@ public class CreateOrEditFormProposalListenerTest {
                 TaskBuilder.aTask().havingFormMapping(aFormMapping().havingTargetForm(anExpression()))
                         .havingContract(aContract()).build()
                         .getFormMapping(),
+                null,
                 null);
 
         assertThat(newPageId).isEqualTo("page-id");
@@ -95,6 +96,7 @@ public class CreateOrEditFormProposalListenerTest {
                         .havingContract(aContract())
                         .build()
                         .getFormMapping(),
+                null,
                 null);
 
         assertThat(newPageId).isNull();

@@ -15,8 +15,10 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import java.util.Collections;
+import java.util.Date;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
@@ -33,9 +36,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -45,25 +48,27 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CreateVariableProposalListener implements IDataProposalListener {
 
-    private boolean isPageFlowContext = true;
-
     private EStructuralFeature feature = ProcessPackage.Literals.DATA_AWARE__DATA;
 
     private boolean multipleData = false;
 
     @Override
-    public String handleEvent(final EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType, String defaultValue) {
         Assert.isNotNull(context);
         final EObject dataContainer = getDataContainer(context);
         final Data dataWorkingCopy = ProcessFactory.eINSTANCE.createData();
         dataWorkingCopy.setMultiple(multipleData);
-        dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.stringDataType));
-        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, dataWorkingCopy, feature,
+        dataWorkingCopy.setDataType(getDataTypeFor(dataContainer, fixedReturnType));
+        if (defaultValue != null) {
+            dataWorkingCopy.setDefaultValue(ExpressionHelper.createConstantExpression(defaultValue, fixedReturnType));
+        }
+        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer,
+                dataWorkingCopy, feature,
                 Collections.singleton(feature), true,
                 fixedReturnType);
-        newWizard.setIsPageFlowContext(isPageFlowContext);
-        final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard, IDialogConstants.FINISH_LABEL);
-        if (wizardDialog.open() == Dialog.OK) {
+        final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard,
+                IDialogConstants.FINISH_LABEL);
+        if (wizardDialog.open() == Window.OK) {
             RepositoryManager.getInstance().getCurrentRepository().buildXtext();
             final Data newData = newWizard.getNewData();
             if (newData != null) {
@@ -73,13 +78,28 @@ public class CreateVariableProposalListener implements IDataProposalListener {
         return null;
     }
 
+    private DataType getDataTypeFor(final EObject dataContainer, String fixedReturnType) {
+        if (Long.class.getName().equals(fixedReturnType)) {
+            return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.longDataType);
+        } else if (Double.class.getName().equals(fixedReturnType)) {
+            return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.doubleDataType);
+        } else if (Boolean.class.getName().equals(fixedReturnType)) {
+            return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.booleanDataType);
+        } else if (Integer.class.getName().equals(fixedReturnType)) {
+            return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.integerDataType);
+        } else if (Date.class.getName().equals(fixedReturnType)) {
+            return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.dateDataType);
+        }
+        return ModelHelper.getDataTypeForID(dataContainer, DataTypeLabels.stringDataType);
+    }
+
     protected Shell activeShell() {
         Shell activeShell = Display
                 .getDefault().getActiveShell();
         if (activeShell != null && activeShell.getParent() != null) {
             activeShell = activeShell.getParent().getShell();
         }
-        if(activeShell == null) {
+        if (activeShell == null) {
             activeShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
         return activeShell;
@@ -104,49 +124,9 @@ public class CreateVariableProposalListener implements IDataProposalListener {
         return Messages.createVariable;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isPageFlowContext()
-     */
-    @Override
-    public boolean isPageFlowContext() {
-        return isPageFlowContext;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
-     */
-    @Override
-    public void setIsPageFlowContext(final boolean isPageFlowContext) {
-        this.isPageFlowContext = isPageFlowContext;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
-     */
     @Override
     public void setEStructuralFeature(final EStructuralFeature feature) {
         this.feature = feature;
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-     */
-    @Override
-    public boolean isOverViewContext() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-     */
-    @Override
-    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
     @Override

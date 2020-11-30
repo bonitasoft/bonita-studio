@@ -25,6 +25,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvide
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
@@ -49,6 +50,7 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -142,7 +144,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                 // the popup shell on the Mac.
                                 // Check the active shell.
                                 final Shell activeShell = e.display.getActiveShell();
-                                if (activeShell == getShell() || infoPopup != null && infoPopup.getShell() == activeShell
+                                if (activeShell == getShell()
+                                        || infoPopup != null && infoPopup.getShell() == activeShell
                                         || linkClicked) {
                                     return;
                                 }
@@ -798,7 +801,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     final IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
                     if (listener instanceof ExpressionViewer) {
                         ((ExpressionViewer) listener)
-                                .manageNatureProviderAndAutocompletionProposal(((ExpressionViewer) listener).getInput());
+                                .manageNatureProviderAndAutocompletionProposal(
+                                        ((ExpressionViewer) listener).getInput());
                     }
                 }
                 if (proposalProvider != null) {
@@ -2388,35 +2392,44 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
     public String addNewData(final IProposalListener proposalListener) {
         String fixedReturnType = null;
+        String defaultValue = null;
         EStructuralFeature dataFeature = null;
         final Object[] listenerArray = proposalListeners.getListeners();
         for (int i = 0; i < listenerArray.length; i++) {
             final IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
             if (listener instanceof ExpressionViewer) {
                 final ExpressionViewer expViewer = (ExpressionViewer) listener;
-                isPageFlowContext = expViewer.isPageFlowContext();
                 final IExpressionNatureProvider expressionNatureProvider = expViewer.getExpressionNatureProvider();
                 if (expressionNatureProvider instanceof DataExpressionNatureProvider) {
                     dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
                 }
                 Expression exp = null;
+                IStructuredSelection selectedExpression = (IStructuredSelection) expViewer.getSelection();
+                if (selectedExpression.getFirstElement() instanceof Expression) {
+                    exp = (Expression) selectedExpression.getFirstElement();
+                    fixedReturnType = exp.getReturnType();
+                    if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())){
+                        defaultValue = exp.getContent();
+                    }
+                }
                 if (expViewer.getInput() instanceof Expression) {
                     exp = (Expression) expViewer.getInput();
                 } else if (expViewer.getInput() instanceof SearchIndex) {
                     exp = ((SearchIndex) expViewer.getInput()).getValue();
                 } else if (expViewer.getInput() instanceof SequenceFlow) {
                     exp = ((SequenceFlow) expViewer.getInput()).getCondition();
+                }else if (expViewer.getInput() instanceof Operation) {
+                    exp = ((Operation) expViewer.getInput()).getLeftOperand();
                 }
-                if (exp != null && exp.isReturnTypeFixed()) {
+                if (exp != null) {
                     fixedReturnType = exp.getReturnType();
                 }
             }
         }
-        proposalListener.setIsPageFlowContext(isPageFlowContext);
         if (dataFeature != null) {
             proposalListener.setEStructuralFeature(dataFeature);
         }
-        return proposalListener.handleEvent(context, fixedReturnType);
+        return proposalListener.handleEvent(context, fixedReturnType, defaultValue);
     }
 
     public boolean createShortcutZone() {

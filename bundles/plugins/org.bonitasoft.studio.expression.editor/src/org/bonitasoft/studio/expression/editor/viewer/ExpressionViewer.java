@@ -184,7 +184,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(
             new ExpressionItemProviderAdapterFactory());
     private String defaultReturnType;
-    private ExpressionNameResolver expressionNameResolver = new DefaultExpressionNameResolver();
+    protected ExpressionNameResolver expressionNameResolver = new DefaultExpressionNameResolver();
     private IStatus defaultStatus = ValidationStatus.info("");
     private IStatus status = defaultStatus;
 
@@ -543,8 +543,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected EditExpressionDialog createEditDialog() {
         final Object input = getInput();
         final EObject editInput = getEditInput(input);
-        final EditExpressionDialog dialog = createEditDialog(editInput);
-        return dialog;
+        return createEditDialog(editInput);
     }
 
     private EObject getEditInput(final Object input) {
@@ -562,9 +561,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
         final EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(), isPassword,
                 getSelectedExpression(), editInput,
-                getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
+                getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this, expressionNameResolver);
         dialog.setEditorFilters(filteredEditor);
-        dialog.setExpressionNameResolver(expressionNameResolver);
         return dialog;
     }
 

@@ -75,7 +75,7 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
      * java.lang.String)
      */
     @Override
-    public String handleEvent(final EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType, String defaultValue) {
         final PageFlow pageFlow = pageFlowFor(context);
         checkState(pageFlow != null);
         final CreateUIDArtifactOperation operation = doCreateFormOperation(pageDesignerURLFactory,

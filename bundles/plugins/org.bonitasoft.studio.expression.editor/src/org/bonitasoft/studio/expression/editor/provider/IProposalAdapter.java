@@ -18,34 +18,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.ISelection;
 
-/**
- * @author Romain Bioteau
- */
 public abstract class IProposalAdapter implements IProposalListener {
 
     @Override
-    public boolean isPageFlowContext() {
-        return false;
-    }
-
-    @Override
-    public void setIsPageFlowContext(final boolean isPageFlowContext) {
-
-    }
-
-    @Override
-    public String handleEvent(final EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType, String defaultValue) {
         return null;
-    }
-
-    @Override
-    public boolean isOverViewContext() {
-        return false;
-    }
-
-    @Override
-    public void setIsOverviewContext(final boolean isOverviewContext) {
-
     }
 
     @Override

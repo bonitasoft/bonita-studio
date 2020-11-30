@@ -134,7 +134,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
     protected void createNewForm() {
         final PageFlow pageflow = unwrap(selectionProvider.getSelection());
         if (shouldCreateNewContract(pageflow)) {
-            final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null);
+            final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null, null);
             final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
             repositoryStore.refresh();
             final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId, true);

@@ -96,7 +96,7 @@ public class FormReferenceExpressionViewer extends ExpressionViewer {
     @Override
     protected void editControlSelected(final ToolBar tb, final Event event, final EditingDomain editingDomain) {
         Preconditions.checkState(context instanceof FormMapping);
-        final String newPageId = createOrEditFormListener.handleEvent(context, null);
+        final String newPageId = createOrEditFormListener.handleEvent(context, null, null);
         if (newPageId != null) {
             pageStore.refresh();
             final WebPageFileStore webPageFileStore = pageStore.getChild(newPageId, true);

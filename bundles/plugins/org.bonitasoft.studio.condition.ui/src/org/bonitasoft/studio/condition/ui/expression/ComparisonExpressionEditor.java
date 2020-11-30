@@ -34,7 +34,6 @@ import org.bonitasoft.studio.condition.ui.i18n.Messages;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
-import org.bonitasoft.studio.expression.editor.constant.ConstantTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -63,6 +62,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -306,7 +306,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         typeCombo = new ComboViewer(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY);
         typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider());
-        typeCombo.setLabelProvider(new ConstantTypeLabelProvider());
+        typeCombo.setLabelProvider(new LabelProvider());
         typeCombo.setInput(new Object());
     }
 

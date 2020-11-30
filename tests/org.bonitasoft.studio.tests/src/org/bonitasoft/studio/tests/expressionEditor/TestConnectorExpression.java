@@ -123,14 +123,7 @@ public class TestConnectorExpression implements SWTBotConstants {
         bot.text().setText(id);
         bot.table().select(id);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        SWTBotShell activeShell = bot.activeShell();
-        bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, 0).click();
-        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConstantType();
-        bot.text().setText("Hello World");
-        assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
-        assertEquals("wrong return type", bot.comboBoxWithLabel("Return type").selection(), String.class.getName());
-        bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
+        bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).setText("Hello World");
         assertEquals("wrong value for input1", bot.textWithLabel("Input1").getText(), "Hello World");
         editGroovyEditor(1, "Input2", Boolean.class.getName(), "booleanScriptTest", "1==1;");
         editGroovyEditor(2, "Input3", Double.class.getName(), "doubleScriptTest", "(double)9.345+1.256;");
