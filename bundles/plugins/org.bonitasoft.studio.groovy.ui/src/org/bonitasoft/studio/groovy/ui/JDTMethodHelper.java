@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.data.provider;
+package org.bonitasoft.studio.groovy.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,6 +115,7 @@ public class JDTMethodHelper {
     private static boolean isValidGetterMethod(final List<IMethod> methods, final IMethod method) {
         try {
             return Flags.isPublic(method.getFlags())
+                    && !Flags.isStatic(method.getFlags())
                     && method.getParameterTypes().length == 0
                     && !method.isConstructor()
                     && !method.getReturnType().equals("V")
@@ -133,7 +134,7 @@ public class JDTMethodHelper {
         return JavaElementLabels.getElementLabel(m, JavaElementLabels.ALL_DEFAULT);
     }
 
-    public static List<IMethod> allPublicMethodWithoutParameterReturningNonVoid(final IType type)
+    public static List<IMethod> allPublicNonStaticMethodWithoutParameterReturningNonVoid(final IType type)
             throws JavaModelException {
         List<IMethod> methods = new ArrayList<>();
         if (isGroovySourceType(type)) {

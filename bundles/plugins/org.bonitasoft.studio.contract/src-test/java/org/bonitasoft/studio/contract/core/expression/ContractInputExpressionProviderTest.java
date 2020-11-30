@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.tuple;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.expression.ContractInputExpressionEditor;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -143,11 +142,6 @@ public class ContractInputExpressionProviderTest {
 
         assertThat(contractInputExpressionProvider.getIcon(ExpressionHelper.createConstantExpression("", "")))
                 .isNull();
-    }
-
-    @Test
-    public void should_getExpressionEditor_return_a_new_ContractInputExpressionEditor() throws Exception {
-        assertThat(contractInputExpressionProvider.getExpressionEditor(null, null)).isInstanceOf(ContractInputExpressionEditor.class);
     }
 
     private Contract creatContractWithInput(final String...inputNames) {

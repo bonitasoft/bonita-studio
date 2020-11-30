@@ -119,7 +119,7 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
 
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
-        return new ConnectorOutputExpressionEditor();
+        return null;
     }
 
 

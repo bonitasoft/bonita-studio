@@ -21,11 +21,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.DataTypeLabels;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -47,14 +45,12 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataDi
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -326,9 +322,7 @@ public class DataWizardIT {
         final BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
                 .selectPoolDataTab();
         final BotAddDataWizardPage addData = botDataPropertySection.addData();
-        SWTBotShell activeShell = bot.activeShell();
-        addData.editDefaultValueExpression().selectContractInputType().selectContractInput("input1 -- TEXT").ok();
-        activeShell.setFocus();
+        addData.setDefaultValueExpression("input1");
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
@@ -373,99 +367,6 @@ public class DataWizardIT {
                         .isTypeAvailable(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel))
                 .isFalse();
         editDefaultValueExpression.cancel();
-        activeShell.setFocus();
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
-    }
-
-    @Test
-    public void testDatacantBeInitializeByItself() {
-        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
-        final BotGefProcessDiagramEditor activeProcessDiagramEditor = diagramPerspective.activeProcessDiagramEditor();
-        activeProcessDiagramEditor.selectDiagram();
-        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("DataInit");
-
-        final EObject selectedSemanticElement = activeProcessDiagramEditor.selectElement("Step1")
-                .getSelectedSemanticElement();
-        final AbstractProcess proc = ModelHelper.getParentProcess(selectedSemanticElement);
-
-        // add data to Process
-        activeProcessDiagramEditor.selectElement(proc.getName());
-        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab()
-                .selectPoolDataTab();
-        BotAddDataWizardPage addData = botDataPropertySection.addData();
-        addData.setName("procVar_1").setType("Text").finishAndAdd().setName("procVar_2").setType("Integer").finish();
-
-        diagramPerspective.activeProcessDiagramEditor().addElementAfter("Step1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
-                PositionConstants.EAST);
-
-        // set data on step1 Task
-        diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab();
-        addData = botDataPropertySection.addData();
-        addData.setName("varS1_1").setType("Text").finishAndAdd().setName("varS1_2").setType("Integer").finish();
-
-        // set data on step2 Task
-        diagramPerspective.activeProcessDiagramEditor().selectElement("Step2");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab();
-        addData = botDataPropertySection.addData();
-        addData.setName("varS2_1").setType("Text").finishAndAdd().setName("varS2_2").setType("Integer").finish();
-        botApplicationWorkbenchWindow.save();
-
-        // check only process variables are available in tasks data edit expression
-        diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
-        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab();
-
-        // Test on var varS1_1
-        botDataPropertySection.processDataList().select("varS1_1" + " -- " + "Text");
-        BotEditDataDialog editDataWizardPage = botDataPropertySection.edit();
-        BotExpressionEditorDialog editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
-        BotTableWidget variableList = editDefaultValueExpression.selectVariableTab().variableList();
-
-        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text"))
-                .overridingErrorMessage("Error: Task data can't be initialized by itself").isFalse();
-        assertThat(variableList.containsItem("varS1_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error: Task data can't be initialized by a sibling task data").isFalse();
-
-        assertThat(variableList.containsItem("varS2_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error: Task data can't be initialized by task data").isFalse();
-        assertThat(variableList.containsItem("varS2_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error: Task data can't be initialized by task data").isFalse();
-
-        assertThat(variableList.containsItem("procVar_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount())
-                .isTrue();
-        assertThat(variableList.containsItem("procVar_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount())
-                .isTrue();
-
-        editDefaultValueExpression.cancel();
-        editDataWizardPage.cancel();
-
-        // Test on var varS1_2
-        botDataPropertySection.processDataList().select("varS1_2" + " -- " + "Integer");
-        editDataWizardPage = botDataPropertySection.edit();
-        SWTBotShell activeShell = bot.activeShell();
-
-        editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
-        variableList = editDefaultValueExpression.selectVariableTab().variableList();
-
-        assertThat(variableList.containsItem("varS1_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error: Task data can't be initialized by itself").isFalse();
-        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error: Task data can't be initialized by a sibling task data").isFalse();
-
-        assertThat(variableList.containsItem("varS2_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error: Task data can't be initialized by task data").isFalse();
-        assertThat(variableList.containsItem("procVar_1" + " -- " + "Text")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data").isTrue();
-
-        assertThat(variableList.containsItem("varS2_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error: Task data can't be initialized by task data").isFalse();
-        assertThat(variableList.containsItem("procVar_2" + " -- " + "Integer")).overridingErrorMessage(
-                "Error:  Task data sould be initialized by Process data").isTrue();
-
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
         activeShell.setFocus();
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }

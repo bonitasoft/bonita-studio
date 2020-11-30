@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.bonitasoft.studio.data.provider;
+package org.bonitasoft.studio.groovy.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;

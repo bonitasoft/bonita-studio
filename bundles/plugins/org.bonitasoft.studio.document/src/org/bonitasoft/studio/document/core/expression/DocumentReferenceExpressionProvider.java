@@ -84,7 +84,7 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
-        return new DocumentExpressionEditor();
+        return null;
     }
 
 }

@@ -11,8 +11,6 @@ package org.bonitasoft.studio.swtbot.framework.expression;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -39,29 +37,11 @@ public class BotExpressionEditorDialog extends BotDialog {
         return new BotScriptExpressionEditor(bot, this);
     }
 
-    public BotVariableExpressionEditor selectVariableTab() {
-        bot.tabItem("Variable").activate();
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
-        return new BotVariableExpressionEditor(bot, this);
-    }
-
 
     public BotConditionExpressionEditor selectConditionExpressionType() {
         bot.tabItem("Comparison").activate();
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
         return new BotConditionExpressionEditor(bot, this);
-    }
-
-    public BotContractInputExpressionEditor selectContractInputType() {
-        bot.tabItem(org.bonitasoft.studio.contract.i18n.Messages.contractInputTypeLabel).activate();
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
-        return new BotContractInputExpressionEditor(bot, this);
-    }
-
-    public BotParameterExpressionEditor selectParameterTab() {
-        bot.tabItem("Parameter").activate();
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
-        return new BotParameterExpressionEditor(bot, this);
     }
 
     public boolean isTypeAvailable(String type) {

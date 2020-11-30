@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IField;
@@ -109,7 +110,7 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
 
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         try {
-                            res.addAll(JDTMethodHelper.allPublicMethodWithoutParameterReturningNonVoid(type));
+                            res.addAll(JDTMethodHelper.allPublicNonStaticMethodWithoutParameterReturningNonVoid(type));
                         } catch (CoreException e) {
                             BonitaStudioLog.error(e);
                         }
