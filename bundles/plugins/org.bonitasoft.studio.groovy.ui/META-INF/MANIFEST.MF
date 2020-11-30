@@ -6,11 +6,7 @@ Bundle-Version: 7.13.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
-Export-Package: org.bonitasoft.studio.groovy.ui;
-  x-friends:="org.bonitasoft.studio.tests.ex,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.groovy.tests,
-   org.bonitasoft.studio.repository.tests.ex",
+Export-Package: org.bonitasoft.studio.groovy.ui,
  org.bonitasoft.studio.groovy.ui.dialog,
  org.bonitasoft.studio.groovy.ui.handler,
  org.bonitasoft.studio.groovy.ui.job,

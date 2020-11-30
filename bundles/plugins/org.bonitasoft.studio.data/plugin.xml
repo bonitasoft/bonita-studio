@@ -6,9 +6,6 @@
       <expressionProvider
             providerClass="org.bonitasoft.studio.data.provider.DataExpressionProvider">
       </expressionProvider>
-      <expressionProvider
-            providerClass="org.bonitasoft.studio.data.provider.JavaExpressionProvider">
-      </expressionProvider>
    </extension>
    <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyTabs">

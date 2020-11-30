@@ -80,7 +80,6 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
@@ -697,8 +696,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         if (condition != null) {
             if (expressionType == ExpressionConstants.VARIABLE_TYPE) {
                 // edit button
-                bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-                setVariableExpression(bot, condition);
+                bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).setText(condition);
             } else if (expressionType == ExpressionConstants.SCRIPT_TYPE) {
                 // edit button
                 bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
@@ -798,26 +796,6 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.styledText().setText(expression);
         if (returnTypeOfScript != null) {
             bot.comboBoxWithLabel(returnType).setText(returnTypeOfScript);
-        }
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
-        bot.button(IDialogConstants.OK_LABEL).click();
-    }
-
-    /**
-     * @param bot
-     * @param variableName
-     */
-    public static void setVariableExpression(final SWTGefBot bot, final String variableName) {
-        bot.waitUntil(Conditions.shellIsActive(editExpression));
-        new BotExpressionEditorDialog(bot, bot.activeShell()).selectVariableTab();
-        // select the variable
-        final SWTBotTable tableVar = bot.table();
-        for (int i = 0; i < tableVar.rowCount(); i++) {
-            final SWTBotTableItem tableItem = tableVar.getTableItem(i);
-            if (tableItem.getText().startsWith(variableName + " --")) {
-                tableItem.select();
-                break;
-            }
         }
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.OK_LABEL)));
         bot.button(IDialogConstants.OK_LABEL).click();

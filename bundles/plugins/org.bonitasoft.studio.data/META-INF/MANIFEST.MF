@@ -45,7 +45,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.diagram.custom;bundle-version="7.1.0",
  org.eclipse.e4.core.di,
- org.bonitasoft.studio.ui;bundle-version="7.6.0"
+ org.bonitasoft.studio.ui;bundle-version="7.6.0",
+ org.bonitasoft.studio.groovy.ui;bundle-version="7.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.data.i18n;

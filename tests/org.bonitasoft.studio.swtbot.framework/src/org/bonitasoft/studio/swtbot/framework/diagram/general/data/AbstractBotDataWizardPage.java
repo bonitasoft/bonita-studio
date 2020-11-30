@@ -8,8 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swt.widgets.Display;
@@ -26,8 +26,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
  * @author Joachim Segala
  */
 public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
-
-    private SWTBotShell activeShell;
 
 	public AbstractBotDataWizardPage(final SWTGefBot bot) {
         super(bot);
@@ -73,9 +71,14 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
     }
 
     public BotExpressionEditorDialog editDefaultValueExpression() {
-    	activeShell = bot.activeShell();
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+    	SWTBotShell activeShell = bot.activeShell();
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
         return new BotExpressionEditorDialog(bot,activeShell);
+    }
+    
+    public AbstractBotDataWizardPage setDefaultValueExpression(String value) {
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).setText(value);
+        return this;
     }
     
     

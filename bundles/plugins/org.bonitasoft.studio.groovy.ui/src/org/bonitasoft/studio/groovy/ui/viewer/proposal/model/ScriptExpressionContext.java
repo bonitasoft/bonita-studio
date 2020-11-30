@@ -1,9 +1,15 @@
 package org.bonitasoft.studio.groovy.ui.viewer.proposal.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +27,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -31,6 +38,7 @@ import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.groovy.library.GroovyFunction;
 import org.bonitasoft.studio.groovy.library.IFunction;
 import org.bonitasoft.studio.groovy.ui.Activator;
+import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.CodeTemplatesProvider;
 import org.bonitasoft.studio.model.process.Data;
@@ -48,6 +56,25 @@ import org.eclipse.jface.text.templates.Template;
 
 public class ScriptExpressionContext {
 
+    private static final Set<String> PRIMITIVE_TYPES = new HashSet<>();
+    static {
+        PRIMITIVE_TYPES.add(String.class.getName());
+        PRIMITIVE_TYPES.add(Boolean.class.getName());
+        PRIMITIVE_TYPES.add(Date.class.getName());
+        PRIMITIVE_TYPES.add(Integer.class.getName());
+        PRIMITIVE_TYPES.add(Long.class.getName());
+        PRIMITIVE_TYPES.add(Double.class.getName());
+        PRIMITIVE_TYPES.add(Float.class.getName());
+        PRIMITIVE_TYPES.add(Map.class.getName());
+        PRIMITIVE_TYPES.add(List.class.getName());
+        PRIMITIVE_TYPES.add(Set.class.getName());
+        PRIMITIVE_TYPES.add(Collection.class.getName());
+        PRIMITIVE_TYPES.add(Short.class.getName());
+        PRIMITIVE_TYPES.add(Byte.class.getName());
+        PRIMITIVE_TYPES.add(BigDecimal.class.getName());
+    }
+    
+    
     private List<Category> categories = new ArrayList<>();
 
     public static ScriptExpressionContext computeProposals(RepositoryAccessor repositoryAccessor,
@@ -107,8 +134,9 @@ public class ScriptExpressionContext {
         addProposals(input, docCategory, repositoryAccessor, processContext);
 
         IExpressionProvider documentRefExressionProvider = getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
-        Category docRefCategory = context.addCategory(new Category(ExpressionConstants.DOCUMENT_REF_TYPE, Messages.documents,
-                documentRefExressionProvider.getTypeIcon()));
+        Category docRefCategory = context
+                .addCategory(new Category(ExpressionConstants.DOCUMENT_REF_TYPE, Messages.documents,
+                        documentRefExressionProvider.getTypeIcon()));
         docRefCategory.setDescription(Messages.documentsCategoryDescription);
         addProposals(input, docRefCategory, repositoryAccessor, processContext);
 
@@ -186,20 +214,20 @@ public class ScriptExpressionContext {
 
     private static Optional<Query> findQuery(IMethod method, BusinessObjectModel bdm) {
         String daoFullyQualifiedName = method.getDeclaringType().getFullyQualifiedName();
-         return findBusinessObjectFromDAO(daoFullyQualifiedName, bdm)
+        return findBusinessObjectFromDAO(daoFullyQualifiedName, bdm)
                 .flatMap(bo -> bo.getQueries().stream()
                         .filter(q -> q.getName().equals(method.getElementName()))
                         .findFirst())
                 .filter(Objects::nonNull);
     }
-    
+
     private static Optional<BusinessObject> findBusinessObjectFromDAO(String daoType, BusinessObjectModel bdm) {
         String businessObjectQualifiedName = daoType.substring(0, daoType.length() - 3);
         return bdm.getBusinessObjects().stream()
                 .filter(bo -> bo.getQualifiedName().equals(businessObjectQualifiedName))
                 .findFirst();
     }
-    
+
     private static String createFunctionPattern(IFunction function) {
         String toInsert = "";
         if (function.isStatic()) {
@@ -256,26 +284,32 @@ public class ScriptExpressionContext {
         String type = scriptVariable.getType();
         if (isBusinessObject(type, repositoryAccessor)) {
             addBusinessVariableProposalChildren(scriptProposal, repositoryAccessor);
-        }else if(List.class.getName().equals(type)){ 
-            findData(scriptVariable.getName(),processContext)
-                .ifPresent( d -> scriptProposal.setType(DataUtil.getDisplayTypeName(d)));
-            findDocument(scriptVariable.getName(),processContext)
-            .ifPresent( d -> scriptProposal.setType("List<Document>"));
+        } else if (isJavaObject(type)) {
+            addGetterProposalChildren(scriptProposal, repositoryAccessor);
+        } else if (List.class.getName().equals(type)) {
+            findData(scriptVariable.getName(), processContext)
+                    .ifPresent(d -> scriptProposal.setType(DataUtil.getDisplayTypeName(d)));
+            findDocument(scriptVariable.getName(), processContext)
+                    .ifPresent(d -> scriptProposal.setType("List<Document>"));
         }
         return scriptProposal;
     }
 
-    private static Optional<Data> findData(String name, EObject processContext) {
-      return ModelHelper.getAccessibleData(processContext, true).stream()
-       .filter(d -> Objects.equals(d.getName(), name))
-       .findFirst();
+    private static boolean isJavaObject(String type) {
+        return !PRIMITIVE_TYPES.contains(type);
     }
-    
+
+    private static Optional<Data> findData(String name, EObject processContext) {
+        return ModelHelper.getAccessibleData(processContext, true).stream()
+                .filter(d -> Objects.equals(d.getName(), name))
+                .findFirst();
+    }
+
     private static Optional<Document> findDocument(String name, EObject processContext) {
         return ModelHelper.getParentPool(processContext).getDocuments().stream()
-         .filter(d -> Objects.equals(d.getName(), name))
-         .findFirst();
-      }
+                .filter(d -> Objects.equals(d.getName(), name))
+                .findFirst();
+    }
 
     private static void addDAOProposals(List<ScriptVariable> input, Category category, BusinessObjectModel bdm) {
         input.stream()
@@ -319,6 +353,36 @@ public class ScriptExpressionContext {
                 .isPresent();
     }
 
+    private static void addGetterProposalChildren(ScriptProposal scriptProposal,
+            RepositoryAccessor repositoryAccessor) {
+        final IJavaProject project = repositoryAccessor.getCurrentRepository().getJavaProject();
+        try {
+            IType type = project.findType(scriptProposal.getType());
+            if(type != null) {
+                JDTMethodHelper.allPublicNonStaticMethodWithoutParameterReturningNonVoid(type)
+                .stream()
+                .map(ScriptExpressionContext::toProposal)
+                .filter(Objects::nonNull)
+                .forEach(scriptProposal::addChild);
+            }
+        } catch (JavaModelException e) {
+            BonitaStudioLog.error(e);
+        }
+       
+    }
+    
+    private static ScriptProposal toProposal(IMethod method) {
+        try {
+            String qualifiedType = JDTMethodHelper.retrieveQualifiedType(method.getReturnType(), method.getDeclaringType());
+            ScriptProposal scriptProposal = new ScriptProposal(method.getElementName()+"()", qualifiedType);
+            scriptProposal.setDescription(method.getAttachedJavadoc(AbstractRepository.NULL_PROGRESS_MONITOR));
+            return scriptProposal;
+        } catch (JavaModelException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+    
     private static void addBusinessVariableProposalChildren(ScriptProposal scriptProposal,
             RepositoryAccessor repositoryAccessor) {
         getBusinessObjectModelRepository(repositoryAccessor)

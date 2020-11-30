@@ -47,9 +47,14 @@ import org.eclipse.ui.PlatformUI;
 public class PojoBrowserContentProvider implements ITreeContentProvider {
 
     private final AbstractRepository repository;
+    private String type;
 
     public PojoBrowserContentProvider() {
-        repository = RepositoryManager.getInstance().getCurrentRepository();
+       this(RepositoryManager.getInstance().getCurrentRepository());
+    }
+    
+    public PojoBrowserContentProvider(AbstractRepository repository) {
+        this.repository = repository;
     }
 
     @Override
@@ -59,17 +64,22 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
     @Override
     public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
     }
+    
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @Override
     public Object[] getElements(final Object inputElement) {
         final IJavaProject project = repository.getJavaProject();
-        IType type = null;;
+        String className = type == null ? inputElement.getClass().getName() : type;
+        IType javaType = null;
         try {
-            type = project.findType(inputElement.getClass().getName());
+            javaType = project.findType(className);
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(e);
         }
-        final Pair<IMember, Object> pair = new Pair<IMember, Object>(type, inputElement);
+        final Pair<IMember, Object> pair = new Pair<>(javaType, inputElement);
         return new Object[] { pair };
     }
 

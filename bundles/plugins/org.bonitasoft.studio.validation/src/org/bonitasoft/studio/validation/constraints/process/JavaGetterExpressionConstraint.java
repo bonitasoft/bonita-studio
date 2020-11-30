@@ -22,7 +22,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.provider.JDTMethodHelper;
+import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.JavaObjectData;
@@ -72,7 +72,7 @@ public class JavaGetterExpressionConstraint extends AbstractLiveValidationMarker
             return ctx.createFailureStatus(NLS.bind(Messages.failedToRetrieveExpressionType, dataClassname));
         }
         final String methodName = expression.getContent();
-        final Optional<IMethod> foundMethod = tryFind(JDTMethodHelper.allPublicMethodWithoutParameterReturningNonVoid(type), methodWithName(methodName));
+        final Optional<IMethod> foundMethod = tryFind(JDTMethodHelper.allPublicNonStaticMethodWithoutParameterReturningNonVoid(type), methodWithName(methodName));
         if (!foundMethod.isPresent()) {
             return ctx.createFailureStatus(NLS.bind(Messages.methodDoesnotExist, methodName, dataName(expression)));
         }

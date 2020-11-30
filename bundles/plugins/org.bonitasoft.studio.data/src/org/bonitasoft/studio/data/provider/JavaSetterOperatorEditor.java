@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.provider.IOperatorEditor;
+import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.JavaObjectData;

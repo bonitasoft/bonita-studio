@@ -149,7 +149,7 @@ public class DataExpressionProvider implements IExpressionProvider {
 
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
-        return new DataExpressionEditor();
+        return null;
     }
 
 }

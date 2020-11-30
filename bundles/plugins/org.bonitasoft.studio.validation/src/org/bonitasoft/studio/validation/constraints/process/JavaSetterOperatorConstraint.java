@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.provider.JDTMethodHelper;
+import org.bonitasoft.studio.groovy.ui.JDTMethodHelper;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;

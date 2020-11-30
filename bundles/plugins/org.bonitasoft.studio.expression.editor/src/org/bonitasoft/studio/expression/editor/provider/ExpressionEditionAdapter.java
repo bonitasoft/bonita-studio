@@ -17,12 +17,26 @@ package org.bonitasoft.studio.expression.editor.provider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 
 public class ExpressionEditionAdapter {
-
+    
+    private static final Set<String> SIMPLE_EXPRESSION_TYPE_UPDATE = new HashSet<>();
+    static {
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.VARIABLE_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.PARAMETER_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.DOCUMENT_REF_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.DOCUMENT_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.DOCUMENT_LIST_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.BUSINESS_DATA_TYPE);
+        SIMPLE_EXPRESSION_TYPE_UPDATE.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
+    }
+    
     private ExpressionEditionAdapter() {
     }
 
@@ -30,6 +44,10 @@ public class ExpressionEditionAdapter {
         String type = expression.getType();
         if (ExpressionConstants.CONSTANT_TYPE.equals(type)) {
             return adaptConstantExpression(expression);
+        }
+        if (SIMPLE_EXPRESSION_TYPE_UPDATE.contains(type)) {
+            expression.setType(ExpressionConstants.SCRIPT_TYPE);
+            expression.setInterpreter(ExpressionConstants.GROOVY);
         }
         return expression;
     }
@@ -45,7 +63,7 @@ public class ExpressionEditionAdapter {
         }
         return expression;
     }
-
+    
     private static boolean isADateReturnType(String returnType) {
         return LocalDate.class.getName().equals(returnType)
                 || LocalDateTime.class.getName().equals(returnType)

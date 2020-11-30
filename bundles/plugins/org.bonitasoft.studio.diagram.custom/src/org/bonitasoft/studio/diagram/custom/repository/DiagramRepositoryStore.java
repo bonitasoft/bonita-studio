@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -45,6 +46,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.RemoveDanglingReferences;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -54,6 +56,7 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -379,8 +382,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                         }
                     }
                 } catch (ReadFileStoreException e) {
-                   BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
-                   return null;
+                    BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
+                    return null;
                 }
             }
         }
@@ -450,6 +453,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
             diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
             updateConfigurationId(diagramResource, diagram);
+            migrateJavaExpressionType(diagram);
 
             ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
@@ -482,6 +486,21 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                 diagramResource.delete(Collections.emptyMap());
             }
         }
+    }
+
+    private void migrateJavaExpressionType(MainProcess diagram) {
+                    ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
+                    modelSearch.getAllItemsOfType(diagram, Expression.class)
+                            .stream()
+                            .filter(exp -> ExpressionConstants.JAVA_TYPE.equals(exp.getType()))
+                            .forEach(expression -> toScriptExpression(expression));
+    }
+    private void toScriptExpression(Expression exp) {
+        exp.setType(ExpressionConstants.SCRIPT_TYPE);
+        exp.setInterpreter(ExpressionConstants.GROOVY);
+        exp.setContent( String.format("%s.%s()",
+                ((Element) exp.getReferencedElements().get(0)).getName(),
+                exp.getContent()));
     }
 
     private boolean isFormDiagram(EObject eObject) {
@@ -558,15 +577,17 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public void close() {
-         BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
         super.close();
     }
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null && filename.endsWith(".proc")) {
-            return new DiagramCompatibilityValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)).validate(inputStream);
+            return new DiagramCompatibilityValidator(
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))
+                            .validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

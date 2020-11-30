@@ -72,8 +72,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.commands.ICommandService;
@@ -81,12 +79,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
-import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptor;
-import org.eclipse.ui.internal.navigator.extensions.NavigatorViewerDescriptorManager;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
-import org.eclipse.ui.navigator.INavigatorViewerDescriptor;
 import org.eclipse.ui.navigator.NavigatorActionService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
@@ -122,18 +117,18 @@ public class BonitaProjectExplorer extends CommonNavigator {
         super.createPartControl(aParent);
         IActionBars actionBars = getViewSite().getActionBars();
         IToolBarManager toolBarManager = actionBars.getToolBarManager();
-       Stream.of(toolBarManager.getItems())
-           .filter(ActionContributionItem.class::isInstance)
-           .map(ActionContributionItem.class::cast)
-           .filter(item -> item.getAction() instanceof LinkEditorAction)
-           .findFirst()
-           .ifPresent(toolBarManager::remove);
-       toolBarManager.update(true);
+        Stream.of(toolBarManager.getItems())
+                .filter(ActionContributionItem.class::isInstance)
+                .map(ActionContributionItem.class::cast)
+                .filter(item -> item.getAction() instanceof LinkEditorAction)
+                .findFirst()
+                .ifPresent(toolBarManager::remove);
+        toolBarManager.update(true);
         setLinkingEnabled(true);
         activateNestedProjectsState();
         getNavigatorContentService().bindExtensions(
                 new String[] { "org.bonitasoft.studio.application.extendedResourceLinkHelper" }, false);
-       
+
         initContextMenu();
         getCommonViewer().expandToLevel(2);
         Job.getJobManager().addJobChangeListener(openIntroListener);
@@ -176,7 +171,8 @@ public class BonitaProjectExplorer extends CommonNavigator {
                         throw new RuntimeException("Fail to launch bos import command", e);
                     }
                 } else {
-                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importDragDropInfoTitle,
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            Messages.importDragDropInfoTitle,
                             Messages.importDragDropInfo);
                 }
             }
