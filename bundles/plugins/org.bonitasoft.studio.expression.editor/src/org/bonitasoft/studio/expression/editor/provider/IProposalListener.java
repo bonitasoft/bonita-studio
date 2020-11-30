@@ -8,18 +8,13 @@
  *******************************************************************************/
 package org.bonitasoft.studio.expression.editor.provider;
 
-import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.ISelection;
 
-/**
- * @author Maxence Raoux
- *
- */
-public interface IProposalListener extends IBonitaVariableContext {
+public interface IProposalListener {
 
-    public String handleEvent(EObject context, String fixedReturnType);
+    public String handleEvent(EObject context, String fixedReturnType, String defaultValue);
 
     public void setEStructuralFeature(EStructuralFeature feature);
 

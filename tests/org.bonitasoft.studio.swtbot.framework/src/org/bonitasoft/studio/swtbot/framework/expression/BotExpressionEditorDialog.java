@@ -45,11 +45,6 @@ public class BotExpressionEditorDialog extends BotDialog {
         return new BotVariableExpressionEditor(bot, this);
     }
 
-    public BotConstantExpressionEditor selectConstantType() {
-        bot.tabItem("Constant").activate();
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Text.class)));
-        return new BotConstantExpressionEditor(bot, this);
-    }
 
     public BotConditionExpressionEditor selectConditionExpressionType() {
         bot.tabItem("Comparison").activate();

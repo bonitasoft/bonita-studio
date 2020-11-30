@@ -53,7 +53,7 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
     private boolean multipleData;
 
     @Override
-    public String handleEvent(EObject context, final String fixedReturnType) {
+    public String handleEvent(EObject context, final String fixedReturnType, String defaultValue) {
         Assert.isNotNull(context);
         while (!(context instanceof Pool)) {
             context = context.eContainer();
@@ -97,47 +97,8 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
         return Messages.createBusinessDataVariable;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isPageFlowContext()
-     */
-    @Override
-    public boolean isPageFlowContext() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
-     */
-    @Override
-    public void setIsPageFlowContext(final boolean isPageFlowContext) {
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
-     */
     @Override
     public void setEStructuralFeature(final EStructuralFeature feature) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-     */
-    @Override
-    public boolean isOverViewContext() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-     */
-    @Override
-    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
     @Override

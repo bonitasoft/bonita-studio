@@ -274,7 +274,7 @@ public class DataWizardIT {
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON).click();
         assertEquals("Expression return type should be " + String.class.getName(), String.class.getName(),
                 bot.comboBoxWithLabel(Messages.returnType).getText());
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
         activeShell.setFocus();
         bot.comboBoxWithLabel(Messages.datatypeLabel).setSelection(DataTypeLabels.integerDataType);
 
@@ -286,7 +286,7 @@ public class DataWizardIT {
                 bot.comboBoxWithLabel(Messages.returnType)
                         .getText());
 
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
         activeShell.setFocus();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();

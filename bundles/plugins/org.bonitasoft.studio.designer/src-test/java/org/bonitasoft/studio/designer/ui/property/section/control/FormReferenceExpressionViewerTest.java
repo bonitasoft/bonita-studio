@@ -81,11 +81,11 @@ public class FormReferenceExpressionViewerTest {
 
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build();
         formReferenceExpressionViewer.setInput(mapping);
-        when(createOrEditNewFormProposalListener.handleEvent(mapping, null)).thenReturn(null);
+        when(createOrEditNewFormProposalListener.handleEvent(mapping, null, null)).thenReturn(null);
         when(webPageRepositoryStore.getChild("a-page-id", true)).thenReturn(selectedPage);
         formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
 
-        Mockito.verify(createOrEditNewFormProposalListener).handleEvent(mapping, null);
+        Mockito.verify(createOrEditNewFormProposalListener).handleEvent(mapping, null, null);
         Mockito.verify(webPageRepositoryStore, Mockito.never()).refresh();
         ExpressionAssert.assertThat(mapping.getTargetForm()).hasContent("a-page-id");
     }
@@ -99,7 +99,7 @@ public class FormReferenceExpressionViewerTest {
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();
         formReferenceExpressionViewer.setInput(mapping);
 
-        when(createOrEditNewFormProposalListener.handleEvent(mapping, null)).thenReturn("a-new-page-id");
+        when(createOrEditNewFormProposalListener.handleEvent(mapping, null, null)).thenReturn("a-new-page-id");
         when(webPageRepositoryStore.getChild("a-new-page-id", true)).thenReturn(selectedPage);
         formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
 

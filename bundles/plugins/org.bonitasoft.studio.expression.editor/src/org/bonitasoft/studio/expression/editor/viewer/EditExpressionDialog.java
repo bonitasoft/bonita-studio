@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionEditionAdapter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -88,15 +89,22 @@ public class EditExpressionDialog extends TrayDialog {
             final EObject context,
             final EditingDomain domain,
             final ViewerFilter[] viewerTypeFilters,
-            final ExpressionViewer expressionViewer) {
+            final ExpressionViewer expressionViewer,
+            ExpressionNameResolver expressionNameResolver) {
         super(parentShell);
         this.inputExpression = inputExpression;
+        this.expressionNameResolver = expressionNameResolver;
         if (this.inputExpression == null) {
             this.inputExpression = ExpressionFactory.eINSTANCE.createExpression();
             this.inputExpression.setType(ExpressionConstants.CONSTANT_TYPE);
         }
         expressionUpdater = new EMFModelUpdater<Expression>().from(this.inputExpression);
-        this.inputExpression = expressionUpdater.getWorkingCopy();
+        boolean shouldClearName = shouldClearName();
+        this.inputExpression = ExpressionEditionAdapter.adapt(expressionUpdater.getWorkingCopy());
+        if(shouldClearName) {
+            this.inputExpression.setName(null);
+        }
+        this.inputExpression.setName(expressionNameResolver.getName(this.inputExpression));
         this.context = context;
         this.domain = domain;
         this.viewerTypeFilters = viewerTypeFilters;
@@ -343,10 +351,6 @@ public class EditExpressionDialog extends TrayDialog {
 
     public void setEditorFilters(final Set<String> filteredEditor) {
         this.filteredEditor = filteredEditor;
-    }
-
-    public void setExpressionNameResolver(ExpressionNameResolver expressionNameResolver) {
-        this.expressionNameResolver = expressionNameResolver;
     }
 
 }

@@ -35,10 +35,9 @@ public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
     @Override
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
-        final GroovyOnlyEditExpressionDialog groovyOnlyEditExpressionDialog = new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword,
+        return new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword,
                 getSelectedExpression(), editInput, getEditingDomain(),
-                filters.toArray(new ViewerFilter[filters.size()]), this);
-        return groovyOnlyEditExpressionDialog;
+                filters.toArray(new ViewerFilter[filters.size()]), this, expressionNameResolver);
     }
 
     @Override

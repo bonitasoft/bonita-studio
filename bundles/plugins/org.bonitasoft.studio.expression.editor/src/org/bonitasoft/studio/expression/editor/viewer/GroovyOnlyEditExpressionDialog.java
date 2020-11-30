@@ -33,8 +33,9 @@ public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
     protected GroovyOnlyEditExpressionDialog(final Shell parentShell, final boolean isPassword,
             final Expression inputExpression, final EObject context,
             final EditingDomain domain, final ViewerFilter[] viewerTypeFilters,
-            final ExpressionViewer expressionViewer) {
-        super(parentShell, isPassword, inputExpression, context, domain, viewerTypeFilters, expressionViewer);
+            final ExpressionViewer expressionViewer,
+            ExpressionNameResolver expressionNameResolver) {
+        super(parentShell, isPassword, inputExpression, context, domain, viewerTypeFilters, expressionViewer, expressionNameResolver);
         this.inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
     }
 

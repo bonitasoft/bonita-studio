@@ -15,8 +15,6 @@
 package org.bonitasoft.studio.document.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +77,7 @@ public class DocumentProposalListenerTest extends DocumentProposalListener {
         when(mockedDocumentWizardDialog.open()).thenReturn(Dialog.OK);
         when(mockedDocumentWizard.getDocumentWorkingCopy()).thenReturn(documentToReturn);
 
-        final String result = documentProposalListener.handleEvent(context, null);
+        final String result = documentProposalListener.handleEvent(context, null, null);
         assertThat(result).isEqualTo(documentToReturn.getName());
 
     }
@@ -89,24 +87,12 @@ public class DocumentProposalListenerTest extends DocumentProposalListener {
 
         when(mockedDocumentWizardDialog.open()).thenReturn(Dialog.OK);
         when(mockedDocumentWizard.getDocumentWorkingCopy()).thenReturn(null);
-        String result = documentProposalListener.handleEvent(context, null);
+        String result = documentProposalListener.handleEvent(context, null, null);
         assertThat(result).isNull();
 
         when(mockedDocumentWizardDialog.open()).thenReturn(Dialog.CANCEL);
-        result = documentProposalListener.handleEvent(context, null);
+        result = documentProposalListener.handleEvent(context, null, null);
         assertThat(result).isNull();
-    }
-
-    @Test
-    public void test_is_PageFLowContext() {
-        documentProposalListener.setIsPageFlowContext(true);
-        assertTrue(documentProposalListener.isPageFlowContext());
-    }
-
-    @Test
-    public void test_is_not_PageFLowContext() {
-        documentProposalListener.setIsPageFlowContext(false);
-        assertFalse(documentProposalListener.isPageFlowContext());
     }
 
 }

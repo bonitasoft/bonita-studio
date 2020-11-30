@@ -58,7 +58,7 @@ public class ConstantExpressionProvider implements IExpressionProvider {
      */
     @Override
     public Image getIcon(Expression expression) {
-        return null ;//Pics.getImage(PicsConstants.constant);
+        return null;
     }
 
     /* (non-Javadoc)
@@ -92,7 +92,7 @@ public class ConstantExpressionProvider implements IExpressionProvider {
 
     @Override
     public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
-        return new ConstantExpressionEditor();
+        return null;
     }
 
 

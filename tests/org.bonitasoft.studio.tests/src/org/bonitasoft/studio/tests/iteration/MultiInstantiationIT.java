@@ -44,7 +44,6 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccu
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotStandardLoopTypeStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
-import org.bonitasoft.studio.swtbot.framework.expression.BotConstantExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
@@ -85,9 +84,9 @@ public class MultiInstantiationIT implements SWTBotConstants {
         botExpressionEditorDialog.ok();
 
         botExpressionEditorDialog = botStandardLoopType.editMaximumLoopExpression();
-        final BotConstantExpressionEditor botConstantExpressionEditor = botExpressionEditorDialog.selectConstantType();
-        botConstantExpressionEditor.setValue("3");
-        botExpressionEditorDialog.ok();
+        botExpressionEditorDialog.selectScriptTab()
+           .setScriptContent("3")
+           .ok();
 
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.STANDARD);
         MultiInstantiableAssert.assertThat(multiInstantiable).hasTestBefore(false);
@@ -95,8 +94,8 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 .hasContent("instanceCount < 5")
                 .hasType(ExpressionConstants.SCRIPT_TYPE)
                 .hasReturnType(Boolean.class.getName());
-        ExpressionAssert.assertThat(multiInstantiable.getLoopMaximum()).hasName("3").hasContent("3")
-                .hasType(ExpressionConstants.CONSTANT_TYPE)
+        ExpressionAssert.assertThat(multiInstantiable.getLoopMaximum()).hasName("maximumLoop()").hasContent("3")
+                .hasType(ExpressionConstants.SCRIPT_TYPE)
                 .hasReturnType(Integer.class.getName());
     }
 
@@ -141,13 +140,15 @@ public class MultiInstantiationIT implements SWTBotConstants {
             }
         });
 
-        botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("8").ok();
+        botNumberBasedStackPanel.editNumberOfInstances().selectScriptTab()
+            .setScriptContent("8")
+            .ok();
         bot.waitUntil(new AssertionCondition() {
 
             @Override
             protected void makeAssert() throws Exception {
-                ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("8").hasContent("8")
-                        .hasType(ExpressionConstants.CONSTANT_TYPE)
+                ExpressionAssert.assertThat(multiInstantiable.getCardinalityExpression()).hasName("numberOfInstancesToCreate()").hasContent("8")
+                        .hasType(ExpressionConstants.SCRIPT_TYPE)
                         .hasReturnType(Integer.class.getName());
             }
         });
@@ -181,7 +182,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 .addData();
         BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer")
                 .editDefaultValueExpression();
-        botExpressionEditorDialog.selectConstantType().setValue("20").ok();
+        botExpressionEditorDialog.selectScriptTab().setScriptContent("20").ok();
         addDataBot.finish();
 
         final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective
@@ -196,14 +197,14 @@ public class MultiInstantiationIT implements SWTBotConstants {
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botProcessDiagramPerspective.getDiagramPropertiesPart()
                 .selectGeneralTab()
                 .selectIterationTab().selectParallelType().definedNumberOfInstances();
-        botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("15").ok();
+        botNumberBasedStackPanel.editNumberOfInstances().selectScriptTab().setScriptContent("15").ok();
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isThereTickets")
                 .setScriptContent("nbTicketsAvailable == 0").ok();
 
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
-        botExpressionEditorDialog.selectConstantType().setValue("0").ok();
+        botExpressionEditorDialog.selectScriptTab().setScriptContent("0").ok();
         addDataBot.finish();
         drawDiagram.selectElement("Step1");
 
@@ -311,7 +312,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         addDataBot = (BotAddDataWizardPage) addDataBot.setName("vipName").setType("Text").finishAndAdd();
-        addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectConstantType().setValue("0")
+        addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectScriptTab().setScriptContent("0")
                 .ok();
         addDataBot.finish();
 
@@ -414,7 +415,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
                 .addData();
         BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer")
                 .editDefaultValueExpression();
-        botExpressionEditorDialog.selectConstantType().setValue("20").ok();
+        botExpressionEditorDialog.selectScriptTab().setScriptContent("20").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
         botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
                 .editDefaultValueExpression();
@@ -440,7 +441,7 @@ public class MultiInstantiationIT implements SWTBotConstants {
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectDataTab().selectLocalDataTab()
                 .addData();
         botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
-        botExpressionEditorDialog.selectConstantType().setValue("0").ok();
+        botExpressionEditorDialog.selectScriptTab().setScriptContent("0").ok();
         addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
 
         addDataBot.setName("vipName").setType("Text").finish();

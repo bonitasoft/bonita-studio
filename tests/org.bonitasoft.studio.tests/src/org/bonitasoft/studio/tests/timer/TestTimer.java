@@ -415,24 +415,13 @@ public class TestTimer implements SWTBotConstants {
         // wait for "Edit Expression" shell
         bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
 
-        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConstantType();
+        new BotExpressionEditorDialog(bot, bot.activeShell())
+        .selectScriptTab()
+        .setScriptContent("120000")
+        .setName("120000")
+        .setReturnType(Long.class.getName())
+        .ok();
 
-        final Matcher<Widget> matcher = WidgetMatcherFactory.withLabel("Value");
-
-        bot.waitUntil(Conditions.waitForWidget(matcher));
-        bot.textWithLabel("Value").setText("120000");
-
-        Assert.assertEquals("Error: Wrong Timer Condition setted", "120000", bot.textWithLabel("Value").getText());
-
-        // "Return type" , "java.lang.Long"
-        final SWTBotCombo returnTypeCombo = bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType);
-        returnTypeCombo.setSelection(Long.class.getName());
-
-        Assert.assertEquals("Error: Wrong Timer Condition return type setted", Long.class.getName(),
-                returnTypeCombo.getText());
-
-        // in the shell editor for 'Every hour'
-        bot.button(IDialogConstants.OK_LABEL).click();
         activeShell.setFocus();
 
         Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());

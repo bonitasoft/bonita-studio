@@ -103,7 +103,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
     public void should_handleEvent_returns_new_pageid_and_open_page_designer_with_new_id() throws Exception {
         final EObject context = aContract().in(aTask().withName("step1")).build();
 
-        final String pageId = createNewFormProposal.handleEvent(context, null);
+        final String pageId = createNewFormProposal.handleEvent(context, null, null);
 
         assertThat(pageId).isEqualTo("page-id");
         verify(formFileStore).open();
@@ -116,7 +116,7 @@ public class CreateNewFormProposalListenerTest implements BonitaPreferenceConsta
                 .build();
 
         //When
-        createNewFormProposal.handleEvent(task.getFormMapping(), null);
+        createNewFormProposal.handleEvent(task.getFormMapping(), null, null);
 
         //Then
         verify(createNewFormProposal).doCreateFormOperation(eq(pageDesignerURLFactory),

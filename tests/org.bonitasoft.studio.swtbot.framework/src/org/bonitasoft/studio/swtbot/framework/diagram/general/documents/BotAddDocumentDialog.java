@@ -120,11 +120,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @param pURL
      */
     public void setURLWithExpressionEditor(final String pURL) {
-    	SWTBotShell activeShell = bot.activeShell();
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        final BotExpressionEditorDialog editor = new BotExpressionEditorDialog(bot,activeShell);
-        editor.selectConstantType().setValue(pURL);
-        editor.ok();
+        bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).setText(pURL);
     }
 
     /**

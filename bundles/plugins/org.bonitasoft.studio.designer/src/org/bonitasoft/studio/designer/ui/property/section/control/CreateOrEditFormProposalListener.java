@@ -50,7 +50,7 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
     }
 
     @Override
-    public String handleEvent(final EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType, String defaultValue) {
         final FormMapping mapping = (FormMapping) context;
         final Expression targetForm = mapping.getTargetForm();
         if (targetForm.hasContent()) {
@@ -71,7 +71,7 @@ public class CreateOrEditFormProposalListener extends CreateNewFormProposalListe
             }
             return null;
         } else {
-            return super.handleEvent(context, fixedReturnType);
+            return super.handleEvent(context, fixedReturnType, defaultValue);
         }
     }
 

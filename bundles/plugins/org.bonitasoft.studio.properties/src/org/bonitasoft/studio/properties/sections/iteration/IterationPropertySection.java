@@ -546,7 +546,7 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                         value = ModelHelper.getParentProcess(value);
                     }
                     if (value != null) {
-                        final String newVariableName = ((IProposalListener) selection).handleEvent(value, null);
+                        final String newVariableName = ((IProposalListener) selection).handleEvent(value, null, null);
                         if (newVariableName != null) {
                             final IObservableList observeList = (IObservableList) inputListComboViewer.getInput();
                             inputListComboViewer.setSelection(

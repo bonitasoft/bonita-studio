@@ -27,6 +27,7 @@ import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
+import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotAddDocumentDialog;
@@ -73,8 +74,15 @@ public class TestDocument {
         botAddDocumentDialog.chooseExternalInitialContent();
         final boolean isErrorMessageForURLAppeared = botAddDocumentDialog.isErrorMessageUrl();
         botAddDocumentDialog.setURLWithExpressionEditor("http://url-test");
-
-        Assertions.assertThat(botAddDocumentDialog.isErrorMessageUrl()).isFalse();
+        BotAddDocumentDialog documentDialogBot = botAddDocumentDialog;
+        bot.waitUntil(new AssertionCondition() {
+            
+            @Override
+            protected void makeAssert() throws Exception {
+                Assertions.assertThat(documentDialogBot.isErrorMessageUrl()).isFalse();
+            }
+        });
+      
 
         botAddDocumentDialog.ok();
 
