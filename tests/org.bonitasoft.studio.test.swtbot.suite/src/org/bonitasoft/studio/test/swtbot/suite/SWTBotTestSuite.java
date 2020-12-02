@@ -92,7 +92,6 @@ import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicat
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerRestApiIT;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
-import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.repository.TestSeveralLocalRepositories;
@@ -121,7 +120,6 @@ import org.junit.runners.Suite;
         TestDatabaseConnectorOutputMode.class,
         TestPatternExpressionViewer.class,
         TestLoadSaveConnectorConfiguration.class,
-        TestConditionExpression.class,
         ConfigurationDialogIT.class,
         ActorDefinitionTranslationsTest.class,
         ActorFilterDefinitionTest.class,

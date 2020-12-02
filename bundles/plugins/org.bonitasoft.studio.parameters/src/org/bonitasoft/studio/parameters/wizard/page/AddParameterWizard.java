@@ -33,7 +33,6 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 public class AddParameterWizard extends Wizard {
 
@@ -67,15 +66,6 @@ public class AddParameterWizard extends Wizard {
                 AddCommand.create(editingDomain, container,
                         ProcessPackage.Literals.ABSTRACT_PROCESS__PARAMETERS,
                         parameterWorkingCopy));
-
-        try {
-            RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
-        } catch (final CoreException e1) {
-            BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
-            return false;
-        }
-
         return true;
     }
 

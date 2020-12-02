@@ -86,7 +86,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
@@ -222,13 +221,6 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection
                 }
             }
             parameterTableViewer.refresh();
-            try {
-                RepositoryManager.getInstance().getCurrentRepository().getProject()
-                        .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID,
-                                Collections.<String, String> emptyMap(), null);
-            } catch (final CoreException e1) {
-                BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
-            }
         }
     }
 

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionValidator;
 import org.bonitasoft.studio.decision.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -289,21 +288,10 @@ public class DecisionTableWizardPage extends WizardPage {
                 new Composite(placeHolder, SWT.NONE).setLayoutData(new GridData(0, 0));
             }
 
-            final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER) {
-
-                /*
-                 * (non-Javadoc)
-                 * @see org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer#defaultExpressionType()
-                 */
-                @Override
-                protected String defaultExpressionType() {
-                    return ExpressionConstants.CONDITION_TYPE;
-                }
-            };
+            final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER);
             op1widget.getControl().setLayoutData(
                     GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
             op1widget.setDefaultReturnType(Boolean.class.getName());
-            op1widget.addExpressionValidator(new ComparisonExpressionValidator());
             op1widget.addExpressionValidationListener(new IExpressionValidationListener() {
 
                 @Override
@@ -314,7 +302,7 @@ public class DecisionTableWizardPage extends WizardPage {
             });
             op1widget.setContext(container);
             op1widget.addFilter(
-                    new AvailableExpressionTypeFilter(ExpressionConstants.CONDITION_TYPE, ExpressionConstants.SCRIPT_TYPE,
+                    new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.SCRIPT_TYPE,
                             ExpressionConstants.VARIABLE_TYPE,
                             ExpressionConstants.PARAMETER_TYPE));
             op1widget.setContext(container);
@@ -348,7 +336,7 @@ public class DecisionTableWizardPage extends WizardPage {
                 final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
                 exp.setReturnType(Boolean.class.getName());
                 exp.setReturnTypeFixed(true);
-                exp.setType(ExpressionConstants.CONDITION_TYPE);
+                exp.setType(ExpressionConstants.CONSTANT_TYPE);
 
                 lineWorkingCopy.getConditions().add(exp);
                 updateLineButton.setEnabled(false);

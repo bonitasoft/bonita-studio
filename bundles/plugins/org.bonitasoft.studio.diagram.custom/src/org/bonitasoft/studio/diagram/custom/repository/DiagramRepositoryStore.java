@@ -454,6 +454,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
             updateConfigurationId(diagramResource, diagram);
             migrateJavaExpressionType(diagram);
+            migrateConditionExpressionType(diagram);
 
             ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
@@ -489,16 +490,30 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     private void migrateJavaExpressionType(MainProcess diagram) {
-                    ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
-                    modelSearch.getAllItemsOfType(diagram, Expression.class)
-                            .stream()
-                            .filter(exp -> ExpressionConstants.JAVA_TYPE.equals(exp.getType()))
-                            .forEach(expression -> toScriptExpression(expression));
+        ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
+        modelSearch.getAllItemsOfType(diagram, Expression.class)
+                .stream()
+                .filter(exp -> ExpressionConstants.JAVA_TYPE.equals(exp.getType()))
+                .forEach(this::javaToScriptExpression);
     }
-    private void toScriptExpression(Expression exp) {
+
+    private void migrateConditionExpressionType(MainProcess diagram) {
+        ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
+        modelSearch.getAllItemsOfType(diagram, Expression.class)
+                .stream()
+                .filter(exp -> ExpressionConstants.CONDITION_TYPE.equals(exp.getType()))
+                .forEach(this::conditionToScriptExpression);
+    }
+    
+    private void conditionToScriptExpression(Expression exp) {
         exp.setType(ExpressionConstants.SCRIPT_TYPE);
         exp.setInterpreter(ExpressionConstants.GROOVY);
-        exp.setContent( String.format("%s.%s()",
+    }
+
+    private void javaToScriptExpression(Expression exp) {
+        exp.setType(ExpressionConstants.SCRIPT_TYPE);
+        exp.setInterpreter(ExpressionConstants.GROOVY);
+        exp.setContent(String.format("%s.%s()",
                 ((Element) exp.getReferencedElements().get(0)).getName(),
                 exp.getContent()));
     }

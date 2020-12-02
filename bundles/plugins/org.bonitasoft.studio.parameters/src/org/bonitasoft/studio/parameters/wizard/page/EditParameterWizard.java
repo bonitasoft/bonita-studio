@@ -37,7 +37,6 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
@@ -90,14 +89,6 @@ public class EditParameterWizard extends Wizard {
         } else {
             return false;
         }
-        try {
-            RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
-        } catch (final CoreException e1) {
-            BonitaStudioLog.error(e1, ParameterPlugin.PLUGIN_ID);
-            return false;
-        }
-
         return true;
     }
 

@@ -38,8 +38,6 @@
         <module>org.bonitasoft.studio.connectors.database.drivers</module>
         <module>org.bonitasoft.studio.connectors.database.drivers.prop</module>
         <module>org.bonitasoft.studio.connectors.model</module>
-        <module>org.bonitasoft.studio.condition</module>
-        <module>org.bonitasoft.studio.condition.ui</module>
         <module>org.bonitasoft.studio.connectors.model.edit</module>
         <module>org.bonitasoft.studio.data</module>
         <module>org.bonitasoft.studio.datatools</module>

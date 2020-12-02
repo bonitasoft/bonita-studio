@@ -48,8 +48,6 @@ public class DocumentWizard extends Wizard {
     private final boolean editMode;
     private final EObject context;
 
-    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
-
     public DocumentWizard(final EObject context) {
         super();
         this.context = context;
@@ -121,8 +119,6 @@ public class DocumentWizard extends Wizard {
                 return false;
             }
         }
-
-        refreshProject();
         return true;
     }
 
@@ -151,16 +147,6 @@ public class DocumentWizard extends Wizard {
     protected boolean isEdited() {
         return !(documentWorkingCopy.getName().equals(document.getName())
                 && documentWorkingCopy.isMultiple() == document.isMultiple());
-    }
-
-    private void refreshProject() {
-        try {
-            RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(),
-                            null);
-        } catch (final CoreException e1) {
-            BonitaStudioLog.error(e1, DocumentPlugin.PLUGIN_ID);
-        }
     }
 
     public Document getDocumentWorkingCopy() {
