@@ -21,9 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
@@ -32,9 +29,6 @@ import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.data.ui.property.section.PoolAdaptableSelectionProvider;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -198,27 +192,12 @@ public class PoolGeneralPropertySection extends AbstractBonitaDescriptionSection
     private void updateProcessName(String oldName, String newName) {
         Pool pool = (Pool) selectionProvider.getAdapter(EObject.class);
         processNamingTools.proceedForPools(pool, newName, oldName, pool.getVersion(), pool.getVersion());
-        updateMessageEvents(pool);
         updatePropertyTabTitle(newName);
         Display.getDefault().asyncExec(() -> {
             DiagramEditor activeEditor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                     .getActivePage().getActiveEditor();
             activeEditor.getDiagramGraphicalViewer().getContents().refresh();
         });
-    }
-
-    private void updateMessageEvents(final Pool element) {
-        for (final AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))) {
-            final Message eventObject = ModelHelper.findEvent(element, ev.getEvent());
-            if (eventObject != null) {
-                EMFModelUpdater<EObject> updater = new EMFModelUpdater<>().from(eventObject.getTargetProcessExpression());
-                Expression newExpression = ExpressionHelper.createConstantExpression(element.getName(),
-                        String.class.getName());
-                newExpression.setReturnTypeFixed(eventObject.getTargetProcessExpression().isReturnTypeFixed());
-                updater.editWorkingCopy(newExpression);
-                getEditingDomain().getCommandStack().execute(updater.createUpdateCommand(getEditingDomain()));
-            }
-        }
     }
 
     private void updatePropertyTabTitle(String poolName) {
