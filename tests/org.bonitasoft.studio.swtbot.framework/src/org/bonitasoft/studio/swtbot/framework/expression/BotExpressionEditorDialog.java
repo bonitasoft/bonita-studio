@@ -11,10 +11,10 @@ package org.bonitasoft.studio.swtbot.framework.expression;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
@@ -35,13 +35,6 @@ public class BotExpressionEditorDialog extends BotDialog {
         bot.tabItem("Script").activate();
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
         return new BotScriptExpressionEditor(bot, this);
-    }
-
-
-    public BotConditionExpressionEditor selectConditionExpressionType() {
-        bot.tabItem("Comparison").activate();
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
-        return new BotConditionExpressionEditor(bot, this);
     }
 
     public boolean isTypeAvailable(String type) {

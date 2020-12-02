@@ -4318,7 +4318,7 @@ public class ElementInitializers {
 	private Expression condition_SequenceFlow_4001(SequenceFlow self) {
 		Expression expression = ExpressionFactory.eINSTANCE.createExpression();
 		expression.setName("");
-		expression.setType(ExpressionConstants.CONDITION_TYPE);
+		expression.setType(ExpressionConstants.CONSTANT_TYPE);
 		expression.setReturnType(java.lang.Boolean.class.getName());
 		expression.setReturnTypeFixed(true);
 		return expression;

@@ -103,8 +103,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
 
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
-    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
-
     public static final Set<String> LEGACY_REPOSITORIES = new HashSet<>();
 
     static {
@@ -202,12 +200,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             final IWorkspace workspace) {
         return new CreateBonitaBPMProjectOperation(workspace, projectName)
                 .addNature(BonitaProjectNature.NATURE_ID)
-                .addNature("org.eclipse.xtext.ui.shared.xtextNature")
                 .addNature(JavaCore.NATURE_ID)
                 .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder("org.eclipse.xtext.ui.shared.xtextBuilder")
                 .addBuilder("org.eclipse.pde.ManifestBuilder")
                 .addBuilder("org.eclipse.pde.SchemaBuilder")
                 .addBuilder("org.eclipse.wst.validation.validationbuilder");
@@ -893,10 +889,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRenamable#retrieveNewName()
-     */
     @Override
     public Optional<String> retrieveNewName() {
         String currentName = getName();
@@ -912,17 +904,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     public void addProjectListener(IBonitaProjectListener listener) {
         if (!projectListeners.contains(listener)) {
             projectListeners.add(listener);
-        }
-    }
-
-    public void buildXtext() {
-        try {
-            getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID,
-                            Collections.<String, String> emptyMap(),
-                            null);
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
         }
     }
 

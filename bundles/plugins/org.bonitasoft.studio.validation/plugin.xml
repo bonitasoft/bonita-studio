@@ -879,22 +879,6 @@
                        class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
-              <constraint
-                    class="org.bonitasoft.studio.validation.constraints.process.ConditionExpressionConstraint"
-                    id="org.bonitasoft.studio.validation.constraints.condition_expression"
-                    isEnabledByDefault="true"
-                    lang="Java"
-                    mode="Batch"
-                    name="Condition expression constraint"
-                    severity="ERROR"
-                    statusCode="1">
-                 <message>
-                    {0}
-                 </message>
-                 <target
-                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
-                 </target>
-              </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.OperationLeftOperandConsistencyConstraint"
                   id="org.bonitasoft.studio.validation.constraints.operationleftoperandconsistency"

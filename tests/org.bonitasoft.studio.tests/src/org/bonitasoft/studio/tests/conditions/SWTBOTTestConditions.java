@@ -25,8 +25,8 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
-import org.bonitasoft.studio.swtbot.framework.expression.BotConditionExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.validation.ValidationTestBase;
 import org.eclipse.core.runtime.IStatus;
@@ -75,8 +75,8 @@ public class SWTBOTTestConditions {
         SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         final BotExpressionEditorDialog expressionEditor = new BotExpressionEditorDialog(bot, activeShell);
-        final BotConditionExpressionEditor botConditionEditor = expressionEditor.selectConditionExpressionType();
-        botConditionEditor.setValue("myData < \"value\"");
+        final BotScriptExpressionEditor botConditionEditor = expressionEditor.selectScriptTab();
+        botConditionEditor.setScriptContent("myData < \"value\"");
         botConditionEditor.ok();
         final DiagramRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(DiagramRepositoryStore.class);

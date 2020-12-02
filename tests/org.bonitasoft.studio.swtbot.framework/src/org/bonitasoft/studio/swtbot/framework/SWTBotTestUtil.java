@@ -32,7 +32,6 @@ import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -47,7 +46,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
@@ -86,8 +84,6 @@ import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement;
-import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
-import org.eclipse.xtext.ui.editor.validation.ValidationJob;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
@@ -706,61 +702,11 @@ public class SWTBotTestUtil implements SWTBotConstants {
             } else if (expressionType == ExpressionConstants.CONSTANT_TYPE) {
                 bot.textWithLabel("Condition").setText(condition);
                 bot.sleep(600);
-            } else if (expressionType == ExpressionConstants.CONDITION_TYPE) {
-                bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-                setComparisonExpression(bot, condition);
-            } else {
+            }  else {
                 Assert.assertTrue("Error: Expression type " + expressionType + " is not supported.", false);
             }
         }
 
-    }
-
-    /**
-     * @param bot
-     * @param condition
-     *        warning : sequence flow properties must be displayed before using this method
-     */
-    public static void initializeComparisonExpression(final SWTGefBot bot, final String condition) {
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        setComparisonExpression(bot, condition);
-    }
-
-    /**
-     * @param bot
-     * @param condition
-     */
-    private static void setComparisonExpression(final SWTGefBot bot, final String condition) {
-        bot.waitUntil(Conditions.shellIsActive(editExpression));
-        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConditionExpressionType();
-        bot.styledText().setFocus();
-        bot.styledText().setText(condition);
-    }
-
-    public static StyleRange getTextStyleInEditExpressionDialog(final SWTGefBot bot, final String expressionType,
-            final int line, final int column)
-            throws OperationCanceledException, InterruptedException {
-        bot.waitUntil(new ICondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return bot.styledText() != null;
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "StyledText is not ready";
-            }
-        });
-        bot.styledText().setFocus();
-        Job.getJobManager().join(ValidationJob.XTEXT_VALIDATION_FAMILY, AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for ValidationJob
-        Job.getJobManager().join(XtextReconciler.class.getName(), AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for Reconciler Job
-        bot.sleep(600);
-        return bot.styledText().getStyle(line, column);
     }
 
     public static Keyboard getKeybord() {

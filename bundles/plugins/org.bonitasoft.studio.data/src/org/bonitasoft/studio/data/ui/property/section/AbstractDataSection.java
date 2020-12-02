@@ -283,7 +283,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         wizard.setIsOverviewContext(isOverViewContext());
         if (new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard, this).open() == Dialog.OK) {
             dataTableViewer.refresh();
-            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
         }
     }
 

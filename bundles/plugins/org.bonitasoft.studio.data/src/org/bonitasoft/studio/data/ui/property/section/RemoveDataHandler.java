@@ -42,8 +42,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class RemoveDataHandler {
 
-    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
-
     public void execute(final IStructuredSelection structuredSelection, final EObject container, final EStructuralFeature dataFeature) {
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
         final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(),
@@ -66,12 +64,6 @@ public class RemoveDataHandler {
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-            }
-            try {
-                RepositoryManager.getInstance().getCurrentRepository().getProject()
-                        .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
-            } catch (final CoreException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             }
         }

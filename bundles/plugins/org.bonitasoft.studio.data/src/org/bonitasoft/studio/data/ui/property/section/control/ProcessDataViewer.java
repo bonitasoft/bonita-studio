@@ -115,11 +115,9 @@ public class ProcessDataViewer extends DataViewer implements IAddData {
     @Override
     public void addData() {
         final DataAware container = (DataAware) getDataContainerObservable().getValue();
-        if (new DataWizardDialog(Display.getDefault().getActiveShell(),
+        new DataWizardDialog(Display.getDefault().getActiveShell(),
                 dataWizardFactory.createAddWizard(TransactionUtil.getEditingDomain(container), container),
-                this).open() == Dialog.OK) {
-            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
-        }
+                this).open();
     }
 
     private ViewerFilter hideBusinessObjectData() {

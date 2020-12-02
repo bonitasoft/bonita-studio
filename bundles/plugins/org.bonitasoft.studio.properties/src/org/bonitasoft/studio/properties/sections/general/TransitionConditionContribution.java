@@ -19,7 +19,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionValidator;
 import org.bonitasoft.studio.decision.ui.DecisionTableWizard;
 import org.bonitasoft.studio.decision.ui.condition.MaximizableWizardDialog;
 import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
@@ -61,7 +60,6 @@ import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelection;
@@ -138,16 +136,14 @@ public class TransitionConditionContribution implements IExtensibleGridPropertyS
         conditionViewer = new ExpressionViewer(client, SWT.BORDER, widgetFactory, editingDomain,
                 ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
         conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage);
-        conditionViewer.addExpressionValidator(new ComparisonExpressionValidator());
         conditionViewer.addFilter(new AvailableExpressionTypeFilter(
                 new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.PARAMETER_TYPE,
-                        ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.VARIABLE_TYPE,
-                        ExpressionConstants.CONDITION_TYPE }));
+                        ExpressionConstants.SCRIPT_TYPE, ExpressionConstants.VARIABLE_TYPE }));
         if (transition.getCondition() == null) {
             final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
             expression.setReturnType(Boolean.class.getName());
             expression.setReturnTypeFixed(true);
-            expression.setType(ExpressionConstants.CONDITION_TYPE);
+            expression.setType(ExpressionConstants.CONSTANT_TYPE);
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, transition,
                     ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, expression));
         }

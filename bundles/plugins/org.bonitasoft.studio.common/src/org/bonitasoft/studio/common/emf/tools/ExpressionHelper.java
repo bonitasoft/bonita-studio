@@ -193,9 +193,7 @@ public class ExpressionHelper {
         Assert.isLegal(expr != null, "Expression cannot be null.");
         expr.setName("");
         expr.setContent("");
-        if (!ExpressionConstants.CONDITION_TYPE.equals(expr.getType())) {
-            expr.setType(ExpressionConstants.CONSTANT_TYPE);
-        }
+        expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.getReferencedElements().clear();
         expr.getConnectors().clear();
         if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {

@@ -69,7 +69,6 @@ public class CreateVariableProposalListener implements IDataProposalListener {
         final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell(), newWizard,
                 IDialogConstants.FINISH_LABEL);
         if (wizardDialog.open() == Window.OK) {
-            RepositoryManager.getInstance().getCurrentRepository().buildXtext();
             final Data newData = newWizard.getNewData();
             if (newData != null) {
                 return newData.getName();

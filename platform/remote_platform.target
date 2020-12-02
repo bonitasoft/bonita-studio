@@ -26,7 +26,6 @@
             <unit id="org.eclipse.jdt.feature.group" version="3.18.400.v20200604-0540"/>
             <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.18.0.v202005251731"/>
             <unit id="org.eclipse.m2e.feature.feature.group" version="1.16.0.20200610-1735"/>
-            <unit id="org.eclipse.xtext.sdk.feature.group" version="2.22.0.v20200602-1533"/>
             <unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.3.700.v201910252115"/>
             <unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.600.v201910252115"/>
             <unit id="org.eclipse.wst.server_adapters.feature.feature.group" version="3.2.801.v201912051849"/>
