@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process">
+  <process:MainProcess xmi:id="_KUvLcb11Ed6_Re6p6AChyA" name="TestDateProcess" label="TestDateProcess" version="1.0" bonitaVersion="5.0.preview">
+    <elements xmi:type="process:Pool" xmi:id="_KW6VsL11Ed6_Re6p6AChyA" name="TestDateProcess" label="TestDateProcess" version="1.0">
+      <elements xmi:type="process:StartEvent" xmi:id="_KXp8kL11Ed6_Re6p6AChyA" name="Start1" label="Start1" outgoing="_KaYgcL11Ed6_Re6p6AChyA"/>
+      <elements xmi:type="process:Task" xmi:id="_C3ceAL12Ed6_Re6p6AChyA" name="Step1" label="Step1" incoming="_KaYgcL11Ed6_Re6p6AChyA" user="" groups="_KUvLcr11Ed6_Re6p6AChyA">
+        <data xmi:type="process:Data" xmi:id="_mwh2oL11Ed6_Re6p6AChyA" name="Britney_Spears_Birthday" label="Britney Spears Birthday" dataType="_KUvLdL11Ed6_Re6p6AChyA" defaultValue="1981/12/02/13/37/02"/>
+      </elements>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_KaYgcL11Ed6_Re6p6AChyA" source="_KXp8kL11Ed6_Re6p6AChyA" target="_C3ceAL12Ed6_Re6p6AChyA" isDefault="true"/>
+    </elements>
+    <groups xmi:type="process:Group" xmi:id="_KUvLcr11Ed6_Re6p6AChyA" documentation="Person who takes the first action to start the process" name="Initiator" label="Initiator" connectorId="ProcessInitiatior"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_KUvLc711Ed6_Re6p6AChyA" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_KUvLdL11Ed6_Re6p6AChyA" name="Date" label="Date"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_KUvLdb11Ed6_Re6p6AChyA" name="Float" label="Float"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_KUvLdr11Ed6_Re6p6AChyA" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_KUvLd711Ed6_Re6p6AChyA" name="String" label="String"/>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_KU7_wL11Ed6_Re6p6AChyA" type="Process" element="_KUvLcb11Ed6_Re6p6AChyA" name="TestDateProcess_1.0.proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_KXEtwL11Ed6_Re6p6AChyA" type="2007" element="_KW6VsL11Ed6_Re6p6AChyA">
+      <children xmi:type="notation:DecorationNode" xmi:id="_KXK0YL11Ed6_Re6p6AChyA" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_KXK0Yb11Ed6_Re6p6AChyA" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_KXrKsL11Ed6_Re6p6AChyA" type="3002" element="_KXp8kL11Ed6_Re6p6AChyA" fontName="Sans">
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_KXrKsb11Ed6_Re6p6AChyA" x="30" y="65"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_C3gIYL12Ed6_Re6p6AChyA" type="3005" element="_C3ceAL12Ed6_Re6p6AChyA" fontName="Sans">
+          <children xmi:type="notation:DecorationNode" xmi:id="_C3gvcL12Ed6_Re6p6AChyA" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_C3gIYb12Ed6_Re6p6AChyA" x="130" y="55" width="100" height="50"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_KXEtwb11Ed6_Re6p6AChyA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_KXEtwr11Ed6_Re6p6AChyA" fontName="Sans"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_KXEtw711Ed6_Re6p6AChyA"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_KXEtxL11Ed6_Re6p6AChyA" x="20" y="20" width="1216" height="319"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_KU7_wb11Ed6_Re6p6AChyA"/>
+    <edges xmi:type="notation:Connector" xmi:id="_Kaa8sL11Ed6_Re6p6AChyA" type="4001" element="_KaYgcL11Ed6_Re6p6AChyA" source="_KXrKsL11Ed6_Re6p6AChyA" target="_C3gIYL12Ed6_Re6p6AChyA" routing="Rectilinear" avoidObstructions="true" closestDistance="true" roundedBendpointsRadius="5">
+      <children xmi:type="notation:DecorationNode" xmi:id="_KacK0L11Ed6_Re6p6AChyA" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_KacK0b11Ed6_Re6p6AChyA" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_KacK0r11Ed6_Re6p6AChyA" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_KacK0711Ed6_Re6p6AChyA" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_KabjwL11Ed6_Re6p6AChyA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Kabjwb11Ed6_Re6p6AChyA" points="[0, 0, -130, -55]$[130, 55, 0, 0]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>
