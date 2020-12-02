@@ -53,6 +53,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -110,7 +111,7 @@ public class ProcessNamingTools {
 
         if (!messagesToUpdate.isEmpty() || (!callActivityToUpdate.isEmpty()
                 && MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.updateReferencesTitle,
-                        Messages.bind(Messages.updateReferencesMsg, activitiesToUpdateMsg.toString())))) {
+                        NLS.bind(Messages.updateReferencesMsg, activitiesToUpdateMsg.toString())))) {
             IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.run(true, false, new IRunnableWithProgress() {
