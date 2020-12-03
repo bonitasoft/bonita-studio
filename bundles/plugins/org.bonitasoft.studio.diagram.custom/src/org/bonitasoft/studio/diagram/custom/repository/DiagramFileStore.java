@@ -14,9 +14,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
-import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.IOException;
@@ -25,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,20 +34,17 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
-import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.Activator;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
-import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
-import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
@@ -58,7 +52,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -78,7 +71,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
@@ -103,7 +95,7 @@ import com.google.common.base.Predicates;
 /**
  * @author Romain Bioteau
  */
-public class DiagramFileStore extends EMFFileStore implements IDeployable, IRenamable, IBuildable {
+public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDeployable, IRenamable, IBuildable {
 
     public static final String PROC_EXT = "proc";
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
@@ -115,13 +107,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
 
     private static final Pattern diagramNamePattern = Pattern.compile("(.*)-(.*)");
 
-    public DiagramFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
+    public DiagramFileStore(final String fileName, IRepositoryStore<? extends EMFFileStore<MainProcess>> store) {
         super(fileName, store);
-    }
-
-    @Override
-    public synchronized MainProcess getContent() {
-        return (MainProcess) super.getContent();
     }
 
     @Override
@@ -133,7 +120,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         }
         return displayName;
     }
-    
+
     @Override
     public Object executeCommand(String command, Map<String, Object> parameters) {
         return super.executeCommand(command, parameters);
@@ -147,7 +134,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("ProcessDiagramFile.gif", Activator.getDefault());
+        return getParentStore().getIcon();
     }
 
     @Override
@@ -213,9 +200,16 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         final DiagramEditor editor = getOpenedEditor();
         if (editor != null && editor.getDiagramEditPart() != null) {
             diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
+            if(diagram.eIsProxy()) {
+                diagram = null;
+            }
         }
         if (diagram == null) {
-            diagram = getContent();
+            try {
+                diagram = getContent();
+            } catch (ReadFileStoreException e) {
+                return Collections.emptyList();
+            }
         }
         final List<AbstractProcess> allProcesses = ModelHelper.getAllProcesses(diagram);
         final List<AbstractProcess> processes = new ArrayList<>();
@@ -234,13 +228,13 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         try {
             OperationHistoryFactory.getOperationHistory().execute(
                     new SaveDiagramResourceCommand(content, editingDomain, resource),
-                    Repository.NULL_PROGRESS_MONITOR,
+                    AbstractRepository.NULL_PROGRESS_MONITOR,
                     null);
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }
         if (content instanceof DiagramDocumentEditor) {
-            ((DiagramDocumentEditor) content).doSave(Repository.NULL_PROGRESS_MONITOR);
+            ((DiagramDocumentEditor) content).doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
 
         try {
@@ -254,8 +248,12 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     protected IWorkbenchPart doOpen() {
         IEditorPart part = null;
         final Resource emfResource = getEMFResource();
-        final MainProcess content = getContent();
-        Assert.isLegal(content != null);
+        MainProcess content;
+        try {
+            content = getContent();
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
         Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
         part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram).trimFragment()));
@@ -267,25 +265,25 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
                 setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
             }
             registerListeners(mainProcess, editor.getEditingDomain());
-
             setDefaultSelection(editor);
-
             return editor;
         }
         return part;
     }
-
+    
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.EMFFileStore#doClose()
      */
     @Override
     protected void doClose() {
-        DiagramEditor openedEditor = getOpenedEditor();
-        if (openedEditor != null) {
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            activePage.closeEditor(openedEditor, false);
-        }
+        Display.getDefault().syncExec(() -> {
+            DiagramEditor openedEditor = getOpenedEditor();
+            if (openedEditor != null) {
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                activePage.closeEditor(openedEditor, false);
+            }
+        });
     }
 
     protected void setDefaultSelection(final DiagramEditor editor) {
@@ -334,8 +332,8 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
     }
 
     @Override
-    public Set<IRepositoryFileStore> getRelatedFileStore() {
-        final Set<IRepositoryFileStore> result = new HashSet<>();
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
+        final Set<IRepositoryFileStore<?>> result = new HashSet<>();
         final ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = getRepository()
                 .getRepositoryStore(
                         ProcessConfigurationRepositoryStore.class);
@@ -352,57 +350,6 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         return ModelHelper::getEObjectID;
     }
 
-    /**
-     * @return the migration report if exists otherwise returns null
-     */
-    public Report getMigrationReport() {
-        final Resource emfResource = getEMFResource();
-        if (emfResource != null) {
-            return (Report) find(emfResource.getContents(), instanceOf(Report.class), null);
-        }
-        return null;
-    }
-
-    /**
-     * Remove the migration report from the proc file.
-     *
-     * @param save , Whether we save the resoruce after deletion or not
-     * @throws IOException
-     */
-    public void clearMigrationReport(final boolean save) throws IOException {
-        final EObject toRemove = null;
-        final Resource emfResource = getEMFResource();
-        final Report report = getMigrationReport();
-        if (report != null) {
-            final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(toRemove);
-            if (domain != null) {
-                domain.getCommandStack().execute(new RecordingCommand(domain) {
-
-                    @Override
-                    protected void doExecute() {
-                        emfResource.getContents().remove(report);
-                    }
-                });
-                if (save) {
-                    emfResource.save(Collections.emptyMap());
-                }
-            }
-        }
-    }
-
-    public boolean hasMigrationReport() {
-        final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(getResource().getLocation().toFile());
-        final Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType(
-                "report:Report",
-                MigrationReportPackage.Literals.REPORT__NAME);
-        if (featureValueFromEObjectType == null || featureValueFromEObjectType.values() == null
-                || featureValueFromEObjectType.values().isEmpty()) {
-            return false;
-        }
-        final Iterator<String[]> iterator = featureValueFromEObjectType.values().iterator();
-        final String[] values = iterator.next();
-        return values != null && values[0] != null;
-    }
 
     public boolean isOpened() {
         return getOpenedEditor() != null;
@@ -423,7 +370,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         parameters.put("validateDiagram", Boolean.TRUE.toString());
         executeCommand(DEPLOY_DIAGRAM_COMMAND, parameters);
     }
-    
+
     @Override
     public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
         options.put("fileName", getName());
@@ -454,7 +401,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
             try {
                 processFolder.create(true, true, new NullProgressMonitor());
             } catch (CoreException e) {
-               return e.getStatus();
+                return e.getStatus();
             }
         }
 
@@ -465,7 +412,7 @@ public class DiagramFileStore extends EMFFileStore implements IDeployable, IRena
         monitor.subTask(String.format(Messages.buildingDiagram, getDisplayName()));
         IStatus buildStatus = (IStatus) executeCommand(BUILD_DIAGRAM_COMMAND, parameters);
         if (Objects.equals(buildStatus.getSeverity(), IStatus.ERROR)) {
-           return parseStatus(buildStatus);
+            return parseStatus(buildStatus);
         }
         return ValidationStatus.ok();
     }

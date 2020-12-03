@@ -37,7 +37,7 @@ public class RepositoryAccessorTest {
     @Mock
     private IProgressMonitor monitor;
     @Mock
-    private Repository repository;
+    private AbstractRepository repository;
 
     /**
      * @throws java.lang.Exception

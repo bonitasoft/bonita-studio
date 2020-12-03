@@ -78,6 +78,14 @@ public class Messages extends NLS {
     public static String buildingWebPage;
     public static String startingDataRepositoryService;
     public static String indexingUIDPages;
+    public static String migrationNotPossible;
+    public static String migrationError;
+    public static String migrationWarning;
+    public static String migratingPage;
+    public static String UIDMigrationFailed;
+    public static String UIDMigrationFailedMessage;
+    public static String createFragmentFailed;
+    public static String creatingNewFragment;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

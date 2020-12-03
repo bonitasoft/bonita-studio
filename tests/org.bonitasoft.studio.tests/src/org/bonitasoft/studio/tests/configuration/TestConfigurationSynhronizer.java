@@ -40,8 +40,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
 
 
 public class TestConfigurationSynhronizer {
@@ -252,7 +250,7 @@ public class TestConfigurationSynhronizer {
         Connector c = ProcessFactory.eINSTANCE.createConnector();
         c.setName(connectorName);
         c.setDefinitionId("email");
-        c.setDefinitionVersion("1.1.0");
+        c.setDefinitionVersion("1.2.0");
         c.setEvent(ConnectorEvent.ON_ENTER.toString());
         return c;
     }

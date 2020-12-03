@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -34,10 +33,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
-import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -103,7 +101,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return portalPort;
     }
 
-    public synchronized void start(Repository repository, IProgressMonitor monitor) {
+    public synchronized void start(AbstractRepository repository, IProgressMonitor monitor) {
         if (launch == null
                 || Stream.of(launch.getProcesses())
                         .findFirst()
@@ -140,13 +138,12 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
-                launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
+                launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
                         UIDesignerPlugin.PLUGIN_ID);
-                new MigrateUIDOperation(pageDesignerURLBuilder).run(monitor);
-            } catch (final CoreException | IOException | InvocationTargetException | InterruptedException e) {
+            } catch (final CoreException | IOException  e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
                 monitor.done();
@@ -241,7 +238,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return javaBinaryPath.getAbsolutePath();
     }
 
-    protected List<String> buildCommand(Repository repository) throws IOException {
+    protected List<String> buildCommand(AbstractRepository repository) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
         port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, -1);
         if (port == -1 || isPortInUse(port)) {
@@ -261,8 +258,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workspaceSystemProperties.getFragmentRepositoryLocation(),
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
-                String.format("-D%s=http://%s:%s", PORTAL_BASE_URL, InetAddress.getByName(null).getHostAddress(),portalPort),
-                String.format("-D%s=http://%s:%s", BONITA_DATA_REPOSITORY_ORIGIN, InetAddress.getByName(null).getHostAddress(), DataRepositoryServerManager.getInstance().getPort()),
+                String.format("-D%s=http://%s:%s", PORTAL_BASE_URL, InetAddress.getByName(null).getHostAddress(),
+                        portalPort),
+                String.format("-D%s=http://%s:%s", BONITA_DATA_REPOSITORY_ORIGIN,
+                        InetAddress.getByName(null).getHostAddress(), DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
@@ -341,14 +340,14 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     @Override
-    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         if (PlatformUI.isWorkbenchRunning()) {
             start(repository, monitor);
         }
     }
 
     @Override
-    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
         if (PlatformUI.isWorkbenchRunning()) {
             stop();
         }

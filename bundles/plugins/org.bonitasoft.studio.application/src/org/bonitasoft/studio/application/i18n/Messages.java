@@ -137,6 +137,8 @@ public class Messages extends NLS {
     public static String allArtifactSelected;
     public static String noArtifactSelected;
     public static String environmentTootltip;
+    public static String incompatibleModelFoundTitle;
+    public static String incompatibleModelFoundMsg;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

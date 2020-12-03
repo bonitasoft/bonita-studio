@@ -20,13 +20,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.helper.PackageHelper;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.model.SmartImportBdmModel;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.SmartImportableUnit;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,7 +49,12 @@ public class SmartImportBDMOperation implements IRunnableWithStatus {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.importingBdm, IProgressMonitor.UNKNOWN);
-        BusinessObjectModel currentModel = fileStore.getContent();
+        BusinessObjectModel currentModel = new BusinessObjectModel();
+        try {
+            currentModel = fileStore.getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+        }
         performImport(currentModel);
         fileStore.save(currentModel);
         monitor.done();

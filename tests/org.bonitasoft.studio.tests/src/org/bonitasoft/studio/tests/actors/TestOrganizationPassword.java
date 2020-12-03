@@ -27,6 +27,7 @@ import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
@@ -48,7 +49,7 @@ public class TestOrganizationPassword {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
-    public void testImportExportWithPasswordUpdated() throws IOException {
+    public void testImportExportWithPasswordUpdated() throws IOException, ReadFileStoreException {
         importOrganizationProgrammatically();
 
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);

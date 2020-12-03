@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Main UI plugin
 Bundle-SymbolicName: org.bonitasoft.studio.application;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.application.ApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -61,7 +61,6 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.ui.navigator.resources,
  org.bonitasoft.studio.businessobject;bundle-version="7.8.0",
  org.eclipse.e4.ui.services;bundle-version="1.3.0",
- org.eclipse.wst.xml.core,
  org.eclipse.wst.html.core,
  org.bonitasoft.studio.ui;bundle-version="7.9.0",
  org.bonitasoft.studio.validation.common,
@@ -69,7 +68,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.core.databinding.property;bundle-version="1.6.300",
  org.bonitasoft.studio.configuration;bundle-version="7.10.0",
  org.eclipse.m2e.maven.runtime,
- winterwell.markdown;bundle-version="1.2.0"
+ winterwell.markdown;bundle-version="1.2.0",
+ org.eclipse.e4.ui.css.swt.theme
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
@@ -88,19 +88,14 @@ Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.session,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.workbench.renderers.swt,
+ org.eclipse.wst.xml.core.internal,
  org.osgi.service.event;version="1.3.0"
 Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.actions,
  org.bonitasoft.studio.application.actions.coolbar,
  org.bonitasoft.studio.application.contribution,
  org.bonitasoft.studio.application.handler,
- org.bonitasoft.studio.application.i18n;
-  x-friends:="org.bonitasoft.studio.tests,
-   org.bonitasoft.studio.application.test,
-   org.bonitasoft.studio.diagram.test,
-   org.bonitasoft.studio.swtbot.framework,
-   org.bonitasoft.studio.swtbot.framework.ex,
-   org.bonitasoft.studio.tests.ex",
+ org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.application.operation,
  org.bonitasoft.studio.application.splash,
  org.bonitasoft.studio.application.views,

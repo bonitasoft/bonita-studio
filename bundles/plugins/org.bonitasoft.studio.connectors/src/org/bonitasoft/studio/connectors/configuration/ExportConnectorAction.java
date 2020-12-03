@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -100,7 +100,7 @@ public class ExportConnectorAction extends Action implements IConfigurationExpor
 
                     op.setTargetPath(fileName) ;
                     op.setIncludeSources(false) ;
-                    op.run(Repository.NULL_PROGRESS_MONITOR) ;
+                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 }
             }
 

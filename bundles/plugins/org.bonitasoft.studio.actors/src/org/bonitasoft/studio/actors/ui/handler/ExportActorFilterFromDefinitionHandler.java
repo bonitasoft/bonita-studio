@@ -18,6 +18,7 @@ import org.bonitasoft.studio.actors.repository.ActorFilterDefFileStore;
 import org.bonitasoft.studio.actors.ui.wizard.ExportActorFilterWizard;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -40,7 +41,13 @@ public class ExportActorFilterFromDefinitionHandler extends AbstractHandler {
         fileStoreFinder.findSelectedFileStore(repositoryAccessor.getCurrentRepository())
                 .filter(ActorFilterDefFileStore.class::isInstance)
                 .map(ActorFilterDefFileStore.class::cast)
-                .map(ActorFilterDefFileStore::getContent)
+                .map(fStore -> {
+                    try {
+                        return fStore.getContent();
+                    } catch (ReadFileStoreException e) {
+                       return null;
+                    }
+                })
                 .ifPresent(def -> {
                     WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),
                             new ExportActorFilterWizard(def));

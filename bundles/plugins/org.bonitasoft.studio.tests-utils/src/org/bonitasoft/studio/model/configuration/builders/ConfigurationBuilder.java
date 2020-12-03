@@ -15,14 +15,12 @@
 package org.bonitasoft.studio.model.configuration.builders;
 
 import org.bonitasoft.studio.model.Buildable;
-import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 
 /**
  * @author Romain Bioteau
@@ -74,28 +72,32 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    public ConfigurationBuilder havingDefinitionMappings(final Buildable<? extends DefinitionMapping>... defMappings) {
+    @SafeVarargs
+    public final ConfigurationBuilder havingDefinitionMappings(final Buildable<? extends DefinitionMapping>... defMappings) {
         for (final Buildable<? extends DefinitionMapping> def : defMappings) {
             configuration.getDefinitionMappings().add(def.build());
         }
         return this;
     }
 
-    public ConfigurationBuilder havingProcessDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
+    @SafeVarargs
+    public final ConfigurationBuilder havingProcessDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
         for (final Buildable<? extends FragmentContainer> dep : dependencies) {
             configuration.getProcessDependencies().add(dep.build());
         }
         return this;
     }
 
-    public ConfigurationBuilder havingApplicationDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
+    @SafeVarargs
+    public final ConfigurationBuilder havingApplicationDependencies(final Buildable<? extends FragmentContainer>... dependencies) {
         for (final Buildable<? extends FragmentContainer> dep : dependencies) {
             configuration.getApplicationDependencies().add(dep.build());
         }
         return this;
     }
 
-    public ConfigurationBuilder havingParameters(final Buildable<? extends Parameter>... parameters) {
+    @SafeVarargs
+    public final ConfigurationBuilder havingParameters(final Buildable<? extends Parameter>... parameters) {
         for (final Buildable<? extends Parameter> parameter : parameters) {
             configuration.getParameters().add(parameter.build());
         }

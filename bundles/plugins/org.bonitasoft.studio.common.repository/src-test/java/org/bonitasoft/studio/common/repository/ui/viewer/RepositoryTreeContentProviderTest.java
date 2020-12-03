@@ -36,10 +36,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class RepositoryTreeContentProviderTest {
 
     @Mock
-    IRepositoryStore<IRepositoryFileStore> repoStore;
+    IRepositoryStore<?> repoStore;
 
     @Mock
-    IRepositoryFileStore repoFileStore;
+    IRepositoryFileStore<?> repoFileStore;
 
     @Before
     public void setUp() throws Exception {

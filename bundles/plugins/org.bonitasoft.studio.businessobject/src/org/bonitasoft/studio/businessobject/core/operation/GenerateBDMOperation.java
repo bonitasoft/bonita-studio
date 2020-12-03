@@ -35,7 +35,8 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.Assert;
@@ -43,9 +44,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.wiring.BundleWiring;
 
 public class GenerateBDMOperation implements IRunnableWithProgress {
 
@@ -73,13 +71,17 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
 
     protected void doGenerateBDM(IProgressMonitor monitor) throws InvocationTargetException {
         if (monitor == null) {
-            monitor = Repository.NULL_PROGRESS_MONITOR;
+            monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         }
-        final BusinessObjectModel model = fileStore.getContent();
+        BusinessObjectModel model;
+        try {
+            model = fileStore.getContent();
+        } catch (ReadFileStoreException e1) {
+            throw new InvocationTargetException(e1);
+        }
         if (containsBusinessObjects(model)) {
             monitor.beginTask(Messages.generatingJarFromBDMModel, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.debug(Messages.generatingJarFromBDMModel, BusinessObjectPlugin.PLUGIN_ID);
-            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             try {
                 final Map<String, byte[]> resources = new HashMap<>();
                 // Build jar with Model
@@ -155,7 +157,7 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             }
             final DependencyFileStore bdmJarFileStore = store.createRepositoryFileStore(fileStore.getDependencyName());
             bdmJarFileStore.save(is);
-            fileStore.getRepository().build(Repository.NULL_PROGRESS_MONITOR);
+            fileStore.getRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (IOException e) {
             throw new InvocationTargetException(e);
         }

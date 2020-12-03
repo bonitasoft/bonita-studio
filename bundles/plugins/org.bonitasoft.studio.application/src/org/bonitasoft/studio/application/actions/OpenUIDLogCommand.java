@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -45,7 +45,7 @@ public class OpenUIDLogCommand extends AbstractHandler implements IHandler {
         if (logFile.isPresent() && logFile.get().exists()) {
             try {
                 IFileStore fileStore = EFS.getLocalFileSystem().getStore(logFile.get().toURI());
-                final File localFile = fileStore.toLocalFile(EFS.NONE, Repository.NULL_PROGRESS_MONITOR);
+                final File localFile = fileStore.toLocalFile(EFS.NONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 final long fileSize = localFile.length();
                 if (fileSize < MAX_FILE_SIZE) {
                     IDE.openEditorOnFileStore(page, fileStore);

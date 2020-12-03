@@ -22,7 +22,6 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.NewDiagramFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -59,9 +58,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     }
 
     public DiagramFileStore newDiagram() {
-        final NewDiagramFactory diagramFactory = new NewDiagramFactory(
-                RepositoryManager.getInstance().getCurrentRepository(),
-                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository());
         diagramFactory.setDefaultPoolWidth(CustomPoolEditPart.getDefaultWidth());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {

@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.api.ApplicationAPI;
+import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -69,9 +69,17 @@ public class DeployApplicationAction {
                         new String[] { IDialogConstants.OK_LABEL }));
     }
 
+    public int deploySingleApplicationNode(Shell shell, ApplicationNode application) {
+        ApplicationNodeContainer applicationNodeContainer = new ApplicationNodeContainer();
+        applicationNodeContainer.addApplication(application);
+        return deployApplicationNodeContainer(shell, applicationNodeContainer,
+                new String[] { Messages.openInWebBrowser, IDialogConstants.CANCEL_LABEL });
+    }
+
     private WizardBuilder<ApplicationNodeContainer> createWizard(WizardBuilder<ApplicationNodeContainer> builder) {
         SelectionSinglePage<ApplicationRepositoryStore> selectApplicationDescriptorPage = new SelectionSinglePage<>(
-                repositoryAccessor, ApplicationRepositoryStore.class, new DeployApplicationFileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class),
+                new DeployApplicationFileStoreLabelProvider());
         selectApplicationDescriptorPage.addUnselectableElements(getUnparsableFiles());
         return builder.withTitle(Messages.deployExistingApplication)
                 .havingPage(newPage()

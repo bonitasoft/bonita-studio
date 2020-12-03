@@ -4,13 +4,14 @@ import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -18,16 +19,21 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.BosImportStatusDialogHandler;
 import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchiveControlSupplier;
+import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportBosHandler {
+
+    private SwitchRepositoryStrategy switchRepositoryStrategy;
 
     @Execute
     public void execute(Shell activeShell,
@@ -61,7 +67,43 @@ public class ImportBosHandler {
 
     protected Optional<ImportArchiveModel> onFinishOperation(ImportBosArchiveControlSupplier bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor, IWizardContainer container) {
+        if (switchRepositoryStrategy.isSwitchRepository()) {
+            try {
+                container.run(true, false, this::switchToRepository);
+            } catch (final InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(Messages.failSwitchRepository, e);
+            }
+            if (switchRepositoryStrategy.isRebuildModel()) {
+                try {
+                    container.run(true, false,
+                            monitor -> reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor));
+                } catch (InvocationTargetException | InterruptedException e) {
+                    throw new RuntimeException(Messages.errorReadArchive, e);
+                }
+            }
+        }
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
+    }
+
+    private void reparseArchive(ImportBosArchiveControlSupplier bosArchiveControlSupplier,
+            RepositoryAccessor repositoryAccessor, IProgressMonitor monitor) {
+        try {
+            final ImportArchiveModel archiveModel = bosArchiveControlSupplier.getArchiveModel().getBosArchive()
+                    .toImportModel(repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository()),
+                            monitor);
+            bosArchiveControlSupplier.setArchiveModel(archiveModel);
+        } catch (final IOException e) {
+            throw new RuntimeException(Messages.errorReadArchive, e);
+        }
+
+    }
+
+    private AbstractRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository());
+    }
+
+    private void switchToRepository(IProgressMonitor monitor) {
+        TeamRepositoryUtil.switchToRepository(switchRepositoryStrategy.getTargetRepository(), monitor);
     }
 
     protected void importArchive(Shell activeShell, ImportArchiveModel model,
@@ -94,20 +136,27 @@ public class ImportBosHandler {
 
     protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store, Shell activeShell,
             String repositoryName) {
-        if (new BosImportStatusDialogHandler(operation.getStatus(), store)
-                .open(activeShell) != IDialogConstants.PROCEED_ID) {
+        int result = -1;
+        if (switchRepositoryStrategy.isSwitchRepository()) {
+            result = new BosImportStatusDialogHandler(operation.getStatus(), store,
+                    NLS.bind(Messages.importWithSwitchRepositorySuccessful,
+                            repositoryName),
+                    NLS.bind(Messages.importWithSwitchRepositoryError,
+                            repositoryName)).open(activeShell);
+        } else {
+            result = new BosImportStatusDialogHandler(operation.getStatus(), store).open(activeShell);
+        }
+        if (result != IDialogConstants.PROCEED_ID) {
             operation.openFilesToOpen();
             PlatformUtil.openIntroIfNoOtherEditorOpen();
         }
     }
 
-    protected Repository getTargetRepository(RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getCurrentRepository();
-    }
-
     protected ImportBosArchiveControlSupplier newImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
             ExceptionDialogHandler exceptionDialogHandler, String file, String projectName) {
-        return new ImportBosArchiveControlSupplier(repositoryAccessor, exceptionDialogHandler, file);
+        switchRepositoryStrategy = new SwitchRepositoryStrategy(repositoryAccessor, projectName);
+        return new ImportBosArchiveControlSupplier(repositoryAccessor, switchRepositoryStrategy, exceptionDialogHandler,
+                file);
     }
 
 }

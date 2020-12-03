@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public abstract class AbstractExportAction {
 
-    public Optional<IRepositoryFileStore> export(Shell shell, IRepositoryFileStore fileStore) {
+    public Optional<IRepositoryFileStore<?>> export(Shell shell, IRepositoryFileStore<?> fileStore) {
         final Optional<String> optionalPath = getPath(shell, fileStore);
         if (optionalPath.isPresent()) {
             final File targetFile = Paths.get(optionalPath.get()).toFile();
@@ -62,7 +62,7 @@ public abstract class AbstractExportAction {
 
     protected abstract String getExportDoneMessage();
 
-    protected Optional<String> getPath(Shell shell, IRepositoryFileStore fStore) {
+    protected Optional<String> getPath(Shell shell, IRepositoryFileStore<?> fStore) {
         final FileDialog fd = new FileDialog(shell, SWT.SAVE | SWT.SHEET);
         fd.setFileName(fStore.getName());
         fd.setFilterExtensions(new String[] { "*.xml" });

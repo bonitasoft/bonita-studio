@@ -38,9 +38,10 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -133,10 +134,15 @@ public class DeployBDMOperation implements IRunnableWithProgress {
 
     protected void doDeployBDM(IProgressMonitor monitor) throws InvocationTargetException {
         if (monitor == null) {
-            monitor = Repository.NULL_PROGRESS_MONITOR;
+            monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         }
 
-        final BusinessObjectModel bom = fileStore.getContent();
+        BusinessObjectModel bom;
+        try {
+            bom = fileStore.getContent();
+        } catch (ReadFileStoreException e2) {
+            throw new InvocationTargetException(e2);
+        }
         final String progressMessage = progressMessage(bom);
         monitor.beginTask(progressMessage, IProgressMonitor.UNKNOWN);
         BonitaStudioLog.debug(progressMessage, BusinessObjectPlugin.PLUGIN_ID);
@@ -161,6 +167,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 tenantManagementAPI.installBusinessDataModel(fileStore.toByteArray());
             }
             tenantManagementAPI.resume();
+            updateDeployRequiredProperty();
         } catch (final Throwable e) {
             try {
                 tenantManagementAPI.uninstallBusinessDataModel();
@@ -181,6 +188,11 @@ public class DeployBDMOperation implements IRunnableWithProgress {
                 session = null;
             }
         }
+    }
+
+    protected void updateDeployRequiredProperty() {
+        BusinessObjectPlugin.getDefault().getPreferenceStore()
+                .setValue(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY, false);
     }
 
     protected void forceH2Drop() {
@@ -251,7 +263,7 @@ public class DeployBDMOperation implements IRunnableWithProgress {
             }
             final DependencyFileStore bdmJarFileStore = store.createRepositoryFileStore(fileStore.getDependencyName());
             bdmJarFileStore.save(is);
-            RepositoryManager.getInstance().getCurrentRepository().build(Repository.NULL_PROGRESS_MONITOR);
+            RepositoryManager.getInstance().getCurrentRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
         } finally {
             if (is != null) {
                 try {

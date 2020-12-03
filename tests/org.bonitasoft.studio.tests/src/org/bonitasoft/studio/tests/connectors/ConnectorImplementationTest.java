@@ -23,7 +23,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -108,8 +108,8 @@ public class ConnectorImplementationTest implements SWTBotConstants {
             }
         }, 30000);
         int length = bot.activeEditor().toTextEditor().getText().length();
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
         bot.sleep(1000);
         StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
         containsError(styles);

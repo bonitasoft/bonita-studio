@@ -49,9 +49,6 @@ public class Messages extends NLS {
 	public static String invalidDouble;
 	public static String parameterWizardDesc;
 	public static String newParameterWizardDescription;
-	public static String invalidIntegerForParameter;
-	public static String invalidDoulbeForParameter;
-	public static String missingParameterValue;
 	public static String exportParameterFile;
 	public static String importParameterFile;
 	public static String areYouSureMessage;

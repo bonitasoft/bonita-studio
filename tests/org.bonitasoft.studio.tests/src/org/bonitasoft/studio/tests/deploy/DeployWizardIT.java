@@ -31,8 +31,7 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -42,9 +41,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotDeployDialog;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,8 +58,8 @@ public class DeployWizardIT {
     @Before
     public void cleanRepository() throws Exception {
         new UndeployProcessOperation(BOSEngineManager.getInstance())
-                .undeployAll().run(Repository.NULL_PROGRESS_MONITOR);
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                .undeployAll().run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         currentRepository.getAllStores().stream().filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
                 .flatMap(store -> store.getChildren().stream())
                 .filter(fStore -> fStore.canBeDeleted()).forEach(IRepositoryFileStore::delete);
@@ -83,16 +80,39 @@ public class DeployWizardIT {
 
         botDeployDialog.runValidation(false);
 
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").expand();
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool").expand();
+
         //Check select none/all/latest
         botDeployDialog.selectNone();
         assertThat(botDeployDialog.isDeployEnabled()).isFalse();
         botDeployDialog.selectAll();
         assertThat(botDeployDialog.isDeployEnabled()).isTrue();
-        botDeployDialog.selectLatest();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isTrue();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
+
+        botDeployDialog.selectLatest();// Check 'selectLatestVersion' option -> Old process should not be checked anymore
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
                 .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
         assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
                 .getNode("2.0  MonDiagramme-2.0.proc").isChecked()).isTrue();
+
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").check(); // Try to check the old process with the 'selectLatestVersion' option -> should not work
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
+
+        botDeployDialog.selectAllVersions();// Uncheck 'selectLatestVersion' option -> Old process can be checked/unchecked now
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").check();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isTrue();
+        botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").uncheck();
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Processes").getNode("Pool")
+                .getNode("1.0  MonDiagramme-1.0.proc").isChecked()).isFalse();
 
         //Check username validation
         botDeployDialog.setDefaultUser("john.doe");
@@ -102,17 +122,6 @@ public class DeployWizardIT {
 
         botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].uncheck();
         assertThat(botDeployDialog.isDefaultUserEnabled()).isTrue();
-
-        long timeout = SWTBotPreferences.TIMEOUT;
-        try {
-            SWTBotPreferences.TIMEOUT = 500;
-            bot.ccomboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions);
-            fail("Environment combo should not be visible in community edition");
-        } catch (WidgetNotFoundException e) {
-            // Environment combo should not be there in community
-        } finally {
-            SWTBotPreferences.TIMEOUT = timeout;
-        }
 
         botDeployDialog.deploy();
         assertThat(bot.button(IDialogConstants.OPEN_LABEL).isEnabled()).isTrue();
@@ -138,7 +147,7 @@ public class DeployWizardIT {
     private void checkDeployedContent() throws LoginException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException, ProcessDefinitionNotFoundException, PageNotFoundException, SearchException {
         BOSEngineManager manager = BOSEngineManager.getInstance();
-        APISession apiSession = manager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        APISession apiSession = manager.loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         try {
             ProcessAPI processAPI = manager.getProcessAPI(apiSession);
             PageAPI pageAPI = manager.getPageAPI(apiSession);

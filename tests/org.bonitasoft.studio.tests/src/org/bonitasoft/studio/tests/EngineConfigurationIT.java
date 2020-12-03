@@ -31,7 +31,7 @@ import org.bonitasoft.engine.platform.PlatformLogoutException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Display;
@@ -51,8 +51,8 @@ public class EngineConfigurationIT {
     public void setUp() throws Exception {
         new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, monitor -> {
             try {
-                session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-                platformSession = BOSEngineManager.getInstance().loginPlatform(Repository.NULL_PROGRESS_MONITOR);
+                session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
+                platformSession = BOSEngineManager.getInstance().loginPlatform(AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (Exception e) {
                 throw new InvocationTargetException(e);
             }
@@ -69,7 +69,7 @@ public class EngineConfigurationIT {
     @Test
     public void should_enable_debug_mode() throws Exception {
         final PlatformSession platformSession = BOSEngineManager.getInstance()
-                .loginPlatform(Repository.NULL_PROGRESS_MONITOR);
+                .loginPlatform(AbstractRepository.NULL_PROGRESS_MONITOR);
         final PlatformAPI platformAPI = BOSEngineManager.getInstance().getPlatformAPI(platformSession);
         final Map<Long, Map<String, byte[]>> clientPlatformConfigurations = platformAPI.getClientTenantConfigurations();
         final byte[] content = clientPlatformConfigurations.get(1L).get("security-config.properties");

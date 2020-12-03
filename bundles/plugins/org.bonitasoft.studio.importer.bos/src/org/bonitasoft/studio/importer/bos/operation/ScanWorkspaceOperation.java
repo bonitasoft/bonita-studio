@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportRepositoryModel;
@@ -44,9 +44,9 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
     private static final String APPLICATION_ID = "org.bonitasoft.studio.importer.bos.ImportWorkspaceApplication";
     public static final String TMP_WS_FOLDER = ".tmpWS";
     private final ImportWorkspaceModel workspaceModel;
-    protected Repository repository;
+    protected AbstractRepository repository;
 
-    public ScanWorkspaceOperation(File folder, Repository repository) {
+    public ScanWorkspaceOperation(File folder, AbstractRepository repository) {
         this.workspaceModel = new ImportWorkspaceModel(requireNonNull(folder.getAbsolutePath()));
         this.repository = requireNonNull(repository);
     }
@@ -70,7 +70,7 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
             workingCopy.setAttribute(IPDELauncherConstants.DOCLEAR, false);
             workingCopy.setAttribute(IPDELauncherConstants.LOCATION, tmpWorskpaceFolder());
             workingCopy.setAttribute(IPDELauncherConstants.USE_PRODUCT, false);
-            final ILaunch launch = workingCopy.launch("run", Repository.NULL_PROGRESS_MONITOR);
+            final ILaunch launch = workingCopy.launch("run", AbstractRepository.NULL_PROGRESS_MONITOR);
             launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
 
                 @Override
@@ -98,7 +98,7 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         File wsFolder = new File(workspaceModel.getWorksapceFolder());
         File tmpFolder = new File(System.getProperty("java.io.tmpdir"), TMP_WS_FOLDER);
         if (tmpFolder.exists()) {
-            PlatformUtil.delete(tmpFolder, Repository.NULL_PROGRESS_MONITOR);
+            PlatformUtil.delete(tmpFolder, AbstractRepository.NULL_PROGRESS_MONITOR);
         }
         Files.walkFileTree(wsFolder.toPath(), new SimpleFileVisitor<Path>() {
 

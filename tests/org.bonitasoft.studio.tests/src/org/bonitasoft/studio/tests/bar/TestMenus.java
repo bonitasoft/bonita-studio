@@ -44,7 +44,7 @@ public class TestMenus {
             assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 9,
                     menuItems.size());
         } else if (Platform.getProduct().getId().equals("org.bonitasoft.studio.product")) {
-            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 7,
+            assertEquals(String.format("Menu bar polluted by third-party menus.\n available menu:\n%s\n", menuItems), 8,
                     menuItems.size());
         }
         assertThat(menuItems).doesNotContain("Run");

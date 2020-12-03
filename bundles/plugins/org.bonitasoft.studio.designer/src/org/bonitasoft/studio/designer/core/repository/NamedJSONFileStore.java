@@ -59,7 +59,7 @@ public class NamedJSONFileStore extends JSONFileStore {
             return getStringAttribute(NAME_KEY);
         } catch (final JSONException | ReadFileStoreException e) {
             BonitaStudioLog.error(String.format("Failed to retrieve name in JSON file %s.json, with key %s.", getName(), NAME_KEY), UIDesignerPlugin.PLUGIN_ID);
-            return null;
+            return getResource().getName();
         }
     }
 

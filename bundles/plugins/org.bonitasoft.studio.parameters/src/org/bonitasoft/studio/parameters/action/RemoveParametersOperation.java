@@ -18,7 +18,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.SaveConfigurationEMFCommand;
@@ -28,6 +30,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.parameters.ParameterPlugin;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -83,8 +86,12 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
             Configuration localeConfiguration = null;
             Configuration localeConfigurationWorkingCopy = null;
             if (file != null) {
-                localeConfiguration = file.getContent();
-                localeConfigurationWorkingCopy = EcoreUtil.copy(localeConfiguration);
+                try {
+                    localeConfiguration = file.getContent();
+                    localeConfigurationWorkingCopy = EcoreUtil.copy(localeConfiguration);
+                } catch (ReadFileStoreException e) {
+                   BonitaStudioLog.warning(e.getMessage(), ParameterPlugin.PLUGIN_ID);
+                }
             }
             if (localeConfiguration != null) {
 

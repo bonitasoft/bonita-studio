@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.model;
 import java.io.IOException;
 import java.util.Set;
 
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -25,19 +26,19 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryFileStore extends IDisplayable, IAdaptable {
+public interface IRepositoryFileStore<T> extends IDisplayable, IAdaptable {
 
     String getName();
 
-    IRepositoryStore<? extends IRepositoryFileStore> getParentStore();
+    IRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore();
 
-    Object getContent() throws ReadFileStoreException;
+    T getContent() throws ReadFileStoreException;
 
     IResource getResource();
 
     Set<IResource> getRelatedResources();
 
-    Set<IRepositoryFileStore> getRelatedFileStore();
+    Set<IRepositoryFileStore<?>> getRelatedFileStore();
 
     boolean isShared();
 
@@ -66,8 +67,12 @@ public interface IRepositoryFileStore extends IDisplayable, IAdaptable {
     boolean canBeDeleted();
 
     @Override
-    default <T> T getAdapter(Class<T> adapter) {
+    default <X> X getAdapter(Class<X> adapter) {
         return null;
+    }
+    
+    default IStatus validate() {
+        return ValidationStatus.ok();
     }
 
 }

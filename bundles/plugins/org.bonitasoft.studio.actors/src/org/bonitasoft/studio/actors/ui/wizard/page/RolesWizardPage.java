@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -48,8 +49,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -61,6 +64,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -87,7 +91,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
         }
     }
 
-    private final List<Membership> roleMemberShips = new ArrayList<Membership>();
+    private final List<Membership> roleMemberShips = new ArrayList<>();
     private IViewerObservableValue roleSingleSelectionObservable;
 
     public RolesWizardPage() {
@@ -112,7 +116,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
                 setControlEnabled(getInfoGroup(), isSelectedRole);
                 roleMemberShips.clear();
                 for (final Membership m : membershipList) {
-                    if (Objects.equals(selectedRole.getName(),m.getRoleName())) {
+                    if (Objects.equals(selectedRole.getName(), m.getRoleName())) {
                         roleMemberShips.add(m);
                     }
                 }
@@ -201,18 +205,29 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
     protected void configureInfoGroup(final Group group) {
 
         group.setText(Messages.details);
-        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create());
 
-        createNameField(group);
+        Composite detailsComposite = new Composite(group, SWT.NONE);
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create());
+        IViewerObservableValue<Object> selection = ViewerProperties.singleSelection().observe(getViewer());
+        context.bindValue(WidgetProperties.visible().observe(detailsComposite), new ComputedValue<Boolean>() {
 
-        createDisplayNameField(group);
+            @Override
+            protected Boolean calculate() {
+                return selection.getValue() != null;
+            }
+        });
 
-        createDescriptionField(group);
+        createNameField(detailsComposite);
+
+        createDisplayNameField(detailsComposite);
+
+        createDescriptionField(detailsComposite);
 
         setControlEnabled(getInfoGroup(), false);
     }
 
-    private void createDescriptionField(final Group group) {
+    private void createDescriptionField(final Composite group) {
         final Label descriptionLabel = new Label(group, SWT.NONE);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
         descriptionLabel.setText(Messages.description);
@@ -235,7 +250,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
         });
     }
 
-    private void createDisplayNameField(final Group group) {
+    private void createDisplayNameField(final Composite group) {
         final Label displayNameLabel = new Label(group, SWT.NONE);
         displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         displayNameLabel.setText(Messages.displayName);
@@ -262,7 +277,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
         });
     }
 
-    private void createNameField(final Group group) {
+    private void createNameField(final Composite group) {
         final Label roleName = new Label(group, SWT.NONE);
         roleName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         roleName.setText(Messages.name + " *");
@@ -351,7 +366,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage implements V
     }
 
     private String generateRolename() {
-        final Set<String> names = new HashSet<String>();
+        final Set<String> names = new HashSet<>();
         for (final Role r : roleList) {
             names.add(r.getName());
         }

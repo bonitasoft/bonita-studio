@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
@@ -119,12 +119,12 @@ public class BosArchiveTest {
         doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
-        doReturn(Status.OK_STATUS).when(bosArchive).validateDiagram(any());
+        doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
         return bosArchive;
     }
 
-    private IRepositoryStore<IRepositoryFileStore> createRepositoryStore(String name) {
-        final IRepositoryStore<IRepositoryFileStore> store = mock(IRepositoryStore.class);
+    private IRepositoryStore createRepositoryStore(String name) {
+        final IRepositoryStore store = mock(IRepositoryStore.class);
         when(store.getName()).thenReturn(name);
         return store;
     }
@@ -133,32 +133,32 @@ public class BosArchiveTest {
         return new File(URLDecoder.decode(BosArchiveTest.class.getResource(filePath).getFile(),"UTF-8"));
     }
 
-    private Repository createRepository() throws CoreException {
+    private AbstractRepository createRepository() throws CoreException {
 
         final IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
         when(fileStore.getName()).thenReturn("Customer Support-2.0.proc");
 
-        final List<IRepositoryFileStore> fileStoreList = new ArrayList<>();
+        final List fileStoreList = new ArrayList<>();
         fileStoreList.add(fileStore);
 
-        final IRepositoryStore<IRepositoryFileStore> diagramStore = mock(IRepositoryStore.class);
+        final IRepositoryStore diagramStore = mock(IRepositoryStore.class);
         when(diagramStore.getName()).thenReturn("diagrams");
         when(diagramStore.getChildren()).thenReturn(fileStoreList);
 
-        final IRepositoryStore<IRepositoryFileStore> appRessourcesStore = mock(IRepositoryStore.class);
+        final IRepositoryStore appRessourcesStore = mock(IRepositoryStore.class);
         when(appRessourcesStore.getName()).thenReturn("application_resources");
-        when(appRessourcesStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
+        when(appRessourcesStore.getChildren()).thenReturn(new ArrayList<>());
 
-        final IRepositoryStore<IRepositoryFileStore> libStore = mock(IRepositoryStore.class);
+        final IRepositoryStore libStore = mock(IRepositoryStore.class);
         when(libStore.getName()).thenReturn("lib");
         when(libStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> storeList = new ArrayList<>();
+        final List storeList = new ArrayList<>();
         storeList.add(diagramStore);
         storeList.add(appRessourcesStore);
         storeList.add(libStore);
 
-        final Repository repo = mock(Repository.class);
+        final AbstractRepository repo = mock(AbstractRepository.class);
         when(repo.getAllStores()).thenReturn(storeList);
         when(repo.getRepositoryStoreByName(anyString())).thenReturn(Optional.empty());
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));

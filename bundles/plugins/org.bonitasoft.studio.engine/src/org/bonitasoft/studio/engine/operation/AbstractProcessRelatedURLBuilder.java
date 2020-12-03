@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -27,8 +32,11 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 
 public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURLBuilder {
 
+    private static final String FIND_USER_PASSWORD_COMMAND = "org.bonitasoft.studio.actors.command.userPassword";
     protected final AbstractProcess process;
     protected String configurationId;
+
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     public AbstractProcessRelatedURLBuilder(final AbstractProcess process, final String configurationId) {
         this.process = process;
@@ -59,10 +67,20 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
         final Configuration conf = getConfiguration();
         if (conf != null && conf.getUsername() != null) {
             userName = conf.getUsername();
-            password = conf.getPassword();
+            password = retrieveUserPasswordFromActiveOrga(userName)
+                    .orElseThrow(() -> new RuntimeException(
+                            String.format("Unable to retrieve the password of %s in the active organization.",
+                                    conf.getUsername())));
         }
 
         return buildLoginUrl(userName, password);
+    }
+
+    Optional<String> retrieveUserPasswordFromActiveOrga(String user) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("userName", user);
+        Object result = commandExecutor.executeCommand(FIND_USER_PASSWORD_COMMAND, parameters);
+        return result instanceof Optional ? (Optional<String>) result : Optional.empty();
     }
 
     protected void initConfigurationId() {

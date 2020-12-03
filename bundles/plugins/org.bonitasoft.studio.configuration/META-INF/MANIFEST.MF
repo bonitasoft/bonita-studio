@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Configuration Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.configuration;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.configuration.ConfigurationPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -29,11 +29,17 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.ui;bundle-version="7.10.0",
  org.junit;bundle-version="4.12.0",
  org.bonitasoft.studio.tests-utils;bundle-version="7.10.0",
- assertj-core;bundle-version="3.6.1"
+ assertj-core;bundle-version="3.6.1",
+ org.eclipse.e4.core.di.annotations;bundle-version="1.6.600"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.configuration,
+ org.bonitasoft.studio.configuration.environment,
+ org.bonitasoft.studio.configuration.environment.impl,
+ org.bonitasoft.studio.configuration.environment.util,
  org.bonitasoft.studio.configuration.extension,
- org.bonitasoft.studio.configuration.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework",
+ org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.configuration.preferences,
+ org.bonitasoft.studio.configuration.repository,
  org.bonitasoft.studio.configuration.ui.handler
+Import-Package: org.bonitasoft.engine.form

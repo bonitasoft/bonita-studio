@@ -99,6 +99,7 @@ public class BonitaPreferenceDialog extends Dialog {
     private Composite preferencePageComposite;
     private Button btnDisplay;
     private StringMatcher matcher;
+    private Color highlightColor;
 
     private final List<IPreferencePage> applyOnBack;
 
@@ -120,6 +121,9 @@ public class BonitaPreferenceDialog extends Dialog {
         setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.APPLICATION_MODAL);
         applyOnBack = new ArrayList<>();
         swtResourcesRegistry = new SWTResourcesRegistry(parentShell.getDisplay());
+        highlightColor = PreferenceUtil.isDarkTheme()
+                ? new Color(parentShell.getDisplay(), new RGB(238, 238, 238))
+                : new Color(parentShell.getDisplay(), new RGB(80, 80, 80));
     }
 
     @Override
@@ -224,13 +228,11 @@ public class BonitaPreferenceDialog extends Dialog {
         gd_searchTxt.widthHint = 150;
         searchTxt.setLayoutData(gd_searchTxt);
         searchTxt.setText(Messages.BonitaPreferenceDialog_search);
-        searchTxt.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
 
         searchTxt.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(final ModifyEvent e) {
-                searchTxt.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
                 cleanHighlights();
                 if (!searchTxt.getText().trim().isEmpty()) {
                     filter(searchTxt.getText());
@@ -256,8 +258,7 @@ public class BonitaPreferenceDialog extends Dialog {
             item.setEnabled(true);
         }
         for (final Label l : labelPerPreferenceNode.values()) {
-            l.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-            l.setFont(BonitaStudioFontRegistry.getNormalFont());
+            l.setForeground(highlightColor);
         }
     }
 
@@ -277,7 +278,6 @@ public class BonitaPreferenceDialog extends Dialog {
 
         disableAllItems();
         if (!foundIds.isEmpty()) {
-
             for (final String id : foundIds) {
                 highlight(id);
             }
@@ -292,15 +292,12 @@ public class BonitaPreferenceDialog extends Dialog {
 
         for (final Label l : labelPerPreferenceNode.values()) {
             l.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-            l.setFont(BonitaStudioFontRegistry.getNormalFont());
         }
     }
 
     private void highlight(final String id) {
         itemPerPreferenceNode.get(id).setEnabled(true);
-        labelPerPreferenceNode.get(id).setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-        labelPerPreferenceNode.get(id).setFont(BonitaStudioFontRegistry.getHighlightedFont());
-
+        labelPerPreferenceNode.get(id).setForeground(highlightColor);
     }
 
     protected boolean wordMatches(final String text) {

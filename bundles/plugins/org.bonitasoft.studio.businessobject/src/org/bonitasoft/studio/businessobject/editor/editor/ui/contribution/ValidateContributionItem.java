@@ -22,6 +22,9 @@ import org.bonitasoft.studio.businessobject.editor.model.Package;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.BusinessObjectListValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -29,6 +32,7 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -50,7 +54,10 @@ public class ValidateContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.validate);
         item.setToolTipText(Messages.validateTooltip);
-        item.setImage(BusinessObjectPlugin.getImage("icons/validate.png"));
+        Image image = PreferenceUtil.isDarkTheme()
+                ? Pics.getImage(PicsConstants.validate_dark)
+                : Pics.getImage(PicsConstants.validate);
+        item.setImage(image);
         item.addListener(SWT.Selection, e -> validate());
         item.setEnabled(true);
     }

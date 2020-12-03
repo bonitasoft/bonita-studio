@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.json.JSONException;
@@ -110,11 +111,12 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
-            if(!PageUUIDResolver.indexFile(location.toFile()).exists()) {
+            if (!PageUUIDResolver.indexFile(location.toFile()).exists() 
+                    && UIDesignerServerManager.getInstance().isStarted()) {
                 try {
-                    new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
+                    new IndexingUIDOperation().run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (InvocationTargetException | InterruptedException e) {
-                   BonitaStudioLog.error(e);
+                    BonitaStudioLog.error(e);
                 }
             }
             String id = new PageUUIDResolver(location.toFile()).resolveUUID(uuid);
@@ -157,19 +159,20 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore#migrate(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
-                new MigrateUIDOperation().run(monitor);
+                MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
+                migrateUIDOperation.run(monitor);
+                if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
+                    throw new MigrationException(Messages.UIDMigrationFailedMessage, new Exception());
+                }
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new MigrationException(e);
             }
         }
     }
+
 
 }

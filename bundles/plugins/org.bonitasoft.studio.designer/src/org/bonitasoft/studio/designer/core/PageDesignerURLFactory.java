@@ -22,6 +22,7 @@ import java.net.URL;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.LocaleUtil;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -97,16 +98,32 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(String.format("%s/rest/pages/%s/resources", baseURL(), pageId));
     }
 
-    public URL migrate() throws MalformedURLException {
+    public URL migrateAll() throws MalformedURLException {
         return new URL(baseURL() + "/rest/migration");
     }
+
+    public URL migratePage(final String pageId) throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/page/" + pageId);
+    }
     
+    public URL migrateFragment(String fragmentId) throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/fragment/" + fragmentId);
+    }
+
+    public URL migrateWidget(String widgetId) throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/widget/" + widgetId);
+    }
+
     public URL indexation() throws MalformedURLException {
         return new URL(baseURL() + "/rest/indexing");
     }
 
     public URL newWidget() throws MalformedURLException {
         return new URL(baseURL() + "/rest/widgets/");
+    }
+
+    public URL artifactStatus() throws MalformedURLException {
+        return new URL(baseURL() + "/rest/migration/status");
     }
 
     private String host() {
@@ -135,4 +152,6 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
         return new URL(baseURL() + "/rest/fragments/");
     }
 
+
+   
 }

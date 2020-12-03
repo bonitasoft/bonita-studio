@@ -17,12 +17,17 @@ package org.bonitasoft.studio.designer.core.repository;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -34,9 +39,9 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class JSONFileStore extends AbstractFileStore {
+public class JSONFileStore extends AbstractFileStore<JSONObject> {
 
-    public JSONFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public JSONFileStore(final String fileName, final IRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
@@ -48,21 +53,13 @@ public class JSONFileStore extends AbstractFileStore {
         return getContent().getBoolean(attribute);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return null;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
+    
     @Override
-    public JSONObject getContent() throws ReadFileStoreException {
+    protected JSONObject doGetContent() throws ReadFileStoreException {
         checkState(getResource() instanceof IFile && getResource().exists());
         return toJSONObject((IFile) getResource());
     }
@@ -75,10 +72,6 @@ public class JSONFileStore extends AbstractFileStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
     @Override
     protected void doSave(final Object content) {
 

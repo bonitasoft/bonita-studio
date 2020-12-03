@@ -77,7 +77,7 @@ public class DummyEditorSite implements IEditorSite {
             @Override
             public Object compute(IEclipseContext context, String contextKey) {
                 if (keyBindingService == null) {
-                    keyBindingService = new KeyBindingService(DummyEditorSite.this);
+                    keyBindingService = new CustomKeyBindingService(DummyEditorSite.this);
                 }
 
                 return keyBindingService;

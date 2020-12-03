@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.actors.action;
 
-import java.io.FileNotFoundException;
-
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.SearchException;
@@ -23,18 +21,19 @@ import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.engine.session.InvalidSessionException;
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.extension.IEngineAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 
 /**
  * @author Romain Bioteau
@@ -59,30 +58,30 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             final String artifactId = activeOrganizationProvider.getActiveOrganization();
             final OrganizationRepositoryStore store = RepositoryManager.getInstance()
                     .getRepositoryStore(OrganizationRepositoryStore.class);
-            final OrganizationFileStore organizationFileStore = store
+            OrganizationFileStore organizationFileStore = store
                     .getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
+            if (organizationFileStore == null && !store.getChildren().isEmpty()) {
+                organizationFileStore = store.getChildren().get(0);
+            }
             if (organizationFileStore == null) {
-                throw new FileNotFoundException(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT);
+                // No organization to deploy
+                BonitaNotificator.openNotification(Messages.noOrganizationFoundTitle, Messages.noOrganizationFoundMsg);
+                return;
             }
             final PublishOrganizationOperation op = new UpdateOrganizationOperation(organizationFileStore.getContent());
             op.setSession(session);
-            op.run(Repository.NULL_PROGRESS_MONITOR);
+            op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
     }
 
     private boolean noOrganizationDeployed(final APISession session)
-            throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
-            SearchException {
+            throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, SearchException {
         final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
         return identityAPI.searchUsers(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
                 && identityAPI.searchGroups(new SearchOptionsBuilder(0, 1).done()).getCount() == 0
                 && identityAPI.searchRoles(new SearchOptionsBuilder(0, 1).done()).getCount() == 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.IEngineAction#shouldRun()
-     */
     @Override
     public boolean shouldRun() {
         return true;

@@ -18,6 +18,8 @@
  
 package org.bonitasoft.studio.groovy.library;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.IMethod;
 
 /**
@@ -46,7 +48,7 @@ public interface IFunction {
 
 	public String getContent();
 
-	public String getParameters();
+	public List<String> getParameterNames();
 
 	public boolean isStatic();
 	

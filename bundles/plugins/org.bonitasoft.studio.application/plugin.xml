@@ -1291,6 +1291,9 @@
               <contentExtension
                   pattern="org.eclipse.jdt.java.ui.javaLinkHelper">
             </contentExtension>
+              <contentExtension
+                    pattern="org.codehaus.groovy.eclipse.ui.groovyContent">
+              </contentExtension>
             <contentExtension
                   pattern="org.eclipse.jdt.java.ui.filters.*">
             </contentExtension>

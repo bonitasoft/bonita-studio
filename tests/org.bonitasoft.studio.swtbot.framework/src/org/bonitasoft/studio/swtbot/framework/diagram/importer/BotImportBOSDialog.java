@@ -74,7 +74,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
     }
-    
+
     public BotDeployDialog importAndDeploy() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 10000);
         bot.button(Messages.importButtonLabel).click();
@@ -89,6 +89,23 @@ public class BotImportBOSDialog extends BotWizardDialog {
 
     private String toAbsoluteFilePath(URL bosURLInClasspath) throws IOException {
         return new File(FileLocator.toFileURL(bosURLInClasspath).getFile()).getAbsolutePath();
+    }
+
+    public void newProject(String repoName) {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository)));
+        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository).click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithId("newRepoTextWidget")));
+        bot.textWithId("newRepoTextWidget").setText(repoName);
+        bot.sleep(400);//Delayed observable (typeText crashes on windows :S)
+    }
+
+    public void existingRepository(String repoName, Boolean current) {
+        String name = current ? repoName + " " + Messages.currentRepoinfo : repoName;
+        bot.waitUntil(
+                Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository)));
+        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository).click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.ccomboBox()));
+        bot.ccomboBox().setSelection(name);
     }
 
     @Override

@@ -851,13 +851,6 @@
       </perspective>
       </extension>
 <extension
-      point="org.bonitasoft.studio.common.configurationIdProvider">
-   <configurationIdProvider
-         configurationIdProvider="org.bonitasoft.studio.diagram.custom.ConfigurationIdProvider"
-         priority="1">
-   </configurationIdProvider>
-</extension>
-<extension
       point="org.eclipse.gmf.runtime.common.ui.services.editorProviders">
    <EditorProvider
          class="org.bonitasoft.studio.diagram.custom.providers.DiagramEditorProvider">
@@ -895,7 +888,7 @@
    <editor
          class="org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramEditor"
          contributorClass="org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramActionBarContributor"
-         default="false"
+         default="true"
          extensions="proc"
          icon="icons/ProcessDiagramFile.gif"
          id="org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID"

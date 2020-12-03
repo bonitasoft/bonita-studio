@@ -16,12 +16,16 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -29,6 +33,7 @@ import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImp
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -131,6 +136,16 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     protected IRepositoryStore<? extends IRepositoryFileStore> getSourceRepositoryStore() {
         return RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorSourceRepositoryStore.class);
+    }
+    
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if(filename != null && filename.endsWith("."+ CONNECTOR_IMPL_EXT)) {
+            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE, 
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))).validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
     }
 
 }

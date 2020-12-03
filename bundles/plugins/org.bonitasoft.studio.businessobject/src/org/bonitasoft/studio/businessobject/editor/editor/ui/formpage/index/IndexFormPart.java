@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.index;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.DeployRequiredControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.ReadOnlyBusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.index.IndexControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
@@ -25,7 +24,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -34,19 +32,15 @@ import org.eclipse.ui.forms.AbstractFormPart;
 
 public class IndexFormPart extends AbstractFormPart {
 
-    private DataBindingContext ctx = new EMFDataBindingContext();
+    private DataBindingContext ctx = new DataBindingContext();
     private IndexFormPage formPage;
     private ReadOnlyBusinessObjectList businessObjectList;
     private IndexControl indexControl;
-    private DeployRequiredControl deployRequiredControl;
 
     public IndexFormPart(Composite parent, IndexFormPage formPage) {
         this.formPage = formPage;
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        deployRequiredControl = new DeployRequiredControl(parent, formPage,
-                GridDataFactory.fillDefaults().span(2, 1).create());
 
         createBusinessObjectList(parent);
         createIndexEditionControl(parent);
@@ -78,6 +72,7 @@ public class IndexFormPart extends AbstractFormPart {
 
         businessObjectList = new ReadOnlyBusinessObjectList(businessObjectListComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
+        businessObjectList.expandAll();
     }
 
     public void refreshIndexList() {
@@ -90,14 +85,6 @@ public class IndexFormPart extends AbstractFormPart {
 
     public void showBusinessObjectSelection() {
         businessObjectList.showBusinessObjectSelection();
-    }
-
-    public void updateDeployRequiredComposite(Boolean deployRequired) {
-        if (deployRequired) {
-            deployRequiredControl.show();
-        } else {
-            deployRequiredControl.hide();
-        }
     }
 
 }

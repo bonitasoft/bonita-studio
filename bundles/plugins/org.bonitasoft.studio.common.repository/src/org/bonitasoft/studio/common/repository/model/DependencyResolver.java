@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 
-public interface DependencyResolver<T extends IRepositoryFileStore> {
+public interface DependencyResolver<T extends IRepositoryFileStore<?>> {
 
-    List<IRepositoryFileStore> findDependencies(T fStore);
+    List<IRepositoryFileStore<?>> findDependencies(T fStore);
     
 }

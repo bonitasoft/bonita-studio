@@ -696,6 +696,24 @@
                      class="Connector:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
+             <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ProvidedScriptsDeprecationConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.providedScriptDeprecationConstraint"
+                  lang="java"
+                  mode="Batch"
+                  name="Deprecated provided Groovy script usage"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+               <target
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.BPMN2ValidationConstraint"
                   id="org.bonitasoft.studio.validation.constraints.bpmn2"
@@ -1249,19 +1267,25 @@
             locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator2">
             <command
                   commandId="org.bonitasoft.studio.validation.batchValidation"
+                  icon="icons/validate.png"
+                  label="%batchValidationAction_Label"
                   style="push">
+               <parameter
+                     name="showReport"
+                     value="true">
+               </parameter>
+               <parameter
+                     name="checkAllModelVersion"
+                     value="true">
+               </parameter>
             </command>
-             <separator
-                  name="org.bonitasoft.studio.validation.separator2"
-                  visible="true">
-            </separator>
        </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
          <command
                commandId="org.bonitasoft.studio.validation.command.validateDiagram"
-               icon="icons/Accept-icon.png"
+               icon="icons/validate.png"
                style="push">
             <visibleWhen>
                <and>
@@ -1275,6 +1299,33 @@
                   </iterate>
                </and>
             </visibleWhen>
+         </command>
+         <command
+               commandId="org.bonitasoft.studio.validation.batchValidation"
+               icon="icons/validate.png"
+               label="%batchValidationAction_Label"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.application.isBonitaProject">
+                     </test>
+                  </iterate>
+               </and>
+            </visibleWhen>
+            <parameter
+                  name="showReport"
+                  value="true">
+            </parameter>
+            <parameter
+                  name="checkAllModelVersion"
+                  value="true">
+            </parameter>
          </command>
       </menuContribution>
       </extension>
@@ -1293,6 +1344,11 @@
                      name="showReport"
                      optional="true">
                </commandParameter>
+               <commandParameter
+                     id="checkAllModelVersion"
+                     name="checkAllModelVersion"
+                     optional="true">
+               </commandParameter>
       </command>
             <command
                   id="org.bonitasoft.studio.validation.command.validateDiagram"
@@ -1305,7 +1361,7 @@
                allowMultiple="false"
                category="org.bonitasoft.studio.application.bonita"
                class="org.bonitasoft.studio.validation.ui.view.ValidationViewPart"
-               icon="icons/Accept-icon.png"
+               icon="icons/validate.png"
                id="org.bonitasoft.studio.validation.view"
                name="%ValidationView"
                restorable="true">
@@ -1330,5 +1386,16 @@
          <fragment
                uri="fragment.e4xmi">
          </fragment>
+      </extension>
+      <extension
+            id="modelVersionMarker"
+            name="%modelVersionMarker"
+            point="org.eclipse.core.resources.markers">
+         <super
+               type="org.eclipse.core.resources.problemmarker">
+         </super>
+         <persistent
+               value="true">
+         </persistent>
       </extension>
 </plugin>

@@ -227,7 +227,7 @@ public class TestWebPurchase implements SWTBotConstants {
         bot.button("Add...").click();
         try {
             SWTBotTestUtil.addNewData(bot, "expirationDate", "Date", false, "Now");
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             bot.captureScreenshot("screenshots/illegalArgumentException.jpg");
             throw e;
         }
@@ -239,7 +239,8 @@ public class TestWebPurchase implements SWTBotConstants {
 
     private void stepReject(final SWTBotGefEditor gmfEditor) {
         SWTBotTestUtil
-                .selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+                .selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",
+                        SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
                         PositionConstants.SOUTH_EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
@@ -250,7 +251,8 @@ public class TestWebPurchase implements SWTBotConstants {
     }
 
     private void stepExpressDelivery(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay",
+                SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
                 PositionConstants.EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
@@ -261,7 +263,8 @@ public class TestWebPurchase implements SWTBotConstants {
     }
 
     private void stepArchive(final SWTBotGefEditor gmfEditor) {
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay",
+                SWTBotTestUtil.CONTEXTUALPALETTE_STEP,
                 PositionConstants.SOUTH_EAST);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
@@ -289,11 +292,7 @@ public class TestWebPurchase implements SWTBotConstants {
         final MainProcess model = (MainProcess) part.resolveSemanticElement();
         final Pool pool = (Pool) model.getElements().get(0);
         final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        } else {
-            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        }
+        bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for " + processLabel));
         bot.table().getTableItem("Actor mapping").select();
         bot.tree().getTreeItem("Actor1 -- Not mapped").select();

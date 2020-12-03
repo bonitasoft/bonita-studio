@@ -41,7 +41,7 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -480,7 +480,7 @@ public class DefinitionResourceProvider {
                     final IFolder targetFoler = store.getResource();
                     final IFile iconFile = targetFoler.getFile(iconName);
                     if (iconFile.exists()) {
-                        iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                        iconFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                     }
                     BufferedImage image = ImageIO.read(imageFile);
                     image = FileUtil.resizeImage(image, 16);

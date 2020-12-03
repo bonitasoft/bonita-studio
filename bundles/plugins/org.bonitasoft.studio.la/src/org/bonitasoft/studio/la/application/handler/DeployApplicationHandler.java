@@ -28,7 +28,7 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.application.handler.DeployArtifactsHandler;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.DependencyResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -70,9 +70,9 @@ public class DeployApplicationHandler {
         if (applicationFileStore.isPresent()) {
             APISession apiSession = null;
             try {
-                apiSession = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+                apiSession = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
                 DeployApplicationDescriptorOperation deployAppDescriptorOperation = getDeployAppDescriptorOperation(apiSession, repositoryAccessor, applicationFileStore);
-                deployAppDescriptorOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                deployAppDescriptorOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 return deployAppDescriptorOperation.getStatus();
             } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException
                     | ReadFileStoreException | InvocationTargetException | InterruptedException | LoginException e) {
@@ -101,7 +101,7 @@ public class DeployApplicationHandler {
                 application);
         if (applicationFileStore.isPresent()) {
             DeployArtifactsHandler deployArtifactsHandler = new DeployArtifactsHandler();
-            List<IRepositoryFileStore> defaultSelection = new ArrayList<>();
+            List<IRepositoryFileStore<?>> defaultSelection = new ArrayList<>();
             ApplicationFileStore fileStore = applicationFileStore.get();
             defaultSelection.add(fileStore);
             defaultSelection.addAll(dependencyResolver.findDependencies(fileStore));

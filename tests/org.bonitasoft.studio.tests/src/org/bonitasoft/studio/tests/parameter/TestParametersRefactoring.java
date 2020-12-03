@@ -19,9 +19,10 @@ import java.util.List;
 import org.bonitasoft.studio.application.actions.SaveCommandHandler;
 import org.bonitasoft.studio.application.actions.UndoCommandHandler;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
@@ -63,7 +64,7 @@ public class TestParametersRefactoring {
 
     @Test
     public void testParametersRefactoring()
-            throws IOException, InvocationTargetException, InterruptedException, ExecutionException {
+            throws IOException, InvocationTargetException, InterruptedException, ExecutionException, ReadFileStoreException {
         final MainProcess mainProcess = importDiagramAndOpen();
         final List<Pool> pools = ModelHelper.getChildrenProcess(mainProcess);
         assertEquals("2 pools should have been imported", 2, pools.size());
@@ -80,7 +81,7 @@ public class TestParametersRefactoring {
         removeParameter(pools, pool1Parameters, pool1Operations);
     }
 
-    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException {
+    public MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
@@ -88,7 +89,7 @@ public class TestParametersRefactoring {
                 .toFileURL(TestParametersRefactoring.class.getResource("testParametersRefactoring-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final DiagramFileStore diagramFileStore = store.getChild("testParametersRefactoring-1.0.proc", true);
         diagramFileStore.open();
         final MainProcess mainProcess = diagramFileStore.getContent();
@@ -108,7 +109,7 @@ public class TestParametersRefactoring {
     private void refactorParameter(final List<Pool> pools, final List<Parameter> pool1Parameters,
             final List<Parameter> pool2Parameters,
             final List<Operation> pool1Operations,
-            final List<Operation> pool2Operations) throws InvocationTargetException, InterruptedException {
+            final List<Operation> pool2Operations) throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final Parameter parameterToRefactor = pool1Parameters.get(0);
         final Parameter parameterWithSameName = pool2Parameters.get(0);
         final String parameterWithSameNameName = parameterWithSameName.getName();
@@ -143,7 +144,7 @@ public class TestParametersRefactoring {
     private void removeParameter(final List<Pool> pools, final List<Parameter> pool1Parameters,
             final List<Operation> operations)
             throws InvocationTargetException,
-            InterruptedException {
+            InterruptedException, ReadFileStoreException {
         final RemoveParametersOperation op = new RemoveParametersOperation(pool1Parameters.get(0), pools.get(0));
         op.setEditingDomain(TransactionUtil.getEditingDomain(pools.get(0)));
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -156,7 +157,7 @@ public class TestParametersRefactoring {
 
     private void undoParameterRefactoring(final List<Pool> pools, final List<Parameter> pool1Parameters,
             final List<Operation> operations)
-            throws ExecutionException {
+            throws ExecutionException, ReadFileStoreException {
         final UndoCommandHandler undoCommand = new UndoCommandHandler();
         undoCommand.execute(new ExecutionEvent());
         assertEquals("undo was not performed correctly", parameterName, pool1Parameters.get(0).getName());
@@ -173,7 +174,7 @@ public class TestParametersRefactoring {
         saveCommand.execute(new ExecutionEvent());
     }
 
-    public Configuration getLocalConfiguration(final Pool pool) {
+    public Configuration getLocalConfiguration(final Pool pool) throws ReadFileStoreException {
         final String id = ModelHelper.getEObjectID(pool);
         final String fileName = id + ".conf";
         final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(

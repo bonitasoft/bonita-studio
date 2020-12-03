@@ -18,27 +18,38 @@ package org.bonitasoft.studio.engine.operation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.configuration.ConfigurationPlugin;
+import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.studio.configuration.ConfigurationValidator;
+import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.model.configuration.Configuration;
+import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.ui.util.StatusCollectors;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.wiring.BundleWiring;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
@@ -70,6 +81,10 @@ public class ExportBarOperation implements IRunnableWithProgress {
     public void setConfigurationId(final String configurationId) {
         this.configurationId = configurationId;
     }
+    
+    public String getConfigurationId() {
+        return configurationId;
+    }
 
     /**
      * This method was planned only for test purpose.
@@ -89,6 +104,17 @@ public class ExportBarOperation implements IRunnableWithProgress {
 
         status = Status.OK_STATUS;
 
+        if(!barWithoutConfigIsSupported()) {
+            if (configurationId == null) {
+                configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()
+                        .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
+            }
+            status = validateConfiguration(processes, configurationId);
+            if(status.getSeverity() == IStatus.ERROR) {
+                return;
+            }
+        }
+        
         for (final AbstractProcess process : processes) {
             final File targetFolder = new File(targetFolderPath);
             if (!targetFolder.exists()) {
@@ -111,7 +137,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
     }
 
     protected IStatus exportBar(final AbstractProcess process, final File outputFile, final IProgressMonitor monitor) {
-        monitor.beginTask(Messages.bind(Messages.buildingBar, process.getName(), process.getVersion()),
+        monitor.beginTask(NLS.bind(Messages.buildingBar, process.getName(), process.getVersion()),
                 IProgressMonitor.UNKNOWN);
         try {
             final BusinessArchive bar = getBarExporter().createBusinessArchive(process, configurationId);
@@ -141,6 +167,52 @@ public class ExportBarOperation implements IRunnableWithProgress {
 
     public IStatus getStatus() {
         return status;
+    }
+    
+    private Configuration getConfiguration(final AbstractProcess process, String configurationId) {
+        Configuration configuration = null;
+        final ProcessConfigurationRepositoryStore processConfStore = getProcessConfigurationRepositoryStore();
+        Configuration emptyConfig = ConfigurationFactory.eINSTANCE.createConfiguration();
+        emptyConfig.setName(configurationId);
+        emptyConfig.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
+        if (configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+            final String id = ModelHelper.getEObjectID(process);
+            ProcessConfigurationFileStore file = processConfStore.getChild(id + ".conf", true);
+            if (file == null) {
+                file = processConfStore.createRepositoryFileStore(id + ".conf");
+                file.save(emptyConfig);
+            }
+            try {
+                configuration = file.getContent();
+            } catch (final ReadFileStoreException e) {
+                BonitaStudioLog.error("Failed to read process configuration", e);
+            }
+        } else {
+            configuration = process.getConfigurations().stream()
+                    .filter(conf -> configurationId.equals(conf.getName()))
+                    .findFirst()
+                    .orElse(emptyConfig);
+        }
+        synchronizeConfiguration(process, configuration);
+        return configuration;
+    }
+
+    private void synchronizeConfiguration(AbstractProcess process, Configuration configuration) {
+        new ConfigurationSynchronizer(process, configuration).synchronize();
+    }
+
+    private ProcessConfigurationRepositoryStore getProcessConfigurationRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+    }
+    
+    private boolean barWithoutConfigIsSupported() {
+        return !PlatformUtil.isACommunityBonitaProduct();
+    }
+
+    private IStatus validateConfiguration(Collection<AbstractProcess> processes, String configurationId) {
+        return processes.stream()
+                .map(process ->  new ConfigurationValidator(process).validate(getConfiguration(process, configurationId)))
+                .collect(StatusCollectors.toMultiStatus());
     }
 
 }

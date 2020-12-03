@@ -20,7 +20,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
@@ -35,9 +35,9 @@ public class WorkspaceSystemProperties {
     private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
     private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
-    private Repository repository;
+    private AbstractRepository repository;
 
-    public WorkspaceSystemProperties(final Repository repository) {
+    public WorkspaceSystemProperties(final AbstractRepository repository) {
         this.repository = repository;
     }
 

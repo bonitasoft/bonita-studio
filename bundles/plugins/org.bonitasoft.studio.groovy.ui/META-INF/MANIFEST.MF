@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui for Groovy Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.groovy.ui;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -79,11 +79,16 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.eclipse.jdt.ui,
  org.bonitasoft.studio.ui;bundle-version="7.9.0",
  com.ibm.icu;bundle-version="63.1.0",
- org.codehaus.groovy.eclipse.quickfix;bundle-version="3.6.0"
+ org.codehaus.groovy.eclipse.quickfix;bundle-version="3.6.0",
+ org.eclipse.gef,
+ org.eclipse.core.databinding.property;bundle-version="1.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bdm,
  org.bonitasoft.engine.bdm.dao,
+ org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.flownode,

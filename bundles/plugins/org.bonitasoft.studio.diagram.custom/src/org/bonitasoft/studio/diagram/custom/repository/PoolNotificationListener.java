@@ -91,7 +91,7 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
                 final String processUUID = ModelHelper.getEObjectID(pool);
                 final IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID + ".conf");
                 final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-                conf.setVersion(ModelVersion.CURRENT_VERSION);
+                conf.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                 confFile.save(conf);
             }
         };

@@ -14,15 +14,24 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
+import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.edapt.migration.MigrationException;
 
 
 public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore> extends AbstractFolderRepositoryStore<T> {
@@ -65,4 +74,20 @@ public abstract class WebArtifactRepositoryStore<T extends IRepositoryFileStore>
         }
         return null;
     }
+    
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if (filename != null && filename.endsWith(".json")) {
+            return new UIDModelValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename), 
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)).validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
+    }
+    
+    @Override
+    public void migrate(IRepositoryFileStore<?> fileStore, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
+       // Migration done UID side
+    }
+
 }

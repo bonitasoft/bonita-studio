@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Shell;
 public class DeleteGroovyScriptHandler extends DeleteFileHandler {
 
     @Override
-    protected WizardBuilder<Stream<IRepositoryFileStore>> createWizard(WizardBuilder<Stream<IRepositoryFileStore>> builder,
+    protected WizardBuilder<Stream<IRepositoryFileStore<?>>> createWizard(WizardBuilder<Stream<IRepositoryFileStore<?>>> builder,
             RepositoryAccessor repositoryAccessor, Shell activeShell) {
         SelectionMultiPage<GroovyRepositoryStore> selectGroovyScriptPage = new SelectionMultiPage<>(
-                repositoryAccessor, GroovyRepositoryStore.class, new FileStoreLabelProvider());
+                repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class), new FileStoreLabelProvider());
         return builder.withTitle(Messages.deleteExistingGroovyScript)
                 .havingPage(newPage()
                         .withTitle(Messages.deleteExistingGroovyScript)

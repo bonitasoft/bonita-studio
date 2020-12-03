@@ -55,7 +55,7 @@ public class EdaptHistoryIT {
     @Test
     public void should_history_latest_release_label_equals_current_model_version() throws Exception {
         final Release release = history.getLatestRelease();
-        assertThat(release.getLabel()).isEqualTo(ModelVersion.CURRENT_VERSION);
+        assertThat(release.getLabel()).isEqualTo(ModelVersion.CURRENT_DIAGRAM_VERSION);
     }
 
 }

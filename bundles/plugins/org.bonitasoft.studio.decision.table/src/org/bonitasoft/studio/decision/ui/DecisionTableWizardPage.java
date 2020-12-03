@@ -227,7 +227,7 @@ public class DecisionTableWizardPage extends WizardPage {
 
         placeHolder.setLayout(new GridLayout(6, false));
 
-        final List<ExpressionViewer> operands = new ArrayList<ExpressionViewer>();
+        final List<ExpressionViewer> operands = new ArrayList<>();
 
         final GridData iconButtonGridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
         iconButtonGridData.widthHint = iconButtonGridData.heightHint = 16;

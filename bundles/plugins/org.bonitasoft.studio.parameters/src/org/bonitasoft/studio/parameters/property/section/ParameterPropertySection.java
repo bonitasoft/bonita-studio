@@ -138,7 +138,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection
     protected void createParameterComposite(final Composite parent) {
         final Composite parameterComposite = getWidgetFactory().createComposite(parent);
         parameterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        parameterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
         final Composite buttonsComposite = getWidgetFactory().createComposite(parameterComposite, SWT.NONE);
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 3).create());
@@ -149,11 +149,11 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection
         createRemoveParameterButton(buttonsComposite);
 
         parameterTableViewer = new TableViewer(widgetFactory.createTable(parameterComposite,
-                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL)));
+                GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS)));
         parameterTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
-        getWidgetFactory().adapt(parameterTableViewer.getTable(), false, false);
+        getWidgetFactory().adapt(parameterTableViewer.getTable(), true,true);
         parameterTableViewer.getTable()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).create());
         parameterTableViewer.setSorter(new ViewerSorter());
         parameterTableViewer.addDoubleClickListener(this);
         parameterTableViewer.addSelectionChangedListener(this);

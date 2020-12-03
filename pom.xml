@@ -6,21 +6,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>7.11.5-SNAPSHOT</version>
+	<version>7.12.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<tychoVersion>1.6.0</tychoVersion>
-		<tychoExtrasVersion>1.6.0</tychoExtrasVersion>
+		<tychoVersion>1.7.0</tychoVersion>
+		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>${project.version}</bundle.version>
-		<ui.designer.version>1.11.62</ui.designer.version>
+		<ui.designer.version>1.12.41</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
-		<image-overlay-plugin.version>1.0.8</image-overlay-plugin.version>
+		<image-overlay-plugin.version>1.0.9</image-overlay-plugin.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.exclusions>
@@ -230,6 +230,12 @@
 				<groupId>org.bonitasoft.engine.data</groupId>
 				<artifactId>bonita-business-data-generator</artifactId>
 				<version>${engine.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.1</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

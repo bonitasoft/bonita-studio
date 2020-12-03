@@ -205,8 +205,8 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
                         .get(0);
                 if (configuration != null) {
                     final String mVersion = configuration.getVersion();
-                    if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
-                        configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
+                    if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
+                        configuration.setModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                     }
                     try {
                         r.save(r.getDefaultSaveOptions());

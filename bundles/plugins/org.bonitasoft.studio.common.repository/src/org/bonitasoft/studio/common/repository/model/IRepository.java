@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -49,7 +49,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void delete(IProgressMonitor monitor);
 
-    Repository open(IProgressMonitor monitor);
+    AbstractRepository open(IProgressMonitor monitor);
 
     void close();
 

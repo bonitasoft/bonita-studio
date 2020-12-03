@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -33,9 +33,7 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.StartEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,9 +55,6 @@ public class NewDiagramFactoryTest {
     private DiagramRepositoryStore diagramRepositoryStore;
 
     @Mock
-    private IPreferenceStore preferenceStore;
-
-    @Mock
     private ElementInitializers elementInitalizers;
 
     /**
@@ -67,9 +62,8 @@ public class NewDiagramFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        newDiagramFactory = spy(new NewDiagramFactory(repository, preferenceStore));
+        newDiagramFactory = spy(new NewDiagramFactory(repository));
 
-        doReturn(null).when(newDiagramFactory).getConfigurationId(any(MainProcess.class));
         when(repository.getRepositoryStore(DiagramRepositoryStore.class)).thenReturn(diagramRepositoryStore);
         when(diagramRepositoryStore.getChild(anyString(), any(Boolean.class))).thenReturn(null);
     }
@@ -82,7 +76,7 @@ public class NewDiagramFactoryTest {
         final Map<Class<?>, EObject> domainElements = newDiagramFactory.createlModel(ProcessFactory.eINSTANCE, "",
                 elementInitalizers,
                 "7.5.0-001",
-                Repository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(domainElements).containsKey(MainProcess.class);
         assertThat(domainElements).containsKey(Pool.class);
         assertThat(domainElements).containsKey(Lane.class);

@@ -43,8 +43,8 @@ public class JarBOSArchiveResourceProvider implements IBOSArchiveFileStoreProvid
      * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>() ;
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>() ;
         final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
         for (FragmentContainer fc : configuration.getProcessDependencies()) {
             List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT) ;

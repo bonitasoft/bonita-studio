@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -66,7 +66,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
     private void executeJob() {
         if (runSynchronously) {
-            doOpen(Repository.NULL_PROGRESS_MONITOR);
+            doOpen(AbstractRepository.NULL_PROGRESS_MONITOR);
         } else {
             Job job = new Job(Messages.initializingUserXP) {
 

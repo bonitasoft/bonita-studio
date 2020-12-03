@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -67,7 +67,7 @@ public class CaseDetailURLBuilderTest {
         final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
         doReturn(configuration).when(caseDetailURLBuilder).getConfiguration();
 
-        final URL url = caseDetailURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
+        final URL url = caseDetailURLBuilder.toURL(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validLocale = URLEncoder.encode("_l=fr", "UTF-8");
         final String appliPath = URLEncoder.encode("portal/homepage#?", "UTF-8");

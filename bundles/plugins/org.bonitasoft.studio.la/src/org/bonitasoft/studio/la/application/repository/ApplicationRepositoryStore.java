@@ -16,6 +16,7 @@ package org.bonitasoft.studio.la.application.repository;
 
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,13 +28,17 @@ import java.util.stream.Stream;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
@@ -49,7 +54,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
 
     @Override
     public String getName() {
-        return "applications"; //$NON-NLS-N$
+        return "applications";
     }
 
     /*
@@ -129,7 +134,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
         for (ApplicationFileStore fileStore : getChildren()) {
             try {
                 ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
-                applicationNodeContainer.getApplications().forEach(application -> updateBonitaTheme(application));
+                applicationNodeContainer.getApplications().forEach(this::updateBonitaTheme);
                 fileStore.save(applicationNodeContainer);
             } catch (ReadFileStoreException e) {
                 BonitaStudioLog.error(e);
@@ -138,8 +143,20 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     }
 
     private void updateBonitaTheme(ApplicationNode application) {
-        if(Objects.equals(application.getTheme(),"custompage_bonitadefaulttheme")) {
+        if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")) {
             application.setTheme("custompage_themeBonita");
         }
+    }
+
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        if (filename != null && filename.endsWith("." + XML_EXTENSION)) {
+            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
+                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, 
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
+                            .validate(inputStream);
+        }
+        return super.validate(filename, inputStream);
     }
 }

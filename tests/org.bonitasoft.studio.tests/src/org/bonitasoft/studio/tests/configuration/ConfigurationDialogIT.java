@@ -56,7 +56,7 @@ public class ConfigurationDialogIT {
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
-    private final static String EMPLOYEE_ACTOR = "Employee actor";
+    private static final String EMPLOYEE_ACTOR = "Employee actor";
 
     @Before
     public void setUp() throws Exception {
@@ -100,13 +100,6 @@ public class ConfigurationDialogIT {
 
     @Test
     public void testAdvancedCheckbox() {
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
-        final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
-        final MainProcess model = (MainProcess) part.resolveSemanticElement();
-        final Pool pool = (Pool) model.getElements().get(0);
-        final String processLabel = pool.getName() + " (" + pool.getVersion() + ")";
         new BotApplicationWorkbenchWindow(bot).configure();
         if (bot.checkBox().isChecked()) {
             bot.checkBox().click();

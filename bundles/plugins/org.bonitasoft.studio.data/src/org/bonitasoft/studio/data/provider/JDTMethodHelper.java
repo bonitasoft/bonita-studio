@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IField;
@@ -84,7 +84,7 @@ public class JDTMethodHelper {
                 methods.add(method);
             }
         }
-        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(Repository.NULL_PROGRESS_MONITOR);
+        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(AbstractRepository.NULL_PROGRESS_MONITOR);
         if (typeHierarchy != null) {
             Stream.of(typeHierarchy.getAllSuperclasses(type))
                     .filter(t -> !Object.class.getName().equals(t.getElementName()))
@@ -144,7 +144,7 @@ public class JDTMethodHelper {
                 methods.add(method);
             }
         }
-        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(Repository.NULL_PROGRESS_MONITOR);
+        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(AbstractRepository.NULL_PROGRESS_MONITOR);
         if (typeHierarchy != null) {
             Stream.of(typeHierarchy.getAllSuperclasses(type))
                     .filter(t -> !Object.class.getName().equals(t.getElementName()))
@@ -172,7 +172,7 @@ public class JDTMethodHelper {
     private static List<IField> getAllDeclaredFields(final IType type) throws JavaModelException {
         List<IField> fields = new ArrayList<>();
         fields.addAll(Arrays.asList(type.getFields()));
-        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(Repository.NULL_PROGRESS_MONITOR);
+        ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(AbstractRepository.NULL_PROGRESS_MONITOR);
         Stream.of(typeHierarchy.getAllSuperclasses(type))
                 .filter(t -> !Object.class.getName().equals(t.getElementName()))
                 .filter(t -> isGroovySourceType(t))

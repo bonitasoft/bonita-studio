@@ -34,7 +34,7 @@ public class BotFormFieldExpressionEditor extends AbstractBotExpressionEditor {
      * @param dataType
      */
     public BotFormFieldExpressionEditor selectFormField(final String fieldName) {
-        bot.table(1).getTableItem(fieldName).select();
+        bot.table().getTableItem(fieldName).select();
         return this;
     }
 
@@ -44,7 +44,7 @@ public class BotFormFieldExpressionEditor extends AbstractBotExpressionEditor {
     }
 
     public BotTableWidget fieldList() {
-        return new BotTableWidget(bot.table(1));
+        return new BotTableWidget(bot.table());
     }
 
 }

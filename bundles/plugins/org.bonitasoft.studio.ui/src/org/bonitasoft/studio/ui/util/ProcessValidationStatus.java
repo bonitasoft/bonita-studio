@@ -19,6 +19,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 
 public class ProcessValidationStatus extends Status {
 
@@ -39,7 +40,7 @@ public class ProcessValidationStatus extends Status {
                 String diagramFileName = process.eResource().getURI().lastSegment();
                 return String.format("%s %s %s %s (%s) ", issues,
                         issues == 1 ? Messages.issueFoundIn : Messages.issuesFoundIn, process.getName(),
-                        process.getVersion(), diagramFileName);
+                        process.getVersion(), URI.decode(diagramFileName));
             }
             return String.format("%s %s %s (%s)", issues, issues == 1 ? Messages.issueFoundIn : Messages.issuesFoundIn,
                     process.getName(), process.getVersion());

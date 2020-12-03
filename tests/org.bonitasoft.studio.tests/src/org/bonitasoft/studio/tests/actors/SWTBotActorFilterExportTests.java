@@ -49,9 +49,9 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotActorFilterExportTests {
 
-    private static final String INITIATOR_ACTORFILTER_IMPL_FILENAME = "initiator-impl-1.0.0.zip";
+    private static final String INITIATOR_ACTORFILTER_IMPL_FILENAME = "bonita-actorfilter-initiator-impl-1.0.0.zip";
 
-    private static final String INITIATOR_ACTORFILTER_IMPL_LABEL = "initiator-impl (1.0.0) -- org.bonitasoft.userfilter.initiator.ProcessInitiatorUserFilter";
+    private static final String INITIATOR_ACTORFILTER_IMPL_LABEL = "bonita-actorfilter-initiator-impl (1.0.0) -- org.bonitasoft.actorfilter.initiator.ProcessInitiatorUserFilter";
 
     private SWTGefBot bot = new SWTGefBot();
 

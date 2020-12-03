@@ -27,8 +27,9 @@ import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoSearchDescriptor;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -104,7 +105,7 @@ public class ProjectExplorerDiagramIT {
         BOSEngineManager manager = BOSEngineManager.getInstance();
         APISession session = null;
         try {
-            session = manager.loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            session = manager.loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session);
             List<ProcessDeploymentInfo> result = processAPI
                     .searchProcessDeploymentInfos(new SearchOptionsBuilder(0, 10)
@@ -162,7 +163,13 @@ public class ProjectExplorerDiagramIT {
     private String getNewDiagramName() {
         List<String> existingDiagrams = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getChildren()
                 .stream()
-                .map(DiagramFileStore::getContent)
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                       return null;
+                    }
+                })
                 .filter(diagram -> Objects.equals(diagram.getVersion(), DEFAULT_VERSION))
                 .map(MainProcess::getName)
                 .collect(Collectors.toList());

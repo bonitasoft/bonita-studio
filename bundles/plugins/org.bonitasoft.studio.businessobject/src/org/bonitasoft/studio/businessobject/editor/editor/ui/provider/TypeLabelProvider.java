@@ -24,6 +24,7 @@ import org.bonitasoft.studio.businessobject.editor.model.RelationField;
 import org.bonitasoft.studio.businessobject.editor.model.SimpleField;
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.businessobject.validator.AttributeReferenceExitenceValidator;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
@@ -48,6 +49,9 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
     private DeprecatedTypeStyler deprecatedStyler = new DeprecatedTypeStyler();
     private AttributeReferenceExitenceValidator validator;
     private Color errorColor;
+    private ColumnViewer viewer;
+    private boolean isDarkTheme;
+    private Color darkModeSelectLineUnfocused;
 
     public TypeLabelProvider(IObservableValue<BusinessObjectModel> workingCopy) {
         validator = new AttributeReferenceExitenceValidator(workingCopy);
@@ -57,6 +61,10 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
     @Override
     public void initialize(ColumnViewer viewer, ViewerColumn column) {
         super.initialize(viewer, column);
+        this.viewer = viewer;
+        isDarkTheme = PreferenceUtil.isDarkTheme();
+        darkModeSelectLineUnfocused = new Color(Display.getDefault(),
+                ColorConstants.DARK_MODE_TABLE_SELECTED_UNFOCUS);
     }
 
     @Override
@@ -135,14 +143,19 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
         // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
         // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
         if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            Rectangle bounds = event.getBounds();
             if ((event.detail & SWT.SELECTED) != 0) {
-                Color oldForeground = event.gc.getForeground();
-                event.gc.setForeground(event.item.getDisplay().getSystemColor(
-                        SWT.COLOR_LIST_SELECTION_TEXT));
+                Rectangle bounds = event.getBounds();
+                Color oldBg = event.gc.getBackground();
+                if (isDarkTheme
+                        && !Objects.equals(viewer.getControl(),
+                                viewer.getControl().getDisplay().getFocusControl())) {
+                    // Selected line background is white on dark theme if the table doesn't have the focus (only for Owner drawn cells ofc). 
+                    // We force it to a gray so it stays consistant with the theme (and became usable btw). 
+                    // Should be fixed on swt.cocoa.macosx soon (please). 
+                    event.gc.setBackground(darkModeSelectLineUnfocused);
+                }
                 event.gc.fillRectangle(bounds);
-                /* restore the old GC colors */
-                event.gc.setForeground(oldForeground);
+                event.gc.setBackground(oldBg);
                 event.detail &= ~SWT.SELECTED;
             }
         }
@@ -151,6 +164,7 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
     @Override
     public void dispose() {
         errorColor.dispose();
+        darkModeSelectLineUnfocused.dispose();
         super.dispose();
     }
 

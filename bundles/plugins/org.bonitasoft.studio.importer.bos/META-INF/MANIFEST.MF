@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bar Import plugin
 Bundle-SymbolicName: org.bonitasoft.studio.importer.bos;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -49,10 +49,10 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.businessobject,
  org.eclipse.e4.core.commands,
  org.apache.commons.io;bundle-version="2.2.0",
- org.eclipse.m2e.maven.runtime
+ org.eclipse.m2e.maven.runtime,
+ org.bonitasoft.studio.team,
+ org.eclipse.core.databinding.beans;bundle-version="1.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.studio.ui.widget,
- org.eclipse.core.databinding.beans,
- org.eclipse.jface.databinding.wizard
+ org.bonitasoft.studio.ui.widget

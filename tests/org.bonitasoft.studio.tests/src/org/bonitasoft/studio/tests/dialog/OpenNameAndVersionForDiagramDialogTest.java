@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.dialog.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -54,6 +55,7 @@ public class OpenNameAndVersionForDiagramDialogTest {
                 final MainProcess mp = ProcessFactory.eINSTANCE.createMainProcess();
                 mp.setName("TestName");
                 mp.setVersion("test.version");
+                mp.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                 final Pool pool = ProcessFactory.eINSTANCE.createPool();
                 pool.setName("Pool");
                 pool.setVersion("1.0");

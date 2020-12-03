@@ -20,6 +20,7 @@ import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.ui.wizard.FilterDefinitionWizard;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
@@ -49,7 +50,12 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
     @Override
     public String getDisplayName() {
         ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) getParentStore();
-        ConnectorDefinition def = getContent();
+        ConnectorDefinition def;
+        try {
+            def = getContent();
+        } catch (ReadFileStoreException e) {
+            return getName();
+        }
         if (def != null) {
             String defName = store.getResourceProvider().getConnectorDefinitionLabel(def);
             if (defName == null) {
@@ -63,7 +69,12 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
     @Override
     public Image getIcon() {
         ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) getParentStore();
-        ConnectorDefinition def = getContent();
+        ConnectorDefinition def;
+        try {
+            def = getContent();
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
         if (def != null) {
             return store.getResourceProvider().getDefinitionIcon(def);
         }
@@ -76,7 +87,12 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
                 .getRepositoryStore(ActorFilterDefRepositoryStore.class);
         final DefinitionResourceProvider messageProvider = DefinitionResourceProvider.getInstance(defStore,
                 ActorsPlugin.getDefault().getBundle());
-        FilterDefinitionWizard wizard = new FilterDefinitionWizard(getContent(), messageProvider);
+        FilterDefinitionWizard wizard;
+        try {
+            wizard = new FilterDefinitionWizard(getContent(), messageProvider);
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
         WizardDialog wd = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), wizard,
                 messageProvider);
         wd.open();

@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
@@ -109,7 +109,7 @@ public class FieldToContractInputMappingExpressionBuilder {
         job.getNodes().add(new ScriptVariable(data.getName(), data.getDataType().toString()));
         job.setContext(ModelHelper.getParentPool(data));
         groovyScriptExpression.getReferencedElements().addAll(job.findDependencies());
-        groovyCompilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
+        groovyCompilationUnit.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     private List<ScriptVariable> availableDao() {
@@ -129,7 +129,7 @@ public class FieldToContractInputMappingExpressionBuilder {
             throws JavaModelException {
         return (BonitaScriptGroovyCompilationUnit) new GroovyCompilationUnitFactory(repositoryAccessor).newCompilationUnit(
                 groovyScriptExpression.getContent(),
-                Repository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     private ContractInput rootContractInput(final ContractInput contractInput) {

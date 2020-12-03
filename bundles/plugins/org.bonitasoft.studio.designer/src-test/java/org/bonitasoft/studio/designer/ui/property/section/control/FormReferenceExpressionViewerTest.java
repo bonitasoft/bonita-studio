@@ -16,6 +16,7 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -68,11 +69,14 @@ public class FormReferenceExpressionViewerTest {
     public void setUp() throws Exception {
         when(repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)).thenReturn(webPageRepositoryStore);
         when(repositoryAccessor.getWorkspace()).thenReturn(workspace);
+        InternalMappingComposite composite = makeComposite();
+        when(widgetFactory.createComposite(any())).thenReturn(composite);
     }
 
     @Test
     public void should_call_createOrEditListener_when_editing_an_existing_form() throws Exception {
-        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER, widgetFactory,
+        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(
+                makeComposite(), SWT.BORDER, widgetFactory,
                 webPageRepositoryStore, createOrEditNewFormProposalListener);
 
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression().withContent("a-page-id")).build();
@@ -88,7 +92,8 @@ public class FormReferenceExpressionViewerTest {
 
     @Test
     public void should_call_createOrEditListener_and_update_expression_content_when_creating_a_new_form() throws Exception {
-        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(makeComposite(), SWT.BORDER,
+        final FormReferenceExpressionViewer formReferenceExpressionViewer = new FormReferenceExpressionViewer(
+                makeComposite(), SWT.BORDER,
                 widgetFactory,
                 webPageRepositoryStore, createOrEditNewFormProposalListener);
         final FormMapping mapping = aFormMapping().havingTargetForm(anExpression()).build();

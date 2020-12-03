@@ -103,6 +103,7 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
     private EmptySelectionMultivalidator multiValidator;
     private ContractContainer contractContainer;
     private UnselectLazyReferencesInMultipleContainer lazyFieldStatusProvider;
+    private WritableValue activeWizardPageObservable;
 
     protected CreateContractInputFromBusinessObjectWizardPage(ContractContainer contractContainer,
             GenerationOptions generationOptions,
@@ -249,9 +250,9 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         });
 
         createButtonListeners(checkedElements);
-
+        activeWizardPageObservable = new WritableValue<>();
         multiValidator = new EmptySelectionMultivalidator(selectedDataObservable, checkedElements, mappings,
-                contract.eContainer(), generationOptions.getEditModeObservable());
+                contract.eContainer(), generationOptions.getEditModeObservable(), activeWizardPageObservable);
         dbc.addValidationStatusProvider(multiValidator);
 
         new Label(viewerComposite, SWT.NONE); //FILLER
@@ -262,6 +263,12 @@ public class CreateContractInputFromBusinessObjectWizardPage extends WizardPage 
         formGenerationDocLink.addListener(SWT.Selection, event -> openBrowser(FORM_GENERATION_REDIRECT_ID));
 
         ColumnViewerToolTipSupport.enableFor(treeViewer);
+    }
+    
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        activeWizardPageObservable.setValue(visible ? this : null);
     }
 
     protected void createButtonComposite(final Composite viewerComposite) {

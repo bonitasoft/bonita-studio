@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.handler;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
@@ -37,7 +37,7 @@ public class RenameHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Repository repo = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository repo = RepositoryManager.getInstance().getCurrentRepository();
         Optional<IRenamable> renamable = selectionFinder.findElementToRename(repo);
         if (renamable.isPresent()) {
             renamable
@@ -53,7 +53,7 @@ public class RenameHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
         if (selection.isPresent() && selection.get().toList().size() == 1) {
             IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);

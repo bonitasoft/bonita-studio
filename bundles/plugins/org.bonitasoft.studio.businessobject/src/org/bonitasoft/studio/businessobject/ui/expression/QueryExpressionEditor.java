@@ -26,7 +26,6 @@ import org.bonitasoft.studio.businessobject.core.expression.model.BusinessObject
 import org.bonitasoft.studio.businessobject.core.expression.model.QueryExpressionModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionColumnLabelProvider;
@@ -68,7 +67,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-
 
 public class QueryExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -337,7 +335,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                     }
                 }
             }
-            if(observeQuerySingleSelection.getValue() == null) {
+            if (observeQuerySingleSelection.getValue() == null) {
                 if (!expressionModel.getBusinessObjects().isEmpty()) {
                     final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel.getBusinessObjects()
                             .get(0);
@@ -346,7 +344,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                 }
             }
         }
-        
+
         dataBindingContext.bindValue(
                 EMFObservables.observeDetailValue(Realm.getDefault(), observeQuerySingleSelection,
                         ExpressionPackage.Literals.EXPRESSION__NAME),

@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
@@ -22,12 +21,16 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.handler.CleanDeployBDMHandler;
 import org.bonitasoft.studio.businessobject.ui.handler.DeployBDMHandler;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -49,7 +52,10 @@ public class DeployContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.deploy);
         item.setToolTipText(Messages.deploy);
-        item.setImage(BusinessObjectPlugin.getImage("icons/deploy16.png"));
+        Image image = PreferenceUtil.isDarkTheme()
+                ? Pics.getImage(PicsConstants.deploy_16_dark)
+                : Pics.getImage(PicsConstants.deploy_16);
+        item.setImage(image);
         item.addListener(SWT.Selection, event -> deploy(false));
         item.setEnabled(isEnabled());
     }
@@ -74,7 +80,6 @@ public class DeployContributionItem extends ContributionItem {
         } else {
             new DeployBDMHandler().deploy(formPage.getRepositoryAccessor(), Display.getDefault().getActiveShell());
         }
-        formPage.getEditorContribution().observeDeployRequired().setValue(false);
     }
 
     @Override

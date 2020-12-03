@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Intro Plugin
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.intro;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.intro.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.intro,
+ org.bonitasoft.studio.intro.configurer,
  org.bonitasoft.studio.intro.content,
  org.bonitasoft.studio.intro.content.actions,
  org.bonitasoft.studio.intro.i18n

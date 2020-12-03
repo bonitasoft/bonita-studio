@@ -26,6 +26,7 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -49,7 +50,7 @@ public class OrganizationCreationTest {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Test
-    public void testAddOrganization() {
+    public void testAddOrganization() throws ReadFileStoreException {
         final String firstName1 = "Coralie";
         final String lastName1 = "Auclair";
         final String firstName2 = "Vincent";

@@ -28,7 +28,7 @@ import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
@@ -91,28 +91,28 @@ public class ImportConflictsCheckerTest {
                 .orElseThrow(() -> new Exception(fileName + " diagram not found"));
     }
 
-    private Repository createRepository() throws Exception {
+    private AbstractRepository createRepository() throws Exception {
         final IRepositoryFileStore fileStore = mock(IRepositoryFileStore.class);
         when(fileStore.getName()).thenReturn("Customer Support-2.0.proc");
 
         final List<IRepositoryFileStore> fileStoreList = new ArrayList<>();
         fileStoreList.add(fileStore);
 
-        final IRepositoryStore<IRepositoryFileStore> diagramStore = createRepositoryStore("diagrams");
+        final IRepositoryStore diagramStore = createRepositoryStore("diagrams");
         when(diagramStore.getChildren()).thenReturn(fileStoreList);
 
-        final IRepositoryStore<IRepositoryFileStore> appRessourcesStore = createRepositoryStore("application_resources");
+        final IRepositoryStore appRessourcesStore = createRepositoryStore("application_resources");
         when(appRessourcesStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final IRepositoryStore<IRepositoryFileStore> libStore = createRepositoryStore("lib");
+        final IRepositoryStore libStore = createRepositoryStore("lib");
         when(libStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
 
-        final List<IRepositoryStore<? extends IRepositoryFileStore>> storeList = new ArrayList<>();
+        final List storeList = new ArrayList<>();
         storeList.add(diagramStore);
         storeList.add(appRessourcesStore);
         storeList.add(libStore);
 
-        final Repository repo = mock(Repository.class);
+        final AbstractRepository repo = mock(AbstractRepository.class);
         when(repo.getAllStores()).thenReturn(storeList);
         when(repo.getRepositoryStoreByName(anyString())).thenReturn(Optional.empty());
         when(repo.getRepositoryStoreByName("diagrams")).thenReturn(Optional.of(diagramStore));
@@ -167,12 +167,12 @@ public class ImportConflictsCheckerTest {
         doReturn(true).when(bosArchive).canImport(notNull(String.class));
         doReturn(Arrays.asList(createRepositoryStore("application_resources"), createRepositoryStore("diagrams"),
                 createRepositoryStore("lib"))).when(bosArchive).allRepositoryStores();
-        doReturn(Status.OK_STATUS).when(bosArchive).validateDiagram(any());
+        doReturn(Status.OK_STATUS).when(bosArchive).validateFile(any(), any());
         return bosArchive;
     }
 
-    private IRepositoryStore<IRepositoryFileStore> createRepositoryStore(String name) throws UnsupportedEncodingException {
-        final IRepositoryStore<IRepositoryFileStore> store = mock(IRepositoryStore.class);
+    private IRepositoryStore createRepositoryStore(String name) throws UnsupportedEncodingException {
+        final IRepositoryStore store = mock(IRepositoryStore.class);
         final IFolder folder = createIFolder(name);
 
         when(store.getName()).thenReturn(name);

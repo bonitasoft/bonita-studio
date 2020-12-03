@@ -145,7 +145,6 @@ public class Messages extends NLS {
     public static String loadConfigurationSuccessMsg;
     public static String missingDependency;
     public static String connectorScriptingShellForbidden;
-    public static String connectorCalendarForbidden;
     public static String jarSapConnector;
 
     /**

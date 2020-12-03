@@ -25,7 +25,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.resources.IFolder;
@@ -48,7 +48,7 @@ public class ProjectClasspathFactoryTest {
     @Mock
     private IProject project;
     @Mock
-    private Repository repository;
+    private AbstractRepository repository;
 
     private ProjectClasspathFactory bonitaBPMProjectClasspath;
     @Mock

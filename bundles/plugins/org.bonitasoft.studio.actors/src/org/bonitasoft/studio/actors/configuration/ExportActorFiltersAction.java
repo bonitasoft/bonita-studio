@@ -25,7 +25,7 @@ import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ExportActorFilterArchiveOperation;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.extension.IConfigurationExportAction;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -99,7 +99,7 @@ public class ExportActorFiltersAction extends Action implements IConfigurationEx
 
                     op.setTargetPath(fileName) ;
                     op.setIncludeSources(false) ;
-                    op.run(Repository.NULL_PROGRESS_MONITOR) ;
+                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR) ;
                 }
             }
 

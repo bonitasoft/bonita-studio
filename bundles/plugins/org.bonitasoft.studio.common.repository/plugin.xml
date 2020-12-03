@@ -17,13 +17,6 @@
             class="org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceInitializer">
       </initializer>
    </extension>
-   <extension
-         point="org.bonitasoft.studio.repositoryFactory">
-      <repositoryImplementation
-            class="org.bonitasoft.studio.common.repository.RepositoryFactory"
-            priority="0">
-      </repositoryImplementation>
-   </extension>
      <extension
        point="org.eclipse.ui.menus">
        <menuContribution

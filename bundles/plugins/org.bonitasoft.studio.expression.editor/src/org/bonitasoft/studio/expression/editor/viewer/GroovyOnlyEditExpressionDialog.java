@@ -18,7 +18,10 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,20 +32,25 @@ public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
 
     protected GroovyOnlyEditExpressionDialog(final Shell parentShell, final boolean isPassword,
             final Expression inputExpression, final EObject context,
-            final EditingDomain domain, final ViewerFilter[] viewerTypeFilters, final ExpressionViewer expressionViewer) {
+            final EditingDomain domain, final ViewerFilter[] viewerTypeFilters,
+            final ExpressionViewer expressionViewer) {
         super(parentShell, isPassword, inputExpression, context, domain, viewerTypeFilters, expressionViewer);
         this.inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
     }
 
     @Override
-    protected void createExpressionTypePanel(final Composite parentForm) {
-        //DO NOT CREATE EXPRESSION TYPE PANEL
+    protected Composite createTabFolder(Composite parentForm) {
+        Composite folder = new Composite(parentForm, SWT.NONE);
+        folder.setLayout(GridLayoutFactory.fillDefaults().create());
+        folder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createContentComposite(folder);
+        return folder;
     }
 
     @Override
     public void create() {
         super.create();
-        showContent(ExpressionConstants.SCRIPT_TYPE);
+        showContent(null, ExpressionConstants.SCRIPT_TYPE);
         getShell().layout(true, true);
     }
 

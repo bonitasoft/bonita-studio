@@ -29,10 +29,11 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.ConnectorModelPlugin;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
@@ -122,7 +123,11 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                             final T defFileStore = getDefFileStore(url);
                             boolean filtered = false;
                             for (final IConnectorDefinitionFilter filter : filters) {
-                                if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                                try {
+                                    if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                                        filtered = true;
+                                    }
+                                } catch (ReadFileStoreException e) {
                                     filtered = true;
                                 }
                             }
@@ -149,7 +154,11 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 final T defFileStore = getDefFileStore(url);
                 if (defFileStore != null) {
                     for (final IConnectorDefinitionFilter filter : filters) {
-                        if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                        try {
+                            if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                                return null;
+                            }
+                        } catch (ReadFileStoreException e) {
                             return null;
                         }
                     }
@@ -179,7 +188,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         migrator.setLevel(ValidationLevel.NONE);
         final ResourceSet rSet = migrator.migrateAndLoad(
                 Collections.singletonList(resourceURI), release,
-                null, Repository.NULL_PROGRESS_MONITOR);
+                null, AbstractRepository.NULL_PROGRESS_MONITOR);
         if (!rSet.getResources().isEmpty()) {
             FileOutputStream fos = null;
             try {

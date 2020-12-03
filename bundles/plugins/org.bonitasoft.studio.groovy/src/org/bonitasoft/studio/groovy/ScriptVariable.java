@@ -27,18 +27,30 @@ public class ScriptVariable {
     private String type;
     private String defaultValue;
     private String category;
+    private String description;
 
     public String getCategory() {
 		return category;
 	}
+    
+    public String getDescription() {
+        return description;
+    }
 
 	public void setCategory(String category) {
 		this.category = category;
 	}
-
+	
 	public ScriptVariable(String name,String type){
         this.name = name;
         this.type = type ;
+    }
+
+	public ScriptVariable(String name,String type, String defaultValue, String description){
+        this.name = name;
+        this.type = type ;
+        this.description = description;
+        setDefaultValue(defaultValue);
     }
 
     public ScriptVariable(String name,String type,String defaultValue){

@@ -30,11 +30,11 @@ import org.eclipse.core.resources.IFile;
  * @author Romain Bioteau
  *
  */
-public abstract class PropertiesFileStore extends AbstractFileStore implements IRepositoryFileStore {
+public abstract class PropertiesFileStore extends AbstractFileStore<Properties> {
 
 	private Properties properties;
 
-	public PropertiesFileStore(String fileName,IRepositoryStore store){
+	public PropertiesFileStore(String fileName, IRepositoryStore store){
 		super(fileName, store) ;
 		InputStream is = null ; 
 		if(getResource() != null && getResource().exists()){
@@ -67,12 +67,9 @@ public abstract class PropertiesFileStore extends AbstractFileStore implements I
 		return properties ;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.IRepositoryFileStore#getContent()
-	 */
 	@Override
-	public Properties getContent() {
-		return properties;
+	protected Properties doGetContent() {
+	    return properties;
 	}
 
 	

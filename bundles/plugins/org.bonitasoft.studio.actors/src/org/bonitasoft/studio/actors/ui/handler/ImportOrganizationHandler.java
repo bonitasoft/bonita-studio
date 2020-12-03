@@ -28,10 +28,12 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -63,15 +65,28 @@ public class ImportOrganizationHandler extends AbstractHandler {
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException,
                             InterruptedException {
                         monitor.beginTask(Messages.importingOrganization, IProgressMonitor.UNKNOWN);
-                        FileInputStream fis = null;
-                        try {
-                            fis = new FileInputStream(filePath);
-                            final String id = new File(filePath).getName();
+                        File file = new File(filePath);
+                        try(FileInputStream fis = new FileInputStream(file)) {
+                            IStatus status = organizationStore.validate(file.getName(), fis);
+                            if(status.getSeverity() == IStatus.ERROR) {
+                                MessageDialog.openError(Display.getDefault().getActiveShell(), 
+                                        Messages.importOrganizationFailedTitle, 
+                                        status.getMessage());
+                                return;
+                            }
+                        } catch (IOException e1) {
+                            MessageDialog.openError(Display.getDefault().getActiveShell(), 
+                                    Messages.importOrganizationFailedTitle, 
+                                    e1.getMessage());
+                            return;
+                        } 
+                        
+                        try(FileInputStream fis = new FileInputStream(file)) {
+                            final String id = file.getName();
                             FileActionDialog.setThrowExceptionOnCancel(true);
-                            final OrganizationFileStore file = organizationStore.importInputStream(id, fis);
-
-                            if (file != null && file.isCorrectlySyntaxed()) {
-                                final IStatus status = validateImportedOrganization(file);
+                            final OrganizationFileStore fStore = organizationStore.importInputStream(id, fis);
+                            if (fStore != null && fStore.isCorrectlySyntaxed()) {
+                                final IStatus status = validateImportedOrganization(fStore);
                                 if (!status.isOK()) {
                                     new MultiStatusDialog(Display.getDefault().getActiveShell(),
                                             Messages.importOrganizationWithWarningTitle,
@@ -86,9 +101,8 @@ public class ImportOrganizationHandler extends AbstractHandler {
                                 }
 
                             } else {
-                                fis.close();
-                                if (file != null) {
-                                    file.delete();
+                                if (fStore != null) {
+                                    fStore.delete();
                                 }
                                 MessageDialog.openError(Display.getDefault().getActiveShell(),
                                         Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
@@ -102,25 +116,17 @@ public class ImportOrganizationHandler extends AbstractHandler {
                                     Messages.importOrganizationCancelledTitle, message);
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
-                            final OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName()
+                            final OrganizationFileStore fStore = organizationStore.getChild(file.getName()
                                     .replace(".xml", "." + OrganizationRepositoryStore.ORGANIZATION_EXT), true);
-                            if (file != null) {
-                                file.delete();
+                            if (fStore != null) {
+                                fStore.delete();
                             }
                             new BonitaErrorDialog(Display.getDefault().getActiveShell(),
                                     Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage, e)
                                             .open();
                         } finally {
                             FileActionDialog.setThrowExceptionOnCancel(false);
-                            if (fis != null) {
-                                try {
-                                    fis.close();
-                                } catch (final IOException e) {
-
-                                }
-                            }
                         }
-
                     }
 
                 });
@@ -134,7 +140,11 @@ public class ImportOrganizationHandler extends AbstractHandler {
     }
 
     protected IStatus validateImportedOrganization(final OrganizationFileStore fileStore) {
-        return new OrganizationValidator().validate(fileStore.getContent());
+        try {
+            return new OrganizationValidator().validate(fileStore.getContent());
+        } catch (ReadFileStoreException e) {
+            return ValidationStatus.error(e.getMessage());
+        }
     }
 
     @Override

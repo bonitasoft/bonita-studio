@@ -8,12 +8,10 @@
  *******************************************************************************/
 package org.bonitasoft.studio.businessobject.editor.editor.ui.contribution;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.ui.editors.contribution.AbstractExportContributionItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
 
 public class ExportBDMContributionItem extends AbstractExportContributionItem<AbstractBdmFormPage> {
 
@@ -24,12 +22,6 @@ public class ExportBDMContributionItem extends AbstractExportContributionItem<Ab
     public ExportBDMContributionItem(AbstractBdmFormPage formPage) {
         super(ID, formPage);
         commandExecutor = new CommandExecutor();
-    }
-
-    @Override
-    public void fill(ToolBar parent, int index) {
-        super.fill(parent, index);
-        item.setImage(BusinessObjectPlugin.getImage("icons/export-bdm.png"));
     }
 
     @Override
