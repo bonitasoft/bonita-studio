@@ -105,14 +105,14 @@ public class ProjectExplorerBot extends BotBase {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
         projectTreeItem.contextMenu().menu("New").menu("Actor filter definition...").click();
-        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.newFilterDefinition);
+        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
     }
 
     public ConnectorImplementationWizardBot newActorFilterImplementation() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
         projectTreeItem.contextMenu().menu("New").menu("Actor filter implementation...").click();
-        return new ConnectorImplementationWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.newFilterImplementation);
+        return new ConnectorImplementationWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
     }
 
     public OrganizationProjectExplorerBot organization() {

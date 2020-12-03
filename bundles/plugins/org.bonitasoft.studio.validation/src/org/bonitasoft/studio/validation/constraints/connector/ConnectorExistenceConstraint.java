@@ -1,10 +1,10 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
@@ -28,7 +28,7 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
         AbstractDefinitionRepositoryStore<?> connectorDefStore = null;
         boolean isConnector = true;
         if (!(connector instanceof ActorFilter)) {
-            connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
+            connectorDefStore = RepositoryManager
                     .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         } else {
             isConnector = false;

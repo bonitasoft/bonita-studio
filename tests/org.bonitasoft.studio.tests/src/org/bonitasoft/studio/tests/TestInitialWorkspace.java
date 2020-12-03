@@ -16,9 +16,9 @@ package org.bonitasoft.studio.tests;
 
 import static org.junit.Assert.assertNotSame;
 
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.junit.Test;
 

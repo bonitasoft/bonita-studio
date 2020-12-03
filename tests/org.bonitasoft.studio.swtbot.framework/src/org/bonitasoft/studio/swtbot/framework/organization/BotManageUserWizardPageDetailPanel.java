@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.organization;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 

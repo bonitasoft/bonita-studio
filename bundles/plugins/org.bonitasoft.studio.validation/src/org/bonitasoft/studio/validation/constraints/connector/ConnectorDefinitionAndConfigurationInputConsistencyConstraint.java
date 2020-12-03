@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.process.ActorFilter;
@@ -32,30 +32,39 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
 
     @Override
     protected IStatus performBatchValidation(IValidationContext context) {
-        Connector connector = (Connector)context.getTarget();
+        Connector connector = (Connector) context.getTarget();
         AbstractDefinitionRepositoryStore<?> connectorDefStore = null;
         boolean isConnector = true;
-        if(!(connector instanceof ActorFilter)){
+        if (!(connector instanceof ActorFilter)) {
             connectorDefStore = getConnectorDefinitionRepositoryStore();
-        }else{
+        } else {
             isConnector = false;
             connectorDefStore = getActorFilterDefinitionStore();
         }
         ConnectorConfiguration configuration = connector.getConfiguration();
-        if(configuration == null){
+        if (configuration == null) {
             return context.createSuccessStatus();
         }
 
-        ConnectorDefinition def = connectorDefStore.getDefinition(configuration.getDefinitionId(),configuration.getVersion());
-        if (def!=null){
+        ConnectorDefinition def = connectorDefStore.getDefinition(configuration.getDefinitionId(),
+                configuration.getVersion());
+        if (def != null) {
             AbstractDefFileStore fStore = getDefFileStore(connectorDefStore, def);
-            if(!fStore.isReadOnly()){
-                IStatus inputStatus = checkInputConsistency(configuration, def,context);
-                if(!inputStatus.isOK()){
-                    if(isConnector){
-                        return context.createFailureStatus( Messages.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,new Object[]{connector.getName(),connector.getDefinitionId()+"--"+connector.getDefinitionVersion(),inputStatus.getMessage()}));
-                    }else{
-                        return context.createFailureStatus( Messages.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,new Object[]{connector.getName(),connector.getDefinitionId()+"--"+connector.getDefinitionVersion(),inputStatus.getMessage()}));
+            if (!fStore.isReadOnly()) {
+                IStatus inputStatus = checkInputConsistency(configuration, def, context);
+                if (!inputStatus.isOK()) {
+                    if (isConnector) {
+                        return context.createFailureStatus(
+                                Messages.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,
+                                        new Object[] { connector.getName(),
+                                                connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
+                                                inputStatus.getMessage() }));
+                    } else {
+                        return context.createFailureStatus(
+                                Messages.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,
+                                        new Object[] { connector.getName(),
+                                                connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
+                                                inputStatus.getMessage() }));
                     }
                 }
             }
@@ -63,46 +72,48 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
         return context.createSuccessStatus();
     }
 
-    protected AbstractDefFileStore getDefFileStore(AbstractDefinitionRepositoryStore<?> connectorDefStore, ConnectorDefinition def) {
+    protected AbstractDefFileStore getDefFileStore(AbstractDefinitionRepositoryStore<?> connectorDefStore,
+            ConnectorDefinition def) {
         return (AbstractDefFileStore) connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()), true);
     }
 
-    protected IStatus checkInputConsistency(ConnectorConfiguration configuration,ConnectorDefinition def, IValidationContext context) {
+    protected IStatus checkInputConsistency(ConnectorConfiguration configuration, ConnectorDefinition def,
+            IValidationContext context) {
         List<Input> inputs = def.getInput();
-        Set<String> inputNames = new HashSet<String>(); 
-        for(Input in : inputs){
+        Set<String> inputNames = new HashSet<>();
+        for (Input in : inputs) {
             inputNames.add(in.getName());
         }
-        Set<String> connectorParamKey = new HashSet<String>(); 
-        for(ConnectorParameter parameter : configuration.getParameters()){
+        Set<String> connectorParamKey = new HashSet<>();
+        for (ConnectorParameter parameter : configuration.getParameters()) {
             connectorParamKey.add(parameter.getKey());
         }
-        if(inputNames.equals(connectorParamKey)){
+        if (inputNames.equals(connectorParamKey)) {
             return context.createSuccessStatus();
         }
         StringBuilder sb = new StringBuilder();
         sb.append(checkNewMandatoryInputs(inputs, connectorParamKey).toString());
         sb.append(checkRemovedInputs(inputs, connectorParamKey).toString());
 
-        if(sb.length() > 1 ){
-            sb = sb.delete(sb.length()-2, sb.length());
+        if (sb.length() > 1) {
+            sb = sb.delete(sb.length() - 2, sb.length());
         }
-        if(sb.length() == 0){
+        if (sb.length() == 0) {
             return context.createSuccessStatus();
         }
         return context.createFailureStatus(sb.toString());
     }
 
-    protected StringBuilder checkRemovedInputs(List<Input> inputs,Set<String> connectorParamKey) {
+    protected StringBuilder checkRemovedInputs(List<Input> inputs, Set<String> connectorParamKey) {
         StringBuilder sb = new StringBuilder();
-        Set<String> inputNames = new HashSet<String>(); 
-        for(Input in : inputs){
+        Set<String> inputNames = new HashSet<>();
+        for (Input in : inputs) {
             inputNames.add(in.getName());
         }
-        for(String key : connectorParamKey){
-            if(!inputNames.contains(key)){
+        for (String key : connectorParamKey) {
+            if (!inputNames.contains(key)) {
                 sb.append(key);
-                sb.append("("+Messages.removed+"), ");
+                sb.append("(" + Messages.removed + "), ");
             }
         }
         return sb;
@@ -110,20 +121,20 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
 
     protected StringBuilder checkNewMandatoryInputs(List<Input> inputs, Set<String> connectorParamKey) {
         StringBuilder sb = new StringBuilder();
-        Set<String> inputNames = new HashSet<String>(); 
-        for(Input in : inputs){
+        Set<String> inputNames = new HashSet<>();
+        for (Input in : inputs) {
             inputNames.add(in.getName());
         }
         inputNames.removeAll(connectorParamKey);
-        for(Input in : inputs){
-            if(inputNames.contains(in.getName())
-                    && !in.isMandatory()){
+        for (Input in : inputs) {
+            if (inputNames.contains(in.getName())
+                    && !in.isMandatory()) {
                 inputNames.remove(in.getName());
             }
         }
-        for(String name : inputNames){
+        for (String name : inputNames) {
             sb.append(name);
-            sb.append("("+Messages.mandatory+"), ");
+            sb.append("(" + Messages.mandatory + "), ");
         }
         return sb;
     }

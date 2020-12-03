@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.zip.ZipException;
 
-import org.bonitasoft.studio.actors.repository.ExportActorFilterArchiveOperation;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ExportConnectorArchiveOperation;
+import org.bonitasoft.studio.identity.actors.repository.ExportActorFilterArchiveOperation;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.IProgressMonitor;

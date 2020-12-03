@@ -26,8 +26,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.Artifact;
 import org.bonitasoft.studio.application.ui.control.model.ArtifactVersion;
@@ -46,6 +44,8 @@ import org.bonitasoft.studio.common.repository.ui.viewer.FileStoreTreeStructureA
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.extension.IEnvironmentProvider;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
@@ -594,8 +594,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 .useNativeRender()
                 .labelAbove()
                 .widthHint(530)
-                .withLabel(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)
-                .withTootltip(org.bonitasoft.studio.actors.i18n.Messages.defaultUserTooltip)
+                .withLabel(org.bonitasoft.studio.identity.i18n.Messages.defaultUser)
+                .withTootltip(org.bonitasoft.studio.identity.i18n.Messages.defaultUserTooltip)
                 .bindTo(usernameObservable)
                 .withProposalProvider(usernameProposalProvider)
                 .withValidator(defaultUserValidator().create())
@@ -647,14 +647,14 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             selectedOrganization = ((OrganizationArtifact) getDefaultOrganization()).getModel();
         }
         if (selectedOrganization != null) {
-            IStatus status = new EmptyInputValidator(org.bonitasoft.studio.actors.i18n.Messages.defaultUser)
+            IStatus status = new EmptyInputValidator(org.bonitasoft.studio.identity.i18n.Messages.defaultUser)
                     .validate(user);
             if (!status.isOK()) {
                 return status;
             }
             if (Stream.of(usernames(selectedOrganization)).noneMatch(user::equals)) {
                 return ValidationStatus
-                        .error(Messages.bind(org.bonitasoft.studio.actors.i18n.Messages.UserDoesntExistError, user));
+                        .error(Messages.bind(org.bonitasoft.studio.identity.i18n.Messages.UserDoesntExistError, user));
             }
         }
         return ValidationStatus.ok();

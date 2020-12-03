@@ -20,13 +20,13 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.actors.model.organization.Group;
-import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.identity.i18n.Messages;
+import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;

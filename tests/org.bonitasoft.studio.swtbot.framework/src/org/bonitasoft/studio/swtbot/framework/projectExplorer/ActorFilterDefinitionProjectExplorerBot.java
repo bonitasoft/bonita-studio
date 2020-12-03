@@ -29,22 +29,22 @@ public class ActorFilterDefinitionProjectExplorerBot extends ProjectExplorerBot 
     public ConnectorDefinitionWizardBot newConnectorDefinition() {
         clickOnContextualMenu(getActorFilterDefFolderTreeItem(), "New...");
         return new ConnectorDefinitionWizardBot(bot,
-                org.bonitasoft.studio.actors.i18n.Messages.newFilterDefinition);
+                org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
     }
 
     public ConnectorDefinitionWizardBot openActorFilterDefinition(String actorFilterDef, String version) {
         clickOnContextualMenu(getActorFilterDefTreeItem(actorFilterDef, version), "Open");
-        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.editFilterDefinition);
+        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.editFilterDefinition);
     }
 
     public ConnectorDefinitionWizardBot renameActorFilterDefinition(String actorFilterDef, String version) {
         clickOnContextualMenu(getActorFilterDefTreeItem(actorFilterDef, version), "Rename...");
-        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.actors.i18n.Messages.editFilterDefinition);
+        return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.editFilterDefinition);
     }
 
     public BotDialog exportActorFilterFromDefinition(String actorFilterDef, String version) {
         clickOnContextualMenu(getActorFilterDefTreeItem(actorFilterDef, version), "Export...");
-        return new BotDialog(bot, org.bonitasoft.studio.actors.i18n.Messages.selectFilterImplementationToExportTitle);
+        return new BotDialog(bot, org.bonitasoft.studio.identity.i18n.Messages.selectFilterImplementationToExportTitle);
     }
 
     public void deleteActorFilterDefinition(String connectorDef, String version) {

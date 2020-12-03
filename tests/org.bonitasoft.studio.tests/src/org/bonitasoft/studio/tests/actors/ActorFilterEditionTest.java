@@ -19,8 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.actors.ActorsPlugin;
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -28,6 +26,8 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvid
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
+import org.bonitasoft.studio.identity.IdentityPlugin;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.SelectNodeUnder;
@@ -164,7 +164,7 @@ public class ActorFilterEditionTest {
         assertEquals("category size should be equal to 1", connectorDef
                 .getCategory().size(), 1);
         final DefinitionResourceProvider messageProvider = DefinitionResourceProvider
-                .getInstance(store, ActorsPlugin.getDefault().getBundle());
+                .getInstance(store, IdentityPlugin.getDefault().getBundle());
         SWTBotActorFilterUtil.activateActorFilterDefEditionShell(bot);
         final Category category = connectorDef.getCategory().get(0);
         String categoryLabel = messageProvider.getCategoryLabel(category);

@@ -25,7 +25,7 @@ public class BotConfigureDialog extends BotWizardDialog {
     }
 
     public BotActorMappingConfigurationPage selectActorMapping() {
-        bot.table().select(org.bonitasoft.studio.actors.i18n.Messages.actorMapping);
+        bot.table().select(org.bonitasoft.studio.identity.i18n.Messages.actorMapping);
         return new BotActorMappingConfigurationPage(bot);
     }
 

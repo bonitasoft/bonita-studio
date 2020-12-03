@@ -16,9 +16,9 @@ package org.bonitasoft.studio.tests.projectExplorer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;

@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -34,6 +33,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFacto
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -91,7 +91,8 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
         abstractFileStore = mock(AbstractDefFileStore.class);
         when(abstractFileStore.isReadOnly()).thenReturn(false);
-        doReturn(abstractFileStore).when(constraintUnderTest).getDefFileStore(any(AbstractDefinitionRepositoryStore.class), any(ConnectorDefinition.class));
+        doReturn(abstractFileStore).when(constraintUnderTest).getDefFileStore(any(AbstractDefinitionRepositoryStore.class),
+                any(ConnectorDefinition.class));
     }
 
     /**
@@ -288,7 +289,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckNewMandatoryInputs_ReturnAStringContainingNewMandatoryInputOnly() throws Exception {
-        final Set<String> connectorParamKey = new HashSet<String>();
+        final Set<String> connectorParamKey = new HashSet<>();
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
@@ -299,13 +300,14 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         def.getInput().add(createInput("input2", Boolean.class.getName()));
         def.getInput().add(createInput("input3", String.class.getName()));
 
-        assertThat(constraintUnderTest.checkNewMandatoryInputs(def.getInput(), connectorParamKey).toString()).contains("input1").doesNotContain("input2")
+        assertThat(constraintUnderTest.checkNewMandatoryInputs(def.getInput(), connectorParamKey).toString())
+                .contains("input1").doesNotContain("input2")
                 .doesNotContain("input3");
     }
 
     @Test
     public void shouldCheckNewMandatoryInputs_ReturnAnEmptyString() throws Exception {
-        final Set<String> connectorParamKey = new HashSet<String>();
+        final Set<String> connectorParamKey = new HashSet<>();
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
@@ -321,7 +323,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckRemovedInputs_ReturnAnEmptyString() throws Exception {
-        final Set<String> connectorParamKey = new HashSet<String>();
+        final Set<String> connectorParamKey = new HashSet<>();
         connectorParamKey.add("input1");
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
@@ -339,7 +341,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckRemovedInputs_ReturnAStringContainingRemovedInputs() throws Exception {
-        final Set<String> connectorParamKey = new HashSet<String>();
+        final Set<String> connectorParamKey = new HashSet<>();
         connectorParamKey.add("input1");
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");

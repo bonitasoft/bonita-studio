@@ -16,7 +16,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.actors;
 
 import java.util.Objects;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -59,7 +59,7 @@ public class BotActorDefinitionPropertySection extends BotBase {
 
     public BotActorDefinitionPropertySection selectActor(final String actorName) {
         final SWTBotTable table = bot.table();
-        final int actorIdx = table.indexOf(actorName, org.bonitasoft.studio.actors.i18n.Messages.name);
+        final int actorIdx = table.indexOf(actorName, org.bonitasoft.studio.identity.i18n.Messages.name);
         table.getTableItem(actorIdx).select();
         return this;
     }

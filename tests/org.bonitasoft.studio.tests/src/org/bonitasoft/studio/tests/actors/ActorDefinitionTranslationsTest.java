@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import org.bonitasoft.studio.actors.ActorsPlugin;
-import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.identity.IdentityPlugin;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -129,11 +129,11 @@ public class ActorDefinitionTranslationsTest {
         int line = bot.table().indexOf(language, "Locale");
         bot.table().getTableItem(line).check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
+        ActorFilterDefRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(
                         ActorFilterDefRepositoryStore.class);
         DefinitionResourceProvider resourceProvider = DefinitionResourceProvider
-                .getInstance(store, ActorsPlugin.getDefault().getBundle());
+                .getInstance(store, IdentityPlugin.getDefault().getBundle());
         List<File> resources = resourceProvider
                 .getExistingLocalesResource(store.getDefinition(
                         "testTranslationWizardPage", "1.0.0"));
@@ -199,7 +199,7 @@ public class ActorDefinitionTranslationsTest {
     private void createWidget(String widgetId, String widgetType, int inputIndex) {
         bot.button("Add...").click();
         bot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
                 bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
@@ -207,7 +207,7 @@ public class ActorDefinitionTranslationsTest {
                 activeShell.setFocus();
                 return activeShell.isActive();
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";

@@ -23,7 +23,6 @@
         <module>org.bonitasoft.studio.model.edit</module>
         <module>org.bonitasoft.studio.tests-utils</module>
         <module>org.bonitasoft.studio.diagram</module>
-        <module>org.bonitasoft.studio.actors</module>
         <module>org.bonitasoft.studio.businessobject</module>
         <module>org.bonitasoft.studio.common</module>
         <module>org.bonitasoft.studio.common.diagram</module>
@@ -56,11 +55,12 @@
         <module>org.bonitasoft.studio.expression.editor.win32</module>
         <module>org.bonitasoft.studio.groovy</module>
         <module>org.bonitasoft.studio.groovy.ui</module>
+        <module>org.bonitasoft.studio.identity</module>
         <module>org.bonitasoft.studio.importer</module>
         <module>org.bonitasoft.studio.importer.bos</module>
+        <module>org.bonitasoft.studio.intro</module>
         <module>org.bonitasoft.studio.la</module>
         <module>org.bonitasoft.studio.migration</module>
-        <module>org.bonitasoft.studio.intro</module>
         <module>org.bonitasoft.studio.model.edit.custom</module>
         <module>org.bonitasoft.studio.refactoring</module>
         <module>org.bonitasoft.studio.parameters</module>
