@@ -61,7 +61,8 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Override
     protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(repositoryAccessor,
+        final FormReferenceExpressionValidator formReferenceExpressionValidator = new FormReferenceExpressionValidator(
+                repositoryAccessor,
                 getFormMappingFeature());
         formMappingRadioGroup = new FormMappingRadioGroup(parent, getWidgetFactory(), preferenceStore,
                 repositoryAccessor, formReferenceExpressionValidator, createOrEditListener);
@@ -78,9 +79,6 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
 
     @Override
     public void dispose() {
-        if (formMappingRadioGroup != null) {
-            formMappingRadioGroup.dispose();
-        }
         if (context != null) {
             context.dispose();
         }
@@ -92,7 +90,7 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
         super.setInput(part, selection);
         selectionProvider.setSelection(selection);
     }
-    
+
     @Override
     public String getSectionDescription() {
         return Messages.entryFormMappingDescription;

@@ -8,8 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -134,13 +135,13 @@ public class ValidationTestBase {
     }
 
     protected MainProcess getDiagramFromArchive(final String archiveName, final String diagramName,
-            final String diagramVersion) throws IOException, InvocationTargetException, InterruptedException {
+            final String diagramVersion) throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
         final URL url = TestValidationConstraints.class.getResource(archiveName);
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.disableValidation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore fStore = store.getDiagram(diagramName, diagramVersion);
         assertNotNull(fStore);

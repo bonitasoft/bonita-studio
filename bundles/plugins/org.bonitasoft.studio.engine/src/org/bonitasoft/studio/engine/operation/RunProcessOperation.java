@@ -21,7 +21,7 @@ import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
@@ -237,7 +237,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
     @Override
     public void run() {
         try {
-            run(Repository.NULL_PROGRESS_MONITOR);
+            run(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e);
         } catch (final InterruptedException e) {

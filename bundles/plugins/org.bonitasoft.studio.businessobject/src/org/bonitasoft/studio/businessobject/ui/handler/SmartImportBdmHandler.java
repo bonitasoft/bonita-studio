@@ -26,6 +26,7 @@ import javax.inject.Named;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -37,6 +38,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.SmartImportBdmPage;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -89,12 +91,18 @@ public class SmartImportBdmHandler extends AbstractHandler {
                         .map(BusinessDataModelEditorContribution.class::cast)
                         .ifPresent(contribution -> {
                             retrieveBdmFileStore(repositoryAccessor).ifPresent(fStore -> {
+                                try {
+                                org.bonitasoft.engine.bdm.model.BusinessObjectModel model = fStore.getContent();
                                 BusinessObjectModel businessObjectModel = contribution.getConverter()
-                                        .toEmfModel(fStore.getContent(), contribution.loadBdmArtifactDescriptor());
+                                        .toEmfModel(model, contribution.loadBdmArtifactDescriptor());
                                 IObservableValue<BusinessObjectModel> workingCopyObservable = contribution
                                         .observeWorkingCopy();
                                 workingCopyObservable.getRealm()
                                         .exec(() -> workingCopyObservable.setValue(businessObjectModel));
+                                } catch (ReadFileStoreException e) {
+                                    BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+                                    return;
+                                }
                             });
                         }));
     }

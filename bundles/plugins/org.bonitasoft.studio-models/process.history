@@ -15129,5 +15129,22 @@
   <releases xmi:id="_ULmOgLX-Eeq4FY7VcpLJTw" date="2020-06-23T11:25:27.494+0200" label="7.11.1-001">
     <changes xsi:type="history:MigrationChange" xmi:id="_bGouALX-Eeq4FY7VcpLJTw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateLDAPConnectorVersionTo110"/>
   </releases>
+  <releases xmi:id="_WB_cUPyzEeqbNf3UDvWEaw" date="2020-09-22T11:25:27.494+0200" label="7.12.0-001">
+    <changes xsi:type="history:MigrationChange" xmi:id="_WCADYPyzEeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateInitiatorActorFilterDefinition"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_8BYSwPy1EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateInitiatorManagerActorFilterDefinition"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_-cvh8Py1EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateUserManagerActorFilterDefinition"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_AHJOQPy2EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateSingleUserActorFilterDefinition"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_BlCvoPy2EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCustomUserInfoActorFilterDefinition"/>
+    <changes xsi:type="history:MigrationChange" xmi:id="_ENYq4Py2EeqbNf3UDvWEaw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateSameTaskActorFilterDefinition"/>
+  </releases>
+  <releases xmi:id="_cF18cATHEeucZo-Urx5qXw" date="2020-10-02T11:25:27.494+0200" label="7.12.0-002">
+    <changes xsi:type="history:MigrationChange" xmi:id="_cF18dgTHEeucZo-Urx5qXw" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateGoogleCalendarDefinitionTo110"/>
+  </releases>
+  <releases xmi:id="_By8VUAo2Eeuyz_cP-Eh7FA" date="2020-10-09T11:25:27.494+0200" label="7.12.0-003">
+    <changes xsi:type="history:MigrationChange" xmi:id="_By8VUQo2Eeuyz_cP-Eh7FA" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateEmailConnectorVersionTo120"/>
+  </releases>
+  <releases xmi:id="_JE4CPo2IhfYz_Ev-OD6UY" date="2020-14-09T11:25:27.494+0200" label="7.12.0-004">
+    <changes xsi:type="history:MigrationChange" xmi:id="_JE4CPo2IhfYz_Ev-OD6UY" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateDeprecatedGroovyConnector"/>
+  </releases>
   <releases xmi:id="_tt2RcE8LEeq0LYHRol2p7w"/>
 </history:History>

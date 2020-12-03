@@ -15,17 +15,27 @@
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
 public class ImportBdmContentValidator implements IValidator<String> {
+
+    private BusinessObjectModelRepositoryStore<?> store;
+
+    public ImportBdmContentValidator(BusinessObjectModelRepositoryStore<?> store) {
+        this.store = store;
+    }
 
     @Override
     public IStatus validate(String value) {
@@ -38,8 +48,19 @@ public class ImportBdmContentValidator implements IValidator<String> {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            try {
+                return checkBDMVersion(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return ValidationStatus.ok();
+    }
+    
+    private IStatus checkBDMVersion(File value) throws FileNotFoundException, IOException {
+        try(InputStream is = new FileInputStream(value)){
+            return store.validate(BusinessObjectModelFileStore. ZIP_FILENAME, is);
+        }
     }
 
 }

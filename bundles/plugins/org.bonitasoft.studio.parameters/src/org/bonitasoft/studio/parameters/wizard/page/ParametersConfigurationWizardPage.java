@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.parameters.wizard.page;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.configuration.ConfigurationValidator;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -24,15 +25,17 @@ import org.bonitasoft.studio.parameters.action.ImportParametersAction;
 import org.bonitasoft.studio.parameters.i18n.Messages;
 import org.bonitasoft.studio.parameters.property.section.provider.ParameterNameLabelProvider;
 import org.bonitasoft.studio.parameters.property.section.provider.ParameterTypeLabelProvider;
-import org.bonitasoft.studio.parameters.property.section.provider.ParameterValueLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -56,6 +59,7 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
     private ParameterValueEditingSupport valueEditingSupport;
     private AbstractProcess process;
     private Configuration configuration;
+    private ConfigurationValidator configurationValidator;
 
     public ParametersConfigurationWizardPage() {
         super(ParametersConfigurationWizardPage.class.getName());
@@ -83,8 +87,10 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
         descriptionLabel.setText(getDescription());
         descriptionLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
 
-        parameterTableViewer = new TableViewer(parameterComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        parameterTableViewer = new TableViewer(parameterComposite,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
         parameterTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        ColumnViewerToolTipSupport.enableFor(parameterTableViewer);
         parameterTableViewer.setContentProvider(ArrayContentProvider.getInstance());
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(25));
@@ -124,7 +130,10 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
         column3.setText(Messages.type);
 
         final TableViewerColumn columnValueViewer = new TableViewerColumn(parameterTableViewer, SWT.NONE);
-        columnValueViewer.setLabelProvider(new ParameterValueLabelProvider());
+        columnValueViewer.setLabelProvider(new LabelProviderBuilder<Parameter>()
+                .withTextProvider(Parameter::getValue)
+                .withStatusProvider(p -> configurationValidator.validateParameter(p, false))
+                .createColumnLabelProvider());
         valueEditingSupport = new ParameterValueEditingSupport(columnValueViewer.getViewer(), this);
 
         columnValueViewer.setEditingSupport(valueEditingSupport);
@@ -132,7 +141,6 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
         column2.setText(Messages.value);
 
         parameterTableViewer.getTable().setHeaderVisible(true);
-        parameterTableViewer.getTable().setLinesVisible(true);
 
         final TableColumnSorter sorter = new TableColumnSorter(parameterTableViewer);
         sorter.setColumn(column);
@@ -143,7 +151,9 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
     public void updatePage(final AbstractProcess process, final Configuration configuration) {
         this.process = process;
         this.configuration = configuration;
-        if (process != null && configuration != null && parameterTableViewer != null && !parameterTableViewer.getTable().isDisposed()) {
+        configurationValidator = new ConfigurationValidator(process);
+        if (process != null && configuration != null && parameterTableViewer != null
+                && !parameterTableViewer.getTable().isDisposed()) {
             parameterTableViewer.setInput(configuration.getParameters());
         }
     }
@@ -186,29 +196,17 @@ public class ParametersConfigurationWizardPage extends WizardPage implements IPr
 
     @Override
     public String isConfigurationPageValid(final Configuration configuration) {
-        if (configuration != null) {
-            for (final Parameter p : configuration.getParameters()) {
-                final String input = p.getValue();
-                final String typeName = p.getTypeClassname();
-                if (input == null || input.isEmpty()) {
-                    return Messages.bind(Messages.missingParameterValue, p.getName());
-                } else if (typeName.equals(Integer.class.getName())) {
-                    try {
-                        Integer.parseInt(input);
-                    } catch (final NumberFormatException e) {
-                        return Messages.bind(Messages.invalidIntegerForParameter, p.getName());
-                    }
-                } else if (typeName.equals(Double.class.getName())) {
-                    try {
-                        Double.parseDouble(input);
-                    } catch (final NumberFormatException e) {
-                        return Messages.bind(Messages.invalidDoulbeForParameter, p.getName());
-                    }
+        if (configuration != null && configurationValidator != null) {
+            IStatus status = configurationValidator.validateParameters(configuration, false);
+            for (final IStatus s : status.getChildren()) {
+                if (!s.isOK()) {
+                    return s.getMessage();
                 }
             }
         }
         return null;
     }
+
 
     @Override
     public Image getConfigurationImage() {

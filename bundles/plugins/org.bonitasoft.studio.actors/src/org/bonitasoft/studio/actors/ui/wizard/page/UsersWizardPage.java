@@ -472,7 +472,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                         .align(SWT.FILL, SWT.CENTER)
                         .grab(true, false)
                         .indent(5, 0)
-                        .span("macosx".equals(Platform.getOS()) ? 2 : 1, 1)
+                        .span(Platform.OS_MACOSX.equals(Platform.getOS()) ? 2 : 1, 1)
                         .create());
         char echoChar = passwordText.getEchoChar();
 
@@ -1480,7 +1480,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         customUserInfoTable.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Table table = customUserInfoTable.getTable();
         table.setHeaderVisible(true);
-        table.setLinesVisible(true);
         customUserInfoTable.setContentProvider(new ObservableListContentProvider());
 
         final TableViewerColumn nameColumn = new TableViewerColumn(customUserInfoTable, SWT.NONE);
@@ -1592,7 +1591,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table generalDataTable = new Table(generalDataTableComposite, SWT.BORDER);
         generalDataTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        generalDataTable.setLinesVisible(true);
         generalDataTable.setHeaderVisible(true);
 
         final String[] generalDataItems = getGeneralDataItems();
@@ -1614,7 +1612,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         businessCardTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final Table businessCardTable = new Table(businessCardTableComposite, SWT.BORDER);
-        businessCardTable.setLinesVisible(true);
         businessCardTable.setHeaderVisible(true);
 
         final String[] businessCardTitles = getBusinessCardItems();
@@ -1636,7 +1633,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table personnalTable = new Table(personalTableComposite, SWT.BORDER);
         personnalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        personnalTable.setLinesVisible(true);
         personnalTable.setHeaderVisible(true);
 
         final String[] personalTitles = getPersonalItems();
@@ -1655,7 +1651,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Table membershipTable = new Table(memberships, SWT.BORDER | SWT.FILL);
         membershipTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        membershipTable.setLinesVisible(true);
         membershipTable.setHeaderVisible(true);
 
         final TableColumn membershipColumn = new TableColumn(membershipTable, SWT.NONE | SWT.FILL);

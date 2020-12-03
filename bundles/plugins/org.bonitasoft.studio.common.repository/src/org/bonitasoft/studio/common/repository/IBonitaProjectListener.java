@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface IBonitaProjectListener {
 
-    void projectOpened(Repository repository, IProgressMonitor monitor);
+    void projectOpened(AbstractRepository repository, IProgressMonitor monitor);
 
-    void projectClosed(Repository repository, IProgressMonitor monitor);
+    void projectClosed(AbstractRepository repository, IProgressMonitor monitor);
 
 }

@@ -56,7 +56,7 @@ import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
@@ -64,7 +64,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -264,7 +264,8 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
 
     private Predicate<? super Object> filterVersionedArtifact() {
         return artifact -> artifact instanceof VersionedArtifact ? ((VersionedArtifact) artifact).hasSingleVersion()
-                : artifact instanceof ArtifactVersion ? !((ArtifactVersion) artifact).getParent().hasSingleVersion() : artifact instanceof Artifact;
+                : artifact instanceof ArtifactVersion ? !((ArtifactVersion) artifact).getParent().hasSingleVersion()
+                        : artifact instanceof Artifact;
     }
 
     private void updateCleanDeployEnablement() {
@@ -348,7 +349,36 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
             if (event.getElement() instanceof OrganizationArtifact && countSelectedOrganizations() > 1) {
                 uniqueOrganizationSelection((OrganizationArtifact) event.getElement());
             }
+            if (latestVersionOnly && event.getChecked()) {
+                if (isVersionedArtifact(event.getElement())) {
+                    selectLatestVersion(getVersionedArtifact(event.getElement()));
+                } else if (event.getElement() instanceof ArtifactVersion
+                        && !((ArtifactVersion) event.getElement()).isLatest()) {
+                    checkedElementsObservable.remove(event.getElement());
+                }
+            }
         });
+    }
+
+    private void selectLatestVersion(VersionedArtifact selectedArtifact) {
+        checkedElementsObservable.add(selectedArtifact.getLatestVersion());
+        checkedElementsObservable
+                .removeIf(element -> element instanceof ArtifactVersion
+                        && !((ArtifactVersion) element).isLatest());
+    }
+
+    private boolean isVersionedArtifact(Object element) {
+        if (element instanceof RepositoryStore) {
+            return ((RepositoryStore) element).getArtifacts().get(0) instanceof VersionedArtifact;
+        }
+        return element instanceof VersionedArtifact;
+    }
+
+    private VersionedArtifact getVersionedArtifact(Object element) {
+        if (element instanceof RepositoryStore) {
+            return (VersionedArtifact) ((RepositoryStore) element).getArtifacts().get(0);
+        }
+        return (VersionedArtifact) element;
     }
 
     private boolean isOrganizationRepositoryStore(Object element) {
@@ -440,8 +470,15 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         Button onlyLatestProcessVersionButton = new Button(composite, SWT.CHECK);
         onlyLatestProcessVersionButton.setText(Messages.selectLatestVersion);
 
-        ctx.bindValue(WidgetProperties.selection().observe(onlyLatestProcessVersionButton),
-                PojoProperties.value("latestVersionOnly").observe(this));
+        IObservableValue<Boolean> latestOnlyObservable = PojoProperties
+                .<SelectArtifactToDeployPage, Boolean> value("latestVersionOnly").observe(this);
+        ctx.bindValue(WidgetProperties.buttonSelection().observe(onlyLatestProcessVersionButton),
+                latestOnlyObservable);
+        latestOnlyObservable.addValueChangeListener(e -> {
+            if (latestVersionOnly) {
+                checkLatestOnly();
+            }
+        });
 
         ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
 
@@ -456,6 +493,16 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         collapseAll.setImage(Pics.getImage(PicsConstants.collapseAll));
         collapseAll.setToolTipText(Messages.collapseAll);
         collapseAll.addListener(SWT.Selection, e -> fileStoreViewer.collapseAll());
+    }
+
+    private void checkLatestOnly() {
+        checkedElementsObservable.removeIf(this::isOldVersion);
+        mergeSets();
+        allCheckedElements.removeIf(this::isOldVersion);
+    }
+
+    private boolean isOldVersion(Object element) {
+        return element instanceof ArtifactVersion && !((ArtifactVersion) element).isLatest();
     }
 
     private void createSearch(DataBindingContext ctx, Composite parent) {
@@ -511,7 +558,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         cleanDeployOption.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         cleanDeployOption.setText(Messages.cleanBDMDatabase);
 
-        ctx.bindValue(WidgetProperties.selection().observe(cleanDeployOption),
+        ctx.bindValue(WidgetProperties.buttonSelection().observe(cleanDeployOption),
                 PojoProperties.value("cleanBDM").observe(this));
 
         validateProcessOption = new Button(deployOptionGroup, SWT.CHECK);
@@ -524,7 +571,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
                 .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
         controlDecoration.show();
 
-        ctx.bindValue(WidgetProperties.selection().observe(validateProcessOption),
+        ctx.bindValue(WidgetProperties.buttonSelection().observe(validateProcessOption),
                 PojoProperties.value("validate").observe(this));
     }
 
@@ -540,7 +587,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
     }
 
     private void createDefaultUserTextWidget(DataBindingContext ctx, final Composite mainComposite) {
-        usernameObservable = PojoProperties.value("defaultUsername").observe(this);
+        usernameObservable = PojoProperties.<SelectArtifactToDeployPage, String> value("defaultUsername").observe(this);
         usernameProposalProvider = new SimpleContentProposalProvider();
         usernameProposalProvider.setFiltering(true);
         defaultUserTextWidget = new TextWidget.Builder()

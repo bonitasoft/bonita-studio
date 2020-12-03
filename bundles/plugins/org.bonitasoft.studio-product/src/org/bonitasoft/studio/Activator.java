@@ -27,7 +27,6 @@ public class Activator extends AbstractUIPlugin {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.LINK_NAVIGATOR_TO_EDITOR, true);
-        PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
         super.start(bundleContext);
     }
 }

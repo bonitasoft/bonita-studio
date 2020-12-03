@@ -24,7 +24,7 @@ import java.util.Optional;
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
@@ -58,12 +58,12 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author Romain Bioteau
  */
-public class SourceFileStore extends AbstractFileStore {
+public class SourceFileStore extends AbstractFileStore<InputStream> {
 
     private String qualifiedClassName;
     private IEditorPart editorPart;
 
-    public SourceFileStore(final String qualifiedClassName, final IRepositoryStore<?> parentStore) {
+    public SourceFileStore(final String qualifiedClassName, final IRepositoryStore parentStore) {
         super("", parentStore);
         this.qualifiedClassName = qualifiedClassName;
     }
@@ -92,12 +92,8 @@ public class SourceFileStore extends AbstractFileStore {
         return Pics.getImage("java.gif", CommonRepositoryPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public InputStream getContent() {
+    protected InputStream doGetContent() {
         try {
             return getResource().getContents();
         } catch (final CoreException e) {
@@ -105,11 +101,7 @@ public class SourceFileStore extends AbstractFileStore {
         }
         return null;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
-     */
+   
     @Override
     public IFile getResource() {
         final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
@@ -184,7 +176,7 @@ public class SourceFileStore extends AbstractFileStore {
         jarPackakeData.setOverwrite(true);
         jarPackakeData.setUseSourceFolderHierarchy(includeSources);
         final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null);
-        runnable.run(Repository.NULL_PROGRESS_MONITOR);
+        runnable.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     protected JarPackageData createJarPackageData() {
@@ -206,13 +198,13 @@ public class SourceFileStore extends AbstractFileStore {
         try {
             final IRepositoryStore<?> store = getParentStore();
             final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
-            root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR);
+            root.createPackageFragment(packageName, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             final IPackageFragment targetContainer = project
                     .findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".", "/")));
             final IType type = project.findType(qualifiedClassName);
             if (type != null) {
                 type.getCompilationUnit().move(targetContainer, null, className + ".java", true,
-                        Repository.NULL_PROGRESS_MONITOR);
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
                 qualifiedClassName = newQualifiedClassName;
             }
         } catch (final Exception e) {

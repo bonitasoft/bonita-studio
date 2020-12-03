@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.ui.expression;
 
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -22,7 +23,9 @@ import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizar
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IDataProposalListener;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -34,12 +37,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -61,12 +65,15 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
                 TransactionUtil.getEditingDomain(context));
         Shell activeShell = Display
                 .getDefault().getActiveShell();
-        if (activeShell.getParent() != null) {
+        if (activeShell != null && activeShell.getParent() != null) {
             activeShell = activeShell.getParent().getShell();
+        }
+        if(activeShell == null) {
+            activeShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
         final CustomWizardDialog wizardDialog = new CustomWizardDialog(activeShell,
                 newWizard, IDialogConstants.FINISH_LABEL);
-        if (wizardDialog.open() == Dialog.OK) {
+        if (wizardDialog.open() == Window.OK) {
             final EObject obj = newWizard.getBusinessObjectData();
             if (obj instanceof Data) {
                 final Data d = (Data) obj;
@@ -147,8 +154,13 @@ public class CreateBusinessDataProposalListener implements IDataProposalListener
                 .getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore child = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         if (child != null) {
-            final BusinessObjectModel content = child.getContent();
-            return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+            BusinessObjectModel content;
+            try {
+                content = child.getContent();
+                return content.getBusinessObjectsClassNames().contains(returnType) || Object.class.getName().equals(returnType);
+            } catch (ReadFileStoreException e) {
+              BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            }
         }
         return Object.class.getName().equals(returnType);
 

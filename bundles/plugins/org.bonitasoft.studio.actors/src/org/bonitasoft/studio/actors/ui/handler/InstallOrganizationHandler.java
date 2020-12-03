@@ -25,7 +25,7 @@ import org.bonitasoft.studio.actors.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -73,7 +73,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
             final PublishOrganizationOperation op = publishOperation(organization);
             try {
-                op.run(Repository.NULL_PROGRESS_MONITOR);
+                op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final Exception e) {
                 if (PlatformUI.isWorkbenchRunning()) {
                     Display.getDefault().syncExec(new Runnable() {

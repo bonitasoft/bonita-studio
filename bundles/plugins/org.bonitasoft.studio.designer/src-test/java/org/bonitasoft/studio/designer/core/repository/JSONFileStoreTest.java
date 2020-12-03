@@ -22,18 +22,19 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.designer.core.repository.JSONFileStore;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -43,7 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class JSONFileStoreTest {
 
     @Mock
-    private IRepositoryStore<? extends IRepositoryFileStore> parentStore;
+    private IRepositoryStore parentStore;
     private JSONFileStore jsonFileStore;
     private IFile iResource;
     private File jsonFile;
@@ -59,6 +60,8 @@ public class JSONFileStoreTest {
         invalidJsonFile = Paths.get(JSONFileStoreTest.class.getResource("/invalidJson.json").toURI()).toFile();
         iResource = mock(IFile.class, RETURNS_DEEP_STUBS);
         doReturn(iResource).when(jsonFileStore).getResource();
+        when(parentStore.validate(Mockito.anyString(), Mockito.any(InputStream.class)))
+                .thenReturn(ValidationStatus.ok());
     }
 
     @Test

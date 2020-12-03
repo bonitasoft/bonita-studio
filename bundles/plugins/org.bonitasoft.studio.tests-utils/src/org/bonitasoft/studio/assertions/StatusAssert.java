@@ -242,7 +242,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMessage = format("Expected actual IStatus not to be oK but was.", actual);
+        final String errorMessage = format("Expected actual IStatus not to be oK but was not.", actual);
 
         // check
         if (actual.isOK()) {
@@ -255,7 +255,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     public StatusAssert isInfo() {
         isNotNull();
-        final String errorMessage = format("Expected actual IStatus to be Info but was.", actual);
+        final String errorMessage = format("Expected actual IStatus to be Info but was not.", actual);
         if (!Objects.equals(actual.getSeverity(), IStatus.INFO)) {
             throw new AssertionError(errorMessage);
         }
@@ -264,7 +264,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     public StatusAssert isWarning() {
         isNotNull();
-        final String errorMessage = format("Expected actual IStatus to be Warning but was.", actual);
+        final String errorMessage = format("Expected actual IStatus to be Warning but was not.", actual);
         if (!Objects.equals(actual.getSeverity(), IStatus.WARNING)) {
             throw new AssertionError(errorMessage);
         }
@@ -273,7 +273,7 @@ public class StatusAssert extends AbstractAssert<StatusAssert, IStatus> {
 
     public StatusAssert isError() {
         isNotNull();
-        final String errorMessage = format("Expected actual IStatus to be Error but was.", actual);
+        final String errorMessage = format("Expected actual IStatus to be Error but was not.", actual);
         if (!Objects.equals(actual.getSeverity(), IStatus.ERROR)) {
             throw new AssertionError(errorMessage);
         }

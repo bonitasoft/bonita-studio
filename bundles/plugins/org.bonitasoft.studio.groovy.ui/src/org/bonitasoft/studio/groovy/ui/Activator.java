@@ -11,7 +11,6 @@ public class Activator extends AbstractUIPlugin {
     // The shared instance
     private static Activator plugin;
 
-
     /*
      * (non-Javadoc)
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -35,5 +34,4 @@ public class Activator extends AbstractUIPlugin {
     public static Activator getDefault() {
         return plugin;
     }
-
 }

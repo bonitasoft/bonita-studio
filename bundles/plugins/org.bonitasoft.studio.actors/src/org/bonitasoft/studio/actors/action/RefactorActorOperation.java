@@ -17,9 +17,12 @@ package org.bonitasoft.studio.actors.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.SaveConfigurationEMFCommand;
@@ -64,7 +67,11 @@ public class RefactorActorOperation extends AbstractRefactorOperation<Actor, Act
         Configuration localeConfiguration = null;
         Configuration localConfigurationCopy = null;
         if (file != null) {
-            localeConfiguration = file.getContent();
+            try {
+                localeConfiguration = file.getContent();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            }
             localConfigurationCopy = EcoreUtil.copy(localeConfiguration);
         }
         final List<Configuration> configurations = new ArrayList<Configuration>();

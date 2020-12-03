@@ -44,7 +44,7 @@ public class BotVariableExpressionEditor extends AbstractBotExpressionEditor {
     }
 
     public BotTableWidget variableList() {
-        return new BotTableWidget(bot.table(1));
+        return new BotTableWidget(bot.table());
     }
 
 }

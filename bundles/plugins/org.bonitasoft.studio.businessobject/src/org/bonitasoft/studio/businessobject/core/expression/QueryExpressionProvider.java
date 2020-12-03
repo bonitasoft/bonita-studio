@@ -38,7 +38,9 @@ import org.bonitasoft.studio.businessobject.ui.expression.QueryExpressionEditor;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -145,7 +147,12 @@ public class QueryExpressionProvider implements IExpressionProvider {
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
                 true);
-        return fileStore != null ? fileStore.getContent() : null;
+        try {
+            return fileStore != null ? fileStore.getContent() : null;
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), BusinessObjectPlugin.PLUGIN_ID);
+            return null;
+        }
     }
 
     /*

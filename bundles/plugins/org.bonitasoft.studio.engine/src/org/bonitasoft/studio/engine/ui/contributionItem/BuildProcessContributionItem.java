@@ -24,8 +24,10 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.engine.operation.ProcessValidationOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -82,20 +84,30 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
     private void displayOperatonStatus(ExportBarOperation exportBarOperation, String path, String processName) {
         IStatus status = exportBarOperation.getStatus();
         Shell shell = Display.getDefault().getActiveShell();
-        switch (status.getSeverity()) {
-            case ValidationStatus.CANCEL:
-                break;
-            case ValidationStatus.OK:
-                MessageDialog.openInformation(shell, Messages.buildDoneTitle,
-                        String.format(Messages.buildDoneMessage, processName, path));
-                break;
-            case ValidationStatus.WARNING:
-                MessageDialog.openWarning(shell, Messages.buildDoneTitle, status.getMessage());
-                break;
-            default:
-                MessageDialog.openError(shell, Messages.buildFailedTitle, status.getMessage());
-        }
+        if(status instanceof MultiStatus && status.getSeverity() == IStatus.ERROR) {
+            new MultiStatusDialog(Display.getDefault().getActiveShell(),
+                    Messages.buildFailedTitle,
+                    String.format(Messages.invalidConfigurationForEnv, exportBarOperation.getConfigurationId()),
+                    new String[] { IDialogConstants.CLOSE_LABEL },
+                    (MultiStatus) status)
+                            .open();
+        }else {
+            switch (status.getSeverity()) {
+                case IStatus.CANCEL:
+                    break;
+                case IStatus.OK:
+                    MessageDialog.openInformation(shell, Messages.buildDoneTitle,
+                            String.format(Messages.buildDoneMessage, processName, path));
+                    break;
+                case IStatus.WARNING:
+                    MessageDialog.openWarning(shell, Messages.buildDoneTitle, status.getMessage());
+                    break;
+                default:
+                    MessageDialog.openError(shell, Messages.buildFailedTitle, status.getMessage());
+            }
 
+        }
+        
     }
 
     private Optional<String> getPath(Shell shell) {

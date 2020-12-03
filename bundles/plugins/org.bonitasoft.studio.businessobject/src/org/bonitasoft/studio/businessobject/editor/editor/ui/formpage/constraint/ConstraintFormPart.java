@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.constrain
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.DeployRequiredControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.ReadOnlyBusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.constraint.ConstraintEditionControl;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
@@ -25,7 +24,6 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -35,11 +33,10 @@ import org.eclipse.ui.forms.AbstractFormPart;
 
 public class ConstraintFormPart extends AbstractFormPart {
 
-    private DataBindingContext ctx = new EMFDataBindingContext();
+    private DataBindingContext ctx = new DataBindingContext();
     private ConstraintFormPage formPage;
     private ReadOnlyBusinessObjectList businessObjectList;
     private ConstraintEditionControl constraintObjectEditionControl;
-    private DeployRequiredControl deployRequiredControl;
 
     public ConstraintFormPart(Composite parent, ConstraintFormPage formPage) {
         this.formPage = formPage;
@@ -47,9 +44,6 @@ public class ConstraintFormPart extends AbstractFormPart {
         parent.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, LayoutConstants.getSpacing().y).create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        deployRequiredControl = new DeployRequiredControl(parent, formPage,
-                GridDataFactory.fillDefaults().span(2, 1).create());
 
         createBusinessObjectList(parent);
         createConstraintEditionControl(parent);
@@ -80,6 +74,7 @@ public class ConstraintFormPart extends AbstractFormPart {
 
         businessObjectList = new ReadOnlyBusinessObjectList(businessObjectListComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
+        businessObjectList.expandAll();
     }
 
     public void refreshConstraintList() {
@@ -102,14 +97,6 @@ public class ConstraintFormPart extends AbstractFormPart {
 
     public void showBusinessObjectSelection() {
         businessObjectList.showBusinessObjectSelection();
-    }
-
-    public void updateDeployRequiredComposite(Boolean deployRequired) {
-        if (deployRequired) {
-            deployRequiredControl.show();
-        } else {
-            deployRequiredControl.hide();
-        }
     }
 
 }

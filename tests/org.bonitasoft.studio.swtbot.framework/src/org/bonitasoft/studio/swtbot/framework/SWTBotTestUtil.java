@@ -18,20 +18,21 @@ import static org.bonitasoft.studio.actors.i18n.Messages.selectActor;
 import static org.bonitasoft.studio.actors.i18n.Messages.setAsProcessInitiator;
 import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpression;
-import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTypeLabel;
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.returnType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -41,6 +42,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.swtbot.framework.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -50,11 +52,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
@@ -84,6 +84,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList.ListElement;
 import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
@@ -123,7 +124,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         }, 30000, 100);
     }
 
-    public static IStatus selectAndRunFirstPoolFound(final SWTGefBot gefbot) throws ExecutionException {
+    public static IStatus selectAndRunFirstPoolFound(final SWTGefBot gefbot) {
         gefbot.waitUntil(new DefaultCondition() {
 
             @Override
@@ -153,36 +154,32 @@ public class SWTBotTestUtil implements SWTBotConstants {
         Assert.assertFalse(runnableEPs.isEmpty());
         gmfEditor.select(runnableEPs.get(0));
         final RunProcessCommand cmd = new RunProcessCommand(true);
-        final RunnableWithResult<IStatus> runnable = new RunnableWithResult<IStatus>() {
+        final IRunnableWithStatus runnable = new IRunnableWithStatus() {
 
             IStatus status = null;
-
-            @Override
-            public void run() {
-                try {
-                    status = (IStatus) cmd.execute(null);
-                } catch (final ExecutionException e) {
-                    BonitaStudioLog.error(e);
-                    status = new Status(Status.ERROR, "org.bonitasoft.studio.tests.ex", "Error during execution");
-                }
-            }
-
-            @Override
-            public IStatus getResult() {
-                return status;
-            }
-
-            @Override
-            public void setStatus(final IStatus status) {
-            }
 
             @Override
             public IStatus getStatus() {
                 return status;
             }
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                try {
+                    status = (IStatus) cmd.execute(null);
+                } catch (final ExecutionException e) {
+                    status = new Status(IStatus.ERROR, "org.bonitasoft.studio.tests.ex", "Error during execution", e);
+                }
+            }
         };
-        Display.getDefault().syncExec(runnable);
-        return runnable.getResult();
+        Display.getDefault().syncExec(() -> {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, runnable);
+            } catch (InvocationTargetException | InterruptedException e) {
+               throw new RuntimeException(e);
+            }
+        });
+        return runnable.getStatus();
     }
 
     public static boolean testingBosSp() {
@@ -191,14 +188,14 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     public static void selectTabbedPropertyView(final SWTBot viewerBot, final String tabText) {
         viewerBot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
                 final List<? extends Widget> widgets = viewerBot.getFinder()
                         .findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
                 Assert.assertTrue("No widget of type " + TabbedPropertyList.class.getName() + " has been found",
                         widgets.size() > 0);
-               return UIThreadRunnable.syncExec(new Result<Boolean>() {
+                return UIThreadRunnable.syncExec(new Result<Boolean>() {
 
                     @Override
                     public Boolean run() {
@@ -233,21 +230,19 @@ public class SWTBotTestUtil implements SWTBotConstants {
                     }
                 });
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "Can't find a tab item with " + tabText + " label";
             }
-            
+
         }, 5000);
     }
-
 
     public static void waitUntilRootShellIsActive(SWTBot bot) {
         bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita Studio"), 40000);
         bot.shell("Bonita Studio").setFocus();
     }
-
 
     /**
      * select an event on diagram with the given name
@@ -257,7 +252,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param poolName
      * @param eventName
      */
-    public static void selectEventOnProcess(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String eventName) {
+    public static void selectEventOnProcess(final SWTGefBot bot, final SWTBotGefEditor gmfEditor,
+            final String eventName) {
         final SWTBotGefEditPart event = gmfEditor.getEditPart(eventName).parent();
         event.click();
         event.select();
@@ -380,28 +376,28 @@ public class SWTBotTestUtil implements SWTBotConstants {
     private static int computeYPaletteDelta(final int elementIndex) {
         switch (elementIndex) {
             case CONTEXTUALPALETTE_EVENT:
-                return FiguresHelper.EVENT_WIDTH/2;
+                return FiguresHelper.EVENT_WIDTH / 2;
             case CONTEXTUALPALETTE_GATEWAY:
-                return FiguresHelper.GATEWAY_WIDTH/2 +1;
+                return FiguresHelper.GATEWAY_WIDTH / 2 + 1;
             case CONTEXTUALPALETTE_SEQUENCEFLOW:
                 return 5;
             case CONTEXTUALPALETTE_STEP:
-                return FiguresHelper.ACTIVITY_HEIGHT/2 + 1;
+                return FiguresHelper.ACTIVITY_HEIGHT / 2 + 1;
             default:
                 return 0;
         }
     }
-    
+
     private static int computeXPaletteDelta(final int elementIndex) {
         switch (elementIndex) {
             case CONTEXTUALPALETTE_EVENT:
-                return FiguresHelper.EVENT_WIDTH/2;
+                return FiguresHelper.EVENT_WIDTH / 2;
             case CONTEXTUALPALETTE_GATEWAY:
-                return FiguresHelper.GATEWAY_WIDTH/2;
+                return FiguresHelper.GATEWAY_WIDTH / 2;
             case CONTEXTUALPALETTE_SEQUENCEFLOW:
                 return 5;
             case CONTEXTUALPALETTE_STEP:
-                return FiguresHelper.ACTIVITY_WIDTH/2 - 15;
+                return FiguresHelper.ACTIVITY_WIDTH / 2 - 15;
             default:
                 return 0;
         }
@@ -522,7 +518,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
      * @param startElementName
      * @param endElementName
      */
-    public static void addSequenceFlow(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String startElementName,
+    public static void addSequenceFlow(final SWTGefBot bot, final SWTBotGefEditor gmfEditor,
+            final String startElementName,
             final String endElementName,
             final int targetAnchorPosition) {
         final int nbConnection = ModelHelper
@@ -560,7 +557,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
             @Override
             public boolean test() throws Exception {
                 return nbConnection + 1 == ModelHelper
-                        .getAllItemsOfType(((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
+                        .getAllItemsOfType(
+                                ((IGraphicalEditPart) gmfEditor.mainEditPart().part()).resolveSemanticElement(),
                                 ProcessPackage.Literals.SEQUENCE_FLOW)
                         .size();
             }
@@ -736,23 +734,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
      */
     private static void setComparisonExpression(final SWTGefBot bot, final String condition) {
         bot.waitUntil(Conditions.shellIsActive(editExpression));
-        bot.tableWithLabel(expressionTypeLabel).select("Comparison");
-        bot.waitUntil(new ICondition() {
-
-            @Override
-            public boolean test() throws Exception {
-                return bot.styledText() != null;
-            }
-
-            @Override
-            public void init(final SWTBot bot) {
-            }
-
-            @Override
-            public String getFailureMessage() {
-                return "StyledText is not ready";
-            }
-        });
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectConditionExpressionType();
         bot.styledText().setFocus();
         bot.styledText().setText(condition);
     }
@@ -777,8 +759,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
             }
         });
         bot.styledText().setFocus();
-        Job.getJobManager().join(ValidationJob.XTEXT_VALIDATION_FAMILY, Repository.NULL_PROGRESS_MONITOR);//Wait for ValidationJob
-        Job.getJobManager().join(XtextReconciler.class.getName(), Repository.NULL_PROGRESS_MONITOR);//Wait for Reconciler Job
+        Job.getJobManager().join(ValidationJob.XTEXT_VALIDATION_FAMILY, AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for ValidationJob
+        Job.getJobManager().join(XtextReconciler.class.getName(), AbstractRepository.NULL_PROGRESS_MONITOR);//Wait for Reconciler Job
         bot.sleep(600);
         return bot.styledText().getStyle(line, column);
     }
@@ -809,8 +791,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static void setScriptExpression(final SWTGefBot bot, final String scriptName, final String expression,
             final String returnTypeOfScript) {
         bot.waitUntil(Conditions.shellIsActive(editExpression));
-        bot.tableWithLabel(expressionTypeLabel).select("Script");
-        bot.sleep(1000);
+
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectScriptTab();
         // set the Script name
         bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(expression);
@@ -827,10 +809,9 @@ public class SWTBotTestUtil implements SWTBotConstants {
      */
     public static void setVariableExpression(final SWTGefBot bot, final String variableName) {
         bot.waitUntil(Conditions.shellIsActive(editExpression));
-        bot.tableWithLabel(expressionTypeLabel).select("Variable");
-        bot.sleep(1000);
+        new BotExpressionEditorDialog(bot, bot.activeShell()).selectVariableTab();
         // select the variable
-        final SWTBotTable tableVar = bot.table(1);
+        final SWTBotTable tableVar = bot.table();
         for (int i = 0; i < tableVar.rowCount(); i++) {
             final SWTBotTableItem tableItem = tableVar.getTableItem(i);
             if (tableItem.getText().startsWith(variableName + " --")) {
@@ -892,7 +873,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final UpdateSizePoolSelectionEditPolicy addPoolSizeElementEditPolicy = (UpdateSizePoolSelectionEditPolicy) graphicalEditPart
                 .getEditPolicy(UpdateSizePoolSelectionEditPolicy.UPDATE_POOL_SIZE_SELECTION_FEEDBACK_ROLE);
 
-        final IFigure toolbarFigure = addPoolSizeElementEditPolicy.getFigure(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT);
+        final IFigure toolbarFigure = addPoolSizeElementEditPolicy
+                .getFigure(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT);
         final Point location = toolbarFigure.getBounds().getCenter().getCopy();
         toolbarFigure.translateToAbsolute(location);
         editor.click(location.x, location.y);
@@ -906,7 +888,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final UpdateSizePoolSelectionEditPolicy addPoolSizeElementEditPolicy = (UpdateSizePoolSelectionEditPolicy) graphicalEditPart
                 .getEditPolicy(UpdateSizePoolSelectionEditPolicy.UPDATE_POOL_SIZE_SELECTION_FEEDBACK_ROLE);
 
-        final IFigure toolbarFigure = addPoolSizeElementEditPolicy.getFigure(UpdateSizePoolSelectionEditPolicy.ADD_BOTTOM);
+        final IFigure toolbarFigure = addPoolSizeElementEditPolicy
+                .getFigure(UpdateSizePoolSelectionEditPolicy.ADD_BOTTOM);
         final Point location = toolbarFigure.getBounds().getCenter().getCopy();
         toolbarFigure.translateToAbsolute(location);
         editor.click(location.x, location.y);
@@ -1037,9 +1020,11 @@ public class SWTBotTestUtil implements SWTBotConstants {
             case PositionConstants.NORTH_WEST:
                 return graphicalEditPart.getFigure().getBounds().getTopLeft().getCopy().translate(-X_MARGIN, Y_MARGIN);
             case PositionConstants.SOUTH_EAST:
-                return graphicalEditPart.getFigure().getBounds().getBottomRight().getCopy().translate(-X_MARGIN, Y_MARGIN);
+                return graphicalEditPart.getFigure().getBounds().getBottomRight().getCopy().translate(-X_MARGIN,
+                        Y_MARGIN);
             case PositionConstants.SOUTH_WEST:
-                return graphicalEditPart.getFigure().getBounds().getBottomLeft().getCopy().translate(X_MARGIN, -Y_MARGIN);
+                return graphicalEditPart.getFigure().getBounds().getBottomLeft().getCopy().translate(X_MARGIN,
+                        -Y_MARGIN);
             default:
                 throw new RuntimeException("Invalid position specified");
         }
@@ -1074,18 +1059,5 @@ public class SWTBotTestUtil implements SWTBotConstants {
         proposalShell.close();
         return result;
     }
-
-    public static void pressUndo() {
-        getKeybord().pressShortcut(SWT.CTRL, 'z');
-    }
-
-    public static void pressRedo() {
-        if (System.getProperty("os.name").equals("Linux")) {
-            getKeybord().pressShortcut(SWT.SHIFT | SWT.CTRL, 'z');
-        } else {
-            getKeybord().pressShortcut(SWT.CTRL, 'y');
-        }
-    }
-
 
 }

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -57,6 +59,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.views.markers.MarkerSupportInternalUtilities;
 import org.eclipse.ui.part.ViewPart;
 
 public class ValidationViewPart extends ViewPart implements ISelectionListener,
@@ -182,7 +185,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
 
                     final String elementId = (String) marker
                             .getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
-                    String location = (String) marker.getAttribute("location");
+                    String location = (String) marker.getAttribute(IMarker.LOCATION);
                     int idx = location.lastIndexOf(":");
                     if (idx > 0) {
                         String result = location.substring(idx + 1);
@@ -287,6 +290,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
     public void selectionChanged(final SelectionChangedEvent event) {
         if (event.getSelection() instanceof StructuredSelection
                 && ((StructuredSelection) event.getSelection()).getFirstElement() instanceof Marker) {
+            updateStatusLine((IStructuredSelection) event.getSelection());
             final Marker m = (Marker) ((StructuredSelection) event.getSelection())
                     .getFirstElement();
             final String elementId = m.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID, null);
@@ -337,12 +341,30 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
             final IWorkbenchPage activePage = PlatformUI.getWorkbench()
                     .getActiveWorkbenchWindow().getActivePage();
 
-            // tableViewer.setInput(activePage.getActiveEditor());
             validateAction = new ValidationViewAction();
             validateAction.setActivePage(activePage);
             validateAction.setTableViewer(tableViewer);
             tableViewer.refresh();
         }
+    }
+    
+    /**
+     * Update the status line with the new selection
+     *
+     * @param newSelection
+     */
+    void updateStatusLine(IStructuredSelection newSelection) {
+        String message = MarkerSupportInternalUtilities.EMPTY_STRING;
+
+        if (newSelection.size() == 1) {
+            // Use the Message attribute of the marker
+            try {
+                message = (String) ((Marker) newSelection.getFirstElement()).getAttribute("message");
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        } 
+        getViewSite().getActionBars().getStatusLineManager().setMessage(message);
     }
 
     public void refreshViewer() {

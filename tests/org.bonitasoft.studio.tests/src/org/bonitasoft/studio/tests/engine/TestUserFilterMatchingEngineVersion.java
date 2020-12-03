@@ -29,7 +29,7 @@ import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -70,7 +70,7 @@ public class TestUserFilterMatchingEngineVersion {
 
     @Test
     public void testUserFilterRun() throws Exception {
-        session = BOSEngineManager.getInstance().loginTenant("william.jobs", "bpm", Repository.NULL_PROGRESS_MONITOR);
+        session = BOSEngineManager.getInstance().loginTenant("william.jobs", "bpm", AbstractRepository.NULL_PROGRESS_MONITOR);
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
         final User williamJobsUser = BOSEngineManager.getInstance().getIdentityAPI(session)
@@ -83,7 +83,7 @@ public class TestUserFilterMatchingEngineVersion {
                 .toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();

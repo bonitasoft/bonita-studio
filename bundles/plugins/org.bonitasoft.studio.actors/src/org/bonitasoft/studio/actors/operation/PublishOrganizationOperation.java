@@ -44,7 +44,7 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.runtime.Assert;
@@ -88,7 +88,7 @@ public abstract class PublishOrganizationOperation implements IRunnableWithProgr
         BonitaStudioLog.info("Loading organization " + organization.getName() + " in portal...", ActorsPlugin.PLUGIN_ID);
         try {
             if (session == null) {
-                session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+                session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
                 flushSession = true;
             }
             final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);

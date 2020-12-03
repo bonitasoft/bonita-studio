@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
@@ -117,8 +118,13 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
                 .createIn(mainComposite);
 
         fileStoreObservable.addValueChangeListener(event -> {
-            organizationChanged(event.diff.getNewValue().getContent(), proposalProvider);
-            widget.getValueBinding().validateTargetToModel();
+            try {
+                Organization content = event.diff.getNewValue().getContent();
+                organizationChanged(content, proposalProvider);
+                widget.getValueBinding().validateTargetToModel();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            }
         });
     }
 
@@ -184,14 +190,19 @@ public class DeployOrganizationControlSupplier implements ControlSupplier {
     }
 
     private String[] usernames() {
-        return fileStoreObservable.getValue() == null
-                ? new String[0]
-                : fileStoreObservable.getValue().getContent()
-                        .getUsers()
-                        .getUser()
-                        .stream()
-                        .map(User::getUserName)
-                        .toArray(String[]::new);
+        try {
+            return fileStoreObservable.getValue() == null
+                    ? new String[0]
+                    : fileStoreObservable.getValue().getContent()
+                            .getUsers()
+                            .getUser()
+                            .stream()
+                            .map(User::getUserName)
+                            .toArray(String[]::new);
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            return new String[0];
+        }
     }
 
     public OrganizationFileStore getFileStore() {

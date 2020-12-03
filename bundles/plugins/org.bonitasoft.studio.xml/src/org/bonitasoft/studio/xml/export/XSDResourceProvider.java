@@ -37,8 +37,8 @@ import org.eclipse.emf.ecore.EObject;
 public class XSDResourceProvider implements IBOSArchiveFileStoreProvider {
 
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>();
         final XSDRepositoryStore store = (XSDRepositoryStore) RepositoryManager.getInstance()
                 .getRepositoryStore(XSDRepositoryStore.class);
 

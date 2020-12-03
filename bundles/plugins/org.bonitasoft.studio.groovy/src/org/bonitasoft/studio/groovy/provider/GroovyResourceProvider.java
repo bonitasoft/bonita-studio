@@ -41,8 +41,8 @@ public class GroovyResourceProvider implements IBOSArchiveFileStoreProvider {
      * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>() ;
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>() ;
 
         final GroovyRepositoryStore groovySotre = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class) ;
         addScriptFile(files, groovySotre, getProcessContainer(configuration));
@@ -51,7 +51,7 @@ public class GroovyResourceProvider implements IBOSArchiveFileStoreProvider {
         return files;
     }
 
-    protected void addScriptFile(final Set<IRepositoryFileStore> files, final GroovyRepositoryStore groovySotre, FragmentContainer groovyContainer) {
+    protected void addScriptFile(final Set<IRepositoryFileStore<?>> files, final GroovyRepositoryStore groovySotre, FragmentContainer groovyContainer) {
         for(Fragment script : groovyContainer.getFragments()){
             GroovyFileStore file = groovySotre.getChild(script.getValue(), true) ;
             if(script.isExported() && file != null && file.canBeShared()){

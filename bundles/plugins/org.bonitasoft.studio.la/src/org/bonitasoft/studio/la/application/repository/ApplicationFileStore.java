@@ -30,13 +30,11 @@ import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContai
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IValidable;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
@@ -72,17 +70,17 @@ import org.xml.sax.SAXException;
 
 import com.google.common.io.ByteStreams;
 
-public class ApplicationFileStore extends AbstractFileStore implements IDeployable, IBuildable, IRenamable, IValidable {
+public class ApplicationFileStore extends AbstractFileStore<ApplicationNodeContainer> implements IDeployable, IBuildable, IRenamable, IValidable {
 
     public static final String DEPLOY_COMMAND = "org.bonitasoft.studio.la.deploy.command";
 
-    public ApplicationFileStore(String fileName, IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public ApplicationFileStore(String fileName, ApplicationRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
     @Override
-    public ApplicationNodeContainer getContent() throws ReadFileStoreException {
-        try (InputStream inputStream = getResource().getContents()) {
+    protected ApplicationNodeContainer doGetContent() throws ReadFileStoreException {
+        try (InputStream inputStream = openInputStream()) {
             return getConverter().unmarshallFromXML(ByteStreams.toByteArray(inputStream));
         } catch (CoreException | JAXBException | IOException | SAXException e) {
             throw new ReadFileStoreException("Failed to load application model", e);
@@ -109,10 +107,10 @@ public class ApplicationFileStore extends AbstractFileStore implements IDeployab
                 final IFile resource = getResource();
                 if (!resource.exists()) {
                     resource.create(is, IResource.FORCE,
-                            Repository.NULL_PROGRESS_MONITOR);
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     resource.setContents(is, IResource.KEEP_HISTORY | IResource.FORCE,
-                            Repository.NULL_PROGRESS_MONITOR);
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             }
         } catch (JAXBException | IOException | SAXException | CoreException e) {

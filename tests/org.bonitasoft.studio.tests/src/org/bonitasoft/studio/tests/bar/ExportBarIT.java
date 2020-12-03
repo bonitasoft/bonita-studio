@@ -33,7 +33,7 @@ import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
@@ -104,7 +104,7 @@ public class ExportBarIT {
         importBosArchiveOperation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         Display.getDefault().syncExec(() -> {
             try {
-                importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                importBosArchiveOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new RuntimeException("Error while importing bos archive");
             }
@@ -125,7 +125,7 @@ public class ExportBarIT {
         try (OutputStream out = new FileOutputStream(confProperties.getLocation().toFile())) {
             properties.store(out, null);
         }
-        folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+        folder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
 
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
@@ -155,7 +155,7 @@ public class ExportBarIT {
 
         exportBarOperation.addProcessToDeploy(process);
         exportBarOperation.setTargetFolder(targetBarFolder.getAbsolutePath());
-        exportBarOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        exportBarOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         //Then
         assertThat(exportBarOperation.getStatus()).isOK();

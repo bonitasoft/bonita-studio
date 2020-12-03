@@ -15,19 +15,17 @@
 package org.bonitasoft.studio.ui.page;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.ui.provider.FileStoreLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 
-public class SelectionMultiPage<T extends IRepositoryStore<? extends IRepositoryFileStore>> extends SelectionPage<T> {
+public class SelectionMultiPage<T extends IRepositoryStore<?>> extends SelectionPage<T> {
 
     public static final String TABLE_ID = "org.bonitasoft.studio.la.ui.control.SelectionMultiPageTable";
 
-    public SelectionMultiPage(RepositoryAccessor repositoryAccessor, Class<T> type, FileStoreLabelProvider provider) {
-        super(repositoryAccessor, type, provider);
+    public SelectionMultiPage(T store, FileStoreLabelProvider provider) {
+        super(store, provider);
     }
 
     @Override

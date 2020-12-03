@@ -25,7 +25,7 @@ import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
@@ -66,7 +66,7 @@ public class DeployPageHandler {
                     PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
                     displayDeploymentResult(activeShell, operation);
                 }else {
-                    operation.run(Repository.NULL_PROGRESS_MONITOR);
+                    operation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                     return operation.getStatus();
                 }
             } else {

@@ -13,7 +13,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.model.ConflictStatus;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
@@ -55,8 +54,8 @@ public class ImportModelLabelProviderTest {
                 ConflictStatus.CONFLICTING);
     }
 
-    private IRepositoryStore<IRepositoryFileStore> repositoryStore(String name) {
-        final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
+    private IRepositoryStore repositoryStore(String name) {
+        final IRepositoryStore repositoryStore = mock(IRepositoryStore.class);
         when(repositoryStore.getName()).thenReturn(name);
         return repositoryStore;
     }

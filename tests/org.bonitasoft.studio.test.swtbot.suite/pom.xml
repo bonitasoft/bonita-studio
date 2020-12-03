@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.tests</groupId>
 		<artifactId>tests</artifactId>
-		<version>7.11.5-SNAPSHOT</version>
+		<version>7.12.0-SNAPSHOT</version>
 	</parent>
 	
 	<groupId>org.bonitasoft.studio.tests</groupId>
@@ -51,8 +51,9 @@
 					<includes>
 						<include>**/*TestSuite.java</include>
 					</includes>
-					<argLine>-Xmx1g -DLAZYLOAD_ENGINE -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
+					<argLine>-Xmx1g -DLAZYLOAD_ENGINE -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
 					<appArgLine>-nl en -clean</appArgLine>
+					
 					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
 					<bundleStartLevel>
 						<bundle>

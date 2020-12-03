@@ -22,7 +22,7 @@ import static org.mockito.Mockito.spy;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.Before;
@@ -62,7 +62,7 @@ public class PortalURLBuilderTest {
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {
         final URL url = portalURLBuilder
-                .toURL(Repository.NULL_PROGRESS_MONITOR);
+                .toURL(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validApplicationPath = URLEncoder.encode(
                 "portal/homepage", "UTF-8");

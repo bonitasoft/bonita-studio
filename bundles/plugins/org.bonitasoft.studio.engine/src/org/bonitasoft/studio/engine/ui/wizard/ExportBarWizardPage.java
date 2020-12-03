@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -43,6 +44,7 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -54,12 +56,15 @@ import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -95,6 +100,10 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     private Button destinationBrowseButton;
     private WizardPageSupport pageSupport;
     private CheckboxTreeViewer viewer;
+
+    private Button noneButton;
+
+    private Button configButton;
 
     protected ExportBarWizardPage() {
         super(ExportBarWizardPage.class.getName());
@@ -227,7 +236,52 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     }
 
     protected void createConfiguration(final Composite parent) {
+        final Label configuration = new Label(parent, SWT.NONE);
+        configuration.setText(Messages.configuration);
+        configuration.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
+        final Composite radioComposite = new Composite(parent, SWT.NONE);
+        radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+
+        if (barWithoutConfigIsSupported()) {
+            noneButton = new Button(radioComposite, SWT.RADIO);
+            noneButton.setText(Messages.none);
+            configButton = new Button(radioComposite, SWT.RADIO);
+        }
+
+        final ComboViewer configurationCombo = new ComboViewer(radioComposite, SWT.READ_ONLY | SWT.BORDER);
+        configurationCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        configurationCombo.setContentProvider(new EnvironmentContentProvider());
+        configurationCombo.setLabelProvider(new LabelProvider());
+        configurationCombo.setInput(new Object());
+        configurationCombo.getCombo().setEnabled(true);
+
+        dbc.bindValue(ViewersObservables.observeSingleSelection(configurationCombo),
+                PojoProperties.value(ExportBarWizardPage.class, "configurationId").observe(this));
+
+        if (barWithoutConfigIsSupported()) {
+            configButton.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    configurationCombo.getCombo().setEnabled(configButton.getSelection());
+                }
+            });
+            noneButton.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    configurationCombo.getCombo().setEnabled(configButton.getSelection());
+                }
+            });
+            noneButton.setSelection(false);
+            configButton.setSelection(true);
+        }
+    }
+
+    private boolean barWithoutConfigIsSupported() {
+        return !PlatformUtil.isACommunityBonitaProduct();
     }
 
     protected void createDestination(final Composite group) {
@@ -370,25 +424,35 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
     /*
      * Implements method from IJarPackageWizardPage.
      */
-    public IStatus finish() throws InvocationTargetException, InterruptedException {
+    public IStatus finish(ExportBarOperation operation) throws InvocationTargetException, InterruptedException {
         saveWidgetValues();
 
-        final ExportBarOperation operation = new ExportBarOperation();
-        operation.setTargetFolder(getDetinationPath());
-        operation.setConfigurationId(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
-
-        if (!validateBeforeExport(selectedProcess)) {
+        if (!validateBeforeExport(getSelectedProcess())) {
             return Status.CANCEL_STATUS;
         }
 
-        for (final AbstractProcess process : selectedProcess) {
+        operation.setTargetFolder(getDetinationPath());
+        if (noneButton != null && noneButton.getSelection()) {
+            operation.setConfigurationId(ConfigurationPreferenceConstants.NONE_CONFIGURAITON);
+        } else {
+            operation.setConfigurationId(getConfigurationId());
+        }
+        for (AbstractProcess process : getSelectedProcess()) {
             if (!(process instanceof MainProcess)) {
                 operation.addProcessToDeploy(process);
             }
         }
-        getContainer().run(true, false, operation);
+        getContainer().run(true, false, new IRunnableWithProgress() {
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                operation.run(monitor);
+            }
+        });
         return operation.getStatus();
     }
+
+ 
 
     /**
      *
@@ -401,7 +465,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
             final StringBuilder report = new StringBuilder("");
             final List<String> alreadyInReport = new ArrayList<>(selectedList.size());
             for (final IStatus s : status.getChildren()) {
-                if(s.getMessage() != null && s.getMessage().indexOf(":") != -1) {
+                if (s.getMessage() != null && s.getMessage().indexOf(":") != -1) {
                     final String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
                     if (!alreadyInReport.contains(fileName)) {
                         report.append(fileName);
@@ -411,7 +475,8 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
                 }
             }
             if (!FileActionDialog.getDisablePopup()) {
-                String generalMessage = status.getSeverity() == IStatus.ERROR ? Messages.errorValidationInDiagramToExport
+                String generalMessage = status.getSeverity() == IStatus.ERROR
+                        ? Messages.errorValidationInDiagramToExport
                         : Messages.warningValidationInDiagramToExport;
                 String errorMessage = String.format("%s\n%s%s", generalMessage, report,
                         Messages.errorValidationContinueAnywayMessage);

@@ -234,6 +234,16 @@ public class Messages extends NLS {
     public static String Validation_jasperConnectorRemoved;
     public static String invalidColumnUsageInTaskName;
     public static String deprecatedConnectorDefinition;
+    public static String checkingModelCompatibility;
+    public static String validationErrorMessage;
+    public static String validationTitle;
+    public static String validationSuccessMsg;
+    public static String validationWarningMessage;
+
+    public static String bonitaSqlProvidedScriptDeprecationMessage;
+    public static String bonitaUsersProvidedScriptDeprecationMessage;
+    public static String bonitaXMLProvidedScriptDeprecationMessage;
+    public static String bonitaTypesProvidedScriptDeprecationMessage;
     
     static {
         // initialize resource bundle

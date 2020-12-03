@@ -31,20 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
       </parser>
    </extension>
-
-   <extension point="org.eclipse.ui.editors" id="gmf-editor">
-      <?gmfgen generated="true"?>
-      <editor
-         id="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorID"
-         name="%editorName"
-         icon="icons/obj16/ProcessDiagramFile.gif"
-         extensions="proc"
-         default="true"
-         class="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor"
-         matchingStrategy="org.bonitasoft.studio.model.process.diagram.part.ProcessMatchingStrategy"
-         contributorClass="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramActionBarContributor">
-      </editor>
-   </extension>
    
    <extension point="org.eclipse.ui.contexts" id="ui-context">
       <?gmfgen generated="true"?>

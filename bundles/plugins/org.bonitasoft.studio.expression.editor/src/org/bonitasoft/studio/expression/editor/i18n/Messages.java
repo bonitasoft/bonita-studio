@@ -156,6 +156,10 @@ public class Messages extends NLS {
 
     public static String cannotStoreBusinessObjectInProcessVariable;
 
+    public static String richTextHelpMessage;
+    public static String insertVariableButton;
+    public static String selectVariableTitle;
+
     private Messages() {
         // Do not instantiate
     }

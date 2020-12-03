@@ -36,7 +36,7 @@ public abstract class FormMappingException extends Exception {
     }
 
     private String formType() {
-        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature()) ? "overview form" : "instantiation form";
+        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature()) ? "instantiation form" : "overview form" ;
     }
     
     protected String formId() {

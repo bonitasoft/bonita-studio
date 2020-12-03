@@ -14,17 +14,23 @@
  */
 package org.bonitasoft.studio.designer.core.repository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.json.JSONObject;
 
@@ -36,7 +42,7 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
 
     private static final String JSON_EXTENSION = ".json";
 
-    public InFolderJSONFileStore(final String folderName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public InFolderJSONFileStore(final String folderName, final IRepositoryStore parentStore) {
         super(folderName, parentStore);
     }
 
@@ -44,13 +50,9 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
     public IFolder getResource() {
         return getParentStore().getResource().getFolder(getName());
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
+    
     @Override
-    public JSONObject getContent() throws ReadFileStoreException {
+    protected JSONObject doGetContent() throws ReadFileStoreException {
         if (!getResource().exists()) {
             throw new ReadFileStoreException(getResource().getLocation() + " does not exists.");
         }
@@ -59,6 +61,40 @@ public class InFolderJSONFileStore extends NamedJSONFileStore {
             throw new ReadFileStoreException(jsonFile.getLocation() + " does not exists.");
         }
         return toJSONObject(jsonFile);
+    }
+    
+    @Override
+    protected void doCheckModelVersion() throws ReadFileStoreException {
+        IFile jsoniFile = getJSONIFile();
+        if(jsoniFile != null && getJSONIFile().exists()) {
+            try (InputStream is = openInputStream()) {
+                IStatus status = getParentStore().validate(jsoniFile.getName(), is);
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new ReadFileStoreException(status.getMessage());
+                }
+            } catch (IOException | CoreException e) {
+                throw new ReadFileStoreException(e.getMessage(), e);
+            }
+        }
+    }
+    
+    @Override
+    public IStatus validate() {
+        IResource resource = getJSONIFile();
+        if (resource instanceof IFile) {
+            try (InputStream is =  openInputStream()) {
+                return getParentStore().validate(resource.getName(), is);
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+                return ValidationStatus.error("Failed to validate file model", e);
+            }
+        }
+        return ValidationStatus.ok();
+    }
+    
+    @Override
+    protected InputStream openInputStream() throws CoreException {
+        return getJSONIFile().getContents();
     }
 
     public IFile getJSONIFile() {

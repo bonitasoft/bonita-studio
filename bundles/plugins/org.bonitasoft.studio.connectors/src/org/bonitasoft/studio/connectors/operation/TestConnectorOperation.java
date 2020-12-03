@@ -50,7 +50,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
@@ -169,7 +169,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         URLClassLoader projectClassloader = null;
         try {
-            session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+            session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi);
             final AbstractProcess proc = createAbstractProcess(implementation);
@@ -224,8 +224,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         final List<URL> jars = new ArrayList<>();
         try {
             // Synchronize with build jobs
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
 
             IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
             IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();

@@ -30,7 +30,7 @@ import org.bonitasoft.studio.ui.validator.PathValidator;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -53,7 +53,7 @@ public abstract class AbstractImportPage implements ControlSupplier {
 
     public AbstractImportPage(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
-        filePathObservable = PojoProperties.value("filePath").observe(this);
+        filePathObservable = PojoProperties.<AbstractImportPage, String> value("filePath").observe(this);
     }
 
     @Override

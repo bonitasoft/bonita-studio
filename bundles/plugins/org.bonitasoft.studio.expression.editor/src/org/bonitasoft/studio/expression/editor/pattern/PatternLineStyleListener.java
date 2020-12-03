@@ -63,7 +63,7 @@ public class PatternLineStyleListener implements LineStyleListener {
         final List<ITypedRegion> groovyPartions = new ArrayList<>();
         for (int i = 0; i < regions.length; i++) {
             final ITypedRegion partition = regions[i];
-            if (PatternExpressionViewer.GROOVY_EXPRESSION_CONTENT_TYPE.equals(partition.getType())) {
+            if (TextViewerDocumentViewerDelegate.GROOVY_EXPRESSION_CONTENT_TYPE.equals(partition.getType())) {
                 groovyPartions.add(partition);
             }
         }

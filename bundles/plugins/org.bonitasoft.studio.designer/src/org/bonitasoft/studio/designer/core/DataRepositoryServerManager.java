@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -115,7 +115,7 @@ public class DataRepositoryServerManager {
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, dataRepositoryBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
                         Joiner.on(" ").join(buildCommand()));
-                launch = workingCopy.launch(ILaunchManager.RUN_MODE, Repository.NULL_PROGRESS_MONITOR);
+                launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 if (launch != null && launch.getProcesses().length > 0) {
                     BonitaStudioLog.info(
                             String.format("Data Repository Service has been started on http://localhost:%s/", port),
@@ -186,7 +186,7 @@ public class DataRepositoryServerManager {
             }
             try {
                 PlatformUtil.unzipZipFiles(new File(FileLocator.toFileURL(binArchiveLocation).getFile()),
-                        extractLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+                        extractLocation().toFile(), AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (Exception e) {
                 BonitaStudioLog.error(e);
             }

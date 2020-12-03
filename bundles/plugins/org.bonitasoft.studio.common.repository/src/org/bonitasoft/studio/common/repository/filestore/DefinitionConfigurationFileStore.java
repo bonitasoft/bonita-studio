@@ -38,15 +38,10 @@ import org.eclipse.ui.IWorkbenchPart;
  * @author Romain Bioteau
  *
  */
-public class DefinitionConfigurationFileStore extends EMFFileStore {
+public class DefinitionConfigurationFileStore extends EMFFileStore<ConnectorConfiguration> {
 
-    public DefinitionConfigurationFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
-        super(fileName, store);
-    }
-
-    @Override
-    public ConnectorConfiguration getContent() {
-        return (ConnectorConfiguration) super.getContent();
+    public DefinitionConfigurationFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore<ConnectorConfiguration>> store) {
+        super(fileName,store);
     }
 
     @Override
@@ -54,9 +49,6 @@ public class DefinitionConfigurationFileStore extends EMFFileStore {
         return getName();
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
     @Override
     protected void doSave(final Object content) {
         if(content instanceof ConnectorConfiguration){

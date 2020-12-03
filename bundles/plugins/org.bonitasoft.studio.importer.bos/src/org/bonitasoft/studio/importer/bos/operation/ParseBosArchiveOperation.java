@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.eclipse.core.runtime.Assert;
@@ -19,9 +19,9 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
     private IStatus status;
     private final File archiveFile;
     private ImportArchiveModel archiveModel;
-    protected Repository repository;
+    protected AbstractRepository repository;
 
-    public ParseBosArchiveOperation(File archiveFile, Repository repository) {
+    public ParseBosArchiveOperation(File archiveFile, AbstractRepository repository) {
         Objects.requireNonNull(archiveFile);
         Assert.isTrue(archiveFile.exists());
         Objects.requireNonNull(repository);

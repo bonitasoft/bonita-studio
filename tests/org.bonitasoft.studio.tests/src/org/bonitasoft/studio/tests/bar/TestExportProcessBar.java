@@ -25,7 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -60,7 +60,7 @@ public class TestExportProcessBar  {
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         op.setArchiveFile(barToImport.getAbsolutePath());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
+        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         /* Retrieve the AbstractProcess */
         final DiagramRepositoryStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument", "1.0");
@@ -71,7 +71,7 @@ public class TestExportProcessBar  {
 
         /* Export to the specified folder */
         final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
-        PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.delete(targetFolder, AbstractRepository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
         final ExportBarOperation ebo = new ExportBarOperation();
         ebo.addProcessToDeploy(proc);
@@ -102,7 +102,7 @@ public class TestExportProcessBar  {
     @After
     public void tearDown() throws Exception {
         final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
-        PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.delete(targetFolder, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
 }

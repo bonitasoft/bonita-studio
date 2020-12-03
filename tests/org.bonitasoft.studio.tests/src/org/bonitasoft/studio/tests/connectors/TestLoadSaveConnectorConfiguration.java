@@ -30,6 +30,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -54,24 +55,51 @@ public class TestLoadSaveConnectorConfiguration {
         final String widgetId = "textWidget";
         final String pageId = "connectorDefPageId";
         SWTBotConnectorTestUtil.activateConnectorDefinitionShell(bot);
-        SWTBotShell activeShell = bot.activeShell();
         bot.textWithLabel("Definition id *").setText(connectorDefinitionId);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
         bot.textWithLabel("Page id *").setText(pageId);
-        bot.button("Add...").click();
-        bot.textWithLabel("Widget id*").setText(widgetId);
-        bot.textWithLabel("Display name").setText("text");
-        bot.comboBoxWithLabel("Widget type").setSelection("Text");
-        bot.comboBoxWithLabel("Input *").setSelection(0);
-        bot.button(IDialogConstants.OK_LABEL).click();
-        activeShell.setFocus();
+        createWidget(widgetId, "Text", 0, "text");
         bot.button("Apply").click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.button("Add...").click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+    }
+    
+    private void createWidget(String widgetId, String widgetType, int inputIndex,  String displayName) {
+        bot.button("Add...").click();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                bot.shell(org.bonitasoft.studio.connector.model.i18n.Messages.addWidget).activate();
+                SWTBotShell activeShell = bot.activeShell();
+                activeShell.setFocus();
+                return activeShell.isActive();
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Shell " + org.bonitasoft.studio.connector.model.i18n.Messages.addWidget + " did not activate";
+            }
+        });
+        assertFalse("button ok should be disabled",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
+        bot.textWithLabel("Widget id*").setText(widgetId);
+        bot.textWithLabel("Display name").setText(displayName);
+        bot.comboBoxWithLabel("Widget type").setSelection(widgetType);
+        if (!widgetType.equals("Group")) {
+            bot.comboBoxWithLabel("Input *").setSelection(inputIndex);
+        } else {
+            assertFalse("inputs combo box should be disabled for Group widget",
+                    bot.comboBoxWithLabel("Input *").isEnabled());
+        }
+        assertTrue("button ok should be enabled",
+                bot.button(IDialogConstants.OK_LABEL).isEnabled());
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("New connector definition"));
     }
 
     @Test

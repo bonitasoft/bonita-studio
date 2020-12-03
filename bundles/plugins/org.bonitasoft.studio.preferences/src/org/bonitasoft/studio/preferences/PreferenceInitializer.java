@@ -14,9 +14,14 @@
  */
 package org.bonitasoft.studio.preferences;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -32,14 +37,16 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
+import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+
+import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
  *         Class used to initialize default preference values.
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer implements BonitaPreferenceConstants {
-
 
     @Override
     public void initializeDefaultPreferences() {
@@ -58,19 +65,34 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.SMALL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
-        store.setDefault(DEFAULT_USERXP_THEME, "default");
-        store.setDefault(DEFAULT_APPLICATION_THEME, "Default Application");
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
         store.setDefault(SHOW_LEGACY_6X_MODE, false);
         store.setDefault(UID_JVM_OPTS, "-Xmx256m");
         store.setDefault(BonitaPreferenceConstants.CUSTOM_PAGE_DEBUG, false);
         getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
+        store.setDefault(NOTIFY_BDM_DEPLOYMENT_REQUIRED, true);
 
         initDefaultDebugPreferences();
 
         final IPreferenceStore jdtUIStore = getJDTPreferenceStore();
         jdtUIStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, Boolean.FALSE);
+
+        IPreferenceStore preferenceStore = getIDEPreferenceStore();
+        try {
+            preferenceStore.setDefault(
+                    "org.eclipse.ui.internal.views.markers.CachedMarkerBuilderorg.eclipse.ui.views.ProblemView",
+                    Files.toString(
+                            new File(FileLocator.toFileURL(PreferenceInitializer.class.getResource("problemView.xml"))
+                                    .getFile()),
+                            Charset.defaultCharset()));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected IPreferenceStore getIDEPreferenceStore() {
+        return IDEWorkbenchPlugin.getDefault().getPreferenceStore();
     }
 
     protected void initializeWorkbenchPreferences() {

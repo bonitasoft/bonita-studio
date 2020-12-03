@@ -24,6 +24,7 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -144,7 +145,9 @@ public abstract class DataViewer extends Composite {
         toolBarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).create());
         ToolBar toolBar = new ToolBar(toolBarComposite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         widgetFactory.adapt(toolBar);
-        toolBar.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+        if (!PreferenceUtil.isDarkTheme()) {
+            toolBar.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+        }
         createToolItems(toolBar);
     }
 

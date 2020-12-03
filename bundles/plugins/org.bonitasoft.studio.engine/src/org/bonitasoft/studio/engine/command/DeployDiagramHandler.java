@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -84,7 +84,7 @@ public class DeployDiagramHandler {
             if (!shouldDisablePopup) {
                 runInJob(diagramFileStore, deployOperation);
             } else {
-                deployOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                deployOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 return deployOperation.getStatus();
             }
         }

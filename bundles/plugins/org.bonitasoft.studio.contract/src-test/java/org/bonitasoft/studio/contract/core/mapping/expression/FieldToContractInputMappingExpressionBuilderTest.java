@@ -33,7 +33,7 @@ import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMapping;
 import org.bonitasoft.studio.contract.core.mapping.RelationFieldToContractInputMapping;
@@ -184,7 +184,7 @@ public class FieldToContractInputMappingExpressionBuilderTest {
         expressionBuilder.toExpression(aBusinessData().withName("myEmployee").build(),
                 mapping, false);
 
-        verify(groovyCompilationUnit).delete(true, Repository.NULL_PROGRESS_MONITOR);
+        verify(groovyCompilationUnit).delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Test

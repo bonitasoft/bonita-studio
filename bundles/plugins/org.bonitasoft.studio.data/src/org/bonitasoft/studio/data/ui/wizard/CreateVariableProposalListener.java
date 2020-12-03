@@ -38,6 +38,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Maxence Raoux
@@ -75,8 +76,11 @@ public class CreateVariableProposalListener implements IDataProposalListener {
     protected Shell activeShell() {
         Shell activeShell = Display
                 .getDefault().getActiveShell();
-        if (activeShell.getParent() != null) {
+        if (activeShell != null && activeShell.getParent() != null) {
             activeShell = activeShell.getParent().getShell();
+        }
+        if(activeShell == null) {
+            activeShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         }
         return activeShell;
     }

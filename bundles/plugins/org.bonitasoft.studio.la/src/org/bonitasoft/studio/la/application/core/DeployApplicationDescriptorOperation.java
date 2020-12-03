@@ -15,12 +15,17 @@
 package org.bonitasoft.studio.la.application.core;
 
 import static java.util.Objects.requireNonNull;
+import static org.bonitasoft.studio.ui.util.StatusCollectors.toMultiStatus;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
@@ -32,8 +37,11 @@ import org.bonitasoft.engine.business.application.ApplicationImportPolicy;
 import org.bonitasoft.engine.business.application.exporter.ApplicationNodeContainerConverter;
 import org.bonitasoft.engine.business.application.xml.ApplicationNode;
 import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
+import org.bonitasoft.engine.business.application.xml.ApplicationPageNode;
 import org.bonitasoft.engine.exception.AlreadyExistsException;
 import org.bonitasoft.engine.exception.ImportException;
+import org.bonitasoft.studio.common.core.IRunnableWithStatus;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -46,10 +54,12 @@ import org.xml.sax.SAXException;
 
 public class DeployApplicationDescriptorOperation implements IRunnableWithProgress {
 
-    protected final ApplicationAPI applicationAPI;
-    protected final ApplicationNodeContainer applicationNodeContainer;
+    protected ApplicationAPI applicationAPI;
+    protected ApplicationNodeContainer applicationNodeContainer;
     protected MultiStatus status = new MultiStatus(LivingApplicationPlugin.PLUGIN_ID, 0, "", null);
-    protected final ApplicationNodeContainerConverter converter;
+    protected ApplicationNodeContainerConverter converter;
+    private PageDependencyResolver pageDependencyResolver;
+    private ThemeDependencyResolver themeDependencyResolver;
 
     public DeployApplicationDescriptorOperation(ApplicationAPI applicationAPI,
             ApplicationNodeContainer applicationNodeContainer,
@@ -57,15 +67,76 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
         this.applicationAPI = requireNonNull(applicationAPI);
         this.applicationNodeContainer = requireNonNull(applicationNodeContainer);
         this.converter = requireNonNull(converter);
+
+    }
+
+    public DeployApplicationDescriptorOperation withDependencies(PageDependencyResolver pageDependencyResolver,
+            ThemeDependencyResolver themeDependencyResolver) {
+        this.pageDependencyResolver = pageDependencyResolver;
+        this.themeDependencyResolver = themeDependencyResolver;
+        return this;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.deployingLivingApplication, IProgressMonitor.UNKNOWN);
+        final List<IRunnableWithStatus> dependencies = findDependencies(applicationNodeContainer);
+        monitor.beginTask(Messages.deployingLivingApplication, dependencies.size() + 1);
         status.add(deleteBeforeDeploy(monitor));
         if (status.isOK()) {
+            status = dependencies.stream()
+                    .map(deploy(monitor))
+                    .collect(toMultiStatus());
             deployApplications(monitor);
         }
+    }
+
+    private Function<? super IRunnableWithStatus, ? extends IStatus> deploy(IProgressMonitor monitor) {
+        return deployable -> {
+            try {
+                deployable.run(monitor);
+            } catch (InvocationTargetException | InterruptedException e) {
+                return new Status(IStatus.ERROR, LivingApplicationPlugin.PLUGIN_ID,
+                        "Failed to deploy", e);
+            }
+            return deployable.getStatus();
+        };
+    }
+
+    protected List<IRunnableWithStatus> findDependencies(ApplicationNodeContainer applicationNodeContainer) {
+        List<String> profilesPages = getProfilePages();
+        Stream.Builder<IRunnableWithStatus> deployables = Stream.builder();
+        if (pageDependencyResolver != null) {
+            Stream.Builder<String> builder = Stream.builder();
+            //Application Pages
+            applicationNodeContainer
+                    .getApplications()
+                    .stream()
+                    .map(ApplicationNode::getApplicationPages)
+                    .flatMap(Collection::stream)
+                    .map(ApplicationPageNode::getCustomPage)
+                    .forEach(builder::add);
+            //Layout
+            applicationNodeContainer
+                    .getApplications()
+                    .stream()
+                    .map(ApplicationNode::getLayout)
+                    .forEach(builder::add);
+            pageDependencyResolver.prepareDeployOperation(builder.build()
+                    .filter(customPage -> !profilesPages.contains(customPage)))
+                    .forEach(deployables::add);
+        }
+        if (themeDependencyResolver != null) {
+            themeDependencyResolver.prepareDeployOperation(applicationNodeContainer
+                    .getApplications()
+                    .stream()
+                    .map(ApplicationNode::getTheme))
+                    .forEach(deployables::add);
+        }
+        return deployables.build().collect(Collectors.toList());
+    }
+
+    protected List<String> getProfilePages() {
+        return Collections.EMPTY_LIST;
     }
 
     protected void deployApplications(IProgressMonitor monitor) {
@@ -88,9 +159,10 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
                         .forEach(mStatus::add);
             }
         } catch (AlreadyExistsException | ImportException | IOException | JAXBException | SAXException e) {
+            BonitaStudioLog.error(e);
             if (status.isMultiStatus()) {
                 status.add(new Status(IStatus.ERROR, LivingApplicationPlugin.PLUGIN_ID,
-                        "Failed to deploy application.", e));
+                        Messages.deployFailed, e));
             }
         } finally {
             monitor.done();
@@ -120,8 +192,9 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
                 case APPLICATION_PAGE:
                     return ValidationStatus.warning(
                             String.format(Messages.appPageTokenNotFound, applicationDisplayName, s.getName()));
-                case PAGE: return ValidationStatus.warning(
-                        String.format(Messages.applicationPageNotFound, applicationDisplayName, s.getName()));
+                case PAGE:
+                    return ValidationStatus.warning(
+                            String.format(Messages.applicationPageNotFound, applicationDisplayName, s.getName()));
                 default:
                     return ValidationStatus.error(s.getName());
             }

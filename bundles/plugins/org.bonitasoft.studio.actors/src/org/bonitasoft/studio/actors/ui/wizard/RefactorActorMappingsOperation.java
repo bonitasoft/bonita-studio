@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
@@ -305,7 +307,12 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
             final DiagramRepositoryStore diagramStore) {
         final List<Configuration> configurations = new ArrayList<>();
         for (final ProcessConfigurationFileStore fileStore : confStore.getChildren()) {
-            final Configuration c = fileStore.getContent();
+            Configuration c = null;
+            try {
+                c = fileStore.getContent();
+            } catch (ReadFileStoreException e) {
+                BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+            }
             if (c != null && c.getActorMappings() != null) {
                 configurations.add(c);
             }

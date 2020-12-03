@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -83,7 +83,7 @@ public class TestConnectorUtil {
 		}
         DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, Repository.NULL_PROGRESS_MONITOR);
+		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, AbstractRepository.NULL_PROGRESS_MONITOR);
 		//Always add BDM jar if present, so filtering it from selection dialog
 		jars.add(BDM_JAR_NAME);
         int retCode = Window.OK;

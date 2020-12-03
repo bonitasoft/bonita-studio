@@ -32,7 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class PreferenceInitializerTest {
 
     @Mock
-    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore, workbenchStore;
+    public IPreferenceStore apiPrefStore, webPrefStore, bonitaPrefStore, jdtPrefStore, dslPreferenceStore, workbenchStore, idePreferenceStore;
 
     @Test
     public void testLegacyModeDeactivatedByDefault() throws Exception {
@@ -61,6 +61,7 @@ public class PreferenceInitializerTest {
         doReturn(bonitaPrefStore).when(preferenceInitializer).getBonitaPreferenceStore();
         doReturn(jdtPrefStore).when(preferenceInitializer).getJDTPreferenceStore();
         doReturn(new Locale[] {}).when(preferenceInitializer).getStudioLocales();
+        doReturn(idePreferenceStore).when(preferenceInitializer).getIDEPreferenceStore();
         doNothing().when(preferenceInitializer).setUTF8DefaultEncoding();
         doNothing().when(preferenceInitializer).initDefaultDebugPreferences();
         doNothing().when(preferenceInitializer).initializeWorkbenchPreferences();

@@ -45,7 +45,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.ui.dialog.EnumDataTypeDialog;
@@ -79,6 +79,7 @@ import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
@@ -166,9 +167,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-/**
- * @author Romain Bioteau
- */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DataWizardPage extends WizardPage implements IBonitaVariableContext {
 
     private static final String GENERATE_DATA_CONTRIBUTION_ID = "org.bonitasoft.studio.propertiies.generateData";
@@ -717,7 +716,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         }
         final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
         final DataType type = (DataType) selectedType.getValue();
-        if (type instanceof JavaType) {
+        if (data instanceof JavaObjectData) {
             final String className = ((JavaObjectData) data).getClassName();
             if (className == null || className.isEmpty()) {
                 return String.class.getName();
@@ -781,11 +780,16 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (nsCombo != null && !nsCombo.isDisposed()) {
             final List<XSDFileStore> allArtifacts = store.getChildren();
             for (final XSDFileStore artifact : allArtifacts) {
-                final String namespace = ((XSDSchema) artifact.getContent()).getTargetNamespace();
-                if (namespace != null) {
-                    nsCombo.add(namespace);
-                } else {
-                    nsCombo.add("No Namespace " + "(" + artifact.getName() + ")");
+                try {
+                    XSDSchema xsdSchema = artifact.getContent();
+                    final String namespace = xsdSchema.getTargetNamespace();
+                    if (namespace != null) {
+                        nsCombo.add(namespace);
+                    } else {
+                        nsCombo.add("No Namespace " + "(" + artifact.getName() + ")");
+                    }
+                } catch (ReadFileStoreException e1) {
+                    BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                 }
             }
 
@@ -862,6 +866,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         new Label(parent, SWT.NONE);
         moreSection = new Section(parent, ExpandableComposite.NO_TITLE_FOCUS_BOX | ExpandableComposite.TWISTIE);
         moreSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        moreSection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         moreSection.setText(Messages.additionalInformation);
         moreSection.addExpansionListener(new IExpansionListener() {
 
@@ -1060,7 +1065,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     protected void updateMoreSection(final DataType type) {
         if (moreSection != null && !moreSection.isDisposed()) {
             moreSection.setExpanded(false);
-            moreSection.setEnabled(false);
+            moreSection.setVisible(false);
 
             if (moreSection.getClient() != null) {
                 moreSection.getClient().dispose();
@@ -1068,15 +1073,15 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             if (type instanceof JavaType) {
                 moreSection.setClient(createJavaTypeSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else if (type instanceof XMLType) {
                 moreSection.setClient(createXMLTypeSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else if (type instanceof DateType) {
                 moreSection.setClient(createDateSelection(moreSection));
-                moreSection.setEnabled(true);
+                moreSection.setVisible(true);
                 moreSection.setExpanded(true);
             } else {
                 moreSection.setClient(new Composite(moreSection, SWT.NONE));
@@ -1353,17 +1358,21 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         artifact.save(content);
                     }
                     nsCombo.removeAll();
-                    for (final IRepositoryFileStore artifact : store.getChildren()) {
-                        final XSDFileStore file = (XSDFileStore) artifact;
-                        final XSDSchema schema = (XSDSchema) file.getContent();
-                        String xmlNamespace = null;
-                        if (schema != null && schema.getTargetNamespace() != null
-                                && !schema.getTargetNamespace().isEmpty()) {
-                            xmlNamespace = schema.getTargetNamespace();
-                        } else {
-                            xmlNamespace = "No Namespace " + "(" + artifact.getName() + ")";
+                    for (final XSDFileStore artifact : store.getChildren()) {
+                        XSDSchema schema = null;
+                        try {
+                            schema = artifact.getContent();
+                            String xmlNamespace = null;
+                            if (schema != null && schema.getTargetNamespace() != null
+                                    && !schema.getTargetNamespace().isEmpty()) {
+                                xmlNamespace = schema.getTargetNamespace();
+                            } else {
+                                xmlNamespace = "No Namespace " + "(" + artifact.getName() + ")";
+                            }
+                            nsCombo.add(xmlNamespace);
+                        } catch (ReadFileStoreException e1) {
+                            BonitaStudioLog.warning(e1.getMessage(), DataPlugin.PLUGIN_ID);
                         }
-                        nsCombo.add(xmlNamespace);
                     }
                     nsCombo.setText(((XMLData) data).getNamespace());
                 }

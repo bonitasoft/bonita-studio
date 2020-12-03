@@ -31,7 +31,7 @@ public class BotContractInputExpressionEditor extends AbstractBotExpressionEdito
      * @param dataType
      */
     public BotContractInputExpressionEditor selectContractInput(final String contractInputName) {
-        bot.table(1).getTableItem(contractInputName).select();
+        bot.table().getTableItem(contractInputName).select();
         return this;
     }
 
@@ -41,6 +41,6 @@ public class BotContractInputExpressionEditor extends AbstractBotExpressionEdito
     }
 
     public BotTableWidget fieldList() {
-        return new BotTableWidget(bot.table(1));
+        return new BotTableWidget(bot.table());
     }
 }

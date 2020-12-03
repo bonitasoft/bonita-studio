@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.bonitasoft.studio</groupId>
         <artifactId>bundles</artifactId>
-        <version>7.11.5-SNAPSHOT</version>
+        <version>7.12.0-SNAPSHOT</version>
     </parent>
     <name>Bonita Studio Community Plugins</name>
     <groupId>org.bonitasoft.studio.bundles</groupId>
@@ -30,6 +30,10 @@
         <module>org.bonitasoft.studio.common.repository</module>
         <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.configuration</module>
+		<module>org.bonitasoft.studio.connector.wizard.office</module>
+        <module>org.bonitasoft.studio.connector.wizard.sapjco3</module>
+		<module>org.bonitasoft.studio.connector.wizard.sforce</module>
+        <module>org.bonitasoft.studio.connector.wizard.uipath</module>
         <module>org.bonitasoft.studio.connectors</module>
         <module>org.bonitasoft.studio.connectors.database.drivers</module>
         <module>org.bonitasoft.studio.connectors.database.drivers.prop</module>
@@ -38,6 +42,7 @@
         <module>org.bonitasoft.studio.condition.ui</module>
         <module>org.bonitasoft.studio.connectors.model.edit</module>
         <module>org.bonitasoft.studio.data</module>
+        <module>org.bonitasoft.studio.datatools</module>
         <module>org.bonitasoft.studio.decision.table</module>
         <module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
@@ -58,7 +63,6 @@
         <module>org.bonitasoft.studio.la</module>
         <module>org.bonitasoft.studio.migration</module>
         <module>org.bonitasoft.studio.intro</module>
-        <module>org.bonitasoft.studio.jpdl</module>
         <module>org.bonitasoft.studio.model.edit.custom</module>
         <module>org.bonitasoft.studio.refactoring</module>
         <module>org.bonitasoft.studio.parameters</module>
@@ -66,13 +70,17 @@
         <module>org.bonitasoft.studio.pics.bonitasoft</module>
         <module>org.bonitasoft.studio.preferences</module>
         <module>org.bonitasoft.studio.properties</module>
-        <module>org.bonitasoft.studio.properties.bos</module>
+        <module>org.bonitasoft.studio.rest.api.extension</module>
+        <module>org.bonitasoft.studio.sap.dependency</module>
+        <module>org.bonitasoft.studio.sap.mock</module>
         <module>org.bonitasoft.studio.scripting</module>
+        <module>org.bonitasoft.studio.sqlbuilder.ex</module>
+        <module>org.bonitasoft.studio.team</module>
+        <module>org.bonitasoft.studio.team.git</module>
         <module>org.bonitasoft.studio.ui</module>
         <module>org.bonitasoft.studio.validation</module>
         <module>org.bonitasoft.studio.validation.common</module>
         <module>org.bonitasoft.studio.xml</module>
-        <module>org.bonitasoft.studio.xpdl</module>
         <module>org.omg.schema.spec.bpmn</module>
         <module>org.bonitasoft.studio-product</module>
     </modules>
@@ -81,7 +89,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

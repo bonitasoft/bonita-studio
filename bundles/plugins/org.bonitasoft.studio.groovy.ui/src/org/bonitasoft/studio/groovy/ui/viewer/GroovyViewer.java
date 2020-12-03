@@ -28,8 +28,9 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
@@ -44,12 +45,14 @@ import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -150,7 +153,7 @@ public class GroovyViewer implements IDocumentListener {
             final DummyEditorSite site = new DummyEditorSite(mainComposite.getShell(), editor);
             groovyEditorContext.set(ISources.ACTIVE_SITE_NAME, site);
             editor.init(site, this.input);
-            editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+            editor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
             ASTProvider astProvider = JavaPlugin.getDefault().getASTProvider();
             org.eclipse.jdt.groovy.core.util.ReflectionUtils.executePrivateMethod(ASTProvider.class,
                     "activeJavaEditorChanged", new Class[] { IWorkbenchPart.class }, astProvider,
@@ -242,13 +245,19 @@ public class GroovyViewer implements IDocumentListener {
                 final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance()
                         .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
                 final ProcessConfigurationFileStore fileStore = store
-                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT, true);
+                        .getChild(ModelHelper.getEObjectID(proc) + "." + ProcessConfigurationRepositoryStore.CONF_EXT,
+                                true);
                 if (fileStore != null) {
-                    final Configuration c = fileStore.getContent();
-                    for (final Parameter p : c.getParameters()) {
-                        if (p.getName().equals(v.getName())) {
-                            v.setDefaultValue(p.getValue());
+                    Configuration c;
+                    try {
+                        c = fileStore.getContent();
+                        for (final Parameter p : c.getParameters()) {
+                            if (p.getName().equals(v.getName())) {
+                                v.setDefaultValue(p.getValue());
+                            }
                         }
+                    } catch (ReadFileStoreException e1) {
+                        BonitaStudioLog.warning(e1.getMessage(), Activator.PLUGIN_ID);
                     }
                 }
             }
@@ -295,6 +304,7 @@ public class GroovyViewer implements IDocumentListener {
             Collections.sort(expressions, new ExpressionComparator());
             for (final Expression e : expressions) {
                 final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+                scriptVariable.setCategory(ExpressionConstants.DAO_TYPE);
                 providedScriptVariable.add(scriptVariable);
             }
         }
@@ -369,6 +379,10 @@ public class GroovyViewer implements IDocumentListener {
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
         groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
         groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, true);
+    }
+
+    public GroovyEditor getEditor() {
+        return editor;
     }
 
 }

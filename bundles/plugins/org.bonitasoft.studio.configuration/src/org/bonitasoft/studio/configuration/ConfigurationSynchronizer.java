@@ -23,7 +23,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -136,7 +136,7 @@ public class ConfigurationSynchronizer implements Synchronizer {
     }
 
     public void synchronize() {
-        synchronize(Repository.NULL_PROGRESS_MONITOR);
+        synchronize(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
     
     @Override
@@ -168,8 +168,8 @@ public class ConfigurationSynchronizer implements Synchronizer {
                     ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON));
         }
 
-        if (configuration.getVersion() == null || !ModelVersion.CURRENT_VERSION.equals(configuration.getVersion())) {
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_VERSION));
+        if (configuration.getVersion() == null || !ModelVersion.CURRENT_DIAGRAM_VERSION.equals(configuration.getVersion())) {
+            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_DIAGRAM_VERSION));
         }
 
         synchronizeFragmentContainers(cc);

@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -61,7 +61,7 @@ public class BonitaProjectPropertyTester extends PropertyTester {
     private boolean isBonitaStoreContainer(Object receiver) {
         if (RepositoryManager.getInstance().hasActiveRepository()
                 && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
-            Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
             if (receiver instanceof IFolder && !isDocumentationStore(receiver)) {
                 for (final IRepositoryStore<? extends IRepositoryFileStore> store : currentRepository.getAllStores()) {
                     if (Objects.equals(store.getResource(), receiver)) {

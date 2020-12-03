@@ -19,6 +19,9 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
+import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.UIPlugin;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -30,8 +33,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.IManagedForm;
@@ -60,6 +65,8 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
     private EHandlerService eHandlerService;
 
+    private Color darkModeBg;
+
     public AbstractFormPage(String id, String title, IEclipseContext context) {
         super(id, title);
         this.repositoryAccessor = repositoryAccessor();
@@ -80,7 +87,13 @@ public abstract class AbstractFormPage<T> extends FormPage {
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         toolkit = managedForm.getToolkit();
+        darkModeBg = new Color(Display.getDefault(), ColorConstants.DARK_MODE_EDITORS_BACKGROUND);
+        if (PreferenceUtil.isDarkTheme()) {
+            toolkit.setBackground(darkModeBg);
+        }
         scrolledForm = managedForm.getForm();
+        scrolledForm.getForm().setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EDITOR_FORM_BAKGROUND_CLASS);
         scrolledForm.setHeadClient(createHeader(scrolledForm.getForm()));
         scrolledForm.getBody().setLayout(GridLayoutFactory.swtDefaults().create());
         scrolledForm.getBody().setLayoutData(GridDataFactory.fillDefaults().create());
@@ -95,11 +108,10 @@ public abstract class AbstractFormPage<T> extends FormPage {
     private Control createHeader(Form form) {
         final Composite head = form.getHead();
         final ToolBar toolBar = new ToolBar(head, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS);
+        toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+        toolBar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EDITOR_TOOLBAR_TEXT_COLOR);
         toolBarManager = new ToolBarManager(toolBar);
         createHeaderContent(toolBar);
-
-        Label toolbarSeparator = new Label(form.getBody(), SWT.HORIZONTAL | SWT.SEPARATOR);
-        toolbarSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         return toolBar;
     }
 
@@ -216,6 +228,14 @@ public abstract class AbstractFormPage<T> extends FormPage {
     private void updateWorkingCopy(T model) {
         if (getEditor() instanceof AbstractEditor) {
             ((AbstractEditor) getEditor()).updateWorkingCopy(model);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (darkModeBg != null) {
+            darkModeBg.dispose();
         }
     }
 

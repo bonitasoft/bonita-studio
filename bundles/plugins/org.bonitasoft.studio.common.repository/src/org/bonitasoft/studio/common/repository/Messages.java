@@ -94,6 +94,14 @@ public final class Messages extends NLS {
     public static String unloadable;
     public static String uncategorized;
 
+    public static String invalidFile;
+
+    public static String migrationError;
+    public static String migrationConfirmationMsg;
+    public static String migrationConfirmationTitle;
+    public static String continueLabel;
+    public static String updateAllModels;
+
     private Messages() {
         // Do not instantiate
     }

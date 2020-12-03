@@ -20,8 +20,11 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -133,11 +136,15 @@ public class QueryExpressionValidationConstraint extends AbstractLiveValidationM
     protected BusinessObject getBusinessObject(final String simpleBOName) {
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = getBusinessObjectDefinitionStore();
         BusinessObjectModelFileStore fStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        final BusinessObjectModel businessObjectModel = fStore.getContent();
-        for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
-            if (simpleBOName.equals(NamingUtils.getSimpleName(bo.getQualifiedName()))) {
-                return bo;
+        try {
+            BusinessObjectModel  businessObjectModel = fStore.getContent();
+            for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
+                if (simpleBOName.equals(NamingUtils.getSimpleName(bo.getQualifiedName()))) {
+                    return bo;
+                }
             }
+        } catch (ReadFileStoreException e) {
+          BonitaStudioLog.warning(e.getMessage(), ValidationPlugin.PLUGIN_ID);
         }
         return null;
     }

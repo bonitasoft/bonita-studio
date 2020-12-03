@@ -18,10 +18,9 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -35,9 +34,9 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class DependencyFileStore extends AbstractFileStore {
+public class DependencyFileStore extends AbstractFileStore<InputStream> {
 
-    public DependencyFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public DependencyFileStore(final String fileName, final DependencyRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
@@ -50,12 +49,8 @@ public class DependencyFileStore extends AbstractFileStore {
         return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public InputStream getContent() {
+    protected InputStream doGetContent() throws ReadFileStoreException {
         try {
             return getResource().getContents();
         } catch (final CoreException e) {
@@ -73,9 +68,9 @@ public class DependencyFileStore extends AbstractFileStore {
         if (content instanceof InputStream) {
             try {
                 if (getResource().exists()) {
-                    getResource().setContents((InputStream) content, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                    getResource().setContents((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    getResource().create((InputStream) content, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                    getResource().create((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
@@ -106,12 +101,12 @@ public class DependencyFileStore extends AbstractFileStore {
         try {
             final IResource r = getResource();
             if (r != null && r.exists()) {
-                r.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                final Repository repository = getRepository();
+                r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                final AbstractRepository repository = getRepository();
                 final IProject project = repository.getProject();
-                project.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                project.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 if (repository.isBuildEnable()) {
-                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
+                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
 
             }

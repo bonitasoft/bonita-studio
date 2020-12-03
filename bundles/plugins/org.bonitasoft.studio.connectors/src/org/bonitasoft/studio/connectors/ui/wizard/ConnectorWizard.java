@@ -151,7 +151,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector();
         final ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE
                 .createConnectorConfiguration();
-        configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
+        configuration.setModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         connectorWorkingCopy.setConfiguration(configuration);
         editMode = false;
         this.connectorContainmentFeature = connectorContainmentFeature;

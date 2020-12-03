@@ -14,8 +14,11 @@
  */
 package org.bonitasoft.studio.connectors.handler;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplFileStore;
 import org.bonitasoft.studio.connectors.ui.wizard.ExportConnectorWizard;
 import org.eclipse.core.commands.AbstractHandler;
@@ -41,7 +44,14 @@ public class ExportSingleConnectorHandler extends AbstractHandler {
                 .findSelectedFileStore(repositoryAccessor.getCurrentRepository())
                 .filter(ConnectorImplFileStore.class::isInstance)
                 .map(ConnectorImplFileStore.class::cast)
-                .map(ConnectorImplFileStore::getContent)
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(e.getMessage(), ConnectorPlugin.PLUGIN_ID);
+                        return null;
+                    }
+                })
                 .ifPresent(impl -> {
                     WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),
                             new ExportConnectorWizard(impl));

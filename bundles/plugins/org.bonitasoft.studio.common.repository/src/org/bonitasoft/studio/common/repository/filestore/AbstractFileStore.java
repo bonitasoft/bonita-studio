@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.filestore;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,8 +30,8 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -38,12 +39,19 @@ import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
@@ -61,23 +69,53 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public abstract class AbstractFileStore
-        implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
+public abstract class AbstractFileStore<T>
+        implements IRepositoryFileStore<T>, IFileStoreChangeNotifier, IPartListener {
 
     public static final String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
 
     private String name;
-    protected final IRepositoryStore<? extends IRepositoryFileStore> store;
+    protected final IRepositoryStore<? extends IRepositoryFileStore<T>> store;
     private IWorkbenchPart activePart;
     private Map<String, Object> parameters;
     private RepositoryAccessor repositoryAccessor;
     private CommandExecutor commandExecutor = new CommandExecutor();
 
-    public AbstractFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public AbstractFileStore(final String fileName,
+            final IRepositoryStore<? extends IRepositoryFileStore<T>> parentStore) {
         name = fileName;
         store = parentStore;
         initParameters();
     }
+
+    @Override
+    public T getContent() throws ReadFileStoreException {
+        doCheckModelVersion();
+        return doGetContent();
+    }
+
+    protected void doCheckModelVersion() throws ReadFileStoreException {
+        if (getResource() != null && getResource().exists()) {
+            try (InputStream is = openInputStream()) {
+                IStatus status = getParentStore().validate(getName(), is);
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new ReadFileStoreException(status.getMessage());
+                }
+            } catch (IOException | CoreException e) {
+                throw new ReadFileStoreException(e.getMessage(), e);
+            }
+        }
+    }
+
+    protected InputStream openInputStream() throws CoreException {
+        if (getResource() instanceof IFile) {
+            return ((IFile) getResource()).getContents();
+        } else {
+            throw new IllegalStateException(String.format("Cannot open an InputStream for %s", getClass().getName()));
+        }
+    }
+
+    protected abstract T doGetContent() throws ReadFileStoreException;
 
     private void initParameters() {
         parameters = new HashMap<>();
@@ -120,12 +158,12 @@ public abstract class AbstractFileStore
         return new StyledString(getName());
     }
 
-    public Repository getRepository() {
+    public AbstractRepository getRepository() {
         return RepositoryManager.getInstance().getCurrentRepository();
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getParentStore() {
+    public IRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
         return store;
     }
 
@@ -183,9 +221,10 @@ public abstract class AbstractFileStore
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_SAVE, this));
             IResource resource = getResource();
             boolean exists = resource.exists();
+            checkParentExists(resource);
             doSave(content);
             try {
-                getResource().refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
+                getResource().refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -197,6 +236,17 @@ public abstract class AbstractFileStore
             Display.getDefault().syncExec(
                     () -> MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,
                             Messages.bind(Messages.readOnlyFileWarning, getDisplayName())));
+        }
+    }
+
+    private void checkParentExists(IResource resource) {
+        IContainer parent = resource.getParent();
+        if(parent != null && !parent.exists() && parent instanceof IFolder) {
+            try {
+                ((IFolder)parent).create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
         }
     }
 
@@ -220,6 +270,34 @@ public abstract class AbstractFileStore
     @Override
     public IWorkbenchPart open() {
         final Display display = Display.getDefault();
+        IStatus status = validate();
+        switch (status.getSeverity()) {
+            case IStatus.ERROR:
+                MessageDialog.openError(display.getActiveShell(), Messages.invalidFile, status.getMessage());
+                return null;
+            case IStatus.WARNING:
+                MessageDialog dialog = new MessageDialog(display.getActiveShell(),
+                        Messages.migrationConfirmationTitle,
+                        null,
+                        Messages.migrationConfirmationMsg,
+                        MessageDialog.WARNING,
+                        0,
+                        Messages.continueLabel,
+                        IDialogConstants.CANCEL_LABEL);
+                if (dialog.open() == Dialog.OK) {
+                    try {
+                        getParentStore().migrate(this, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    } catch (CoreException | MigrationException e) {
+                        MessageDialog.openError(display.getActiveShell(), Messages.migrationError, e.getMessage());
+                        return null;
+                    }
+                    break;
+                }
+                return null;
+            default:
+                break;
+        }
+
         final boolean[] done = new boolean[1];
         display.asyncExec(() -> {
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this));
@@ -268,7 +346,7 @@ public abstract class AbstractFileStore
             }
             try {
                 getResource().move(getParentStore().getResource().getFullPath().append(newName), true,
-                        Repository.NULL_PROGRESS_MONITOR);
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -281,7 +359,7 @@ public abstract class AbstractFileStore
         try {
             final IResource r = getResource();
             if (r != null && r.exists()) {
-                r.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                r.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
@@ -298,12 +376,12 @@ public abstract class AbstractFileStore
             final File target = new File(to, file.getName());
             if (target.exists()) {
                 if (FileActionDialog.overwriteQuestion(file.getName())) {
-                    PlatformUtil.delete(target, Repository.NULL_PROGRESS_MONITOR);
+                    PlatformUtil.delete(target, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     return ValidationStatus.cancel("");
                 }
             }
-            PlatformUtil.copyResource(to, file.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+            PlatformUtil.copyResource(to, file.getLocation().toFile(), AbstractRepository.NULL_PROGRESS_MONITOR);
             return ValidationStatus.ok();
         }
         return ValidationStatus.error(String.format(Messages.failedToRetrieveResourceToExport, getName()));
@@ -380,8 +458,8 @@ public abstract class AbstractFileStore
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof IRepositoryFileStore) {
-            return getName().equals(((IRepositoryFileStore) obj).getName())
-                    && getParentStore().equals(((IRepositoryFileStore) obj).getParentStore());
+            return getName().equals(((IRepositoryFileStore<?>) obj).getName())
+                    && getParentStore().equals(((IRepositoryFileStore<?>) obj).getParentStore());
         }
         return super.equals(obj);
     }
@@ -401,7 +479,7 @@ public abstract class AbstractFileStore
     }
 
     @Override
-    public Set<IRepositoryFileStore> getRelatedFileStore() {
+    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
         return Collections.emptySet();
     }
 
@@ -463,4 +541,17 @@ public abstract class AbstractFileStore
         return true;
     }
 
+    @Override
+    public IStatus validate() {
+        IResource resource = getResource();
+        if (resource instanceof IFile && resource.exists()) {
+            try (InputStream is = openInputStream()) {
+                return getParentStore().validate(resource.getName(), is);
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+                return ValidationStatus.error("Failed to validate file model", e);
+            }
+        }
+        return ValidationStatus.ok();
+    }
 }

@@ -200,7 +200,7 @@ public class BarExporter {
                 file = processConfStore.createRepositoryFileStore(id + ".conf");
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(configurationId);
-                configuration.setVersion(ModelVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                 file.save(configuration);
             }
             try {
@@ -218,6 +218,7 @@ public class BarExporter {
             }
         }
 
+        //TODO Remove configuration sync when all bar artifacts will be live update friendly (connectors, dependencies, parameters...) ? 
         if (configuration == null) {
             configuration = createEmptyConfiguration(configurationId);
         }
@@ -238,7 +239,7 @@ public class BarExporter {
     protected Configuration createEmptyConfiguration(String id) {
         Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
         configuration.setName(id);
-        configuration.setVersion(ModelVersion.CURRENT_VERSION);
+        configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
         return configuration;
     }
 
@@ -283,5 +284,7 @@ public class BarExporter {
         }
         return res;
     }
+
+
 
 }

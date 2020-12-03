@@ -36,12 +36,14 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -85,7 +87,14 @@ public class DeployOrganizationHandler {
     private Optional<Organization> findOrganizationToDeploy(RepositoryAccessor repositoryAccessor, String organization) {
         return Optional.ofNullable(organization)
                 .map(orga -> repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class).getChild(orga, true))
-                .map(OrganizationFileStore::getContent);
+                .map(t -> {
+                    try {
+                        return t.getContent();
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+                        return null;
+                    }
+                });
     }
 
     protected void openResultDialog(ExceptionDialogHandler exceptionDialogHandler,
@@ -124,7 +133,12 @@ public class DeployOrganizationHandler {
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(Messages.validatingOrganizationContent, IProgressMonitor.UNKNOWN);
-                    final IStatus status = new OrganizationValidator().validate(fileStore.getContent());
+                    IStatus status;
+                    try {
+                         status = new OrganizationValidator().validate(fileStore.getContent());
+                    } catch (ReadFileStoreException e1) {
+                        status = ValidationStatus.error(e1.getMessage());
+                    }
                     if (!status.isOK()) {
                         throw new InvocationTargetException(
                                 new OrganizationValidationException((MultiStatus) status, fileStore.getDisplayName()));
@@ -165,7 +179,12 @@ public class DeployOrganizationHandler {
             DeployOrganizationControlSupplier controlSupplier) {
         final String userName = controlSupplier.getUsername();
         activeOrganizationProvider.saveDefaultUser(userName);
-        Organization organization = controlSupplier.getFileStore().getContent();
+        Organization organization = null;
+        try {
+            organization = controlSupplier.getFileStore().getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), ActorsPlugin.PLUGIN_ID);
+        }
         if (organization != null) {
             activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
                     .filter(user -> Objects.equals(user.getUserName(), userName))

@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.importer.builder.IProcBuilder;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.EventType;
@@ -129,7 +129,7 @@ public class ProcBuilderTests {
 
         final DeployProcessOperation deployProcessOperation = new DeployProcessOperation();
         deployProcessOperation.addProcessToDeploy(p);
-        StatusAssert.assertThat(deployProcessOperation.run(Repository.NULL_PROGRESS_MONITOR)).isOK();
+        StatusAssert.assertThat(deployProcessOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR)).isOK();
         diagramResource.unload();
     }
 }

@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
@@ -107,14 +108,13 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
                         String.format("%s (%s) not found in repository", association.getImplementationId(),
                                 association.getImplementationVersion()));
             }
-            addImplementation(builder, connectorImplementationFilename, implementationFileStore, configuration);
-
-            final ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore
-                    .getContent();
             try {
+                addImplementation(builder, connectorImplementationFilename, implementationFileStore, configuration);
+                ConnectorImplementation connectorImplementation = (ConnectorImplementation) implementationFileStore
+                    .getContent();
                 addProcessDependencies(builder, configuration, resources, connectorImplementation,
                         implementationFileStore.canBeShared());
-            } catch (JavaModelException e) {
+            } catch (JavaModelException | ReadFileStoreException e) {
                 throw new InvocationTargetException(e);
             }
         }
@@ -223,21 +223,21 @@ public class ConnectorBarResourceProvider implements BARResourcesProvider {
 
     protected void addImplementation(final BusinessArchiveBuilder builder, final String connectorImplementationFilename,
             final EMFFileStore implementationFileStore, final Configuration configuration)
-            throws IOException {
+            throws IOException, ReadFileStoreException {
         builder.addConnectorImplementation(
                 newBarResource(connectorImplementationFilename, implementationFileStore, configuration));
     }
 
     protected BarResource newBarResource(final String connectorImplementationFilename,
             final EMFFileStore implementationFileStore,
-            final Configuration configuration) throws UnsupportedEncodingException, IOException {
+            final Configuration configuration) throws UnsupportedEncodingException, IOException, ReadFileStoreException {
         return new BarResource(connectorImplementationFilename,
                 toXMLString(implemetationWithSelfDep(implementationFileStore, configuration)).getBytes("UTF-8"));
     }
 
     protected ConnectorImplementation implemetationWithSelfDep(final EMFFileStore implementationFileStore,
             final Configuration configuration)
-            throws IOException {
+            throws IOException, ReadFileStoreException {
         final ConnectorImplementation content = (ConnectorImplementation) implementationFileStore.getContent();
         final ConnectorImplementation connectorImplementation = EcoreUtil.copy(content);
         JarDependencies dependencies = content.getJarDependencies();

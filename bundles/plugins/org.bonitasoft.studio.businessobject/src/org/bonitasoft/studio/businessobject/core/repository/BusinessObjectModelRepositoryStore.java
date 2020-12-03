@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.zip.ZipFile;
 
 import javax.xml.bind.JAXBException;
 
@@ -40,10 +42,14 @@ import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
+import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.CoreException;
@@ -72,8 +78,8 @@ import com.google.common.io.Files;
 /**
  * @author Romain Bioteau
  */
-public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
-        extends AbstractRepositoryStore<AbstractBDMFileStore>
+public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?>>
+        extends AbstractRepositoryStore<AbstractBDMFileStore<?>>
         implements IBonitaProjectListener {
 
     private static final String STORE_NAME = "bdm";
@@ -101,7 +107,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public AbstractBDMFileStore createRepositoryFileStore(final String fileName) {
+    public AbstractBDMFileStore<?> createRepositoryFileStore(final String fileName) {
         return new BusinessObjectModelFileStore(fileName, this);
     }
 
@@ -133,9 +139,9 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     public Optional<BusinessObject> getBusinessObjectByQualifiedName(String qualifiedName) {
-        final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
-                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
-        return businessObjectFileStore.map(fileStore -> fileStore.getBusinessObject(qualifiedName));
+        return Optional
+                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true))
+                .map(fileStore -> fileStore.getBusinessObject(qualifiedName));
     }
 
     @Override
@@ -176,14 +182,14 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
                 model = converter.unmarshall(bytes);
                 fStore.save(model);
             }
-        } catch (JAXBException | IOException | SAXException e) {
+        } catch (JAXBException | IOException | SAXException | ReadFileStoreException e) {
             BonitaStudioLog.error("Failed to perform namespace migration on Business data model", e);
         }
     }
 
     protected IStatus generateJar(F fileStore) {
         try {
-            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(AbstractRepository.NULL_PROGRESS_MONITOR);
             return Status.OK_STATUS;
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
@@ -230,7 +236,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    new DeployBDMOperation(fileStore).run(Repository.NULL_PROGRESS_MONITOR);
+                    new DeployBDMOperation(fileStore).run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 } catch (final InvocationTargetException | InterruptedException e) {
                     return new Status(IStatus.ERROR, BusinessObjectPlugin.PLUGIN_ID, "Failed to deploy BDM", e);
                 }
@@ -266,7 +272,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
         ITypeHierarchy newTypeHierarchy = null;
         try {
             newTypeHierarchy = javaProject.newTypeHierarchy(daoType, newRegion,
-                    Repository.NULL_PROGRESS_MONITOR);
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(String.format("Failed to compute %s hierarchy", daoType.getElementName()), e);
         }
@@ -331,7 +337,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public void projectOpened(Repository repository, IProgressMonitor monitor) {
+    public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         Job job = new Job(Messages.generatingJarFromBDMModel) {
 
             @Override
@@ -348,8 +354,35 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore>
     }
 
     @Override
-    public void projectClosed(Repository repository, IProgressMonitor monitor) {
+    public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
         //Nothing to do
+    }
+
+    @Override
+    public IStatus validate(String filename, InputStream inputStream) {
+        XMLModelCompatibilityValidator validator = new XMLModelCompatibilityValidator(
+                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE,  
+                        String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                        String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)));
+        if (Objects.equals(filename, BusinessObjectModelFileStore.BOM_FILENAME)) {
+            return validator.validate(inputStream);
+        }
+        if (Objects.equals(filename, BusinessObjectModelFileStore.ZIP_FILENAME)) {
+            try {
+                File tempFile = File.createTempFile("bdm", ".zip");
+                java.nio.file.Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                try (ZipFile zipFile = new ZipFile(tempFile);
+                        InputStream is = zipFile
+                                .getInputStream(zipFile.getEntry(BusinessObjectModelFileStore.BOM_FILENAME));) {
+                    return validator.validate(is);
+                }finally {
+                    tempFile.delete();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return super.validate(filename, inputStream);
     }
 
 }

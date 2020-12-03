@@ -74,8 +74,6 @@ public class Messages extends NLS {
     public static String legacyFormsNotImported;
     public static String formsRemovedFromStudio;
     public static String legacyFormsNotImportedFromWorkspace;
-    public static String spDiagramCannotBeImportedError;
-    public static String containsLegacyFormsWarning;
     public static String projectConnectorToVCS;
     public static String occurrences;
     public static String downloadingRemoteBosArchive;
@@ -83,5 +81,10 @@ public class Messages extends NLS {
     public static String conflictingArtifactTooltip;
     public static String identicalArtifactTooltip;
     public static String importedArtifactTooltip;
+    public static String errorReadArchive;
+    public static String failSwitchRepository;
+    public static String importWithSwitchRepositorySuccessful;
+    public static String importWithSwitchRepositoryError;
+    public static String currentRepoinfo;
 
 }

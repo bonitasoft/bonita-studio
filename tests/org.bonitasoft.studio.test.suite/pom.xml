@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.tests</groupId>
 		<artifactId>tests</artifactId>
-        <version>7.11.5-SNAPSHOT</version>
+        <version>7.12.0-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.tests</groupId>
     <artifactId>org.bonitasoft.studio.test.suite</artifactId>
@@ -14,7 +14,7 @@
 
     <properties>
         <javaOPTS>-Xmx1g</javaOPTS>
-        <additionalArgs>-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -DLAZYLOAD_ENGINE -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
+        <additionalArgs>-Dbonita.noregister=1 -DLAZYLOAD_ENGINE -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
 		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
     </properties>
 

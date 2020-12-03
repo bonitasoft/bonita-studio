@@ -97,7 +97,6 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
     private final Message workingCopyMessage;
     protected DataBindingContext databindingContext;
-    protected boolean allowSortOnCorrelation = true;
     private CatchMessageEventNamesExpressionNatureProvider catchEventNatureProvider;
 
     private WizardPageSupport pageSupport;

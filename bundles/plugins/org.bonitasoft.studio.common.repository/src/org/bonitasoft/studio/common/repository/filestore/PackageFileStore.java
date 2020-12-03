@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.jdt.CreateJarOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -41,11 +41,11 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Romain Bioteau
  */
-public class PackageFileStore extends AbstractFileStore {
+public class PackageFileStore extends AbstractFileStore<IFolder> {
 
     private final String packageName;
 
-    public PackageFileStore(final String packageName, final IRepositoryStore<?> parentStore) {
+    public PackageFileStore(final String packageName, final IRepositoryStore parentStore) {
         super("", parentStore);
         this.packageName = packageName;
     }
@@ -69,12 +69,8 @@ public class PackageFileStore extends AbstractFileStore {
         return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
     @Override
-    public IFolder getContent() {
+    protected IFolder doGetContent() {
         return getResource();
     }
 
@@ -100,7 +96,7 @@ public class PackageFileStore extends AbstractFileStore {
         }
         final IPackageFragment packageFragment = getPackageFragment();
         try {
-            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(Repository.NULL_PROGRESS_MONITOR);
+            new CreateJarOperation(new File(absoluteTargetFilePath), packageFragment.getCompilationUnits()).run(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final JavaModelException e) {
             throw new InvocationTargetException(e, "Failed to retrieve compilation units from package frgament");
         }

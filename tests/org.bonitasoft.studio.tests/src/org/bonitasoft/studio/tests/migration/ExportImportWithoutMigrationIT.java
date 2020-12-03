@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -116,7 +116,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         assertThat(fileStores).isNotEmpty();
         exportBosArchiveOperation.setFileStores(fileStores);
         assertThat(bosFile.exists()).isFalse();
-        exportBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        exportBosArchiveOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(bosFile.exists()).isTrue();
 
         //delete diagram
@@ -125,7 +125,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(false, repositoryAccessor);
         importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        importBosArchiveOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
 
         diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",

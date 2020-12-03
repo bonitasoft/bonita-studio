@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
@@ -61,7 +61,7 @@ public class TestImportRepository extends TestCase {
             final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
             op.setArchiveFile(bosFile.getAbsolutePath());
             op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-            op.run(Repository.NULL_PROGRESS_MONITOR);
+            op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         } catch (final Exception e) {
             e.printStackTrace();
             fail("Unable to find the test bar file"); //$NON-NLS-1$

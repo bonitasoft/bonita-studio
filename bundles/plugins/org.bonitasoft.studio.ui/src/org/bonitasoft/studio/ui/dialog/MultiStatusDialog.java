@@ -75,13 +75,13 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         this.canFinish = canFinish;
         this.finishId = finishId;
     }
-    
+
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         Button button = null;
-        if(Messages.seeDetails.equals(label)) {
+        if (Messages.seeDetails.equals(label)) {
             button = super.createButton(parent, SEE_DETAILS_ID, label, defaultButton);
-        }else {
+        } else {
             button = super.createButton(parent, id, label, defaultButton);
         }
         if (finishId == id && canFinish != null) {
@@ -130,7 +130,6 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
             }
         };
     }
-    
 
     @Override
     protected ViewerComparator getComparator() {
@@ -161,10 +160,11 @@ public class MultiStatusDialog extends ProblemsDialog<IStatus> {
         return Arrays.asList(status);
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public MultiStatusDialog setLevel(int level) {
+        this.level = STATUS_LEVEL.get(level);
+        return this;
     }
-
+    
     static class StatusSeverityComparator implements Comparator<IStatus> {
 
         @Override

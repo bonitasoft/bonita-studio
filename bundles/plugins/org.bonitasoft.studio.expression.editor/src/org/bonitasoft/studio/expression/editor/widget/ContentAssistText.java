@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -62,7 +62,8 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
     private final List<ISelectionChangedListener> listeners = new ArrayList<>();
     private ISelection selection;
 
-    public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
+    public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider,
+            int style) {
         super(parent, SWT.NONE);
         Point margins = new Point(3, 3);
         if ((style & SWT.BORDER) == 0) {
@@ -79,9 +80,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
             indent = 18;
         }
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
-        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        textControl = new Text(this, GTKStyleHandler.replaceSingleWithWrap(style | SWT.SINGLE));
-        textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        setBackground(PreferenceUtil.isDarkTheme()
+                ? parent.getBackground()
+                : Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        textControl = new Text(this, style | SWT.SINGLE);
+        textControl.setBackground(getBackground());
         textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         textControl.addTraverseListener(e -> {
             if (e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
@@ -125,7 +128,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
         /* Data for test purpose */
         textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
         tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
-        tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        tb.setBackground(getBackground());
         tb.setLayoutData(GridDataFactory.swtDefaults().create());
         tb.setEnabled(true);
         final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
@@ -163,7 +166,9 @@ public class ContentAssistText extends Composite implements SWTBotConstants, ISe
     }
 
     protected Image getArrowDownImage() {
-        return Pics.getImage("resize_S.gif");
+        return PreferenceUtil.isDarkTheme()
+                ? Pics.getImage("resize_S_dark.gif")
+                : Pics.getImage("resize_S.gif");
     }
 
     public void setProposalEnabled(final boolean proposalEnabled) {

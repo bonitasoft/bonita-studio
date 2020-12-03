@@ -14,6 +14,7 @@ import org.bonitasoft.studio.actors.model.organization.Users;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class GetAllUsersHandlerTest {
     public static String ORGA_FILE_NAME = "ACME.organization";
 
     @Test
-    public void should_retrieve_all_users_from_active_orga() {
+    public void should_retrieve_all_users_from_active_orga() throws ReadFileStoreException {
         GetAllUsersHandler handler = spy(new GetAllUsersHandler());
         RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         OrganizationRepositoryStore repositoryStore = mock(OrganizationRepositoryStore.class);

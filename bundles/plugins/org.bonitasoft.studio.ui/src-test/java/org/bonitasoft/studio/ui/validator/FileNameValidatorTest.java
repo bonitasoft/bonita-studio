@@ -26,7 +26,7 @@ public class FileNameValidatorTest {
         children.add(fileStore1);
         children.add(fileStore2);
 
-        final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
+        final IRepositoryStore repositoryStore = mock(IRepositoryStore.class);
         when(repositoryStore.getChildren()).thenReturn(children);
 
         final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
@@ -41,8 +41,8 @@ public class FileNameValidatorTest {
     @Test
     public void should_reject_invalid_char() {
 
-        final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
-        when(repositoryStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
+        final IRepositoryStore repositoryStore = mock(IRepositoryStore.class);
+        when(repositoryStore.getChildren()).thenReturn(new ArrayList<>());
 
         final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
 
@@ -53,8 +53,8 @@ public class FileNameValidatorTest {
 
     @Test
     public void should_fail_if_no_filename() {
-        final IRepositoryStore<IRepositoryFileStore> repositoryStore = mock(IRepositoryStore.class);
-        when(repositoryStore.getChildren()).thenReturn(new ArrayList<IRepositoryFileStore>());
+        final IRepositoryStore repositoryStore = mock(IRepositoryStore.class);
+        when(repositoryStore.getChildren()).thenReturn(new ArrayList<>());
 
         final FileNameValidator validator = new FileNameValidator(repositoryStore, ExtensionSupported.XML);
 

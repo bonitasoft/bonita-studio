@@ -6,7 +6,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,20 +19,17 @@ import java.util.zip.ZipFile;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.json.JSONException;
 
@@ -57,27 +53,19 @@ public class BosArchive {
 
     private boolean openAll = false;
     private final File archiveFile;
-    private DiagramCompatibilityValidator diagramValidator = new DiagramCompatibilityValidator();
 
     public BosArchive(File archiveFile) {
         this.archiveFile = archiveFile;
     }
 
-    public ImportArchiveModel toImportModel(Repository repository, IProgressMonitor monitor) throws IOException {
+    public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor) throws IOException {
         final IStatus validationStatus = validate();
+        final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
+        archiveModel.setValidationStatus(validationStatus);
         if (!validationStatus.isOK()) {
-            String message = validationStatus instanceof MultiStatus
-                    ? Arrays.asList(((MultiStatus) validationStatus).getChildren())
-                            .stream()
-                            .filter(status -> !status.isOK())
-                            .map(IStatus::getMessage)
-                            .reduce("", (m1, m2) -> String.format("%s\n%s", m1, m2))
-                    : validationStatus.getMessage();
-            throw new IllegalArgumentException(message);
+            return archiveModel;
         }
         final Set<String> resourcesToOpen = getResourcesToOpen();
-
-        final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
         try (ZipFile zipFile = new ZipFile(archiveFile)) {
             int entryCount = (int) zipFile.stream().filter(entry -> !entry.isDirectory()).count();
             monitor.beginTask(org.bonitasoft.studio.importer.bos.i18n.Messages.parsingArchive,
@@ -105,7 +93,7 @@ public class BosArchive {
     }
 
     private boolean isLegacyFormRepo(String segment) {
-        return Repository.LEGACY_REPOSITORIES.contains(segment);
+        return AbstractRepository.LEGACY_REPOSITORIES.contains(segment);
     }
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
@@ -123,7 +111,7 @@ public class BosArchive {
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
-        } else if(Repository.LEGACY_REPOSITORIES.contains(segment)){
+        } else if (AbstractRepository.LEGACY_REPOSITORIES.contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
         } else {
             archiveModel.addStore(new RootFileModel(segment, Joiner.on('/').join(parentSegments)));
@@ -138,13 +126,13 @@ public class BosArchive {
             ImportFileStoreModel file = createImportModelFileStore(store, segments.get(0), filePath);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
-                if (isDiagram(file)) {
-                    IStatus validationStatus = validateDiagram(file);
+                file.getParentRepositoryStore().ifPresent(repositoryStore -> {
+                    IStatus validationStatus = validateFile(file, repositoryStore);
                     file.setValidationStatus(validationStatus);
                     if (validationStatus.getSeverity() == IStatus.ERROR) {
                         archiveModel.setValidationStatus(validationStatus);
                     }
-                }
+                });
                 store.addFile(file);
             }
         } else if (segments.size() == 1 && !directStoreChild) {
@@ -155,9 +143,13 @@ public class BosArchive {
                 file.setDisplayName(String.format("%s (%s)", name, file.getFileName()));
                 file.getParent().ifPresent(parent -> parent
                         .setDisplayName(String.format("%s (%s)", name, parent.getFolderName())));
-            }
-            if (isFragment(file) && PlatformUtil.isACommunityBonitaProduct()) {
-                return;
+                file.getParentRepositoryStore().ifPresent(repositoryStore -> {
+                    IStatus validationStatus = validateFile(file, repositoryStore);
+                    file.setValidationStatus(validationStatus);
+                    if (validationStatus.getSeverity() == IStatus.ERROR) {
+                        archiveModel.setValidationStatus(validationStatus);
+                    }
+                });
             }
             store.addFile(file);
         } else if (segments.size() > 1 && directStoreChild) { // Folder
@@ -188,25 +180,13 @@ public class BosArchive {
         return new ImportFileStoreModel(filePath, parentStore);
     }
 
-    private boolean isFragment(ImportFileModel file) {
-        if (file.getParentRepositoryStore().isPresent()) {
-            IRepositoryStore repositoryStore = file.getParentRepositoryStore().get();
-            return repositoryStore instanceof WebFragmentRepositoryStore;
-        }
-        return false;
-    }
-
-    public IStatus validateDiagram(ImportFileStoreModel file) {
+    public IStatus validateFile(AbstractFileModel file, IRepositoryStore<IRepositoryFileStore> repositoryStore) {
         try (ZipFile archive = getZipFile();
                 InputStream is = archive.getInputStream(archive.getEntry(file.getPath()));) {
-            return diagramValidator.validate(is);
+            return repositoryStore.validate(file.getFileName(), is);
         } catch (IOException e) {
             return ValidationStatus.error(String.format("Failed to read %s", file.getFileName()));
         }
-    }
-
-    private boolean isDiagram(ImportFileStoreModel file) {
-        return file.getFileName().endsWith(".proc");
     }
 
     private boolean isLegacySoapXSD(AbstractFolderModel store, ImportFileStoreModel file) {
@@ -225,7 +205,9 @@ public class BosArchive {
     }
 
     private boolean isAWebRepositoryStore(AbstractFolderModel store) {
-        return store.getParentRepositoryStore().filter(repoWithName("web_page").or(repoWithName("web_fragments")))
+        return store.getParentRepositoryStore().filter(repoWithName("web_page")
+                .or(repoWithName("web_fragments"))
+                .or(repoWithName("web_widgets")))
                 .isPresent();
     }
 
@@ -254,9 +236,10 @@ public class BosArchive {
 
     protected IStatus validate() {
         try {
-            final MultiStatus status = new MultiStatus(BosArchiveImporterPlugin.PLUGIN_ID, 0, "", null);
-            status.add(validateZipStructure());
-            status.add(validateArchiveCompatibility());
+            IStatus status = validateZipStructure();
+            if (status.isOK()) {
+                status = validateArchiveCompatibility();
+            }
             return status;
         } catch (final IOException e) {
             return new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID,
@@ -272,7 +255,10 @@ public class BosArchive {
                 defaultArtifactVersion.getMinorVersion(), defaultArtifactVersion.getIncrementalVersion());
         if (!canImport(this.version)) {
             return ValidationStatus
-                    .error(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
+                    .error(Messages.bind(Messages.incompatibleProductVersion,
+                            ProductVersion
+                                    .toMinorVersionString(ProductVersion.minorVersion(ProductVersion.CURRENT_VERSION)),
+                            ProductVersion.toMinorVersionString(ProductVersion.minorVersion(version))));
         }
         return ValidationStatus.ok();
     }

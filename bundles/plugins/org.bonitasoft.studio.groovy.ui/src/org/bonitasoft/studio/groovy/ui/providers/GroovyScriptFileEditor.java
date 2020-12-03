@@ -16,32 +16,24 @@
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor implements IExpressionEditor {
+public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor {
 
     public static final String CONTEXT_DATA_KEY = "context";
 
@@ -53,20 +45,15 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
-        createDataChooserArea(parent);
-        mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
-        mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
-        createGroovyEditor(parent,false);
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        createProposalComposite(mainComposite, ctx);
+        createGroovyEditor(mainComposite, false);
         return mainComposite;
     }
-
 
     @Override
     public boolean canFinish() {
@@ -74,16 +61,11 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
     }
 
     @Override
-    protected void createDataChooserArea(final Composite composite) {
-
-    }
-
-    @Override
-    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression, final ViewerFilter[] filters,
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context,
+            final Expression inputExpression, final ViewerFilter[] filters,
             final ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression;
         this.context = context;
-
 
         groovyViewer.getDocument().set(inputExpression.getContent());
         IExpressionNatureProvider natureProvider = null;
@@ -98,7 +80,7 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
 
             @Override
             public void documentChanged(final DocumentEvent event) {
-               GroovyScriptFileEditor.this.inputExpression.setContent(event.getDocument().get());
+                GroovyScriptFileEditor.this.inputExpression.setContent(event.getDocument().get());
             }
 
             @Override

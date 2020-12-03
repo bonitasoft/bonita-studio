@@ -19,13 +19,11 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -39,11 +37,11 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Romain Bioteau
  */
-public abstract class EMFFileStore extends AbstractFileStore {
+public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<T> {
 
     protected Resource eResource;
 
-    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
+    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore<T>> store) {
         super(fileName, store);
     }
 
@@ -71,85 +69,43 @@ public abstract class EMFFileStore extends AbstractFileStore {
         return getParentStore().getResource().getLocation().toFile().getAbsolutePath() + File.separatorChar + getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepositoryFileStore#getContent()
-     */
     @Override
-    public synchronized EObject getContent() {
+    protected T doGetContent() throws ReadFileStoreException {
         final Resource eResource = getEMFResource();
         doLoad(eResource);
         if (eResource != null && !eResource.getContents().isEmpty()) {
-            return eResource.getContents().get(0);
+            return (T) eResource.getContents().get(0);
         }
         return null;
     }
 
-    protected void doLoad(final Resource eResource) {
+    protected void doLoad(Resource eResource) throws ReadFileStoreException {
         if (eResource != null) {
             final boolean loaded = eResource.isLoaded();
             if (!loaded) {
                 try {
                     final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
                     if (editingDomain != null) {
-                        editingDomain.runExclusive(eResourceLoader(eResource));
+                        editingDomain.getResourceSet().getResource(eResource.getURI(), true);
                     } else {
-                        eResource.load(Collections.EMPTY_MAP);
+                        eResource.load(Collections.emptyMap());
                     }
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                } catch (final IOException | RuntimeException e) {
+                    throw new ReadFileStoreException("Failed to load EMF Resource", e);
                 }
             }
         }
-    }
-
-    private Runnable eResourceLoader(final Resource resource) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    resource.load(Collections.EMPTY_MAP);
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-                }
-            }
-        };
     }
 
     @Override
     protected void doDelete() {
         final Resource eResource = getEMFResource();
         doClose();
-        try {
-            getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
         if (eResource != null) {
-            final Runnable deleteRunnable = new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        eResource.delete(Collections.EMPTY_MAP);
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-
-                }
-            };
-            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
-            if (editingDomain != null) {
-                try {
-                    editingDomain.runExclusive(deleteRunnable);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-            } else {
-                deleteRunnable.run();
+            try {
+                eResource.delete(Collections.emptyMap());
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
             }
         }
     }
@@ -183,17 +139,25 @@ public abstract class EMFFileStore extends AbstractFileStore {
 
     @Override
     public String getDisplayName() {
-        return getLabelProvider().getText(getContent());
+        try {
+            return getLabelProvider().getText(getContent());
+        } catch (ReadFileStoreException e) {
+            return getName();
+        }
     }
 
     @Override
-    public AbstractEMFRepositoryStore<? extends IRepositoryFileStore> getParentStore() {
-        return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore>) super.getParentStore();
+    public AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>> getParentStore() {
+        return (AbstractEMFRepositoryStore<? extends IRepositoryFileStore<T>>) super.getParentStore();
     }
 
     @Override
     public Image getIcon() {
-        return getLabelProvider().getImage(getContent());
+        try {
+            return getLabelProvider().getImage(getContent());
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
     }
 
     @Override

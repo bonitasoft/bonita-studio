@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Workflow Engine
 Bundle-SymbolicName: org.bonitasoft.studio.engine;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -34,7 +34,6 @@ Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.eclipse.core.databinding.beans;bundle-version="1.2.100",
  org.eclipse.jface.databinding;bundle-version="1.5.0",
  org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
- org.eclipse.wst.server.core;bundle-version="1.1.303",
  org.eclipse.jst.server.tomcat.core;bundle-version="1.1.301",
  org.eclipse.jdt.launching;bundle-version="3.6.1",
  org.bonitasoft.studio.condition.ui;bundle-version="1.0.0",
@@ -63,8 +62,9 @@ Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.designer;bundle-version="7.8.0",
  org.eclipse.e4.ui.model.workbench;bundle-version="2.0.1.v20170713-1800",
  org.eclipse.e4.ui.services,
- org.eclipse.wst.server.ui;bundle-version="1.5.401",
- org.eclipse.e4.core.commands
+ org.eclipse.e4.core.commands,
+ org.eclipse.mylyn.commons.ui,
+ org.eclipse.wst.server.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

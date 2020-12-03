@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -53,7 +53,7 @@ public class FileStoreFinderTest {
 
         IStructuredSelection selection = new StructuredSelection(file);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
-        Repository repository = mock(Repository.class);
+        AbstractRepository repository = mock(AbstractRepository.class);
         DeployableFileStore deployableFileStore = mock(DeployableFileStore.class);
         when(deployableFileStore.getName()).thenReturn(FILE_NAME);
         when(deployableFileStore.canBeRenamed()).thenReturn(true);
@@ -85,7 +85,7 @@ public class FileStoreFinderTest {
         when(adaptable.getAdapter(IResource.class)).thenReturn(file);
         IStructuredSelection selection = new StructuredSelection(adaptable);
         doReturn(Optional.of(selection)).when(finder).getCurrentStructuredSelection();
-        Repository repository = mock(Repository.class);
+        AbstractRepository repository = mock(AbstractRepository.class);
 
         DeployableFileStore deployableFileStore = mock(DeployableFileStore.class);
         when(deployableFileStore.getName()).thenReturn(FILE_NAME);

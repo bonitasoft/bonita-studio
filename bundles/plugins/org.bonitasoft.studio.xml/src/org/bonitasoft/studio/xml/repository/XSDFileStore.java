@@ -23,6 +23,7 @@ import java.util.Map;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -40,7 +41,7 @@ import org.eclipse.xsd.XSDSchema;
 /**
  * @author Romain Bioteau
  */
-public class XSDFileStore extends EMFFileStore {
+public class XSDFileStore extends EMFFileStore<XSDSchema> {
 
     private static final String ECORE_TYPE_NS = "http://www.eclipse.org/emf/2002/Ecore";
 
@@ -98,7 +99,12 @@ public class XSDFileStore extends EMFFileStore {
     }
 
     public XSDElementDeclaration findElementDeclaration(String namespace, String elementName) {
-        XSDSchema schema = (XSDSchema) getContent();
+        XSDSchema schema;
+        try {
+            schema = getContent();
+        } catch (ReadFileStoreException e) {
+           return null;
+        }
         // check namespace
         if (namespace == null) {
             namespace = "";
@@ -121,7 +127,12 @@ public class XSDFileStore extends EMFFileStore {
 
     public List<String> getElements() {
         List<String> res = new ArrayList<>();
-        XSDSchema schema = (XSDSchema) getContent();
+        XSDSchema schema;
+        try {
+            schema = getContent();
+        } catch (ReadFileStoreException e) {
+            return res;
+        }
         if (schema != null) {
             for (XSDElementDeclaration element : schema.getElementDeclarations()) {
                 if (!ECORE_TYPE_NS.equals(element.getTargetNamespace())) {

@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
@@ -88,9 +88,9 @@ public class RunProcessCommand extends AbstractHandler {
                         new ValidationMarkerProvider()));
         validationOperation.addProcesses(processes);
         try {
-            new IndexingUIDOperation().run(Repository.NULL_PROGRESS_MONITOR);
+            new IndexingUIDOperation().run(AbstractRepository.NULL_PROGRESS_MONITOR);
             if (runSynchronously) {
-                validationOperation.run(Repository.NULL_PROGRESS_MONITOR);
+                validationOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true, false,
                         validationOperation);

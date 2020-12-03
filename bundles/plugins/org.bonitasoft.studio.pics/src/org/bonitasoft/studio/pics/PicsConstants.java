@@ -256,8 +256,6 @@ public class PicsConstants {
 
     public static String error_decorator = "error_decorator.gif";
 
-    public static String diagram = "diagram.gif";
-
     public static String connector = "configuration/connector.png";
 
     public static String actorfilter = "configuration/actorfilter.png";
@@ -381,4 +379,26 @@ public class PicsConstants {
 
     public static String validation = "preferences/validation.png";
     public static String validationDisabled = "preferences/validation_disabled.png";
+
+    // Editor icons
+    public static String deploy_16 = "deploy16.png";
+    public static String deploy_16_dark = "deploy16_dark.png";
+    public static String bin_16 = "bin.png";
+    public static String bin_16_dark = "bin_dark.png";
+    public static String import_16 = "import_16.png";
+    public static String import_16_dark = "import_16_dark.png";
+    public static String export_16 = "export_16.png";
+    public static String export_16_dark = "export_16_dark.png";
+    public static String explore_16 = "explore_16.png";
+    public static String explore_16_dark = "explore_16_dark.png";
+    public static String add_16 = "add_16.png";
+    public static String add_16_dark = "add_16_dark.png";
+    public static String add_32 = "add_32.png";
+    public static String add_32_dark = "add_32_dark.png";
+    public static String duplicate_16 = "duplicate_16.png";
+    public static String duplicate_16_dark = "duplicate_16_dark.png";
+    public static String rename_16 = "rename_16.png";
+    public static String rename_16_dark = "rename_16_dark.png";
+    public static String validate = "validate.png";
+    public static String validate_dark = "validate_dark.png";
 }

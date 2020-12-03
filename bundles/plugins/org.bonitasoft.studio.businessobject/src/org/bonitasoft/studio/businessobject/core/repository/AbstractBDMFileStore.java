@@ -28,9 +28,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
-public abstract class AbstractBDMFileStore extends AbstractFileStore implements IDeployable, ITenantResource {
+public abstract class AbstractBDMFileStore<T> extends AbstractFileStore<T> implements IDeployable, ITenantResource {
 
-    public AbstractBDMFileStore(String fileName, final IRepositoryStore<AbstractBDMFileStore> store) {
+    public AbstractBDMFileStore(String fileName, final IRepositoryStore<? extends AbstractBDMFileStore> store) {
         super(fileName, store);
     }
 

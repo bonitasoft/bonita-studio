@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -97,12 +98,19 @@ public class LabelProviderBuilder<T> {
 
             private Color errorColor;
             private Color warningColor;
+            private ColumnViewer viewer;
+            private boolean isDarkTheme;
+            private Color darkModeSelectLineUnfocused;
 
             @Override
             public void initialize(ColumnViewer viewer, ViewerColumn column) {
                 super.initialize(viewer, column);
+                this.viewer = viewer;
                 errorColor = new Color(Display.getDefault(), ColorConstants.ERROR_RGB);
                 warningColor = new Color(Display.getDefault(), ColorConstants.WARNING_RGB);
+                isDarkTheme = PreferenceUtil.isDarkTheme();
+                darkModeSelectLineUnfocused = new Color(Display.getDefault(),
+                        ColorConstants.DARK_MODE_TABLE_SELECTED_UNFOCUS);
                 viewer.getColumnViewerEditor().addEditorActivationListener(refreshAllAfterEdit());
             }
 
@@ -175,15 +183,19 @@ public class LabelProviderBuilder<T> {
                 // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
                 // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
                 if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                    Rectangle bounds = event.getBounds();
                     if ((event.detail & SWT.SELECTED) != 0) {
-                        Color oldForeground = event.gc.getForeground();
-                        event.gc.setForeground(event.item.getDisplay().getSystemColor(
-                                SWT.COLOR_LIST_SELECTION_TEXT));
+                        Rectangle bounds = event.getBounds();
+                        Color oldBg = event.gc.getBackground();
+                        if (isDarkTheme
+                                && !Objects.equals(viewer.getControl(),
+                                        viewer.getControl().getDisplay().getFocusControl())) {
+                            // Selected line background is white on dark theme if the table doesn't have the focus (only for Owner drawn cells ofc). 
+                            // We force it to a gray so it stays consistant with the theme (and became usable btw). 
+                            // Should be fixed on swt.cocoa.macosx soon (please). 
+                            event.gc.setBackground(darkModeSelectLineUnfocused);
+                        }
                         event.gc.fillRectangle(bounds);
-                        /* restore the old GC colors */
-                        event.gc.setForeground(oldForeground);
-                        /* ensure that default selection is not drawn */
+                        event.gc.setBackground(oldBg);
                         event.detail &= ~SWT.SELECTED;
                     }
                 }
@@ -193,6 +205,7 @@ public class LabelProviderBuilder<T> {
             public void dispose() {
                 errorColor.dispose();
                 warningColor.dispose();
+                darkModeSelectLineUnfocused.dispose();
                 super.dispose();
             }
 

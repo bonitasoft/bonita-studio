@@ -18,7 +18,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Objects;
 
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -79,9 +81,24 @@ public class Pics extends AbstractUIPlugin {
      */
     public static ImageDescriptor getWizban() {
         if (wizban == null) {
-            wizban = new ClassPathResourceImageDescriptor("/icons/wizban/wizard.png"); //$NON-NLS-1$
+            wizban = isDarkTheme()
+                    ? new ClassPathResourceImageDescriptor("/icons/wizban/wizardDark.png")
+                    : new ClassPathResourceImageDescriptor("/icons/wizban/wizard.png");
         }
         return wizban;
+    }
+
+    private static boolean isDarkTheme() {
+        try {
+            IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+            if (engine.getActiveTheme() != null
+                    && Objects.equals(engine.getActiveTheme().getId(), "org.bonitasoft.studio.preferences.theme.dark")) {
+                return true;
+            }
+        } catch (IllegalStateException e) {
+            // Workbench not created yet, ignored.
+        }
+        return false;
     }
 
     /**
@@ -182,17 +199,17 @@ public class Pics extends AbstractUIPlugin {
     }
 
     public static Cursor getOpenedHandCursor() {
-        if(CURSOR_OPENED_HAND == null){
+        if (CURSOR_OPENED_HAND == null) {
             CURSOR_OPENED_HAND = createCursor(getImageDescriptor("/cursor/open_hand.png"));
         }
-        return CURSOR_OPENED_HAND; //$NON-NLS-1$
+        return CURSOR_OPENED_HAND;
     }
-    
+
     public static Cursor getClosedHandCursor() {
-        if(CURSOR_CLOSE_HAND == null){
+        if (CURSOR_CLOSE_HAND == null) {
             CURSOR_CLOSE_HAND = createCursor(getImageDescriptor("/cursor/closed_hand.png"));
         }
-        return CURSOR_CLOSE_HAND; //$NON-NLS-1$
+        return CURSOR_CLOSE_HAND;
     }
 
     private static Cursor createCursor(ImageDescriptor imageDescriptor) {

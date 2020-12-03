@@ -7,11 +7,6 @@
 <title>Welcome</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="css/tailwind-1.1.2.min.css" rel="stylesheet" type="text/css" />
-<style>
-.background {
-	background-color: rgba(240, 240, 240, .5);
-}
-</style>
 </head>
 
 <body class="background">
@@ -19,29 +14,32 @@
 		<div class="flex items-stretch content-center flex-wrap h-screen">
 			<div class="w-1/3 p-4">
 				<div
-					class="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg h-full text-gray-700">
+					class="max-w-sm mx-auto p-6 bg-box rounded-lg shadow-lg h-full text-color">
 					<contentProvider id="design-icon"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
 					<contentProvider id="design-title"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
-					<ul class="text-gray-700">
-						<li><contentProvider id="new-diagram-action"
-								pluginId="org.bonitasoft.studio.intro"
-								class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
-						<li><contentProvider id="open-diagram-action"
-								pluginId="org.bonitasoft.studio.intro"
-								class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
-						<li><contentProvider id="import-action"
-								pluginId="org.bonitasoft.studio.intro"
-								class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
+					<ul class="text-color">
+						<li><contentProvider id="new-project-action"
+                                pluginId="org.bonitasoft.studio.intro"
+                                class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
+                        <li><contentProvider id="switch-action"
+                                pluginId="org.bonitasoft.studio.intro"
+                                class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
+                        <li><contentProvider id="import-action"
+                                pluginId="org.bonitasoft.studio.intro"
+                                class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
+                        <li><contentProvider id="clone-action"
+                                pluginId="org.bonitasoft.studio.intro"
+                                class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
 					</ul>
 				</div>
 			</div>
 			<div class="w-1/3 p-4">
 				<div
-					class="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg h-full text-gray-700">
+					class="max-w-sm mx-auto p-6 bg-box rounded-lg shadow-lg h-full text-color">
 					<contentProvider id="recent-icon"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
@@ -60,7 +58,7 @@
 			</div>
 			<div class="w-1/3 p-4">
 				<div
-					class="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg h-full text-gray-700">
+					class="max-w-sm mx-auto p-6 bg-box rounded-lg shadow-lg h-full text-color">
 					<contentProvider id="learn-icon"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
@@ -91,7 +89,7 @@
 			</div>
 			<div class="w-1/3 p-4">
 				<div
-					class="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg h-full text-gray-700">
+					class="max-w-sm mx-auto p-6 bg-box rounded-lg shadow-lg h-full text-color">
 					<contentProvider id="help-icon"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
@@ -113,7 +111,7 @@
 			</div>
 			<div class="w-1/3 p-4">
 				<div
-					class="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg h-full text-gray-700">
+					class="max-w-sm mx-auto p-6 bg-box rounded-lg shadow-lg h-full text-color">
 					<contentProvider id="resources-icon"
 						pluginId="org.bonitasoft.studio.intro"
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
@@ -122,6 +120,9 @@
 						class="org.bonitasoft.studio.intro.content.IntroContentProvider" />
 					<ul>
 					   <li><contentProvider id="user-application-link"
+                                pluginId="org.bonitasoft.studio.intro"
+                                class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
+						<li><contentProvider id="admin-application-link"
                                 pluginId="org.bonitasoft.studio.intro"
                                 class="org.bonitasoft.studio.intro.content.IntroContentProvider" /></li>
 						<li><contentProvider id="procurement-example-link"

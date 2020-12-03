@@ -38,8 +38,10 @@ import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Rule;
@@ -225,8 +227,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
             final String scriptName, final String groovyScript) {
         SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
-        bot.table().select("Script");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name")), 10000);
+        bot.tabItem("Script").activate();
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
         bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(groovyScript);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());

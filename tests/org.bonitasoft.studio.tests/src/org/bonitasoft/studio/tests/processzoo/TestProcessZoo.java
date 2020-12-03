@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -86,7 +86,7 @@ public class TestProcessZoo {
         final ImportBosArchiveOperation ibao = new ImportBosArchiveOperation(repositoryAccessor);
         ibao.setArchiveFile(file.getAbsolutePath());
         ibao.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        ibao.run(Repository.NULL_PROGRESS_MONITOR);
+        ibao.run(AbstractRepository.NULL_PROGRESS_MONITOR);
 
         for (final IRepositoryFileStore f : ibao.getFileStoresToOpen()) {
             f.open();

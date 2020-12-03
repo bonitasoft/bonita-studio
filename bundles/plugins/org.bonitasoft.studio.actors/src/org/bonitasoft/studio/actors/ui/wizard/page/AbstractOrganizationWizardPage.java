@@ -191,7 +191,6 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
                 SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
         final Table table = tableViewer.getTable();
         table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).create());
-        table.setLinesVisible(true);
         table.setHeaderVisible(true);
         tableViewer.setContentProvider(new ArrayContentProvider());
         tableViewer.addFilter(new ViewerFilter() {

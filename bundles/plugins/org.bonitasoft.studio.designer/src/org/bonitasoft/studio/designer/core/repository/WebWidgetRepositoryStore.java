@@ -52,5 +52,5 @@ public class WebWidgetRepositoryStore extends WebArtifactRepositoryStore<WebWidg
         }
         return new WebWidgetFileStore(widgetFolderName, this);
     }
-
+    
 }

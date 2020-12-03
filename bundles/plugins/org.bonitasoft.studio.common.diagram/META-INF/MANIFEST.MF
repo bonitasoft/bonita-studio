@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Diagram Utils
 Bundle-SymbolicName: org.bonitasoft.studio.common.diagram;singleton:=true
-Bundle-Version: 7.11.5.qualifier
+Bundle-Version: 7.12.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.gmf.runtime.lite.svg;bundle-version="1.0.0",
@@ -24,7 +24,9 @@ Require-Bundle: org.eclipse.gmf.runtime.lite.svg;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional
+ org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
+ org.bonitasoft.studio.preferences;bundle-version="7.11.0",
+ org.bonitasoft.studio.ui;bundle-version="7.11.0"
 Export-Package: org.bonitasoft.studio.common.diagram,
  org.bonitasoft.studio.common.diagram.dialog,
  org.bonitasoft.studio.common.diagram.palette,

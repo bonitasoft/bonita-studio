@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -55,7 +55,7 @@ public class ExportBusinessDataModelOperation implements IRunnableWithProgress {
         Assert.isNotNull(destinationFilePath, "destinationFilePath");
         Assert.isNotNull(bdmFileStore, "bdmFileStore");
         if (monitor == null) {
-            monitor = Repository.NULL_PROGRESS_MONITOR;
+            monitor = AbstractRepository.NULL_PROGRESS_MONITOR;
         }
 
         monitor.beginTask(Messages.exportingBusinessDataModel, IProgressMonitor.UNKNOWN);

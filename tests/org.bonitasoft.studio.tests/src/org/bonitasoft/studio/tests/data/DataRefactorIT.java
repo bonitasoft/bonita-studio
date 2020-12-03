@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.model.ModelSearch;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -74,7 +75,7 @@ public class DataRefactorIT {
     private DiagramFileStore newDiagram;
 
     @Test
-    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() {
+    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() throws ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -98,7 +99,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() {
+    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() throws ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
@@ -121,7 +122,7 @@ public class DataRefactorIT {
 
     @Test
     public void testNameRefactorWithLocalDataReferencedInVariableExpression()
-            throws InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
@@ -142,7 +143,7 @@ public class DataRefactorIT {
 
     @Test
     public void testRenameAndModifyTypeWithReferenceInScriptOperation()
-            throws InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
@@ -208,7 +209,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameInGroovyScriptConnector() throws InvocationTargetException, InterruptedException {
+    public void testRenameInGroovyScriptConnector() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final String newDataType = DataTypeLabels.integerDataType;
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
@@ -263,7 +264,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteData() throws InvocationTargetException, InterruptedException {
+    public void testDeleteData() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has not been removed", 1, process.getData().size());
@@ -274,7 +275,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteSeveralData() throws InvocationTargetException, InterruptedException {
+    public void testDeleteSeveralData() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
         refactorDataOperation.addItemToRefactor(null, processData2);
         refactorDataOperation.run(new NullProgressMonitor());
@@ -286,7 +287,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException {
+    public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = getActivity(process);
@@ -327,7 +328,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteSeveralDataWithReferenceInScript() throws InvocationTargetException, InterruptedException {
+    public void testDeleteSeveralDataWithReferenceInScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = getActivity(process);
@@ -359,7 +360,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException {
+    public void testDeleteDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
@@ -401,7 +402,7 @@ public class DataRefactorIT {
 
     @Test
     public void testDeleteSeveralDataWithReferenceInScriptAndOperations()
-            throws InvocationTargetException, InterruptedException {
+            throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Activity activity = (Activity) new ModelSearch(Collections::emptyList)
@@ -446,7 +447,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteSeveralDataWithReferenceInOperations() throws InvocationTargetException, InterruptedException {
+    public void testDeleteSeveralDataWithReferenceInOperations() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression variableExpression = addOperationOnFirstActivity(process, processData);
@@ -488,7 +489,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException {
+    public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression conditionExpression = createSequenceFlowWithConditionExpression(process);
@@ -503,7 +504,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testDeleteDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException {
+    public void testDeleteDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final AbstractProcess process = initTestForGlobalDataRefactor(null);
 
         final Expression patternExpr = createConnectorWithPatternExpression(process);
@@ -519,7 +520,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException {
+    public void testRenameDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -560,7 +561,7 @@ public class DataRefactorIT {
     }
 
     @Test
-    public void testRenameDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException {
+    public void testRenameDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         final String newDataName = "newDataName";
         final AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
@@ -613,9 +614,10 @@ public class DataRefactorIT {
 
     /**
      * @return an AbstractProcess with a global data and a local data on an activity.
+     * @throws ReadFileStoreException 
      */
 
-    private AbstractProcess createProcessWithData() {
+    private AbstractProcess createProcessWithData() throws ReadFileStoreException {
         if (process == null) {
             newDiagram = new NewDiagramCommandHandler().newDiagram();
             editingDomain = TransactionUtil.getEditingDomain(newDiagram.getEMFResource());
@@ -649,24 +651,24 @@ public class DataRefactorIT {
         return process;
     }
 
-    private AbstractProcess initTestForLocalDataRefactor(final String newDataName) {
+    private AbstractProcess initTestForLocalDataRefactor(final String newDataName) throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, localData);
     }
 
-    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName) {
+    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName) throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, processData);
     }
 
-    private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) {
+    private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, dataToRefactor.getDataType().getName(), dataToRefactor);
     }
 
-    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName, final String newDataType) {
+    private AbstractProcess initTestForGlobalDataRefactor(final String newDataName, final String newDataType) throws ReadFileStoreException {
         return initTestForDataRefactor(newDataName, newDataType, processData);
     }
 
     private AbstractProcess initTestForDataRefactor(final String newDataName, final String newDataType,
-            final Data dataToRefactor) {
+            final Data dataToRefactor) throws ReadFileStoreException {
         final AbstractProcess process = createProcessWithData();
         if (newDataName != null) {
             refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);

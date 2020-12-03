@@ -17,9 +17,10 @@ import java.util.zip.ZipEntry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -32,9 +33,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ImportConflictsChecker {
 
     private static final String LEGACY_BDM_FILENAME = "bdm.zip";
-    private final Repository currentRepository;
+    private final AbstractRepository currentRepository;
 
-    public ImportConflictsChecker(Repository currentRepository) {
+    public ImportConflictsChecker(AbstractRepository currentRepository) {
         Objects.requireNonNull(currentRepository);
         this.currentRepository = currentRepository;
     }
@@ -99,9 +100,13 @@ public class ImportConflictsChecker {
         try (InputStream inputStream = bosArchive.getZipFile().getInputStream(entry)) {
             Properties properties = new Properties();
             properties.load(inputStream);
-            importedPropertiesFile.setStatus(properties.equals(currentPropertiesFile.getContent())
-                    ? ConflictStatus.SAME_CONTENT
-                    : ConflictStatus.CONFLICTING);
+            try {
+                importedPropertiesFile.setStatus(properties.equals(currentPropertiesFile.getContent())
+                        ? ConflictStatus.SAME_CONTENT
+                        : ConflictStatus.CONFLICTING);
+            } catch (ReadFileStoreException e) {
+                importedPropertiesFile.setStatus(ConflictStatus.CONFLICTING);
+            }
             importedPropertiesFile.setImportAction(importedPropertiesFile.isConflicting()
                     ? ImportAction.KEEP
                     : ImportAction.OVERWRITE);

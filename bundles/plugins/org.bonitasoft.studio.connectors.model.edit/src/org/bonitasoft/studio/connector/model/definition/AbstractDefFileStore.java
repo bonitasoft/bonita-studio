@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
@@ -43,27 +44,29 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  * @author Baptiste Mesta
  */
-public abstract class AbstractDefFileStore extends EMFFileStore {
+public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition> {
 
-	AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store;
-	
-    public AbstractDefFileStore(final String fileName, final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
+    AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store;
+
+    public AbstractDefFileStore(final String fileName,
+            final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
         super(fileName, store);
         this.store = store;
-        
+
     }
 
     @Override
-    public ConnectorDefinition getContent() {
+    protected ConnectorDefinition doGetContent() throws ReadFileStoreException {
         try {
-            final DocumentRoot root = (DocumentRoot) super.getContent();
-            if(root == null){
-            	return null;
+            final DocumentRoot root = (DocumentRoot) super.doGetContent();
+            if (root == null) {
+                return null;
             }
             return root.getConnectorDefinition();
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
-            final UnloadableConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
+            final UnloadableConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE
+                    .createUnloadableConnectorDefinition();
             connectorDefinition.setId(getName());
             connectorDefinition.setVersion("");
             return connectorDefinition;
@@ -94,22 +97,30 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
         return null;
     }
 
-  
-  @Override
-  public void delete() {
-	  for (IResource localeResource : retrieveLocaleResources(getContent())) {
-		  try {
-			  localeResource.delete(true, new NullProgressMonitor());
-		  } catch (CoreException e) {
-			  BonitaStudioLog.error(e);
-		  }
-	  }
-	  super.delete();
-  }
+    @Override
+    public void delete() {
+        try {
+            for (IResource localeResource : retrieveLocaleResources(getContent())) {
+                try {
+                    localeResource.delete(true, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.warning(e.getMessage(), "org.bonitasoft.studio.connectors.model.edit");
+        }
+        super.delete();
+    }
 
     @Override
     public Image getIcon() {
-        final ConnectorDefinition def = getContent();
+        ConnectorDefinition def;
+        try {
+            def = getContent();
+        } catch (ReadFileStoreException e) {
+            return null;
+        }
         return DefinitionResourceProvider.getInstance(getParentStore(), getBundle()).getDefinitionIcon(def);
     }
 
@@ -118,7 +129,12 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
     @Override
     public Set<IResource> getRelatedResources() {
         final Set<IResource> result = super.getRelatedResources();
-        final ConnectorDefinition def = getContent();
+        ConnectorDefinition def;
+        try {
+            def = getContent();
+        } catch (ReadFileStoreException e) {
+            return result;
+        }
         if (def.getIcon() != null) {
             final IFile iconFile = getParentStore().getResource().getFile(Path.fromOSString(def.getIcon()));
             if (iconFile != null && iconFile.exists()) {
@@ -139,22 +155,23 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
         return result;
     }
 
-	private Set<IResource> retrieveLocaleResources(final ConnectorDefinition def) {
-		final Set<IResource> localeResources = new HashSet<IResource>();
-        final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(getParentStore(), getBundle());
+    private Set<IResource> retrieveLocaleResources(final ConnectorDefinition def) {
+        final Set<IResource> localeResources = new HashSet<IResource>();
+        final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(getParentStore(),
+                getBundle());
         final List<File> propertiesFile = resourceProvider.getExistingLocalesResource(def);
         for (final File propertyFile : propertiesFile) {
             final String newFilename = propertyFile.getName();
             try {
                 final IFile f = getParentStore().getResource().getFile(newFilename);
                 if (f != null && f.exists()) {
-                	localeResources.add(f);
+                    localeResources.add(f);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
-		return localeResources;
-	}
+        return localeResources;
+    }
 
 }

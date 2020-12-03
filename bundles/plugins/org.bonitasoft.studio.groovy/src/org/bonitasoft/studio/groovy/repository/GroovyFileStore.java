@@ -23,9 +23,10 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
@@ -45,12 +46,12 @@ import org.eclipse.ui.ide.IDE;
 /**
  * @author Romain Bioteau
  */
-public class GroovyFileStore extends AbstractFileStore {
+public class GroovyFileStore extends AbstractFileStore<String> {
 
     private static final String UTF_8 = "UTF-8";
     public static final String EXPRESSION_SCRIPT_NAME = "BonitaScriptContext.groovy";
 
-    public GroovyFileStore(final String fileName, final IRepositoryStore<?> parentStore) {
+    public GroovyFileStore(final String fileName, final GroovyRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
@@ -62,13 +63,9 @@ public class GroovyFileStore extends AbstractFileStore {
     public Image getIcon() {
         return Pics.getImage(PicsConstants.groovyScript);
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
+    
     @Override
-    public String getContent() {
+    protected String doGetContent() throws ReadFileStoreException {
         try {
             if (getResource().exists()) {
                 final FileInputStream fis = (FileInputStream) getResource().getContents();
@@ -83,6 +80,7 @@ public class GroovyFileStore extends AbstractFileStore {
         return "";
     }
 
+
     public ICompilationUnit getCompilationUnit() {
         return JavaCore.createCompilationUnitFrom(getResource());
     }
@@ -94,20 +92,24 @@ public class GroovyFileStore extends AbstractFileStore {
     @Override
     protected void doSave(final Object content) {
         if (content instanceof String) {
-            if (getResource().exists() && content != null && content.equals(getContent())) {
-                return;
+            try {
+                if (getResource().exists() && content != null && content.equals(getContent())) {
+                    return;
+                }
+            } catch (ReadFileStoreException e1) {
+               BonitaStudioLog.warning(e1.getMessage(), GroovyPlugin.PLUGIN_ID);
             }
             try {
                 final String scriptContent = (String) content;
                 final InputStream is = new ByteArrayInputStream(scriptContent.getBytes(UTF_8));
                 final IFile sourceFile = getResource();
                 if (sourceFile.exists() && FileActionDialog.overwriteQuestion(getName())) {
-                    sourceFile.setContents(is, IResource.FOLDER, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.setContents(is, IResource.FOLDER, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    sourceFile.create(is, true, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
                 if (!UTF_8.equals(sourceFile.getCharset())) {
-                    sourceFile.setCharset(UTF_8, Repository.NULL_PROGRESS_MONITOR);
+                    sourceFile.setCharset(UTF_8, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);

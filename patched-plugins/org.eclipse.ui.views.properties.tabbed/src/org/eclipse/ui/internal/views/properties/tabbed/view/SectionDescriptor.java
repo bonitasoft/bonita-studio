@@ -14,6 +14,7 @@
  *******************************************************************************/
 package org.eclipse.ui.internal.views.properties.tabbed.view;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,6 @@ import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.eclipse.ui.views.properties.tabbed.ITypeMapper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * Represents the default implementation of a section descriptor on the tabbed
@@ -163,9 +162,6 @@ public class SectionDescriptor extends AbstractSectionDescriptor {
 		return enablesFor;
 	}
 
-	/**
-	 * @see org.eclipse.ui.views.properties.tabbed.ISectionDescriptor#getTargetTab()
-	 */
 	@Override
 	public String getTargetTab() {
 		return targetTab;

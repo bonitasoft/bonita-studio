@@ -32,7 +32,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
@@ -334,7 +334,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
             if (new Identifier(oldName, oldVersion).equals(nameDialog.getIdentifier())) {
                 renamePoolsOnly(nameDialog, editor, newProcess);
             } else {
-                editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+                editor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
                 renameDiagramAndPool(nameDialog, editor, newProcess);
             }
         }
@@ -374,7 +374,7 @@ public class ProcessElementNameContribution extends AbstractNamePropertySectionC
 
     protected void renamePoolsOnly(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor,
             final MainProcess newProcess) {
-        editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+        editor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
         final Identifier identifier = nameDialog.getIdentifier();
         processNamingTools.changeProcessNameAndVersion(newProcess, identifier.getName(), identifier.getVersion());
         for (final ProcessesNameVersion pnv : nameDialog.getPools()) {

@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -237,9 +236,8 @@ public class ProcBuilder implements IProcBuilder {
                         diagramModel.setName(name);
                     }
                     diagramModel.setVersion(version);
-                    diagramModel.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+                    diagramModel.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                     diagramModel.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-                    diagramModel.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagramModel));
                     ModelHelper.addDataTypes(diagramModel);
                     diagram.setElement(diagramModel);
                 }

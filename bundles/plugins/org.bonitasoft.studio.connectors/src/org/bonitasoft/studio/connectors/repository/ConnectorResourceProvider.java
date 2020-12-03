@@ -46,9 +46,9 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
      * AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process,
+    public Set<IRepositoryFileStore<?>> getFileStoreForConfiguration(final AbstractProcess process,
             final Configuration configuration) {
-        final Set<IRepositoryFileStore> files = new HashSet<IRepositoryFileStore>();
+        final Set<IRepositoryFileStore<?>> files = new HashSet<>();
 
         final ConnectorDefRepositoryStore connectorDefSotre = RepositoryManager.getInstance().getRepositoryStore(
                 ConnectorDefRepositoryStore.class);

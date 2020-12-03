@@ -19,24 +19,23 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.MigrationException;
 
 /**
  * @author Romain Bioteau
  */
-public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDisplayable {
+public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDisplayable {
 
     void createRepositoryStore(IRepository repository);
 
     T createRepositoryFileStore(String fileName);
 
     T importInputStream(String fileName, InputStream inputStream);
-
-    T importIResource(String fileName, IResource resource);
 
     T importArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor) throws CoreException;
 
@@ -64,9 +63,15 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> extends IDispl
     void refresh();
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
+    
+    void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException;
 
     void close();
 
     void repositoryUpdated();
+
+    default IStatus validate(String filename, InputStream inputStream) {
+        return ValidationStatus.ok();
+    }
 
 }

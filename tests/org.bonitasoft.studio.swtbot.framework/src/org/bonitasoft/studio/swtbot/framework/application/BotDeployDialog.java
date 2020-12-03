@@ -25,6 +25,16 @@ public class BotDeployDialog extends BotDialog {
     public BotDeployDialog(final SWTGefBot bot) {
         super(bot, Messages.selectArtifactToDeployTitle);
     }
+    
+    public BotDeployDialog selectEnvironment(String environment) {
+        bot.comboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions).setSelection(environment);
+        return this;
+    }
+
+    public String getSelectedEnvironment() {
+        return bot.comboBoxWithLabelInGroup(Messages.environment, Messages.deployOptions).getText();
+    }
+
 
     public BotDeployDialog searchArtifacts(final String searchText) {
         bot.text(0).setText(searchText);
@@ -90,16 +100,20 @@ public class BotDeployDialog extends BotDialog {
         bot.button(Messages.selectNone).click();
         return this;
     }
-    
+
     public BotDeployDialog selectAll() {
         bot.checkBox(Messages.selectLatestVersion).deselect();
         bot.button(Messages.selectAll).click();
         return this;
     }
-    
+
     public BotDeployDialog selectLatest() {
         bot.checkBox(Messages.selectLatestVersion).select();
-        bot.button(Messages.selectAll).click();
+        return this;
+    }
+
+    public BotDeployDialog selectAllVersions() {
+        bot.checkBox(Messages.selectLatestVersion).deselect();
         return this;
     }
 }

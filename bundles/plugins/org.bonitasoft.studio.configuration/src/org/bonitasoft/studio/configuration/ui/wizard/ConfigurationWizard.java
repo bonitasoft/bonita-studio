@@ -232,7 +232,7 @@ public class ConfigurationWizard extends Wizard {
             } else {
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
-                configuration.setVersion(ModelVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
             }
         } else if (process != null) {
             for (final Configuration conf : process.getConfigurations()) {
@@ -244,7 +244,7 @@ public class ConfigurationWizard extends Wizard {
             if (configuration == null) {
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(confName);
-                configuration.setVersion(ModelVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
             }
         }
         return configuration;

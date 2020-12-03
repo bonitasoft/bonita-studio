@@ -88,6 +88,29 @@
                </with>
             </visibleWhen>
          </command>
+         <command
+               commandId="org.bonitasoft.studio.designer.command.create.fragment"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+	                  <count
+	                        value="1">
+	                  </count>
+	                     <iterate>
+	                        <instanceof
+	                              value="org.eclipse.core.resources.IProject">
+	                        </instanceof>
+	                        <test
+	                              property="org.bonitasoft.studio.application.isBonitaProject">
+	                        </test>
+	                     </iterate>
+	               </and>
+               </with>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -301,5 +324,9 @@
          commandId="org.bonitasoft.studio.designer.command.create.layout"
          icon="icons/page.png">
    </image>
+      <image
+            commandId="org.bonitasoft.studio.designer.command.create.fragment"
+            icon="icons/fragment.png">
+      </image>
 </extension>
 </plugin>

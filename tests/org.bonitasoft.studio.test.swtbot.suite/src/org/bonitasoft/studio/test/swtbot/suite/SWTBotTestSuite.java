@@ -23,6 +23,8 @@ import org.bonitasoft.studio.tests.actors.ActorFilterImplementationTest;
 import org.bonitasoft.studio.tests.actors.OrganizationCreationTest;
 import org.bonitasoft.studio.tests.actors.SWTBotActorFilterExportTests;
 import org.bonitasoft.studio.tests.actors.TestOrganizationPassword;
+import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorIT;
+import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorOverviewIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
 import org.bonitasoft.studio.tests.bar.BarExporterTest;
 import org.bonitasoft.studio.tests.bar.TestMenus;
@@ -31,16 +33,24 @@ import org.bonitasoft.studio.tests.businessobject.SmartImportBdmIT;
 import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.configuration.ConfigurationDialogIT;
 import org.bonitasoft.studio.tests.configuration.JavaDependenciesConfigurationIT;
+import org.bonitasoft.studio.tests.connectors.AdvancedDBConnectorsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionTranslationsTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditedInAsingleCommandIT;
 import org.bonitasoft.studio.tests.connectors.ConnectorEditionTest;
 import org.bonitasoft.studio.tests.connectors.ConnectorImplementationTest;
+import org.bonitasoft.studio.tests.connectors.RichTextEditorIT;
 import org.bonitasoft.studio.tests.connectors.SWTBotConnectorDefinitionTest;
 import org.bonitasoft.studio.tests.connectors.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorOutputMode;
 import org.bonitasoft.studio.tests.connectors.TestLoadSaveConnectorConfiguration;
 import org.bonitasoft.studio.tests.connectors.TestTextAreaInConnectorWizard;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceConnection;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceCreateObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceDeleteObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceQueryObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceRetrieveObject;
+import org.bonitasoft.studio.tests.connectors.sforce.TestSForceUpdateObject;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.deploy.DeployWizardIT;
@@ -72,6 +82,7 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
+import org.bonitasoft.studio.tests.importer.bos.ImportBosArchiveIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
@@ -79,10 +90,13 @@ import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerLivingApplicationIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerOrganizationIT;
+import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerRestApiIT;
 import org.bonitasoft.studio.tests.properties.CallActivityMappingIT;
 import org.bonitasoft.studio.tests.properties.TestConditionExpression;
 import org.bonitasoft.studio.tests.properties.TestDecisionTable;
 import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
+import org.bonitasoft.studio.tests.repository.TestSeveralLocalRepositories;
+import org.bonitasoft.studio.tests.searchindex.SearchIndexesTest;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.junit.runner.RunWith;
@@ -90,6 +104,7 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
+        RichTextEditorIT.class,
         DiagramTests.class,
         TestDeleteDiagrams.class,
         DeleteCommandTest.class,
@@ -98,6 +113,7 @@ import org.junit.runners.Suite;
         ProjectExplorerBdmIT.class,
         ProjectExplorerLivingApplicationIT.class,
         ProjectExplorerConnectorIT.class,
+        ProjectExplorerRestApiIT.class,
         OpenExistingApplicationIT.class,
         TestMenus.class,
         OpenNameAndVersionForDiagramDialogTest.class,
@@ -159,7 +175,19 @@ import org.junit.runners.Suite;
         BPMNEventSubProcessExportImportTest.class,
         DeployWizardIT.class,
         OrganizationCreationTest.class,
-        SmartImportBdmIT.class
+        SmartImportBdmIT.class,
+        TestSForceConnection.class,
+        TestSForceCreateObject.class,
+        TestSForceDeleteObject.class,
+        TestSForceQueryObject.class,
+        TestSForceRetrieveObject.class,
+        TestSForceUpdateObject.class,
+        AdvancedDBConnectorsTest.class,
+        SearchIndexesTest.class,
+        ImportBosArchiveIT.class,
+        TestSeveralLocalRepositories.class,
+        ApplicationDescriptorOverviewIT.class,
+        ApplicationDescriptorIT.class
 })
 public class SWTBotTestSuite {
 

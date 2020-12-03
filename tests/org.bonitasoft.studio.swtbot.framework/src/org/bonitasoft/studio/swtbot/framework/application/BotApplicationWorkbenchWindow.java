@@ -18,7 +18,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.application.menu.BotOrganizationMenu;
@@ -29,8 +28,11 @@ import org.bonitasoft.studio.swtbot.framework.diagram.configuration.BotConfigure
 import org.bonitasoft.studio.swtbot.framework.diagram.export.BotExportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportOtherDialog;
+import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
+import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizardBot;
+import org.bonitasoft.studio.swtbot.framework.team.BotTeamMenu;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -139,16 +141,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotConfigureDialog configure() {
-        if (SWTBotTestUtil.testingBosSp()) {
-            bot.waitUntil(Conditions
-                    .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
-            bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        } else {
-            bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
-            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
-        }
+        bot.waitUntil(Conditions
+                .widgetIsEnabled(bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM)));
+        bot.toolbarDropDownButtonWithId(SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM).click();
         final DiagramEditor editor = (DiagramEditor) bot.activeEditor().getReference().getEditor(true);
-        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
+        final IGraphicalEditPart ep = (IGraphicalEditPart) editor.getDiagramGraphicalViewer().getSelectedEditParts()
+                .get(0);
         final Pool selectedProcess = ModelHelper.getFirstContainerOfType(ep.resolveSemanticElement(), Pool.class);
         return new BotConfigureDialog(bot, selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")");
     }
@@ -187,6 +185,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
+    public SelectApplicationToDeployWizardBot deployApplicationFile() {
+        waitForMainShell(bot);
+        bot.menu("Development").menu("Application Descriptors").menu("Deploy...").click();
+        return new SelectApplicationToDeployWizardBot(bot, Messages.deployExistingApplication);
+    }
+
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
         waitForMainShell(bot);
         bot.menu("Development").menu("Application Descriptors").menu("Delete...").click();
@@ -211,5 +215,18 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     public BotDeployDialog openDeploy() {
         bot.menu("File").menu("Deploy...").click();
         return new BotDeployDialog(bot);
+    }
+
+    public BotTeamMenu teamMenu() {
+        waitForMainShell(bot);
+        openMenu("Team");
+        return new BotTeamMenu(bot);
+    }
+
+    public BotApplicationEditor newApplicationContainer() {
+        waitForMainShell(bot);
+        bot.menu("Development").menu("Application Descriptors").menu("New...").click();
+        bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
+        return new BotApplicationEditor(bot, bot.activeEditor());
     }
 }

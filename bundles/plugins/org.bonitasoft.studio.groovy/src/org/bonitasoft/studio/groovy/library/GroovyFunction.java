@@ -18,13 +18,15 @@
 
 package org.bonitasoft.studio.groovy.library;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.groovy.Messages;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.eclipse.jdt.core.Flags;
@@ -61,7 +63,7 @@ public class GroovyFunction implements IFunction {
             if(methodNode.getSource()!= null){
                 final IDocument source =  new Document(methodNode.getSource());
                 if(methodNode.getJavadocRange() != null){
-                    javadoc = methodNode.getAttachedJavadoc(Repository.NULL_PROGRESS_MONITOR);
+                    javadoc = methodNode.getAttachedJavadoc(AbstractRepository.NULL_PROGRESS_MONITOR);
                     if(javadoc == null){
                         javadoc = source.get(0,methodNode.getJavadocRange().getLength());
                         javadoc = javadoc.replace("/*", "");
@@ -89,9 +91,6 @@ public class GroovyFunction implements IFunction {
             if(category.equals(FunctionsRepositoryFactory.getUserFunctionCatgory())){
                 category.addFunction(this);
                 return ;
-            }else if(category.equals(FunctionsRepositoryFactory.getBonitaFunctionCatgory())){
-                category.addFunction(this);
-                return ;
             }
         }
         for(final String type : methodNode.getParameterTypes()){
@@ -108,17 +107,6 @@ public class GroovyFunction implements IFunction {
                 }
             }
         }
-
-        if(isStringFunction){
-            FunctionsRepositoryFactory.getStringFunctionCatgory().addFunction(this);
-        }else if(isColletionFunction){
-            FunctionsRepositoryFactory.getCollectionFunctionCatgory().addFunction(this);
-        }else if(isNumberFunction){
-            FunctionsRepositoryFactory.getNumberFunctionCatgory().addFunction(this);
-        }else{
-            FunctionsRepositoryFactory.getOtherFunctionCatgory().addFunction(this);
-        }
-
     }
 
 
@@ -235,27 +223,13 @@ public class GroovyFunction implements IFunction {
 
 
     @Override
-    public String getParameters() {
-        final List<String> paramNames = new ArrayList<String>();
-        String result = "" ; //$NON-NLS-1$
-
+    public List<String> getParameterNames() {
         try {
-            for(final String s : methodNode.getParameterNames()) {
-                paramNames.add(s);
-            }
+            return Stream.of(methodNode.getParameterNames()).collect(Collectors.toList());
         } catch (final JavaModelException e) {
             BonitaStudioLog.error(e);
+            return Collections.emptyList();
         }
-
-        for(final String name : paramNames){
-            result = result.concat(name+","); //$NON-NLS-1$
-        }
-
-        result = result.substring(0, result.lastIndexOf(",")); //$NON-NLS-1$
-
-
-        return  result ;
-
     }
 
     @Override

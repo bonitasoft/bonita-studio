@@ -6,7 +6,6 @@
    <extension-point id="barResourcesProvider" name="Extension Point to add Resources to BAR at export" schema="schema/barResourcesProvider.exsd"/>
    <extension-point id="startupDialog" name="Actions to hook after studio started" schema="schema/org.bonitasoft.studio.common.startup.dialog.exsd"/>
    <extension-point id="org.bonitasoft.studio.coolbarContributionItem" name="org.bonitasoft.studio.coolbarContributionItem" schema="schema/org.bonitasoft.studio.coolbarContributionItem.exsd"/>
-  <extension-point id="configurationIdProvider" name="configurationIdProvider" schema="schema/configurationIdProvider.exsd"/>
   <extension-point id="org.bonitasoft.studio.common.introModelPageId" name="introModelPageId" schema="schema/org.bonitasoft.studio.common.exsd"/>
  
 <extension

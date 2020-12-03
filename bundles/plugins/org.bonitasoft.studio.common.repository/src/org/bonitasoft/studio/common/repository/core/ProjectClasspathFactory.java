@@ -25,7 +25,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.resources.IFile;
@@ -47,7 +47,7 @@ import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 
 public class ProjectClasspathFactory {
 
-    public void create(final Repository repository, final IProgressMonitor monitor) throws CoreException {
+    public void create(final AbstractRepository repository, final IProgressMonitor monitor) throws CoreException {
         if (!classpathExists(repository)) {
             BonitaStudioLog.log(Messages.initializingProjectClasspath);
             monitor.subTask(Messages.initializingProjectClasspath);
@@ -64,15 +64,16 @@ public class ProjectClasspathFactory {
         options.put(CompilerOptions.OPTION_TargetPlatform, javaVersion);
         options.put(CompilerOptions.OPTION_Source, javaVersion);
         options.put(CompilerOptions.OPTION_Compliance, javaVersion);
+        options.put(CompilerOptions.OPTION_ReportMissingSerialVersion, CompilerOptions.IGNORE);
         JavaCore.setOptions(options);
     }
 
-    public void refresh(final Repository repository, final IProgressMonitor monitor) throws CoreException {
+    public void refresh(final AbstractRepository repository, final IProgressMonitor monitor) throws CoreException {
         javaModel().refreshExternalArchives(null, monitor);
         flushBuildPath(repository, monitor);
     }
 
-    protected void flushBuildPath(final Repository repository, final IProgressMonitor monitor) throws CoreException, JavaModelException {
+    protected void flushBuildPath(final AbstractRepository repository, final IProgressMonitor monitor) throws CoreException, JavaModelException {
         final IJavaProject javaProject = asJavaProject(repository);
         BuildPathsBlock.flush(Arrays.asList(CPListElement.createFromExisting(javaProject)), javaProject.getOutputLocation(), javaProject, null, monitor);
     }
@@ -82,7 +83,7 @@ public class ProjectClasspathFactory {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Set<IClasspathEntry> addClasspathEntries(final Repository repository) {
+    protected Set<IClasspathEntry> addClasspathEntries(final AbstractRepository repository) {
         final Set<IClasspathEntry> entries = newHashSet(
                 newContainerEntry(new Path("repositoryDependencies"), true),
                 newContainerEntry(newJREContainerPath(javaRuntimeEnvironment()), false),
@@ -111,22 +112,22 @@ public class ProjectClasspathFactory {
         return JavaCore.newSourceEntry(path);
     }
 
-    protected IJavaProject asJavaProject(final Repository repository) throws CoreException {
+    protected IJavaProject asJavaProject(final AbstractRepository repository) throws CoreException {
         return (IJavaProject) repository.getProject().getNature(JavaCore.NATURE_ID);
     }
 
-    public boolean classpathExists(final Repository repository) {
+    public boolean classpathExists(final AbstractRepository repository) {
         return repository.getProject().findMember(".classpath") != null;
     }
 
-    public void delete(final Repository repository, final IProgressMonitor monitor) throws CoreException {
+    public void delete(final AbstractRepository repository, final IProgressMonitor monitor) throws CoreException {
         final IFile classpathFile = repository.getProject().getFile(".classpath");
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, monitor);
         }
     }
 
-    public IClasspathEntry[] getEntries(final Repository repository) throws CoreException {
+    public IClasspathEntry[] getEntries(final AbstractRepository repository) throws CoreException {
         return asJavaProject(repository).getRawClasspath();
     }
 

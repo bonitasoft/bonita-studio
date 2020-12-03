@@ -66,7 +66,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
  * @author Romain Bioteau
  */
-public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection {
+public class ThrowEventSection extends AbstractBonitaDescriptionSection {
 
     public static final int LIST_HEIGHT = 170;
     private FilteredTree filteredTree;
@@ -239,7 +239,9 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         return addMessageEventButton;
     }
 
-    protected abstract UpdateMessageEventWizard createMessageEventWizard(MainProcess diagram,Message message);
+    protected UpdateMessageEventWizard createMessageEventWizard(MainProcess diagram,Message message) {
+        return new UpdateMessageEventWizard(diagram,getThrowMessageEvent(), message, getEditingDomain(), this);
+    }
 
     /**
      * @return

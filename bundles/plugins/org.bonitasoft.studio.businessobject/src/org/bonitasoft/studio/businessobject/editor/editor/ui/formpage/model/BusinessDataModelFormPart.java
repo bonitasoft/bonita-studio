@@ -22,7 +22,6 @@ import java.io.IOException;
 import javax.xml.bind.JAXBException;
 
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
-import org.bonitasoft.studio.businessobject.editor.editor.ui.control.DeployRequiredControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
@@ -30,14 +29,12 @@ import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.GroupIdValidator;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -54,12 +51,10 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
     public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
 
-    private DataBindingContext ctx = new EMFDataBindingContext();
+    private DataBindingContext ctx = new DataBindingContext();
     private BusinessDataModelFormPage formPage;
     private BusinessObjectList businessObjectList;
     private BusinessObjectEditionControl businessObjectEditionControl;
-
-    private DeployRequiredControl deployRequiredControl;
 
     public BusinessDataModelFormPart(Composite businessDataModelComposite,
             BusinessDataModelFormPage formPage) {
@@ -69,17 +64,12 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 5).create());
         businessDataModelComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        deployRequiredControl = new DeployRequiredControl(businessDataModelComposite, formPage,
-                GridDataFactory.fillDefaults().span(2, 1).create());
-
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
 
         createBusinessObjectList(leftComposite);
-        if (!PlatformUtil.isACommunityBonitaProduct()) {
-            createMavenArtifactPropertiesGroup(leftComposite, ctx);
-        }
+        createMavenArtifactPropertiesGroup(leftComposite, ctx);
         createBusinessObjectEditionControl(businessDataModelComposite);
     }
 
@@ -134,6 +124,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
     private void createBusinessObjectList(Composite businessDataModelComposite) {
         businessObjectList = new BusinessObjectList(businessDataModelComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
+        businessObjectList.expandAll();
     }
 
     public void updateTopControl() {
@@ -174,14 +165,5 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
     public void showBusinessObjectSelection() {
         businessObjectList.showBusinessObjectSelection();
-    }
-
-    public void updateDeployRequiredComposite(Boolean deployRequired) {
-        if (deployRequired) {
-            deployRequiredControl.show();
-        } else {
-            deployRequiredControl.hide();
-        }
-
     }
 }

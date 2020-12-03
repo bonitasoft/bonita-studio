@@ -13,8 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.apache.batik.svggen;bundle-version="[1.6.0,1.7.0)",
  org.apache.batik.transcoder;bundle-version="[1.6.0,1.7.0)",
  org.apache.batik.util;bundle-version="[1.6.0,1.7.0)",
- org.w3c.dom.svg;bundle-version="[1.1.0,2.0.0)",
- org.apache.xerces;bundle-version="2.9.0"
+ org.w3c.dom.svg;bundle-version="1.1.0"
 Bundle-Activator: org.eclipse.gmf.internal.runtime.lite.svg.Activator
 Export-Package: org.eclipse.gmf.internal.runtime.lite.svg;x-internal:=
  true,org.eclipse.gmf.runtime.lite.svg

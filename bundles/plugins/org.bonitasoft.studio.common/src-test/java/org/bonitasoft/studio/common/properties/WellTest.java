@@ -35,7 +35,8 @@ public class WellTest {
 
     @Test
     public void should_have_an_error_backround_for_error_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.ERROR);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.ERROR);
 
         final GC gc = paint(well);
 
@@ -44,7 +45,8 @@ public class WellTest {
 
     @Test
     public void should_have_an_error_foreground_for_error_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.ERROR);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.ERROR);
 
         final GC gc = paint(well);
 
@@ -53,7 +55,8 @@ public class WellTest {
 
     @Test
     public void should_have_an_info_background_for_info_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.INFO);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.INFO);
 
         final GC gc = paint(well);
 
@@ -62,7 +65,8 @@ public class WellTest {
 
     @Test
     public void should_have_an_info_foreground_for_info_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.INFO);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.INFO);
 
         final GC gc = paint(well);
 
@@ -71,7 +75,8 @@ public class WellTest {
 
     @Test
     public void should_have_a_warning_background_for_warning_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.WARNING);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.WARNING);
 
         final GC gc = paint(well);
 
@@ -80,7 +85,8 @@ public class WellTest {
 
     @Test
     public void should_have_a_warning_foreground_for_warning_status() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.WARNING);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.WARNING);
 
         final GC gc = paint(well);
 
@@ -89,7 +95,8 @@ public class WellTest {
 
     @Test
     public void should_update_label_text() throws Exception {
-        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()), IStatus.WARNING);
+        final Well well = new Well(realm.createComposite(), "", new FormToolkit(realm.getShell().getDisplay()),
+                IStatus.WARNING);
 
         well.setText("hello");
 

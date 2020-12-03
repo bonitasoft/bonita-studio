@@ -17,10 +17,12 @@ package org.bonitasoft.studio.application.handler;
 import java.util.Optional;
 
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
+import org.bonitasoft.studio.common.repository.model.IDeployable;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog.DeployStrategy;
 import org.eclipse.core.commands.AbstractHandler;
@@ -29,6 +31,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -68,14 +71,21 @@ public class DeployHandler extends AbstractHandler {
                 && selection.get().getFirstElement() instanceof IAdaptable) {
             IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
             if (resource != null) {
-                Repository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                boolean resourceMatch = selectionFinder.findElementToDeploy(resource, currentRepository)
-                        .isPresent();
+                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                Optional<IDeployable> elementToDeploy = selectionFinder.findElementToDeploy(resource, currentRepository);
+                boolean resourceMatch = elementToDeploy.isPresent();
                 if (!resourceMatch) {
                     IProject project = resource.getProject();
                     if (project != null) {
-                        resourceMatch = selectionFinder.findElementToDeploy(project, currentRepository)
-                                .isPresent();
+                        elementToDeploy =  selectionFinder.findElementToDeploy(project, currentRepository);
+                        resourceMatch = elementToDeploy .isPresent();
+                    }
+                }
+                if(resourceMatch) {
+                    IDeployable deployable = elementToDeploy.get();
+                    if(deployable instanceof IRepositoryFileStore<?>) {
+                        // Check if there is no compatibility issues
+                        return ((IRepositoryFileStore) deployable).validate().getSeverity() != IStatus.ERROR;
                     }
                 }
                 return resourceMatch;
