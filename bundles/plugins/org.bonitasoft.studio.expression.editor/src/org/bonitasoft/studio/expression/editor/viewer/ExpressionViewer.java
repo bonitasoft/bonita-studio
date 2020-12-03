@@ -30,13 +30,11 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
@@ -78,8 +76,6 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.databinding.observable.UnmodifiableObservableValue;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -283,41 +279,29 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected void createToolbar(final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         toolbar = new ToolBar(control, SWT.FLAT | SWT.NO_FOCUS);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
-        editControl = createEditToolItem(toolbar);
-        if (withConnector) {
-            createToolBarExtension(toolbar);
-        }
+           if(shouldAddEditToolItem()) {
+               editControl = createEditToolItem(toolbar);
+           }
+       
         createEraseToolItem(toolbar);
         if (widgetFactory != null) {
             widgetFactory.adapt(toolbar, true, true);
         }
     }
 
-    protected void createToolBarExtension(final ToolBar toolbar) {
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.expression.editor.expressionViewerToolbar")) {
-            try {
-                final IExpressionToolbarContribution item = (IExpressionToolbarContribution) elem
-                        .createExecutableExtension("class");
-                if (item.getId() == "ConnectorInExpressionViewer" && withConnector) {
-                    item.fill(toolbar, -1);
-                    item.setExpressionViewer(this);
-                }
-                toolbarContributions.add(item);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e, ExpressionEditorPlugin.PLUGIN_ID);
-            }
-        }
+
+    protected boolean shouldAddEditToolItem() {
+        return true;
     }
 
     protected ToolItem createEditToolItem(final ToolBar tb) {
-        final ToolItem editControl = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
-        editControl.setImage(Pics.getImage(PicsConstants.edit));
-        editControl.setToolTipText(Messages.editAndContinue);
+        final ToolItem editToolItem = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
+        editToolItem.setImage(Pics.getImage(PicsConstants.edit));
+        editToolItem.setToolTipText(Messages.editAndContinue);
 
         /* For test purpose */
-        editControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EDITBUTTON);
-        editControl.addListener(SWT.Selection, new Listener() {
+        editToolItem.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EDITBUTTON);
+        editToolItem.addListener(SWT.Selection, new Listener() {
 
             @Override
             public void handleEvent(final Event event) {
@@ -326,8 +310,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
         });
 
-        editControl.addDisposeListener(disposeListener);
-        return editControl;
+        editToolItem.addDisposeListener(disposeListener);
+        return editToolItem;
     }
 
     protected void editControlSelected(final ToolBar tb, final Event event, final EditingDomain editingDomain) {
@@ -680,7 +664,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private ArrayList<String> getFilteredExpressionType() {
-        final ArrayList<String> filteredExpressions = new ArrayList<>();
+        final ArrayList<String> expressionType = new ArrayList<>();
         final Set<ViewerFilter> fitlers = getFilters();
 
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
@@ -691,12 +675,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                 for (final ViewerFilter viewerFilter : fitlers) {
                     exp.setType(provider.getExpressionType());
                     if (!viewerFilter.select(this, context, exp)) {
-                        filteredExpressions.add(provider.getExpressionType());
+                        expressionType.add(provider.getExpressionType());
                     }
                 }
             }
         }
-        return filteredExpressions;
+        return expressionType;
     }
 
     public void setExpressionNatureProvider(final IExpressionNatureProvider expressionNatureProvider) {

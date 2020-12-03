@@ -82,8 +82,8 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    protected ToolItem createEditToolItem(final ToolBar tb) {
-        return null;
+    protected boolean shouldAddEditToolItem() {
+        return false;
     }
 
     /**
