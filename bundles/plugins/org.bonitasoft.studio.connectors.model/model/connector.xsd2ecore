@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="connector-definition-descriptor.xsd#/ connector-implementation-descriptor.xsd#/"
+    outputs="definition.ecore#/ implementation.ecore#/" topToBottom="true">
+  <nested inputs="bundleentry://461.fwk998462082/cache/www.w3.org/2001/XMLSchema.xsd#//string;XSDSimpleTypeDefinition=9"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Component;XSDComplexTypeDefinition=16"
+      outputs="definition.ecore#//Component">
+    <nested inputs="connector-definition-descriptor.xsd#//Component;XSDComplexTypeDefinition=16/XSDAttributeUse"
+        outputs="definition.ecore#//Component/id"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//WidgetComponent;XSDComplexTypeDefinition=5"
+      outputs="definition.ecore#//WidgetComponent">
+    <nested inputs="connector-definition-descriptor.xsd#//WidgetComponent;XSDComplexTypeDefinition=5/XSDAttributeUse"
+        outputs="definition.ecore#//WidgetComponent/inputName"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Widget;XSDComplexTypeDefinition=6"
+      outputs="definition.ecore#//Widget"/>
+  <nested inputs="bundleentry://461.fwk998462082/cache/www.w3.org/2001/XMLSchema.xsd#//integer;XSDSimpleTypeDefinition=40"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//Integer"/>
+  <nested inputs="bundleentry://461.fwk998462082/cache/www.w3.org/2001/XMLSchema.xsd#//boolean;XSDSimpleTypeDefinition=10"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13"
+      outputs="definition.ecore#//Array">
+    <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//Array/colsCaption"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13/XSDAttributeUse"
+        outputs="definition.ecore#//Array/cols"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13/XSDAttributeUse=2"
+        outputs="definition.ecore#//Array/fixedCols"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13/XSDAttributeUse=3"
+        outputs="definition.ecore#//Array/fixedRows"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Array;XSDComplexTypeDefinition=13/XSDAttributeUse=1"
+        outputs="definition.ecore#//Array/rows"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Array;XSDElementDeclaration=13"
+      outputs="definition.ecore#//DocumentRoot/array"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Category;XSDComplexTypeDefinition=4"
+      outputs="definition.ecore#//Category">
+    <nested inputs="connector-definition-descriptor.xsd#//Category;XSDComplexTypeDefinition=4/XSDAttributeUse=1"
+        outputs="definition.ecore#//Category/icon"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Category;XSDComplexTypeDefinition=4/XSDAttributeUse"
+        outputs="definition.ecore#//Category/id"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Category;XSDElementDeclaration=4"
+      outputs="definition.ecore#//DocumentRoot/category"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Checkbox;XSDComplexTypeDefinition=10"
+      outputs="definition.ecore#//Checkbox"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Checkbox;XSDElementDeclaration=10"
+      outputs="definition.ecore#//DocumentRoot/checkbox"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Component;XSDElementDeclaration=16"
+      outputs="definition.ecore#//DocumentRoot/component"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Input;XSDComplexTypeDefinition=2"
+      outputs="definition.ecore#//Input">
+    <nested inputs="connector-definition-descriptor.xsd#//Input;XSDComplexTypeDefinition=2/XSDAttributeUse=3"
+        outputs="definition.ecore#//Input/defaultValue"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Input;XSDComplexTypeDefinition=2/XSDAttributeUse=2"
+        outputs="definition.ecore#//Input/mandatory"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Input;XSDComplexTypeDefinition=2/XSDAttributeUse"
+        outputs="definition.ecore#//Input/name"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Input;XSDComplexTypeDefinition=2/XSDAttributeUse=1"
+        outputs="definition.ecore#//Input/type"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Output;XSDComplexTypeDefinition=3"
+      outputs="definition.ecore#//Output">
+    <nested inputs="connector-definition-descriptor.xsd#//Output;XSDComplexTypeDefinition=3/XSDAttributeUse"
+        outputs="definition.ecore#//Output/name"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Output;XSDComplexTypeDefinition=3/XSDAttributeUse=1"
+        outputs="definition.ecore#//Output/type"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Page;XSDComplexTypeDefinition=1"
+      outputs="definition.ecore#//Page">
+    <nested inputs="connector-definition-descriptor.xsd#//Page;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//Page/widget"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Page;XSDComplexTypeDefinition=1/XSDAttributeUse"
+        outputs="definition.ecore#//Page/id"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition"
+      outputs="definition.ecore#//ConnectorDefinition">
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//ConnectorDefinition/category"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="definition.ecore#//ConnectorDefinition/input"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="definition.ecore#//ConnectorDefinition/output"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="definition.ecore#//ConnectorDefinition/page"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="definition.ecore#//ConnectorDefinition/icon"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="definition.ecore#//ConnectorDefinition/id"/>
+    <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="definition.ecore#//ConnectorDefinition/version"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//ConnectorDefinition;XSDElementDeclaration"
+      outputs="definition.ecore#//DocumentRoot/connectorDefinition"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Group;XSDComplexTypeDefinition=14"
+      outputs="definition.ecore#//Group">
+    <nested inputs="connector-definition-descriptor.xsd#//Group;XSDComplexTypeDefinition=14/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//Group/widget"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Group;XSDComplexTypeDefinition=14/XSDAttributeUse"
+        outputs="definition.ecore#//Group/optional"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Group;XSDElementDeclaration=14"
+      outputs="definition.ecore#//DocumentRoot/group"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Input;XSDElementDeclaration=2"
+      outputs="definition.ecore#//DocumentRoot/input"/>
+  <nested inputs="connector-definition-descriptor.xsd#//List;XSDComplexTypeDefinition=15"
+      outputs="definition.ecore#//List"/>
+  <nested inputs="connector-definition-descriptor.xsd#//List;XSDElementDeclaration=15"
+      outputs="definition.ecore#//DocumentRoot/list"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Output;XSDElementDeclaration=3"
+      outputs="definition.ecore#//DocumentRoot/output"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Page;XSDElementDeclaration=1"
+      outputs="definition.ecore#//DocumentRoot/page"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Text;XSDComplexTypeDefinition=7"
+      outputs="definition.ecore#//Text"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Password;XSDComplexTypeDefinition=8"
+      outputs="definition.ecore#//Password"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Password;XSDElementDeclaration=8"
+      outputs="definition.ecore#//DocumentRoot/password"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Orientation;XSDSimpleTypeDefinition"
+      outputs="definition.ecore#//Orientation">
+    <nested inputs="connector-definition-descriptor.xsd#//Orientation;XSDSimpleTypeDefinition/XSDEnumerationFacet"
+        outputs="definition.ecore#//Orientation/HORIZONTAL"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Orientation;XSDSimpleTypeDefinition/XSDEnumerationFacet=1"
+        outputs="definition.ecore#//Orientation/VERTICAL"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//RadioGroup;XSDComplexTypeDefinition=11"
+      outputs="definition.ecore#//RadioGroup">
+    <nested inputs="connector-definition-descriptor.xsd#//RadioGroup;XSDComplexTypeDefinition=11/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//RadioGroup/choices"/>
+    <nested inputs="connector-definition-descriptor.xsd#//RadioGroup;XSDComplexTypeDefinition=11/XSDAttributeUse"
+        outputs="definition.ecore#//RadioGroup/orientation"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//RadioGroup;XSDElementDeclaration=11"
+      outputs="definition.ecore#//DocumentRoot/radioGroup"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Select;XSDComplexTypeDefinition=12"
+      outputs="definition.ecore#//Select">
+    <nested inputs="connector-definition-descriptor.xsd#//Select;XSDComplexTypeDefinition=12/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="definition.ecore#//Select/items"/>
+    <nested inputs="connector-definition-descriptor.xsd#//Select;XSDComplexTypeDefinition=12/XSDAttributeUse"
+        outputs="definition.ecore#//Select/readOnly"/>
+  </nested>
+  <nested inputs="connector-definition-descriptor.xsd#//Select;XSDElementDeclaration=12"
+      outputs="definition.ecore#//DocumentRoot/select"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Text;XSDElementDeclaration=7"
+      outputs="definition.ecore#//DocumentRoot/text"/>
+  <nested inputs="connector-definition-descriptor.xsd#//TextArea;XSDComplexTypeDefinition=9"
+      outputs="definition.ecore#//TextArea"/>
+  <nested inputs="connector-definition-descriptor.xsd#//TextArea;XSDElementDeclaration=9"
+      outputs="definition.ecore#//DocumentRoot/textArea"/>
+  <nested inputs="connector-definition-descriptor.xsd#//Widget;XSDElementDeclaration=6"
+      outputs="definition.ecore#//DocumentRoot/widget"/>
+  <nested inputs="connector-definition-descriptor.xsd#//WidgetComponent;XSDElementDeclaration=5"
+      outputs="definition.ecore#//DocumentRoot/widgetComponent"/>
+  <nested inputs="connector-implementation-descriptor.xsd#//jarDependencies;XSDComplexTypeDefinition=1"
+      outputs="implementation.ecore#//JarDependencies">
+    <nested inputs="connector-implementation-descriptor.xsd#//jarDependencies;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="implementation.ecore#//JarDependencies/jarDependency"/>
+  </nested>
+  <nested inputs="bundleentry://461.fwk998462082/cache/www.w3.org/2001/XMLSchema.xsd#//anyType;XSDComplexTypeDefinition=28"
+      outputs="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition"
+      outputs="implementation.ecore#//ConnectorImplementation">
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="implementation.ecore#//ConnectorImplementation/jarDependencies"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="implementation.ecore#//ConnectorImplementation/description"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="implementation.ecore#//ConnectorImplementation/definitionId"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse=3"
+        outputs="implementation.ecore#//ConnectorImplementation/definitionVersion"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse=5"
+        outputs="implementation.ecore#//ConnectorImplementation/hasSources"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse=4"
+        outputs="implementation.ecore#//ConnectorImplementation/implementationClassname"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="implementation.ecore#//ConnectorImplementation/implementationId"/>
+    <nested inputs="connector-implementation-descriptor.xsd#//ConnectorImplementation;XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="implementation.ecore#//ConnectorImplementation/implementationVersion"/>
+  </nested>
+  <nested inputs="connector-implementation-descriptor.xsd#//connectorImplementation;XSDElementDeclaration"
+      outputs="implementation.ecore#//DocumentRoot/connectorImplementation"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

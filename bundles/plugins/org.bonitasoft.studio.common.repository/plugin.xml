@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="initializer" name="initializer" schema="schema/initializer.exsd"/>
+   <extension-point id="repository" name="Repository" schema="schema/repository.exsd"/>
+   <extension-point id="repositoryServiceListener" name="Listeners on some global repository events" schema="schema/repositoryListener.exsd"/>
+   <extension-point id="org.bonitasoft.studio.repositoryStore" name="org.bonitasoft.studio.repositoryStore" schema="schema/org.bonitasoft.studio.repositoryStore.exsd"/>
+   <extension-point id="org.bonitasoft.studio.repository.fileContribution" name="org.bonitasoft.studio.repository.fileContribution" schema="schema/org.bonitasoft.studio.repository.fileContribution.exsd"/>
+   <extension-point id="org.bonitasoft.studio.repositoryFactory" name="org.bonitasoft.studio.repositoryFactory" schema="schema/org.bonitasoft.studio.repositoryFactory.exsd"/>
+   <extension-point id="org.bonitasoft.studio.bosArchiveProvider" name="org.bonitasoft.studio.bosArchiveProvider" schema="schema/org.bonitasoft.studio.bosArchiveProvider.exsd"/>
+   <extension-point id="postinitrepository" name="Actions to hook at the end of the initialization repository job" schema="schema/postinitrepository.exsd"/>
+   <extension-point id="lockStatusProvider" name="lockStatusProvider" schema="schema/lockStatusProvider.exsd"/>
+   <extension-point id="projectListenerProvider" name="projectListenerProvider" schema="schema/org.bonitasoft.studio.projectListenerProvider.exsd"/>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceInitializer">
+      </initializer>
+   </extension>
+     <extension
+       point="org.eclipse.ui.menus">
+       <menuContribution
+          locationURI="menu:org.bonitasoft.studio.menu.extensions">
+       <separator
+             name="org.bonitasoft.studio.repository.separator1"
+             visible="true">
+       </separator>
+       <command
+             commandId="org.bonitasoft.studio.repository.importArtifacts"
+             icon="icons/import_repository.png"
+             label="%Import_Artifacts"
+             style="push">
+       </command>
+       <command
+             commandId="org.bonitasoft.studio.repository.exportArtifacts"
+             icon="icons/export_repository.png"
+             label="%Export_Artifacts"
+             style="push">
+       </command>
+    </menuContribution>
+  </extension>
+    <extension
+       point="org.eclipse.ui.commands">
+    <command
+          defaultHandler="org.bonitasoft.studio.common.repository.handler.ExportArtifactsToZip"
+          id="org.bonitasoft.studio.repository.exportArtifacts"
+          name="export artifacts">
+    </command>
+       
+  </extension>
+    <extension
+          point="org.eclipse.ui.ide.projectNatureImages">
+       <image
+             icon="icons/bos.png"
+             id="org.bonitasoft.studio.common.repository.bonitaNatureImage"
+             natureId="org.bonitasoft.studio.common.repository.bonitaNature">
+       </image>
+    </extension>
+    <extension
+          id="bonitaNature"
+          name="Bonita Project Nature"
+          point="org.eclipse.core.resources.natures">
+       <runtime>
+          <run
+                class="org.bonitasoft.studio.common.repository.BonitaProjectNature">
+          </run>
+       </runtime>
+    </extension>
+    <extension
+          point="org.eclipse.wst.validation.removeV2Validator">
+       <remove
+             validatorId="org.eclipse.wst.json.core.json">
+       </remove>
+       <remove
+             validatorId="org.eclipse.wst.html.core.HTMLValidator">
+       </remove>
+    </extension>
+   
+</plugin>

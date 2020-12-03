@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_k87fkGaGEemgxNHVk538sQ">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_AoaSsGaIEemgxNHVk538sQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_Jl7nUGaIEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.open.command" commandName="%open"/>
+    <elements xsi:type="commands:Command" xmi:id="_WQDTEGaUEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.new.command" commandName="%new"/>
+    <elements xsi:type="commands:Command" xmi:id="_Q6KhkGaWEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.delete.command" commandName="%delete"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_BFtSsGaIEemgxNHVk538sQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_Oyz74GaIEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.open.handler" contributionURI="bundleclass://org.bonitasoft.studio.groovy.ui/org.bonitasoft.studio.groovy.ui.handler.OpenGroovyScriptsHandler" command="_Jl7nUGaIEemgxNHVk538sQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_YQXlAGaUEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.new.handler" contributionURI="bundleclass://org.bonitasoft.studio.groovy.ui/org.bonitasoft.studio.groovy.ui.handler.NewGroovyClassHandler" command="_WQDTEGaUEemgxNHVk538sQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_xENnMGaWEemgxNHVk538sQ" elementId="org.bonitasoft.studio.groovy.ui.delete.handler" contributionURI="bundleclass://org.bonitasoft.studio.groovy.ui/org.bonitasoft.studio.groovy.ui.handler.DeleteGroovyScriptHandler" command="_Q6KhkGaWEemgxNHVk538sQ"/>
+  </fragments>
+</fragment:ModelFragments>
