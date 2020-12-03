@@ -37,7 +37,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class IndexSection extends AbstractBonitaDescriptionSection {
 
-    private static final  int MAX_LINES = 5;
+    private static final int MAX_LINES = 5;
 
     private List<ExpressionViewer> nameViewers;
 
@@ -81,10 +81,16 @@ public class IndexSection extends AbstractBonitaDescriptionSection {
             final TabbedPropertySheetWidgetFactory widgetFactory) {
         final ExpressionViewer nameViewer = new ExpressionViewer(parent,
                 SWT.BORDER, widgetFactory,
-                ProcessPackage.Literals.SEARCH_INDEX__NAME);
+                ProcessPackage.Literals.SEARCH_INDEX__NAME) {
+
+            @Override
+            protected boolean shouldAddEditToolItem() {
+                return false;
+            }
+        };
         nameViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(false, false)
-                        .hint(250, SWT.DEFAULT).create());
+                        .hint(350, SWT.DEFAULT).create());
         nameViewers.add(nameViewer);
         final ExpressionViewer valueViewer = new ExpressionViewer(parent,
                 SWT.BORDER, widgetFactory,
@@ -92,7 +98,7 @@ public class IndexSection extends AbstractBonitaDescriptionSection {
         valueViewers.add(valueViewer);
         valueViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(false, false)
-                        .hint(250, SWT.DEFAULT).create());
+                        .hint(350, SWT.DEFAULT).create());
 
     }
 
@@ -114,10 +120,10 @@ public class IndexSection extends AbstractBonitaDescriptionSection {
         final ExpressionViewer nameViewer = nameViewers.get(index);
         nameViewer.setContext(pool);
         nameViewer.setInput(searchIndex);
-        nameViewer.addFilter(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE }));
+        nameViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
         nameViewer
                 .addExpressionValidator(new SearchIndexNameUnicityValidator());
+        nameViewer.manageNatureProviderAndAutocompletionProposal(null);
         final RefactorSearchIndexOperation operation = new RefactorSearchIndexOperation(
                 pool);
         operation.setEditingDomain(getEditingDomain());
