@@ -74,7 +74,7 @@ public class DeploySuccessDialog extends MessageDialog {
                 .fill()
                 .grabHorizontalSpace()
                 .readOnly()
-                .withMessage(String.format("%s : %s", org.bonitasoft.studio.actors.i18n.Messages.defaultUser,
+                .withMessage(String.format("%s : %s", org.bonitasoft.studio.identity.i18n.Messages.defaultUser,
                         new ActiveOrganizationProvider().getDefaultUser()))
                 .withItems(contentProvider.getItems())
                 .bindTo(PojoProperties.value("selection").observe(contentProvider))

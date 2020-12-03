@@ -20,7 +20,7 @@ Embed-Directory: lib
 Embed-StripVersion: true
 Embed-Transitive: true
 Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
- onita-client";v="7.12.0-SNAPSHOT",lib/jaxb-api.jar;g="javax.xml.bind";a
+ onita-client";v="7.13.0-SNAPSHOT",lib/jaxb-api.jar;g="javax.xml.bind";a
  ="jaxb-api";v="2.3.1",lib/javax.activation-api.jar;g="javax.activation"
  ;a="javax.activation-api";v="1.2.0",lib/jaxb-runtime.jar;g="org.glassfi
  sh.jaxb";a="jaxb-runtime";v="2.3.1",lib/txw2.jar;g="org.glassfish.jaxb"
@@ -35,7 +35,7 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  ;a="xstream";v="1.4.13",lib/xmlpull.jar;g="xmlpull";a="xmlpull";v="1.1.
  3.1",lib/xpp3_min.jar;g="xpp3";a="xpp3_min";v="1.1.4c",lib/httpmime.jar
  ;g="org.apache.httpcomponents";a="httpmime";v="4.5.12",lib/bonita-commo
- n.jar;g="org.bonitasoft.engine";a="bonita-common";v="7.12.0-SNAPSHOT",l
+ n.jar;g="org.bonitasoft.engine";a="bonita-common";v="7.13.0-SNAPSHOT",l
  ib/jakarta.activation.jar;g="com.sun.activation";a="jakarta.activation"
  ;v="1.2.2",lib/commons-io.jar;g="commons-io";a="commons-io";v="2.8.0",l
  ib/jackson-databind.jar;g="com.fasterxml.jackson.core";a="jackson-datab
@@ -150,7 +150,7 @@ Export-Package:
  javax.xml.bind.helpers;version="2.2.0",
  javax.xml.bind.util;version="2.2.0"
 Include-Resource: , lib/bonita-client.jar=/Users/adrien/.m2/repository/o
- rg/bonitasoft/engine/bonita-client/7.12.0-SNAPSHOT/bonita-client-7.12.0
+ rg/bonitasoft/engine/bonita-client/7.13.0-SNAPSHOT/bonita-client-7.13.0
  -SNAPSHOT.jar,lib/jaxb-api.jar=/Users/adrien/.m2/repository/javax/xml/b
  ind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar,lib/javax.activation-api.jar=/Use
  rs/adrien/.m2/repository/javax/activation/javax.activation-api/1.2.0/ja
@@ -174,8 +174,8 @@ Include-Resource: , lib/bonita-client.jar=/Users/adrien/.m2/repository/o
  /xpp3_min.jar=/Users/adrien/.m2/repository/xpp3/xpp3_min/1.1.4c/xpp3_mi
  n-1.1.4c.jar,lib/httpmime.jar=/Users/adrien/.m2/repository/org/apache/h
  ttpcomponents/httpmime/4.5.12/httpmime-4.5.12.jar,lib/bonita-common.jar
- =/Users/adrien/.m2/repository/org/bonitasoft/engine/bonita-common/7.12.
- 0-SNAPSHOT/bonita-common-7.12.0-SNAPSHOT.jar,lib/jakarta.activation.jar
+ =/Users/adrien/.m2/repository/org/bonitasoft/engine/bonita-common/7.13.
+ 0-SNAPSHOT/bonita-common-7.13.0-SNAPSHOT.jar,lib/jakarta.activation.jar
  =/Users/adrien/.m2/repository/com/sun/activation/jakarta.activation/1.2
  .2/jakarta.activation-1.2.2.jar,lib/commons-io.jar=/Users/adrien/.m2/re
  pository/commons-io/commons-io/2.8.0/commons-io-2.8.0.jar,lib/jackson-d

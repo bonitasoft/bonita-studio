@@ -14,10 +14,10 @@
  */
 package org.bonitasoft.studio.application.ui.control.model;
 
-import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 
 public class OrganizationArtifact extends TenantArtifact {
 

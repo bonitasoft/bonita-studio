@@ -44,12 +44,12 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
 
     public BotDialog exportOrganization() {
         clickOnContextualMenu(getOrganizationFolderTreeItem(), "Export...");
-        return new BotDialog(bot, org.bonitasoft.studio.actors.i18n.Messages.exportOrganizationTitle);
+        return new BotDialog(bot, org.bonitasoft.studio.identity.i18n.Messages.exportOrganizationTitle);
     }
 
     public BotDialog exportOrganization(String organization) {
         clickOnContextualMenu(getOrganizationTreeItem(organization), "Export...");
-        return new BotDialog(bot, org.bonitasoft.studio.actors.i18n.Messages.exportOrganizationTitle);
+        return new BotDialog(bot, org.bonitasoft.studio.identity.i18n.Messages.exportOrganizationTitle);
     }
 
     public BotManageOrganizationWizard openOrganization(String organization) {
@@ -69,10 +69,10 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
     public void deployOrganization(String organization, String user) {
         SWTBotTreeItem organizationTreeItem = getOrganizationFolderTreeItem();
         clickOnContextualMenu(getTreeItem(organizationTreeItem, getDisplayName(organization)), "Deploy");
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.actors.i18n.Messages.deployOrganizationTitle));
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.identity.i18n.Messages.deployOrganizationTitle));
         bot.text().setText(user);
         bot.button("Deploy").click();
-        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.actors.i18n.Messages.deployInformationTitle));
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.identity.i18n.Messages.deployInformationTitle));
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));

@@ -16,11 +16,11 @@ package org.bonitasoft.studio.tests.actors;
 
 import java.io.File;
 
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 
 import junit.framework.TestCase;
 

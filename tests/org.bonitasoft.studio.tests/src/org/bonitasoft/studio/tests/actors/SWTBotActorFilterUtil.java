@@ -16,7 +16,7 @@ package org.bonitasoft.studio.tests.actors;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.MenuItem;

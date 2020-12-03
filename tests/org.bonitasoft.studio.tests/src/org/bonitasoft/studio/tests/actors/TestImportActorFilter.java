@@ -20,10 +20,6 @@ package org.bonitasoft.studio.tests.actors;
 import java.io.File;
 import java.net.URL;
 
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
-import org.bonitasoft.studio.actors.repository.ActorFilterSourceRepositoryStore;
-import org.bonitasoft.studio.actors.repository.ImportActorFilterArchiveOperation;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
@@ -32,6 +28,10 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ImportActorFilterArchiveOperation;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 

@@ -18,8 +18,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.Component;
@@ -29,6 +27,8 @@ import org.bonitasoft.studio.connector.model.definition.Password;
 import org.bonitasoft.studio.connector.model.definition.RadioGroup;
 import org.bonitasoft.studio.connector.model.definition.Select;
 import org.bonitasoft.studio.connector.model.definition.Text;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;

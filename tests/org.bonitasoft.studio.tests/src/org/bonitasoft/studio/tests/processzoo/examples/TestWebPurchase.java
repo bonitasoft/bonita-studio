@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.tests.processzoo.examples;
 
-import static org.bonitasoft.studio.actors.i18n.Messages.selectActorTitle;
-import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
+import static org.bonitasoft.studio.identity.i18n.Messages.selectActorTitle;
+import static org.bonitasoft.studio.identity.i18n.Messages.useTaskActors;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;

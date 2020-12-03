@@ -25,13 +25,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.bonitasoft.studio.actors.model.organization.Membership;
-import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.model.organization.User;
-import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.actors.validator.OrganizationValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.User;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.identity.organization.validator.OrganizationValidator;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Test;
 

@@ -562,13 +562,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.actors"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.configuration"
          download-size="0"
          install-size="0"
@@ -1011,6 +1004,13 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.identity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

@@ -42,13 +42,13 @@ public class BotDeployDialog extends BotDialog {
     }
 
     public BotDeployDialog setDefaultUser(String username) {
-        bot.textWithLabelInGroup(org.bonitasoft.studio.actors.i18n.Messages.defaultUser, Messages.deployOptions)
+        bot.textWithLabelInGroup(org.bonitasoft.studio.identity.i18n.Messages.defaultUser, Messages.deployOptions)
                 .setText(username);
         return this;
     }
 
     public boolean isDefaultUserEnabled() {
-        return bot.textWithLabelInGroup(org.bonitasoft.studio.actors.i18n.Messages.defaultUser, Messages.deployOptions)
+        return bot.textWithLabelInGroup(org.bonitasoft.studio.identity.i18n.Messages.defaultUser, Messages.deployOptions)
                 .isEnabled();
     }
 

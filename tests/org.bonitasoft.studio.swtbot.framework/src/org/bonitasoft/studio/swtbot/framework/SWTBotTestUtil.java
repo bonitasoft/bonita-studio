@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.swtbot.framework;
 
-import static org.bonitasoft.studio.actors.i18n.Messages.selectActor;
-import static org.bonitasoft.studio.actors.i18n.Messages.setAsProcessInitiator;
-import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpression;
 import static org.bonitasoft.studio.expression.editor.i18n.Messages.returnType;
+import static org.bonitasoft.studio.identity.i18n.Messages.selectActor;
+import static org.bonitasoft.studio.identity.i18n.Messages.setAsProcessInitiator;
+import static org.bonitasoft.studio.identity.i18n.Messages.useTaskActors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -772,7 +772,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         bot.viewById(VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         selectTabbedPropertyView(bot, "Actors");
         if (bot.button(setAsProcessInitiator).isEnabled()) {
-            final int actorIdx = bot.table().indexOf(actor, org.bonitasoft.studio.actors.i18n.Messages.name);
+            final int actorIdx = bot.table().indexOf(actor, org.bonitasoft.studio.identity.i18n.Messages.name);
             Assert.assertTrue("Error: no actor " + actor + " available", actorIdx != -1);
             bot.table().getTableItem(actorIdx).select();
             bot.button(setAsProcessInitiator).click();
