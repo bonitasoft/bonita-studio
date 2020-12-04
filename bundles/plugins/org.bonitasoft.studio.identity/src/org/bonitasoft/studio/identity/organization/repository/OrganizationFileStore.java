@@ -123,16 +123,16 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
             emfResource.getContents().clear();
             final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
             Organization organization = (Organization) EcoreUtil.copy((EObject) content);
-            if(organization.getUsers() == null) {
+            if (organization.getUsers() == null) {
                 organization.setUsers(OrganizationFactory.eINSTANCE.createUsers());
             }
-            if(organization.getGroups() == null) {
+            if (organization.getGroups() == null) {
                 organization.setGroups(OrganizationFactory.eINSTANCE.createGroups());
             }
-            if(organization.getRoles() == null) {
+            if (organization.getRoles() == null) {
                 organization.setRoles(OrganizationFactory.eINSTANCE.createRoles());
             }
-            if(organization.getMemberships() == null) {
+            if (organization.getMemberships() == null) {
                 organization.setMemberships(OrganizationFactory.eINSTANCE.createMemberships());
             }
             root.setOrganization(organization);
@@ -228,8 +228,8 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
                 return false;
             }
         } catch (ReadFileStoreException e) {
-          BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-          return false;
+            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
+            return false;
         }
         return true;
     }
@@ -303,7 +303,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         try {
             organization = getContent();
         } catch (ReadFileStoreException e1) {
-           return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID, e1.getMessage());
+            return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID, e1.getMessage());
         }
         PublishOrganizationOperation operation = Objects.equals(organization.getName(), activeOrganization)
                 ? new UpdateOrganizationOperation(organization)

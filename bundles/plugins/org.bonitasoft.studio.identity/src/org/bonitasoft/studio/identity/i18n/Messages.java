@@ -279,5 +279,8 @@ public class Messages extends NLS {
     public static String showPassword;
     public static String noOrganizationFoundMsg;
     public static String noOrganizationFoundTitle;
+    public static String groups;
+    public static String roles;
+    public static String users;
 
 }

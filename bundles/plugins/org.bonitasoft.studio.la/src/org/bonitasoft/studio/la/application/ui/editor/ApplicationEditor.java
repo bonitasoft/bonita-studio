@@ -43,27 +43,30 @@ public class ApplicationEditor extends AbstractEditor<ApplicationNodeContainer> 
     protected final ApplicationNodeContainerConverter applicationNodeContainerConverter = RepositoryManager.getInstance()
             .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
 
+    protected ApplicationFormPage applicationFormPage;
+
     @Override
     protected void initVariablesAndListeners() {
         final IDocument document = fSourceEditor.getDocumentProvider().getDocument(getEditorInput());
         try {
             workingCopy = applicationNodeContainerConverter.unmarshallFromXML(document.get().getBytes());
-            formPage.init(workingCopy, document);
+            applicationFormPage.init(workingCopy, document);
         } catch (JAXBException | IOException | SAXException e) {
             workingCopy = new ApplicationNodeContainer();
-            formPage.init(workingCopy, document);
-            formPage.setErrorState(true);
+            applicationFormPage.init(workingCopy, document);
+            applicationFormPage.setErrorState(true);
             setActivePage(0);
             setActiveEditor(fSourceEditor);
         }
     }
 
     @Override
-    protected void createFormPage() {
-        formPage = new ApplicationFormPage("Editor",
+    protected void createFormPages() {
+        applicationFormPage = new ApplicationFormPage("Editor",
                 org.bonitasoft.studio.ui.i18n.Messages.editor,
                 applicationNodeContainerConverter,
                 getContext());
+        formPages.add(applicationFormPage);
     }
 
     @Override
@@ -71,8 +74,8 @@ public class ApplicationEditor extends AbstractEditor<ApplicationNodeContainer> 
         try {
             return Optional.of(applicationNodeContainerConverter.unmarshallFromXML(xml));
         } catch (final UnmarshalException unmarshalException) {
-            formPage.setErrorState(true);
-            formPage.loadErrorPage();
+            applicationFormPage.setErrorState(true);
+            applicationFormPage.loadErrorPage();
         } catch (JAXBException | IOException | SAXException e) {
             throw new RuntimeException("Fail to update the applicationNodeContainer", e);
         }
@@ -87,8 +90,8 @@ public class ApplicationEditor extends AbstractEditor<ApplicationNodeContainer> 
 
     @Override
     protected void pageChange(int newPageIndex) {
-        if (newPageIndex != formPage.getIndex()) {
-            ((ApplicationFormPage) formPage).saveExpendedApplications();
+        if (newPageIndex != applicationFormPage.getIndex()) {
+            applicationFormPage.saveExpendedApplications();
         }
         super.pageChange(newPageIndex);
     }
@@ -118,8 +121,8 @@ public class ApplicationEditor extends AbstractEditor<ApplicationNodeContainer> 
 
     @Override
     public void dispose() {
-        if (formPage != null) {
-            ((ApplicationFormPage) formPage).disposeProviders();
+        if (applicationFormPage != null) {
+            applicationFormPage.disposeProviders();
         }
         super.dispose();
     }

@@ -51,6 +51,13 @@
                   icon="icons/organization_import.png"
                   style="push">
             </command>
+            <separator
+                  name="temporarySeparator">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.identity.organization.editor.command"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -599,6 +606,42 @@
             commandId="org.bonitasoft.studio.actors.newFilterImpl"
             icon="icons/actor_filter-implem-new.png">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.identity.organization.editor.OrganizationPerspectiveFactory"
+            id="org.bonitasoft.studio.identity.organization.perspective"
+            name="%organizationPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bonitasoft.studio.identity.organization.editor.OrganizationEditor"
+            default="false"
+            extensions="organization"
+            icon="icons/organization.png"
+            id="org.bonitasoft.studio.identity.organization.editor"
+            name="%organizationEditor">
+         <contentTypeBinding
+               contentTypeId="org.bonitasoft.studio.identity.organization.contentType">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            file-extensions="organization"
+            id="org.bonitasoft.studio.identity.organization.contentType"
+            name="Organization"
+            priority="normal">
+         <describer
+               class="org.bonitasoft.studio.identity.organization.editor.OrganizationContentDescriber">
+         </describer>
+      </content-type>
    </extension>
 
 </plugin>
