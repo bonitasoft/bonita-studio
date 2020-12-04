@@ -14,15 +14,13 @@
  */
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.ui.i18n.Messages;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.SWT;
@@ -35,7 +33,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.WorkbenchWindow;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.DocumentProviderRegistry;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IElementStateListener;
@@ -43,11 +40,12 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public abstract class AbstractEditor<T> extends FormEditor implements IElementStateListener {
 
-    protected AbstractFormPage<T> formPage;
+    protected List<AbstractFormPage<T>> formPages = new ArrayList<>();
     protected StructuredTextEditor fSourceEditor;
     protected T workingCopy;
     private IEclipseContext context;
     private Composite pageContainer;
+    private int sourceEditorIndex;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -77,15 +75,18 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
 
     @Override
     protected void addPages() {
-        createFormPage();
-        formPage.initialize(this);
-        formPage.setActive(true);
-
+        createFormPages();
         try {
-            setPageText(addPage(formPage), Messages.editor);
-            setPageText(addPage(createSourceEditor(), getEditorInput()), Messages.source);
+            for (AbstractFormPage fPage : formPages) {
+                fPage.initialize(this);
+                int index = addPage(fPage);
+                setPageText(index, fPage.getPartName());
+            }
+            formPages.stream().findFirst().ifPresent(fpage -> fpage.setActive(true));
+            sourceEditorIndex = addPage(createSourceEditor(), getEditorInput());
+            setPageText(sourceEditorIndex, Messages.source);
             initVariablesAndListeners();
-            addPageChangedListener(e -> formPage.reflow());
+            //  addPageChangedListener(e -> formPage.reflow()); // TODO -> a mon avis osef
             customizeTabItem();
         } catch (final PartInitException e) {
             throw new RuntimeException("fail to create editor", e);
@@ -94,9 +95,10 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
 
     @Override
     protected void pageChange(int newPageIndex) {
-        if (newPageIndex == formPage.getIndex()) {
-            formPage.update();
+        if (Objects.equals(getCurrentPage(), sourceEditorIndex)) {
+            formPages.stream().findFirst().ifPresent(AbstractFormPage::update); // update shared working copy
         }
+        // TODO else ?
         super.pageChange(newPageIndex);
     }
 
@@ -118,7 +120,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        formPage.doSave(monitor);
+        formPages.forEach(fPage -> fPage.doSave(monitor));
         fSourceEditor.doSave(monitor);
     }
 
@@ -129,7 +131,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
 
     @Override
     public boolean isDirty() {
-        return fSourceEditor.isDirty() || formPage.isDirty();
+        return fSourceEditor.isDirty() || formPages.stream().anyMatch(AbstractFormPage::isDirty);
     }
 
     @Override
@@ -140,38 +142,41 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
     @Override
     public void elementContentReplaced(Object element) {
         initVariablesAndListeners();
-        formPage.recreateForm();
-        formPage.reflow();
+        formPages.forEach(fPage -> {
+            fPage.recreateForm();
+            fPage.reflow();
+        });
     }
 
     @Override
     public void elementMoved(Object originalElement, Object movedElement) {
-        if(originalElement.equals(getEditorInput())) {
+        if (originalElement.equals(getEditorInput())) {
             updateEditorInput((IEditorInput) movedElement);
         }
     }
 
     @Override
-    public void elementContentAboutToBeReplaced(Object element) {  }
+    public void elementContentAboutToBeReplaced(Object element) {
+    }
 
     @Override
-    public void elementDeleted(Object element) {  }
+    public void elementDeleted(Object element) {
+    }
 
     @Override
-    public void elementDirtyStateChanged(Object element, boolean isDirty) {  }
+    public void elementDirtyStateChanged(Object element, boolean isDirty) {
+    }
 
     public void updateEditorInput(IEditorInput input) {
         Display.getDefault().asyncExec(() -> {
             fSourceEditor.setInput(input);
             setInputWithNotify(input);
             setPartName(input.getName());
-            initVariablesAndListeners();
-            formPage.recreateForm();
-            formPage.reflow();
+            elementContentReplaced(input);
         });
     }
 
-    protected abstract void createFormPage();
+    protected abstract void createFormPages();
 
     protected abstract void initVariablesAndListeners();
 
@@ -189,8 +194,10 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
         return fSourceEditor;
     }
 
-    public AbstractFormPage<T> getFormPage() {
-        return formPage;
+    public AbstractFormPage<T> getFormPage(String partName) {
+        return formPages.stream()
+                .filter(fPage -> Objects.equals(fPage.getPartName(), partName))
+                .findFirst().orElse(null);
     }
 
     public IEclipseContext getContext() {
