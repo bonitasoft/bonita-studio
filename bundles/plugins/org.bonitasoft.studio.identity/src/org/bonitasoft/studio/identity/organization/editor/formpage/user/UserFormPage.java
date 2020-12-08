@@ -16,7 +16,9 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.AbstractFormPart;
 
 public class UserFormPage extends AbstractOrganizationFormPage {
 
@@ -33,8 +35,32 @@ public class UserFormPage extends AbstractOrganizationFormPage {
 
     @Override
     protected void createForm() {
+        super.createForm();
         userFormPart = new UserFormPart(scrolledForm.getBody(), this);
         getManagedForm().addPart(userFormPart);
+    }
+
+    @Override
+    public AbstractFormPart getFormPart() {
+        return userFormPart;
+    }
+
+    @Override
+    public void documentAboutToBeChanged(DocumentEvent event) {
+    }
+
+    @Override
+    public void documentChanged(DocumentEvent event) {
+        if (!isActive()) {
+            makeStale();
+        }
+    }
+
+    @Override
+    public void makeStale() {
+        if (userFormPart != null) {
+            userFormPart.markStale();
+        }
     }
 
 }

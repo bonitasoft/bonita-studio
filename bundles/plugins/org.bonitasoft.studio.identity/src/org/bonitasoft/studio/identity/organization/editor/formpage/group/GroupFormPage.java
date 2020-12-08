@@ -15,12 +15,16 @@
 package org.bonitasoft.studio.identity.organization.editor.formpage.group;
 
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.AbstractFormPart;
 
 public class GroupFormPage extends AbstractOrganizationFormPage {
 
     private GroupFormPart groupFormPart;
+    private OrganizationXMLProcessor xmlProcessor;
 
     public GroupFormPage(String id, String title, IEclipseContext context) {
         super(id, title, context);
@@ -33,8 +37,32 @@ public class GroupFormPage extends AbstractOrganizationFormPage {
 
     @Override
     protected void createForm() {
+        super.createForm();
         groupFormPart = new GroupFormPart(scrolledForm.getBody(), this);
         getManagedForm().addPart(groupFormPart);
+    }
+
+    @Override
+    public AbstractFormPart getFormPart() {
+        return groupFormPart;
+    }
+
+    @Override
+    public void documentAboutToBeChanged(DocumentEvent event) {
+    }
+
+    @Override
+    public void documentChanged(DocumentEvent event) {
+        if (!isActive()) {
+            makeStale();
+        }
+    }
+
+    @Override
+    public void makeStale() {
+        if (groupFormPart != null) {
+            groupFormPart.markStale();
+        }
     }
 
 }

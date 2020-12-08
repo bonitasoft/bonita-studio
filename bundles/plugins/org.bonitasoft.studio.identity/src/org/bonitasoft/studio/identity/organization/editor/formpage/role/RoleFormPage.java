@@ -16,7 +16,9 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.role;
 
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.AbstractFormPart;
 
 public class RoleFormPage extends AbstractOrganizationFormPage {
 
@@ -33,8 +35,32 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
 
     @Override
     protected void createForm() {
+        super.createForm();
         roleFormPart = new RoleFormPart(scrolledForm.getBody(), this);
         getManagedForm().addPart(roleFormPart);
+    }
+
+    @Override
+    public AbstractFormPart getFormPart() {
+        return roleFormPart;
+    }
+
+    @Override
+    public void documentAboutToBeChanged(DocumentEvent event) {
+    }
+
+    @Override
+    public void documentChanged(DocumentEvent event) {
+        if (!isActive()) {
+            makeStale();
+        }
+    }
+
+    @Override
+    public void makeStale() {
+        if (roleFormPart != null) {
+            roleFormPart.markStale();
+        }
     }
 
 }

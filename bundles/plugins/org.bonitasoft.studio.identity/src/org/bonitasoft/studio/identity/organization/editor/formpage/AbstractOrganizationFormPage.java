@@ -14,14 +14,76 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage;
 
-import org.bonitasoft.studio.identity.organization.model.organization.Organization;
-import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
-import org.eclipse.e4.core.contexts.IEclipseContext;
+import java.util.Optional;
 
-public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Organization> {
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.ui.forms.AbstractFormPart;
+
+public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Organization> implements IDocumentListener {
+
+    protected IObservableValue<Organization> workingCopyObservable;
+    private OrganizationXMLProcessor xmlProcessor;
 
     public AbstractOrganizationFormPage(String id, String title, IEclipseContext context) {
         super(id, title, context);
     }
+
+    public void init(IObservableValue<Organization> workingCopyObservable, IDocument document,
+            OrganizationXMLProcessor xmlProcessor) {
+        this.xmlProcessor = xmlProcessor;
+        super.init(workingCopyObservable.getValue(), document);
+        this.workingCopyObservable = workingCopyObservable;
+    }
+
+    @Override
+    protected void createForm() {
+        getDocument().addDocumentListener(this);
+    }
+
+    public IObservableValue<Organization> observeWorkingCopy() {
+        return workingCopyObservable;
+    }
+
+    public void updateWorkingCopy() {
+        Optional<Organization> orga = xmlToModel(getDocument().get().getBytes());
+        if (orga.isPresent()) {
+            if (isErrorState()) {
+                setErrorState(false);
+            }
+            workingCopyObservable.getRealm().exec(() -> workingCopyObservable.setValue(orga.get()));
+        } else {
+            setErrorState(true);
+        }
+    }
+
+    public abstract AbstractFormPart getFormPart();
+
+    public void makeDirty() {
+        AbstractFormPart formPart = getFormPart();
+        if (formPart != null && !formPart.isDirty()) {
+            formPart.markDirty();
+            getManagedForm().dirtyStateChanged();
+        }
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        if (isDirty()) {
+            super.doSave(monitor);
+        }
+    }
+
+    public OrganizationXMLProcessor getXmlProcessor() {
+        return xmlProcessor;
+    }
+
+    public abstract void makeStale();
 
 }

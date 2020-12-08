@@ -14,15 +14,104 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage.group;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+
+import java.io.IOException;
+
+import org.bonitasoft.studio.identity.organization.editor.control.group.GroupEditionControl;
+import org.bonitasoft.studio.identity.organization.editor.control.group.GroupList;
+import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
 public class GroupFormPart extends AbstractFormPart {
 
+    private DataBindingContext ctx = new DataBindingContext();
     private GroupFormPage formPage;
+    private GroupList groupList;
+    private GroupEditionControl groupEditionControl;
 
     public GroupFormPart(Composite parent, GroupFormPage formPage) {
         this.formPage = formPage;
+
+        parent.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, LayoutConstants.getSpacing().y).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        createGroupList(parent);
+        createGroupDetailsControl(parent);
+    }
+
+    /**
+     * Has to be done only once for all form part -> only defined in this form part.
+     */
+    @Override
+    public void commit(boolean onSave) {
+        Organization workingCopy = formPage.observeWorkingCopy().getValue();
+        JobSafeStructuredDocument document = (JobSafeStructuredDocument) formPage.getDocument();
+        DocumentRewriteSession session = null;
+        try {
+            session = document.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
+            document.set(formPage.getXmlProcessor().saveToString(workingCopy.eResource(), null));
+        } catch (IOException e) {
+            throw new RuntimeException("Fail to update the document", e);
+        } finally {
+            if (session != null) {
+                document.stopRewriteSession(session);
+            }
+        }
+        super.commit(onSave);
+        if (onSave) {
+            getManagedForm().dirtyStateChanged();
+        }
+    }
+
+    private void createGroupDetailsControl(Composite parent) {
+        IObservableValue<Group> selectedGroupObservable = groupList.observeGroupSelected();
+        groupEditionControl = new GroupEditionControl(parent, formPage, selectedGroupObservable, ctx);
+
+        ctx.bindValue(groupList.observeGroupSelected(), groupEditionControl.observeSectionTitle(),
+                updateValueStrategy().withConverter(ConverterBuilder.<Group, String> newConverter()
+                        .fromType(Group.class)
+                        .toType(String.class)
+                        .withConvertFunction(grp -> grp == null ? "" : grp.getDisplayName())
+                        .create()).create(),
+                neverUpdateValueStrategy().create());
+        //
+        //        ctx.bindValue(groupEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
+        //                .withSupplier(() -> formPage.observeBusinessObjectSelected().getValue() != null)
+        //                .build());
+    }
+
+    private void createGroupList(Composite parent) {
+        Composite groupListComposite = formPage.getToolkit().createComposite(parent);
+        groupListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
+
+        groupList = new GroupList(groupListComposite, formPage, ctx);
+        IObservableValue groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                formPage.observeWorkingCopy(),
+                OrganizationPackage.Literals.ORGANIZATION__GROUPS);
+        IObservableList groupListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
+                OrganizationPackage.Literals.GROUPS__GROUP);
+        ctx.bindList(groupList.observeInput(), groupListObservable);
+        groupList.expandAll();
     }
 
 }

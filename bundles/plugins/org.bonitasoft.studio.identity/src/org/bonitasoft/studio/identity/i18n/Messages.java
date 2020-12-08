@@ -87,7 +87,7 @@ public class Messages extends NLS {
     public static String deleteGroupMsg;
     public static String deleteGroupTitle;
     public static String displayName;
-    public static String displayGroupsPageTitle;
+    public static String organizationGroups;
     public static String displayGroupsPageDesc;
     public static String groupNameAlreadyExistsForLevel;
     public static String userNameAlreadyExists;
@@ -282,5 +282,7 @@ public class Messages extends NLS {
     public static String groups;
     public static String roles;
     public static String users;
+    public static String expandAll;
+    public static String collapseAll;
 
 }
