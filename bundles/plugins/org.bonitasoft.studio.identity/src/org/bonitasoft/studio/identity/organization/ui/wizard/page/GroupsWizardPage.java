@@ -126,7 +126,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage implements 
 
     public GroupsWizardPage() {
         super(GroupsWizardPage.class.getName());
-        setTitle(Messages.displayGroupsPageTitle);
+        setTitle(Messages.organizationGroups);
         setDescription(Messages.displayGroupsPageDesc);
     }
 

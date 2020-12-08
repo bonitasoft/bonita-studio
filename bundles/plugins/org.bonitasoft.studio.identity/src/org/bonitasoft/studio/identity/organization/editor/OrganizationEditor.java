@@ -34,6 +34,8 @@ import org.bonitasoft.studio.identity.organization.model.organization.util.Organ
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractEditor;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.text.IDocument;
 
 public class OrganizationEditor extends AbstractEditor<Organization> {
@@ -43,6 +45,7 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
     private GroupFormPage groupFormPage;
     private RoleFormPage roleFormPage;
     private UserFormPage userFormPage;
+    private IObservableValue<Organization> workingCopyObservable = new WritableValue<>();
 
     @Override
     protected void createFormPages() {
@@ -60,16 +63,29 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
         repositoryAccessor.init();
         xmlProcessor = new OrganizationXMLProcessor();
         IDocument document = fSourceEditor.getDocumentProvider().getDocument(getEditorInput());
+        groupFormPage.init(workingCopyObservable, document, xmlProcessor);
+        roleFormPage.init(workingCopyObservable, document, xmlProcessor);
+        userFormPage.init(workingCopyObservable, document, xmlProcessor);
+        DirtyStateAdapter dirtyStateAdapter = new DirtyStateAdapter(groupFormPage, roleFormPage, userFormPage);
+        workingCopyObservable.addValueChangeListener(e -> {
+            dirtyStateAdapter.setIgnore(true);
+            try {
+                Organization oldOrga = e.diff.getOldValue();
+                if (oldOrga != null) {
+                    oldOrga.eAdapters().remove(dirtyStateAdapter);
+                }
+                Organization newOrga = e.diff.getNewValue();
+                if (newOrga != null) {
+                    newOrga.eAdapters().add(dirtyStateAdapter);
+                }
+            } finally {
+                dirtyStateAdapter.setIgnore(false);
+            }
+        });
         try {
-            workingCopy = getFileStore(getEditorInput().getName()).getContent();
-            groupFormPage.init(workingCopy, document);
-            roleFormPage.init(workingCopy, document);
-            userFormPage.init(workingCopy, document);
+            workingCopyObservable.setValue(getFileStore(getEditorInput().getName()).getContent());
         } catch (ReadFileStoreException e) {
-            workingCopy = OrganizationFactory.eINSTANCE.createOrganization();
-            groupFormPage.init(workingCopy, document);
-            roleFormPage.init(workingCopy, document);
-            userFormPage.init(workingCopy, document);
+            workingCopyObservable.setValue(OrganizationFactory.eINSTANCE.createOrganization());
             groupFormPage.setErrorState(true);
             roleFormPage.setErrorState(true);
             userFormPage.setErrorState(true);
@@ -100,7 +116,12 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     @Override
     protected void updateWorkingCopy(Organization newModel) {
-        // TODO Auto-generated method stub
+        workingCopyObservable.getRealm().exec(() -> workingCopyObservable.setValue(newModel));
+    }
+
+    @Override
+    public Organization getWorkingCopy() {
+        return workingCopyObservable.getValue();
     }
 
 }

@@ -266,9 +266,8 @@ public class TextWidget extends EditableControlWidget {
 
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);
-        configureBackground(text);
-
         toolkit.ifPresent(toolkit -> toolkit.adapt(text, true, true));
+        configureBackground(text);
 
         enableStrategy.ifPresent(strategy -> ctx.orElse(new DataBindingContext())
                 .bindValue(WidgetProperties.editable().observe(text), strategy));

@@ -218,7 +218,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
         return null; // TODO: essayer de le recup via le context s'il existe! 
     }
 
-    private Optional<T> xmlToModel(byte[] xml) {
+    protected Optional<T> xmlToModel(byte[] xml) {
         if (getEditor() instanceof AbstractEditor) {
             return ((AbstractEditor) getEditor()).xmlToModel(xml);
         }
