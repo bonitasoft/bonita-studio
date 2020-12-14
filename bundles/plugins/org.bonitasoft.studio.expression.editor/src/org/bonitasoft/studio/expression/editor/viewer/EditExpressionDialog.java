@@ -302,7 +302,7 @@ public class EditExpressionDialog extends TrayDialog {
             });
             if (item != null) {
                 item.setControl(contentComposite);
-                contentComposite.layout(true);
+                contentComposite.getDisplay().asyncExec(() -> contentComposite.layout(true, true) );
             }
             DialogSupport.create(this, dataBindingContext);
         }

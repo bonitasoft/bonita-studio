@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Maxence Raoux
@@ -74,8 +75,8 @@ public class SForceCreateObjectComponentSwitch extends
 					.addSelectionChangedListener(new ISelectionChangedListener() {
 						@Override
 						public void selectionChanged(SelectionChangedEvent event) {
-							final String sObjectName = nameExpViewer
-									.getTextControl().getText();
+							final String sObjectName = ((Text) nameExpViewer
+									.getTextControl()).getText();
 							removeAllRow(expColViewer.getViewer());
 							autoCompleteToField(sObjectName, expColViewer);
 							List<String> mandotoryFields = sfTool
@@ -125,8 +126,8 @@ public class SForceCreateObjectComponentSwitch extends
 					new ISelectionChangedListener() {
 						@Override
 						public void selectionChanged(SelectionChangedEvent event) {
-							autoCompleteToPickList(nameExpViewer
-									.getTextControl().getText(), expColViewer);
+							autoCompleteToPickList(((Text) nameExpViewer
+									.getTextControl()).getText(), expColViewer);
 						}
 					});
 			return expColViewer;

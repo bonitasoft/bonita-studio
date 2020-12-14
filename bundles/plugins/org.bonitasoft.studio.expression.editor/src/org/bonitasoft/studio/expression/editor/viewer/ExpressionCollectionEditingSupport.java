@@ -17,6 +17,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -46,18 +47,14 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 
     protected EObject context;
     protected final int colIndex;
-    protected final List<ViewerFilter> filters;
+    protected final List<ViewerFilter> filters = new ArrayList<>();
     protected EditingDomain editingDomain;
     private IExpressionNatureProvider expressionNatureProvider;
     private final SelectionListener removeRowListener;
     private IExpressionProposalLabelProvider expressionProposalLabelProvider;
     private Object input;
+    private ExpressionViewerCellEditor editor;
 
-    /**
-     * @param viewer
-     * @param textOrDataFactory
-     * @param dontUseFormField
-     */
     public ExpressionCollectionEditingSupport(final ColumnViewer viewer, final int colIndex,
             final SelectionListener removeRowListener) {
         this(viewer, colIndex, null, removeRowListener);
@@ -67,7 +64,6 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
             final int colIndex, final EditingDomain editingDomain, final SelectionListener removeRowListener) {
         super(viewer);
         this.colIndex = colIndex;
-        filters = new ArrayList<ViewerFilter>();
         this.editingDomain = editingDomain;
         this.removeRowListener = removeRowListener;
     }
@@ -93,29 +89,13 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        final ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
-                getViewer(), (Composite) getViewer().getControl(),
-                editingDomain, removeRowListener);
-        if (expressionNatureProvider != null) {
-            editor.setExpressionNatureProvider(expressionNatureProvider);
-        }
-        if (expressionProposalLabelProvider != null) {
-            editor.setExpressionProposalLableProvider(expressionProposalLabelProvider);
-        }
-        for (final ViewerFilter filter : filters) {
-            editor.addFilter(filter);
-        }
-        if (context != null) {
-            editor.setContext(context);
-        }
-        if (input != null) {
-            editor.setInput(input);
+        if (editor == null) {
+            editor = createEditor();
         }
         if (element instanceof Expression) {
             editor.setSelection(new StructuredSelection(element));
         }
         if (element instanceof ListExpression) {
-
             final List<Expression> list = ((ListExpression) element).getExpressions();
             for (int i = 0; i <= colIndex; i++) {
                 if (i < list.size()) {
@@ -161,6 +141,29 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
         return editor;
     }
 
+    private ExpressionViewerCellEditor createEditor() {
+        final ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
+                getViewer(), (Composite) getViewer().getControl(),
+                editingDomain, removeRowListener, filters.stream()
+                        .anyMatch(f -> f.select(null, null, ExpressionHelper.createGroovyScriptExpression("", ""))));
+        if (expressionNatureProvider != null) {
+            editor.setExpressionNatureProvider(expressionNatureProvider);
+        }
+        if (expressionProposalLabelProvider != null) {
+            editor.setExpressionProposalLableProvider(expressionProposalLabelProvider);
+        }
+        for (final ViewerFilter filter : filters) {
+            editor.addFilter(filter);
+        }
+        if (context != null) {
+            editor.setContext(context);
+        }
+        if (input != null) {
+            editor.setInput(input);
+        }
+        return editor;
+    }
+
     @Override
     protected boolean canEdit(final Object element) {
         return true;
@@ -193,7 +196,8 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
         this.expressionNatureProvider = expressionNatureProvider;
     }
 
-    public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+    public void setExpressionProposalLableProvider(
+            final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
         this.expressionProposalLabelProvider = expressionProposalLabelProvider;
     }
 

@@ -173,20 +173,20 @@ public class TestThrowCatchMessage implements SWTBotConstants {
         bot.button(Messages.autoFillMessageContent).click();
         bot.waitUntil(Conditions.widgetIsEnabled(bot
                 .textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT)), 5000);
-        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0)
+        assertEquals(bot.labelWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0)
                 .getText(), messageContent1);
-        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2)
+        assertEquals(bot.labelWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 1)
                 .getText(), messageContent2);
-        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 4)
+        assertEquals(bot.labelWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2)
                 .getText(), messageContent3);
         // index for expression viewer start at index 1 because of the
         // description in the form widget section
         assertEquals(messageContent1,
-                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 1).getText());
+                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText());
         assertEquals(messageContent2,
-                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 3).getText());
+                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 1).getText());
         assertEquals(messageContent3,
-                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 5).getText());
+                bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2).getText());
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL)

@@ -46,6 +46,8 @@ public class ReferencedExpressionEditingSupport extends EditingSupport {
 
     private IExpressionProposalLabelProvider expressionProposalLabelProvider;
 
+    private ExpressionViewerCellEditor editor;
+
     public ReferencedExpressionEditingSupport(final ColumnViewer viewer) {
         super(viewer);
     }
@@ -76,11 +78,26 @@ public class ReferencedExpressionEditingSupport extends EditingSupport {
 
     @Override
     protected CellEditor getCellEditor(final Object element) {
+        if (editor == null) {
+            editor = createEditor();
+        }
+        if (element instanceof Expression) {
+            final Object value = getValue(element);
+            if (value != null) {
+                editor.setSelection(new StructuredSelection(value));
+            }
+        }
+
+        return editor;
+    }
+
+    private ExpressionViewerCellEditor createEditor() {
         final ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
                 getViewer(),
                 (Composite) getViewer().getControl(),
                 editingDomain,
-                null);
+                null,
+                true);
         if (expressionNatureProvider != null) {
             editor.setExpressionNatureProvider(expressionNatureProvider);
         }
@@ -93,13 +110,6 @@ public class ReferencedExpressionEditingSupport extends EditingSupport {
         if (context != null) {
             editor.setInput(context);
         }
-        if (element instanceof Expression) {
-            final Object value = getValue(element);
-            if (value != null) {
-                editor.setSelection(new StructuredSelection(value));
-            }
-        }
-
         return editor;
     }
 
@@ -131,7 +141,8 @@ public class ReferencedExpressionEditingSupport extends EditingSupport {
         this.expressionNatureProvider = expressionNatureProvider;
     }
 
-    public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+    public void setExpressionProposalLableProvider(
+            final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
         this.expressionProposalLabelProvider = expressionProposalLabelProvider;
     }
 

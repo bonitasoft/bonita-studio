@@ -58,13 +58,13 @@ public class ScriptExpressionProvider implements IExpressionProvider {
      */
     @Override
     public Image getIcon(final Expression expression) {
-        final String languageId = expression.getInterpreter();
-        final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
-        if (expression != null && provider != null) {
-            return provider.getIcon();
-        } else {
-            return null;
+        if (expression != null) {
+            final String languageId = expression.getInterpreter();
+            final IScriptLanguageProvider provider = ScriptLanguageService.getInstance()
+                    .getScriptLanguageProvider(languageId);
+            return provider != null ? provider.getIcon() : null;
         }
+        return null;
     }
 
     /*

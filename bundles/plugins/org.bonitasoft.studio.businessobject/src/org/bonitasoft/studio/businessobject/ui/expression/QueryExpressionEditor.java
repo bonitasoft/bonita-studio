@@ -65,6 +65,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
@@ -149,27 +150,24 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
             }
         });
-
-        final TableViewer parametersTableViewer = new TableViewer(composite,
-                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
-        parametersTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 80).create());
-        parametersTableViewer.getTable().setLinesVisible(true);
+        Table table = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL) ;
+        final TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(1, false));
+        tableLayout.addColumnData(new ColumnWeightData(1, false));
+        table.setLayout(tableLayout);
+        final TableViewer parametersTableViewer = new TableViewer(table);
+        table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 80).create());
+        parametersTableViewer.getTable().setLinesVisible(false);
         parametersTableViewer.getTable().setHeaderVisible(true);
         parametersTableViewer.setContentProvider(new ObservableListContentProvider());
-
+        
         queryParameterObserveDetailList = EMFObservables.observeDetailList(Realm.getDefault(),
                 observeQuerySingleSelection,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        final TableLayout tableLayout = new TableLayout();
-        tableLayout.addColumnData(new ColumnWeightData(1, true));
-        tableLayout.addColumnData(new ColumnWeightData(1, true));
-        parametersTableViewer.getTable().setLayout(tableLayout);
-
         createNameColumn(parametersTableViewer);
         createValueColumn(parametersTableViewer);
-
+        
         parametersTableViewer.setInput(queryParameterObserveDetailList);
     }
 
@@ -196,18 +194,19 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
                 .createColumnLabelProvider());
 
         editingSupport = new ReferencedExpressionEditingSupport(valueColumnViewer.getViewer());
-        editingSupport.setFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE,
+        editingSupport.setFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.CONTRACT_INPUT_TYPE }));
+                ExpressionConstants.CONTRACT_INPUT_TYPE));
         valueColumnViewer.setEditingSupport(editingSupport);
     }
 
     private void createQueryTextContent(final Composite composite, final EMFDataBindingContext ctx) {
         final Composite queryContentComposite = new Composite(composite, SWT.NONE);
         queryContentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-        queryContentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 2).create());
+        queryContentComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 2).create());
 
         final Label queryContentLabel = new Label(queryContentComposite, SWT.NONE);
         queryContentLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).span(2, 1).create());
@@ -337,7 +336,8 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
             }
             if (observeQuerySingleSelection.getValue() == null) {
                 if (!expressionModel.getBusinessObjects().isEmpty()) {
-                    final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel.getBusinessObjects()
+                    final BusinessObjectExpressionQuery businessObjectExpressionQuery = expressionModel
+                            .getBusinessObjects()
                             .get(0);
                     observeBOSingleSelection.setValue(businessObjectExpressionQuery);
                     observeQuerySingleSelection.setValue(businessObjectExpressionQuery.getQueryExpressions().get(0));
@@ -366,7 +366,8 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
         dataBindingContext.bindValue(
                 EMFObservables.observeDetailValue(Realm.getDefault(), observeQuerySingleSelection,
                         ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED),
-                EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED), null,
+                EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED),
+                null,
                 new UpdateValueStrategy(
                         UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(

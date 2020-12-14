@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Maxence Raoux
@@ -66,9 +67,9 @@ public class SForceRetrievesObjectsComponentSwitch extends
 					.addSelectionChangedListener(new ISelectionChangedListener() {
 						@Override
 						public void selectionChanged(SelectionChangedEvent event) {
-							autoCompleteToField(nameExpViewer.getTextControl()
+							autoCompleteToField(((Text) nameExpViewer.getTextControl())
 									.getText(), expFieldColViewer);
-							autoCompleteToId(nameExpViewer.getTextControl()
+							autoCompleteToId(((Text) nameExpViewer.getTextControl())
 									.getText(), expIdColViewer);
 						}
 					});

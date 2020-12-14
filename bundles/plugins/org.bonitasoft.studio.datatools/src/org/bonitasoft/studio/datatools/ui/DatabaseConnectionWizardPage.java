@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 
 /**
@@ -178,15 +179,15 @@ public abstract class DatabaseConnectionWizardPage extends AbstractConnectorConf
             if(template != null){
                 final String driverClassName = template.getPropertyValueFromId(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
                 if(driverClassName != null && !driverClassName.isEmpty()){
-                    driverClassExpressionViewer.getTextControl().setText(driverClassName) ;
+                    ((Text) driverClassExpressionViewer.getTextControl()).setText(driverClassName) ;
                 }
                 final String url = template.getPropertyValueFromId(IJDBCDriverDefinitionConstants.URL_PROP_ID);
                 if(url != null && !url.isEmpty()){
-                    jdbcURLExpressionViewer.getTextControl().setText(url);
+                    ((Text) jdbcURLExpressionViewer.getTextControl()).setText(url);
                 }
                 final String user = template.getPropertyValueFromId(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
                 if(user != null && !user.isEmpty()){
-                    userExpressionViewer.getTextControl().setText(user) ;
+                    ((Text) userExpressionViewer.getTextControl()).setText(user) ;
                 }
             }
         }

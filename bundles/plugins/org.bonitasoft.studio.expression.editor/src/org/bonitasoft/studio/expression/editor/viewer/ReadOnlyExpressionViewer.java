@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -27,18 +25,14 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -49,7 +43,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     public ReadOnlyExpressionViewer(final Composite composite, final int style,
             final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference) {
-        super(composite, style, widgetFactory, editingDomain, expressionReference);
+        super(composite, style, widgetFactory, editingDomain, expressionReference, false);
     }
 
     @Override
@@ -57,17 +51,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             final TabbedPropertySheetWidgetFactory widgetFactory) {
         super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
         getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        getTextControl().setMessage(Messages.selectTarget);
-        final IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.expression.editor.caretDestroyer");
-        if (configurationElements.length == 1) {
-            try {
-                final FocusListener caretDestroyerFocusListener = (FocusListener) configurationElements[0].createExecutableExtension("class");
-                getTextControl().addFocusListener(caretDestroyerFocusListener);
-            } catch (final CoreException e1) {
-                BonitaStudioLog.error(e1);
-            }
-        }
+        setMessage(Messages.selectTarget);
     }
 
     @Override
@@ -75,15 +59,15 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
         super.manageNatureProviderAndAutocompletionProposal(input);
         setProposalsFiltering(false);
     }
+    
+    @Override
+    public Label getTextControl() {
+        return (Label) super.getTextControl();
+    }
 
     @Override
     protected void bindEditableText(final IObservableValue typeObservable) {
 
-    }
-
-    @Override
-    protected boolean shouldAddEditToolItem() {
-        return false;
     }
 
     /**

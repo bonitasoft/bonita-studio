@@ -65,7 +65,7 @@ public class SearchIndexesTest {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Operations");
         bot.button("Add").click();
         SWTBotTestUtil.selectExpressionProposal(bot, "index1", String.class.getName(), 0);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 1).setText("myNewValue");
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).setText("myNewValue");
         final MainProcess mainProcess = (MainProcess) ((IGraphicalEditPart) gmfEditor.mainEditPart().part())
                 .resolveSemanticElement();
         final List<AbstractProcess> processes = ModelHelper.getAllProcesses(mainProcess);

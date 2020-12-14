@@ -100,7 +100,7 @@ public class SapFonctionPageComponentSwitch extends PageComponentSwitch {
         .addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
-                final String selectedFunction = functionNameViewer.getTextControl().getText();
+                final String selectedFunction = ((org.eclipse.swt.widgets.Text) functionNameViewer.getTextControl()).getText();
                 if (sapTool.isFunction(selectedFunction)) {
                     sapTool.selectedFunction = selectedFunction;
                     final SapFunction function = sapTool.getFunction(selectedFunction);
@@ -135,7 +135,7 @@ public class SapFonctionPageComponentSwitch extends PageComponentSwitch {
         final String groupName = groupSelected.getContent();
         if (sapTool.isGroup(groupName)) {
             makeAutoCompletion(functionNameViewer, sapTool.getFonctionsNamesByGroupe(groupName));
-            functionNameViewer.getTextControl().setText("");
+            ((org.eclipse.swt.widgets.Text) functionNameViewer.getTextControl()).setText("");
             functionNameViewer.refresh();
         } else {
             makeAutoCompletion(functionNameViewer, sapTool.getFonctionsNames());
@@ -149,7 +149,7 @@ public class SapFonctionPageComponentSwitch extends PageComponentSwitch {
         .addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
-                final String repositoryName = repositoryViewer.getTextControl().getText();
+                final String repositoryName = ((org.eclipse.swt.widgets.Text) repositoryViewer.getTextControl()).getText();
                 sapTool.setDistanationName(repositoryName);
             }
         });

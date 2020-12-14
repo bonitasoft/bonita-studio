@@ -15,20 +15,15 @@
 package org.bonitasoft.studio.groovy.ui.providers;
 
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.eclipse.swt.graphics.Image;
 
-/**
- * @author Romain Bioteau
- */
 public class GroovyScriptLanguageProvider implements IScriptLanguageProvider {
 
     private static final String LANGUAGE_ID = ExpressionInterpreter.GROOVY.name();
-
-    private final Image groovyIcon = Pics.getImage(PicsConstants.groovyScript);
 
     @Override
     public String getLanguageId() {
@@ -37,12 +32,12 @@ public class GroovyScriptLanguageProvider implements IScriptLanguageProvider {
 
     @Override
     public String getLanguageName() {
-        return LANGUAGE_ID;
+        return getLanguageId();
     }
 
     @Override
     public Image getIcon() {
-        return groovyIcon;
+        return Pics.getImage("function.png", ExpressionEditorPlugin.getDefault());
     }
 
     @Override
