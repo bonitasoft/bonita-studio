@@ -506,8 +506,12 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
     
     private void conditionToScriptExpression(Expression exp) {
-        exp.setType(ExpressionConstants.SCRIPT_TYPE);
-        exp.setInterpreter(ExpressionConstants.GROOVY);
+        if(exp.hasContent()) {
+            exp.setType(ExpressionConstants.SCRIPT_TYPE);
+            exp.setInterpreter(ExpressionConstants.GROOVY);
+        }else {
+            exp.setType(ExpressionConstants.CONSTANT_TYPE);
+        }
     }
 
     private void javaToScriptExpression(Expression exp) {
