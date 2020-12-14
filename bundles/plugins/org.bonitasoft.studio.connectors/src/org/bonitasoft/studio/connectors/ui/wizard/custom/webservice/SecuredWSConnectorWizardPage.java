@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.ui.wizard.custom.webservice;
 
@@ -273,7 +271,8 @@ public class SecuredWSConnectorWizardPage extends AbstractConnectorConfiguration
 
         paramViewer = new TreeViewer(res, SWT.BORDER | SWT.FULL_SELECTION);
         paramViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).span(2, 1).create());
 
         contentProvider = new XSDContentProvider(false);
         paramViewer.setContentProvider(contentProvider);
@@ -322,24 +321,34 @@ public class SecuredWSConnectorWizardPage extends AbstractConnectorConfiguration
         });
         valueColumn.setEditingSupport(new EditingSupport(valueColumn.getViewer()) {
 
+            private ExpressionViewerCellEditor cellEditor;
+
             @Override
             protected CellEditor getCellEditor(final Object element) {
-                final ExpressionViewerCellEditor cellEditor = new ExpressionViewerCellEditor(valueColumn.getViewer(),
-                        (Composite) valueColumn.getViewer()
-                                .getControl(),
-                        null, null);
-                cellEditor.addFilter(new AvailableExpressionTypeFilter(
-                        new String[] { ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.VARIABLE_TYPE,
-                                ExpressionConstants.PARAMETER_TYPE }));
-                cellEditor.setContext(getElementContainer());
-                cellEditor.setInput(getElementContainer());
+                if (cellEditor == null) {
+                    cellEditor = createEditor(valueColumn);
+                }
                 if (elementTreePath.get(element) != null) {
                     cellEditor.setSelection(new StructuredSelection(elements.get(elementTreePath.get(element))));
                 } else {
                     cellEditor.setSelection(
-                            new StructuredSelection(ExpressionHelper.createConstantExpression("", String.class.getName())));
+                            new StructuredSelection(
+                                    ExpressionHelper.createConstantExpression("", String.class.getName())));
                 }
                 return cellEditor;
+            }
+
+            private ExpressionViewerCellEditor createEditor(final TreeViewerColumn valueColumn) {
+                final ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(valueColumn.getViewer(),
+                        (Composite) valueColumn.getViewer()
+                                .getControl(),
+                        null, null, false);
+                editor.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE,
+                        ExpressionConstants.VARIABLE_TYPE,
+                        ExpressionConstants.PARAMETER_TYPE));
+                editor.setContext(getElementContainer());
+                editor.setInput(getElementContainer());
+                return editor;
             }
 
             @Override
@@ -566,7 +575,8 @@ public class SecuredWSConnectorWizardPage extends AbstractConnectorConfiguration
      * @param operationName
      */
     public void updateParamTreeViewer(final String operationName) {
-        final XSDElementDeclaration operationPart = wsdlParsingTool.getOperationPart(serviceQName, portName, operationName);
+        final XSDElementDeclaration operationPart = wsdlParsingTool.getOperationPart(serviceQName, portName,
+                operationName);
         if (operationPart == null) {
             resetElementTreePath();
         }
@@ -698,7 +708,8 @@ public class SecuredWSConnectorWizardPage extends AbstractConnectorConfiguration
                             String.class.getName()));
             setInputParameter(SOAP_ACTION,
                     ExpressionHelper.createConstantExpression(
-                            wsdlParsingTool.getSoapAction(operationName, serviceQName, portName), String.class.getName()));
+                            wsdlParsingTool.getSoapAction(operationName, serviceQName, portName),
+                            String.class.getName()));
         }
     }
 
@@ -709,7 +720,8 @@ public class SecuredWSConnectorWizardPage extends AbstractConnectorConfiguration
         } else {
             if (value instanceof Expression && parameter.getExpression() instanceof Expression) {
                 final Expression selectedExpression = (Expression) parameter.getExpression();
-                new ExpressionSynchronizer(null, (Expression) value, selectedExpression).synchronize(new CompoundCommand());
+                new ExpressionSynchronizer(null, (Expression) value, selectedExpression)
+                        .synchronize(new CompoundCommand());
             }
         }
     }

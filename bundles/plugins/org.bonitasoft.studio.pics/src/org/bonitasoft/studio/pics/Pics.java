@@ -15,17 +15,15 @@
 package org.bonitasoft.studio.pics;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -33,12 +31,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * @author Mickael Istria
- */
 public class Pics extends AbstractUIPlugin {
 
     // The plug-in ID
@@ -48,10 +44,7 @@ public class Pics extends AbstractUIPlugin {
     private static Pics plugin;
 
     private static ImageDescriptor wizban;
-
-    private static Cursor CURSOR_OPENED_HAND;
-
-    private static Cursor CURSOR_CLOSE_HAND;
+    private static final ResourceManagerManger RMM = new ResourceManagerManger();
 
     private static class ClassPathResourceImageDescriptor extends ImageDescriptor {
 
@@ -92,7 +85,8 @@ public class Pics extends AbstractUIPlugin {
         try {
             IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
             if (engine.getActiveTheme() != null
-                    && Objects.equals(engine.getActiveTheme().getId(), "org.bonitasoft.studio.preferences.theme.dark")) {
+                    && Objects.equals(engine.getActiveTheme().getId(),
+                            "org.bonitasoft.studio.preferences.theme.dark")) {
                 return true;
             }
         } catch (IllegalStateException e) {
@@ -120,39 +114,38 @@ public class Pics extends AbstractUIPlugin {
         if (plugin == null) {
             return null;
         }
-        final ImageRegistry reg = plugin.getImageRegistry();
-
-        Image result = reg.get(imageName);
-
-        if (result != null && !result.isDisposed()) {//prevent from bad dispose
-            return result;
-        }
-
         final ImageDescriptor descriptor = getImageDescriptor(imageName, plugin);
         if (descriptor != null) {
-            result = descriptor.createImage();
+            LocalResourceManager manager = RMM.getResourceManager(Display.getDefault());
+            return manager.createImage(descriptor);
         }
-
-        reg.remove(imageName);
-        if (result != null) {
-            reg.put(imageName, result);
-        }
-
-        return result;
+        return null;
     }
 
     public static ImageDescriptor getImageDescriptor(final String imageName, final AbstractUIPlugin plugin) {
-        ImageDescriptor desc;
-        try {
-            desc = ImageDescriptor.createFromURL(
-                    new URL(
-                            plugin.getBundle().getResource("/"), //$NON-NLS-1$
-                            "icons/" + imageName)); //$NON-NLS-1$
-        } catch (final MalformedURLException e) {
-            desc = ImageDescriptor.getMissingImageDescriptor();
+        if(plugin == null) {
+            return ImageDescriptor.getMissingImageDescriptor();
+        }
+        String resourceName = imageName;
+        if (isDarkTheme()) {
+            String extension = getExtension(imageName);
+            String id = imageName.substring(0, imageName.lastIndexOf(extension));
+            resourceName = id + "_dark" + extension;
         }
 
-        return desc;
+        URL resource = plugin.getBundle().getResource("/icons/" + resourceName);
+        if (resource != null) {
+            return ImageDescriptor.createFromURL(resource);
+        } else {
+            return ImageDescriptor.createFromURL(plugin.getBundle().getResource("/icons/" + imageName));
+        }
+    }
+
+    private static String getExtension(String imageName) {
+        if (imageName.indexOf(".") != -1) {
+            return imageName.substring(imageName.lastIndexOf("."), imageName.length());
+        }
+        return null;
     }
 
     /**
@@ -199,50 +192,11 @@ public class Pics extends AbstractUIPlugin {
     }
 
     public static Cursor getOpenedHandCursor() {
-        if (CURSOR_OPENED_HAND == null) {
-            CURSOR_OPENED_HAND = createCursor(getImageDescriptor("/cursor/open_hand.png"));
-        }
-        return CURSOR_OPENED_HAND;
+        return Display.getDefault().getSystemCursor(SWT.CURSOR_HAND);
     }
 
     public static Cursor getClosedHandCursor() {
-        if (CURSOR_CLOSE_HAND == null) {
-            CURSOR_CLOSE_HAND = createCursor(getImageDescriptor("/cursor/closed_hand.png"));
-        }
-        return CURSOR_CLOSE_HAND;
-    }
-
-    private static Cursor createCursor(ImageDescriptor imageDescriptor) {
-        ImageData openHand = imageDescriptor.getImageData();
-        return new Cursor(Display.getCurrent(), openHand, 12, 12);
-    }
-
-    /**
-     * get the system image resized in 16x16 (only used in connectors label provider)
-     *
-     * @param id
-     * @return
-     */
-    public static Image getSystemImage(final int id) {
-        final ImageRegistry reg = plugin.getImageRegistry();
-
-        final String imageName = id + "";
-        Image result = reg.get(imageName);
-
-        if (result != null && !result.isDisposed()) {//prevent from bad dispose
-            return result;
-        }
-        result = Display.getCurrent().getSystemImage(id);
-        final Image scaled = new Image(Display.getDefault(), 16, 16);
-        final GC gc = new GC(scaled);
-        gc.setAntialias(SWT.ON);
-        gc.setInterpolation(SWT.HIGH);
-        gc.drawImage(result, 0, 0, result.getBounds().width, result.getBounds().height, 0, 0, 16, 16);
-        gc.dispose();
-        result = scaled;
-        reg.remove(imageName);
-        reg.put(imageName, result);
-        return result;
+        return Display.getDefault().getSystemCursor(SWT.CURSOR_SIZEALL);
     }
 
 }

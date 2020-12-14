@@ -19,8 +19,6 @@ import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -35,7 +33,7 @@ import org.eclipse.swt.widgets.Display;
 public class ExpressionColumnLabelProvider extends ColumnLabelProvider {
 
     private final int col;
-    private Color bgColor;
+    private Color emptyCellBackgroundColor;
 
     public ExpressionColumnLabelProvider(int col) {
         this.col = col;
@@ -44,7 +42,7 @@ public class ExpressionColumnLabelProvider extends ColumnLabelProvider {
     @Override
     protected void initialize(ColumnViewer viewer, ViewerColumn column) {
         if (!Platform.getWS().equals(Platform.WS_GTK)) {
-            bgColor = new Color(Display.getCurrent(), 232, 232, 232);
+            emptyCellBackgroundColor = new Color(Display.getCurrent(), 232, 232, 232);
         }
     }
 
@@ -52,15 +50,15 @@ public class ExpressionColumnLabelProvider extends ColumnLabelProvider {
     public Color getBackground(Object element) {
         final String text = getText(element);
         if (text == null || text.isEmpty()) {
-            return bgColor;
+            return emptyCellBackgroundColor;
         }
         return super.getBackground(element);
     }
 
     @Override
     public void dispose(ColumnViewer viewer, ViewerColumn column) {
-        if (bgColor != null) {
-            bgColor.dispose();
+        if (emptyCellBackgroundColor != null) {
+            emptyCellBackgroundColor.dispose();
         }
         dispose();
     }
@@ -80,10 +78,9 @@ public class ExpressionColumnLabelProvider extends ColumnLabelProvider {
                 return provider.getIcon((Expression) expression);
             }
             if (ExpressionConstants.CONSTANT_TYPE.equals(((Expression) expression).getType())
-                    && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()) {
-                return Pics.getImage(PicsConstants.constant);
+                    && ((Expression) expression).hasContent()) {
+                return null;
             }
-
         }
 
         if (expression instanceof ListExpression) {

@@ -466,15 +466,14 @@ public class AddMessageEventWizardPage extends WizardPage implements
                     }
                 }
             }
+            Text textControl = (Text) elementExpressionViewer.getTextControl();
             if (elementExpressionViewer == null
-                    || elementExpressionViewer.getTextControl().getText()
-                            .isEmpty()) {
+                    || textControl.getText().isEmpty()) {
                 return ValidationStatus.error(Messages.eventNameLabel + " "
                         + Messages.isMandatory);
             }
             if (processExpressionViewer == null
-                    || processExpressionViewer.getTextControl().getText()
-                            .isEmpty()) {
+                    || textControl.getText().isEmpty()) {
                 return ValidationStatus.error(Messages.processNameLabel + " "
                         + Messages.isMandatory);
             }

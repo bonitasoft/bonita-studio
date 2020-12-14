@@ -108,7 +108,7 @@ public class TestDatabaseConnectorOutputMode implements SWTBotConstants {
 
         bot.radio(org.bonitasoft.studio.connectors.i18n.Messages.scriptMode).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        assertEquals("resultset", bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 1).getText());
+        assertEquals("resultset", bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText());
         bot.button(IDialogConstants.BACK_LABEL).click();
 
         bot.checkBox(org.bonitasoft.studio.connectors.i18n.Messages.alwaysUseScriptingMode).click();

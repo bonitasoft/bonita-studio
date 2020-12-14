@@ -142,6 +142,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -963,7 +964,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         try {
                             final ByteArrayOutputStream stream = generator.createXMLDocument("xmlFileName", "UTF-8");
                             final String xmlContent = new String(stream.toByteArray(), "UTF-8");
-                            defaultValueViewer.getTextControl().setText(xmlContent);
+                            ((Text) defaultValueViewer.getTextControl()).setText(xmlContent);
                         } catch (final Exception e1) {
                             BonitaStudioLog.error(e1);
                         }
@@ -995,8 +996,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                         while ((temp = br.readLine()) != null) {
                             builder.append(temp);
                         }
-                        defaultValueViewer.getTextControl().setText(builder.toString());
-                        if (!defaultValueViewer.getTextControl().getText().equals(builder.toString())) {
+                        Text textControl = (Text) defaultValueViewer.getTextControl();
+                        textControl.setText(builder.toString());
+                        if (!textControl.equals(builder.toString())) {
                             MessageDialog.openError(getShell(), Messages.xmlDefaultValueTooLongTitle,
                                     Messages.xmlDefaultValueTooLongMessage);
                         }

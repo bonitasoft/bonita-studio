@@ -137,7 +137,7 @@ public class TwitterDirectMessageWizardPageComponentSwitch extends
                 if (recipientList.getSelectionIndex() != -1) {
                     final String name = recipientList.getItem(recipientList
                             .getSelectionIndex());
-                    userScreenNameViewer.getTextControl().setText(name);
+                    ((org.eclipse.swt.widgets.Text) userScreenNameViewer.getTextControl()).setText(name);
                     final User user = twitterTools.getUser(name);
                     try {
                         final URL url = new URL(user.getBiggerProfileImageURL());

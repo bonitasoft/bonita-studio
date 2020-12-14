@@ -29,7 +29,7 @@ public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
     public GroovyOnlyExpressionViewer(final Composite composite, final int style) {
         super(composite, style);
-        getContentAssistText().getToolbar().getItem(0).setEnabled(false);
+        getContentAssistText().setProposalEnabled(false);
 
     }
 

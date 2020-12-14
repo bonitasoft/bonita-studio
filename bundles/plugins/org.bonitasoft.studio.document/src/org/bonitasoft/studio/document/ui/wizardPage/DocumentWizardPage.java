@@ -364,7 +364,7 @@ public class DocumentWizardPage extends WizardPage {
         scriptComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         scriptComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
 
-        final GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(scriptComposite, SWT.READ_ONLY | SWT.BORDER);
+        final GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(scriptComposite,  SWT.BORDER);
         multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         multipleInitialContentExpressionViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONTRACT_INPUT_TYPE));
         multipleInitialContentExpressionViewer.setMessage(Messages.documentListScriptToolTip);
@@ -431,7 +431,7 @@ public class DocumentWizardPage extends WizardPage {
         final Label documentURLLabel = new Label(externalCompo, SWT.NONE);
         documentURLLabel.setText(mandatoryFieldLabel(Messages.documentExternalLabel));
 
-        documentUrlViewer = new ExpressionViewer(externalCompo, SWT.BORDER);
+        documentUrlViewer = new ExpressionViewer(externalCompo, SWT.BORDER, null, null, null, false);
         documentUrlViewer.addFilter(new AvailableExpressionTypeFilter(ExpressionConstants.CONSTANT_TYPE));
         documentUrlViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentUrlViewer.setExample(Messages.hintExternalUrl);

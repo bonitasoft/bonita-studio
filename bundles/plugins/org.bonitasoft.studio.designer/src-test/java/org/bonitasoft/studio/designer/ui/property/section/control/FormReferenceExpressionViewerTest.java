@@ -30,7 +30,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,8 +58,6 @@ public class FormReferenceExpressionViewerTest {
     private CreateOrEditFormProposalListener createOrEditNewFormProposalListener;
     @Mock
     private TabbedPropertySheetWidgetFactory widgetFactory;
-    @Mock
-    ToolBar toolBar;
 
     /**
      * @throws java.lang.Exception
@@ -83,7 +80,7 @@ public class FormReferenceExpressionViewerTest {
         formReferenceExpressionViewer.setInput(mapping);
         when(createOrEditNewFormProposalListener.handleEvent(mapping, null, null)).thenReturn(null);
         when(webPageRepositoryStore.getChild("a-page-id", true)).thenReturn(selectedPage);
-        formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
+        formReferenceExpressionViewer.editControlSelected(editingDomain());
 
         Mockito.verify(createOrEditNewFormProposalListener).handleEvent(mapping, null, null);
         Mockito.verify(webPageRepositoryStore, Mockito.never()).refresh();
@@ -101,7 +98,7 @@ public class FormReferenceExpressionViewerTest {
 
         when(createOrEditNewFormProposalListener.handleEvent(mapping, null, null)).thenReturn("a-new-page-id");
         when(webPageRepositoryStore.getChild("a-new-page-id", true)).thenReturn(selectedPage);
-        formReferenceExpressionViewer.editControlSelected(toolBar, null, editingDomain());
+        formReferenceExpressionViewer.editControlSelected(editingDomain());
 
         ExpressionAssert.assertThat(mapping.getTargetForm()).hasContent("a-new-page-id");
     }

@@ -35,6 +35,7 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.SharedCursors;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -42,9 +43,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -243,16 +242,16 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             return df;
         }
 
-        /**
-         * @generated
-         */
+ 
         public WrappingLabel getFigureLinkLabel() {
             return fFigureLinkLabel;
         }
+        
+        @Override
+        public void setCursor(Cursor cursor) {
+            super.setCursor(SharedCursors.HAND);
+        }
 
-        /**
-         * @generated
-         */
         public WrappingLabel getFigureLinkConditionLabel() {
             return fFigureLinkConditionLabel;
         }

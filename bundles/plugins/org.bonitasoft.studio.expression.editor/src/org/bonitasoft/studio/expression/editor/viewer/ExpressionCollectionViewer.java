@@ -51,6 +51,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -253,7 +254,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             final TabbedPropertySheetWidgetFactory widgetFactory) {
         viewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 70).create());
-        viewer.getTable().setLinesVisible(true);
+        viewer.getTable().setLinesVisible(false);
         viewer.getTable().setHeaderVisible(captions != null && !captions.isEmpty());
 
         provider = new ExpressionCollectionContentProvider();
@@ -338,7 +339,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         expressionComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, false).create());
         expressionEditor = new ExpressionViewer(expressionComposite,
-                SWT.BORDER, widgetFactory, null, null, withConnectors);
+                SWT.BORDER, widgetFactory, null, null);
         expressionEditor.setIsPageFlowContext(isPageFlowContext);
         expressionEditor.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).create());

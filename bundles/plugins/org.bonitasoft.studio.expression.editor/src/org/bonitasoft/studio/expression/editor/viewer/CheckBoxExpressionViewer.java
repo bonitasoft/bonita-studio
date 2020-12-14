@@ -24,6 +24,7 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -79,10 +80,8 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
         }
         control.addDisposeListener(disposeListener);
         control.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.BEGINNING, SWT.CENTER).create());
-        control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 0).create());
+        control.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
         createTextControl(style, widgetFactory);
-
-        createToolbar(style, widgetFactory);
         if ((style & SWT.BORDER) != 0) {//Not in a table
             createSwitchEditorControl(widgetFactory);
         }
@@ -100,7 +99,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     private void createSwitchEditorControl(final TabbedPropertySheetWidgetFactory widgetFactory) {
         ((GridLayout) control.getLayout()).numColumns++;
         final Link switchControl = new Link(mc, SWT.NONE);
-        switchControl.setLayoutData(GridDataFactory.fillDefaults().indent(15, 0).create());
+        switchControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
         switchControl.setText(Messages.switchEditorCondition);
         switchControl.addSelectionListener(new SelectionAdapter() {
 
@@ -124,7 +123,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 falseExp.setContent(Boolean.FALSE.toString());
                 falseExp.setReturnType(Boolean.class.getName());
                 falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
-                updateSelection(null, falseExp);
+                updateSelection(new CompoundCommand(), falseExp);
                 bindExpression();
             }
         }

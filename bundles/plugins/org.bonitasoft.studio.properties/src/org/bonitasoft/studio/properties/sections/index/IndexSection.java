@@ -80,20 +80,19 @@ public class IndexSection extends AbstractBonitaDescriptionSection {
     protected void createLine(final Composite parent,
             final TabbedPropertySheetWidgetFactory widgetFactory) {
         final ExpressionViewer nameViewer = new ExpressionViewer(parent,
-                SWT.BORDER, widgetFactory,
-                ProcessPackage.Literals.SEARCH_INDEX__NAME) {
-
-            @Override
-            protected boolean shouldAddEditToolItem() {
-                return false;
-            }
-        };
+                SWT.BORDER, 
+                widgetFactory,
+                getEditingDomain(),
+                ProcessPackage.Literals.SEARCH_INDEX__NAME,
+                false);
         nameViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(false, false)
                         .hint(350, SWT.DEFAULT).create());
         nameViewers.add(nameViewer);
         final ExpressionViewer valueViewer = new ExpressionViewer(parent,
-                SWT.BORDER, widgetFactory,
+                SWT.BORDER, 
+                widgetFactory,
+                getEditingDomain(),
                 ProcessPackage.Literals.SEARCH_INDEX__VALUE);
         valueViewers.add(valueViewer);
         valueViewer.getControl().setLayoutData(

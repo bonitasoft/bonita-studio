@@ -66,17 +66,22 @@ public class ExpressionViewerCellEditor extends CellEditor {
 
     private final Composite parent;
 
+    private boolean enableEditExpression;
+
     public ExpressionViewerCellEditor(final ColumnViewer columnViewer,
             final Composite parent, final EditingDomain editingDomain,
-            final SelectionListener removeRowListener) {
-        super(parent);
+            final SelectionListener removeRowListener,
+            boolean enableEditExpression) {
+        super();
+        this.enableEditExpression = enableEditExpression;
+        create(parent);
+        viewer.setColumnViewer(columnViewer);
         this.editingDomain = editingDomain;
         this.columnViewer = columnViewer;
-        viewer.setColumnViewer(columnViewer);
         this.removeRowListener = null;
         this.parent = parent;
     }
-
+    
     private void createRemoveRowDecorator(final Composite parent, final SelectionListener removeRowListener) {
         deleteRow = new ControlDecoration(parent.getParent(), SWT.LEFT | SWT.TOP) {
 
@@ -115,6 +120,13 @@ public class ExpressionViewerCellEditor extends CellEditor {
     @Override
     public void dispose() {
         super.dispose();
+        if (viewer != null) {
+            final Control viewerControl = viewer.getControl();
+            if (viewerControl != null && !viewerControl.isDisposed()) {
+                viewerControl.dispose();
+            }
+        }
+        viewer = null;
         Display.getDefault().removeFilter(SWT.FocusIn, focusListener);
     }
 
@@ -132,10 +144,8 @@ public class ExpressionViewerCellEditor extends CellEditor {
                 viewerControl.dispose();
             }
         }
-
-        viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain, null);
-
-        final Text text = viewer.getTextControl();
+        viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain, null, enableEditExpression);
+        final Text text = (Text) viewer.getTextControl();
         text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(20, SWT.DEFAULT).create());
         text.addSelectionListener(new SelectionAdapter() {
 
@@ -169,6 +179,12 @@ public class ExpressionViewerCellEditor extends CellEditor {
                 }
             }
         });
+        
+        viewer.addSelectionChangedListener(event -> parent.getDisplay().asyncExec(() -> {
+            if(!isActivated()) {
+                columnViewer.refresh(true);
+            }
+        }));
 
         final Control viewerControl = viewer.getControl();
         focusListener = new Listener() {
@@ -195,25 +211,22 @@ public class ExpressionViewerCellEditor extends CellEditor {
         };
 
         text.setFont(parent.getFont());
-
         return viewerControl;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
-     */
+    
+    @Override
+    public LayoutData getLayoutData() {
+        LayoutData layoutData = super.getLayoutData();
+        layoutData.minimumWidth = 0;
+        return layoutData;
+    }
+    
     @Override
     protected Object doGetValue() {
-        final Expression exp = (Expression) ((IStructuredSelection) viewer
+        return ((IStructuredSelection) viewer
                 .getSelection()).getFirstElement();
-        return exp;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
-     */
     @Override
     protected void doSetFocus() {
         viewer.getTextControl().setFocus();
@@ -241,7 +254,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
             viewer.setSelection(new StructuredSelection(exp));
         }
     }
-
+    
     public void setInput(final Object input) {
         viewer.setInput(input);
     }
@@ -253,9 +266,6 @@ public class ExpressionViewerCellEditor extends CellEditor {
     @Override
     public void activate() {
         super.activate();
-        if (getControl() != null && !getControl().isDisposed()) {
-            getControl().getParent().layout(true, true);
-        }
         Display.getDefault().addFilter(SWT.FocusIn, focusListener);
     }
 
@@ -271,16 +281,9 @@ public class ExpressionViewerCellEditor extends CellEditor {
     @Override
     public void deactivate() {
         super.deactivate();
-
-        if (getControl() != null && !getControl().isDisposed()) {
-            getControl().getParent().layout(true, true);
-        }
-        if (columnViewer != null && !columnViewer.getControl().isDisposed()) {
-            columnViewer.refresh(true);
-        }
         Display.getDefault().removeFilter(SWT.FocusIn, focusListener);
     }
-
+    
     /**
      * Handles a default selection event from the text control by applying the
      * editor value and deactivating this cell editor.

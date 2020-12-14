@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
@@ -119,7 +120,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                 if (e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12) {
                     return;
                 }
-
+                
                 // If focus is leaving an important widget or the field's
                 // shell is deactivating
                 if (e.type == SWT.FocusOut) {
@@ -149,13 +150,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                         || linkClicked) {
                                     return;
                                 }
-                                /*
-                                 * System.out.println(e);
-                                 * System.out.println(e.display
-                                 * .getFocusControl());
-                                 * System.out.println(e.display
-                                 * .getActiveShell());
-                                 */
                                 close();
                             }
                         }
@@ -2069,6 +2063,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                     });
                     internalPopupOpened();
                     notifyPopupOpened();
+                    if(control instanceof Label) {
+                        popup.getShell().getDisplay().asyncExec(()-> popup.getShell().setFocus());
+                    }
                 } else if (!autoActivated) {
                     getControl().getDisplay().beep();
                 }
