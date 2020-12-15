@@ -16,23 +16,34 @@ package org.bonitasoft.studio.identity.organization.validator;
 
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 
 public class GroupListValidator implements IValidator<Group> {
 
+    private IObservableValue<Group> selectedGroupObservable = new WritableValue<>();
     private GroupParentPathLengthValidator groupParentPathLengthValidator;
+    private GroupNameValidator groupNameValidator;
+    private GroupDisplayNameValidator groupDisplayNameValidator;
 
-    public GroupListValidator() {
+    public GroupListValidator(IObservableValue<Organization> organizationObservable) {
         groupParentPathLengthValidator = new GroupParentPathLengthValidator();
+        groupNameValidator = new GroupNameValidator(organizationObservable, selectedGroupObservable);
+        groupDisplayNameValidator = new GroupDisplayNameValidator();
     }
 
     @Override
     public IStatus validate(Group group) {
+        selectedGroupObservable.setValue(group);
         MultiStatus globalStatus = new MultiStatus(IdentityPlugin.PLUGIN_ID, 0, "", null);
 
         globalStatus.add(groupParentPathLengthValidator.validate(group));
+        globalStatus.add(groupNameValidator.validate(group.getName()));
+        globalStatus.add(groupDisplayNameValidator.validate(group.getName()));
 
         return globalStatus;
     }

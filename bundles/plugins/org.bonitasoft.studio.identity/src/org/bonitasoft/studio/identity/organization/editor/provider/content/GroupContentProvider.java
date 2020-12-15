@@ -20,13 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class GroupContentProvider implements ITreeContentProvider {
 
     public static final String GROUP_SEPARATOR = "/";
-    private List<Group> groups;
+    private IObservableList<Group> groups;
+
+    public GroupContentProvider(IObservableList<Group> groups) {
+        this.groups = groups;
+    }
 
     @Override
     public void dispose() {
@@ -56,7 +61,6 @@ public class GroupContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getElements(Object element) {
-        groups = (List<Group>) element;
         List<Group> rootGroups = new ArrayList<>();
         for (Group g : groups) {
             if (g.getParentPath() == null) {

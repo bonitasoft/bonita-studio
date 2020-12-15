@@ -124,17 +124,20 @@ public abstract class AbstractFormPage<T> extends FormPage {
     }
 
     public void update() {
+        retrieveModelFromDocument().ifPresent(model -> {
+            updateWorkingCopy(model);
+            setErrorState(false);
+            recreateForm();
+        });
+    }
+
+    protected Optional<T> retrieveModelFromDocument() {
         IDocument document = getSourceEditor() != null
                 ? getSourceEditor().getDocumentProvider().getDocument(getEditorInput())
                 : null;
-        if (document != null) {
-            final Optional<T> newModel = xmlToModel(document.get().getBytes());
-            newModel.ifPresent(model -> {
-                updateWorkingCopy(model);
-                setErrorState(false);
-                recreateForm();
-            });
-        }
+        return document != null
+                ? xmlToModel(document.get().getBytes())
+                : Optional.empty();
     }
 
     public void recreateForm() {
@@ -225,7 +228,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
         return Optional.empty();
     }
 
-    private void updateWorkingCopy(T model) {
+    protected void updateWorkingCopy(T model) {
         if (getEditor() instanceof AbstractEditor) {
             ((AbstractEditor) getEditor()).updateWorkingCopy(model);
         }

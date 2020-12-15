@@ -401,4 +401,6 @@ public class PicsConstants {
     public static String rename_16_dark = "rename_16_dark.png";
     public static String validate = "validate.png";
     public static String validate_dark = "validate_dark.png";
+    public static String copyToClipboard = "copyToClipboard.png";
+    public static String copyToClipboard_dark = "copyToClipboard_dark.png";
 }
