@@ -335,7 +335,7 @@ public class EditExpressionDialog extends TrayDialog {
 
     @Override
     protected boolean canHandleShellCloseEvent() {
-        if (FileActionDialog.getDisablePopup()) {
+        if (FileActionDialog.getDisablePopup() || !hasExpressionChanged()) {
             return true;
         }
         if (MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle,
@@ -343,6 +343,17 @@ public class EditExpressionDialog extends TrayDialog {
             return super.canHandleShellCloseEvent();
         }
         return false;
+    }
+    
+    private boolean hasExpressionChanged() {
+        return expressionUpdater.hasChanged();
+    }
+
+    @Override
+    protected void cancelPressed() {
+        if(canHandleShellCloseEvent()) {
+            super.cancelPressed();
+        }
     }
 
     public Expression getExpression() {
