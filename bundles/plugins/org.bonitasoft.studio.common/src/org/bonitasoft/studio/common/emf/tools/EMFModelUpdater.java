@@ -327,4 +327,8 @@ public class EMFModelUpdater<T extends EObject> {
 
     }
 
+    public boolean hasChanged() {
+        return !EcoreUtil.equals(workingCopy, source);
+    }
+
 }
