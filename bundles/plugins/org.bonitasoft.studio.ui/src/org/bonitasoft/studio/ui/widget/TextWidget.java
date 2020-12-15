@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
@@ -47,6 +48,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -64,6 +66,8 @@ public class TextWidget extends EditableControlWidget {
 
         protected Optional<String> placeholder = Optional.empty();
         protected Optional<String> labelButton = Optional.empty();
+        protected Optional<Image> imageButton = Optional.empty();
+        protected Optional<String> tooltipButton = Optional.empty();
         protected Optional<Listener> buttonListner = Optional.empty();
         protected boolean transactionalEdit = false;
         private BiConsumer<String, String> onEdit;
@@ -94,6 +98,15 @@ public class TextWidget extends EditableControlWidget {
          */
         public Builder withButton(String labelButton) {
             this.labelButton = Optional.ofNullable(labelButton);
+            return this;
+        }
+
+        /**
+         * Create a button after the Text, with an image and a toolitp
+         */
+        public Builder withButton(Image image, String toolitp) {
+            this.imageButton = Optional.ofNullable(image);
+            this.tooltipButton = Optional.ofNullable(toolitp);
             return this;
         }
 
@@ -132,11 +145,12 @@ public class TextWidget extends EditableControlWidget {
             }
             final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3())
                     ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
-                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                            transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy, Optional.ofNullable(ctx))
+                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
+                            tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
+                            Optional.ofNullable(ctx))
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
-                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                            transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
+                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
+                            tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
                             Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
@@ -158,7 +172,8 @@ public class TextWidget extends EditableControlWidget {
     }
 
     private Text text;
-    private Optional<Button> button;
+    private Optional<Button> button = Optional.empty();
+    private Optional<ToolItem> buttonWithImage = Optional.empty();
     private final boolean transactionalEdit;
     private final Optional<BiConsumer<String, String>> onEdit;
     private boolean editing = false;
@@ -167,11 +182,14 @@ public class TextWidget extends EditableControlWidget {
     private final Optional<IContentProposalProvider> proposalProvider;
     private Optional<ComputedValue<Boolean>> enableStrategy;
     private Optional<DataBindingContext> ctx;
+    private Optional<Image> imageButton;
+    private Optional<String> tooltipButton;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
             boolean useCompositeMessageDecorator,
-            Optional<String> labelButton, boolean transactionalEdit, BiConsumer<String, String> onEdit,
+            Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
+            boolean transactionalEdit, BiConsumer<String, String> onEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
@@ -182,11 +200,13 @@ public class TextWidget extends EditableControlWidget {
         this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
         this.enableStrategy = enableStrategy;
         this.ctx = ctx;
+        this.imageButton = imageButton;
+        this.tooltipButton = tooltipButton;
     }
 
     @Override
     protected int numColumn() {
-        return buttonLabel.isPresent() || transactionalEdit ? 3 : 2;
+        return buttonLabel.isPresent() || imageButton.isPresent() || transactionalEdit ? 3 : 2;
     }
 
     @Override
@@ -226,6 +246,7 @@ public class TextWidget extends EditableControlWidget {
     public void onClickButton(Listener listener) {
         if (listener != null) {
             button.ifPresent(b -> b.addListener(SWT.Selection, listener));
+            buttonWithImage.ifPresent(bWithImage -> bWithImage.addListener(SWT.Selection, listener));
         }
     }
 
@@ -306,15 +327,26 @@ public class TextWidget extends EditableControlWidget {
                 }
             });
         }
-
-        button = buttonLabel.map(label -> {
-            final Button b = new Button(this, SWT.PUSH);
-            b.setText(label);
-            toolkit.ifPresent(toolkit -> toolkit.adapt(b, true, true));
-            return b;
-        });
-        button.ifPresent(GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment())::applyTo);
+        createButton();
         return textContainer;
+    }
+
+    private void createButton() {
+        if (buttonLabel.isPresent()) {
+            Button b = new Button(this, SWT.PUSH);
+            b.setText(buttonLabel.get());
+            toolkit.ifPresent(toolkit -> toolkit.adapt(b, true, true));
+            GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment()).applyTo(b);
+            button = Optional.of(b);
+        } else if (imageButton.isPresent()) {
+            ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
+            toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
+            toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
+            ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
+            bWithImage.setImage(imageButton.get());
+            bWithImage.setToolTipText(tooltipButton.orElse(""));
+            buttonWithImage = Optional.of(bWithImage);
+        }
     }
 
     private Optional<KeyStroke> retrieveEclipseContentAssistKeyStroke() {
@@ -462,22 +494,28 @@ public class TextWidget extends EditableControlWidget {
     }
 
     protected void configureBackground(Control control) {
-        final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-        final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-        if (toolkit.isPresent()) {
-            if (control instanceof Composite) {
-                toolkit.get().adapt((Composite) control);
-            } else {
-                toolkit.get().adapt(control, true, true);
+        if (!PreferenceUtil.isDarkTheme()) {
+            final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+            final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+            if (toolkit.isPresent()) {
+                if (control instanceof Composite) {
+                    toolkit.get().adapt((Composite) control);
+                } else {
+                    toolkit.get().adapt(control, true, true);
+                }
             }
+            control.setBackground(readOnly ? backgroundColor : whiteColor);
         }
-        control.setBackground(readOnly ? backgroundColor : whiteColor);
         control.setEnabled(!readOnly);
     }
 
     public TextWidget setText(String text) {
         this.text.setText(text);
         return this;
+    }
+
+    public Optional<ToolItem> getButtonWithImage() {
+        return buttonWithImage;
     }
 
     public ISWTObservableValue observeEnable() {

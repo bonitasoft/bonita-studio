@@ -22,9 +22,11 @@ import java.io.IOException;
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupList;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Groups;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -50,8 +52,8 @@ public class GroupFormPart extends AbstractFormPart {
     public GroupFormPart(Composite parent, GroupFormPage formPage) {
         this.formPage = formPage;
 
-        parent.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, LayoutConstants.getSpacing().y).create());
+        parent.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
+                .spacing(20, LayoutConstants.getSpacing().y).create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createGroupList(parent);
@@ -93,25 +95,35 @@ public class GroupFormPart extends AbstractFormPart {
                         .withConvertFunction(grp -> grp == null ? "" : grp.getDisplayName())
                         .create()).create(),
                 neverUpdateValueStrategy().create());
-        //
-        //        ctx.bindValue(groupEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
-        //                .withSupplier(() -> formPage.observeBusinessObjectSelected().getValue() != null)
-        //                .build());
+
+        ctx.bindValue(groupEditionControl.observeSectionVisible(), new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> selectedGroupObservable.getValue() != null)
+                .build());
     }
 
     private void createGroupList(Composite parent) {
         Composite groupListComposite = formPage.getToolkit().createComposite(parent);
         groupListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
+        groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
         groupList = new GroupList(groupListComposite, formPage, ctx);
-        IObservableValue groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+        IObservableValue<Groups> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 formPage.observeWorkingCopy(),
                 OrganizationPackage.Literals.ORGANIZATION__GROUPS);
-        IObservableList groupListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
+        IObservableList<Group> groupListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
                 OrganizationPackage.Literals.GROUPS__GROUP);
         ctx.bindList(groupList.observeInput(), groupListObservable);
         groupList.expandAll();
+    }
+
+    public void refreshSelectedGroup() {
+        groupList.refreshSelectedGroup();
+    }
+
+    @Override
+    public void dispose() {
+        groupList.dispose();
+        super.dispose();
     }
 
 }

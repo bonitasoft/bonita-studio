@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -35,7 +36,7 @@ public class TextAreaWidget extends TextWidget {
         public TextAreaWidget createIn(Composite container) {
             final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                    toolkit, editableStrategy, Optional.ofNullable(ctx));
+                    imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx));
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -59,12 +60,14 @@ public class TextAreaWidget extends TextWidget {
             String message,
             boolean useCompositeMessageDecorator,
             Optional<String> labelButton,
+            Optional<Image> imageButton,
+            Optional<String> tooltipButton,
             Optional<FormToolkit> toolkit,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, useCompositeMessageDecorator, labelButton, false, null, toolkit, Optional.empty(), editableStrategy,
-                ctx);
+                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, toolkit,
+                Optional.empty(), editableStrategy, ctx);
     }
 
     /*

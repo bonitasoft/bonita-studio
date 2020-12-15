@@ -284,5 +284,10 @@ public class Messages extends NLS {
     public static String users;
     public static String expandAll;
     public static String collapseAll;
+    public static String groupPathMessage;
+    public static String copyToClipboard;
+    public static String addGroupTooltip;
+    public static String addSubGroupTooltip;
+    public static String deleteTooltip;
 
 }

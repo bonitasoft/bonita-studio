@@ -999,6 +999,12 @@
                   value="org.bonitasoft.studio.businessobject.perspective">
             </equals>
          </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.identity.organization.perspective">
+            </equals>
+         </with>
          </or>
       </definition>
       <definition
