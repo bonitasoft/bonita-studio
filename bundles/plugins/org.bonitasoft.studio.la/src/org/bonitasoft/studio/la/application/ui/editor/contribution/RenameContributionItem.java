@@ -21,7 +21,6 @@ import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStor
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.dialog.RenameXMLFileDialog;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
@@ -29,7 +28,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -50,10 +48,7 @@ public class RenameContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(org.bonitasoft.studio.ui.i18n.Messages.rename);
         item.setToolTipText(org.bonitasoft.studio.ui.i18n.Messages.rename);
-        Image image = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.rename_16_dark)
-                : Pics.getImage(PicsConstants.rename_16);
-        item.setImage(image);
+        item.setImage(Pics.getImage(PicsConstants.edit));
         item.addListener(SWT.Selection, event -> onClick(parent.getShell()));
     }
 

@@ -105,9 +105,8 @@ public class Pics extends AbstractUIPlugin {
     public static Image getImage(final String imageName) {
         if (PicsConstants.hint.equals(imageName) && plugin != null) {
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-        } else {
-            return getImage(imageName, plugin);
         }
+        return getImage(imageName, plugin);
     }
 
     public static Image getImage(final String imageName, final AbstractUIPlugin plugin) {
@@ -123,7 +122,7 @@ public class Pics extends AbstractUIPlugin {
     }
 
     public static ImageDescriptor getImageDescriptor(final String imageName, final AbstractUIPlugin plugin) {
-        if(plugin == null) {
+        if (plugin == null) {
             return ImageDescriptor.getMissingImageDescriptor();
         }
         String resourceName = imageName;
@@ -136,9 +135,8 @@ public class Pics extends AbstractUIPlugin {
         URL resource = plugin.getBundle().getResource("/icons/" + resourceName);
         if (resource != null) {
             return ImageDescriptor.createFromURL(resource);
-        } else {
-            return ImageDescriptor.createFromURL(plugin.getBundle().getResource("/icons/" + imageName));
         }
+        return ImageDescriptor.createFromURL(plugin.getBundle().getResource("/icons/" + imageName));
     }
 
     private static String getExtension(String imageName) {

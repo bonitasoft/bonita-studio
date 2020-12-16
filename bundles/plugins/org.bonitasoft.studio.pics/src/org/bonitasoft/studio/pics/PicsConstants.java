@@ -231,7 +231,6 @@ public class PicsConstants {
     public static String greenCheck = "done.png";
 
     public static String greenCheck20 = "green_check_20.png";
-
     public static String empty20 = "empty_20.png";
 
     public static String redMinus = "skip.png";
@@ -380,27 +379,36 @@ public class PicsConstants {
     public static String validation = "preferences/validation.png";
     public static String validationDisabled = "preferences/validation_disabled.png";
 
-    // Editor icons
     public static String deploy_16 = "deploy16.png";
     public static String deploy_16_dark = "deploy16_dark.png";
-    public static String bin_16 = "bin.png";
-    public static String bin_16_dark = "bin_dark.png";
+
     public static String import_16 = "import_16.png";
     public static String import_16_dark = "import_16_dark.png";
+
     public static String export_16 = "export_16.png";
     public static String export_16_dark = "export_16_dark.png";
+
     public static String explore_16 = "explore_16.png";
     public static String explore_16_dark = "explore_16_dark.png";
-    public static String add_16 = "add_16.png";
-    public static String add_16_dark = "add_16_dark.png";
-    public static String add_32 = "add_32.png";
-    public static String add_32_dark = "add_32_dark.png";
+
+    public static String add_item = "add_item.png";
+    public static String add_item_large = "add_item_large.png";
+
     public static String duplicate_16 = "duplicate_16.png";
     public static String duplicate_16_dark = "duplicate_16_dark.png";
-    public static String rename_16 = "rename_16.png";
-    public static String rename_16_dark = "rename_16_dark.png";
+
     public static String validate = "validate.png";
-    public static String validate_dark = "validate_dark.png";
-    public static String copyToClipboard = "copyToClipboard.png";
-    public static String copyToClipboard_dark = "copyToClipboard_dark.png";
+
+    public static String copyToClipboard = "copy_clipboard.png";
+
+    public static String edit_simple = "edit_simple.png";
+
+    public static String add_simple = "add_simple.png";
+
+    public static String delete = "delete_icon.png";
+
+    public static String organization_group = "identity/group.png";
+    public static String add_organization_group = "identity/add_group.png";
+    public static String add_organization_subgroup = "identity/add_subgroup.png";
+
 }

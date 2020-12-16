@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.editingSupport.QueryParameterTypeEditingSupport;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.query.QueryFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.provider.QueryResultTypeLabelProvider;
@@ -37,6 +36,8 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.QueryParameterNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -278,13 +279,13 @@ public class QueryDetailsControl extends Composite {
 
         addParameterItem = new ToolItem(toolBar, SWT.PUSH);
         addParameterItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_PARAM_BUTTON_ID);
-        addParameterItem.setImage(BusinessObjectPlugin.getImage("/icons/add.png"));
+        addParameterItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addParameterItem.setToolTipText(Messages.addParameterTooltip);
         addParameterItem.addListener(SWT.Selection, e -> addParameter());
 
         deleteParameterItem = new ToolItem(toolBar, SWT.PUSH);
         deleteParameterItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_PARAM_BUTTON_ID);
-        deleteParameterItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteParameterItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteParameterItem.setToolTipText(Messages.deleteParameterTooltip);
         deleteParameterItem.addListener(SWT.Selection, e -> removeParameter());
     }

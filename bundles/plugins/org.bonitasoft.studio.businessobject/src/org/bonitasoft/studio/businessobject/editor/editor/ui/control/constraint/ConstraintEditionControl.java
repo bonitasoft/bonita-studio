@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.IndexableFieldFilter;
 import org.bonitasoft.studio.businessobject.editor.editor.listener.ConstraintAttributeCheckListener;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
@@ -32,6 +31,8 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintFieldsValidator;
 import org.bonitasoft.studio.businessobject.validator.UniqueConstraintNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
@@ -390,12 +391,12 @@ public class ConstraintEditionControl {
 
         ToolItem addConstraintItem = new ToolItem(toolBar, SWT.PUSH);
         addConstraintItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_CONSTRAINT_BUTTON_ID);
-        addConstraintItem.setImage(BusinessObjectPlugin.getImage("/icons/add.png"));
+        addConstraintItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addConstraintItem.setToolTipText(Messages.addConstraintTooltip);
         addConstraintItem.addListener(SWT.Selection, e -> addUniqueConstraint());
 
         deleteConstraintItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteConstraintItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteConstraintItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteConstraintItem.setToolTipText(Messages.deleteConstraintTooltip);
         deleteConstraintItem.addListener(SWT.Selection, e -> removeSelectedConstraint());
     }

@@ -33,7 +33,6 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
@@ -48,7 +47,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
-import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -102,10 +100,7 @@ public class ApplicationDescriptorControl {
                 "org.bonitasoft.studio.la.ui.editor.clone." + application.getToken());
         final ToolItem deleteToolItem = new ToolItem(toolBar, SWT.PUSH);
         deleteToolItem.setToolTipText(Messages.deleteApplicationDescriptor);
-        Image deleteImage = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.bin_16_dark)
-                : Pics.getImage(PicsConstants.bin_16);
-        deleteToolItem.setImage(deleteImage);
+        deleteToolItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteToolItem.addListener(SWT.Selection,
                 new DeleteApplicationDescriptorListener(application, formPage));
         deleteToolItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,

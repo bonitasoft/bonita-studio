@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
@@ -212,7 +214,7 @@ public class TextWidget extends EditableControlWidget {
     @Override
     protected int horizontalSpacing() {
         if (labelAbove && transactionalEdit) {
-            return 1;
+            return 5;
         }
         return super.horizontalSpacing();
     }
@@ -387,7 +389,7 @@ public class TextWidget extends EditableControlWidget {
         final ToolItem editButton = new ToolItem(toolBar, SWT.FLAT);
         editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON);
-        editButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "edit.png").createImage());
+        editButton.setImage(Pics.getImageDescriptor(PicsConstants.edit_simple).createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
         editButton.addListener(SWT.Selection, editListener(toolBar));

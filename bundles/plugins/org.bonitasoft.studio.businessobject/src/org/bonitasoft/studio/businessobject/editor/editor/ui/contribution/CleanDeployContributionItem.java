@@ -18,9 +18,7 @@ import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBd
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -33,10 +31,7 @@ public class CleanDeployContributionItem extends DeployContributionItem {
     @Override
     public void fill(ToolBar parent, int index) {
         item = new ToolItem(parent, SWT.PUSH);
-        Image image = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.bin_16_dark)
-                : Pics.getImage(PicsConstants.bin_16);
-        item.setImage(image);
+        item.setImage(Pics.getImage(PicsConstants.delete));
         item.setText(Messages.cleanDeployTitle);
         item.setToolTipText(Messages.cleanDeployTitle);
         item.addListener(SWT.Selection, event -> deploy(true));

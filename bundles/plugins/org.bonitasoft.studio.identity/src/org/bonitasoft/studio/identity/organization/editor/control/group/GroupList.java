@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
@@ -285,7 +284,7 @@ public class GroupList {
 
     private void createGroupColumn() {
         TreeViewerColumn column = new TreeViewerColumn(viewer, SWT.NONE);
-        Image groupsImage = Pics.getImage("groups.gif", IdentityPlugin.getDefault());
+        Image groupsImage = Pics.getImage(PicsConstants.organization_group);
         column.setLabelProvider(new LabelProviderBuilder<Group>()
                 .withTextProvider(Group::getDisplayName)
                 .withImageProvider(grp -> groupsImage)
@@ -386,19 +385,19 @@ public class GroupList {
     protected void createAddDeleteItems(ToolBar toolBar) {
         addGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_GROUP_BUTTON_ID);
-        addGroupItem.setImage(Pics.getImage("addGroup.png", IdentityPlugin.getDefault()));
+        addGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_group));
         addGroupItem.setToolTipText(Messages.addGroupTooltip);
         addGroupItem.addListener(SWT.Selection, e -> addGroup(null));
 
         addSubGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addSubGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_SUB_GROUP_BUTTON_ID);
-        addSubGroupItem.setImage(Pics.getImage("addSubGroup.png", IdentityPlugin.getDefault()));
+        addSubGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_subgroup));
         addSubGroupItem.setToolTipText(Messages.addSubGroupTooltip);
         addSubGroupItem.addListener(SWT.Selection, e -> addSubGroup());
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_BUTTON_ID);
-        deleteItem.setImage(Pics.getImage("delete_icon.png"));
+        deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setToolTipText(Messages.deleteTooltip);
         deleteItem.addListener(SWT.Selection, e -> removeGroup());
     }

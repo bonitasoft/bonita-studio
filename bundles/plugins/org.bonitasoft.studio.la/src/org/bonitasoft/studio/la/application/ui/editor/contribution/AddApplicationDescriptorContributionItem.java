@@ -21,10 +21,8 @@ import org.bonitasoft.studio.la.application.ui.editor.listener.AddApplicationDes
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -50,10 +48,7 @@ public class AddApplicationDescriptorContributionItem extends ContributionItem {
         item.setText(Messages.add);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setToolTipText(Messages.addApplicationDescriptorTitle);
-        Image image = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.add_16_dark)
-                : Pics.getImage(PicsConstants.add_16);
-        item.setImage(image);
+        item.setImage(Pics.getImage(PicsConstants.add_item));
         item.addListener(SWT.Selection, listener::handleEvent);
     }
 
