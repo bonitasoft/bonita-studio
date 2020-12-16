@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.IndexableFieldFilter;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
@@ -32,6 +31,8 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.validator.IndexFieldsValidator;
 import org.bonitasoft.studio.businessobject.validator.IndexNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
@@ -188,12 +189,12 @@ public class IndexControl {
 
         ToolItem addIndexItem = new ToolItem(toolBar, SWT.PUSH);
         addIndexItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_INDEX_BUTTON_ID);
-        addIndexItem.setImage(BusinessObjectPlugin.getImage("/icons/add.png"));
+        addIndexItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addIndexItem.setToolTipText(Messages.addIndexTooltip);
         addIndexItem.addListener(SWT.Selection, e -> addIndex());
 
         deleteIndexItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteIndexItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteIndexItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteIndexItem.setToolTipText(Messages.deleteIndexTooltip);
         deleteIndexItem.addListener(SWT.Selection, e -> removeIndex());
     }

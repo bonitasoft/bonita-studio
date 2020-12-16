@@ -34,6 +34,8 @@ import org.bonitasoft.studio.businessobject.refactor.DiffElement;
 import org.bonitasoft.studio.businessobject.refactor.Event;
 import org.bonitasoft.studio.businessobject.validator.FieldNameValidator;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.CheckboxLabelProviderBuilder;
@@ -392,14 +394,14 @@ public class AttributeEditionControl extends Composite {
         formPage.getToolkit().adapt(toolBar);
 
         ToolItem addFieldItem = new ToolItem(toolBar, SWT.PUSH);
-        addFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/add.png"));
+        addFieldItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addFieldItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_ATTRIBUTE_BUTTON_ID);
         addFieldItem.setToolTipText(Messages.addFieldTooltip);
         addFieldItem.addListener(SWT.Selection, e -> addAttribute());
 
         deleteFieldItem = new ToolItem(toolBar, SWT.PUSH);
         deleteFieldItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_ATTRIBUTE_BUTTON_ID);
-        deleteFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteFieldItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteFieldItem.setToolTipText(Messages.deleteFieldTooltip);
         deleteFieldItem.addListener(SWT.Selection, e -> removeSelectedAttribute());
 

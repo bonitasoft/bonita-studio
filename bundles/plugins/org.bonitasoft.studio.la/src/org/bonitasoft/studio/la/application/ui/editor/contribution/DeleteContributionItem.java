@@ -21,11 +21,9 @@ import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStor
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
@@ -48,10 +46,7 @@ public class DeleteContributionItem extends ContributionItem {
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.delete);
         item.setToolTipText(String.format(Messages.deleteContainer, formEditor.getEditorInput().getName()));
-        Image deleteImage = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.bin_16_dark)
-                : Pics.getImage(PicsConstants.bin_16);
-        item.setImage(deleteImage);
+        item.setImage(Pics.getImage(PicsConstants.delete));
         item.addListener(SWT.Selection, event -> onClick(parent.getShell()));
     }
 

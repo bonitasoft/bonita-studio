@@ -26,14 +26,11 @@ import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.theme.ThemeRepositoryStore;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
@@ -118,10 +115,7 @@ public class ApplicationFormPart extends AbstractFormPart {
                 formPage.getRepositoryAccessor());
 
         final ImageHyperlink imageHyperlink = toolkit.createImageHyperlink(composite, SWT.NO_FOCUS);
-        Image image = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.add_32_dark)
-                : Pics.getImage(PicsConstants.add_32);
-        imageHyperlink.setImage(image);
+        imageHyperlink.setImage(Pics.getImage(PicsConstants.add_item_large));
         imageHyperlink.addHyperlinkListener(listener);
         imageHyperlink.setLayoutData(GridDataFactory.fillDefaults().create());
         Link labelLink = new Link(composite, SWT.NO_FOCUS);

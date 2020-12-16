@@ -26,7 +26,6 @@ import org.bonitasoft.studio.identity.organization.validator.GroupDisplayNameVal
 import org.bonitasoft.studio.identity.organization.validator.GroupNameValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
@@ -41,7 +40,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
@@ -91,14 +89,11 @@ public class GroupEditionControl {
     }
 
     private void createPathField(Composite parent) {
-        Image copyToCLipboardImage = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.copyToClipboard_dark)
-                : Pics.getImage(PicsConstants.copyToClipboard);
         pathTextWidget = new TextWidget.Builder()
                 .labelAbove()
                 .withLabel(Messages.groupPath)
                 .withMessage(Messages.groupPathMessage)
-                .withButton(copyToCLipboardImage, Messages.copyToClipboard)
+                .withButton(Pics.getImage(PicsConstants.copyToClipboard), Messages.copyToClipboard)
                 .onClickButton(e -> copyToClipBoard(toPath(selectedGroupObservable.getValue())))
                 .widthHint(400)
                 .bindTo(selectedGroupObservable)

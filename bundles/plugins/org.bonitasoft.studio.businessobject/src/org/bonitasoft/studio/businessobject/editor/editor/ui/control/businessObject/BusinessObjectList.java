@@ -417,7 +417,7 @@ public class BusinessObjectList {
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_BUTTON_ID);
-        deleteItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setToolTipText(Messages.deleteTooltip);
         deleteItem.addListener(SWT.Selection, e -> remove(formPage));
     }

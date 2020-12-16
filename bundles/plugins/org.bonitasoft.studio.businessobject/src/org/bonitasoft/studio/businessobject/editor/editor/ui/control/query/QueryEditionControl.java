@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.QueryContentCreator;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.query.QueryFormPage;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.provider.QueryContentProvider;
@@ -181,12 +180,12 @@ public class QueryEditionControl {
 
         ToolItem addQueryItem = new ToolItem(toolBar, SWT.PUSH);
         addQueryItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_QUERY_BUTTON_ID);
-        addQueryItem.setImage(BusinessObjectPlugin.getImage("/icons/add.png"));
+        addQueryItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addQueryItem.setToolTipText(Messages.addQueryTooltip);
         addQueryItem.addListener(SWT.Selection, e -> addQuery());
 
         deleteQueryItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteQueryItem.setImage(BusinessObjectPlugin.getImage("/icons/delete_icon.png"));
+        deleteQueryItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteQueryItem.setToolTipText(Messages.deleteQueryTooltip);
         deleteQueryItem.addListener(SWT.Selection, e -> removeQuery());
 

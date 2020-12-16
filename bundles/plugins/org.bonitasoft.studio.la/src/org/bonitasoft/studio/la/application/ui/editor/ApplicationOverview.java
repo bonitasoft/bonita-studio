@@ -55,7 +55,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -65,7 +64,7 @@ public class ApplicationOverview extends Composite implements IValueChangeListen
     protected ApplicationNodeContainerConverter applicationNodeContainerConverter = RepositoryManager.getInstance()
             .getRepositoryStore(ApplicationRepositoryStore.class).getConverter();
 
-    private DataBindingContext ctx;
+    protected DataBindingContext ctx;
     protected ApplicationFormPage formPage;
 
     public ApplicationOverview(Composite parent, ApplicationFormPage formPage, ApplicationNode application,
@@ -156,9 +155,18 @@ public class ApplicationOverview extends Composite implements IValueChangeListen
         profileModelObservable.addValueChangeListener(this);
 
         Composite profileComposite = formPage.getToolkit().createComposite(this);
-        profileComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        profileComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         profileComposite.setLayoutData(GridDataFactory.fillDefaults().hint(WIDGET_WIDTH_HINT, SWT.DEFAULT).create());
 
+        createAddProfileTextWidget(profileModelObservable, profileComposite);
+    }
+
+    protected ProfileValidator getProfileValidator() {
+        return new ProfileValidator();
+    }
+
+    protected void createAddProfileTextWidget(IObservableValue<String> profileModelObservable,
+            Composite profileComposite) {
         new TextWidget.Builder()
                 .withLabel(Messages.profile)
                 .labelAbove()
@@ -172,17 +180,6 @@ public class ApplicationOverview extends Composite implements IValueChangeListen
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(profileComposite);
-
-        createAddProfileButton(profileModelObservable, profileComposite);
-    }
-
-    protected ProfileValidator getProfileValidator() {
-        return new ProfileValidator();
-    }
-
-    protected void createAddProfileButton(IObservableValue<String> profileModelObservable,
-            Composite profileComposite) {
-        new Label(profileComposite, SWT.NONE); // Filler, add button is only available in sp editions
     }
 
     private void buildDescription(DataBindingContext ctx, ApplicationNode application) {
