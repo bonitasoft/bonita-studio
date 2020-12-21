@@ -193,7 +193,7 @@
 								<!-- Configure tomcat bundle resource -->
 								<move todir="${tomcat.bundle.dir}">
 									<fileset
-										dir="${tomcat.bundle.dir}/BonitaCommunity-${bundle.version}/" />
+										dir="${tomcat.bundle.dir}/BonitaCommunity-${branding.version}/" />
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
