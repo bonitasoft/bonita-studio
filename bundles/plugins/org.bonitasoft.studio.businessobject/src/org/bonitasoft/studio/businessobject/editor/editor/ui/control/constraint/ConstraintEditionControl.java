@@ -276,7 +276,7 @@ public class ConstraintEditionControl {
     private void createContraintsDefinitionComposite(Composite parent, AbstractBdmFormPage formPage) {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1).margins(5, 10)
+                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).margins(5, 10)
                         .create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(500, SWT.DEFAULT).create());
 
@@ -333,7 +333,7 @@ public class ConstraintEditionControl {
         constraintViewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
         constraintViewer.getTable()
-                .setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         constraintViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, CONSTRAINTS_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(constraintViewer.getTable());
         ColumnViewerToolTipSupport.enableFor(constraintViewer);
@@ -386,17 +386,19 @@ public class ConstraintEditionControl {
     }
 
     private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
+        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
 
         ToolItem addConstraintItem = new ToolItem(toolBar, SWT.PUSH);
         addConstraintItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_CONSTRAINT_BUTTON_ID);
         addConstraintItem.setImage(Pics.getImage(PicsConstants.add_simple));
+        addConstraintItem.setText(Messages.add);
         addConstraintItem.setToolTipText(Messages.addConstraintTooltip);
         addConstraintItem.addListener(SWT.Selection, e -> addUniqueConstraint());
 
         deleteConstraintItem = new ToolItem(toolBar, SWT.PUSH);
         deleteConstraintItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteConstraintItem.setText(Messages.delete);
         deleteConstraintItem.setToolTipText(Messages.deleteConstraintTooltip);
         deleteConstraintItem.addListener(SWT.Selection, e -> removeSelectedConstraint());
     }

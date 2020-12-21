@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.businessobject.editor.editor.filter.IndexableFieldFilter;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.AbstractBdmFormPage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessDataModelPackage;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
@@ -83,7 +82,6 @@ public class IndexControl {
     private IObservableValue<BusinessObject> selectedBoObservable;
     private ToolItem deleteIndexItem;
     private TableViewer indexViewer;
-    private IndexableFieldFilter indexableFieldFilter;
     private IndexEditionControl indexEditionControl;
     private Section section;
     private Composite mainComposite;
@@ -93,7 +91,6 @@ public class IndexControl {
             AbstractBdmFormPage formPage,
             DataBindingContext ctx) {
 
-        this.indexableFieldFilter = new IndexableFieldFilter();
         this.formPage = formPage;
         this.selectedBoObservable = formPage.observeBusinessObjectSelected();
 
@@ -130,7 +127,7 @@ public class IndexControl {
 
     private void createIndexDefinitionComposite(Composite parent) {
         Composite composite = formPage.getToolkit().createComposite(parent);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
+        composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1)
                 .extendedMargins(15, 5, 10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
@@ -184,17 +181,19 @@ public class IndexControl {
     }
 
     private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
+        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
 
         ToolItem addIndexItem = new ToolItem(toolBar, SWT.PUSH);
         addIndexItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_INDEX_BUTTON_ID);
         addIndexItem.setImage(Pics.getImage(PicsConstants.add_simple));
+        addIndexItem.setText(Messages.add);
         addIndexItem.setToolTipText(Messages.addIndexTooltip);
         addIndexItem.addListener(SWT.Selection, e -> addIndex());
 
         deleteIndexItem = new ToolItem(toolBar, SWT.PUSH);
         deleteIndexItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteIndexItem.setText(Messages.delete);
         deleteIndexItem.setToolTipText(Messages.deleteIndexTooltip);
         deleteIndexItem.addListener(SWT.Selection, e -> removeIndex());
     }
@@ -255,7 +254,7 @@ public class IndexControl {
     private void createIndexViewer(Composite parent) {
         indexViewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
         indexViewer.getTable()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).span(2, 1).hint(350, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(350, SWT.DEFAULT).create());
         indexViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, INDEX_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(indexViewer.getTable());
         ColumnViewerToolTipSupport.enableFor(indexViewer);

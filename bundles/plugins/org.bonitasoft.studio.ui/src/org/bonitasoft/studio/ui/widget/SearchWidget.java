@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
 
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -77,6 +78,7 @@ public class SearchWidget extends TextWidget {
         final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
+        newText.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.SEARCH_WIDGET);
         return newText;
     }
 

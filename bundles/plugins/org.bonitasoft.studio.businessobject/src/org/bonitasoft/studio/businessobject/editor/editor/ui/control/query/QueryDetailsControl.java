@@ -274,18 +274,20 @@ public class QueryDetailsControl extends Composite {
     }
 
     private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
+        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
 
         addParameterItem = new ToolItem(toolBar, SWT.PUSH);
         addParameterItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_PARAM_BUTTON_ID);
         addParameterItem.setImage(Pics.getImage(PicsConstants.add_simple));
+        addParameterItem.setText(Messages.add);
         addParameterItem.setToolTipText(Messages.addParameterTooltip);
         addParameterItem.addListener(SWT.Selection, e -> addParameter());
 
         deleteParameterItem = new ToolItem(toolBar, SWT.PUSH);
         deleteParameterItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_PARAM_BUTTON_ID);
         deleteParameterItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteParameterItem.setText(Messages.delete);
         deleteParameterItem.setToolTipText(Messages.deleteParameterTooltip);
         deleteParameterItem.addListener(SWT.Selection, e -> removeParameter());
     }
@@ -360,7 +362,7 @@ public class QueryDetailsControl extends Composite {
         parametersTableViewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         parametersTableViewer.getControl()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+                .setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
         parametersTableViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, QUERY_PARAMETERS_VIEWER_ID);
         ColumnViewerToolTipSupport.enableFor(parametersTableViewer);
         parametersTableViewer.getTable().setHeaderVisible(true);

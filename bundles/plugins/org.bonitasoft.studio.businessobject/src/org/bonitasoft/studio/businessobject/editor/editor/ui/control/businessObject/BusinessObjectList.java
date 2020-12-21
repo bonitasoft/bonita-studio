@@ -143,7 +143,8 @@ public class BusinessObjectList {
     protected Composite createBusinessObjectListComposite(AbstractBdmFormPage formPage) {
         Composite boListComposite = formPage.getToolkit().createComposite(section);
         boListComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1).margins(5, 10)
+                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1)
+                        .margins(5, 10)
                         .create());
         boListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -201,7 +202,7 @@ public class BusinessObjectList {
 
     protected void createViewer(Composite parent, AbstractBdmFormPage formPage) {
         viewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
+        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         formPage.getToolkit().adapt(viewer.getTree());
         viewer.getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, BUSINESS_OBJECT_LIST_VIEWER_ID);
         viewer.addFilter(createSearchFilter());
@@ -373,7 +374,7 @@ public class BusinessObjectList {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
+                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
 
         ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
@@ -406,20 +407,25 @@ public class BusinessObjectList {
         addPackageItem = new ToolItem(toolBar, SWT.PUSH);
         addPackageItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_PACKAGE_BUTTON_ID);
         addPackageItem.setImage(BusinessObjectPlugin.getImage("/icons/addPackageIcon.png"));
+        addPackageItem.setText(Messages.addPackage);
         addPackageItem.setToolTipText(Messages.createPackageTooltip);
         addPackageItem.addListener(SWT.Selection, e -> addPackage(formPage));
 
         addBoItem = new ToolItem(toolBar, SWT.PUSH);
         addBoItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_BO_BUTTON_ID);
         addBoItem.setImage(BusinessObjectPlugin.getImage("/icons/addObjectIcon.png"));
+        addBoItem.setText(Messages.addBusinessObject);
         addBoItem.setToolTipText(Messages.createBoTooltip);
         addBoItem.addListener(SWT.Selection, e -> addBusinessObject(formPage));
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_BUTTON_ID);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteItem.setText(Messages.delete);
         deleteItem.setToolTipText(Messages.deleteTooltip);
         deleteItem.addListener(SWT.Selection, e -> remove(formPage));
+
+        new ToolItem(toolBar, SWT.SEPARATOR);
     }
 
     private void addPackage(AbstractBdmFormPage formPage) {

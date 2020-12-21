@@ -24,6 +24,8 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IMarker;
@@ -49,6 +51,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -347,7 +350,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
             tableViewer.refresh();
         }
     }
-    
+
     /**
      * Update the status line with the new selection
      *
@@ -363,7 +366,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
-        } 
+        }
         getViewSite().getActionBars().getStatusLineManager().setMessage(message);
     }
 
@@ -371,6 +374,11 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
         if (tableViewer != null && !tableViewer.getTable().isDisposed()) {
             tableViewer.setInput(tableViewer.getInput());
         }
+    }
+
+    @Override
+    public Image getTitleImage() {
+        return Pics.getImage(PicsConstants.validate);
     }
 
 }
