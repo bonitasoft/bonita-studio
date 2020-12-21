@@ -29,6 +29,7 @@ public interface BonitaThemeConstants {
     public static final String EDITOR_TOOLBAR_TEXT_COLOR = "editorToolbarTextColor";
     public static final String TABLE_BACKGROUND_COLOR = "tableBackground";
     public static final String NOTIFICATION_COMPOSITE = "notificationComposite";
+    public static final String SEARCH_WIDGET = "searchWidget";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";

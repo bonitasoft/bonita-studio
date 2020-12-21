@@ -244,7 +244,9 @@ public class Messages extends NLS {
     public static String bonitaUsersProvidedScriptDeprecationMessage;
     public static String bonitaXMLProvidedScriptDeprecationMessage;
     public static String bonitaTypesProvidedScriptDeprecationMessage;
-    
+
+    public static String validate;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -127,8 +127,7 @@ public class GroupList {
     private Composite createGroupListComposite() {
         Composite groupListComposite = formPage.getToolkit().createComposite(section);
         groupListComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1).margins(5, 10)
-                        .create());
+                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).margins(5, 10).create());
         groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createToolbar(groupListComposite);
@@ -149,7 +148,7 @@ public class GroupList {
 
     protected void createViewer(Composite parent) {
         viewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
+        viewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         formPage.getToolkit().adapt(viewer.getTree());
         viewer.getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, GROUP_LIST_VIEWER_ID);
         viewer.addFilter(createSearchFilter());
@@ -353,11 +352,12 @@ public class GroupList {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create());
+                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
 
         ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
         createAddDeleteItems(toolBar);
+        new ToolItem(toolBar, SWT.SEPARATOR);
         createExpandCollapseItems(toolBar);
     }
 
@@ -386,18 +386,21 @@ public class GroupList {
         addGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_GROUP_BUTTON_ID);
         addGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_group));
+        addGroupItem.setText(Messages.addNewGroup);
         addGroupItem.setToolTipText(Messages.addGroupTooltip);
         addGroupItem.addListener(SWT.Selection, e -> addGroup(null));
 
         addSubGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addSubGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_SUB_GROUP_BUTTON_ID);
         addSubGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_subgroup));
+        addSubGroupItem.setText(Messages.addSubGroup);
         addSubGroupItem.setToolTipText(Messages.addSubGroupTooltip);
         addSubGroupItem.addListener(SWT.Selection, e -> addSubGroup());
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_BUTTON_ID);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteItem.setText(Messages.delete);
         deleteItem.setToolTipText(Messages.deleteTooltip);
         deleteItem.addListener(SWT.Selection, e -> removeGroup());
     }

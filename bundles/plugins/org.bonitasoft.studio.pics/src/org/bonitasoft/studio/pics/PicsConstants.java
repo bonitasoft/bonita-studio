@@ -379,8 +379,7 @@ public class PicsConstants {
     public static String validation = "preferences/validation.png";
     public static String validationDisabled = "preferences/validation_disabled.png";
 
-    public static String deploy_16 = "deploy16.png";
-    public static String deploy_16_dark = "deploy16_dark.png";
+    public static String deploy = "deploy.png";
 
     public static String import_16 = "import_16.png";
     public static String import_16_dark = "import_16_dark.png";
@@ -410,5 +409,8 @@ public class PicsConstants {
     public static String organization_group = "identity/group.png";
     public static String add_organization_group = "identity/add_group.png";
     public static String add_organization_subgroup = "identity/add_subgroup.png";
+
+    public static String up = "up.png";
+    public static String down = "down.png";
 
 }

@@ -122,9 +122,8 @@ public class QueryEditionControl {
 
         Composite definitionComposite = formPage.getToolkit().createComposite(client);
         definitionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-        definitionComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 1)
-                        .margins(10, 10).create());
+        definitionComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1)
+                .margins(10, 10).create());
 
         createToolbar(definitionComposite);
         createSearchField(definitionComposite);
@@ -175,19 +174,23 @@ public class QueryEditionControl {
     }
 
     private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
+        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
 
         ToolItem addQueryItem = new ToolItem(toolBar, SWT.PUSH);
         addQueryItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_QUERY_BUTTON_ID);
         addQueryItem.setImage(Pics.getImage(PicsConstants.add_simple));
+        addQueryItem.setText(Messages.add);
         addQueryItem.setToolTipText(Messages.addQueryTooltip);
         addQueryItem.addListener(SWT.Selection, e -> addQuery());
 
         deleteQueryItem = new ToolItem(toolBar, SWT.PUSH);
         deleteQueryItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteQueryItem.setText(Messages.delete);
         deleteQueryItem.setToolTipText(Messages.deleteQueryTooltip);
         deleteQueryItem.addListener(SWT.Selection, e -> removeQuery());
+
+        new ToolItem(toolBar, SWT.SEPARATOR);
 
         ToolItem expandItem = new ToolItem(toolBar, SWT.PUSH);
         expandItem.setImage(Pics.getImage(PicsConstants.expandAll));
@@ -203,7 +206,7 @@ public class QueryEditionControl {
     private void createViewer(Composite parent) {
         Composite customModeComposite = formPage.getToolkit().createComposite(parent);
         customModeComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        customModeComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, true).create());
+        customModeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         viewer = createQueryViewer(customModeComposite);
         viewer.setInput(boSelectedObservable);

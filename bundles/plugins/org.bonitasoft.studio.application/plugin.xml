@@ -517,9 +517,9 @@
                   checkEnabled="true">
             </visibleWhen>
          </command>
-         <command
-               commandId="org.bonitasoft.studio.application.command.deployArtifacts"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.application.ui.contribution.DeployArtifactsMenuContributionItem"
+               id="org.bonitasoft.studio.application.deployArtifacts">
             <visibleWhen
                   checkEnabled="false">
                <with
@@ -541,7 +541,7 @@
                   </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
          <separator
                name="deploySeparator"
                visible="true">

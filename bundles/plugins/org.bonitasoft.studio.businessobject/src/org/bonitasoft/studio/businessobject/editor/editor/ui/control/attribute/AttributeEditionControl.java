@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.editor.editor.filter.SearchFilter;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.editingSupport.FieldTypeEditingSupport;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.BusinessDataModelFormPage;
@@ -390,30 +389,32 @@ public class AttributeEditionControl extends Composite {
     }
 
     private void createToolbar(Composite parent) {
-        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.LEFT | SWT.NO_FOCUS | SWT.FLAT);
+        ToolBar toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);
 
         ToolItem addFieldItem = new ToolItem(toolBar, SWT.PUSH);
         addFieldItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addFieldItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_ATTRIBUTE_BUTTON_ID);
+        addFieldItem.setText(Messages.add);
         addFieldItem.setToolTipText(Messages.addFieldTooltip);
         addFieldItem.addListener(SWT.Selection, e -> addAttribute());
+
+        upFieldItem = new ToolItem(toolBar, SWT.PUSH);
+        upFieldItem.setImage(Pics.getImage(PicsConstants.up));
+        upFieldItem.setText(Messages.up);
+        upFieldItem.addListener(SWT.Selection, e -> upSelectedAttribute());
+
+        downFieldItem = new ToolItem(toolBar, SWT.PUSH);
+        downFieldItem.setImage(Pics.getImage(PicsConstants.down));
+        downFieldItem.setText(Messages.down);
+        downFieldItem.addListener(SWT.Selection, e -> downSelectedAttribute());
 
         deleteFieldItem = new ToolItem(toolBar, SWT.PUSH);
         deleteFieldItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_ATTRIBUTE_BUTTON_ID);
         deleteFieldItem.setImage(Pics.getImage(PicsConstants.delete));
+        deleteFieldItem.setText(Messages.delete);
         deleteFieldItem.setToolTipText(Messages.deleteFieldTooltip);
         deleteFieldItem.addListener(SWT.Selection, e -> removeSelectedAttribute());
-
-        upFieldItem = new ToolItem(toolBar, SWT.PUSH);
-        upFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/up.png"));
-        upFieldItem.setToolTipText(Messages.up);
-        upFieldItem.addListener(SWT.Selection, e -> upSelectedAttribute());
-
-        downFieldItem = new ToolItem(toolBar, SWT.PUSH);
-        downFieldItem.setImage(BusinessObjectPlugin.getImage("/icons/down.png"));
-        downFieldItem.setToolTipText(Messages.down);
-        downFieldItem.addListener(SWT.Selection, e -> downSelectedAttribute());
     }
 
     private void downSelectedAttribute() {

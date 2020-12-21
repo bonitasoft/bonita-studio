@@ -1249,28 +1249,17 @@
             point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.application.separator2">
-            <command
-                  commandId="org.bonitasoft.studio.validation.batchValidation"
-                  icon="icons/validate.png"
-                  label="%batchValidationAction_Label"
-                  style="push">
-               <parameter
-                     name="showReport"
-                     value="true">
-               </parameter>
-               <parameter
-                     name="checkAllModelVersion"
-                     value="true">
-               </parameter>
-            </command>
+            <dynamic
+                  class="org.bonitasoft.studio.validation.ui.menu.BatchValidationMenuContributionItem"
+                  id="org.bonitasoft.studio.validation.menu.contribution">
+            </dynamic>
        </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
-         <command
-               commandId="org.bonitasoft.studio.validation.command.validateDiagram"
-               icon="icons/validate.png"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.validation.ui.menu.DiagramValidationMenuContributionItem"
+               id="org.bonitasoft.studio.validation.diagram.explorer.contribution">
             <visibleWhen>
                <and>
                   <count
@@ -1283,12 +1272,10 @@
                   </iterate>
                </and>
             </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.validation.batchValidation"
-               icon="icons/validate.png"
-               label="%batchValidationAction_Label"
-               style="push">
+         </dynamic>
+         <dynamic
+               class="org.bonitasoft.studio.validation.ui.menu.BatchValidationMenuContributionItem"
+               id="org.bonitasoft.studio.validation.explorer.contribution">
             <visibleWhen
                   checkEnabled="true">
                <and>
@@ -1302,15 +1289,7 @@
                   </iterate>
                </and>
             </visibleWhen>
-            <parameter
-                  name="showReport"
-                  value="true">
-            </parameter>
-            <parameter
-                  name="checkAllModelVersion"
-                  value="true">
-            </parameter>
-         </command>
+         </dynamic>
       </menuContribution>
       </extension>
       <extension
@@ -1345,7 +1324,6 @@
                allowMultiple="false"
                category="org.bonitasoft.studio.application.bonita"
                class="org.bonitasoft.studio.validation.ui.view.ValidationViewPart"
-               icon="icons/validate.png"
                id="org.bonitasoft.studio.validation.view"
                name="%ValidationView"
                restorable="true">
