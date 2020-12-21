@@ -29,10 +29,18 @@ public class ProductVersion {
     public static final String CURRENT_VERSION = manifestVersion(true);
     public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
-    public static final String CURRENT_YEAR = "2020";
+    public static final String CURRENT_YEAR = "2021";
+
+    public static final String BUILD_ID = trimDot(System.getProperty("eclipse.buildId", null));
+    public static final String BRANDING_VERSION = System.getProperty("branding.version", null);
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
+    }
+    
+    private static String trimDot(String label) {
+        return label != null && label.lastIndexOf(".") == label.length() - 1 ? label.substring(0, label.length() - 1)
+                : label;
     }
 
     private static String manifestVersion(boolean stripQualifier) {
@@ -45,18 +53,20 @@ public class ProductVersion {
             return stripQualifier ? stripSnaphot(implementationVersion) : implementationVersion;
         }
         Version version = bundle.getVersion();
-        return stripQualifier ? 
-                String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro())
-                :  convertQualifierToMavenFormat(version);
+        return stripQualifier ? String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getMicro())
+                : convertQualifierToMavenFormat(version);
     }
 
     private static String convertQualifierToMavenFormat(Version version) {
-        return hasTimestampQualifier(version) ? String.format("%s.%s.%s-SNAPSHOT", version.getMajor(), version.getMinor(), version.getMicro()) : version.toString();
+        return hasTimestampQualifier(version)
+                ? String.format("%s.%s.%s-SNAPSHOT", version.getMajor(), version.getMinor(), version.getMicro())
+                : version.toString();
     }
 
-   static boolean hasTimestampQualifier(Version version) {
+    static boolean hasTimestampQualifier(Version version) {
         String qualifier = version.getQualifier();
-        return qualifier != null && !qualifier.isEmpty() && (qualifier.matches("[0-9].*$") || "qualifier".equals(qualifier));
+        return qualifier != null && !qualifier.isEmpty()
+                && (qualifier.matches("[0-9].*$") || "qualifier".equals(qualifier));
     }
 
     private static String stripSnaphot(String version) {
@@ -104,7 +114,8 @@ public class ProductVersion {
         } catch (final IllegalArgumentException e) {
             return false;
         }
-        return minorVersion(version).compareTo(minorVersion(CURRENT_VERSION)) <= 0 && current.compareTo(initialVersion) >= 0;
+        return minorVersion(version).compareTo(minorVersion(CURRENT_VERSION)) <= 0
+                && current.compareTo(initialVersion) >= 0;
     }
 
     public static String majorVersion() {
@@ -132,6 +143,7 @@ public class ProductVersion {
     public static String toMinorVersionString(Version version) {
         return String.format("%s.%s", version.getMajor(), version.getMinor());
     }
+
     public static String mavenVersion() {
         return manifestVersion(false);
     }

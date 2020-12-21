@@ -70,11 +70,12 @@ import org.eclipse.ui.internal.about.InstallationDialog;
 import org.eclipse.ui.internal.dialogs.AboutFeaturesDialog;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+
 /**
  * @author Romain Bioteau
- *
  */
 public class AboutDialog extends TrayDialog {
+
     private final static int MAX_IMAGE_WIDTH_FOR_TEXT = 250;
 
     private final static int DETAILS_ID = IDialogConstants.CLIENT_ID + 1;
@@ -90,34 +91,35 @@ public class AboutDialog extends TrayDialog {
     private AboutFeaturesButtonManager buttonManager = new AboutFeaturesButtonManager();
 
     private StyledText text;
-    
+
     private AboutTextManager aboutTextManager;
 
     /**
      * Create an instance of the AboutDialog for the given window.
+     * 
      * @param parentShell The parent of the dialog.
      */
     public AboutDialog(Shell parentShell) {
         super(parentShell);
         product = Platform.getProduct();
         if (product != null) {
-			productName = product.getName();
-		}
+            productName = product.getName();
+        }
         if (productName == null) {
-			productName = WorkbenchMessages.AboutDialog_defaultProductName;
-		}
+            productName = WorkbenchMessages.AboutDialog_defaultProductName;
+        }
 
         // create a descriptive object for each BundleGroup
         IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
         LinkedList groups = new LinkedList();
         if (providers != null) {
-			for (int i = 0; i < providers.length; ++i) {
+            for (int i = 0; i < providers.length; ++i) {
                 IBundleGroup[] bundleGroups = providers[i].getBundleGroups();
                 for (int j = 0; j < bundleGroups.length; ++j) {
-					groups.add(new AboutBundleGroupData(bundleGroups[j]));
-				}
+                    groups.add(new AboutBundleGroupData(bundleGroups[j]));
+                }
             }
-		}
+        }
         bundleGroupInfos = (AboutBundleGroupData[]) groups
                 .toArray(new AboutBundleGroupData[0]);
     }
@@ -127,19 +129,20 @@ public class AboutDialog extends TrayDialog {
      */
     protected void buttonPressed(int buttonId) {
         switch (buttonId) {
-        case DETAILS_ID:
-			BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-				public void run() {
-					IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					InstallationDialog dialog = new InstallationDialog(getShell(), workbenchWindow);
-					dialog.setModalParent(AboutDialog.this);
-					dialog.open();	
-				}
-			});
-            break;
-        default:
-            super.buttonPressed(buttonId);
-            break;
+            case DETAILS_ID:
+                BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+
+                    public void run() {
+                        IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                        InstallationDialog dialog = new InstallationDialog(getShell(), workbenchWindow);
+                        dialog.setModalParent(AboutDialog.this);
+                        dialog.open();
+                    }
+                });
+                break;
+            default:
+                super.buttonPressed(buttonId);
+                break;
         }
     }
 
@@ -158,23 +161,22 @@ public class AboutDialog extends TrayDialog {
      */
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(NLS.bind(WorkbenchMessages.AboutDialog_shellTitle,productName ));
+        newShell.setText(NLS.bind(WorkbenchMessages.AboutDialog_shellTitle, productName));
         PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
-				IWorkbenchHelpContextIds.ABOUT_DIALOG);
+                IWorkbenchHelpContextIds.ABOUT_DIALOG);
     }
 
     /**
      * Add buttons to the dialog's button bar.
-     * 
      * Subclasses should override.
      * 
      * @param parent
-     *            the button bar composite
+     *        the button bar composite
      */
     protected void createButtonsForButtonBar(Composite parent) {
         parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        createButton(parent, DETAILS_ID, WorkbenchMessages.AboutDialog_DetailsButton, false); 
+        createButton(parent, DETAILS_ID, WorkbenchMessages.AboutDialog_DetailsButton, false);
 
         Label l = new Label(parent, SWT.NONE);
         l.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -188,37 +190,36 @@ public class AboutDialog extends TrayDialog {
     }
 
     /**
-     * Creates and returns the contents of the upper part 
+     * Creates and returns the contents of the upper part
      * of the dialog (above the button bar).
-     *
      * Subclasses should overide.
      *
-     * @param parent  the parent composite to contain the dialog area
+     * @param parent the parent composite to contain the dialog area
      * @return the dialog area control
      */
     protected Control createDialogArea(Composite parent) {
-         // brand the about box if there is product info
+        // brand the about box if there is product info
         Image aboutImage = null;
         AboutItem item = null;
         if (product != null) {
             ImageDescriptor imageDescriptor = ProductProperties
                     .getAboutImage(product);
             if (imageDescriptor != null) {
-				aboutImage = imageDescriptor.createImage();
-			}
+                aboutImage = imageDescriptor.createImage();
+            }
 
             // if the about image is small enough, then show the text
             if (aboutImage == null
                     || aboutImage.getBounds().width <= MAX_IMAGE_WIDTH_FOR_TEXT) {
-            	String aboutText = getAboutText();
+                String aboutText = getAboutText();
                 if (aboutText != null) {
-					item = AboutTextManager.scan(aboutText);
-				}
+                    item = AboutTextManager.scan(aboutText);
+                }
             }
 
             if (aboutImage != null) {
-				images.add(aboutImage);
-			}
+                images.add(aboutImage);
+            }
         }
 
         // create a composite which is the parent of the top area and the bottom
@@ -261,16 +262,15 @@ public class AboutDialog extends TrayDialog {
         layout.verticalSpacing = 0;
         layout.horizontalSpacing = 0;
         topContainer.setLayout(layout);
-        
 
-		// Calculate a good height for the text
+        // Calculate a good height for the text
         GC gc = new GC(parent);
-		int lineHeight = gc.getFontMetrics().getHeight();
-		gc.dispose();
+        int lineHeight = gc.getFontMetrics().getHeight();
+        gc.dispose();
 
         int topContainerHeightHint = 100;
-        
-		topContainerHeightHint = Math.max(topContainerHeightHint, lineHeight * 6);
+
+        topContainerHeightHint = Math.max(topContainerHeightHint, lineHeight * 6);
 
         //image on left side of dialog
         if (aboutImage != null) {
@@ -286,7 +286,7 @@ public class AboutDialog extends TrayDialog {
             imageLabel.setImage(aboutImage);
             topContainerHeightHint = Math.max(topContainerHeightHint, aboutImage.getBounds().height);
         }
-        
+
         GridData data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.verticalAlignment = GridData.FILL;
@@ -294,83 +294,84 @@ public class AboutDialog extends TrayDialog {
         data.grabExcessVerticalSpace = true;
         data.heightHint = topContainerHeightHint;
         topContainer.setLayoutData(data);
-        
+
         if (item != null) {
-			final int minWidth = 432;
-			// This value should really be calculated
-        	// from the computeSize(SWT.DEFAULT,
-        	// SWT.DEFAULT) of all the
-        	// children in infoArea excluding the
-        	// wrapped styled text
-        	// There is no easy way to do this.
+            final int minWidth = 432;
+            // This value should really be calculated
+            // from the computeSize(SWT.DEFAULT,
+            // SWT.DEFAULT) of all the
+            // children in infoArea excluding the
+            // wrapped styled text
+            // There is no easy way to do this.
 
-			// A scrolled composite is used instead of a vertical scroll bar on
-			// the styled text, because styled text does not automatically
-			// remove the vertical bar when not needed.
-        	final ScrolledComposite scroller = new ScrolledComposite(topContainer,
-    				SWT.V_SCROLL | SWT.H_SCROLL);
-        	data = new GridData(GridData.FILL_BOTH);
-        	data.widthHint = minWidth;
-    		scroller.setLayoutData(data);
+            // A scrolled composite is used instead of a vertical scroll bar on
+            // the styled text, because styled text does not automatically
+            // remove the vertical bar when not needed.
+            final ScrolledComposite scroller = new ScrolledComposite(topContainer,
+                    SWT.V_SCROLL | SWT.H_SCROLL);
+            data = new GridData(GridData.FILL_BOTH);
+            data.widthHint = minWidth;
+            scroller.setLayoutData(data);
 
-    		final Composite textComposite = new Composite(scroller, SWT.NONE);
-    		textComposite.setBackground(background);
-    		
-    		layout = new GridLayout();
-    		textComposite.setLayout(layout);
+            final Composite textComposite = new Composite(scroller, SWT.NONE);
+            textComposite.setBackground(background);
 
-    		text = new StyledText(textComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+            layout = new GridLayout();
+            textComposite.setLayout(layout);
 
-    		// Don't set caret to 'null' as this causes https://bugs.eclipse.org/293263.
-//    		text.setCaret(null);
+            text = new StyledText(textComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+
+            // Don't set caret to 'null' as this causes https://bugs.eclipse.org/293263.
+            //    		text.setCaret(null);
 
             text.setFont(parent.getFont());
             text.setText(item.getText());
             text.setCursor(null);
             text.setBackground(background);
             text.setForeground(foreground);
-            
+
             aboutTextManager = new AboutTextManager(text);
             aboutTextManager.setItem(item);
-            
+
             createTextMenu();
-            
-    		GridData gd = new GridData();
-    		gd.verticalAlignment = GridData.BEGINNING;
-    		gd.horizontalAlignment = GridData.FILL;
-    		gd.grabExcessHorizontalSpace = true;
-    		text.setLayoutData(gd);
 
-    		// Adjust the scrollbar increments
-    		scroller.getHorizontalBar().setIncrement(20);
-    		scroller.getVerticalBar().setIncrement(20);
+            GridData gd = new GridData();
+            gd.verticalAlignment = GridData.BEGINNING;
+            gd.horizontalAlignment = GridData.FILL;
+            gd.grabExcessHorizontalSpace = true;
+            text.setLayoutData(gd);
 
-    		final boolean[] inresize = new boolean[1]; // flag to stop unneccesary
-    		// recursion
-    		textComposite.addControlListener(new ControlAdapter() {
-    			public void controlResized(ControlEvent e) {
-    				if (inresize[0])
-    					return;
-    				inresize[0] = true;
-    				// required because of bugzilla report 4579
-    				textComposite.layout(true);
-    				// required because you want to change the height that the
-    				// scrollbar will scroll over when the width changes.
-    				int width = textComposite.getClientArea().width;
-    				Point p = textComposite.computeSize(width, SWT.DEFAULT);
-    				scroller.setMinSize(minWidth, p.y);
-    				inresize[0] = false;
-    			}
-    		});
+            // Adjust the scrollbar increments
+            scroller.getHorizontalBar().setIncrement(20);
+            scroller.getVerticalBar().setIncrement(20);
 
-    		scroller.setExpandHorizontal(true);
-    		scroller.setExpandVertical(true);
-    		Point p = textComposite.computeSize(minWidth, SWT.DEFAULT);
-    		textComposite.setSize(p.x, p.y);
-    		scroller.setMinWidth(minWidth);
-    		scroller.setMinHeight(p.y);
+            final boolean[] inresize = new boolean[1]; // flag to stop unneccesary
+            // recursion
+            textComposite.addControlListener(new ControlAdapter() {
 
-    		scroller.setContent(textComposite);
+                public void controlResized(ControlEvent e) {
+                    if (inresize[0])
+                        return;
+                    inresize[0] = true;
+                    // required because of bugzilla report 4579
+                    textComposite.layout(true);
+                    // required because you want to change the height that the
+                    // scrollbar will scroll over when the width changes.
+                    int width = textComposite.getClientArea().width;
+                    Point p = textComposite.computeSize(width, SWT.DEFAULT);
+                    scroller.setMinSize(minWidth, p.y);
+                    inresize[0] = false;
+                }
+            });
+
+            scroller.setExpandHorizontal(true);
+            scroller.setExpandVertical(true);
+            Point p = textComposite.computeSize(minWidth, SWT.DEFAULT);
+            textComposite.setSize(p.x, p.y);
+            scroller.setMinWidth(minWidth);
+            scroller.setMinHeight(p.y);
+
+            scroller.setContent(textComposite);
         }
 
         // horizontal bar
@@ -388,7 +389,7 @@ public class AboutDialog extends TrayDialog {
         data.horizontalAlignment = SWT.FILL;
         data.verticalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
-        
+
         bottom.setLayoutData(data);
 
         createFeatureImageButtonRow(bottom);
@@ -402,39 +403,40 @@ public class AboutDialog extends TrayDialog {
         return workArea;
     }
 
-	protected String getAboutText() {
-		String buildId = System.getProperty("eclipse.buildId", null) ; 
-		String productVersion = System.getProperty("product.version", null) ; 
-		String aboutText = Messages.bind(Messages.aboutText,new Object[]{productVersion,buildId, bonitaBPMCommunity,corporateName,ProductVersion.CURRENT_YEAR}) ;
-		return aboutText;
-	}
+    protected String getAboutText() {
+        return NLS.bind(Messages.aboutText, new Object[] {
+                ProductVersion.BRANDING_VERSION,
+                ProductVersion.BUILD_ID,
+                bonitaBPMCommunity, corporateName, ProductVersion.CURRENT_YEAR
+        });
+    }
 
     /**
-	 * Create the context menu for the text widget.
-	 * 
-	 * @since 3.4
-	 */
-	private void createTextMenu() {
-		final MenuManager textManager = new MenuManager();
-		textManager.add(new CommandContributionItem(
-				new CommandContributionItemParameter(PlatformUI
-						.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
-						CommandContributionItem.STYLE_PUSH)));
-		textManager.add(new CommandContributionItem(
-				new CommandContributionItemParameter(PlatformUI
-						.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_SELECT_ALL,
-						CommandContributionItem.STYLE_PUSH)));
-		text.setMenu(textManager.createContextMenu(text));
-		text.addDisposeListener(new DisposeListener() {
+     * Create the context menu for the text widget.
+     * 
+     * @since 3.4
+     */
+    private void createTextMenu() {
+        final MenuManager textManager = new MenuManager();
+        textManager.add(new CommandContributionItem(
+                new CommandContributionItemParameter(PlatformUI
+                        .getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
+                        CommandContributionItem.STYLE_PUSH)));
+        textManager.add(new CommandContributionItem(
+                new CommandContributionItemParameter(PlatformUI
+                        .getWorkbench(), null, IWorkbenchCommandConstants.EDIT_SELECT_ALL,
+                        CommandContributionItem.STYLE_PUSH)));
+        text.setMenu(textManager.createContextMenu(text));
+        text.addDisposeListener(new DisposeListener() {
 
-			public void widgetDisposed(DisposeEvent e) {
-				textManager.dispose();
-			}
-		});
-		
-	}
+            public void widgetDisposed(DisposeEvent e) {
+                textManager.dispose();
+            }
+        });
 
-	private void createFeatureImageButtonRow(Composite parent) {
+    }
+
+    private void createFeatureImageButtonRow(Composite parent) {
         Composite featureContainer = new Composite(parent, SWT.NONE);
         RowLayout rowLayout = new RowLayout();
         rowLayout.wrap = true;
@@ -444,15 +446,15 @@ public class AboutDialog extends TrayDialog {
         featureContainer.setLayoutData(data);
 
         for (int i = 0; i < bundleGroupInfos.length; i++) {
-			createFeatureButton(featureContainer, bundleGroupInfos[i]);
-		}
+            createFeatureButton(featureContainer, bundleGroupInfos[i]);
+        }
     }
 
     private Button createFeatureButton(Composite parent,
             final AboutBundleGroupData info) {
         if (!buttonManager.add(info)) {
-			return null;
-		}
+            return null;
+        }
 
         ImageDescriptor desc = info.getFeatureImage();
         Image featureImage = null;
@@ -463,16 +465,19 @@ public class AboutDialog extends TrayDialog {
         images.add(featureImage);
         button.setImage(featureImage);
         button.setToolTipText(info.getProviderName());
-        
-        button.getAccessible().addAccessibleListener(new AccessibleAdapter(){
-        	/* (non-Javadoc)
-			 * @see org.eclipse.swt.accessibility.AccessibleAdapter#getName(org.eclipse.swt.accessibility.AccessibleEvent)
-			 */
-			public void getName(AccessibleEvent e) {
-				e.result = info.getProviderName();
-			}
+
+        button.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.swt.accessibility.AccessibleAdapter#getName(org.eclipse.swt.accessibility.AccessibleEvent)
+             */
+            public void getName(AccessibleEvent e) {
+                e.result = info.getProviderName();
+            }
         });
         button.addSelectionListener(new SelectionAdapter() {
+
             public void widgetSelected(SelectionEvent event) {
                 AboutBundleGroupData[] groupInfos = buttonManager
                         .getRelatedInfos(info);
@@ -488,13 +493,12 @@ public class AboutDialog extends TrayDialog {
         return button;
     }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.dialogs.Dialog#isResizable()
-	 */
-	protected boolean isResizable() {
-		return true;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#isResizable()
+     */
+    protected boolean isResizable() {
+        return true;
+    }
 
 }

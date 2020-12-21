@@ -13,6 +13,7 @@
 		<tychoVersion>1.7.0</tychoVersion>
 		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
+		<branding.version>2021.1-SNAPSHOT</branding.version>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.12.41</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
@@ -20,7 +21,7 @@
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
-		<image-overlay-plugin.version>1.0.9</image-overlay-plugin.version>
+		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.exclusions>

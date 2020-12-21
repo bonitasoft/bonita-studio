@@ -28,7 +28,7 @@
 		<productId>org.bonitasoft.studio.product</productId>
 		<antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
 		<p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
-		<root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
+		<root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${branding.version}</root.dir.arg>
 		<signServiceURL></signServiceURL>
 	</properties>
 
@@ -116,7 +116,7 @@
 							<yLocation>108</yLocation>
 							<fontSize>32</fontSize>
 							<color>#0B4361</color>
-							<versionLabel>${project.version}</versionLabel>
+							<versionLabel>${branding.version}</versionLabel>
 						</configuration>
 						<goals>
 							<goal>create-image</goal>
@@ -157,7 +157,7 @@
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
-					<finalName>${repositoryId}-${project.version}</finalName>
+					<finalName>${repositoryId}-${branding.version}</finalName>
 					<profileProperties>
 						<macosx-bundled>true</macosx-bundled>
 					</profileProperties>
@@ -186,7 +186,7 @@
 						<product>
 							<id>${productId}</id>
 							<rootFolders>
-								<macosx>${product.short.name}-${project.version}.app</macosx>
+								<macosx>${product.short.name}-${branding.version}.app</macosx>
 							</rootFolders>
 						</product>
 					</products>
@@ -262,7 +262,7 @@
 							</descriptors>
 							<attach>false</attach>
 							<appendAssemblyId>false</appendAssemblyId>
-							<finalName>${product.short.name}-${project.version}</finalName>
+							<finalName>${product.short.name}-${branding.version}</finalName>
 						</configuration>
 						<goals>
 							<goal>single</goal>
@@ -276,7 +276,7 @@
 							<descriptors>
 								<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
 							</descriptors>
-							<finalName>${product.short.name}-${project.version}</finalName>
+							<finalName>${product.short.name}-${branding.version}</finalName>
 						</configuration>
 						<goals>
 							<goal>single</goal>
@@ -374,7 +374,7 @@
 										<property name="enable.uninstaller" value="1" />
 										<property file="installer/installer.properties" />
 										<property name="installer.name"
-											value="${product.short.name}-${product.version}-x86_64.run" />
+											value="${product.short.name}-${branding.version}-x86_64.run" />
 										<property name="updated.project.file"
 											value="${basedir}/installer/installer_project_linux_x86_64.xml" />
 										<property name="jre.folder.name" value="${jre.folder.name}" />
@@ -393,14 +393,14 @@
 										<property name="mac.studio.dir"
 											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
 										<property name="studio.dir"
-											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse" />
+											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${branding.version}.app/Contents/Eclipse" />
 										<property name="enable.uninstaller" value="0" />
 										<property name="bitrock.install"
 											value="${project.build.directory}/installers" />
 										<property name="os_arch" value="64" />
 										<property file="installer/installer.properties" />
 										<property name="installer.name"
-											value="${product.short.name}-${product.version}.app" />
+											value="${product.short.name}-${branding.version}.app" />
 										<property name="jre.osx.archive.name" value="${jre.osx.url}.tar.gz" />
 										<property name="updated.project.file"
 											value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
@@ -424,7 +424,7 @@
 										<property name="enable.uninstaller" value="1" />
 										<property file="installer/installer.properties" />
 										<property name="installer.name"
-											value="${product.short.name}-${product.version}-x86_64.exe" />
+											value="${product.short.name}-${branding.version}-x86_64.exe" />
 										<property name="updated.project.file"
 											value="${basedir}/installer/installer_project_win_x86_64.xml" />
 										<ant antfile="createInstallerProject.xml" />
@@ -536,7 +536,7 @@
 											</then>
 										</if>
 										<copy
-											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${project.version}.app/Contents/Eclipse/jre">
+											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/${product.short.name}-${branding.version}.app/Contents/Eclipse/jre">
 											<fileset
 												dir="${user.home}/${jre.osx.url}/${jre.folder.name}" />
 										</copy>
@@ -581,7 +581,7 @@
 								<configuration>
 									<executable>./sign-macosx.sh</executable>
 									<arguments>
-										<argument>${product.short.name}-${project.version}.app</argument>
+										<argument>${product.short.name}-${branding.version}.app</argument>
 										<argument>${macSignServiceURL}</argument>
 										<argument>${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/</argument>
 									</arguments>
@@ -596,9 +596,9 @@
 								<configuration>
 									<executable>./sign.sh</executable>
 									<arguments>
-										<argument>${product.short.name}-${project.version}-x86_64.exe</argument>
+										<argument>${product.short.name}-${branding.version}-x86_64.exe</argument>
 										<argument>${signServiceURL}</argument>
-										<argument>${product.short.name}-${project.version}-x86_64.exe</argument>
+										<argument>${product.short.name}-${branding.version}-x86_64.exe</argument>
 										<argument>${project.build.directory}/installers/output/</argument>
 									</arguments>
 								</configuration>
@@ -612,9 +612,9 @@
 								<configuration>
 									<executable>./sign.sh</executable>
 									<arguments>
-										<argument>${product.short.name}-${project.version}.app.zip</argument>
+										<argument>${product.short.name}-${branding.version}.app.zip</argument>
 										<argument>${macBuildAndSignInstallerServiceURL}</argument>
-										<argument>${product.short.name}-${project.version}-macOs.dmg</argument>
+										<argument>${product.short.name}-${branding.version}-macOs.dmg</argument>
 										<argument>${project.build.directory}/installers/output/</argument>
 									</arguments>
 								</configuration>
