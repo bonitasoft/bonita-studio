@@ -9,7 +9,7 @@
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>${project.build.directory}/${product.short.name}-${project.version}</directory>
+			<directory>${project.build.directory}/${product.short.name}-${branding.version}</directory>
 			<includes>
 				<include>**</include>
 			</includes>

@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.ui.PlatformUI;
 
 public class OpenReleaseNoteHandler {
 
@@ -37,7 +36,7 @@ public class OpenReleaseNoteHandler {
                     ProductVersion.majorVersion())))
                             .asView(openAsView || PlatformUtil.isIntroOpen())
                             .withInteralBrowser("org.bonitasoft.studio.browser.release.note", bringPartToTop)
-                            .withName(String.format("%s Release notes", ProductVersion.CURRENT_VERSION))
+                            .withName(String.format("%s Release notes", ProductVersion.BRANDING_VERSION))
                             .execute();
         } catch (MalformedURLException e) {
             BonitaStudioLog.error(e);

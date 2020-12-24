@@ -8,6 +8,7 @@
 		<replace file="${updated.project.file}" token="@product.short.name@" value="${product.short.name}"/>
 		<replace file="${updated.project.file}" token="@product.full.name@" value="${product.full.name}"/>
 		<replace file="${updated.project.file}" token="@product.version@" value="${product.version}"/>
+		<replace file="${updated.project.file}" token="@branding.version@" value="${branding.version}"/>
 		<replace file="${updated.project.file}" token="@file.shortname@" value="${file.shortname}"/>
 		<replace file="${updated.project.file}" token="@os_arch@" value="${os_arch}"/>
 		
