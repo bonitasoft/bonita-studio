@@ -13,7 +13,7 @@
 		<tychoVersion>1.7.0</tychoVersion>
 		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<branding.version>2021.1</branding.version>
+		<branding.version>2021.2</branding.version>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.13.0</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
