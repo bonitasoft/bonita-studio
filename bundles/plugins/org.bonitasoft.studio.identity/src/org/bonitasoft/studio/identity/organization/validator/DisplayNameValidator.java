@@ -20,11 +20,11 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 
-public class GroupDisplayNameValidator implements IValidator<String> {
+public class DisplayNameValidator implements IValidator<String> {
 
     private InputLengthValidator inputLengthValidator;
 
-    public GroupDisplayNameValidator() {
+    public DisplayNameValidator() {
         inputLengthValidator = new InputLengthValidator(Messages.name, ValidatorConstants.LONG_FIELD_MAX_LENGTH);
     }
 

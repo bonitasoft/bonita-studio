@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Bonitasoft S.A.
+ * Copyright (C) 2021 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,35 +15,32 @@
 package org.bonitasoft.studio.identity.organization.validator;
 
 import org.bonitasoft.studio.identity.IdentityPlugin;
-import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
+import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 
-public class GroupListValidator implements IValidator<Group> {
+public class RoleListValidator implements IValidator<Role> {
 
-    private IObservableValue<Group> selectedGroupObservable = new WritableValue<>();
-    private GroupParentPathLengthValidator groupParentPathLengthValidator;
-    private GroupNameValidator groupNameValidator;
-    private DisplayNameValidator groupDisplayNameValidator;
+    private IObservableValue<Role> selectedRoleObservable = new WritableValue<>();
+    private RoleNameValidator roleNameValidator;
+    private DisplayNameValidator displayNameValidator;
 
-    public GroupListValidator(IObservableValue<Organization> organizationObservable) {
-        groupParentPathLengthValidator = new GroupParentPathLengthValidator();
-        groupNameValidator = new GroupNameValidator(organizationObservable, selectedGroupObservable);
-        groupDisplayNameValidator = new DisplayNameValidator();
+    public RoleListValidator(IObservableValue<Organization> organizationObservable) {
+        roleNameValidator = new RoleNameValidator(organizationObservable, selectedRoleObservable);
+        displayNameValidator = new DisplayNameValidator();
     }
 
     @Override
-    public IStatus validate(Group group) {
-        selectedGroupObservable.setValue(group);
+    public IStatus validate(Role group) {
+        selectedRoleObservable.setValue(group);
         MultiStatus globalStatus = new MultiStatus(IdentityPlugin.PLUGIN_ID, 0, "", null);
 
-        globalStatus.add(groupParentPathLengthValidator.validate(group));
-        globalStatus.add(groupNameValidator.validate(group.getName()));
-        globalStatus.add(groupDisplayNameValidator.validate(group.getName()));
+        globalStatus.add(roleNameValidator.validate(group.getName()));
+        globalStatus.add(displayNameValidator.validate(group.getName()));
 
         return globalStatus;
     }
