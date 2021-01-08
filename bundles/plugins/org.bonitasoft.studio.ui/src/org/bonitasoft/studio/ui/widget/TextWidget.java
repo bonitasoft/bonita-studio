@@ -25,8 +25,7 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
-import org.bonitasoft.studio.ui.ColorConstants;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -34,6 +33,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.bindings.Trigger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -179,13 +179,13 @@ public class TextWidget extends EditableControlWidget {
     private final boolean transactionalEdit;
     private final Optional<BiConsumer<String, String>> onEdit;
     private boolean editing = false;
-    private final Color editingColor;
     private ToolItem okButton;
     private final Optional<IContentProposalProvider> proposalProvider;
     private Optional<ComputedValue<Boolean>> enableStrategy;
     private Optional<DataBindingContext> ctx;
     private Optional<Image> imageButton;
     private Optional<String> tooltipButton;
+    private IThemeEngine themeEngine;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -199,11 +199,13 @@ public class TextWidget extends EditableControlWidget {
         this.transactionalEdit = transactionalEdit;
         this.onEdit = Optional.ofNullable(onEdit);
         this.proposalProvider = proposalProvider;
-        this.editingColor = resourceManager.createColor(ColorConstants.EDITING_RGB);
         this.enableStrategy = enableStrategy;
         this.ctx = ctx;
         this.imageButton = imageButton;
         this.tooltipButton = tooltipButton;
+        if (PlatformUI.isWorkbenchRunning()) {
+            this.themeEngine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+        }
     }
 
     @Override
@@ -267,11 +269,6 @@ public class TextWidget extends EditableControlWidget {
     public TextWidget setLabelColor(Color color) {
         label.ifPresent(label -> label.setForeground(color));
         return this;
-    }
-
-    @Override
-    protected Color selectedBorderColor(Control container) {
-        return editing ? editingColor : super.selectedBorderColor(container);
     }
 
     @Override
@@ -496,17 +493,16 @@ public class TextWidget extends EditableControlWidget {
     }
 
     protected void configureBackground(Control control) {
-        if (!PreferenceUtil.isDarkTheme()) {
-            final Color backgroundColor = control.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-            final Color whiteColor = control.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-            if (toolkit.isPresent()) {
-                if (control instanceof Composite) {
-                    toolkit.get().adapt((Composite) control);
-                } else {
-                    toolkit.get().adapt(control, true, true);
-                }
+        if (toolkit.isPresent()) {
+            if (control instanceof Composite) {
+                toolkit.get().adapt((Composite) control);
+            } else {
+                toolkit.get().adapt(control, true, true);
             }
-            control.setBackground(readOnly ? backgroundColor : whiteColor);
+        }
+        control.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, readOnly ? BonitaThemeConstants.TEXT_READ_ONLY : "");
+        if (themeEngine != null) {
+            themeEngine.applyStyles(control, true);
         }
         control.setEnabled(!readOnly);
     }
