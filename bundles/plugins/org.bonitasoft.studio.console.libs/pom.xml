@@ -197,9 +197,6 @@
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
-								<replace file="${tomcat.bundle.dir}/server/conf/logging.properties"
-									token="org.bonitasoft.level = WARNING" value="org.bonitasoft.level = INFO"
-									failOnNoReplacements="true" />
 								<delete dir="${tomcat.bundle.dir}/server/webapps/examples" />
 
 								<!-- Package javadoc -->
