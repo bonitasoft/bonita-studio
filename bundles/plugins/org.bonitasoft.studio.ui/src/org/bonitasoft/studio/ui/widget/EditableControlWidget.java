@@ -113,7 +113,7 @@ public abstract class EditableControlWidget extends ControlWidget {
     protected abstract Control createControl();
 
     protected Color selectedBorderColor(Control container) {
-        return container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER);
+        return container.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
     }
 
     protected void drawBorder(final Composite container, Event e) {

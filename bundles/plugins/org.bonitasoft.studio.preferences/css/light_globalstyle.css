@@ -56,3 +56,7 @@ CTabFolder {
     background-color: #ffffff;
     color: #4a5568;
 }
+
+#readOnly {
+    background-color: #e9e9e9;
+}

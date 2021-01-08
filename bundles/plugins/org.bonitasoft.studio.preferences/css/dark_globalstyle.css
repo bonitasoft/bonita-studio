@@ -77,3 +77,7 @@ Composite#groovyViewer > * > * > * > * > * > * > * {
     background-color: #2d3748;
     color: #cbd5e0;
 }
+
+#readOnly {
+    background-color: #454545;
+}
