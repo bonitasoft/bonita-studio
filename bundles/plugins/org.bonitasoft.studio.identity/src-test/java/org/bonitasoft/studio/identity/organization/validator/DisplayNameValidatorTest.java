@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.junit.Test;
 
-public class GroupDisplayNameValidatorTest {
+public class DisplayNameValidatorTest {
 
-    private GroupDisplayNameValidator validator = new GroupDisplayNameValidator();
+    private DisplayNameValidator validator = new DisplayNameValidator();
 
     @Test
     public void should_throw_error_when_display_name_is_too_long() {

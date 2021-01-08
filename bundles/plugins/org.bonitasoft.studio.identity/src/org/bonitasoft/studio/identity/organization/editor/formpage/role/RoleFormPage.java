@@ -63,4 +63,8 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
         }
     }
 
+    public void refreshSelectedRole() {
+        roleFormPart.refreshSelectedRole();
+    }
+
 }

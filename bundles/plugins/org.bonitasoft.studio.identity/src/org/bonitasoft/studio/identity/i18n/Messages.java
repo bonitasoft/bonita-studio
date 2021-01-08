@@ -290,5 +290,7 @@ public class Messages extends NLS {
     public static String addSubGroupTooltip;
     public static String deleteTooltip;
     public static String addNewGroup;
-
+    public static String organizationRoles;
+    public static String addNewRole;
+    public static String addRoleTooltip;
 }

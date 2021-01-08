@@ -22,7 +22,7 @@ import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFo
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
-import org.bonitasoft.studio.identity.organization.validator.GroupDisplayNameValidator;
+import org.bonitasoft.studio.identity.organization.validator.DisplayNameValidator;
 import org.bonitasoft.studio.identity.organization.validator.GroupNameValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -131,7 +131,7 @@ public class GroupEditionControl {
     private void createDisplayNameField(Composite parent) {
         IObservableValue<String> displayNameObservable = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
                 selectedGroupObservable, OrganizationPackage.Literals.GROUP__DISPLAY_NAME);
-        GroupDisplayNameValidator displayNameValidator = new GroupDisplayNameValidator();
+        DisplayNameValidator displayNameValidator = new DisplayNameValidator();
         new TextWidget.Builder()
                 .withLabel(Messages.displayName)
                 .labelAbove()

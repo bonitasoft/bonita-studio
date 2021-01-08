@@ -63,6 +63,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -383,16 +385,20 @@ public class GroupList {
     }
 
     protected void createAddDeleteItems(ToolBar toolBar) {
+        Image addImage = new DecorationOverlayIcon(Pics.getImage(PicsConstants.organization_group),
+                Pics.getImageDescriptor(PicsConstants.add_decorator), IDecoration.BOTTOM_RIGHT).createImage();
         addGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_GROUP_BUTTON_ID);
-        addGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_group));
+        addGroupItem.setImage(addImage);
         addGroupItem.setText(Messages.addNewGroup);
         addGroupItem.setToolTipText(Messages.addGroupTooltip);
         addGroupItem.addListener(SWT.Selection, e -> addGroup(null));
 
+        Image addSubGroupImage = new DecorationOverlayIcon(Pics.getImage(PicsConstants.organization_group),
+                Pics.getImageDescriptor(PicsConstants.add_subelement_decorator), IDecoration.BOTTOM_RIGHT).createImage();
         addSubGroupItem = new ToolItem(toolBar, SWT.PUSH);
         addSubGroupItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_SUB_GROUP_BUTTON_ID);
-        addSubGroupItem.setImage(Pics.getImage(PicsConstants.add_organization_subgroup));
+        addSubGroupItem.setImage(addSubGroupImage);
         addSubGroupItem.setText(Messages.addSubGroup);
         addSubGroupItem.setToolTipText(Messages.addSubGroupTooltip);
         addSubGroupItem.addListener(SWT.Selection, e -> addSubGroup());
