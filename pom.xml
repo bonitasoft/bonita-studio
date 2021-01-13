@@ -13,7 +13,7 @@
 		<tychoVersion>1.7.0</tychoVersion>
 		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<branding.version>2021.1</branding.version>
+		<branding.version>2021.1-SNAPSHOT</branding.version>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.12.41</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
@@ -196,6 +196,11 @@
 						</filters>
 					</configuration>
 				</plugin>
+                <plugin>
+                    <groupId>org.codehaus.gmaven</groupId>
+                    <artifactId>groovy-maven-plugin</artifactId>
+                    <version>2.1.1</version>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -207,6 +212,23 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <phase>initialize</phase>
+                    <goals>
+                      <goal>execute</goal>
+                    </goals>
+                    <configuration>
+                      <source>
+                        project.properties["branding.version.short"] = "${branding.version}".replaceAll('-.*', '')
+                      </source>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-versions-plugin</artifactId>
