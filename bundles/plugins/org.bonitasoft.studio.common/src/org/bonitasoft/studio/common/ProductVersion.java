@@ -32,12 +32,15 @@ public class ProductVersion {
     public static final String CURRENT_YEAR = "2021";
 
     public static final String BUILD_ID = trimDot(System.getProperty("eclipse.buildId", null));
-    public static final String BRANDING_VERSION = System.getProperty("branding.version", null);
+    public static final String BRANDING_VERSION_RAW = System.getProperty("branding.version", null);
+    public static final String BRANDING_VERSION = BRANDING_VERSION_RAW != null
+            ? BRANDING_VERSION_RAW.replaceAll("-.*", "")
+            : null;
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
     }
-    
+
     private static String trimDot(String label) {
         return label != null && label.lastIndexOf(".") == label.length() - 1 ? label.substring(0, label.length() - 1)
                 : label;
