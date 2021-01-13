@@ -29,7 +29,7 @@
                             <fontSize>35</fontSize>
                             <color>#0b4361</color>
                             <bold>true</bold>
-                            <versionLabel>${branding.version}</versionLabel>
+                            <versionLabel>${branding.version.short}</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
@@ -47,7 +47,7 @@
                             <fontSize>35</fontSize>
                             <color>#4a5568</color>
                             <bold>true</bold>
-                            <versionLabel>${branding.version}</versionLabel>
+                            <versionLabel>${branding.version.short}</versionLabel>
                         </configuration>
                         <goals>
                             <goal>create-image</goal>
