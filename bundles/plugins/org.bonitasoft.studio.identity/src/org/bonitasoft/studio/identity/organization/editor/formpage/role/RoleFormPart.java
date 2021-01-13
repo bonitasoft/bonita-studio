@@ -86,7 +86,21 @@ public class RoleFormPart extends AbstractFormPart {
 
     public void refreshSelectedRole() {
         roleList.refreshSelectedRole();
+    }
 
+    @Override
+    public void commit(boolean onSave) {
+        if (!onSave) { // onSave, commit is performed only once, on the groupFormPart
+            formPage.commit();
+        }
+        super.commit(onSave);
+        if (onSave) {
+            getManagedForm().dirtyStateChanged();
+        }
+    }
+
+    public void refreshRoleList() {
+        roleList.refreshRoleList();
     }
 
 }

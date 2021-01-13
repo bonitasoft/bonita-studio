@@ -67,4 +67,9 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
         roleFormPart.refreshSelectedRole();
     }
 
+    @Override
+    public void refreshList() {
+        roleFormPart.refreshRoleList();
+    }
+
 }

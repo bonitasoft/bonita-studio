@@ -37,7 +37,8 @@ public class SearchWidget extends TextWidget {
         public SearchWidget createIn(Composite container) {
             final SearchWidget control = new SearchWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                    imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy, Optional.ofNullable(ctx));
+                    imageButton, tooltipButton, toolkit, proposalProvider, editableStrategy, Optional.ofNullable(ctx),
+                    style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -67,15 +68,16 @@ public class SearchWidget extends TextWidget {
             Optional<FormToolkit> toolkit,
             Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
-            Optional<DataBindingContext> ctx) {
+            Optional<DataBindingContext> ctx,
+            int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, toolkit,
-                proposalProvider, editableStrategy, ctx);
+                proposalProvider, editableStrategy, ctx, style);
     }
 
     @Override
     protected Text newText(Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL);
+        final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         newText.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.SEARCH_WIDGET);
