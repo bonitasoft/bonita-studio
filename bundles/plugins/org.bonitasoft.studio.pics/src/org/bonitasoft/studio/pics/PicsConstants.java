@@ -407,14 +407,13 @@ public class PicsConstants {
     public static String delete = "delete_icon.png";
 
     public static String organization_group = "identity/group.png";
-    public static String add_organization_subgroup = "identity/add_subgroup.png";
+    public static String organization_role = "identity/role.png";
+    public static String organization_user = "identity/user.png";
 
     public static String up = "up.png";
     public static String down = "down.png";
 
-    public static String organization_role = "identity/role.png";
-    public static String add_organization_role = "identity/add_role.png";
-
     public static String add_decorator = "decoration/add.png";
     public static String add_subelement_decorator = "decoration/add_subelement.png";
+
 }

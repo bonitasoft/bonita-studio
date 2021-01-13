@@ -36,7 +36,7 @@ public class TextAreaWidget extends TextWidget {
         public TextAreaWidget createIn(Composite container) {
             final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
-                    imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx));
+                    imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             placeholder.ifPresent(control::setPlaceholder);
@@ -64,10 +64,11 @@ public class TextAreaWidget extends TextWidget {
             Optional<String> tooltipButton,
             Optional<FormToolkit> toolkit,
             Optional<ComputedValue<Boolean>> editableStrategy,
-            Optional<DataBindingContext> ctx) {
+            Optional<DataBindingContext> ctx,
+            int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, toolkit,
-                Optional.empty(), editableStrategy, ctx);
+                Optional.empty(), editableStrategy, ctx, style);
     }
 
     /*
@@ -90,7 +91,7 @@ public class TextAreaWidget extends TextWidget {
 
     @Override
     protected Text newText(final Composite textContainer) {
-        final Text text = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+        final Text text = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | style);
         text.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Listener scrollBarListener = event -> {
             final Text t = (Text) event.widget;

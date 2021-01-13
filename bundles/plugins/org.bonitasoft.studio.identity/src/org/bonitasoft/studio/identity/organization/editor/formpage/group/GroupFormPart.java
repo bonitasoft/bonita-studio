@@ -17,13 +17,10 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.group;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.io.IOException;
-
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupList;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Groups;
-import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
@@ -35,12 +32,9 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
-import org.eclipse.jface.text.DocumentRewriteSession;
-import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.AbstractFormPart;
-import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
 public class GroupFormPart extends AbstractFormPart {
 
@@ -60,24 +54,9 @@ public class GroupFormPart extends AbstractFormPart {
         createGroupDetailsControl(parent);
     }
 
-    /**
-     * Has to be done only once for all form part -> only defined in this form part.
-     */
     @Override
     public void commit(boolean onSave) {
-        Organization workingCopy = formPage.observeWorkingCopy().getValue();
-        JobSafeStructuredDocument document = (JobSafeStructuredDocument) formPage.getDocument();
-        DocumentRewriteSession session = null;
-        try {
-            session = document.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
-            document.set(formPage.getXmlProcessor().saveToString(workingCopy.eResource(), null));
-        } catch (IOException e) {
-            throw new RuntimeException("Fail to update the document", e);
-        } finally {
-            if (session != null) {
-                document.stopRewriteSession(session);
-            }
-        }
+        formPage.commit();
         super.commit(onSave);
         if (onSave) {
             getManagedForm().dirtyStateChanged();
@@ -124,6 +103,10 @@ public class GroupFormPart extends AbstractFormPart {
     public void dispose() {
         groupList.dispose();
         super.dispose();
+    }
+
+    public void refreshGroupList() {
+        groupList.refreshGroupList();
     }
 
 }

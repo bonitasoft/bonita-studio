@@ -220,18 +220,18 @@ public class GroupList {
                     @Override
                     public void drop(DropTargetEvent event) {
                         dragLeave(event);
+                        Group grp = (Group) event.data;
                         if (event.item != null) {
                             TreeItem parentItem = (TreeItem) event.item;
                             if (parentItem.getItems().length == 0 && parentItem.getParentItem() != null) {
                                 parentItem = parentItem.getParentItem();
                             }
-                            Group grp = (Group) event.data;
                             Group parentGroup = (Group) parentItem.getData();
                             updateParentPath(grp, parentGroup);
-                            viewer.refresh();
                         } else {
-                            // TODO root group
+                            updateParentPath(grp, null);
                         }
+                        viewer.refresh();
                     }
 
                 });
@@ -269,7 +269,10 @@ public class GroupList {
                 .stream()
                 .map(Group.class::cast)
                 .collect(Collectors.toList());
-        group.setParentPath(GroupContentProvider.getGroupPath(newParent));
+        String newParentPath = newParent != null
+                ? GroupContentProvider.getGroupPath(newParent)
+                : null;
+        group.setParentPath(newParentPath);
         children.forEach(child -> updateParentPath(child, group));
     }
 
@@ -519,6 +522,10 @@ public class GroupList {
     public void dispose() {
         cursorHand.dispose();
         cursorArrow.dispose();
+    }
+
+    public void refreshGroupList() {
+        viewer.refresh();
     }
 
 }

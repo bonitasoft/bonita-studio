@@ -39,10 +39,10 @@ public class NativeTextWidget extends TextWidget {
             boolean transactionalEdit, BiConsumer<String, String> onEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
-            Optional<DataBindingContext> ctx) {
+            Optional<DataBindingContext> ctx, int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, transactionalEdit, onEdit,
-                toolkit, proposalProvider, editableStrategy, ctx);
+                toolkit, proposalProvider, editableStrategy, ctx, style);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class NativeTextWidget extends TextWidget {
 
     @Override
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SINGLE | SWT.BORDER);
+        final Text newText = new Text(textContainer, SWT.SINGLE | SWT.BORDER | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;

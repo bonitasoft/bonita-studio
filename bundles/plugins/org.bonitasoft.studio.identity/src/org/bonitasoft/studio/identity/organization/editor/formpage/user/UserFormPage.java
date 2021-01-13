@@ -15,7 +15,14 @@
 package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.identity.organization.model.organization.User;
+import org.bonitasoft.studio.identity.organization.model.organization.Users;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.AbstractFormPart;
@@ -61,6 +68,29 @@ public class UserFormPage extends AbstractOrganizationFormPage {
         if (userFormPart != null) {
             userFormPart.markStale();
         }
+    }
+
+    public String toUserDisplayName(User user) {
+        if (user.getFirstName() != null && user.getLastName() != null) {
+            return String.format("%s %s", user.getFirstName(), user.getLastName());
+        }
+        return user.getUserName();
+    }
+
+    public IObservableList<User> observeUsers() {
+        IObservableValue<Users> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__USERS);
+        return EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
+                OrganizationPackage.Literals.USERS__USER);
+    }
+
+    public void refreshSelectedUser() {
+        userFormPart.refreshSelectedUser();
+    }
+
+    @Override
+    public void refreshList() {
+        userFormPart.refreshUserList();
     }
 
 }

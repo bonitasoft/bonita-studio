@@ -76,6 +76,7 @@ public class TextWidget extends EditableControlWidget {
         protected Optional<IContentProposalProvider> proposalProvider = Optional.empty();
         private Optional<String> tooltip = Optional.empty();
         protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
+        protected int style = SWT.NONE;
 
         public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
             this.editableStrategy = Optional.ofNullable(viewerObservableValue);
@@ -136,6 +137,11 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
+        public Builder withStyle(int style) {
+            this.style = style;
+            return this;
+        }
+
         @Override
         public TextWidget createIn(Composite container) {
             if (transactionalEdit && targetToModelStrategy == null) {
@@ -149,11 +155,11 @@ public class TextWidget extends EditableControlWidget {
                     ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
                             tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
-                            Optional.ofNullable(ctx))
+                            Optional.ofNullable(ctx), style)
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
                             tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
-                            Optional.ofNullable(ctx));
+                            Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onClickButton);
@@ -186,6 +192,7 @@ public class TextWidget extends EditableControlWidget {
     private Optional<Image> imageButton;
     private Optional<String> tooltipButton;
     private IThemeEngine themeEngine;
+    protected int style;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -193,10 +200,11 @@ public class TextWidget extends EditableControlWidget {
             Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
             boolean transactionalEdit, BiConsumer<String, String> onEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
-            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx) {
+            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, toolkit);
         this.transactionalEdit = transactionalEdit;
+        this.style = style;
         this.onEdit = Optional.ofNullable(onEdit);
         this.proposalProvider = proposalProvider;
         this.enableStrategy = enableStrategy;
@@ -482,7 +490,7 @@ public class TextWidget extends EditableControlWidget {
     }
 
     protected Text newText(final Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SINGLE);
+        final Text newText = new Text(textContainer, SWT.SINGLE | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         return newText;
@@ -514,6 +522,10 @@ public class TextWidget extends EditableControlWidget {
 
     public Optional<ToolItem> getButtonWithImage() {
         return buttonWithImage;
+    }
+
+    public Text getTextControl() {
+        return text;
     }
 
     public ISWTObservableValue observeEnable() {

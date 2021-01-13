@@ -69,4 +69,9 @@ public class GroupFormPage extends AbstractOrganizationFormPage {
         groupFormPart.refreshSelectedGroup();
     }
 
+    @Override
+    public void refreshList() {
+        groupFormPart.refreshGroupList();
+    }
+
 }

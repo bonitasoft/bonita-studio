@@ -293,4 +293,14 @@ public class Messages extends NLS {
     public static String organizationRoles;
     public static String addNewRole;
     public static String addRoleTooltip;
+    public static String organizationUsers;
+    public static String addNewUser;
+    public static String addUserTooltip;
+    public static String deleteRoleTitle;
+    public static String deleteRoleMsg;
+    public static String deleteUserTitle;
+    public static String deleteUserMsg;
+    public static String addMembershipTooltip;
+    public static String deleteMembershipTooltip;
+    public static String membershipEmpty;
 }

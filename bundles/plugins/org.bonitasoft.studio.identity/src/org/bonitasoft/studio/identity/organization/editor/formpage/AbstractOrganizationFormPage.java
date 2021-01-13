@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -22,9 +23,12 @@ import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
 public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Organization> implements IDocumentListener {
 
@@ -85,5 +89,23 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     }
 
     public abstract void makeStale();
+
+    public void commit() {
+        Organization workingCopy = observeWorkingCopy().getValue();
+        JobSafeStructuredDocument document = (JobSafeStructuredDocument) getDocument();
+        DocumentRewriteSession session = null;
+        try {
+            session = document.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
+            document.set(getXmlProcessor().saveToString(workingCopy.eResource(), null));
+        } catch (IOException e) {
+            throw new RuntimeException("Fail to update the document", e);
+        } finally {
+            if (session != null) {
+                document.stopRewriteSession(session);
+            }
+        }
+    }
+
+    public abstract void refreshList();
 
 }
