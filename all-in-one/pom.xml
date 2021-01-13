@@ -116,7 +116,7 @@
 							<yLocation>108</yLocation>
 							<fontSize>32</fontSize>
 							<color>#0B4361</color>
-							<versionLabel>${branding.version}</versionLabel>
+							<versionLabel>${branding.version.short}</versionLabel>
 						</configuration>
 						<goals>
 							<goal>create-image</goal>

@@ -127,11 +127,13 @@ public class AboutDialog extends TrayDialog {
     /*
      * (non-Javadoc) Method declared on Dialog.
      */
+    @Override
     protected void buttonPressed(int buttonId) {
         switch (buttonId) {
             case DETAILS_ID:
                 BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 
+                    @Override
                     public void run() {
                         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                         InstallationDialog dialog = new InstallationDialog(getShell(), workbenchWindow);
@@ -146,6 +148,7 @@ public class AboutDialog extends TrayDialog {
         }
     }
 
+    @Override
     public boolean close() {
         // dispose all images
         for (int i = 0; i < images.size(); ++i) {
@@ -159,6 +162,7 @@ public class AboutDialog extends TrayDialog {
     /*
      * (non-Javadoc) Method declared on Window.
      */
+    @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(NLS.bind(WorkbenchMessages.AboutDialog_shellTitle, productName));
@@ -173,6 +177,7 @@ public class AboutDialog extends TrayDialog {
      * @param parent
      *        the button bar composite
      */
+    @Override
     protected void createButtonsForButtonBar(Composite parent) {
         parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -197,6 +202,7 @@ public class AboutDialog extends TrayDialog {
      * @param parent the parent composite to contain the dialog area
      * @return the dialog area control
      */
+    @Override
     protected Control createDialogArea(Composite parent) {
         // brand the about box if there is product info
         Image aboutImage = null;
@@ -349,6 +355,7 @@ public class AboutDialog extends TrayDialog {
             // recursion
             textComposite.addControlListener(new ControlAdapter() {
 
+                @Override
                 public void controlResized(ControlEvent e) {
                     if (inresize[0])
                         return;
@@ -404,8 +411,12 @@ public class AboutDialog extends TrayDialog {
     }
 
     protected String getAboutText() {
+        String versionId = ProductVersion.BRANDING_VERSION_RAW != null && ProductVersion.BRANDING_VERSION_RAW.contains("-")
+                ? ProductVersion.BRANDING_VERSION_RAW.substring(ProductVersion.BRANDING_VERSION_RAW.indexOf('-') + 1)
+                : null;
         return NLS.bind(Messages.aboutText, new Object[] {
                 ProductVersion.BRANDING_VERSION,
+                versionId,
                 ProductVersion.BUILD_ID,
                 bonitaBPMCommunity, corporateName, ProductVersion.CURRENT_YEAR
         });
@@ -429,6 +440,7 @@ public class AboutDialog extends TrayDialog {
         text.setMenu(textManager.createContextMenu(text));
         text.addDisposeListener(new DisposeListener() {
 
+            @Override
             public void widgetDisposed(DisposeEvent e) {
                 textManager.dispose();
             }
@@ -472,12 +484,14 @@ public class AboutDialog extends TrayDialog {
              * (non-Javadoc)
              * @see org.eclipse.swt.accessibility.AccessibleAdapter#getName(org.eclipse.swt.accessibility.AccessibleEvent)
              */
+            @Override
             public void getName(AccessibleEvent e) {
                 e.result = info.getProviderName();
             }
         });
         button.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent event) {
                 AboutBundleGroupData[] groupInfos = buttonManager
                         .getRelatedInfos(info);
@@ -497,6 +511,7 @@ public class AboutDialog extends TrayDialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#isResizable()
      */
+    @Override
     protected boolean isResizable() {
         return true;
     }
