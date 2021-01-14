@@ -14,7 +14,12 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage.role;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.swt.widgets.ToolBar;
@@ -24,8 +29,8 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
 
     private RoleFormPart roleFormPart;
 
-    public RoleFormPage(String id, String title, IEclipseContext context) {
-        super(id, title, context);
+    public RoleFormPage(String id, String title, IEclipseContext context, OrganizationEditor editor) {
+        super(id, title, context, editor);
     }
 
     @Override
@@ -70,6 +75,14 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
     @Override
     public void refreshList() {
         roleFormPart.refreshRoleList();
+    }
+
+    public void refactorMemberships(List<Membership> memberships, String oldName, String newName) {
+        memberships.stream()
+                .filter(m -> Objects.equals(m.getRoleName(), oldName))
+                .forEach(m -> m.setRoleName(newName));
+        refreshMembershipTable();
+        refreshUserList();
     }
 
 }

@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.role.RoleFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.validator.RoleListValidator;
@@ -86,10 +87,13 @@ public class RoleList {
 
     private ToolItem addItem;
     private ToolItem deleteItem;
+    private IObservableList<Membership> membershipList;
 
-    public RoleList(Composite parent, RoleFormPage formPage, DataBindingContext ctx) {
+    public RoleList(Composite parent, RoleFormPage formPage, DataBindingContext ctx,
+            IObservableList<Membership> membershipList) {
         this.formPage = formPage;
         this.ctx = ctx;
+        this.membershipList = membershipList;
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -226,13 +230,15 @@ public class RoleList {
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setText(Messages.delete);
         deleteItem.setToolTipText(Messages.deleteTooltip);
-        deleteItem.addListener(SWT.Selection, e -> removeGroup());
+        deleteItem.addListener(SWT.Selection, e -> removeRole());
     }
 
-    private void removeGroup() {
+    private void removeRole() {
         if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteRoleTitle,
                 String.format(Messages.deleteRoleMsg, selectionObservable.getValue().getDisplayName()))) {
+            String oldName = selectionObservable.getValue().getName();
             input.remove(selectionObservable.getValue());
+            formPage.refactorMemberships(membershipList, oldName, null);
         }
     }
 

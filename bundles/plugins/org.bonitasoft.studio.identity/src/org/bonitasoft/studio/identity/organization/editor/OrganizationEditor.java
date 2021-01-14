@@ -49,9 +49,9 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     @Override
     protected void createFormPages() {
-        groupFormPage = new GroupFormPage("groups", Messages.groups, getContext());
-        roleFormPage = new RoleFormPage("roles", Messages.roles, getContext());
-        userFormPage = new UserFormPage("users", Messages.users, getContext());
+        groupFormPage = new GroupFormPage("groups", Messages.groups, getContext(), this);
+        roleFormPage = new RoleFormPage("roles", Messages.roles, getContext(), this);
+        userFormPage = new UserFormPage("users", Messages.users, getContext(), this);
         formPages.add(groupFormPage);
         formPages.add(roleFormPage);
         formPages.add(userFormPage);
@@ -122,6 +122,14 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
     @Override
     public Organization getWorkingCopy() {
         return workingCopyObservable.getValue();
+    }
+
+    public void refreshMembershipTable() {
+        userFormPage.doRefreshMembershipTable();
+    }
+
+    public void refreshUserList() {
+        userFormPage.refreshList();
     }
 
 }

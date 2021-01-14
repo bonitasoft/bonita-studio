@@ -191,8 +191,8 @@ public class MembershipSection {
         IObservableValue<String> selectedMembershipGroupParentPathObservable = EMFObservables.observeDetailValue(
                 ctx.getValidationRealm(), selectedMembershipObservable,
                 OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH);
-        column.setEditingSupport(new MembershipGroupEditingSupport(viewer,
-                selectedMembershipGroupNameObservable, selectedMembershipGroupParentPathObservable, formPage, ctx));
+        column.setEditingSupport(new MembershipGroupEditingSupport(viewer, selectedMembershipGroupNameObservable,
+                selectedMembershipGroupParentPathObservable, formPage, ctx));
         selectedMembershipGroupNameObservable.addValueChangeListener(
                 e -> Display.getDefault().asyncExec(() -> {
                     viewer.refresh(selectedMembershipObservable.getValue());
@@ -247,6 +247,10 @@ public class MembershipSection {
     private String getFirstRole() {
         return formPage.observeWorkingCopy().getValue().getRoles().getRole().stream()
                 .findFirst().map(Role::getName).orElse(null);
+    }
+
+    public void refreshTable() {
+        viewer.refresh();
     }
 
 }

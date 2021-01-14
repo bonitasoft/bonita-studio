@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 
+import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
@@ -31,8 +32,8 @@ public class UserFormPage extends AbstractOrganizationFormPage {
 
     private UserFormPart userFormPart;
 
-    public UserFormPage(String id, String title, IEclipseContext context) {
-        super(id, title, context);
+    public UserFormPage(String id, String title, IEclipseContext context, OrganizationEditor editor) {
+        super(id, title, context, editor);
     }
 
     @Override
@@ -91,6 +92,12 @@ public class UserFormPage extends AbstractOrganizationFormPage {
     @Override
     public void refreshList() {
         userFormPart.refreshUserList();
+    }
+
+    public void doRefreshMembershipTable() {
+        if (userFormPart != null) {
+            userFormPart.refreshMembershipTable();
+        }
     }
 
 }

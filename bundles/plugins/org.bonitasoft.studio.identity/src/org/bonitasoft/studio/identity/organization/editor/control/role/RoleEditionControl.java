@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.role.RoleFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.validator.DisplayNameValidator;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -41,12 +43,15 @@ public class RoleEditionControl {
     private IObservableValue<Role> selectedRoleObservable;
     private DataBindingContext ctx;
     private Section section;
+    private IObservableList<Membership> membershipList;
 
     public RoleEditionControl(Composite parent, RoleFormPage formPage, IObservableValue<Role> selectedRoleObservable,
-            DataBindingContext ctx) {
+            DataBindingContext ctx, IObservableList<Membership> membershipList) {
         this.formPage = formPage;
         this.selectedRoleObservable = selectedRoleObservable;
         this.ctx = ctx;
+        this.membershipList = membershipList;
+
         this.section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).grab(true, true).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -67,7 +72,7 @@ public class RoleEditionControl {
                 selectedRoleObservable, OrganizationPackage.Literals.ROLE__NAME);
         RoleNameValidator nameValidator = new RoleNameValidator(formPage.observeWorkingCopy(), selectedRoleObservable);
         new TextWidget.Builder()
-                .transactionalEdit()
+                .transactionalEdit((oldname, newName) -> formPage.refactorMemberships(membershipList, oldname, newName))
                 .withLabel(Messages.name)
                 .labelAbove()
                 .widthHint(300)

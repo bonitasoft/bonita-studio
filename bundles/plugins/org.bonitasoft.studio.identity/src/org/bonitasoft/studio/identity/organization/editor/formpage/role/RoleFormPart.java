@@ -19,6 +19,8 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 
 import org.bonitasoft.studio.identity.organization.editor.control.role.RoleEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.role.RoleList;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.model.organization.Roles;
@@ -42,9 +44,14 @@ public class RoleFormPart extends AbstractFormPart {
     private RoleFormPage formPage;
     private RoleList roleList;
     private RoleEditionControl roleEditionControl;
+    private IObservableList<Membership> membershipList;
 
     public RoleFormPart(Composite parent, RoleFormPage formPage) {
         this.formPage = formPage;
+        IObservableValue<Memberships> memberships = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
+                formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__MEMBERSHIPS);
+        membershipList = EMFObservables.observeDetailList(ctx.getValidationRealm(),
+                memberships, OrganizationPackage.Literals.MEMBERSHIPS__MEMBERSHIP);
 
         parent.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
                 .spacing(20, LayoutConstants.getSpacing().y).create());
@@ -56,7 +63,7 @@ public class RoleFormPart extends AbstractFormPart {
 
     private void createRoleDetailsControl(Composite parent) {
         IObservableValue<Role> selectedRoleObservable = roleList.observeSelectedRole();
-        roleEditionControl = new RoleEditionControl(parent, formPage, selectedRoleObservable, ctx);
+        roleEditionControl = new RoleEditionControl(parent, formPage, selectedRoleObservable, ctx, membershipList);
 
         ctx.bindValue(selectedRoleObservable, roleEditionControl.observeSectionTitle(),
                 updateValueStrategy().withConverter(ConverterBuilder.<Role, String> newConverter()
@@ -76,7 +83,7 @@ public class RoleFormPart extends AbstractFormPart {
         roleListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         roleListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
-        roleList = new RoleList(roleListComposite, formPage, ctx);
+        roleList = new RoleList(roleListComposite, formPage, ctx, membershipList);
         IObservableValue<Roles> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__ROLES);
         IObservableList<Role> roleListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
