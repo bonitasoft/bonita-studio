@@ -71,6 +71,7 @@ public class UserEditionControl {
     private TextWidget passwordField;
     private char hiddenEchoChar;
     private boolean refreshingManagerViewer = false;
+    private MembershipSection membershipSection;
 
     public UserEditionControl(Composite parent, UserFormPage formPage, IObservableValue<User> selectedUserObservable,
             DataBindingContext ctx) {
@@ -170,7 +171,7 @@ public class UserEditionControl {
         Composite membershipComposite = formPage.getToolkit().createComposite(parent);
         membershipComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 5).create());
         membershipComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        new MembershipSection(membershipComposite, formPage, selectedUserObservable, ctx);
+        membershipSection = new MembershipSection(membershipComposite, formPage, selectedUserObservable, ctx);
     }
 
     private void createManagerCombo(Composite parent) {
@@ -296,6 +297,10 @@ public class UserEditionControl {
 
     public IObservableValue<Boolean> observeSectionVisible() {
         return WidgetProperties.visible().observe(section);
+    }
+
+    public void refreshMembershipTable() {
+        membershipSection.refreshTable();
     }
 
 }

@@ -104,4 +104,8 @@ public class UserFormPart extends AbstractFormPart {
         userList.refreshUserList();
     }
 
+    public void refreshMembershipTable() {
+        userEditionControl.refreshMembershipTable();
+    }
+
 }

@@ -59,7 +59,7 @@ public class MembershipRoleEditingSupport extends EditingSupport {
         cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, GROUP_COMBO_EDITOR_ID);
         cellEditor.setContentProvider(new ObservableListContentProvider());
         cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-        cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().getControl().getParent().setFocus());
+        cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().applyEditorValue());
         cellEditor.setLabelProvider(new LabelProviderBuilder<Role>()
                 .withTextProvider(Role::getDisplayName)
                 .createLabelProvider());

@@ -30,6 +30,8 @@ import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.validator.GroupListValidator;
@@ -54,6 +56,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
@@ -101,6 +104,7 @@ public class GroupList {
     private TreeViewer viewer;
     private IObservableValue<Group> selectionObservable;
     private IObservableList<Group> input = new WritableList<>();
+    private IObservableList<Membership> membershipList;
     private GroupContentProvider contentProvider;
     private List<Group> groupsToFilter = new ArrayList<>();
     private Cursor cursorHand;
@@ -115,6 +119,11 @@ public class GroupList {
         this.ctx = ctx;
         this.cursorHand = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
         this.cursorArrow = new Cursor(parent.getDisplay(), SWT.CURSOR_ARROW);
+
+        IObservableValue<Memberships> memberships = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
+                formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__MEMBERSHIPS);
+        membershipList = EMFObservables.observeDetailList(ctx.getValidationRealm(),
+                memberships, OrganizationPackage.Literals.MEMBERSHIPS__MEMBERSHIP);
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -221,6 +230,7 @@ public class GroupList {
                     public void drop(DropTargetEvent event) {
                         dragLeave(event);
                         Group grp = (Group) event.data;
+                        Group oldGroup = EcoreUtil.copy(grp);
                         if (event.item != null) {
                             TreeItem parentItem = (TreeItem) event.item;
                             if (parentItem.getItems().length == 0 && parentItem.getParentItem() != null) {
@@ -231,6 +241,7 @@ public class GroupList {
                         } else {
                             updateParentPath(grp, null);
                         }
+                        refactorMemberships(grp, oldGroup);
                         viewer.refresh();
                     }
 
@@ -421,6 +432,7 @@ public class GroupList {
             removeChildren(selectedGroup);
             formPage.observeWorkingCopy().getValue().getGroups().getGroup().remove(selectedGroup);
             viewer.refresh();
+            refactorMemberships(null, selectedGroup);
 
             /**
              * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
@@ -435,6 +447,7 @@ public class GroupList {
         for (Object child : contentProvider.getChildren(group)) {
             removeChildren((Group) child);
             formPage.observeWorkingCopy().getValue().getGroups().getGroup().remove(child);
+            refactorMemberships(null, (Group) child);
         }
     }
 
@@ -453,7 +466,7 @@ public class GroupList {
         newGroup.setName(newName);
         newGroup.setDisplayName(newName);
         newGroup.setParentPath(path);
-        input.add(newGroup); // TODO faire un observable de la liste de groupes
+        input.add(newGroup);
         viewer.refresh();
         viewer.expandAll();
         selectionObservable.setValue(newGroup);
@@ -495,24 +508,22 @@ public class GroupList {
                     .stream()
                     .map(Group.class::cast)
                     .forEach(child -> updateParentPath(child, group));
+            refactorMemberships(group, oldGroup);
         }
-        //                //                for (final Membership m : membershipList) {
-        //                //                    if (withGroupParentPath(oldPath).apply(m)) {
-        //                //                        String groupParentPath = m.getGroupParentPath();
-        //                //                        if (groupParentPath != null && !groupParentPath.endsWith("/")) {
-        //                //                            groupParentPath = groupParentPath + "/";
-        //                //                        }
-        //                //                        final String replace = groupParentPath.replace(oldPath, newPath);
-        //                //                        m.setGroupParentPath(replace.substring(0, replace.length() - 1));
-        //                //                    }
-        //                //                }
-        //                //                for (final Membership m : membershipList) {
-        //                //                    if (withGroupName(oldValue.toString()).apply(m)) {
-        //                //                        m.setGroupName(group.getName());
-        //                //                    }
-        //                //                }
-        //            }
-        //        }
+    }
+
+    private void refactorMemberships(Group newGroup, Group oldGroup) {
+        String newName = newGroup != null ? newGroup.getName() : null;
+        String newParentPath = newGroup != null ? newGroup.getParentPath() : null;
+        membershipList.stream()
+                .filter(m -> Objects.equals(m.getGroupName(), oldGroup.getName()))
+                .filter(m -> Objects.equals(m.getGroupParentPath(), oldGroup.getParentPath()))
+                .forEach(m -> {
+                    m.setGroupName(newName);
+                    m.setGroupParentPath(newParentPath);
+                });
+        formPage.refreshMembershipTable();
+        formPage.refreshUserList();
     }
 
     public void refreshSelectedGroup() {

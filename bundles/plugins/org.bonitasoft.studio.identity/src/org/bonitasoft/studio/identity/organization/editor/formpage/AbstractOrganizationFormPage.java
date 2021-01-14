@@ -17,6 +17,7 @@ package org.bonitasoft.studio.identity.organization.editor.formpage;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractFormPage;
@@ -34,9 +35,11 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
 
     protected IObservableValue<Organization> workingCopyObservable;
     private OrganizationXMLProcessor xmlProcessor;
+    private OrganizationEditor editor;
 
-    public AbstractOrganizationFormPage(String id, String title, IEclipseContext context) {
+    public AbstractOrganizationFormPage(String id, String title, IEclipseContext context, OrganizationEditor editor) {
         super(id, title, context);
+        this.editor = editor;
     }
 
     public void init(IObservableValue<Organization> workingCopyObservable, IDocument document,
@@ -107,5 +110,13 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     }
 
     public abstract void refreshList();
+
+    public void refreshMembershipTable() {
+        editor.refreshMembershipTable();
+    }
+
+    public void refreshUserList() {
+        editor.refreshUserList();
+    }
 
 }
