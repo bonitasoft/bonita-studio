@@ -72,6 +72,7 @@ public class UserEditionControl {
     private char hiddenEchoChar;
     private boolean refreshingManagerViewer = false;
     private MembershipSection membershipSection;
+    private InformationSection informationSection;
 
     public UserEditionControl(Composite parent, UserFormPage formPage, IObservableValue<User> selectedUserObservable,
             DataBindingContext ctx) {
@@ -79,19 +80,31 @@ public class UserEditionControl {
         this.selectedUserObservable = selectedUserObservable;
         this.ctx = ctx;
         this.section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
-        section.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).grab(true, true).create());
+        section.setLayoutData(
+                GridDataFactory.fillDefaults().indent(0, 30).grab(false, true).hint(900, SWT.DEFAULT).create());
         section.setLayout(GridLayoutFactory.fillDefaults().create());
 
         Composite mainComposite = formPage.getToolkit().createComposite(section);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(900, SWT.DEFAULT).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 10)
                 .spacing(40, LayoutConstants.getSpacing().y).create());
 
-        createUserNameField(mainComposite);
-        createMembershipSection(mainComposite);
-        createPasswordField(mainComposite);
+        createGeneralFields(mainComposite);
+        createInformationSection(mainComposite);
 
-        Composite detailsComposite = formPage.getToolkit().createComposite(mainComposite);
+        section.setClient(mainComposite);
+    }
+
+    private void createInformationSection(Composite parent) {
+        informationSection = new InformationSection(parent, formPage, ctx, selectedUserObservable);
+    }
+
+    private void createGeneralFields(Composite parent) {
+        createUserNameField(parent);
+        createMembershipSection(parent);
+        createPasswordField(parent);
+
+        Composite detailsComposite = formPage.getToolkit().createComposite(parent);
         detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(400, SWT.DEFAULT).create());
         detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
                 .spacing(20, LayoutConstants.getSpacing().y).create());
@@ -100,9 +113,7 @@ public class UserEditionControl {
         createTitleField(detailsComposite);
         createJobTitleField(detailsComposite);
 
-        createManagerCombo(mainComposite);
-
-        section.setClient(mainComposite);
+        createManagerCombo(parent);
     }
 
     private void createTitleField(Composite parent) {
@@ -246,7 +257,7 @@ public class UserEditionControl {
                 .labelAbove()
                 .withStyle(SWT.PASSWORD)
                 .fill()
-                .widthHint(300)
+                .grabHorizontalSpace()
                 .adapt(formPage.getToolkit())
                 .bindTo(passwordValueObservable)
                 .withTargetToModelStrategy(updateStrategy)
@@ -282,7 +293,8 @@ public class UserEditionControl {
                 .transactionalEdit()
                 .withLabel(Messages.userName)
                 .labelAbove()
-                .widthHint(300)
+                .fill()
+                .grabHorizontalSpace()
                 .bindTo(nameObservable)
                 .withTargetToModelStrategy(convertUpdateValueStrategy().withValidator(nameValidator).create())
                 .withModelToTargetStrategy(updateValueStrategy().withValidator(nameValidator).create())

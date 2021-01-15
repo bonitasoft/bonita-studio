@@ -243,19 +243,22 @@ public class UserList {
                 String.format(Messages.deleteUserMsg, formPage.toUserDisplayName(selectionObservable.getValue())))) {
             input.remove(selectionObservable.getValue());
         }
+        // TODO remove user memberships! 
     }
 
     private void addUser() {
         User user = OrganizationFactory.eINSTANCE.createUser();
         user.setUserName(generateUsername());
         user.setPassword(createPassword(DEFAULT_USER_PASSWORD));
+        user.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
+        user.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
         user.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType());
 
         Organization organization = formPage.observeWorkingCopy().getValue();
         CustomUserInfoDefinitions customUserInfoDefinitions = organization.getCustomUserInfoDefinitions();
         if (customUserInfoDefinitions != null) {
-            for (final CustomUserInfoDefinition definitions : customUserInfoDefinitions.getCustomUserInfoDefinition()) {
-                final CustomUserInfoValue newValue = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
+            for (CustomUserInfoDefinition definitions : customUserInfoDefinitions.getCustomUserInfoDefinition()) {
+                CustomUserInfoValue newValue = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
                 newValue.setName(definitions.getName());
                 newValue.setValue("");
                 user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);

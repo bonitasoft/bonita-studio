@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserList;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.Users;
@@ -75,13 +76,21 @@ public class UserFormPart extends AbstractFormPart {
     private void createUserList(Composite parent) {
         Composite userListComposite = formPage.getToolkit().createComposite(parent);
         userListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
+        userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
 
         userList = new UserList(userListComposite, formPage, ctx);
         IObservableValue<Users> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
                 formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__USERS);
         IObservableList<User> userListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
                 OrganizationPackage.Literals.USERS__USER);
+        userListObservable.forEach(user -> {
+            if (user.getPersonalData() == null) {
+                user.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
+            }
+            if (user.getProfessionalData() == null) {
+                user.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
+            }
+        });
         ctx.bindList(userList.observeInput(), userListObservable);
     }
 
