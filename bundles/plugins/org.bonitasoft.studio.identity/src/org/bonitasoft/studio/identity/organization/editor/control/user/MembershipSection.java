@@ -116,7 +116,7 @@ public class MembershipSection {
     private void createViewer(Composite parent) {
         viewer = new TableViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
-        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(500, SWT.DEFAULT).create());
+        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, MEMBERSHIP_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(viewer.getTable());
         ColumnViewerToolTipSupport.enableFor(viewer);
@@ -125,8 +125,8 @@ public class MembershipSection {
         selectedMembershipObservable = ViewerProperties.singleSelection(Membership.class).observe(viewer);
 
         TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
+        layout.addColumnData(new ColumnWeightData(1, 200, true));
+        layout.addColumnData(new ColumnWeightData(1, 200, true));
         viewer.getTable().setLayout(layout);
         viewer.setFilters(new ViewerFilter() {
 
