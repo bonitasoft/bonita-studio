@@ -72,6 +72,8 @@ public class Messages extends NLS {
     public static String remove;
     public static String defaultUserName;
     public static String organizations;
+    public static String organizationOverview;
+    public static String displayOrganizationOverviewPageTitle;
     public static String saveOrganization;
     public static String membership;
     public static String groupName;
@@ -307,4 +309,6 @@ public class Messages extends NLS {
     public static String manageCustomInfo;
     public static String contact;
     public static String location;
+    public static String organizationSavedBeforeRename;
+    public static String organizationAlreadyExists;
 }

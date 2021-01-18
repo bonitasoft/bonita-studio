@@ -56,7 +56,9 @@ public class GroupFormPart extends AbstractFormPart {
 
     @Override
     public void commit(boolean onSave) {
-        formPage.commit();
+        if (!onSave) { // onSave, commit is performed only once, on the overviewFormPart
+            formPage.commit();
+        }
         super.commit(onSave);
         if (onSave) {
             getManagedForm().dirtyStateChanged();

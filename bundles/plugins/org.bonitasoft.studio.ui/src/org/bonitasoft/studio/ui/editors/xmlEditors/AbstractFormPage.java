@@ -120,7 +120,9 @@ public abstract class AbstractFormPage<T> extends FormPage {
     protected abstract void createForm();
 
     public void reflow() {
-        scrolledForm.reflow(true);
+        if (scrolledForm != null) {
+            scrolledForm.reflow(true);
+        }
     }
 
     public void update() {
