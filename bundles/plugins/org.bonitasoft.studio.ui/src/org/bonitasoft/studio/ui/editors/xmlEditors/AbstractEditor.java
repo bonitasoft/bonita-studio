@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +40,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public abstract class AbstractEditor<T> extends FormEditor implements IElementStateListener {
 
-    protected List<AbstractFormPage<T>> formPages = new ArrayList<>();
+    protected List<AbstractFormPage<T>> formPages = new LinkedList<>();
     protected StructuredTextEditor fSourceEditor;
     protected T workingCopy;
     private IEclipseContext context;

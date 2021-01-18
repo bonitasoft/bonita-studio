@@ -97,7 +97,7 @@ public class RoleFormPart extends AbstractFormPart {
 
     @Override
     public void commit(boolean onSave) {
-        if (!onSave) { // onSave, commit is performed only once, on the groupFormPart
+        if (!onSave) { // onSave, commit is performed only once, on the overviewFormPart
             formPage.commit();
         }
         super.commit(onSave);

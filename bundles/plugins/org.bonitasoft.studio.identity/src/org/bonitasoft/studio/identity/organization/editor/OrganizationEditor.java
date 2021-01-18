@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFormPage;
+import org.bonitasoft.studio.identity.organization.editor.formpage.overview.OverviewFormPage;
 import org.bonitasoft.studio.identity.organization.editor.formpage.role.RoleFormPage;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.DocumentRoot;
@@ -42,6 +43,7 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     private RepositoryAccessor repositoryAccessor;
     private OrganizationXMLProcessor xmlProcessor;
+    private OverviewFormPage overviewFormPage;
     private GroupFormPage groupFormPage;
     private RoleFormPage roleFormPage;
     private UserFormPage userFormPage;
@@ -49,9 +51,11 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     @Override
     protected void createFormPages() {
+        overviewFormPage = new OverviewFormPage("overview", Messages.organizationOverview, getContext(), this);
         groupFormPage = new GroupFormPage("groups", Messages.groups, getContext(), this);
         roleFormPage = new RoleFormPage("roles", Messages.roles, getContext(), this);
         userFormPage = new UserFormPage("users", Messages.users, getContext(), this);
+        formPages.add(overviewFormPage);
         formPages.add(groupFormPage);
         formPages.add(roleFormPage);
         formPages.add(userFormPage);
@@ -63,10 +67,12 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
         repositoryAccessor.init();
         xmlProcessor = new OrganizationXMLProcessor();
         IDocument document = fSourceEditor.getDocumentProvider().getDocument(getEditorInput());
+        overviewFormPage.init(workingCopyObservable, document, xmlProcessor);
         groupFormPage.init(workingCopyObservable, document, xmlProcessor);
         roleFormPage.init(workingCopyObservable, document, xmlProcessor);
         userFormPage.init(workingCopyObservable, document, xmlProcessor);
-        DirtyStateAdapter dirtyStateAdapter = new DirtyStateAdapter(groupFormPage, roleFormPage, userFormPage);
+        DirtyStateAdapter dirtyStateAdapter = new DirtyStateAdapter(
+                overviewFormPage, groupFormPage, roleFormPage, userFormPage);
         workingCopyObservable.addValueChangeListener(e -> {
             dirtyStateAdapter.setIgnore(true);
             try {
@@ -86,6 +92,7 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
             workingCopyObservable.setValue(getFileStore(getEditorInput().getName()).getContent());
         } catch (ReadFileStoreException e) {
             workingCopyObservable.setValue(OrganizationFactory.eINSTANCE.createOrganization());
+            overviewFormPage.setErrorState(true);
             groupFormPage.setErrorState(true);
             roleFormPage.setErrorState(true);
             userFormPage.setErrorState(true);
