@@ -519,7 +519,7 @@
          </command>
          <dynamic
                class="org.bonitasoft.studio.application.ui.contribution.DeployArtifactsMenuContributionItem"
-               id="org.bonitasoft.studio.application.deployArtifacts">
+               id="org.bonitasoft.studio.application.command.deployArtifacts">
             <visibleWhen
                   checkEnabled="false">
                <with

@@ -35,7 +35,7 @@ public class DiagramValidationMenuContributionItem extends ContributionItem {
     @Override
     public void fill(Menu parent, int index) {
         super.fill(parent, index);
-        MenuItem item = new MenuItem(parent, SWT.NONE);
+        MenuItem item = new MenuItem(parent, SWT.NONE, index);
         item.setText(Messages.validate);
         item.addListener(SWT.Selection, e -> performValidation());
         item.setEnabled(true);

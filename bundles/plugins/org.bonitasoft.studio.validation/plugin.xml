@@ -1259,7 +1259,7 @@
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
          <dynamic
                class="org.bonitasoft.studio.validation.ui.menu.DiagramValidationMenuContributionItem"
-               id="org.bonitasoft.studio.validation.diagram.explorer.contribution">
+               id="org.bonitasoft.studio.validation.command.validateDiagram">
             <visibleWhen>
                <and>
                   <count
@@ -1275,7 +1275,7 @@
          </dynamic>
          <dynamic
                class="org.bonitasoft.studio.validation.ui.menu.BatchValidationMenuContributionItem"
-               id="org.bonitasoft.studio.validation.explorer.contribution">
+               id="org.bonitasoft.studio.validation.batchValidation">
             <visibleWhen
                   checkEnabled="true">
                <and>
