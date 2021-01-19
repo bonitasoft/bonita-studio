@@ -8,11 +8,15 @@
  *******************************************************************************/
 package org.bonitasoft.studio.rest.api.extension.core.maven;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.maven.operation.CreateCustomPageProjectOperation;
+import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -61,6 +65,13 @@ public class CreateRestAPIExtensionProjectOperation extends CreateCustomPageProj
         project.getFile("kotlin-pom.xml").delete(true, monitor);
         project.getFolder("src/main/kotlin").delete(true, monitor);
         project.getFolder("src/test/kotlin").delete(true, monitor);
+    }
+    
+    @Override
+    protected Set<String> projectBuilders(IProjectDescription description) {
+        Set<String> projectBuilders = super.projectBuilders(description);
+        projectBuilders.add(RestAPIBuilder.BUILDER_ID);
+        return projectBuilders;
     }
 
 }
