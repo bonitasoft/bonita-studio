@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -31,9 +33,14 @@ import com.google.common.base.Strings;
 public class UserMembershipValidator implements IValidator<User> {
 
     private IObservableList<Membership> memberships;
+    private MembershipGroupValidator membershipGroupValidator;
+    private MembershipRoleValidator membershipRoleValidator;
 
-    public UserMembershipValidator(IObservableList<Membership> memberships) {
+    public UserMembershipValidator(IObservableValue<Organization> organizationObservable,
+            IObservableList<Membership> memberships) {
         this.memberships = memberships;
+        this.membershipGroupValidator = new MembershipGroupValidator(organizationObservable);
+        this.membershipRoleValidator = new MembershipRoleValidator(organizationObservable);
     }
 
     @Override
@@ -50,6 +57,14 @@ public class UserMembershipValidator implements IValidator<User> {
             if (Strings.isNullOrEmpty(membership.getRoleName())) {
                 return ValidationStatus
                         .error(String.format(Messages.membershipEmpty, user.getUserName(), Messages.role));
+            }
+            IStatus groupStatus = membershipGroupValidator.validate(membership);
+            if (!groupStatus.isOK()) {
+                return groupStatus;
+            }
+            IStatus roleStatus = membershipRoleValidator.validate(membership);
+            if (!roleStatus.isOK()) {
+                return roleStatus;
             }
         }
         return ValidationStatus.ok();

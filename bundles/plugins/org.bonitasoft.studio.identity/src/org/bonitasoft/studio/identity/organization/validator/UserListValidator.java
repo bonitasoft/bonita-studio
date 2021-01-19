@@ -44,7 +44,7 @@ public class UserListValidator implements IValidator<User> {
                 organizationObservable, OrganizationPackage.Literals.ORGANIZATION__MEMBERSHIPS);
         IObservableList<Membership> membership = EMFObservables.observeDetailList(ctx.getValidationRealm(),
                 memberships, OrganizationPackage.Literals.MEMBERSHIPS__MEMBERSHIP);
-        userMembershipValidator = new UserMembershipValidator(membership);
+        userMembershipValidator = new UserMembershipValidator(organizationObservable, membership);
     }
 
     @Override

@@ -17,23 +17,36 @@ package org.bonitasoft.studio.identity.organization.editor.control.user;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.ContactData;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoValue;
+import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoValuesType;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
+import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
+import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -41,16 +54,15 @@ public class InformationSection {
 
     public static final int SHORT_FIELD_MAX_LENGTH = 50;
     public static final int LONG_FIELD_MAX_LENGTH = 255;
+    public static final String CUSTOM_INFO_LIST_VIEWER_ID = "customInfoViewer";
 
     private UserFormPage formPage;
     private Section section;
-    private Section customInfoSection;
     private DataBindingContext ctx;
     private IObservableValue<User> selectedUserObservable;
     private NativeTabFolderWidget informationsTabFolder;
-    private NativeTabItemWidget personalTab;
     private NativeTabItemWidget professionnalTab;
-    private NativeTabItemWidget customTab;
+    private TableViewer customInfoViewer;
 
     public InformationSection(Composite parent, UserFormPage formPage, DataBindingContext ctx,
             IObservableValue<User> selectedUserObservable) {
@@ -72,42 +84,27 @@ public class InformationSection {
         informationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createInformationsTabFolder(informationComposite);
-        createCustomInformationsSection(informationComposite);
 
         return informationComposite;
-    }
-
-    // TODO -> Bouger cette section en dessous de la user liste, c'est independent. 
-    private void createCustomInformationsSection(Composite parent) {
-        customInfoSection = formPage.getToolkit().createSection(parent, Section.TWISTIE);
-        customInfoSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        customInfoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        customInfoSection.setText(Messages.manageCustomInfo);
-
-        Composite customInfoComposite = formPage.getToolkit().createComposite(customInfoSection);
-        customInfoComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        customInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        customInfoSection.setClient(customInfoComposite);
     }
 
     private void createInformationsTabFolder(Composite informationParent) {
         informationsTabFolder = new NativeTabFolderWidget.Builder().createIn(informationParent);
         informationsTabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         informationsTabFolder
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         professionnalTab = new NativeTabItemWidget.Builder()
                 .withText(Messages.professionalData)
                 .withControl(createProfessionalInformationComposite(informationsTabFolder.getTabFolder()))
                 .createIn(informationsTabFolder);
 
-        personalTab = new NativeTabItemWidget.Builder()
+        new NativeTabItemWidget.Builder()
                 .withText(Messages.personalData)
                 .withControl(createPersonalInformationComposite(informationsTabFolder.getTabFolder()))
                 .createIn(informationsTabFolder);
 
-        customTab = new NativeTabItemWidget.Builder()
+        new NativeTabItemWidget.Builder()
                 .withText(Messages.other)
                 .withStyle(SWT.SCROLL_LINE)
                 .withControl(createCustomInformationComposite(informationsTabFolder.getTabFolder()))
@@ -117,7 +114,12 @@ public class InformationSection {
     }
 
     private Composite createPersonalInformationComposite(Composite parent) {
-        Composite personalInfoComposite = formPage.getToolkit().createComposite(parent);
+        ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+        sc.setLayout(GridLayoutFactory.fillDefaults().create());
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        formPage.getToolkit().adapt(sc);
+
+        Composite personalInfoComposite = formPage.getToolkit().createComposite(sc);
         personalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10)
                 .spacing(10, LayoutConstants.getSpacing().y).numColumns(2).create());
         personalInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -127,33 +129,48 @@ public class InformationSection {
 
         createContactInfoFields(personalInfoComposite, contactDataObservable);
 
-        return personalInfoComposite;
+        sc.setContent(personalInfoComposite);
+        sc.setExpandVertical(true);
+        sc.setExpandHorizontal(true);
+        sc.setMinHeight(personalInfoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+
+        return sc;
     }
 
     private Composite createProfessionalInformationComposite(Composite parent) {
-        Composite professionalInfoComposite = formPage.getToolkit().createComposite(parent);
+        ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+        sc.setLayout(GridLayoutFactory.fillDefaults().create());
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        formPage.getToolkit().adapt(sc);
+
+        Composite professionalInfoComposite = formPage.getToolkit().createComposite(sc);
         professionalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10)
                 .spacing(10, LayoutConstants.getSpacing().y).numColumns(2).equalWidth(true).create());
-        professionalInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        professionalInfoComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         IObservableValue<ContactData> contactDataObservable = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
                 selectedUserObservable, OrganizationPackage.Literals.USER__PROFESSIONAL_DATA);
 
         createContactInfoFields(professionalInfoComposite, contactDataObservable);
 
-        return professionalInfoComposite;
+        sc.setContent(professionalInfoComposite);
+        sc.setExpandVertical(true);
+        sc.setExpandHorizontal(true);
+        sc.setMinHeight(professionalInfoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+
+        return sc;
     }
 
     protected void createContactInfoFields(Composite parent, IObservableValue<ContactData> contactDataObservable) {
-
         Section contactSection = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         contactSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        contactSection.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        contactSection.setLayoutData(GridDataFactory.fillDefaults().create());
         contactSection.setText(Messages.contact);
 
         Composite contactComposite = formPage.getToolkit().createComposite(contactSection);
         contactComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
-        contactComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        contactComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         createEmailField(contactComposite, contactDataObservable);
         createPhoneField(contactComposite, contactDataObservable);
@@ -165,12 +182,12 @@ public class InformationSection {
 
         Section locationSection = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         locationSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        locationSection.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        locationSection.setLayoutData(GridDataFactory.fillDefaults().create());
         locationSection.setText(Messages.location);
 
         Composite locationComposite = formPage.getToolkit().createComposite(locationSection);
         locationComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
-        locationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        locationComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         createBuildingInfoField(locationComposite, contactDataObservable);
         createPersonalRoomField(locationComposite, contactDataObservable);
@@ -267,9 +284,60 @@ public class InformationSection {
         customInfoComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         customInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        formPage.getToolkit().createLabel(customInfoComposite, "CUSTOM");
+        createCustomInfoViewer(customInfoComposite);
 
         return customInfoComposite;
+    }
+
+    private void createCustomInfoViewer(Composite parent) {
+        IObservableValue<CustomUserInfoValuesType> customInfoValuesType = EMFObservables.observeDetailValue(
+                Realm.getDefault(), selectedUserObservable, OrganizationPackage.Literals.USER__CUSTOM_USER_INFO_VALUES);
+        IObservableList<CustomUserInfoValue> customUserInfoValues = EMFObservables.observeDetailList(Realm.getDefault(),
+                customInfoValuesType, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE);
+
+        customInfoViewer = new TableViewer(parent,
+                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
+        customInfoViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        customInfoViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, CUSTOM_INFO_LIST_VIEWER_ID);
+        formPage.getToolkit().adapt(customInfoViewer.getTable());
+        ColumnViewerToolTipSupport.enableFor(customInfoViewer);
+        customInfoViewer.setUseHashlookup(true);
+        customInfoViewer.getTable().setHeaderVisible(true);
+
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(1, 200, true));
+        layout.addColumnData(new ColumnWeightData(1, 200, true));
+        customInfoViewer.getTable().setLayout(layout);
+
+        createNameColumn();
+        createValueColumn();
+
+        customInfoViewer.setContentProvider(new ObservableListContentProvider());
+        customInfoViewer.setInput(customUserInfoValues);
+    }
+
+    private void createValueColumn() {
+        TableViewerColumn column = new TableViewerColumn(customInfoViewer, SWT.NONE);
+        column.getColumn().setText(Messages.value);
+        column.setLabelProvider(new LabelProviderBuilder<CustomUserInfoValue>()
+                .withTextProvider(CustomUserInfoValue::getValue)
+                .createColumnLabelProvider());
+        column.setEditingSupport(new EditingSupportBuilder<CustomUserInfoValue>(customInfoViewer)
+                .withValueProvider(CustomUserInfoValue::getValue)
+                .withValueUpdater((customInfo, value) -> customInfo.setValue((String) value))
+                .create());
+    }
+
+    private void createNameColumn() {
+        TableViewerColumn column = new TableViewerColumn(customInfoViewer, SWT.NONE);
+        column.getColumn().setText(Messages.name);
+        column.setLabelProvider(new LabelProviderBuilder<CustomUserInfoValue>()
+                .withTextProvider(CustomUserInfoValue::getName)
+                .createColumnLabelProvider());
+    }
+
+    public void redrawCustomInfoTable() {
+        customInfoViewer.getTable().redraw();
     }
 
 }
