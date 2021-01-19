@@ -65,4 +65,4 @@ Import-Package: javax.inject;version="1.0.0",
   org.bonitasoft.engine.operation,
   org.bonitasoft.engine.session
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

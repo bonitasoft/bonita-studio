@@ -90,9 +90,9 @@ public class CreateBonitaBPMProjectOperation implements IWorkspaceRunnable {
     private void createJavaProject(final IProgressMonitor monitor) {
         monitor.subTask(Messages.initializingJavaProject);
         final IJavaProject javaProject = asJavaProject();
-        javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
-        javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-        javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+        javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_11);
+        javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_11);
+        javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_11);
         javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, JavaCore.IGNORE);
         IEclipsePreferences preferences = jdtLaunchingPrefNode();
         preferences.put(JavaRuntime.PREF_STRICTLY_COMPATIBLE_JRE_NOT_AVAILABLE, JavaCore.IGNORE);

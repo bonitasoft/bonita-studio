@@ -43,4 +43,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.osgi.services;bundle-version="3.8.0"
 Import-Package: org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.preferences;bundle-version="7.6.0",
  org.bonitasoft.studio.validation,
  org.eclipse.emf.validation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connector.wizard.office,
  org.bonitasoft.studio.connector.wizard.office.templating

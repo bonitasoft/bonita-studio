@@ -13,7 +13,7 @@ Private-Package: org.assertj.core.util.introspection,org.assertj.core.er
  ror,org.assertj.core.data,org.assertj.core.util,org.assertj.core.intern
  al,org.assertj.core.util.xml,org.assertj.core.description,org.assertj.c
  ore.groups
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: AssertJ
 Export-Package: org.assertj.core.api,
  org.assertj.core.api.exception,

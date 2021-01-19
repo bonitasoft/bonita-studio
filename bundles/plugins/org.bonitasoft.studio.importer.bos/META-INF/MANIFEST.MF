@@ -52,7 +52,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.m2e.maven.runtime,
  org.bonitasoft.studio.team,
  org.eclipse.core.databinding.beans;bundle-version="1.6.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.studio.ui.widget

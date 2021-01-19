@@ -63,7 +63,6 @@ import org.osgi.framework.Version;
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
     private static final String HOTSPOT_JRE_11 = "OpenJDK Hotspot JRE 11";
-    private static final String JAVA_8 = "1.8";
     private static final String JAVA_11 = "11";
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
@@ -171,7 +170,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
 
     protected boolean isJavaVersionSupported(final Display display) {
         final String javaVersion = getJavaVersion();
-        if (!(javaVersion.startsWith(JAVA_8) || javaVersion.startsWith(JAVA_11))) {
+        if (!javaVersion.startsWith(JAVA_11)) {
             openErrorDialog(display, javaVersion);
             return false;
         }
@@ -189,7 +188,7 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
                     Messages.incompatibleJavaVersionTitle, null, String.format(
                             Messages.incompatibleJavaVersionMessage,
                             org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion,
-                            "Java 1.8 and Java 11."),
+                            "Java 11."),
                     MessageDialog.ERROR,
                     new String[] { IDialogConstants.OK_LABEL },
                     0,

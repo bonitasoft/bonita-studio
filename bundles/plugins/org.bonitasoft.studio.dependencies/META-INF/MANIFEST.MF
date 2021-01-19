@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.junit;bundle-version="4.8.2";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.dependencies,org.bonitasoft.stud
  io.dependencies.handler,org.bonitasoft.studio.dependencies.i18n;x-fri

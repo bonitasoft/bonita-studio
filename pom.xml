@@ -10,8 +10,8 @@
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<tychoVersion>1.7.0</tychoVersion>
-		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
+		<tychoVersion>2.1.0</tychoVersion>
+		<java.version>11</java.version>
 		<os-jvm-flags></os-jvm-flags>
 		<branding.version>2021.2-SNAPSHOT</branding.version>
 		<bundle.version>${project.version}</bundle.version>
@@ -35,6 +35,8 @@
 		<sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
 		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
 		<tycho.localArtifacts>ignore</tycho.localArtifacts>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -66,7 +68,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.8.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -86,7 +88,7 @@
 				<plugin>
 					<groupId>org.eclipse.tycho.extras</groupId>
 					<artifactId>tycho-eclipserun-plugin</artifactId>
-					<version>${tychoExtrasVersion}</version>
+					<version>${tychoVersion}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
@@ -98,16 +100,6 @@
 						<archive>
 							<addMavenDescriptor>false</addMavenDescriptor>
 						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>maven-osgi-compiler-plugin</artifactId>
-					<inherited>true</inherited>
-					<version>${tychoVersion}</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -162,7 +154,7 @@
 					<artifactId>target-platform-configuration</artifactId>
 					<version>${tychoVersion}</version>
 					<configuration>
-						<executionEnvironment>JavaSE-1.8</executionEnvironment>
+						<executionEnvironment>JavaSE-11</executionEnvironment>
 						<environments>
 							<environment>
 								<os>linux</os>
@@ -204,14 +196,6 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>
                 <artifactId>groovy-maven-plugin</artifactId>

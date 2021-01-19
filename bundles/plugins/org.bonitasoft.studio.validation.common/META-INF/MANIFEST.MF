@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench,
  org.eclipse.ui.ide;bundle-version="3.10.1",
  org.bonitasoft.studio.ui;bundle-version="7.10.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validation.common.operation
 Bundle-Vendor: Bonitasoft S.A.

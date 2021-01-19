@@ -4,7 +4,7 @@ Bundle-Name: SWTBot Framework
 Bundle-SymbolicName: org.bonitasoft.studio.swtbot.framework
 Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.eclipse.gmf.runtime.diagram.ui,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",

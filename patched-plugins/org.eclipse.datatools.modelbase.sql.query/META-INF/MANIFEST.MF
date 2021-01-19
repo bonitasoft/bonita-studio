@@ -6,7 +6,7 @@ Require-Bundle: com.ibm.icu,org.eclipse.core.runtime,org.eclipse.datat
  ools.modelbase.sql;visibility:=reexport
 Bundle-ManifestVersion: 2
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/datato
  ols/org.eclipse.datatools.git;path="plugins/modelbase/org.eclipse.dat
  atools.modelbase.sql.query";commitId=209258c8e9bf1b23d266aa518e478642

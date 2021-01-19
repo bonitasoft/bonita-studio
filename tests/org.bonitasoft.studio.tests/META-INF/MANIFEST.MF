@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
 Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .,
  lib/org.restlet.ext.html-2.2.3.jar
 Bundle-Activator: org.bonitasoft.studio.tests.Activator

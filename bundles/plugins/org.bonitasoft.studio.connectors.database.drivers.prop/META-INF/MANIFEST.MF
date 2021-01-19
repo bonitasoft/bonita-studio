@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.bonitasoft.studio.connectors.database.drivers.prop;sing
 Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.connectors;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

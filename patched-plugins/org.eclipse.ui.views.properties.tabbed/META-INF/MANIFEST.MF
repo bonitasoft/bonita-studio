@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui.forms;bundle-version="[3.3.0,4.0.0)";visibility:=
  org.eclipse.e4.ui.workbench;bundle-version="1.8.0",
  org.eclipse.jface;bundle-version="[3.18.0,4.0.0)"
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/platfo
  rm/eclipse.platform.ui.git;path="bundles/org.eclipse.ui.views.propert
  ies.tabbed";tag="I20180921-1800";commitId=ed4755cca683db3848cb6759e8b

@@ -45,7 +45,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core;bundle-version="3.13.100",
  org.eclipse.wst.validation;bundle-version="1.2.701",
  org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,

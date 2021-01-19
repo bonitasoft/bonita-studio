@@ -56,8 +56,10 @@ public class BotDialog extends BotBase {
             shell.activate();
             shell.setFocus();
         }
-        bot.waitUntil(Conditions.waitForWidget(allOf(widgetOfType(Button.class), withMnemonic(IDialogConstants.CANCEL_LABEL),
+        bot.waitUntil(Conditions.waitForWidget(allOf(widgetOfType(Button.class),
+                withMnemonic(IDialogConstants.CANCEL_LABEL),
                 withStyle(SWT.PUSH, "SWT.PUSH"))), 20000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CANCEL_LABEL)), 10000);
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 

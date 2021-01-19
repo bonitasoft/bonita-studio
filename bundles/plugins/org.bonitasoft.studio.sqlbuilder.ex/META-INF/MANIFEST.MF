@@ -40,7 +40,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.datatools.sqltools.sqlbuilder;bundle-version="1.0.7",
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.modelbase.sql.query
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.sqlbuilder.ex,org.bonitasoft.stu
  dio.sqlbuilder.ex.action,org.bonitasoft.studio.sqlbuilder.ex.builder,

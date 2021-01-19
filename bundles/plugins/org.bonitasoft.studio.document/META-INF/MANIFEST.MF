@@ -48,7 +48,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.services,
  javax.inject
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.document,

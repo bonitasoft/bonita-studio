@@ -64,7 +64,7 @@ public class ProjectManifestFactory {
     }
 
     protected Map<String, String> createManifestHeaders(final String projectName) {
-        final Map<String, String> headers = new HashMap<String, String>();
+        final Map<String, String> headers = new HashMap<>();
         headers.put(ManifestUtils.MANIFEST_VERSION, "1.0");
         headers.put(org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION, "2");
         headers.put(org.osgi.framework.Constants.BUNDLE_NAME, projectName);
@@ -76,7 +76,7 @@ public class ProjectManifestFactory {
         headers.put("Automatic-Module-Name", symbolicName);
         headers.put(org.osgi.framework.Constants.BUNDLE_VERSION, "1.0.0.qualifier");
         headers.put(org.osgi.framework.Constants.BUNDLE_VENDOR, "Bonitasoft S.A.");
-        headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.8");
+        headers.put(org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-11");
         headers.put(org.osgi.framework.Constants.REQUIRE_BUNDLE, engineBundleSymbolicName());
         
         return headers;

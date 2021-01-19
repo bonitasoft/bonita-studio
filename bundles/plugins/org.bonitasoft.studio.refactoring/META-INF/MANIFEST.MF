@@ -31,7 +31,7 @@ Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
  org.bonitasoft.studio.model.edit,
  com.google.guava;bundle-version="11.0.1",
  org.mockito;bundle-version="1.10.19";resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.refactoring.core,
  org.bonitasoft.studio.refactoring.core.emf,
