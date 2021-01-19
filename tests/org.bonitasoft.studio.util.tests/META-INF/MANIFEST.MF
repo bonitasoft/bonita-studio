@@ -4,7 +4,7 @@ Bundle-Name: Tests
 Bundle-SymbolicName: org.bonitasoft.studio.util.tests
 Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.application,

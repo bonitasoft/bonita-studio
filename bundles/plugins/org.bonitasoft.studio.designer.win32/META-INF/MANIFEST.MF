@@ -6,5 +6,5 @@ Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.designer;bundle-version="7.10.0"
 Automatic-Module-Name: org.bonitasoft.studio.designer.win32
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-PlatformFilter: (&(osgi.os=win32))

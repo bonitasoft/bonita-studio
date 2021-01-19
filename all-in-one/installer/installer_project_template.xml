@@ -84,49 +84,6 @@
     </preBuildActionList>
     <preInstallationActionList>
         <setInstallerVariable>
-            <name>continue</name>
-            <value>yes</value>
-        </setInstallerVariable>
-        <autodetectJava>
-            <promptUser>0</promptUser>
-            <selectionOrder>newest</selectionOrder>
-            <abortOnError>0</abortOnError>
-            <showMessageOnError>0</showMessageOnError>
-            <validVersionList>
-                <validVersion>
-                    <bitness>@os_arch@</bitness>
-                    <minVersion>1.8</minVersion>
-                    <maxVersion>1.8</maxVersion>
-                    <requireJDK>0</requireJDK>
-                    <vendor></vendor>
-                </validVersion>
-			    <validVersion>
-			         <vendor></vendor>
-			         <requireJDK>0</requireJDK>
-			         <minVersion>11</minVersion>
-			         <maxVersion>11</maxVersion>
-			         <bitness>@os_arch@</bitness>
-			     </validVersion>
-            </validVersionList>
-        </autodetectJava>
-        <showQuestion>
-            <ruleList>
-                <isFalse value="${java_autodetected}" />
-            </ruleList>
-            <title>${msg(java.version.title)}</title>
-            <text>${msg(java.version.message)}</text>
-            <variable>continue</variable>
-        </showQuestion>
-        <exit>
-            <ruleList>
-                <compareText>
-                    <text>${continue}</text>
-                    <logic>does_not_equal</logic>
-                    <value>yes</value>
-                </compareText>
-            </ruleList>
-        </exit>
-        <setInstallerVariable>
             <!-- Set default path to C: on Windows -->
             <name>installdir</name>
             <value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>

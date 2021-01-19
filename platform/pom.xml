@@ -23,29 +23,29 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>target-platform-validation-plugin</artifactId>
-				<version>${tychoExtrasVersion}</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>validate-target-platform</goal>
-						</goals>
-						<configuration>
-							<targetFiles>
-								<param>platform.target</param>
-							</targetFiles>
-							<failOnError>true</failOnError>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+<!-- 	<build> -->
+<!-- 		<plugins> -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.eclipse.tycho.extras</groupId> -->
+<!-- 				<artifactId>target-platform-validation-plugin</artifactId> -->
+<!-- 				<version>${tychoVersion}</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<phase>verify</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>validate-target-platform</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<targetFiles> -->
+<!-- 								<param>platform.target</param> -->
+<!-- 							</targetFiles> -->
+<!-- 							<failOnError>false</failOnError> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+<!-- 		</plugins> -->
+<!-- 	</build> -->
 
 	<profiles>
 		<profile>

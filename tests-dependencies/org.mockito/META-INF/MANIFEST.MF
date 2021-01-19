@@ -84,4 +84,4 @@ Export-Package: org.hamcrest,
  org.objenesis.instantiator.perc,
  org.objenesis.instantiator.sun,
  org.objenesis.strategy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11

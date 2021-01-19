@@ -4,7 +4,7 @@ Bundle-Name: Process Model Assertions
 Bundle-SymbolicName: org.bonitasoft.studio.tests-utils
 Bundle-Version: 7.13.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.bonitasoft.studio.assertions,
  org.bonitasoft.studio.fakes,
  org.bonitasoft.studio.junit.rules,

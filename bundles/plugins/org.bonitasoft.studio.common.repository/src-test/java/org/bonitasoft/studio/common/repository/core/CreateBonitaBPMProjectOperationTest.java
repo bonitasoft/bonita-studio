@@ -93,9 +93,9 @@ public class CreateBonitaBPMProjectOperationTest {
         orderedProjectCreation.verify(project).open(monitor);
         orderedProjectCreation.verify(project).setDescription(any(IProjectDescription.class), eq(monitor));
 
-        verify(javaProject).setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
-        verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-        verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+        verify(javaProject).setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_11);
+        verify(javaProject).setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_11);
+        verify(javaProject).setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_11);
         verify(javaProject).setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, JavaCore.IGNORE);
         verify(prefNode).put(JavaRuntime.PREF_STRICTLY_COMPATIBLE_JRE_NOT_AVAILABLE, JavaCore.IGNORE);
     }

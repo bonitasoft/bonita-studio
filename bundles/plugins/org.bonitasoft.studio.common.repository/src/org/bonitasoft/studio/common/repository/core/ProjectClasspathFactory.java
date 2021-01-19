@@ -56,7 +56,7 @@ public class ProjectClasspathFactory {
             BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
             javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, monitor);
         }
-        updateCompilerJavaCompliance(CompilerOptions.VERSION_1_8);
+        updateCompilerJavaCompliance(CompilerOptions.VERSION_11);
     }
 
     protected void updateCompilerJavaCompliance(String javaVersion) {
@@ -101,7 +101,7 @@ public class ProjectClasspathFactory {
     }
 
     protected IExecutionEnvironment javaRuntimeEnvironment() {
-        return JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.8");
+        return JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-11");
     }
 
     protected IClasspathEntry newContainerEntry(final IPath path, final boolean isExported) {

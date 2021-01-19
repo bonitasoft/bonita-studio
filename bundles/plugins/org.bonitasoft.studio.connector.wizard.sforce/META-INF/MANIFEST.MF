@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.tests-utils;bundle-version="6.3.0";resolution:=optional,
  org.bonitasoft.studio.common.repository
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/force-partner-api.jar,

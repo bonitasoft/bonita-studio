@@ -70,7 +70,7 @@ Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.studio.common.jface.databinding.validator,
  org.bonitasoft.studio.expression.editor.filter
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.eclipse.ui.plugin",
  org.bonitasoft.studio.identity.actors.repository;
   uses:="org.bonitasoft.studio.connector.model.implementation,

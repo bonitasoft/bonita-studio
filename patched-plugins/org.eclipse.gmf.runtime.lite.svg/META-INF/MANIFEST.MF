@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Built-By: genie.modeling.gmp.gmf-tooling
 Bundle-SymbolicName: org.eclipse.gmf.runtime.lite.svg;singleton:=true
 Require-Bundle: org.eclipse.ui,

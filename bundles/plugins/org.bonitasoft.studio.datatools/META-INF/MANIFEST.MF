@@ -27,7 +27,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.datatools,
  org.bonitasoft.studio.datatools.i18n;x-friends:="org.bonitasoft.studio.tests.ex,org.bonitasoft.studio.swtbot.framework.ex",

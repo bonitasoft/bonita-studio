@@ -91,7 +91,7 @@ public class ProjectManifestFactoryTest {
                 entry("Bundle-Version", "1.0.0.qualifier"),
                 entry("Bundle-Vendor", "Bonitasoft S.A."),
                 entry("Require-Bundle", "org.bonitasoft.studio.console.libs"),
-                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.8"));
+                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-11"));
     }
 
     @Test
@@ -111,6 +111,6 @@ public class ProjectManifestFactoryTest {
                 entry("Bundle-Version", "1.0.0.qualifier"),
                 entry("Bundle-Vendor", "Bonitasoft S.A."),
                 entry("Require-Bundle", "org.bonitasoft.studio.console.libs"),
-                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-1.8"));
+                entry("Bundle-RequiredExecutionEnvironment", "JavaSE-11"));
     }
 }

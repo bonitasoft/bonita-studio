@@ -53,7 +53,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.commands;bundle-version="0.12.400",
  org.eclipse.e4.ui.css.swt.theme,
  org.eclipse.e4.ui.services
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.api,
