@@ -22,7 +22,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -189,7 +191,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                     uidManager.start(repository, monitor);
                 }
                 createLaunchConfiguration(tomcat, AbstractRepository.NULL_PROGRESS_MONITOR);
-                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
+                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
                 startResult = null;
                 tomcat.start(ILaunchManager.RUN_MODE, result -> startResult = result);
                 waitServerRunning();
@@ -294,7 +297,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error(e);
             }
         } else {
-            BonitaStudioLog.error("Failed to login to engine after " + MAX_LOGGING_TRY + " tries", EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.error("Failed to login to engine after " + MAX_LOGGING_TRY + " tries",
+                    EnginePlugin.PLUGIN_ID);
         }
     }
 
@@ -320,6 +324,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
 
+        runPlatformSetupConfiguration();
+
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
                 getTomcatVMArgsBuilder(repositoryAccessor, EnginePlugin.getDefault().getPreferenceStore())
@@ -329,6 +335,35 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, true);
         workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
         return workingCopy.doSave();
+    }
+
+    /**
+     * Configure the tomcat bundle based on the database.properties in setup folder
+     */
+    private void runPlatformSetupConfiguration() {
+        java.nio.file.Path setupFolder = new File(bundleLocation).toPath().resolve("setup");
+        try {
+            new ProcessBuilder().directory(setupFolder.toFile())
+                    .command(configureCommandLine())
+                    .inheritIO()
+                    .start().waitFor();
+        } catch (InterruptedException | IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    private List<String> configureCommandLine()  {
+        List<String> commands = new ArrayList<>();
+        if (Platform.OS_WIN32.equals(Platform.getOS())) {
+            commands.add("cmd");
+            commands.add("/C");
+            commands.add("setup.bat");
+        } else {
+            commands.add("./setup.sh");
+        }
+        commands.add("configure");
+        commands.add("-Dh2.database.dir=${org.bonitasoft.h2.database.dir}");
+        return commands;
     }
 
     protected TomcatVmArgsBuilder getTomcatVMArgsBuilder(final RepositoryAccessor repositoryAccessor,
@@ -386,7 +421,8 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         return serverWC.save(true, monitor);
     }
 
-    protected IRuntime createServerRuntime(final IRuntimeType type, final IProgressMonitor monitor) throws CoreException {
+    protected IRuntime createServerRuntime(final IRuntimeType type, final IProgressMonitor monitor)
+            throws CoreException {
         IRuntime runtime = ServerCore.findRuntime(BONITA_TOMCAT_RUNTIME_ID);
         if (runtime == null) {
             runtime = type.createRuntime(BONITA_TOMCAT_RUNTIME_ID, monitor);

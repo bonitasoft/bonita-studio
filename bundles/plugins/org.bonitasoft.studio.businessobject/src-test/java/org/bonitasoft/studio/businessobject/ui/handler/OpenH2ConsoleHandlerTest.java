@@ -28,6 +28,7 @@ import java.net.URLDecoder;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.FileLocator;
@@ -69,12 +70,17 @@ public class OpenH2ConsoleHandlerTest {
     @Mock
     private ILaunch launch;
 
+    @Mock
+    private DatabaseHandler databaseHandler;
+
     @Before
     public void setUp() throws Exception {
         doReturn("/test/h2_db").when(openH2ConsoleHandler).pathToDBFolder(repositoryAccessor);
         doReturn(rootFile()).when(openH2ConsoleHandler).rootFile(repositoryAccessor);
         doReturn(launchManager).when(openH2ConsoleHandler).getLaunchManager();
         doReturn("/usr/bin/java").when(openH2ConsoleHandler).javaBinaryLocation();
+        doReturn(databaseHandler).when(openH2ConsoleHandler).getDatabaseHandler(repositoryAccessor);
+        when(databaseHandler.getBusinessDataDBName()).thenReturn("business_data.db");
         when(launchManager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE))
                 .thenReturn(lanchConfigurationType);
         when(lanchConfigurationType.newInstance(any(IContainer.class), notNull(String.class))).thenReturn(workingCopy);
