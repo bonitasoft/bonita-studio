@@ -241,9 +241,11 @@ public class UserList {
     private void removeUser() {
         if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteUserTitle,
                 String.format(Messages.deleteUserMsg, formPage.toUserDisplayName(selectionObservable.getValue())))) {
-            input.remove(selectionObservable.getValue());
+            User selectedUser = selectionObservable.getValue();
+            formPage.observeWorkingCopy().getValue().getMemberships().getMembership()
+                    .removeIf(m -> Objects.equals(m.getUserName(), selectedUser.getUserName()));
+            input.remove(selectedUser);
         }
-        // TODO remove user memberships! 
     }
 
     private void addUser() {
@@ -264,13 +266,7 @@ public class UserList {
                 user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);
             }
         }
-
-        //        TODO: Handle membership
-        //        //add a default empty membership for the new User
-        //        final Membership defaultMembershipForNewUser = OrganizationFactory.eINSTANCE.createMembership();
-        //        defaultMembershipForNewUser.setUserName(user.getUserName());
-        //        membershipList.add(defaultMembershipForNewUser);
-
+        organization.getMemberships().getMembership().add(formPage.createDefaultMembership(user.getUserName()));
         input.add(user);
     }
 

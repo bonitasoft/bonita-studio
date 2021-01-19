@@ -16,7 +16,11 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Membership;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.Users;
 import org.eclipse.core.databinding.observable.Realm;
@@ -85,18 +89,49 @@ public class UserFormPage extends AbstractOrganizationFormPage {
                 OrganizationPackage.Literals.USERS__USER);
     }
 
+    public Membership createDefaultMembership(String username) {
+        Membership newMembership = OrganizationFactory.eINSTANCE.createMembership();
+        newMembership.setUserName(username);
+        newMembership.setGroupName(getFirstRootGroup());
+        newMembership.setRoleName(getFirstRole());
+        return newMembership;
+    }
+
+    private String getFirstRootGroup() {
+        return observeWorkingCopy().getValue().getGroups().getGroup().stream()
+                .filter(grp -> grp.getParentPath() == null)
+                .findFirst()
+                .map(Group::getName)
+                .orElse(null);
+    }
+
+    private String getFirstRole() {
+        return observeWorkingCopy().getValue().getRoles().getRole().stream()
+                .findFirst().map(Role::getName).orElse(null);
+    }
+
     public void refreshSelectedUser() {
-        userFormPart.refreshSelectedUser();
+        if (userFormPart != null) {
+            userFormPart.refreshSelectedUser();
+        }
     }
 
     @Override
     public void refreshList() {
-        userFormPart.refreshUserList();
+        if (userFormPart != null) {
+            userFormPart.refreshUserList();
+        }
     }
 
     public void doRefreshMembershipTable() {
         if (userFormPart != null) {
             userFormPart.refreshMembershipTable();
+        }
+    }
+
+    public void redrawCustomInfoTable() {
+        if (userFormPart != null) {
+            userFormPart.redrawCustomInfoTable();
         }
     }
 

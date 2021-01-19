@@ -311,4 +311,8 @@ public class Messages extends NLS {
     public static String location;
     public static String organizationSavedBeforeRename;
     public static String organizationAlreadyExists;
+    public static String addCustomInfoTooltip;
+    public static String deleteCustomInfoTooltip;
+    public static String deleteCustomInfoConfirmation;
+    public static String value;
 }

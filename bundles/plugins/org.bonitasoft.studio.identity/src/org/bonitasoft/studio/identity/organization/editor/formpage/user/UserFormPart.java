@@ -17,6 +17,7 @@ package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import org.bonitasoft.studio.identity.organization.editor.control.user.ManageCustomInformationSection;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserList;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
@@ -47,12 +48,17 @@ public class UserFormPart extends AbstractFormPart {
     public UserFormPart(Composite parent, UserFormPage formPage) {
         this.formPage = formPage;
 
-        parent.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
-                .spacing(20, LayoutConstants.getSpacing().y).create());
+        parent.setLayout(GridLayoutFactory.fillDefaults().create());
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        createUserList(parent);
-        createUserDetailsControl(parent);
+        Composite userComposite = formPage.getToolkit().createComposite(parent);
+        userComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
+                .spacing(20, LayoutConstants.getSpacing().y).create());
+        userComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 630).create());
+        createUserList(userComposite);
+        createUserDetailsControl(userComposite);
+
+        new ManageCustomInformationSection(parent, formPage, ctx);
     }
 
     private void createUserDetailsControl(Composite parent) {
@@ -115,6 +121,10 @@ public class UserFormPart extends AbstractFormPart {
 
     public void refreshMembershipTable() {
         userEditionControl.refreshMembershipTable();
+    }
+
+    public void redrawCustomInfoTable() {
+        userEditionControl.redrawCustomInfoTable();
     }
 
 }

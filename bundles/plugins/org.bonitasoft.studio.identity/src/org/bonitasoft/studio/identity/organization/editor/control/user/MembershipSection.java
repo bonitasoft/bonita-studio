@@ -17,19 +17,17 @@ package org.bonitasoft.studio.identity.organization.editor.control.user;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.editingsupport.MembershipGroupEditingSupport;
 import org.bonitasoft.studio.identity.organization.editor.editingsupport.MembershipRoleEditingSupport;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
-import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
-import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
-import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
+import org.bonitasoft.studio.identity.organization.validator.MembershipGroupValidator;
+import org.bonitasoft.studio.identity.organization.validator.MembershipRoleValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
@@ -158,10 +156,10 @@ public class MembershipSection {
     private void createRoleColumn() {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.getColumn().setText(Messages.role);
-        EmptyInputValidator validator = new EmptyInputValidator(Messages.role);
+        MembershipRoleValidator validator = new MembershipRoleValidator(formPage.observeWorkingCopy());
         column.setLabelProvider(new LabelProviderBuilder<Membership>()
                 .withTextProvider(Membership::getRoleName)
-                .withStatusProvider(memberShip -> validator.validate(memberShip.getRoleName()))
+                .withStatusProvider(validator::validate)
                 .createColumnLabelProvider());
 
         IObservableValue<String> selectedMembershipRoleNameObservable = EMFObservables.observeDetailValue(
@@ -178,12 +176,12 @@ public class MembershipSection {
     private void createGroupColumn() {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.getColumn().setText(Messages.groupName);
-        EmptyInputValidator validator = new EmptyInputValidator(Messages.groupName);
+        MembershipGroupValidator validator = new MembershipGroupValidator(formPage.observeWorkingCopy());
         column.setLabelProvider(new LabelProviderBuilder<Membership>()
                 .withTextProvider(memberShip -> memberShip.getGroupName() == null
                         ? ""
                         : GroupContentProvider.getGroupPath(memberShip.getGroupName(), memberShip.getGroupParentPath()))
-                .withStatusProvider(memberShip -> validator.validate(memberShip.getGroupName())) // enough to check groupName
+                .withStatusProvider(validator::validate)
                 .createColumnLabelProvider());
 
         IObservableValue<String> selectedMembershipGroupNameObservable = EMFObservables.observeDetailValue(
@@ -227,26 +225,7 @@ public class MembershipSection {
     }
 
     private void addMembership() {
-        Membership newMembership = OrganizationFactory.eINSTANCE.createMembership();
-        User selectedUser = selectedUserObservable.getValue();
-        newMembership.setUserName(selectedUser.getUserName());
-        newMembership.setGroupName(getFirstRootGroup());
-        newMembership.setRoleName(getFirstRole());
-        input.add(newMembership);
-        viewer.editElement(newMembership, 0);
-    }
-
-    private String getFirstRootGroup() {
-        return formPage.observeWorkingCopy().getValue().getGroups().getGroup().stream()
-                .filter(grp -> grp.getParentPath() == null)
-                .findFirst()
-                .map(Group::getName)
-                .orElse(null);
-    }
-
-    private String getFirstRole() {
-        return formPage.observeWorkingCopy().getValue().getRoles().getRole().stream()
-                .findFirst().map(Role::getName).orElse(null);
+        input.add(formPage.createDefaultMembership(selectedUserObservable.getValue().getUserName()));
     }
 
     public void refreshTable() {

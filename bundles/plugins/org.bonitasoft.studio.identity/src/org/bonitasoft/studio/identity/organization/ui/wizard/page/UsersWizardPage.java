@@ -869,7 +869,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
         targetStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.emtpyMembershipValue));
         targetStrategy
-                .setConverter(new Converter(org.bonitasoft.studio.identity.organization.model.organization.Group.class, String.class) {
+                .setConverter(new Converter(org.bonitasoft.studio.identity.organization.model.organization.Group.class,
+                        String.class) {
 
                     @Override
                     public Object convert(final Object from) {
@@ -889,7 +890,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
         modelStrategy
-                .setConverter(new Converter(String.class, org.bonitasoft.studio.identity.organization.model.organization.Group.class) {
+                .setConverter(new Converter(String.class,
+                        org.bonitasoft.studio.identity.organization.model.organization.Group.class) {
 
                     @Override
                     public Object convert(final Object from) {
@@ -897,7 +899,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                         final Iterator<org.bonitasoft.studio.identity.organization.model.organization.Group> iterator = observeGroupList
                                 .iterator();
                         while (iterator.hasNext()) {
-                            final org.bonitasoft.studio.identity.organization.model.organization.Group group = iterator.next();
+                            final org.bonitasoft.studio.identity.organization.model.organization.Group group = iterator
+                                    .next();
                             if (group.getName().equals(groupName)) {
                                 final String gParentPath = group.getParentPath();
                                 final String mGroupParentPath = membership.getGroupParentPath();

@@ -146,6 +146,9 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
+                // TODO -> quand on fera un vrai handler pour crer des Orga (bientot), creer directement les list 
+                // de custom info etc, sur l'orga et les users ! ca evitera de devoir les rajouter en live  
+                // dans l'editeur et de proc un etat dirty pour rien.
                 final Organization organization = OrganizationFactory.eINSTANCE.createOrganization();
                 organization.setName(generateOrganizationName());
                 organization.setGroups(OrganizationFactory.eINSTANCE.createGroups());

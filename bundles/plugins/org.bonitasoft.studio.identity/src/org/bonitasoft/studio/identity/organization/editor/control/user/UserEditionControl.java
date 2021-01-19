@@ -315,4 +315,8 @@ public class UserEditionControl {
         membershipSection.refreshTable();
     }
 
+    public void redrawCustomInfoTable() {
+        informationSection.redrawCustomInfoTable();
+    }
+
 }
