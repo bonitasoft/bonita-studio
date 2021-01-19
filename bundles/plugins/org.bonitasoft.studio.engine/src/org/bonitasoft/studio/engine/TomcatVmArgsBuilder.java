@@ -45,14 +45,15 @@ public class TomcatVmArgsBuilder {
         if (tomcatExtraParams != null) {
             args.append(" " + tomcatExtraParams);
         }
+        DatabaseHandler databaseHandler = getDatabaseHandler();
         final String tomcatInstanceLocation = bundleLocation + File.separatorChar + "server";
         addSystemProperty(args, "catalina.home", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_HOME", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "CATALINA_TMPDIR", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
         addSystemProperty(args, "java.io.tmpdir", "\"" + tomcatInstanceLocation + File.separatorChar + "temp\"");
-        addSystemProperty(args, "btm.root", "\"" + tomcatInstanceLocation + "\"");
         addSystemProperty(args, "wtp.deploy", "\"" + tomcatInstanceLocation + File.separatorChar + "webapps\"");
-        addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
+        addSystemProperty(args, "sysprop.bonita.db.vendor", databaseHandler.getBonitaDBVendor());
+        addSystemProperty(args, "sysprop.bonita.bdm.db.vendor", databaseHandler.getBDMDBVendor());
         addSystemProperty(args, "org.bonitasoft.platform.setup.folder",
                 "\"" + bundleLocation + File.separatorChar + "setup\"");
         addSystemProperty(args, "org.bonitasoft.engine.incident.folder",
@@ -79,7 +80,11 @@ public class TomcatVmArgsBuilder {
     }
 
     public File getDBLocation() {
-        return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation();
+        return getDatabaseHandler().getDBLocation();
+    }
+
+    public DatabaseHandler getDatabaseHandler() {
+        return repositoryAccessor.getCurrentRepository().getDatabaseHandler();
     }
 
     public String getProductApplicationId() {
