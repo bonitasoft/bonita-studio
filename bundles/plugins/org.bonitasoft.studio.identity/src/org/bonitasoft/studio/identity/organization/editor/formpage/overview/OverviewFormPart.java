@@ -55,4 +55,8 @@ public class OverviewFormPart extends AbstractFormPart {
         overviewEditionControl.updateDefaultUserViewerInput();
     }
 
+    public void refreshList() {
+        overviewEditionControl.refreshList();
+    }
+
 }
