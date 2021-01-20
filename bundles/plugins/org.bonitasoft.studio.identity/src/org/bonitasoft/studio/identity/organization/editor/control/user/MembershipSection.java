@@ -23,7 +23,6 @@ import org.bonitasoft.studio.identity.organization.editor.editingsupport.Members
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
-import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.validator.MembershipGroupValidator;
@@ -83,11 +82,7 @@ public class MembershipSection {
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         section.setText(Messages.membership);
 
-        IObservableValue<Memberships> memberships = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
-                formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__MEMBERSHIPS);
-
-        input = EMFObservables.observeDetailList(ctx.getValidationRealm(),
-                memberships, OrganizationPackage.Literals.MEMBERSHIPS__MEMBERSHIP);
+        input = formPage.observeMemberships();
 
         section.setClient(createMembsershipComposite());
     }

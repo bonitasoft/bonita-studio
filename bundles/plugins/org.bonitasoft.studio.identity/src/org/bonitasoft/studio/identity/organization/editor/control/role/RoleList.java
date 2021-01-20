@@ -27,10 +27,13 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.editor.formpage.role.RoleFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
+import org.bonitasoft.studio.identity.organization.model.organization.Roles;
 import org.bonitasoft.studio.identity.organization.validator.RoleListValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -40,13 +43,14 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
@@ -77,23 +81,27 @@ public class RoleList {
     public static final String ADD_ROLE_BUTTON_ID = "addRoleButtonId";
     private static final String REMOVE_BUTTON_ID = "deleteRoleButtonId";
 
-    private RoleFormPage formPage;
+    private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
     private Section section;
     private TableViewer viewer;
     private IObservableValue<Role> selectionObservable;
-    private IObservableList<Role> input = new WritableList<>();
+    private IObservableList<Role> input;
     private List<Role> rolesToFilter = new ArrayList<>();
 
     private ToolItem addItem;
     private ToolItem deleteItem;
     private IObservableList<Membership> membershipList;
 
-    public RoleList(Composite parent, RoleFormPage formPage, DataBindingContext ctx,
-            IObservableList<Membership> membershipList) {
+    public RoleList(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
         this.formPage = formPage;
         this.ctx = ctx;
-        this.membershipList = membershipList;
+        this.membershipList = formPage.observeMemberships();
+
+        IObservableValue<Roles> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__ROLES);
+        input = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
+                OrganizationPackage.Literals.ROLES__ROLE);
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -119,7 +127,7 @@ public class RoleList {
         return roleListComposite;
     }
 
-    private void enableButtons() {
+    protected void enableButtons() {
         ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder()
                 .withSupplier(() -> selectionObservable.getValue() != null)
                 .build());
@@ -172,7 +180,7 @@ public class RoleList {
         };
     }
 
-    private void createSearchField(Composite parent) {
+    protected void createSearchField(Composite parent) {
         TextWidget searchWidget = createSearchWidget(parent);
         IObservableValue<String> searchObservableValue = searchWidget.observeText(SWT.Modify);
         searchObservableValue.addValueChangeListener(e -> {
@@ -207,7 +215,7 @@ public class RoleList {
                 .createIn(parent);
     }
 
-    private void createToolbar(Composite parent) {
+    protected void createToolbar(Composite parent) {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
@@ -238,7 +246,7 @@ public class RoleList {
                 String.format(Messages.deleteRoleMsg, selectionObservable.getValue().getDisplayName()))) {
             String oldName = selectionObservable.getValue().getName();
             input.remove(selectionObservable.getValue());
-            formPage.refactorMemberships(membershipList, oldName, null);
+            ((RoleFormPage) formPage).refactorMemberships(membershipList, oldName, null);
         }
     }
 

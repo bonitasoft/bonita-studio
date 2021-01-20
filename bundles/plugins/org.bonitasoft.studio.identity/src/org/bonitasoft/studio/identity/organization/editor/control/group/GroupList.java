@@ -27,9 +27,10 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
-import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFormPage;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.editor.provider.content.GroupContentProvider;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
+import org.bonitasoft.studio.identity.organization.model.organization.Groups;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
@@ -43,8 +44,8 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -98,12 +99,12 @@ public class GroupList {
     private static final String ADD_SUB_GROUP_BUTTON_ID = "addSubGroupButtonId";
     private static final String REMOVE_BUTTON_ID = "deleteGroupButtonId";
 
-    private GroupFormPage formPage;
+    private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
     private Section section;
     private TreeViewer viewer;
     private IObservableValue<Group> selectionObservable;
-    private IObservableList<Group> input = new WritableList<>();
+    private IObservableList<Group> input;
     private IObservableList<Membership> membershipList;
     private GroupContentProvider contentProvider;
     private List<Group> groupsToFilter = new ArrayList<>();
@@ -114,11 +115,17 @@ public class GroupList {
     private ToolItem addSubGroupItem;
     private ToolItem deleteItem;
 
-    public GroupList(Composite parent, GroupFormPage formPage, DataBindingContext ctx) {
+    public GroupList(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
         this.formPage = formPage;
         this.ctx = ctx;
         this.cursorHand = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
         this.cursorArrow = new Cursor(parent.getDisplay(), SWT.CURSOR_ARROW);
+
+        IObservableValue<Groups> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
+                formPage.observeWorkingCopy(),
+                OrganizationPackage.Literals.ORGANIZATION__GROUPS);
+        input = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
+                OrganizationPackage.Literals.GROUPS__GROUP);
 
         IObservableValue<Memberships> memberships = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
                 formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__MEMBERSHIPS);
@@ -149,7 +156,7 @@ public class GroupList {
         return groupListComposite;
     }
 
-    private void enableButtons() {
+    protected void enableButtons() {
         ComputedValue<Boolean> selectionNotNull = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectionObservable.getValue() != null)
                 .build();
@@ -211,7 +218,7 @@ public class GroupList {
         });
     }
 
-    private void addDNDSupport() {
+    protected void addDNDSupport() {
         viewer.addDropSupport(DND.DROP_MOVE | DND.DROP_MOVE | DND.FEEDBACK_INSERT_BEFORE | DND.DROP_DEFAULT,
                 new Transfer[] { GroupTransfer.getInstance() },
                 new DropTargetAdapter() {
@@ -303,7 +310,7 @@ public class GroupList {
         column.setLabelProvider(new LabelProviderBuilder<Group>()
                 .withTextProvider(Group::getDisplayName)
                 .withImageProvider(grp -> groupsImage)
-                .withStatusProvider(groupStatusProvider(new GroupListValidator(formPage.observeWorkingCopy())))
+                .withStatusProvider(groupStatusProvider(new GroupListValidator(formPage)))
                 .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
     }
@@ -317,7 +324,7 @@ public class GroupList {
     }
 
     protected void createSearchField(Composite parent) {
-        TextWidget searchWidget = createSearchWidget(parent, formPage);
+        TextWidget searchWidget = createSearchWidget(parent);
         IObservableValue<String> searchObservableValue = searchWidget.observeText(SWT.Modify);
         searchObservableValue.addValueChangeListener(e -> {
             Display.getDefault().asyncExec(() -> {
@@ -326,8 +333,7 @@ public class GroupList {
                 getRootGroups().stream()
                         .filter(grp -> !matchesSearchValue(grp, search))
                         .forEach(groupsToFilter::add);
-                viewer.refresh(); // apply filter
-                viewer.expandAll();
+                refreshGroupList(); // apply filter
             });
         });
     }
@@ -354,7 +360,7 @@ public class GroupList {
                 .collect(Collectors.toList());
     }
 
-    protected TextWidget createSearchWidget(Composite parent, GroupFormPage formPage) {
+    protected TextWidget createSearchWidget(Composite parent) {
         return new SearchWidget.Builder()
                 .labelAbove()
                 .fill()
@@ -364,7 +370,7 @@ public class GroupList {
                 .createIn(parent);
     }
 
-    private void createToolbar(Composite parent) {
+    protected void createToolbar(Composite parent) {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(
@@ -467,8 +473,7 @@ public class GroupList {
         newGroup.setDisplayName(newName);
         newGroup.setParentPath(path);
         input.add(newGroup);
-        viewer.refresh();
-        viewer.expandAll();
+        refreshGroupList();
         selectionObservable.setValue(newGroup);
         /**
          * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
@@ -536,7 +541,22 @@ public class GroupList {
     }
 
     public void refreshGroupList() {
+        Group selection = selectionObservable.getValue();
         viewer.refresh();
+        viewer.expandAll();
+        if (selection != null) {
+            input.stream()
+                    .filter(aGroup -> Objects.equals(aGroup.getName(), selection.getName()))
+                    .filter(aGroup -> sameParentPath(aGroup, selection))
+                    .findFirst().ifPresent(selectionObservable::setValue);
+        }
+    }
+
+    private boolean sameParentPath(Group group1, Group group2) {
+        if (group1.getParentPath() == null) {
+            return group2.getParentPath() == null;
+        }
+        return Objects.equals(group1.getParentPath(), group2.getParentPath());
     }
 
 }

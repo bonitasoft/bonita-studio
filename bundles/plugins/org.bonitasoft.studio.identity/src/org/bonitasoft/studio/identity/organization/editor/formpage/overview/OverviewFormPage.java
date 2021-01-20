@@ -61,14 +61,16 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
 
     @Override
     public void refreshList() {
-        // TODO Auto-generated method stub
+    }
 
+    @Override
+    public void updateDefaultUserViewerInput() {
+        overviewFormPart.updateDefaultUserViewerInput();
     }
 
     @Override
     protected void createHeaderContent(ToolBar toolBar) {
         // TODO Auto-generated method stub
-
     }
 
 }

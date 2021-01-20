@@ -15,8 +15,8 @@
 package org.bonitasoft.studio.identity.organization.validator;
 
 import org.bonitasoft.studio.identity.IdentityPlugin;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
-import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -30,9 +30,9 @@ public class GroupListValidator implements IValidator<Group> {
     private GroupNameValidator groupNameValidator;
     private DisplayNameValidator groupDisplayNameValidator;
 
-    public GroupListValidator(IObservableValue<Organization> organizationObservable) {
+    public GroupListValidator(AbstractOrganizationFormPage formPage) {
         groupParentPathLengthValidator = new GroupParentPathLengthValidator();
-        groupNameValidator = new GroupNameValidator(organizationObservable, selectedGroupObservable);
+        groupNameValidator = new GroupNameValidator(formPage, selectedGroupObservable);
         groupDisplayNameValidator = new DisplayNameValidator();
     }
 

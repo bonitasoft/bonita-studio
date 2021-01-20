@@ -69,12 +69,16 @@ public class RoleFormPage extends AbstractOrganizationFormPage {
     }
 
     public void refreshSelectedRole() {
-        roleFormPart.refreshSelectedRole();
+        if (roleFormPart != null) {
+            roleFormPart.refreshSelectedRole();
+        }
     }
 
     @Override
     public void refreshList() {
-        roleFormPart.refreshRoleList();
+        if (roleFormPart != null) {
+            roleFormPart.refreshRoleList();
+        }
     }
 
     public void refactorMemberships(List<Membership> memberships, String oldName, String newName) {

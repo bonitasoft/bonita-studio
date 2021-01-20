@@ -36,7 +36,6 @@ public class OverviewFormPart extends AbstractFormPart {
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createOverviewControl(parent);
-
     }
 
     private void createOverviewControl(Composite parent) {
@@ -50,6 +49,10 @@ public class OverviewFormPart extends AbstractFormPart {
         if (onSave) {
             getManagedForm().dirtyStateChanged();
         }
+    }
+
+    public void updateDefaultUserViewerInput() {
+        overviewEditionControl.updateDefaultUserViewerInput();
     }
 
 }

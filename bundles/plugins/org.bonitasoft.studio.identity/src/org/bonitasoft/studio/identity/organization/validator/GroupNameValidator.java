@@ -23,8 +23,8 @@ import org.bonitasoft.studio.common.jface.databinding.validator.MultiValidatorFa
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
 import org.bonitasoft.studio.identity.actors.validator.ValidatorConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
-import org.bonitasoft.studio.identity.organization.model.organization.Organization;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.IStatus;
 public class GroupNameValidator implements IValidator<String> {
 
     private IObservableValue<Group> selectedGroupObservable;
-    private IObservableValue<Organization> organizationObservable;
+    private AbstractOrganizationFormPage formPage;
 
     private EmptyInputValidator emptyInputValidator;
     private InputLengthValidator inputLengthValidator;
@@ -41,9 +41,9 @@ public class GroupNameValidator implements IValidator<String> {
     private IValidator<String> uniquenessValidator;
     private MultiValidator multiValidator;
 
-    public GroupNameValidator(IObservableValue<Organization> organizationObservable,
+    public GroupNameValidator(AbstractOrganizationFormPage formPage,
             IObservableValue<Group> selectedGroupObservable) {
-        this.organizationObservable = organizationObservable;
+        this.formPage = formPage;
         this.selectedGroupObservable = selectedGroupObservable;
 
         emptyInputValidator = new EmptyInputValidator(Messages.name);
@@ -64,7 +64,7 @@ public class GroupNameValidator implements IValidator<String> {
     }
 
     private IStatus validateUniqueness(String value) {
-        return organizationObservable.getValue().getGroups().getGroup().stream()
+        return formPage.observeWorkingCopy().getValue().getGroups().getGroup().stream()
                 .filter(aGroup -> !Objects.equals(aGroup, selectedGroupObservable.getValue()))
                 .filter(aGroup -> Objects.equals(aGroup.getName(), value))
                 .filter(aGroup -> sameParentPath(aGroup, selectedGroupObservable.getValue()))

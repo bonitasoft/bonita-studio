@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.comparator.UserComparator;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinitions;
@@ -46,7 +47,6 @@ import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
@@ -83,20 +83,30 @@ public class UserList {
     private static final String REMOVE_BUTTON_ID = "deleteUserButtonId";
     private static final String DEFAULT_USER_PASSWORD = "bpm";
 
-    private UserFormPage formPage;
+    private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
     private Section section;
     private TableViewer viewer;
     private IObservableValue<User> selectionObservable;
-    private IObservableList<User> input = new WritableList<>();
+    private IObservableList<User> input;
     private List<User> usersToFilter = new ArrayList<>();
 
     private ToolItem addItem;
     private ToolItem deleteItem;
 
-    public UserList(Composite parent, UserFormPage formPage, DataBindingContext ctx) {
+    public UserList(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
         this.formPage = formPage;
         this.ctx = ctx;
+
+        input = formPage.observeUsers();
+        input.forEach(user -> {
+            if (user.getPersonalData() == null) {
+                user.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
+            }
+            if (user.getProfessionalData() == null) {
+                user.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
+            }
+        });
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -122,7 +132,7 @@ public class UserList {
         return userListComposite;
     }
 
-    private void enableButtons() {
+    protected void enableButtons() {
         ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder()
                 .withSupplier(() -> selectionObservable.getValue() != null)
                 .build());
@@ -176,7 +186,7 @@ public class UserList {
                 .collect(StatusCollectors.toMultiStatus());
     }
 
-    private void createSearchField(Composite parent) {
+    protected void createSearchField(Composite parent) {
         TextWidget searchWidget = createSearchWidget(parent);
         IObservableValue<String> searchObservableValue = searchWidget.observeText(SWT.Modify);
         searchObservableValue.addValueChangeListener(e -> {
@@ -212,7 +222,7 @@ public class UserList {
                 .createIn(parent);
     }
 
-    private void createToolbar(Composite parent) {
+    protected void createToolbar(Composite parent) {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
@@ -245,6 +255,13 @@ public class UserList {
             formPage.observeWorkingCopy().getValue().getMemberships().getMembership()
                     .removeIf(m -> Objects.equals(m.getUserName(), selectedUser.getUserName()));
             input.remove(selectedUser);
+            formPage.updateDefaultUserViewerInput();
+
+            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
+            // TODO Hopefully this could be removed on the futur (current date: 08/01/2021)
+            if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
+                viewer.getControl().redraw();
+            }
         }
     }
 
@@ -266,8 +283,16 @@ public class UserList {
                 user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);
             }
         }
-        organization.getMemberships().getMembership().add(formPage.createDefaultMembership(user.getUserName()));
+        organization.getMemberships().getMembership()
+                .add(((UserFormPage) formPage).createDefaultMembership(user.getUserName()));
         input.add(user);
+        formPage.updateDefaultUserViewerInput();
+
+        // Necessary since the MacOS Big Sur update -> Seems that table aren't redraw automatically 
+        // TODO Hopefully this could be removed on the futur (current date: 19/02/2021)
+        if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
+            viewer.getControl().redraw();
+        }
     }
 
     private String generateUsername() {

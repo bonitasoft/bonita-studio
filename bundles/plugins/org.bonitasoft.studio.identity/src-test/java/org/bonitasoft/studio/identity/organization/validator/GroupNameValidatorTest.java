@@ -1,6 +1,8 @@
 package org.bonitasoft.studio.identity.organization.validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -8,6 +10,7 @@ import java.util.Objects;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.identity.actors.validator.ValidatorConstants;
+import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
 import org.bonitasoft.studio.identity.organization.model.organization.Groups;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -43,7 +46,13 @@ public class GroupNameValidatorTest {
         organization.setGroups(groups);
         organizationObservable = new WritableValue<>(organization, Organization.class);
 
-        validator = new GroupNameValidator(organizationObservable, selectedGroupObservable);
+        IObservableValue<Organization> workingCopyObservable = new WritableValue<>();
+        workingCopyObservable.setValue(organization);
+
+        AbstractOrganizationFormPage formPage = mock(AbstractOrganizationFormPage.class);
+        when(formPage.observeWorkingCopy()).thenReturn(workingCopyObservable);
+
+        validator = new GroupNameValidator(formPage, selectedGroupObservable);
     }
 
     @Test

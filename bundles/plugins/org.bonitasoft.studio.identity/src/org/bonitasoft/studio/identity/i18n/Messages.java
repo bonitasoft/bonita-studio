@@ -315,4 +315,6 @@ public class Messages extends NLS {
     public static String deleteCustomInfoTooltip;
     public static String deleteCustomInfoConfirmation;
     public static String value;
+    public static String defaultUserUpdated;
+    public static String defaultUserUpdatedTitle;
 }

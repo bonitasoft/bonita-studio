@@ -149,7 +149,7 @@ public class GroupEditionControl {
     private void createNameField(Composite parent) {
         IObservableValue<String> nameObservable = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
                 selectedGroupObservable, OrganizationPackage.Literals.GROUP__NAME);
-        GroupNameValidator nameValidator = new GroupNameValidator(formPage.observeWorkingCopy(), selectedGroupObservable);
+        GroupNameValidator nameValidator = new GroupNameValidator(formPage, selectedGroupObservable);
         new TextWidget.Builder()
                 .transactionalEdit()
                 .withLabel(Messages.name)
