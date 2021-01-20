@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -206,6 +207,8 @@ public abstract class AbstractFormPage<T> extends FormPage {
 
     protected void disposePageContent() {
         Stream.of(scrolledForm.getBody().getChildren()).forEach(Control::dispose);
+        Stream.of(getManagedForm().getParts()).forEach(IFormPart::dispose);
+        Stream.of(getManagedForm().getParts()).forEach(getManagedForm()::removePart);
     }
 
     public ECommandService getECommandService() {

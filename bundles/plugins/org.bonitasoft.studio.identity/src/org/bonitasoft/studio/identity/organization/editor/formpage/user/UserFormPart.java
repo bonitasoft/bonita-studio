@@ -20,17 +20,11 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import org.bonitasoft.studio.identity.organization.editor.control.user.ManageCustomInformationSection;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.user.UserList;
-import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
-import org.bonitasoft.studio.identity.organization.model.organization.Users;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -85,19 +79,6 @@ public class UserFormPart extends AbstractFormPart {
         userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
 
         userList = new UserList(userListComposite, formPage, ctx);
-        IObservableValue<Users> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
-                formPage.observeWorkingCopy(), OrganizationPackage.Literals.ORGANIZATION__USERS);
-        IObservableList<User> userListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
-                OrganizationPackage.Literals.USERS__USER);
-        userListObservable.forEach(user -> {
-            if (user.getPersonalData() == null) {
-                user.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
-            }
-            if (user.getProfessionalData() == null) {
-                user.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
-            }
-        });
-        ctx.bindList(userList.observeInput(), userListObservable);
     }
 
     @Override

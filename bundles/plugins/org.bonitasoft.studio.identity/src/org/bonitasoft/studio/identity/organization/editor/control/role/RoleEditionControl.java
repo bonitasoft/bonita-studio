@@ -46,11 +46,11 @@ public class RoleEditionControl {
     private IObservableList<Membership> membershipList;
 
     public RoleEditionControl(Composite parent, RoleFormPage formPage, IObservableValue<Role> selectedRoleObservable,
-            DataBindingContext ctx, IObservableList<Membership> membershipList) {
+            DataBindingContext ctx) {
         this.formPage = formPage;
         this.selectedRoleObservable = selectedRoleObservable;
         this.ctx = ctx;
-        this.membershipList = membershipList;
+        this.membershipList = formPage.observeMemberships();
 
         this.section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).grab(true, true).create());

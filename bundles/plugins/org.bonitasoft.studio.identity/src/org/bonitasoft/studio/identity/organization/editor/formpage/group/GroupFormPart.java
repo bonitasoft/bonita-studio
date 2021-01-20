@@ -20,15 +20,10 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupEditionControl;
 import org.bonitasoft.studio.identity.organization.editor.control.group.GroupList;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
-import org.bonitasoft.studio.identity.organization.model.organization.Groups;
-import org.bonitasoft.studio.identity.organization.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -88,12 +83,6 @@ public class GroupFormPart extends AbstractFormPart {
         groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
         groupList = new GroupList(groupListComposite, formPage, ctx);
-        IObservableValue<Groups> groupsObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
-                formPage.observeWorkingCopy(),
-                OrganizationPackage.Literals.ORGANIZATION__GROUPS);
-        IObservableList<Group> groupListObservable = EMFObservables.observeDetailList(Realm.getDefault(), groupsObservable,
-                OrganizationPackage.Literals.GROUPS__GROUP);
-        ctx.bindList(groupList.observeInput(), groupListObservable);
         groupList.expandAll();
     }
 

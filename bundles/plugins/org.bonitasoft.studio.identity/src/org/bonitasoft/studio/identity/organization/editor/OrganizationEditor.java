@@ -139,4 +139,12 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
         userFormPage.refreshList();
     }
 
+    public void refreshGroupList() {
+        groupFormPage.refreshList();
+    }
+
+    public void updateDefaultUserViewerInput() {
+        overviewFormPage.updateDefaultUserViewerInput();
+    }
+
 }

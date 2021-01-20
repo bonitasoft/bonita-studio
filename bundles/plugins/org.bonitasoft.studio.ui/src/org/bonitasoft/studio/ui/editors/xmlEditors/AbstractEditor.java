@@ -45,7 +45,7 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
     protected T workingCopy;
     private IEclipseContext context;
     private Composite pageContainer;
-    private int sourceEditorIndex;
+    protected int sourceEditorIndex;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {

@@ -67,12 +67,16 @@ public class GroupFormPage extends AbstractOrganizationFormPage {
     }
 
     public void refreshSelectedGroup() {
-        groupFormPart.refreshSelectedGroup();
+        if (groupFormPart != null) {
+            groupFormPart.refreshSelectedGroup();
+        }
     }
 
     @Override
     public void refreshList() {
-        groupFormPart.refreshGroupList();
+        if (groupFormPart != null) {
+            groupFormPart.refreshGroupList();
+        }
     }
 
 }
