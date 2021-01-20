@@ -61,6 +61,9 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
 
     @Override
     public void refreshList() {
+        if (overviewFormPart != null) {
+            overviewFormPart.refreshList();
+        }
     }
 
     @Override

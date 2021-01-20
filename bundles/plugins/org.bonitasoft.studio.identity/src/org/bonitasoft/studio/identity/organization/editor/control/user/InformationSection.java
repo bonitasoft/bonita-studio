@@ -17,6 +17,8 @@ package org.bonitasoft.studio.identity.organization.editor.control.user;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
@@ -34,6 +36,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -48,6 +51,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class InformationSection {
@@ -314,6 +318,12 @@ public class InformationSection {
 
         customInfoViewer.setContentProvider(new ObservableListContentProvider());
         customInfoViewer.setInput(customUserInfoValues);
+
+        // TODO necessary since macos Bigsure, should be remove in the futur
+        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+            selectedUserObservable
+                    .addValueChangeListener(e -> Display.getDefault().asyncExec(() -> customInfoViewer.getTable().redraw()));
+        }
     }
 
     private void createValueColumn() {
@@ -337,6 +347,7 @@ public class InformationSection {
     }
 
     public void redrawCustomInfoTable() {
+        customInfoViewer.refresh();
         customInfoViewer.getTable().redraw();
     }
 

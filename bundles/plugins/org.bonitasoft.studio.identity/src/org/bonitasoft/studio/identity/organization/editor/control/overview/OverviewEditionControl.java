@@ -69,6 +69,9 @@ public class OverviewEditionControl {
     private IObservableList<User> users;
     private ComboViewer defaultUserComboViewer;
     private IViewerObservableValue<User> defaultUserSelectionObservable;
+    private GroupListReadOnly groupList;
+    private RoleListReadOnly roleList;
+    private UserListReadOnly userList;
 
     public OverviewEditionControl(Composite parent, OverviewFormPage formPage,
             IObservableValue<Organization> organizationObservable, DataBindingContext ctx) {
@@ -105,10 +108,10 @@ public class OverviewEditionControl {
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         contentComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(3).spacing(40, 10).create());
 
-        GroupListReadOnly groupList = new GroupListReadOnly(contentComposite, formPage, ctx);
+        groupList = new GroupListReadOnly(contentComposite, formPage, ctx);
         groupList.expandAll();
-        new RoleListReadOnly(contentComposite, formPage, ctx);
-        new UserListReadOnly(contentComposite, formPage, ctx);
+        roleList = new RoleListReadOnly(contentComposite, formPage, ctx);
+        userList = new UserListReadOnly(contentComposite, formPage, ctx);
     }
 
     private void createOverviewFields(Composite parent) {
@@ -238,6 +241,12 @@ public class OverviewEditionControl {
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
+    }
+
+    public void refreshList() {
+        groupList.refreshGroupList();
+        roleList.refreshRoleList();
+        userList.refreshUserList();
     }
 
 }

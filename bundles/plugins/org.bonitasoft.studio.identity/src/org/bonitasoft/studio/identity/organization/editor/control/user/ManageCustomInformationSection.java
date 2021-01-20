@@ -157,8 +157,19 @@ public class ManageCustomInformationSection {
         column.setEditingSupport(new EditingSupportBuilder<CustomUserInfoDefinition>(viewer)
                 .withValueProvider(CustomUserInfoDefinition::getName)
                 .withValueUpdater((customInfo, name) -> {
+                    String oldName = customInfo.getName();
                     customInfo.setName((String) name);
-                    // TODO refactor
+                    for (User user : formPage.observeWorkingCopy().getValue().getUsers().getUser()) {
+                        user.getCustomUserInfoValues().getCustomUserInfoValue().stream()
+                                .filter(aCustomInfo -> Objects.equals(aCustomInfo.getName(), oldName))
+                                .forEach(aCustomInfo -> aCustomInfo.setName((String) name));
+                    }
+                    // TODO necessary since macos Bigsure, should be rmeove in the futur
+                    if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
+                        Display.getDefault().syncExec(() -> {
+                            formPage.redrawCustomInfoTable();
+                        });
+                    }
                 })
                 .create());
     }
