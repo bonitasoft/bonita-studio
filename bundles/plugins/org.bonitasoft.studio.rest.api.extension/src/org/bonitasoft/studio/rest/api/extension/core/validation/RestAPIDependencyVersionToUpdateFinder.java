@@ -9,6 +9,9 @@
 package org.bonitasoft.studio.rest.api.extension.core.validation;
 
 import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_BONITA_DEPENDENCY_STATUS_CODE;
+import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_COMPILER_RELEASE_STATUS_CODE;
+import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_COMPILER_SOURCE_STATUS_CODE;
+import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_COMPILER_TARGET_STATUS_CODE;
 import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_GROOVY_ALL_STATUS_CODE;
 import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_GROOVY_BATCH_STATUS_CODE;
 import static org.bonitasoft.studio.importer.bos.status.BonitaStatusCodeAggregator.REST_API_JAVA_11_GROOVY_COMPILER_STATUS_CODE;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -32,11 +36,17 @@ import org.bonitasoft.studio.maven.builder.validator.Location;
 import org.bonitasoft.studio.maven.builder.validator.LocationResolver;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 
 public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToUpdateFinder {
 
+    private static final String JAVA_VERSION_PROPERTY_REF = "${java.version}";
+    private static final String SOURCE_TAG = "source";
+    private static final String TARGET_TAG = "target";
+    private static final String RELEASE_TAG = "release";
+    private static final String JAVA_VERSION = "11";
     public static final String BONITA_VERSION_PROPERTY = "bonita.version";
     public static final String VERSION_TAG = "version";
 
@@ -56,6 +66,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
     public static final String MAVEN_COMPILER_PLUGIN_MIN_VERSION = "3.6.2";
     public static final String MAVEN_COMPILER_PLUGIN_RECOMMENDED_VERSION = "3.8.0";
     private static final String GROUPID_TAG = "groupId";
+    private static final String JAVA_VERSION_PROPERTY = "java.version";
 
     public List<DependencyToUpdate> findDependenciesToUpdate(MavenProject mavenProject) {
         LocationResolver locationResolver = new LocationResolver(toDocument(mavenProject.getFile()));
@@ -63,10 +74,21 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                 false);
         List<Location> groupIdLocations = locationResolver.findLocationsMatching("(<groupId>)(.)+(</groupId>)",
                 false);
+        List<Location> sourceLocations = locationResolver.findLocationsMatching("(<source>)(.)+(</source>)",
+                false);
+        List<Location> targetLocations = locationResolver.findLocationsMatching("(<target>)(.)+(</target>)",
+                false);
+        List<Location> releaseLocations = locationResolver.findLocationsMatching("(<release>)(.)+(</release>)",
+                false);
         List<DependencyToUpdate> dependenciesToUpdate = new ArrayList<>();
 
         findMavenDependenciesToUpdate(mavenProject, versionLocations, dependenciesToUpdate);
-        findMavenPluginDependenciesToUpdate(mavenProject, versionLocations, dependenciesToUpdate);
+        findMavenPluginDependenciesToUpdate(mavenProject,
+                versionLocations,
+                sourceLocations,
+                targetLocations,
+                releaseLocations,
+                dependenciesToUpdate);
         findMavenPropertiesToUpdate(mavenProject, locationResolver, dependenciesToUpdate);
         String bdmGroupId = currentBDMGroupId();
         if (bdmGroupId != null) {
@@ -80,31 +102,85 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
     }
 
     private void findMavenPluginDependenciesToUpdate(MavenProject mavenProject,
-            List<Location> versionLocations, List<DependencyToUpdate> dependenciesToUpdate) {
+            List<Location> versionLocations,
+            List<Location> sourceLocations,
+            List<Location> targetLocations,
+            List<Location> releaseLocations,
+            List<DependencyToUpdate> dependenciesToUpdate) {
         int java11DependenciesSeverity = isUsingJava11() ? IStatus.ERROR : IStatus.WARNING;
         Plugin mavenComplierPlugin = mavenProject
                 .getPlugin(toArtifactName(APPACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_COMPILER_PLUGIN_ARTIFACT_ID));
         if (mavenComplierPlugin != null) {
             String artifactName = toArtifactName(mavenComplierPlugin.getGroupId(), mavenComplierPlugin.getArtifactId());
-            String message = String.format(Messages.updateVersionForJava11Compliance, artifactName, MAVEN_COMPILER_PLUGIN_RECOMMENDED_VERSION);
+            String message = String.format(Messages.updateVersionForJava11Compliance, artifactName,
+                    MAVEN_COMPILER_PLUGIN_RECOMMENDED_VERSION);
             validatePluginToUpdate(versionLocations, mavenComplierPlugin,
                     MAVEN_COMPILER_PLUGIN_MIN_VERSION,
                     MAVEN_COMPILER_PLUGIN_RECOMMENDED_VERSION,
                     message,
                     REST_API_JAVA_11_MAVEN_COMPILER_STATUS_CODE,
                     java11DependenciesSeverity).ifPresent(dependenciesToUpdate::add);
+
+            Xpp3Dom configuration = (Xpp3Dom) mavenComplierPlugin.getConfiguration();
+            Xpp3Dom sourceElement = configuration.getChild(SOURCE_TAG);
+            if (sourceElement != null
+                    && !JAVA_VERSION.equals(sourceElement.getValue())
+                    && !JAVA_VERSION_PROPERTY_REF.equals(sourceElement.getValue())) {
+                InputLocation location = (InputLocation) sourceElement.getInputLocation();
+                findLocation(location, sourceLocations)
+                        .map(l -> new DependencyToUpdate(l,
+                                SOURCE_TAG,
+                                String.format(Messages.setCompilerSource, JAVA_VERSION),
+                                REST_API_JAVA_11_COMPILER_SOURCE_STATUS_CODE,
+                                JAVA_VERSION,
+                                IStatus.ERROR))
+                        .ifPresent(dependenciesToUpdate::add);
+            }
+            Xpp3Dom targetElement = configuration.getChild(TARGET_TAG);
+            if (targetElement != null
+                    && !JAVA_VERSION.equals(targetElement.getValue())
+                    && !JAVA_VERSION_PROPERTY_REF.equals(targetElement.getValue())) {
+                InputLocation location = (InputLocation) targetElement.getInputLocation();
+                findLocation(location, targetLocations)
+                        .map(l -> new DependencyToUpdate(l,
+                                TARGET_TAG,
+                                String.format(Messages.setCompilerTarget, JAVA_VERSION),
+                                REST_API_JAVA_11_COMPILER_TARGET_STATUS_CODE,
+                                JAVA_VERSION,
+                                IStatus.ERROR))
+                        .ifPresent(dependenciesToUpdate::add);
+            }
+            Xpp3Dom releaseElement = configuration.getChild(RELEASE_TAG);
+            if (releaseElement != null
+                    && !JAVA_VERSION.equals(releaseElement.getValue())
+                    && !JAVA_VERSION_PROPERTY_REF.equals(releaseElement.getValue())) {
+                InputLocation location = (InputLocation) releaseElement.getInputLocation();
+                findLocation(location, releaseLocations)
+                        .map(l -> new DependencyToUpdate(l,
+                                RELEASE_TAG,
+                                String.format(Messages.setCompilerRelease, JAVA_VERSION),
+                                REST_API_JAVA_11_COMPILER_RELEASE_STATUS_CODE,
+                                JAVA_VERSION,
+                                IStatus.ERROR))
+                        .ifPresent(dependenciesToUpdate::add);
+            }
+
             mavenComplierPlugin.getDependencies()
                     .forEach(dependency -> {
-                        validateDependencyToUpdate(versionLocations, dependency, GROOVY_GROUP_ID,
+                        validateDependencyToUpdate(
+                                versionLocations, dependency, GROOVY_GROUP_ID,
                                 GROOVY_ECLIPSE_BATCH_ARTIFACT_ID,
                                 GROOVY_ECLIPSE_BATCH_MIN_VERSION,
                                 REST_API_JAVA_11_GROOVY_BATCH_STATUS_CODE,
-                                java11DependenciesSeverity).ifPresent(dependenciesToUpdate::add);
-                        validateDependencyToUpdate(versionLocations, dependency, GROOVY_GROUP_ID,
+                                java11DependenciesSeverity)
+                                        .ifPresent(dependenciesToUpdate::add);
+                        validateDependencyToUpdate(
+                                versionLocations, dependency, GROOVY_GROUP_ID,
                                 GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID,
                                 GROOVY_ECLIPSE_COMPILER_MIN_VERSION,
                                 REST_API_JAVA_11_GROOVY_COMPILER_STATUS_CODE,
-                                java11DependenciesSeverity).ifPresent(dependenciesToUpdate::add);
+                                java11DependenciesSeverity)
+                                        .ifPresent(dependenciesToUpdate::add);
                     });
         } else {
             BonitaStudioLog.error(String.format("Unable to find plugin %s in the pom.xml",
@@ -143,6 +219,18 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
             dependenciesToUpdate.add(new DependencyToUpdate(location, BONITA_VERSION_PROPERTY, message,
                     REST_API_BONITA_DEPENDENCY_STATUS_CODE, ProductVersion.CURRENT_VERSION, IStatus.WARNING));
         }
+        String javaVersion = mavenProject.getProperties().getProperty(JAVA_VERSION_PROPERTY);
+        if (javaVersion != null
+                && !JAVA_VERSION.equals(javaVersion)) {
+            Location location = locationResolver.getLineLocation(JAVA_VERSION_PROPERTY);
+            Location tagLocation = locationResolver.getLocation(JAVA_VERSION_PROPERTY);
+            int overflow = tagLocation.getOffset() - location.getOffset() - 1;
+            location.setOffset(tagLocation.getOffset() - 1);
+            location.setLength(location.getLength() - overflow);
+            String message = String.format(Messages.updateJavaVersionMarkerMessage, JAVA_VERSION);
+            dependenciesToUpdate.add(new DependencyToUpdate(location, JAVA_VERSION_PROPERTY, message,
+                    REST_API_BONITA_DEPENDENCY_STATUS_CODE, JAVA_VERSION, IStatus.ERROR));
+        }
     }
 
     private void findBDMDependencyToUpdate(MavenProject mavenProject,
@@ -154,7 +242,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                 .filter(dependency -> Objects.equals(dependency.getArtifactId(), artifactId))
                 .findFirst()
                 .filter(dependency -> !Objects.equals(dependency.getGroupId(), currentBDMGroupId()))
-                .ifPresent(dependency -> findGroupIdLocation(dependency.getLocation(GROUPID_TAG), groupIdLocations)
+                .ifPresent(dependency -> findLocation(dependency.getLocation(GROUPID_TAG), groupIdLocations)
                         .ifPresent(
                                 location -> dependenciesToUpdate.add(createBDMGroupIdToUpdate(location))));
         mavenProject.getDependencies().stream()
@@ -162,7 +250,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                 .filter(dependency -> Objects.equals(dependency.getGroupId(), currentBDMGroupId()))
                 .findFirst()
                 .filter(dependency -> !Objects.equals(dependency.getVersion(), currentBDMVersion()))
-                .ifPresent(dependency -> findVersionLocation(dependency.getLocation(VERSION_TAG), versionLocations)
+                .ifPresent(dependency -> findLocation(dependency.getLocation(VERSION_TAG), versionLocations)
                         .ifPresent(location -> dependenciesToUpdate.add(createBDMVersionToUpdate(location))));
     }
 
