@@ -151,4 +151,8 @@ public class Messages extends NLS {
     public static String java;
     public static String groovy;
     public static String updateVersionForBCDCompliance;
+    public static String updateJavaVersionMarkerMessage;
+    public static String setCompilerSource;
+    public static String setCompilerTarget;
+    public static String setCompilerRelease;
 }

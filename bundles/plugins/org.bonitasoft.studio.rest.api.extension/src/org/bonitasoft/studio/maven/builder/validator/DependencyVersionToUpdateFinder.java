@@ -50,7 +50,7 @@ public abstract class DependencyVersionToUpdateFinder implements IDependencyVali
             int code,
             int severity) {
         if (artifactVersionToOld(plugin.getVersion(), minVersion)) {
-            return findVersionLocation(plugin.getLocation(VERSION_TAG), versionLocations)
+            return findLocation(plugin.getLocation(VERSION_TAG), versionLocations)
                     .map(location -> new DependencyToUpdate(location, VERSION_TAG, message,
                             code,
                             recommendedVersion, 
@@ -70,7 +70,7 @@ public abstract class DependencyVersionToUpdateFinder implements IDependencyVali
                 && artifactVersionToOld(dependency.getVersion(), minVersion)) {
             String artifactName = toArtifactName(groupId, artifactId);
             String message = String.format(Messages.updateVersionForJava11Compliance, artifactName, minVersion);
-            return findVersionLocation(dependency.getLocation(VERSION_TAG), versionLocations)
+            return findLocation(dependency.getLocation(VERSION_TAG), versionLocations)
                     .map(location -> new DependencyToUpdate(location, VERSION_TAG, message, code, minVersion,
                             severity));
         }
@@ -115,14 +115,8 @@ public abstract class DependencyVersionToUpdateFinder implements IDependencyVali
         return document;
     }
 
-    public Optional<Location> findVersionLocation(InputLocation inputLocation, List<Location> versionLocations) {
-        return versionLocations.stream()
-                .filter(l -> Objects.equals(inputLocation.getLineNumber(), l.getLineNumber() + 1))
-                .findFirst();
-    }
-
-    protected Optional<Location> findGroupIdLocation(InputLocation inputLocation, List<Location> groupIdLocations) {
-        return groupIdLocations.stream()
+    public Optional<Location> findLocation(InputLocation inputLocation, List<Location> locations) {
+        return locations.stream()
                 .filter(l -> Objects.equals(inputLocation.getLineNumber(), l.getLineNumber() + 1))
                 .findFirst();
     }

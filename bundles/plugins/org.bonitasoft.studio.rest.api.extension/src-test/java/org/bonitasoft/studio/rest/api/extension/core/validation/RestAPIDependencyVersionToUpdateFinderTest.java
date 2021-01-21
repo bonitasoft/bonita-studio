@@ -108,7 +108,7 @@ public class RestAPIDependencyVersionToUpdateFinderTest {
     @Test
     public void should_detect_bonita_version_property_to_update() {
         RestAPIDependencyVersionToUpdateFinder finder = spy(new RestAPIDependencyVersionToUpdateFinder());
-        doReturn(Optional.of(new Location(0, 0, 0))).when(finder).findVersionLocation(any(), any());
+        doReturn(Optional.of(new Location(0, 0, 0))).when(finder).findLocation(any(), any());
 
         Properties properties = new Properties();
         properties.put(RestAPIDependencyVersionToUpdateFinder.BONITA_VERSION_PROPERTY, "7.5.0");
@@ -134,7 +134,7 @@ public class RestAPIDependencyVersionToUpdateFinderTest {
     private void validateDependencyToUpdateDetection(String groupId, String artifactId, String version, String minVersion,
             String recommendedVersion, int code, boolean isPlugin) {
         RestAPIDependencyVersionToUpdateFinder validator = spy(new RestAPIDependencyVersionToUpdateFinder());
-        doReturn(Optional.of(new Location(0, 0, 0))).when(validator).findVersionLocation(any(), any());
+        doReturn(Optional.of(new Location(0, 0, 0))).when(validator).findLocation(any(), any());
 
         String message = "some status message";
         Optional<DependencyToUpdate> optionaDependencyToUpdate = isPlugin

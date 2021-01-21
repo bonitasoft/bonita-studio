@@ -37,6 +37,9 @@ public class BonitaStatusCodeAggregator {
     public static final int REST_API_BONITA_DEPENDENCY_STATUS_CODE = 1003;
     public static final int REST_API_JAVA_11_MAVEN_COMPILER_STATUS_CODE = 1004;
     public static final int THEME_MAVEN_FRONTEND_PLUGIN_STATUS_CODE = 1005;
+    public static final int REST_API_JAVA_11_COMPILER_TARGET_STATUS_CODE = 1006;
+    public static final int REST_API_JAVA_11_COMPILER_SOURCE_STATUS_CODE = 1007;
+    public static final int REST_API_JAVA_11_COMPILER_RELEASE_STATUS_CODE = 1008;
 
     public BosArchiveImportStatus aggregateStatus(BosArchiveImportStatus bosArchiveImportStatus) {
         BosArchiveImportStatus bosArchiveStatusAggregated = new BosArchiveImportStatus();
