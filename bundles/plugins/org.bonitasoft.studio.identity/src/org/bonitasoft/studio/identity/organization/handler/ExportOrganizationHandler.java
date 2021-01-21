@@ -33,6 +33,8 @@ import org.eclipse.core.commands.ExecutionException;
 
 public class ExportOrganizationHandler extends AbstractHandler {
 
+    private static final String ORGANIZATION_TO_EXPORT_PARAMETER = "organizationToExport";
+
     FileStoreFinder fileStoreFinder;
 
     public ExportOrganizationHandler() {
@@ -41,14 +43,26 @@ public class ExportOrganizationHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final IRepositoryStore<? extends IRepositoryFileStore> organizationStore = RepositoryManager.getInstance()
+        OrganizationRepositoryStore repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
         List<IRepositoryStore<? extends IRepositoryFileStore>> stores = new ArrayList<>();
-        stores.add(organizationStore);
+        stores.add(repositoryStore);
 
-        CommonRepositoryPlugin.exportArtifactsToFile(stores, getSelection(), Messages.exportOrganizationTitle);
+        String orgaToExport = event.getParameter(ORGANIZATION_TO_EXPORT_PARAMETER);
+        Set<Object> toExport = orgaToExport != null
+                ? getOrgaToExport(repositoryStore, orgaToExport)
+                : getSelection();
+
+        CommonRepositoryPlugin.exportArtifactsToFile(stores, toExport,
+                Messages.exportOrganizationTitle);
 
         return null;
+    }
+
+    private Set<Object> getOrgaToExport(OrganizationRepositoryStore repositoryStore, String orgaToExport) {
+        Set<Object> res = new HashSet<>();
+        res.add(repositoryStore.getChild(orgaToExport, false));
+        return res;
     }
 
     private Set<Object> getSelection() {

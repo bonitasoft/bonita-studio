@@ -317,4 +317,5 @@ public class Messages extends NLS {
     public static String value;
     public static String defaultUserUpdated;
     public static String defaultUserUpdatedTitle;
+    public static String importOrganization;
 }

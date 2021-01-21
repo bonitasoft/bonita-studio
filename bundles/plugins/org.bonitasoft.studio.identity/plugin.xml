@@ -202,6 +202,11 @@
             defaultHandler="org.bonitasoft.studio.identity.organization.handler.ExportOrganizationHandler"
             name="%export_Label"
             id="org.bonitasoft.studio.actors.export">
+         <commandParameter
+               id="organizationToExport"
+               name="Organization to export"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.identity.actors.ui.handler.NewFilterDefinitionHandler"

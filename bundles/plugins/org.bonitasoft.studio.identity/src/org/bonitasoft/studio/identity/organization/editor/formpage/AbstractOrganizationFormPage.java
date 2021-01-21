@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
+import org.bonitasoft.studio.identity.organization.editor.contribution.DeployContributionItem;
+import org.bonitasoft.studio.identity.organization.editor.contribution.ExportContributionItem;
+import org.bonitasoft.studio.identity.organization.editor.contribution.ImportContributionItem;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -37,6 +40,7 @@ import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
@@ -66,6 +70,14 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
             setErrorState(false);
             Display.getDefault().asyncExec(() -> editor.refreshGroupList()); // Fix issues related to the tree viewer selection cache...
         });
+    }
+
+    @Override
+    protected void createHeaderContent(ToolBar toolBar) {
+        toolBarManager.add(new DeployContributionItem(this));
+        toolBarManager.add(new ExportContributionItem(this));
+        toolBarManager.add(new ImportContributionItem(this));
+        toolBarManager.update(true);
     }
 
     @Override

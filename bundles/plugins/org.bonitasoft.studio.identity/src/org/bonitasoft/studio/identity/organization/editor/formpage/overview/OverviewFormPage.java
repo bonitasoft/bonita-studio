@@ -18,7 +18,6 @@ import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.AbstractFormPart;
 
 public class OverviewFormPage extends AbstractOrganizationFormPage {
@@ -69,11 +68,6 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
     @Override
     public void updateDefaultUserViewerInput() {
         overviewFormPart.updateDefaultUserViewerInput();
-    }
-
-    @Override
-    protected void createHeaderContent(ToolBar toolBar) {
-        // TODO Auto-generated method stub
     }
 
 }
