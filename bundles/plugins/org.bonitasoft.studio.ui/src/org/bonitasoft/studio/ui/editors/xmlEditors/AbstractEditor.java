@@ -169,8 +169,8 @@ public abstract class AbstractEditor<T> extends FormEditor implements IElementSt
 
     public void updateEditorInput(IEditorInput input) {
         Display.getDefault().asyncExec(() -> {
-            fSourceEditor.setInput(input);
             setInputWithNotify(input);
+            fSourceEditor.setInput(input);
             setPartName(input.getName());
             elementContentReplaced(input);
         });

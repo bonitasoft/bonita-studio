@@ -13,10 +13,8 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -40,10 +38,7 @@ public class ImportBDMContributionItem extends ContributionItem {
         item = new ToolItem(parent, SWT.PUSH);
         item.setText(Messages.importActionName);
         item.setToolTipText(Messages.smartImportDesc);
-        Image image = PreferenceUtil.isDarkTheme()
-                ? Pics.getImage(PicsConstants.import_16_dark)
-                : Pics.getImage(PicsConstants.import_16);
-        item.setImage(image);
+        item.setImage(Pics.getImage(PicsConstants.import_artifact));
         item.addListener(SWT.Selection, e -> onClick());
     }
 

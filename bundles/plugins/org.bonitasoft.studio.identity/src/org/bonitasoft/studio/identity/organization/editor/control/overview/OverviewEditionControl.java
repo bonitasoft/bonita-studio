@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -217,8 +218,10 @@ public class OverviewEditionControl {
                 BonitaStudioLog.info(Messages.organizationSavedBeforeRename, IdentityPlugin.PLUGIN_ID);
                 formPage.doSave(new NullProgressMonitor());
             }
-            fileStore.rename(String.format("%s.%s", newName, OrganizationRepositoryStore.ORGANIZATION_EXT));
-            formPage.doSave(new NullProgressMonitor());
+            Display.getDefault().asyncExec(() -> {
+                fileStore.rename(String.format("%s.%s", newName, OrganizationRepositoryStore.ORGANIZATION_EXT));
+                formPage.doSave(new NullProgressMonitor());
+            });
         }
     }
 

@@ -22,7 +22,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.Role;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.AbstractFormPart;
 
 public class UserFormPage extends AbstractOrganizationFormPage {
@@ -31,11 +30,6 @@ public class UserFormPage extends AbstractOrganizationFormPage {
 
     public UserFormPage(String id, String title, IEclipseContext context, OrganizationEditor editor) {
         super(id, title, context, editor);
-    }
-
-    @Override
-    protected void createHeaderContent(ToolBar toolBar) {
-        // TODO Auto-generated method stub
     }
 
     @Override

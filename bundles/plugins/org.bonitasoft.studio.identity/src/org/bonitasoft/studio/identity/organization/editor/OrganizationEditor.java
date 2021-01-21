@@ -17,6 +17,7 @@ package org.bonitasoft.studio.identity.organization.editor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -145,6 +146,17 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     public void updateDefaultUserViewerInput() {
         overviewFormPage.updateDefaultUserViewerInput();
+    }
+
+    @Override
+    public void elementContentReplaced(Object element) {
+        if (Objects.equals(getEditorInput(), element) && editorInputStillExists()) {
+            super.elementContentReplaced(element);
+        }
+    }
+
+    private boolean editorInputStillExists() {
+        return getFileStore(getEditorInput().getName()) != null;
     }
 
 }

@@ -381,11 +381,9 @@ public class PicsConstants {
 
     public static String deploy = "deploy.png";
 
-    public static String import_16 = "import_16.png";
-    public static String import_16_dark = "import_16_dark.png";
+    public static String import_artifact = "import.png";
 
-    public static String export_16 = "export_16.png";
-    public static String export_16_dark = "export_16_dark.png";
+    public static String export_artifact = "export.png";
 
     public static String explore_16 = "explore_16.png";
     public static String explore_16_dark = "explore_16_dark.png";
