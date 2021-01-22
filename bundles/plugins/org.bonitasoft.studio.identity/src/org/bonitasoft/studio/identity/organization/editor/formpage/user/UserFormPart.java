@@ -48,7 +48,7 @@ public class UserFormPart extends AbstractFormPart {
         Composite userComposite = formPage.getToolkit().createComposite(parent);
         userComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
                 .spacing(20, LayoutConstants.getSpacing().y).create());
-        userComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 630).create());
+        userComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 630).create());
         createUserList(userComposite);
         createUserDetailsControl(userComposite);
 
