@@ -107,7 +107,8 @@ public class OverviewEditionControl {
     private void createOrganizationContentOverview(Composite parent) {
         Composite contentComposite = formPage.getToolkit().createComposite(parent);
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(3).spacing(40, 10).create());
+        contentComposite.setLayout(
+                GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(3).equalWidth(true).spacing(40, 10).create());
 
         groupList = new GroupListReadOnly(contentComposite, formPage, ctx);
         groupList.expandAll();

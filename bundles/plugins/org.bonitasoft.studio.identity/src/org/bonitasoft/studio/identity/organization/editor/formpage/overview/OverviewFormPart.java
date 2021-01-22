@@ -19,6 +19,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.AbstractFormPart;
 
@@ -33,7 +34,7 @@ public class OverviewFormPart extends AbstractFormPart {
 
         parent.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2)
                 .spacing(20, LayoutConstants.getSpacing().y).create());
-        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
 
         createOverviewControl(parent);
     }
