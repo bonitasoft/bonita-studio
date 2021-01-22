@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Calque_1" x="0px" y="0px" width="32.366001" height="32.366001" viewBox="0 0 32.366 32.366001" enable-background="new 0 0 595.28 841.89" xml:space="preserve" inkscape:version="0.48.0 r9654" sodipodi:docname="StartErrorEvent_selected.svgz"><metadata id="metadata18"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/></cc:Work></rdf:RDF></metadata><defs id="defs16"/><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" id="namedview14" showgrid="false" inkscape:zoom="1.5857387" inkscape:cx="16.158994" inkscape:cy="16.627011" inkscape:current-layer="Calque_1" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0"/>
+
+<g id="g2995" style="opacity:0.5" transform="translate(-281.48101,-405.20601)"><g id="g3">
+	
+		<linearGradient gradientTransform="translate(56.7681,-530.3311)" y2="963.8866" x2="250.2289" y1="939.55371" x1="231.5625" gradientUnits="userSpaceOnUse" id="SVGID_1_">
+		<stop id="stop6" style="stop-color:#FBFBF0" offset="0"/>
+		<stop id="stop8" style="stop-color:#E9ECB2" offset="1"/>
+	</linearGradient>
+	<circle id="circle10" r="15.333" cy="421.38901" cx="297.664" sodipodi:cx="297.664" sodipodi:cy="421.38901" sodipodi:rx="15.333" sodipodi:ry="15.333" style="fill:url(#SVGID_1_);stroke:#63aa29;stroke-width:1.70000005" d="m 312.997,421.38901 c 0,8.46818 -6.86482,15.333 -15.333,15.333 -8.46818,0 -15.333,-6.86482 -15.333,-15.333 0,-8.46818 6.86482,-15.333 15.333,-15.333 8.46818,0 15.333,6.86482 15.333,15.333 z"/>
+</g><polygon id="polygon12" points="308.016,416.725 302.168,431.756 294.033,418.32 288.002,428.034 293.27,411.021 302.11,425.371 " style="fill:#63aa29"/></g>
+</svg>

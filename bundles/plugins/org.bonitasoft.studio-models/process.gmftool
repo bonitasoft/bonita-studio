@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmftool:ToolRegistry
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gmftool="http://www.eclipse.org/gmf/2005/ToolDefinition">
+  <palette
+      title="BPMN Palette"
+      description="">
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Swimlanes"
+        description=""
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Pool"
+          description="Create a new Pool"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Lane"
+          description="Create a new Lane"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Gateways"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Gate"
+          description="Create a new AND Gate"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="XOR Gate"
+          description="Create a new XOR Gate"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Inclusive Gate"
+          description="Create a new Inclusive Gate"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Flow"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Transition"
+          description="Create a new Transition"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Tasks"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Service Task"
+          description="Create a new Service Task"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Human"
+          description="Create a new Human Step"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Script Task"
+          description="Create a new Script Task"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Receive Task"
+          description="Create a new Receive Message Task"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Send Task"
+          description="Create a new Send Message Task"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Step"
+          description="Create a new automatic Step"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Activities"
+        description=""
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Call Activity"
+          description="Create a new Call Activity"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Evenemential SubProcess"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Start Events"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Start"
+          description="Create a new Start event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Start Message"
+          description="Create a new Start Message event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Start Timer"
+          description="Create a new Start Timer event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Start Signal"
+          description="Create a new Start Signal event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Start Error"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Int. Events"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Throw Link"
+          description="Create a new Throw Link"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Catch Link"
+          description="Create a new Catch Link"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Throw Message"
+          description="Create a new Throw Message event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Catch Message"
+          description="Create a new Catch Message event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Throw Signal"
+          description="Create a new Throw Signal event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Catch Signal"
+          description="Create a new Catch Signal event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Catch Error"
+          description="Create a new Catch Error event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Non-Interrupting Timer"
+          description="Create a new Non-Interrupting Timer event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Event"
+          description="Create a new Event">
+        <smallIcon
+            xsi:type="gmftool:BundleImage"
+            path="icons/full/obj16/Event.gif"
+            bundle="org.bonitasoft.studio.model.edit"/>
+      </tools>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Timer"
+          description="Create a new Timer event"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="End Events"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="End"
+          description="Create a new End event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="End Message"
+          description="Create a new End Message event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="End Signal"
+          description="Create a new End Signal event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="End Error"
+          description="Create a new End Error event"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="End Terminated Event"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Text Annotation"
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Text Annotation"
+          description="Create a new Text Annotation"/>
+    </tools>
+  </palette>
+</gmftool:ToolRegistry>

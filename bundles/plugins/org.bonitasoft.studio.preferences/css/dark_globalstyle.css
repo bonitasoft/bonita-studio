@@ -1,0 +1,83 @@
+.widgetBackground {
+   background-color: #515658;
+   background-color-titlebar: #515658;
+}
+
+/* Customize background for property sections in diagram editor */
+Form, FormHeading {
+    background: #302f30;
+    background-color: #302f30;
+}
+
+BonitaForm {
+    text-background-color: #302f30;
+
+	tb-toggle-hover-color: #313538;
+	tb-toggle-color: #313538;
+	h-hover-full-color: #313538;
+	h-hover-light-color: #313538;
+	h-bottom-keyline-2-color: #313538;
+	h-bottom-keyline-1-color: #313538;
+    swt-background-mode: 'force';
+}
+
+.MPart FormHeading,
+.MPart FormHeading > TitleRegion,
+.MPart FormHeading > TitleRegion > Label,
+.MPart FormHeading > TitleRegion > StyledText {
+    background-color: #302f30;
+    color: #9ac9d8;
+}
+
+ /* Customize background for toolbar in Bonita editors */
+.editorFormBackground {
+    text-background-color: #3c3c3c;
+}
+
+/* Table background color */
+.tableBackground {
+    background-color: #2F2F2F;
+}
+
+
+ /* Customize background for toggled sections in Bonita editors */
+.MPart Section#editorSectionBackground,
+.MPart Section#editorSectionBackground > Label,
+.MPart Section#editorSectionBackground > Twistie,
+.MPart Section#editorSectionBackground > ToolBar {
+    background-color: #3c3c3c;
+}
+
+
+#wellInfoLabel {
+	background-color: rgb(229, 245, 255);
+	color: rgb(51, 102, 153);
+}
+
+#wellWarningLabel {
+	background-color: rgb(255, 255, 204);
+	color: rgb(120, 110, 30);
+}
+
+#wellErrorLabel {
+	background-color: rgb(255, 229, 229);
+	color: rgb(204, 0, 0);
+}
+
+/* Vertical ruler and editor background for the Bonita  groovy editor (the one in the dialog)*/
+Composite#groovyViewer > * > * > * > * > * > *,
+Composite#groovyViewer > * > * > * > * > * > * > * {
+    background-color: #2F2F2F;
+}
+
+.notificationComposite,
+.notificationComposite > Composite, 
+.notificationComposite > Composite > *,
+.notificationComposite > Composite > * > * {
+    background-color: #2d3748;
+    color: #cbd5e0;
+}
+
+#readOnly {
+    background-color: #454545;
+}
