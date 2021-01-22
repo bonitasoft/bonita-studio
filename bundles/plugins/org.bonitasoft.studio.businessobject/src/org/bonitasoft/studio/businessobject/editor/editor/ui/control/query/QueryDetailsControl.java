@@ -258,7 +258,7 @@ public class QueryDetailsControl extends Composite {
         Composite parametersComposite = formPage.getToolkit().createComposite(parent);
         parametersComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
         parametersComposite
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(500, 300).create());
 
         Label parametersLabel = formPage.getToolkit().createLabel(parametersComposite, Messages.parametersLabel);
         parametersLabel.setLayoutData(GridDataFactory.fillDefaults().create());

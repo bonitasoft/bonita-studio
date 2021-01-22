@@ -43,7 +43,7 @@ public class ConstraintFormPart extends AbstractFormPart {
 
         parent.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, LayoutConstants.getSpacing().y).create());
-        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
 
         createBusinessObjectList(parent);
         createConstraintEditionControl(parent);
