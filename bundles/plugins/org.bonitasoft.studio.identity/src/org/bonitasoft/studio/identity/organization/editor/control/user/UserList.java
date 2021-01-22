@@ -110,7 +110,7 @@ public class UserList {
 
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
-        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
         section.setText(Messages.organizationUsers);
 
         Composite userListComposite = createUserListComposite();

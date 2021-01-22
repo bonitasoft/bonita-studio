@@ -87,7 +87,7 @@ public class ManageCustomInformationSection {
 
         Section customInfoSection = formPage.getToolkit().createSection(parent, Section.TWISTIE);
         customInfoSection.setLayout(GridLayoutFactory.fillDefaults().create());
-        customInfoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        customInfoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         customInfoSection.setText(Messages.manageCustomInfo);
         customInfoSection.setClient(createCustomInfoComposite(formPage, customInfoSection));
     }
