@@ -257,7 +257,7 @@ public class QueryEditionControl {
         TreeViewer queryViewer = new TreeViewer(parent,
                 SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
         queryViewer.getTree()
-                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, SWT.DEFAULT).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(300, 600).create());
         queryViewer.getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, QUERY_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(queryViewer.getTree());
         ColumnViewerToolTipSupport.enableFor(queryViewer);
