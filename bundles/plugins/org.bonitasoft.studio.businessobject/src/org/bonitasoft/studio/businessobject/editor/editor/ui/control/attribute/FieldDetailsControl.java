@@ -145,7 +145,7 @@ public class FieldDetailsControl extends Composite {
 
     private void createStringFieldDetailsComposite(DataBindingContext ctx) {
         stringFieldDetailsComposite = formPage.getToolkit().createComposite(this);
-        stringFieldDetailsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        stringFieldDetailsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
         stringFieldDetailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         IObservableValue<Integer> fieldLengthObservable = EMFObservables.observeDetailValue(Realm.getDefault(),
@@ -153,12 +153,17 @@ public class FieldDetailsControl extends Composite {
 
         createDescriptionTextArea(stringFieldDetailsComposite);
 
+        Label stringHelp = formPage.getToolkit().createLabel(stringFieldDetailsComposite, Messages.stringLengthTooltip,
+                SWT.WRAP);
+        stringHelp.setLayoutData(GridDataFactory.fillDefaults().indent(10, 15).hint(500, SWT.DEFAULT).create());
+
         new ComboWidget.Builder()
                 .withLabel(Messages.length)
                 .withCompositeMessageDecorator()
                 .withItems(new String[] { "64", "128", "255", "512" })
                 .labelAbove()
                 .widthHint(500)
+                .horizontalSpan(2)
                 .bindTo(fieldLengthObservable)
                 .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
                         .withConverter(StringToNumberConverter.toInteger(false))
@@ -171,9 +176,6 @@ public class FieldDetailsControl extends Composite {
                 .adapt(formPage.getToolkit())
                 .createIn(stringFieldDetailsComposite);
 
-        Label stringHelp = formPage.getToolkit().createLabel(stringFieldDetailsComposite, Messages.stringLengthTooltip,
-                SWT.WRAP);
-        stringHelp.setLayoutData(GridDataFactory.fillDefaults().hint(800, SWT.DEFAULT).create());
     }
 
     private void createDateDeprecatedDetailsComposite() {
