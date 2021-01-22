@@ -116,7 +116,7 @@ public class AttributeEditionControl extends Composite {
 
         Composite viewerComposite = formPage.getToolkit().createComposite(this);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(1000, 300).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 300).create());
 
         Composite toolbarComposite = formPage.getToolkit().createComposite(viewerComposite);
         toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());

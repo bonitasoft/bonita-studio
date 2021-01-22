@@ -40,7 +40,7 @@ public class QueryFormPart extends AbstractFormPart {
     public QueryFormPart(Composite parent, QueryFormPage formPage) {
         this.formPage = formPage;
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
 
         createBusinessObjectList(parent);
         createQueryEditionControl(parent);

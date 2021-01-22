@@ -40,7 +40,7 @@ public class IndexFormPart extends AbstractFormPart {
     public IndexFormPart(Composite parent, IndexFormPage formPage) {
         this.formPage = formPage;
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
 
         createBusinessObjectList(parent);
         createIndexEditionControl(parent);

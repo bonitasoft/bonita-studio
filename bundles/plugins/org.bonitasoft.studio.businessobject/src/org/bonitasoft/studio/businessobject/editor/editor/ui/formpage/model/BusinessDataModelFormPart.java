@@ -59,10 +59,10 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
     public BusinessDataModelFormPart(Composite businessDataModelComposite,
             BusinessDataModelFormPage formPage) {
         this.formPage = formPage;
-
         businessDataModelComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 5).create());
-        businessDataModelComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        businessDataModelComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 600).create());
 
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -70,6 +70,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
         createBusinessObjectList(leftComposite);
         createMavenArtifactPropertiesGroup(leftComposite, ctx);
+
         createBusinessObjectEditionControl(businessDataModelComposite);
     }
 
