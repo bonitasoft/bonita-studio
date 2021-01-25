@@ -79,11 +79,11 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     private Image checkboxImage(final boolean selected, final boolean enabled) {
         if (selected) {
-            return enabled ? Pics.getImage("/checkboxes/checkbox_yes.png")
-                    : Pics.getImage("/checkboxes/checkbox_yes_disabled.png");
+            return enabled ? Pics.getImage("checkboxes/checkbox_yes.png")
+                    : Pics.getImage("checkboxes/checkbox_yes_disabled.png");
         }
-        return enabled ? Pics.getImage("/checkboxes/checkbox_no.png")
-                : Pics.getImage("/checkboxes/checkbox_no_disabled.png");
+        return enabled ? Pics.getImage("checkboxes/checkbox_no.png")
+                : Pics.getImage("checkboxes/checkbox_no_disabled.png");
     }
 
     @Override
