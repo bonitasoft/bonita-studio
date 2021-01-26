@@ -15,12 +15,16 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
+import java.util.Collections;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
@@ -32,21 +36,27 @@ import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.InputMappingBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
+import org.bonitasoft.studio.properties.sections.callActivity.CallActivityHelper;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CallActivityConstraintTest {
 
+    @Mock
+    private CallActivityHelper helper;
+
     @Test
     public void testCallActivityFailureWithMissingData() throws Exception {
         final CallActivityConstraint callActivityConstraint = spy(new CallActivityConstraint());
-        doReturn(PoolBuilder.aPool().build()).when(callActivityConstraint).findSubProcTargeted(any(Expression.class), any(Expression.class));
+        doReturn(helper).when(callActivityConstraint).createHelper(any());
+        when(helper.getCalledProcess()).thenReturn(aPool().build());
         final IValidationContext aValidationContext = aValidationContext(
                 CallActivityBuilder
                         .aCallActivity()
@@ -69,10 +79,12 @@ public class CallActivityConstraintTest {
         final CallActivityConstraint callActivityConstraint = spy(new CallActivityConstraint());
         final Pool childPool = PoolBuilder
                 .aPool()
-                .havingData(DataBuilder.aData().withName("subProcData"))
+                .havingData(aData().withName("subProcData"))
                 .havingContract(ContractBuilder.aContract().havingInput(ContractInputBuilder.aContractInput().withName("contractInput")))
                 .build();
-        doReturn(childPool).when(callActivityConstraint).findSubProcTargeted(any(Expression.class), any(Expression.class));
+        doReturn(helper).when(callActivityConstraint).createHelper(any());
+        when(helper.getCalledProcess()).thenReturn(childPool);
+        when(helper.getCallActivityData()).thenReturn(childPool.getData());
         final IValidationContext aValidationContext = aValidationContext(
                 CallActivityBuilder
                         .aCallActivity()

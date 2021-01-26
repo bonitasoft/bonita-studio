@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.model.workbench;bundle-version="2.1.200",
  org.eclipse.e4.ui.workbench;bundle-version="1.8.0",
  org.bonitasoft.studio.preferences,
- org.bonitasoft.studio.ui
+ org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.properties
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
