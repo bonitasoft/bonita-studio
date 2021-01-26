@@ -66,7 +66,7 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
+        leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(405, SWT.DEFAULT).create());
 
         createBusinessObjectList(leftComposite);
         createMavenArtifactPropertiesGroup(leftComposite, ctx);
@@ -126,10 +126,6 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
         businessObjectList = new BusinessObjectList(businessDataModelComposite, formPage, ctx);
         ctx.bindValue(businessObjectList.observeInput(), formPage.observeWorkingCopy());
         businessObjectList.expandAll();
-    }
-
-    public void updateTopControl() {
-        // TODO Auto-generated method stub
     }
 
     @Override
