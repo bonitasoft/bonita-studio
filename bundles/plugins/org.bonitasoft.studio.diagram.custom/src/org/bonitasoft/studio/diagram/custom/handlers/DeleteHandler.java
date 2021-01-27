@@ -40,6 +40,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
+import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
@@ -56,13 +57,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DeleteHandler extends AbstractHandler {
 
-    private final List<Lane> lanes = new ArrayList<Lane>();
+    private final List<Lane> lanes = new ArrayList<>();
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-
-        if (part != null && part instanceof DiagramEditor) {
+        if (part instanceof DiagramEditor) {
             final IStructuredSelection currentSelection = (IStructuredSelection) ((DiagramEditor) part).getDiagramGraphicalViewer().getSelection();
             if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
                 lanes.clear();
@@ -94,22 +94,25 @@ public class DeleteHandler extends AbstractHandler {
                     }
                 }
                 ((DiagramEditor) part).getDiagramGraphicalViewer().setSelection(new StructuredSelection(newSelection));
+                GlobalAction actionHandler = GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE);
                 if (containsPool) {
                     if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
                             Messages.deleteDialogMessage)) {
                         upadateLaneItems();
-                        GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+                        actionHandler.refresh();
+                        actionHandler.run();
                     }
                 } else {
                     if (isMessageFlow) {
-
                         if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
                                 Messages.bind(Messages.deleteMessageFlow, flow.getName()))) {
                             removeMessage(flow);
-                            GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+                            actionHandler.refresh();
+                            actionHandler.run();
                         }
                     } else {
-                        GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+                        actionHandler.refresh();
+                        actionHandler.run();
                     }
                 }
 
