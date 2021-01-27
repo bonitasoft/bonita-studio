@@ -91,6 +91,7 @@ public class DeployDiagramHandler {
             if (!shouldDisablePopup) {
                 runInJob(diagramFileStore, deployOperation, diagamStore, resetComputedProcesses);
             } else {
+                repositoryAccessor.getCurrentRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
                 deployOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 if(resetComputedProcesses) {
                     diagamStore.resetComputedProcesses();
@@ -106,6 +107,7 @@ public class DeployDiagramHandler {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
+                diagramFileStore.getRepository().build(monitor);
                 return deployOperation.run(monitor);
             }
         };

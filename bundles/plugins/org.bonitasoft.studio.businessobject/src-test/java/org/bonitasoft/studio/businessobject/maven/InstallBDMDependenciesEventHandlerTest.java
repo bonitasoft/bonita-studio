@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,12 +41,9 @@ public class InstallBDMDependenciesEventHandlerTest {
     private RepositoryAccessor repositoryAccessor;
 
     @Mock
-    private File daoTmpFile;
-
-    @Mock
     private MavenInstallFileCommand installCommand;
     @Mock
-    private File clientFile;
+    private File file;
 
     private Event event;
 
@@ -53,25 +51,22 @@ public class InstallBDMDependenciesEventHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        handler = spy(new InstallBDMDependenciesEventHandler(repositoryAccessor));
+        handler = spy(new InstallBDMDependenciesEventHandler());
         final Map<String, Object> properties = new HashMap<>();
         BDMArtifactDescriptor bdmArtifactDescriptor = new BDMArtifactDescriptor();
         bdmArtifactDescriptor.setGroupId("com.company.test");
         properties.put("artifactDescriptor", bdmArtifactDescriptor);
         event = new Event("bdm/deployed", properties);
-        doReturn(daoTmpFile).when(handler).tmpDaoFile(any(byte[].class));
+        doReturn(file).when(handler).tmpFile(any(String.class), any(byte[].class));
         doReturn(installCommand).when(handler).newInstallCommand();
-        final DependencyRepositoryStore depStore = mock(DependencyRepositoryStore.class, RETURNS_DEEP_STUBS);
-        when(repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class)).thenReturn(depStore);
         doNothing().when(handler).updateMavenProjects();
-        when(depStore.getChild("bdm-client-pojo.jar", true).getResource().getLocation().toFile()).thenReturn(clientFile);
     }
 
     @Test
     public void should_install_bdm_client() throws Exception {
         handler.handleEvent(event);
 
-        verify(installCommand).installFile("com.company.test", "bdm-client", "1.0.0", "jar", null, clientFile);
+        verify(installCommand).installFile("com.company.test", "bdm-client", "1.0.0", "jar", null, file);
         verify(handler).updateMavenProjects();
     }
 
@@ -80,8 +75,8 @@ public class InstallBDMDependenciesEventHandlerTest {
         handler.handleEvent(event);
 
         verify(installCommand).installFile(eq("com.company.test"), eq("bdm-dao"), eq("1.0.0"), eq("jar"), eq(null),
-                eq(daoTmpFile), notNull(File.class));
-        verify(daoTmpFile).delete();
+                eq(file), notNull(File.class));
+        verify(file,times(2)).delete();
         verify(handler).updateMavenProjects();
     }
 

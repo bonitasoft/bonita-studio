@@ -61,7 +61,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ClassGenerator {
 
-    private static final String CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME = ConnectorValidationException.class.getName();
+    private static final String CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME = ConnectorValidationException.class
+            .getName();
 
     private static final String CONNECTOR_EXCEPTION_QUALIFIED_NAME = ConnectorException.class.getName();
 
@@ -122,7 +123,8 @@ public class ClassGenerator {
         final String className = implementation.getImplementationClassname();
         String oldSimpleName = oldSuperClassName;
         if (oldSuperClassName.indexOf(".") != -1) {
-            oldSimpleName = oldSuperClassName.substring(oldSuperClassName.lastIndexOf(".") + 1, oldSuperClassName.length());
+            oldSimpleName = oldSuperClassName.substring(oldSuperClassName.lastIndexOf(".") + 1,
+                    oldSuperClassName.length());
         }
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         final IType classType = javaProject.findType(className);
@@ -140,6 +142,10 @@ public class ClassGenerator {
         final String className = implementation.getImplementationClassname();
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        if (!javaProject.isConsistent()) {
+            javaProject.makeConsistent(monitor);
+        }
+
         IType classType = javaProject.findType(className);
 
         if (classType == null) {
@@ -152,10 +158,14 @@ public class ClassGenerator {
             classType = generateImplementationClass(packageName, simpleClassName, sourceStore, monitor);
 
             final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
+            if(abstractConnectorType == null) {
+               BonitaStudioLog.error(String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(), javaProject),
+                       CommonRepositoryPlugin.PLUGIN_ID );
+            }
             final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
             final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, monitor);
 
-            if (hierarchy.contains(abstractConnectorType)) {
+            if (abstractConnectorType != null && hierarchy.contains(abstractConnectorType)) {
                 StringBuilder executeMethodContent = new StringBuilder(
                         "@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t");
 
@@ -164,7 +174,8 @@ public class ClassGenerator {
                 executeMethodContent.append("\n\n }\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
-                executeMethodContent = new StringBuilder("@Override\npublic void connect() throws ConnectorException{\n\t");
+                executeMethodContent = new StringBuilder(
+                        "@Override\npublic void connect() throws ConnectorException{\n\t");
                 executeMethodContent.append("//[Optional] Open a connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(), null, true, monitor);
 
@@ -175,7 +186,7 @@ public class ClassGenerator {
 
                 classType.getCompilationUnit().createImport(CONNECTOR_EXCEPTION_QUALIFIED_NAME, null, monitor);
             }
-            if (hierarchy.contains(abstractFilterType)) {
+            if (abstractFilterType != null && hierarchy.contains(abstractFilterType)) {
                 StringBuilder executeMethodContent = new StringBuilder(
                         "@Override\npublic void validateInputParameters() throws ConnectorValidationException {\n\t");
                 executeMethodContent.append("//TODO validate input parameters here \n\n}\n");
@@ -210,6 +221,9 @@ public class ClassGenerator {
             IProgressMonitor progressMonitor) throws Exception {
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        if (!javaProject.isConsistent()) {
+            javaProject.makeConsistent(progressMonitor);
+        }
         final ProjectTemplateStore fTemplateStore = new ProjectTemplateStore(
                 RepositoryManager.getInstance().getCurrentRepository().getProject());
         try {
@@ -232,7 +246,8 @@ public class ClassGenerator {
         final IResource srcFolder = sourceStore.getResource();
         packageFragmentRoot = javaProject.getPackageFragmentRoot(srcFolder);
         classWizard.setPackageFragmentRoot(packageFragmentRoot, false);
-        IPackageFragment packageFragment = packageFragmentRoot.getPackageFragment(packageName == null ? "" : packageName);
+        IPackageFragment packageFragment = packageFragmentRoot
+                .getPackageFragment(packageName == null ? "" : packageName);
         if (!packageFragment.exists()) {
             packageFragment = packageFragmentRoot.createPackageFragment(packageName, true, progressMonitor);
         }
@@ -241,12 +256,19 @@ public class ClassGenerator {
         return classWizard.getCreatedType();
     }
 
-    private static IType generateImplementationClass(String packageName, String className, SourceRepositoryStore sourceStore,
+    private static IType generateImplementationClass(String packageName, String className,
+            SourceRepositoryStore sourceStore,
             IProgressMonitor progressMonitor)
             throws Exception {
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-
+        if(!javaProject.isConsistent()) {
+            javaProject.makeConsistent(progressMonitor);
+        }
         final IType abstractConnectorType = javaProject.findType(AbstractConnector.class.getName());
+        if(abstractConnectorType == null) {
+            BonitaStudioLog.error(String.format("Cannot find type %s in project %s", AbstractConnector.class.getName(), javaProject),
+                    CommonRepositoryPlugin.PLUGIN_ID );
+         }
         final IType abstractFilterType = javaProject.findType(AbstractUserFilter.class.getName());
         String abstractClassName = "Abstract" + className;
         if (packageName != null && !packageName.isEmpty()) {
@@ -258,7 +280,7 @@ public class ClassGenerator {
         }
         final ITypeHierarchy hierarchy = classType.newTypeHierarchy(javaProject, progressMonitor);
         String tempatePattern = null;
-        if (hierarchy.contains(abstractConnectorType)) {
+        if (abstractConnectorType != null && hierarchy.contains(abstractConnectorType)) {
             tempatePattern = "/**\n*The connector execution will follow the steps" +
                     "\n* 1 - setInputParameters() --> the connector receives input parameters values" +
                     "\n* 2 - validateInputParameters() --> the connector can validate input parameters values" +
@@ -266,7 +288,7 @@ public class ClassGenerator {
                     "\n* 4 - executeBusinessLogic() --> execute the connector" +
                     "\n* 5 - getOutputParameters() --> output are retrieved from connector" +
                     "\n* 6 - disconnect() --> the connector can close connection to remote server (if any)\n*/";
-        } else if (hierarchy.contains(abstractFilterType)) {
+        } else if (abstractFilterType != null && hierarchy.contains(abstractFilterType)) {
             tempatePattern = "/**\n*The actor filter execution will follow the steps" +
                     "\n* 1 - setInputParameters() --> the actor filter receives input parameters values" +
                     "\n* 2 - validateInputParameters() --> the actor filter can validate input parameters values" +
@@ -296,7 +318,8 @@ public class ClassGenerator {
         final IResource srcFolder = sourceStore.getResource();
         packageFragmentRoot = javaProject.getPackageFragmentRoot(srcFolder);
         classWizard.setPackageFragmentRoot(packageFragmentRoot, false);
-        IPackageFragment packageFragment = packageFragmentRoot.getPackageFragment(packageName == null ? "" : packageName);
+        IPackageFragment packageFragment = packageFragmentRoot
+                .getPackageFragment(packageName == null ? "" : packageName);
         if (!packageFragment.exists()) {
             packageFragment = packageFragmentRoot.createPackageFragment(packageName, true, progressMonitor);
         }
@@ -309,7 +332,8 @@ public class ClassGenerator {
             IProgressMonitor monitor)
             throws Exception {
         for (final Input input : definition.getInput()) {
-            final String fieldName = NamingUtils.toJavaIdentifier(input.getName().toUpperCase(), true) + "_INPUT_PARAMETER";
+            final String fieldName = NamingUtils.toJavaIdentifier(input.getName().toUpperCase(), true)
+                    + "_INPUT_PARAMETER";
             final IField field = classType.getField(fieldName);
 
             /* check a field with this name not already exist */
@@ -317,7 +341,8 @@ public class ClassGenerator {
                 field.delete(true, monitor);
             }
 
-            final String fieldDefinition = "protected final static String " + fieldName + " = \"" + input.getName() + "\" ;";
+            final String fieldDefinition = "protected final static String " + fieldName + " = \"" + input.getName()
+                    + "\" ;";
             classType.createField(fieldDefinition, null, true, null);
 
             final String getterName = "get" + NamingUtils.toJavaIdentifier(input.getName(), true);

@@ -37,6 +37,7 @@ import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -96,7 +97,8 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
                         sb.append(":\n");
                         sb.append(status.getMessage());
                         if (status instanceof MultiStatus) {
-                            MultiStatusDialog multiStatusDialog = new MultiStatusDialog(Display.getDefault().getActiveShell(),
+                            MultiStatusDialog multiStatusDialog = new MultiStatusDialog(
+                                    Display.getDefault().getActiveShell(),
                                     Messages.deploymentFailedMessage, Messages.deploymentFailedMessage,
                                     new String[] { IDialogConstants.OK_LABEL }, (MultiStatus) status);
                             multiStatusDialog.setLevel(IStatus.WARNING);

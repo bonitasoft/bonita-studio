@@ -33,12 +33,14 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -55,7 +57,6 @@ import com.google.common.collect.Lists;
 public class DeployBDMOperationIT {
 
     private BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> bomRepositoryStore;
-    private DependencyRepositoryStore depStore;
     private BusinessObjectModelFileStore businessObjectDefinitionFileStore;
     private APISession apiSession;
     private BOSEngineManager managerEx;
@@ -76,7 +77,6 @@ public class DeployBDMOperationIT {
     @Before
     public void setUp() throws Exception {
         PlatformUtil.delete(ProjectUtil.getBonitaStudioWorkFolder(), AbstractRepository.NULL_PROGRESS_MONITOR);
-        depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         bomRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
         final BusinessObjectModelFileStore fileStore = bomRepositoryStore.getChild("bdm.zip", true);
         if (fileStore != null) {
@@ -92,12 +92,12 @@ public class DeployBDMOperationIT {
     public void should_generate_and_deploy_bdm() throws Exception {
         new GenerateBDMOperation(businessObjectDefinitionFileStore).run(null);
 
-        final String dependencyName = businessObjectDefinitionFileStore.getDependencyName();
-        final DependencyFileStore fileStore = depStore.getChild(dependencyName, true);
-        assertThat(fileStore).isNotNull();
-        assertThat(fileStore.getResource().exists()).isTrue();
-
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        
+        IProject project = currentRepository.getProject();
+        final IJavaProject javaProject = currentRepository.getJavaProject();
+        project.build(IncrementalProjectBuilder.AUTO_BUILD, null);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
         final IType iType = javaProject.findType("org.bonita.CompanyUser");
         assertThat(iType).isNotNull();
 
