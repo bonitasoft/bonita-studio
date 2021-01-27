@@ -18,14 +18,11 @@ import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.Adapters;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.ISaveablePart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.markers.ProblemsView;
 import org.eclipse.ui.part.IContributedContentsView;
-import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.PageBookView;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -57,14 +54,10 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         if (part instanceof PropertySheet) {
             return null;
         }
-        IPropertySheetPage page;
-        /* Use our own PropertySheetPage depending on the view */
-        if (part instanceof ProcessDiagramEditor) {
-            page = getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part);
-        } else {
-            page = (IPropertySheetPage) Adapters.adapt(part, IPropertySheetPage.class);
-        }
-        if (page != null) {
+        IPropertySheetPage page = part instanceof ProcessDiagramEditor ? 
+                getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part)
+                : Adapters.adapt(part, IPropertySheetPage.class);
+        if (page instanceof BonitaPropertiesBrowserPage) {
             if (page instanceof IPageBookViewPage) {
                 initPage((IPageBookViewPage) page);
             }
@@ -72,22 +65,6 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
             page.selectionChanged(part, part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
             return new PageRec(part, page);
         }
-
-        // IContributedContentsView without contributed view, show default page
-        IContributedContentsView view = Adapters.adapt(part, IContributedContentsView.class);
-        if (view != null && view.getContributingPart() == null) {
-            return null;
-        }
-
-        // Only if a part is a selection provider, it could have properties for the
-        // default PropertySheetPage. Every part gets its own PropertySheetPage
-        ISelectionProvider provider = part.getSite().getSelectionProvider();
-        if (provider != null) {
-            IPage dPage = createPropertySheetPage(getPageBook());
-            return new PageRec(part, dPage);
-        }
-
-        // No properties to be shown, use the default page
         return null;
     }
 
