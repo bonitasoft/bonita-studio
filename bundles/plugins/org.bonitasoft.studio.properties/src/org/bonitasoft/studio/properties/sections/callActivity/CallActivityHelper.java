@@ -42,7 +42,7 @@ public class CallActivityHelper {
         this.selectionProvider = selectionProvider;
     }
 
-    protected List<Data> getCallActivityData() {
+    public List<Data> getCallActivityData() {
         final AbstractProcess subProcess = getCalledProcess();
         if (subProcess != null) {
             return subProcess.getData();
@@ -50,7 +50,7 @@ public class CallActivityHelper {
         return Collections.emptyList();
     }
 
-    protected List<String> getCallActivityContractInput() {
+    public List<String> getCallActivityContractInput() {
         final List<String> res = new ArrayList<>();
         final Pool subProcess = getCalledProcess();
         if (subProcess != null) {
@@ -61,7 +61,7 @@ public class CallActivityHelper {
         return res;
     }
 
-    protected Pool getCalledProcess() {
+    public Pool getCalledProcess() {
         final CallActivity callActivity = (CallActivity) selectionProvider.getAdapter(EObject.class);
         final String subprocessName = getCalledProcessName(callActivity);
         final String subprocessVersion = getCalledProcessVersion(callActivity);
@@ -92,17 +92,6 @@ public class CallActivityHelper {
             subprocessName = calledActivityName.getContent();
         }
         return subprocessName;
-    }
-
-    protected Map<String, Data> getCalledProcessData() {
-        final Map<String, Data> res = new HashMap<>();
-        final AbstractProcess subProcess = getCalledProcess();
-        if (subProcess != null) {
-            for (final Data data : subProcess.getData()) {
-                res.put(data.getName(), data);
-            }
-        }
-        return res;
     }
 
 }
