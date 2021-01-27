@@ -14,7 +14,6 @@
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
-		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
 		<security.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
 		<console.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
@@ -117,34 +116,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>Retrieve Javadoc</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.bonitasoft.engine</groupId>
-									<artifactId>bonita-common</artifactId>
-									<version>${engine.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.bonitasoft.engine</groupId>
-									<artifactId>bonita-client</artifactId>
-									<version>${engine.version}</version>
-									<classifier>javadoc</classifier>
-									<type>jar</type>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${javadoc.dir}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
 						<id>Retrieve bonita-client dependencies</id>
 						<phase>process-sources</phase>
 						<goals>
@@ -172,12 +143,6 @@
 						<fileset>
 							<directory>${tomcat.bundle.dir}</directory>
 						</fileset>
-						<fileset>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>javadoc.zip</include>
-							</includes>
-						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
@@ -197,12 +162,8 @@
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/server/conf/catalina.properties">java.awt.headless=true</concat>
-								<delete dir="${tomcat.bundle.dir}/server/webapps/examples" />
-
-								<!-- Package javadoc -->
-								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
-									encoding="UTF-8" />
-								<delete dir="${javadoc.dir}" failonerror="false" />
+								<delete
+									dir="${tomcat.bundle.dir}/server/webapps/examples" />
 							</target>
 						</configuration>
 						<goals>
@@ -240,14 +201,14 @@
 						<Bundle-Name>Bonita Community Tomcat Bundle</Bundle-Name>
 						<Bundle-Vendor>Bonitasoft S.A.</Bundle-Vendor>
 						<Bundle-Version>${osgiVersion}</Bundle-Version>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>
 						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
 						<Include-Resource>
 							{maven-resources}, {maven-dependencies},
-							javadoc.zip,plugin.xml,tomcat=tomcat
+							tomcat=tomcat
 						</Include-Resource>
 						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 						<Import-Package>!*</Import-Package>

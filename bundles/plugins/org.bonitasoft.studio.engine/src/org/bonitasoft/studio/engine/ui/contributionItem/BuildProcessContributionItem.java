@@ -51,7 +51,8 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
                         displayOperatonStatus(exportBarOperation, path, process.getName());
                     } catch (InvocationTargetException | InterruptedException e1) {
                         throw new RuntimeException(
-                                String.format("An error occurred while building bar for process %s", process.getName()), e1);
+                                String.format("An error occurred while building bar for process %s", process.getName()),
+                                e1);
                     }
                 }
             });
@@ -65,7 +66,8 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
         IStatus status = processValidationOperation.getStatus();
         if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
             if (!FileActionDialog.getDisablePopup()) {
-                String generalMessage = status.getSeverity() == IStatus.ERROR ? Messages.errorValidationInDiagramToExport
+                String generalMessage = status.getSeverity() == IStatus.ERROR
+                        ? Messages.errorValidationInDiagramToExport
                         : Messages.warningValidationInDiagramToExport;
                 String errorMessage = String.format("%s\n%s%s", generalMessage, process.getName(),
                         Messages.errorValidationContinueAnywayMessage);
@@ -84,14 +86,14 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
     private void displayOperatonStatus(ExportBarOperation exportBarOperation, String path, String processName) {
         IStatus status = exportBarOperation.getStatus();
         Shell shell = Display.getDefault().getActiveShell();
-        if(status instanceof MultiStatus && status.getSeverity() == IStatus.ERROR) {
+        if (status instanceof MultiStatus && status.getSeverity() == IStatus.ERROR) {
             new MultiStatusDialog(Display.getDefault().getActiveShell(),
                     Messages.buildFailedTitle,
                     String.format(Messages.invalidConfigurationForEnv, exportBarOperation.getConfigurationId()),
                     new String[] { IDialogConstants.CLOSE_LABEL },
                     (MultiStatus) status)
                             .open();
-        }else {
+        } else {
             switch (status.getSeverity()) {
                 case IStatus.CANCEL:
                     break;
@@ -107,7 +109,7 @@ public class BuildProcessContributionItem extends ListProcessContributionItem {
             }
 
         }
-        
+
     }
 
     private Optional<String> getPath(Shell shell) {

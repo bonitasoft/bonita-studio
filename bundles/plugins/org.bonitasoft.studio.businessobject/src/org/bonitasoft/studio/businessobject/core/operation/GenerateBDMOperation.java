@@ -31,29 +31,32 @@ import org.bonitasoft.engine.business.data.generator.client.ResourcesLoader;
 import org.bonitasoft.engine.business.data.generator.filter.OnlyDAOImplementationFileFilter;
 import org.bonitasoft.engine.business.data.generator.filter.WithoutDAOImplementationFileFilter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
+import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 
 public class GenerateBDMOperation implements IRunnableWithProgress {
 
-    private static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
-    private static final String BDM_CLIENT = "bdm-client";
-    private static final String BDM_DAO = "bdm-dao";
-    private static final String MODEL = "model";
-    private static final String FILE_CONTENT = "fileContent";
-    private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
+    public static final String BDM_DEPLOYED_TOPIC = "bdm/deployed";
+    public static final String BDM_CLIENT = "bdm-client";
+    public static final String BDM_DAO = "bdm-dao";
+    public static final String MODEL = "model";
+    public static final String FILE_CONTENT = "fileContent";
+    public static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
 
     private final BusinessObjectModelFileStore fileStore;
 
@@ -96,15 +99,9 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 final byte[] daoJarContent = builder.build(model, new OnlyDAOImplementationFileFilter());
                 resources.put(BDM_DAO, daoJarContent);
 
-                updateDependency(resources.get(BDM_CLIENT));
-
-                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-                BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
-                        .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-                businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
-
                 final Map<String, Object> data = new HashMap<>();
                 data.put(MODEL, model);
+                data.put(BDM_CLIENT, resources.get(BDM_CLIENT));
                 data.put(BDM_DAO, resources.get(BDM_DAO));
                 data.put(BDM_ARTIFACT_DESCRIPTOR, fileStore.loadArtifactDescriptor());
                 data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore())
@@ -123,12 +120,19 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
     }
 
     protected void removeDependency() {
-        final DependencyRepositoryStore dependencyRepositoryStore = fileStore.getRepository()
-                .getRepositoryStore(DependencyRepositoryStore.class);
-        final DependencyFileStore bdmFileStore = dependencyRepositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        if (bdmFileStore != null) {
-            bdmFileStore.delete();
+        try {
+            BDMArtifactDescriptor loadArtifactDescriptor = fileStore.loadArtifactDescriptor();
+            RemoveDependencyOperation operation = new RemoveDependencyOperation(loadArtifactDescriptor.getGroupId(), BDM_CLIENT, loadArtifactDescriptor.getVersion());
+            new WorkspaceJob("Remove Project BDM dependency") {
+                
+                @Override
+                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                    operation.run(monitor);
+                    return Status.OK_STATUS;
+                }
+            }.schedule();
+        } catch (CoreException e) {
+           BonitaStudioLog.error(e);
         }
     }
 
@@ -153,22 +157,6 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
             }
         }
         return result;
-    }
-
-    protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {
-        try (ByteArrayInputStream is = new ByteArrayInputStream(jarContent)) {
-            final DependencyRepositoryStore store = fileStore.getRepository()
-                    .getRepositoryStore(DependencyRepositoryStore.class);
-            final DependencyFileStore depFileStore = store.getChild(fileStore.getDependencyName(), true);
-            if (depFileStore != null) {
-                depFileStore.delete();
-            }
-            final DependencyFileStore bdmJarFileStore = store.createRepositoryFileStore(fileStore.getDependencyName());
-            bdmJarFileStore.save(is);
-            fileStore.getRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
-        } catch (IOException e) {
-            throw new InvocationTargetException(e);
-        }
     }
 
 }

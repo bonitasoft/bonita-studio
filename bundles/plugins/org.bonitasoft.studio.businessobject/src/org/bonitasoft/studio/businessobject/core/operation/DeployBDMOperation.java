@@ -233,46 +233,12 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         return repositoryAccessor.getCurrentRepository().getDatabaseHandler().getDBLocation().getAbsolutePath();
     }
 
-    protected void removeDependency() {
-        final DependencyRepositoryStore dependencyRepositoryStore = RepositoryManager.getInstance()
-                .getRepositoryStore(DependencyRepositoryStore.class);
-        final DependencyFileStore bdmFileStore = dependencyRepositoryStore
-                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
-        if (bdmFileStore != null) {
-            bdmFileStore.delete();
-        }
-    }
-
     private boolean containsBusinessObjects(final BusinessObjectModel bom) {
         return bom != null && !bom.getBusinessObjects().isEmpty();
     }
 
     protected boolean dropDBOnInstall() {
         return dropDatabase;
-    }
-
-    protected void updateDependency(final byte[] jarContent) throws InvocationTargetException {
-        ByteArrayInputStream is = null;
-        try {
-            final DependencyRepositoryStore store = RepositoryManager.getInstance()
-                    .getRepositoryStore(DependencyRepositoryStore.class);
-            is = new ByteArrayInputStream(jarContent);
-            final DependencyFileStore depFileStore = store.getChild(fileStore.getDependencyName(), true);
-            if (depFileStore != null) {
-                depFileStore.delete();
-            }
-            final DependencyFileStore bdmJarFileStore = store.createRepositoryFileStore(fileStore.getDependencyName());
-            bdmJarFileStore.save(is);
-            RepositoryManager.getInstance().getCurrentRepository().build(AbstractRepository.NULL_PROGRESS_MONITOR);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (final IOException e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        }
     }
 
     protected File getTargetFolder() {

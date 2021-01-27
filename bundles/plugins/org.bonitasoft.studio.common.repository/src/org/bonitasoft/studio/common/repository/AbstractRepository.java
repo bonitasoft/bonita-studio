@@ -39,11 +39,9 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
-import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
+import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
-import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
-import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
@@ -85,12 +83,12 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.core.ClasspathValidation;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
@@ -109,7 +107,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
     public static final Set<String> LEGACY_REPOSITORIES = new HashSet<>();
-
+     
     static {
         LEGACY_REPOSITORIES.add("application_resources");
         LEGACY_REPOSITORIES.add("forms");
@@ -140,11 +138,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
 
     private final ExtensionContextInjectionFactory extensionContextInjectionFactory;
 
-    private final ProjectManifestFactory projectManifestFactory;
-
     private final IWorkspace workspace;
-
-    private final ProjectClasspathFactory bonitaBPMProjectClasspath;
 
     private boolean isLoaded = false;
 
@@ -158,16 +152,12 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
-            final ProjectManifestFactory projectManifestFactory,
-            final ProjectClasspathFactory bonitaBPMProjectClasspath,
             final boolean migrationEnabled) {
         this.workspace = workspace;
         this.project = project;
         this.jdtTypeHierarchyManager = jdtTypeHierarchyManager;
         this.migrationEnabled = migrationEnabled;
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
-        this.projectManifestFactory = projectManifestFactory;
-        this.bonitaBPMProjectClasspath = bonitaBPMProjectClasspath;
         this.projectFileListener = createProjectFileChangeListener();
     }
 
@@ -207,16 +197,15 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectFileListener);
     }
 
-    protected CreateBonitaBPMProjectOperation newProjectWorkspaceOperation(final String projectName,
+    protected CreateBonitaProjectOperation newProjectWorkspaceOperation(final String projectName,
             final IWorkspace workspace) {
-        return new CreateBonitaBPMProjectOperation(workspace, projectName)
+        return new CreateBonitaProjectOperation(workspace, projectName)
                 .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature(JavaCore.NATURE_ID)
-                .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
+                .addNature(IMavenConstants.NATURE_ID)
+                .addBuilder(IMavenConstants.BUILDER_ID)
                 .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder("org.eclipse.pde.ManifestBuilder")
-                .addBuilder("org.eclipse.pde.SchemaBuilder")
                 .addBuilder("org.eclipse.wst.validation.validationbuilder");
     }
 
@@ -257,30 +246,18 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             if (!project.isOpen()) {
                 BonitaStudioLog.log("Opening project: " + project.getName());
                 project.open(NULL_PROGRESS_MONITOR);
-                final JavaProject jProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
-                if (jProject != null) {
-                    if (!jProject.isOpen()) {
-                        jProject.open(NULL_PROGRESS_MONITOR);
-                    }
-                    new ClasspathValidation(jProject).validate();
-                } else {
-                    BonitaStudioLog
-                            .log("Cannot retrieve the JavaProject Nature from the project: " + project.getName());
-                    project.open(NULL_PROGRESS_MONITOR);//Open anyway
-                }
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         try {
-            projectManifestFactory.createProjectManifest(project, monitor);
             connect(project);
             initRepositoryStores(monitor);
-            bonitaBPMProjectClasspath.create(this, monitor);
-            enableBuild();
+            MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, monitor);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
+        enableBuild();
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
             try {
@@ -431,6 +408,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             }
             RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,
                     enableAutobuild);
+            try {
+                project.build(IncrementalProjectBuilder.AUTO_BUILD, NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+            }
         }
     }
 
@@ -459,7 +441,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
                 if (!getProject().isSynchronized(IResource.DEPTH_ONE)) {
                     getProject().refreshLocal(IResource.DEPTH_ONE, monitor);
                 }
-                new ProjectClasspathFactory().refresh(this, monitor);
                 project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
             } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
@@ -476,12 +457,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     @Override
     public IJavaProject getJavaProject() {
         if (getProject() != null && getProject().isAccessible()) {
-            try {
-                return (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
-            } catch (final CoreException ex) {
-                BonitaStudioLog.error(ex);
-                return null;
-            }
+            return JavaCore.create(project);
         }
         return null;
     }
@@ -793,8 +769,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
     }
 
-    protected BonitaBPMProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
-        return new BonitaBPMProjectMigrationOperation(project, this)
+    protected BonitaProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
+        return new BonitaProjectMigrationOperation(project, this)
                 .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature(JavaCore.NATURE_ID)
                 .addNature("org.eclipse.pde.PluginNature")

@@ -24,14 +24,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import javax.inject.Inject;
-
+import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -42,17 +39,8 @@ import org.osgi.service.event.EventHandler;
 public class InstallBDMDependenciesEventHandler implements EventHandler {
 
     private static final String JAR_TYPE = "jar";
-    private static final String BDM_CLIENT = "bdm-client";
-    private static final String BDM_CLIENT_POJO_JAR_NAME = "bdm-client-pojo.jar";
-    private static final String BDM_DAO = "bdm-dao";
     private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
     private static final String UPDATE_PROJECTS_COMMAND = "org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command";
-    private final RepositoryAccessor repositoryAccessor;
-
-    @Inject
-    public InstallBDMDependenciesEventHandler(final RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
-    }
 
     @Override
     public void handleEvent(final Event event) {
@@ -60,30 +48,29 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     }
 
     private void execute(final Event event) {
-        final DependencyRepositoryStore dependencyStore = repositoryAccessor
-                .getRepositoryStore(DependencyRepositoryStore.class);
         final MavenInstallFileCommand installFileCommand = newInstallCommand();
         BDMArtifactDescriptor artifactDescriptor = (BDMArtifactDescriptor) event.getProperty(BDM_ARTIFACT_DESCRIPTOR);
         String groupId = artifactDescriptor.getGroupId();
         String version = artifactDescriptor.getVersion();
-        try {
-            installFileCommand.installFile(groupId, BDM_CLIENT, version, JAR_TYPE, null,
-                    dependencyStore.getChild(BDM_CLIENT_POJO_JAR_NAME, true).getResource().getLocation().toFile());
-        } catch (final CoreException e1) {
-            BonitaStudioLog.error(e1);
-        }
-
-        final byte[] bdmDaoJarContent = (byte[]) event.getProperty(BDM_DAO);
+        final byte[] bdmClientJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_CLIENT);
         File tmpFile = null;
         try {
-            tmpFile = tmpDaoFile(bdmDaoJarContent);
-            try {
-                installFileCommand.installFile(groupId, BDM_DAO, version, JAR_TYPE, null, tmpFile,
-                        daoPomFile(groupId, version));
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
+            tmpFile = tmpFile(GenerateBDMOperation.BDM_CLIENT, bdmClientJarContent);
+            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_CLIENT, version, JAR_TYPE, null, tmpFile);
+        } catch (final CoreException | IOException e) {
+            BonitaStudioLog.error(e);
+        } finally {
+            if (tmpFile != null) {
+                tmpFile.delete();
             }
-        } catch (final IOException e) {
+        }
+
+        final byte[] bdmDaoJarContent = (byte[]) event.getProperty(GenerateBDMOperation.BDM_DAO);
+        try {
+            tmpFile = tmpFile(GenerateBDMOperation.BDM_DAO, bdmDaoJarContent);
+            installFileCommand.installFile(groupId, GenerateBDMOperation.BDM_DAO, version, JAR_TYPE, null, tmpFile,
+                    daoPomFile(groupId, version));
+        } catch (final IOException | CoreException e) {
             BonitaStudioLog.error(e);
         } finally {
             if (tmpFile != null) {
@@ -117,9 +104,9 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
         return new MavenInstallFileCommand(maven());
     }
 
-    protected File tmpDaoFile(final byte[] bdmDaoJarContent) throws IOException {
-        File tmpFile = File.createTempFile(BDM_DAO, ".jar");
-        try (InputStream stream = new ByteArrayInputStream(bdmDaoJarContent)) {
+    protected File tmpFile(String name, byte[] content) throws IOException {
+        File tmpFile = File.createTempFile(name, ".jar");
+        try (InputStream stream = new ByteArrayInputStream(content)) {
             Files.copy(stream, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         return tmpFile;

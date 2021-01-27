@@ -44,12 +44,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core.manipulation,
  org.eclipse.debug.core;bundle-version="3.13.100",
  org.eclipse.wst.validation;bundle-version="1.2.701",
- org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport
+ org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport,
+ org.eclipse.m2e.maven.runtime,
+ org.eclipse.m2e.core;bundle-version="1.16.0",
+ org.eclipse.m2e.core.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.job,
+ org.bonitasoft.studio.common.repository.core.maven,
  org.bonitasoft.studio.common.repository.extension,
  org.bonitasoft.studio.common.repository.filestore,
  org.bonitasoft.studio.common.repository.handler,

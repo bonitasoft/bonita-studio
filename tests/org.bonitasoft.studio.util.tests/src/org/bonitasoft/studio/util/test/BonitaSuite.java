@@ -181,14 +181,6 @@ public class BonitaSuite extends Suite {
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
-        IEclipsePreferences store = DefaultScope.INSTANCE.getNode(IMavenConstants.PLUGIN_ID);
-        try {
-            File defaultSettings = new File(
-                    FileLocator.toFileURL(BonitaSuite.class.getResource("default_settings.xml")).getFile());
-            store.put(MavenPreferenceConstants.P_USER_SETTINGS_FILE, defaultSettings.getAbsolutePath());
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
-        }
         FileActionDialog.setDisablePopup(true);
     }
 

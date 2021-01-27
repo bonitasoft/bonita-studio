@@ -29,8 +29,6 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
-import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
-import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -59,33 +57,11 @@ public class AbstractRepositoryTest {
     @Mock
     private JDTTypeHierarchyManager jdtTypeHierarchyManager;
     @Mock
-    private ProjectManifestFactory projectManifestFactory;
-    @Mock
     private IProgressMonitor monitor;
-    @Mock
-    private ProjectClasspathFactory bonitaBPMProjectClasspath;
     @Mock
     private DatabaseHandler bonitaHomeHandler;
     @Mock
     private IWorkspaceRoot root;
-
-    @Test
-    public void should_open_trigger_project_manifest_factory() throws Exception {
-        final AbstractRepository repository = newRepository();
-
-        repository.open(monitor);
-
-        verify(projectManifestFactory).createProjectManifest(project, monitor);
-    }
-
-    @Test
-    public void should_open_trigger_project_classpath_factory() throws Exception {
-        final AbstractRepository repository = newRepository();
-
-        repository.open(monitor);
-
-        verify(bonitaBPMProjectClasspath).create(repository, monitor);
-    }
 
     @Test
     public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
@@ -139,8 +115,7 @@ public class AbstractRepositoryTest {
 
     private AbstractRepository newRepository() throws CoreException, MigrationException {
         final AbstractRepository repo = spy(new TestRepository(workspace, project, extensionContextInjectionFactory,
-                jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath, true));
+                jdtTypeHierarchyManager, true));
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
         doNothing().when(repo).hookResourceListeners();
         doNothing().when(repo).removeResourceListeners();
@@ -155,10 +130,8 @@ class TestRepository extends AbstractRepository {
 
     public TestRepository(IWorkspace workspace, IProject project,
             ExtensionContextInjectionFactory extensionContextInjectionFactory,
-            JDTTypeHierarchyManager jdtTypeHierarchyManager, ProjectManifestFactory projectManifestFactory,
-            ProjectClasspathFactory bonitaBPMProjectClasspath, boolean migrationEnabled) {
-        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath, migrationEnabled);
+            JDTTypeHierarchyManager jdtTypeHierarchyManager, boolean migrationEnabled) {
+        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, migrationEnabled);
     }
 
 }

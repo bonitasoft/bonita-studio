@@ -25,7 +25,7 @@ public class BDMDependencyHandlerAddon {
 
     @PostConstruct
     public void registerHandler(IEventBroker eventBroker, RepositoryAccessor repositoryAccessor) {
-        eventBroker.subscribe(BDM_DEPLOYED_TOPIC, new InstallBDMDependenciesEventHandler(repositoryAccessor));
+        eventBroker.subscribe(BDM_DEPLOYED_TOPIC, new InstallBDMDependenciesEventHandler());
     }
 
 }

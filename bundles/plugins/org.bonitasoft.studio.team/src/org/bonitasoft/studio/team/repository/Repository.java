@@ -28,8 +28,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
-import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -98,10 +96,12 @@ public class Repository extends AbstractRepository {
 
     public Repository(final IWorkspace workspace, final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
-            final JDTTypeHierarchyManager jdtTypeHierarchyManager, final ProjectManifestFactory projectManifestFactory,
-            final ProjectClasspathFactory bonitaBPMProjectClasspath, final boolean migrationEnabled) {
-        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, projectManifestFactory,
-                bonitaBPMProjectClasspath,
+            final JDTTypeHierarchyManager jdtTypeHierarchyManager,
+            final boolean migrationEnabled) {
+        super(workspace,
+                project, 
+                extensionContextInjectionFactory,
+                jdtTypeHierarchyManager, 
                 migrationEnabled);
         updateJob = new SharedRepositoryUpdateBackgroundJob("Update shared repository job", INTERVAL, this);
     }

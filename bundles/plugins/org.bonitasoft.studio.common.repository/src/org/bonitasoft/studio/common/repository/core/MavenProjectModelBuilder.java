@@ -1,0 +1,202 @@
+/**
+ * Copyright (C) 2021 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.common.repository.core;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginExecution;
+import org.apache.maven.model.PluginManagement;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+
+public class MavenProjectModelBuilder {
+
+    private String artifactId;
+    private String groupId;
+    private String version;
+    private String displayName;
+    private String description;
+    private String bonitaVersion;
+    private List<Dependency> dependencies = new ArrayList<>();
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBonitaVersion() {
+        return bonitaVersion;
+    }
+
+    public void setBonitaVersion(String bonitaVersion) {
+        this.bonitaVersion = bonitaVersion;
+    }
+
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public Model toMavenModel() {
+        Model model = new Model();
+        model.setModelVersion("4.0.0");
+        model.setName(getDisplayName());
+        model.setArtifactId(getArtifactId());
+        model.setGroupId(getGroupId());
+        model.setVersion(getVersion());
+        model.setDescription(getDescription());
+
+        model.addProperty("bonita.version", getBonitaVersion());
+        model.addProperty("groovy.version", "2.4.20");
+        model.addProperty("maven.compiler.source", "11");
+        model.addProperty("maven.compiler.target", "11");
+        model.addProperty("project.build.sourceEncoding", "UTF-8");
+        model.addProperty("project.reporting.outputEncoding", "UTF-8");
+        model.addProperty("build-helper-maven-plugin.version", "3.2.0");
+//        model.addProperty("maven-compiler-plugin.version", "3.8.1");
+        model.addProperty("maven-install-plugin.version", "3.0.0-M1");
+//        model.addProperty("groovy-eclipse-compiler.version", "3.6.0-03");
+//        model.addProperty("groovy-eclipse-batch.version", "2.4.21-01");
+
+        if (PlatformUtil.isACommunityBonitaProduct()) {
+            model.addDependency(newDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}", Artifact.SCOPE_PROVIDED));
+        } else {
+            model.addDependency(newDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}", Artifact.SCOPE_PROVIDED));
+        }
+        model.addDependency(newDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}", Artifact.SCOPE_PROVIDED));
+
+        dependencies.stream().forEach(model::addDependency);
+
+        Build build = new Build();
+        Plugin helperPlugin = plugin("org.codehaus.mojo", "build-helper-maven-plugin",
+                "${build-helper-maven-plugin.version}");
+        helperPlugin.addExecution(pluginExecution("generate-sources",
+                Collections.singletonList("add-source"),
+                createBuilderHelperMavenPluginConfiguration()));
+        build.addPlugin(helperPlugin);
+        
+//        Plugin compilerPlugin = plugin("org.apache.maven.plugins", "maven-compiler-plugin",
+//                "${maven-compiler-plugin.version}");
+//        compilerPlugin.setConfiguration(createCompilerPluginConfiguration());
+//        compilerPlugin.addDependency(newDependency("org.codehaus.groovy", "groovy-eclipse-compiler", "${groovy-eclipse-compiler.version}", Artifact.SCOPE_COMPILE));
+//        compilerPlugin.addDependency(newDependency("org.codehaus.groovy", "groovy-eclipse-batch", "${groovy-eclipse-batch.version}", Artifact.SCOPE_COMPILE));
+//        build.addPlugin(compilerPlugin);
+
+        PluginManagement pluginManagement = new PluginManagement();
+        pluginManagement.addPlugin(plugin("org.apache.maven.plugins", "maven-install-plugin",
+                "${maven-install-plugin.version}"));
+        build.setPluginManagement(pluginManagement);
+        model.setBuild(build);
+        return model;
+    }
+
+    private PluginExecution pluginExecution(String phase, List<String> goals, Object configuration) {
+        PluginExecution execution = new PluginExecution();
+        execution.setPhase(phase);
+        execution.setGoals(goals);
+        execution.setConfiguration(configuration);
+        return execution;
+    }
+
+    private Plugin plugin(String groupId, String artifactId, String version) {
+        Plugin plugin = new Plugin();
+        plugin.setGroupId(groupId);
+        plugin.setArtifactId(artifactId);
+        plugin.setVersion(version);
+        return plugin;
+    }
+
+    private Dependency newDependency(String groupId, String artifactId, String version, String scope) {
+        Dependency dependency = new Dependency();
+        dependency.setScope(scope);
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        dependency.setVersion(version);
+        return dependency;
+    }
+
+    private Xpp3Dom createBuilderHelperMavenPluginConfiguration() {
+        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+        Xpp3Dom sources = new Xpp3Dom("sources");
+        Xpp3Dom srcConnectors = new Xpp3Dom("source");
+        srcConnectors.setValue("src-connectors");
+        Xpp3Dom srcFilters = new Xpp3Dom("source");
+        srcFilters.setValue("src-filters");
+        Xpp3Dom srcGroovy = new Xpp3Dom("source");
+        srcGroovy.setValue("src-groovy");
+        Xpp3Dom providedGroovySrc = new Xpp3Dom("source");
+        providedGroovySrc.setValue("src-providedGroovy");
+        sources.addChild(srcConnectors);
+        sources.addChild(srcFilters);
+        sources.addChild(srcGroovy);
+        sources.addChild(providedGroovySrc);
+        pluginConfiguration.addChild(sources);
+        return pluginConfiguration;
+    }
+    
+    private Xpp3Dom createCompilerPluginConfiguration() {
+        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+        Xpp3Dom compilerId = new Xpp3Dom("compilerId");
+        compilerId.setValue("groovy-eclipse-compiler");
+        pluginConfiguration.addChild(compilerId);
+        return pluginConfiguration;
+    }
+
+}

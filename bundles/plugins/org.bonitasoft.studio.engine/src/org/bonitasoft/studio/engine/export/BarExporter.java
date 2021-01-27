@@ -88,6 +88,7 @@ public class BarExporter {
         checkArgument(configuration != null);
         BonitaStudioLog.info("Building bar for process " + process.getName() + " (" + process.getVersion() + " )...",
                 EnginePlugin.PLUGIN_ID);
+
         final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
         DesignProcessDefinition def;
         try {

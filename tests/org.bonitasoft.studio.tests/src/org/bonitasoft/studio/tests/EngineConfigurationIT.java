@@ -37,11 +37,9 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-/**
- * @author Romain Bioteau
- */
 public class EngineConfigurationIT {
 
     private APISession session;

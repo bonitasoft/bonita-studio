@@ -12,8 +12,6 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
-import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
-import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
@@ -65,16 +63,10 @@ public class RepositoryTest {
     private JDTTypeHierarchyManager jdtManager;
     @Mock
     private IProject project;
-    @Mock
-    private ProjectManifestFactory projectManifestFactory;
-    @Mock
-    private ProjectClasspathFactory bonitaBPMProjectClasspath;
 
     @Before
     public void setUp() throws Exception, CoreException {
-        sharedRepository = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtManager,
-                projectManifestFactory,
-                bonitaBPMProjectClasspath, true));
+        sharedRepository = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtManager, true));
         doReturn(lockManager).when(sharedRepository).createLockManager();
         when(lockManager.runScanResourcesLockOperation(any(IResource.class))).thenReturn(scan);
         when(fileStore.getResource()).thenReturn(resource);

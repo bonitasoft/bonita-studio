@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.test.suite;
 
+import org.bonitasoft.studio.tests.BonitaProjectIT;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.EngineConfigurationIT;
 import org.bonitasoft.studio.tests.ProductVersionIT;
 import org.bonitasoft.studio.tests.TestFullScenario;
-import org.bonitasoft.studio.tests.TestInitialWorkspace;
 import org.bonitasoft.studio.tests.TestPatchedBundles;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestSpecificWizardIds;
@@ -49,7 +49,6 @@ import org.bonitasoft.studio.tests.designer.UIDArtifactCreationIT;
 import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
 import org.bonitasoft.studio.tests.engine.StudioShutdownIT;
-import org.bonitasoft.studio.tests.engine.TestJavaDoc;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
 import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNDataExportImportTest;
@@ -68,7 +67,6 @@ import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.properties.TestMessageRefactoring;
 import org.bonitasoft.studio.tests.repository.TestAddJar;
-import org.bonitasoft.studio.tests.repository.TestExtensionProject;
 import org.bonitasoft.studio.tests.repository.TestImportExportAndDeleteRepository;
 import org.bonitasoft.studio.tests.repository.TestImportRepository;
 import org.bonitasoft.studio.tests.repository.TestRepositoryLocation;
@@ -95,9 +93,7 @@ import org.junit.runners.Suite;
         EdaptHistoryIT.class,
         TestBugs.class,
         ProductVersionIT.class,
-        TestInitialWorkspace.class,
-        TestExtensionProject.class,
-        EngineConfigurationIT.class,
+        BonitaProjectIT.class,
         TestFullScenario.class,
         TestSubprocess.class,
         TestRunSearchIndex.class,
@@ -117,7 +113,6 @@ import org.junit.runners.Suite;
         TestImportRepository.class,
         TestImportBPMN2.class,
         TestAddJar.class,
-        TestJavaDoc.class,
         TestOperationHistory.class,
         TestDecisionTableToGroovy.class,
         TestSubprocessEventExport.class,
@@ -159,6 +154,7 @@ import org.junit.runners.Suite;
         RestAPIExtensionMarkerResolutionIT.class,
         BuildAndDeployRestAPIExtensionIT.class,
         ExportRestAPIExtensionProjectIT.class,
+        EngineConfigurationIT.class,
         StudioShutdownIT.class
 })
 public class IntegrationTestSuite {

@@ -103,7 +103,7 @@ public class ExportBarOperation implements IRunnableWithProgress {
         Assert.isTrue(!processes.isEmpty());
 
         status = Status.OK_STATUS;
-
+        
         if(!barWithoutConfigIsSupported()) {
             if (configurationId == null) {
                 configurationId = ConfigurationPlugin.getDefault().getPreferenceStore()

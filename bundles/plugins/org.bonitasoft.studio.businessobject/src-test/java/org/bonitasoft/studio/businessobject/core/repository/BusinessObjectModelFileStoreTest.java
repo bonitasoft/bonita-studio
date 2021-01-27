@@ -134,15 +134,6 @@ public class BusinessObjectModelFileStoreTest {
     }
 
     @Test
-    public void shouldDoDelete_DeleteDependency() throws Exception {
-        doReturn(depStore).when(fileStoreUnderTest).getDependencyRepositoryStore();
-        when(depStore.getChild(anyString(), any(Boolean.class))).thenReturn(depFileStore);
-        fileStoreUnderTest.doDelete();
-        verify(depFileStore).delete();
-        verify(fileStoreUnderTest).deleteArtifactDescriptor();
-    }
-
-    @Test
     public void shouldGetBusinessObjects_ReturnAllBusinessObjectsBusinessObjectModel() throws Exception {
         assertThat(fileStoreUnderTest.getBusinessObjects()).isNotEmpty().hasSize(2);
     }

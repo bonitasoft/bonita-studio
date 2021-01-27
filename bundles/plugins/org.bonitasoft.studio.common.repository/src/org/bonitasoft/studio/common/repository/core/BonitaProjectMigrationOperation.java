@@ -30,14 +30,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author Romain Bioteau
  */
-public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
+public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
 
     private final IProject project;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
     private final AbstractRepository repository;
 
-    public BonitaBPMProjectMigrationOperation(final IProject project, final AbstractRepository repository) {
+    public BonitaProjectMigrationOperation(final IProject project, final AbstractRepository repository) {
         this.project = project;
         this.repository = repository;
     }
@@ -54,19 +54,15 @@ public class BonitaBPMProjectMigrationOperation implements IWorkspaceRunnable {
                     .havingBuilders(builders).build(),
                     IResource.FORCE,
                     monitor);
-
-            final ProjectClasspathFactory bonitaBPMProjectClasspath = new ProjectClasspathFactory();
-            bonitaBPMProjectClasspath.delete(repository, monitor);
-            bonitaBPMProjectClasspath.create(repository, monitor);
         }
     }
 
-    public BonitaBPMProjectMigrationOperation addBuilder(final String builderId) {
+    public BonitaProjectMigrationOperation addBuilder(final String builderId) {
         builders.add(builderId);
         return this;
     }
 
-    public BonitaBPMProjectMigrationOperation addNature(final String natureId) {
+    public BonitaProjectMigrationOperation addNature(final String natureId) {
         natures.add(natureId);
         return this;
     }

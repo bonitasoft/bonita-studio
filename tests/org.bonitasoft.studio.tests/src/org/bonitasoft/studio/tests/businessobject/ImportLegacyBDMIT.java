@@ -75,9 +75,6 @@ public class ImportLegacyBDMIT {
         final BusinessObjectModel model = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).getContent();
         assertThat(model).isNotNull();
         assertThat(model.getBusinessObjectsClassNames()).contains("com.bonita.lr.model.VacationRequest");
-
-        assertThat(defStore.getChildren()).hasSize(1);
-        assertThat(depStore.getChild(BusinessObjectModelFileStore.BDM_JAR_NAME, true)).isNotNull();
     }
 
     @Test
