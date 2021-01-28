@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.tests</groupId>
 		<artifactId>tests</artifactId>
-		<version>7.11.4</version>
+		<version>7.11.5-SNAPSHOT</version>
 	</parent>
 	
 	<groupId>org.bonitasoft.studio.tests</groupId>
