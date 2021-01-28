@@ -32,7 +32,9 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -59,9 +61,10 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class MembershipSection {
 
-    private static final Object ADD_MEMBERSHIP_BUTTON_ID = "addMembership";
-    private static final String REMOVE_MEMBERSHIP_BUTTON_ID = "removeMembership";
-    private static final Object MEMBERSHIP_LIST_VIEWER_ID = "membershipViewer";
+    public static final String ADD_MEMBERSHIP_BUTTON_ID = "addMembership";
+    public static final String REMOVE_MEMBERSHIP_BUTTON_ID = "removeMembership";
+    public static final String MEMBERSHIP_LIST_VIEWER_ID = "membershipViewer";
+
     private UserFormPage formPage;
     private Section section;
     private ToolItem deleteMembershipItem;
@@ -107,8 +110,7 @@ public class MembershipSection {
     }
 
     private void createViewer(Composite parent) {
-        viewer = new TableViewer(parent,
-                SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
+        viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, MEMBERSHIP_LIST_VIEWER_ID);
         formPage.getToolkit().adapt(viewer.getTable());
@@ -132,7 +134,7 @@ public class MembershipSection {
                 return false;
             }
         });
-
+        
         createGroupColumn();
         createRoleColumn();
 
@@ -161,11 +163,6 @@ public class MembershipSection {
                 ctx.getValidationRealm(), selectedMembershipObservable, OrganizationPackage.Literals.MEMBERSHIP__ROLE_NAME);
         column.setEditingSupport(new MembershipRoleEditingSupport(viewer,
                 selectedMembershipRoleNameObservable, formPage, ctx));
-        selectedMembershipRoleNameObservable.addValueChangeListener(
-                e -> Display.getDefault().asyncExec(() -> {
-                    viewer.refresh(selectedMembershipObservable.getValue());
-                    formPage.refreshSelectedUser();
-                }));
     }
 
     private void createGroupColumn() {
@@ -186,11 +183,6 @@ public class MembershipSection {
                 OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH);
         column.setEditingSupport(new MembershipGroupEditingSupport(viewer, selectedMembershipGroupNameObservable,
                 selectedMembershipGroupParentPathObservable, formPage, ctx));
-        selectedMembershipGroupNameObservable.addValueChangeListener(
-                e -> Display.getDefault().asyncExec(() -> {
-                    viewer.refresh(selectedMembershipObservable.getValue());
-                    formPage.refreshSelectedUser();
-                }));
     }
 
     private void createToolbar(Composite parent) {

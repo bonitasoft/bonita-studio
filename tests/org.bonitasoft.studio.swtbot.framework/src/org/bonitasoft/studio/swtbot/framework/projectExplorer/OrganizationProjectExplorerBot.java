@@ -15,10 +15,12 @@
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
-import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.swtbot.framework.organization.BotOrganizationEditor;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -37,9 +39,8 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
     }
 
     @Override
-    public BotManageOrganizationWizard newOrganization() {
-        clickOnContextualMenu(getOrganizationFolderTreeItem(), "New...");
-        return new BotManageOrganizationWizard(bot);
+    public void newOrganization() {
+        clickOnContextualMenu(getOrganizationFolderTreeItem(), "New");
     }
 
     public BotDialog exportOrganization() {
@@ -52,9 +53,11 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
         return new BotDialog(bot, org.bonitasoft.studio.identity.i18n.Messages.exportOrganizationTitle);
     }
 
-    public BotManageOrganizationWizard openOrganization(String organization) {
+    public BotOrganizationEditor openOrganization(String organization) {
         clickOnContextualMenu(getOrganizationTreeItem(organization), "Open");
-        return new BotManageOrganizationWizard(bot);
+        String editorName = String.format("%s.%s", organization, OrganizationRepositoryStore.ORGANIZATION_EXT);
+        waitUntilActiveEditorTitleIs(editorName, Optional.empty());
+        return new BotOrganizationEditor(bot, editorName);
     }
 
     public void renameOrganization(String oldName, String newName) {
@@ -76,6 +79,11 @@ public class OrganizationProjectExplorerBot extends ProjectExplorerBot {
         SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
+    }
+
+    public void deleteOrganization(String organization) {
+        SWTBotTreeItem organizationTreeItem = getOrganizationFolderTreeItem();
+        clickOnContextualMenu(getTreeItem(organizationTreeItem, getDisplayName(organization)), "Delete");
     }
 
     private SWTBotTreeItem getOrganizationFolderTreeItem() {

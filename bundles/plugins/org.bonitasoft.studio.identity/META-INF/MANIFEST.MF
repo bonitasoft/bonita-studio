@@ -54,7 +54,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.sse.ui,
  org.eclipse.e4.core.contexts;bundle-version="1.8.400",
  org.bonitasoft.studio.tests-utils,
- org.eclipse.wst.sse.core
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.xml.core
 Import-Package: javax.inject;version="1.0.0",
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
@@ -93,6 +94,10 @@ Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.ecl
  org.bonitasoft.studio.identity.actors.ui.handler,
  org.bonitasoft.studio.identity.actors.ui.wizard.page,
  org.bonitasoft.studio.identity.i18n,
+ org.bonitasoft.studio.identity.organization.editor.control.group,
+ org.bonitasoft.studio.identity.organization.editor.control.role,
+ org.bonitasoft.studio.identity.organization.editor.control.user,
+ org.bonitasoft.studio.identity.organization.editor.editingsupport,
  org.bonitasoft.studio.identity.organization.handler,
  org.bonitasoft.studio.identity.organization.model.organization,
  org.bonitasoft.studio.identity.organization.model.organization.impl,
@@ -103,5 +108,4 @@ Export-Package: org.bonitasoft.studio.identity;uses:="org.osgi.framework,org.ecl
  org.bonitasoft.studio.identity.organization.ui.control,
  org.bonitasoft.studio.identity.organization.ui.provider.content,
  org.bonitasoft.studio.identity.organization.ui.provider.label,
- org.bonitasoft.studio.identity.organization.ui.wizard.page,
  org.bonitasoft.studio.identity.organization.validator

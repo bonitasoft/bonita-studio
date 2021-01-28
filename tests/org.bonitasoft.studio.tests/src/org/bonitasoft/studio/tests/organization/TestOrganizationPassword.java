@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.tests.actors;
+package org.bonitasoft.studio.tests.organization;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +30,7 @@ import org.bonitasoft.studio.identity.organization.repository.OrganizationFileSt
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
-import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.swtbot.framework.organization.BotOrganizationEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -52,34 +52,35 @@ public class TestOrganizationPassword {
     public void testImportExportWithPasswordUpdated() throws IOException, ReadFileStoreException {
         importOrganizationProgrammatically();
 
-        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotManageOrganizationWizard manageOrganizationWizard = botApplicationWorkbenchWindow.organizationMenu()
-                .manage();
-        manageOrganizationWizard.selectOrganization("OrganizationWithEncryptedPassword");
+        BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        BotOrganizationEditor botOrganizationEditor = botApplicationWorkbenchWindow.organizationMenu().open()
+                .select("OrganizationWithEncryptedPassword.organization").open();
 
-        manageOrganizationWizard.next(/* Group page */).next(/* Role page */).next();
-        manageOrganizationWizard.manageUsers().selectUser("User1").setPassword("updatedPassord");
-        manageOrganizationWizard.finish();
+        botOrganizationEditor
+                .userPage()
+                .setPassword("User1 User1", "updatedPassord")
+                .save()
+                .close();
 
         SWTBotTestUtil.waitUntilRootShellIsActive(bot);
 
-        final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
+        OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
-        final OrganizationFileStore orgaFileStore = organizationStore.getChild("OrganizationWithEncryptedPassword."
+        OrganizationFileStore orgaFileStore = organizationStore.getChild("OrganizationWithEncryptedPassword."
                 + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
-        final PasswordType password = orgaFileStore.getContent().getUsers().getUser().get(0).getPassword();
+        PasswordType password = orgaFileStore.getContent().getUsers().getUser().get(0).getPassword();
         Assert.assertEquals("The passsword value should have been updated.", "updatedPassord", password.getValue());
         Assert.assertFalse("The password has been updated and the value of the attribute encrypted should be set to false",
                 password.isEncrypted());
     }
 
     private void importOrganizationProgrammatically() throws IOException, FileNotFoundException {
-        final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
+        OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);
-        final String organizationName = "OrganizationWithEncryptedPassword.xml";
-        final URL archiveURL = TestOrganizationPassword.class.getResource(organizationName);
+        String organizationName = "OrganizationWithEncryptedPassword.xml";
+        URL archiveURL = TestOrganizationPassword.class.getResource(organizationName);
         assertNotNull("filePath should not be null", archiveURL.getPath());
-        final File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
+        File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
         assertTrue("organization to import does not exist", toImport.exists());
         FileInputStream fis = new FileInputStream(toImport);
         String id = toImport.getName();

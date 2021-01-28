@@ -159,4 +159,8 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
         return getFileStore(getEditorInput().getName()) != null;
     }
 
+    public void refreshOverviewGroupList() {
+        overviewFormPage.refreshList();
+    }
+
 }

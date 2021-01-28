@@ -59,6 +59,7 @@ public class InformationSection {
     public static final int SHORT_FIELD_MAX_LENGTH = 50;
     public static final int LONG_FIELD_MAX_LENGTH = 255;
     public static final String CUSTOM_INFO_LIST_VIEWER_ID = "customInfoViewer";
+    public static final String CUSTOM_INFO_VALUE_TEXT_ID = "customInfoValueTextId";
 
     private UserFormPage formPage;
     private Section section;
@@ -333,6 +334,7 @@ public class InformationSection {
                 .withTextProvider(CustomUserInfoValue::getValue)
                 .createColumnLabelProvider());
         column.setEditingSupport(new EditingSupportBuilder<CustomUserInfoValue>(customInfoViewer)
+                .withId(CUSTOM_INFO_VALUE_TEXT_ID)
                 .withValueProvider(CustomUserInfoValue::getValue)
                 .withValueUpdater((customInfo, value) -> customInfo.setValue((String) value))
                 .create());

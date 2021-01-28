@@ -66,6 +66,13 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
     }
 
     @Override
+    public void refreshOverviewGroupList() {
+        if (overviewFormPart != null) {
+            overviewFormPart.refreshGroupList();
+        }
+    }
+
+    @Override
     public void updateDefaultUserViewerInput() {
         overviewFormPart.updateDefaultUserViewerInput();
     }

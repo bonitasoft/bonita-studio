@@ -28,7 +28,6 @@ import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizardBot;
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
-import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
@@ -57,11 +56,10 @@ public class ProjectExplorerBot extends BotBase {
         explorerView.setFocus();
     }
 
-    public BotManageOrganizationWizard newOrganization() {
+    public void newOrganization() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Organization...").click();
-        return new BotManageOrganizationWizard(bot);
+        projectTreeItem.contextMenu().menu("New").menu("Organization").click();
     }
 
     public BotBdmEditor newBdm() {
@@ -112,7 +110,8 @@ public class ProjectExplorerBot extends BotBase {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
         projectTreeItem.contextMenu().menu("New").menu("Actor filter implementation...").click();
-        return new ConnectorImplementationWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
+        return new ConnectorImplementationWizardBot(bot,
+                org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
     }
 
     public OrganizationProjectExplorerBot organization() {

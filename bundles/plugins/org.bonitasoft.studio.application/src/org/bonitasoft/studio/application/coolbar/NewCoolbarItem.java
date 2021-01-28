@@ -133,7 +133,7 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
             public void widgetSelected(final SelectionEvent e) {
                 if (isEnabled()) {
                     final DropdownSelectionListener listener = new DropdownSelectionListener(item);
-                    listener.add("org.bonitasoft.studio.organization.manage", Messages.organization);
+                    listener.add("org.bonitasoft.studio.identity.organization.create.command", Messages.organization);
                     listener.addSeparator();
 
                     boolean hasNewBDM = RepositoryManager.getInstance()

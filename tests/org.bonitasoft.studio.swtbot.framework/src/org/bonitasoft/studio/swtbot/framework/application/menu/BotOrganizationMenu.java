@@ -14,7 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application.menu;
 
-import org.bonitasoft.studio.swtbot.framework.organization.BotManageOrganizationWizard;
+import org.bonitasoft.studio.identity.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.organization.OpenOrganizationWizardBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 public class BotOrganizationMenu extends AbstractBotMenu {
@@ -23,9 +24,9 @@ public class BotOrganizationMenu extends AbstractBotMenu {
         super(bot);
     }
 
-    public BotManageOrganizationWizard manage() {
-        openMenu("Define...");
-        return new BotManageOrganizationWizard(bot);
+    public OpenOrganizationWizardBot open() {
+        openMenu("Open...");
+        return new OpenOrganizationWizardBot(bot, Messages.openExistingOrganization);
     }
 
 }

@@ -318,4 +318,7 @@ public class Messages extends NLS {
     public static String defaultUserUpdated;
     public static String defaultUserUpdatedTitle;
     public static String importOrganization;
+    public static String open;
+    public static String openExistingOrganization;
+    public static String openExistingOrganizationDescription;
 }

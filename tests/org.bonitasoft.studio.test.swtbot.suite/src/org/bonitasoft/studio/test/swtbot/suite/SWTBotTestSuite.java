@@ -20,9 +20,7 @@ import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterDefinitionWizardPageTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterEditionTest;
 import org.bonitasoft.studio.tests.actors.ActorFilterImplementationTest;
-import org.bonitasoft.studio.tests.actors.OrganizationCreationTest;
 import org.bonitasoft.studio.tests.actors.SWTBotActorFilterExportTests;
-import org.bonitasoft.studio.tests.actors.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.ApplicationDescriptorOverviewIT;
 import org.bonitasoft.studio.tests.applicationDescriptor.OpenExistingApplicationIT;
@@ -84,6 +82,8 @@ import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
 import org.bonitasoft.studio.tests.importer.bos.ImportBosArchiveIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
+import org.bonitasoft.studio.tests.organization.OrganizationIT;
+import org.bonitasoft.studio.tests.organization.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
@@ -172,7 +172,7 @@ import org.junit.runners.Suite;
         BPMNGatewayExportImportTest.class,
         BPMNEventSubProcessExportImportTest.class,
         DeployWizardIT.class,
-        OrganizationCreationTest.class,
+        OrganizationIT.class,
         SmartImportBdmIT.class,
         TestSForceConnection.class,
         TestSForceCreateObject.class,

@@ -60,4 +60,8 @@ public class OverviewFormPart extends AbstractFormPart {
         overviewEditionControl.refreshList();
     }
 
+    public void refreshGroupList() {
+        overviewEditionControl.refreshGroupList();
+    }
+
 }

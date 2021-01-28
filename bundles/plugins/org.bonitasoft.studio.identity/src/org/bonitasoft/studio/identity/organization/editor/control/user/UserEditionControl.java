@@ -60,6 +60,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.google.common.base.Strings;
+
 public class UserEditionControl {
 
     private static final char CLEAR_CHAR = '\0';
@@ -270,6 +272,13 @@ public class UserEditionControl {
 
         passwordField = builder.createIn(passwordComposite);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
+        passwordField.observeText(SWT.Modify).addValueChangeListener(e -> {
+            if (!Strings.isNullOrEmpty(e.diff.getOldValue())) { // This event is triggered when the pwd is updated AND when the first user is selected -> old value empty
+                if(passwordObservable.getValue() != null) {
+                    passwordObservable.getValue().setEncrypted(false);
+                }
+            }
+        });
     }
 
     private void showPassword() {
