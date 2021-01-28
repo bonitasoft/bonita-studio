@@ -46,7 +46,6 @@ import org.bonitasoft.studio.identity.organization.operation.CleanPublishOrganiz
 import org.bonitasoft.studio.identity.organization.operation.PublishOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.operation.UpdateOrganizationOperation;
 import org.bonitasoft.studio.identity.organization.styler.ActiveOrganizationStyler;
-import org.bonitasoft.studio.identity.organization.ui.wizard.ManageOrganizationWizard;
 import org.bonitasoft.studio.ui.i18n.Messages;
 import org.bonitasoft.studio.ui.validator.ExtensionSupported;
 import org.bonitasoft.studio.ui.validator.FileNameValidator;
@@ -66,12 +65,13 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 import com.google.common.io.Files;
 
@@ -82,7 +82,7 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         implements IDeployable, IRenamable, ITenantResource {
 
     private static final String DEPLOY_ORGA_CMD = "org.bonitasoft.studio.organization.publish";
-    private static final String ORGANIZATION_EXT = ".organization";
+    public static final String ORGANIZATION_EXT = ".organization";
     private ActiveOrganizationProvider activeOrganizationProvider;
     private ActiveOrganizationStyler activeOrganizationStyler;
 
@@ -198,23 +198,15 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
 
     @Override
     protected IWorkbenchPart doOpen() {
-        Wizard newWizard;
         try {
-            newWizard = new ManageOrganizationWizard(getContent());
-        } catch (ReadFileStoreException e) {
-            BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-            return null;
+            return IDE.openEditor(getActivePage(), getResource());
+        } catch (final PartInitException e) {
+            throw new RuntimeException("Failed to open organization.", e);
         }
-        final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), newWizard) {
+    }
 
-            @Override
-            protected Point getInitialSize() {
-                return new Point(1200, 800);
-            }
-
-        };
-        dialog.open();
-        return null;
+    protected IWorkbenchPage getActivePage() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     }
 
     @Override

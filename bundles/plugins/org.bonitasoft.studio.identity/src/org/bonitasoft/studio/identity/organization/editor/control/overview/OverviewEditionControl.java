@@ -91,12 +91,12 @@ public class OverviewEditionControl {
         Composite mainComposite = formPage.getToolkit().createComposite(overviewSection);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(
-                GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 30)
+                GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 10)
                         .create());
 
         createOverviewFields(mainComposite);
 
-        Label separator = formPage.getToolkit().createLabel(mainComposite, "", SWT.SEPARATOR | SWT.HORIZONTAL);
+        Label separator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createOrganizationContentOverview(mainComposite);
@@ -251,6 +251,10 @@ public class OverviewEditionControl {
         groupList.refreshGroupList();
         roleList.refreshRoleList();
         userList.refreshUserList();
+    }
+
+    public void refreshGroupList() {
+        groupList.refreshGroupList();
     }
 
 }

@@ -175,4 +175,8 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
                 memberships, OrganizationPackage.Literals.MEMBERSHIPS__MEMBERSHIP);
     }
 
+    public void refreshOverviewGroupList() {
+        editor.refreshOverviewGroupList();
+    }
+
 }

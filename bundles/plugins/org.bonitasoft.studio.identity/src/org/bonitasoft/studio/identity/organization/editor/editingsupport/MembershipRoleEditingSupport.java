@@ -33,10 +33,11 @@ import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 public class MembershipRoleEditingSupport extends EditingSupport {
 
-    public static final String GROUP_COMBO_EDITOR_ID = "membershipGroupEditingSupport.Combo";
+    public static final String ROLE_COMBO_EDITOR_ID = "membershipRoleEditingSupport.Combo";
 
     private UserFormPage formPage;
     private DataBindingContext ctx;
@@ -56,12 +57,12 @@ public class MembershipRoleEditingSupport extends EditingSupport {
     protected CellEditor getCellEditor(Object element) {
         ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(),
                 SWT.READ_ONLY);
-        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, GROUP_COMBO_EDITOR_ID);
+        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ROLE_COMBO_EDITOR_ID);
         cellEditor.setContentProvider(new ObservableListContentProvider());
         cellEditor.setActivationStyle(ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
         cellEditor.getControl().addListener(SWT.Selection, e -> getViewer().applyEditorValue());
         cellEditor.setLabelProvider(new LabelProviderBuilder<Role>()
-                .withTextProvider(Role::getDisplayName)
+                .withTextProvider(Role::getName)
                 .createLabelProvider());
 
         IObservableValue rolesObservable = EMFObservables.observeDetailValue(ctx.getValidationRealm(),
@@ -91,6 +92,7 @@ public class MembershipRoleEditingSupport extends EditingSupport {
     protected void setValue(Object element, Object value) {
         if (value != null) {
             selectedMembershipRoleNameObservable.setValue(((Role) value).getName());
+            Display.getDefault().asyncExec(() -> getViewer().refresh(true));
         }
     }
 }

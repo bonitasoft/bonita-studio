@@ -80,8 +80,8 @@ public class UserList {
 
     public static final String USER_LIST_VIEWER_ID = "userListViewerid";
     public static final String ADD_USER_BUTTON_ID = "addUserButtonId";
-    private static final String REMOVE_BUTTON_ID = "deleteUserButtonId";
-    private static final String DEFAULT_USER_PASSWORD = "bpm";
+    public static final String REMOVE_BUTTON_ID = "deleteUserButtonId";
+    public static final String DEFAULT_USER_PASSWORD = "bpm";
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
@@ -293,6 +293,7 @@ public class UserList {
         if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
             viewer.getControl().redraw();
         }
+        selectionObservable.setValue(user);
     }
 
     private String generateUsername() {

@@ -37,7 +37,7 @@ import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.bindings.Trigger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -229,11 +229,11 @@ public class TextWidget extends EditableControlWidget {
         return super.horizontalSpacing();
     }
 
-    public ISWTObservableValue observeText(int event) {
+    public ISWTObservableValue<String> observeText(int event) {
         return WidgetProperties.text(event).observe(text);
     }
 
-    public ISWTObservableValue observeText(int delay, int event) {
+    public ISWTObservableValue<String> observeText(int delay, int event) {
         return WidgetProperties.text(event).observeDelayed(delay, text);
     }
 

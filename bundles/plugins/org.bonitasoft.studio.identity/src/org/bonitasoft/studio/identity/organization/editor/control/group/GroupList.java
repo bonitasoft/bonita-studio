@@ -96,8 +96,8 @@ public class GroupList {
 
     public static final String GROUP_LIST_VIEWER_ID = "groupListViewerid";
     public static final String ADD_GROUP_BUTTON_ID = "addGroupButtonId";
-    private static final String ADD_SUB_GROUP_BUTTON_ID = "addSubGroupButtonId";
-    private static final String REMOVE_BUTTON_ID = "deleteGroupButtonId";
+    public static final String ADD_SUB_GROUP_BUTTON_ID = "addSubGroupButtonId";
+    public static final String REMOVE_BUTTON_ID = "deleteGroupButtonId";
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
@@ -250,6 +250,7 @@ public class GroupList {
                         }
                         refactorMemberships(grp, oldGroup);
                         viewer.refresh();
+                        formPage.refreshOverviewGroupList();
                     }
 
                 });
@@ -439,6 +440,7 @@ public class GroupList {
             formPage.observeWorkingCopy().getValue().getGroups().getGroup().remove(selectedGroup);
             viewer.refresh();
             refactorMemberships(null, selectedGroup);
+            formPage.refreshOverviewGroupList();
 
             /**
              * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
@@ -474,6 +476,7 @@ public class GroupList {
         newGroup.setParentPath(path);
         input.add(newGroup);
         refreshGroupList();
+        formPage.refreshOverviewGroupList();
         selectionObservable.setValue(newGroup);
         /**
          * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)

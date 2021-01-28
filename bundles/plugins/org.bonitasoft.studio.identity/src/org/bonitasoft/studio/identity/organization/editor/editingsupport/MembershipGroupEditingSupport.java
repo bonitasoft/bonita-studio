@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 public class MembershipGroupEditingSupport extends EditingSupport {
 
@@ -97,6 +98,7 @@ public class MembershipGroupEditingSupport extends EditingSupport {
         if (value != null) {
             selectedMembershipGroupNameObservable.setValue(((Group) value).getName());
             selectedMembershipGroupParentPathObservable.setValue(((Group) value).getParentPath());
+            Display.getDefault().asyncExec(() -> getViewer().refresh(true));
         }
     }
 }

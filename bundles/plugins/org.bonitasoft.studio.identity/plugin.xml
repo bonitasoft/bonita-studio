@@ -24,8 +24,15 @@
                label="%actors_Label"
                id="org.bonitasoft.studio.actor.organizationMenu">
             <command
-                  commandId="org.bonitasoft.studio.organization.manage"
-                  icon="icons/manage.png"
+                  commandId="org.bonitasoft.studio.identity.organization.create.command"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.identity.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.identity.organization.open.command"
                   style="push">
             </command>
             <separator
@@ -49,13 +56,6 @@
             <command
                   commandId="org.bonitasoft.studio.actors.import"
                   icon="icons/organization_import.png"
-                  style="push">
-            </command>
-            <separator
-                  name="temporarySeparator">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.identity.organization.editor.command"
                   style="push">
             </command>
          </menu>
@@ -111,7 +111,7 @@
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.organization">
          <command
-               commandId="org.bonitasoft.studio.organization.manage"
+               commandId="org.bonitasoft.studio.identity.organization.create.command"
                id="org.bonitasoft.studio.organization.manage.popup.menu"
                label="%newOrganizationLabel"
                mnemonic="O"
@@ -440,8 +440,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.bonitasoft.studio.identity.organization.handler.ManageOrganizationHandler"
-            commandId="org.bonitasoft.studio.application.newWithWizard">
+            class="org.bonitasoft.studio.identity.organization.handler.CreateOrganizationHandler"
+            commandId="org.bonitasoft.studio.application.new">
          <activeWhen>
             <with
                   variable="activeMenuSelection">
@@ -604,6 +604,10 @@
             icon="icons/organization.png">
       </image>
       <image
+            commandId="org.bonitasoft.studio.identity.organization.create.command"
+            icon="icons/organization.png">
+      </image>
+      <image
             commandId="org.bonitasoft.studio.actors.newFilterDef"
             icon="icons/actor_filter-def-new.png">
       </image>
@@ -647,6 +651,16 @@
                class="org.bonitasoft.studio.identity.organization.editor.OrganizationContentDescriber">
          </describer>
       </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution
+            id="orga-xsd">
+         <public
+               publicId="http://documentation.bonitasoft.com/organization-xml-schema/1.1"
+               uri="model/bos-organization.xsd">
+         </public>
+      </catalogContribution>
    </extension>
 
 </plugin>

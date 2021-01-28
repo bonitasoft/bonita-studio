@@ -61,9 +61,12 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class ManageCustomInformationSection {
 
-    private static final Object ADD_CUSTOM_INFO_BUTTON_ID = "addCustomInfoButton";
-    private static final Object REMOVE_CUSTOM_INFO_BUTTON_ID = "rmeoveCustommeInfoButtom";
-    private static final Object CUSTOM_INFO_LIST_VIEWER_ID = "customInfoDefinitionViewer";
+    public static final String ADD_CUSTOM_INFO_BUTTON_ID = "addCustomInfoButton";
+    public static final String REMOVE_CUSTOM_INFO_BUTTON_ID = "rmeoveCustommeInfoButtom";
+    public static final String CUSTOM_INFO_LIST_VIEWER_ID = "customInfoDefinitionViewer";
+    public static final String CUSTOM_INFO_DEFINITION_NAME_TEXTEDITOR = "customInfoDefNameTextEeditor";
+    public static final String CUSTOM_INFO_DEFINITION_DESCRIPTION_TEXTEDITOR = "customInfoDefDescriptionTextEeditor";
+
     private UserFormPage formPage;
     private DataBindingContext ctx;
     private ToolItem deleteCustomInfoItem;
@@ -141,6 +144,7 @@ public class ManageCustomInformationSection {
                 .withTextProvider(CustomUserInfoDefinition::getDescription)
                 .createColumnLabelProvider());
         column.setEditingSupport(new EditingSupportBuilder<CustomUserInfoDefinition>(viewer)
+                .withId(CUSTOM_INFO_DEFINITION_DESCRIPTION_TEXTEDITOR)
                 .withValueProvider(CustomUserInfoDefinition::getDescription)
                 .withValueUpdater((customInfo, description) -> customInfo.setDescription((String) description))
                 .create());
@@ -155,6 +159,7 @@ public class ManageCustomInformationSection {
                 .withStatusProvider(customInfo -> validator.validate(customInfo.getName()))
                 .createColumnLabelProvider());
         column.setEditingSupport(new EditingSupportBuilder<CustomUserInfoDefinition>(viewer)
+                .withId(CUSTOM_INFO_DEFINITION_NAME_TEXTEDITOR)
                 .withValueProvider(CustomUserInfoDefinition::getName)
                 .withValueUpdater((customInfo, name) -> {
                     String oldName = customInfo.getName();

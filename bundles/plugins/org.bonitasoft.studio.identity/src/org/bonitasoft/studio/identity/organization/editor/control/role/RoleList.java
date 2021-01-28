@@ -79,7 +79,7 @@ public class RoleList {
 
     public static final String ROLE_LIST_VIEWER_ID = "roleListViewerid";
     public static final String ADD_ROLE_BUTTON_ID = "addRoleButtonId";
-    private static final String REMOVE_BUTTON_ID = "deleteRoleButtonId";
+    public static final String REMOVE_BUTTON_ID = "deleteRoleButtonId";
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
@@ -255,6 +255,7 @@ public class RoleList {
         role.setName(generateRolename());
         role.setDisplayName(role.getName());
         input.add(role);
+        selectionObservable.setValue(role);
     }
 
     private String generateRolename() {
