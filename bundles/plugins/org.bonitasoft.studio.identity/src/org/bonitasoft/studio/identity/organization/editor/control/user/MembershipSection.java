@@ -32,9 +32,7 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -134,7 +132,7 @@ public class MembershipSection {
                 return false;
             }
         });
-        
+
         createGroupColumn();
         createRoleColumn();
 
@@ -208,11 +206,13 @@ public class MembershipSection {
         if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteMembershipTitle,
                 Messages.deleteMembershipMsg)) {
             input.remove(selectedMembershipObservable.getValue());
+            formPage.refreshSelectedUser();
         }
     }
 
     private void addMembership() {
         input.add(formPage.createDefaultMembership(selectedUserObservable.getValue().getUserName()));
+        formPage.refreshSelectedUser();
     }
 
     public void refreshTable() {
