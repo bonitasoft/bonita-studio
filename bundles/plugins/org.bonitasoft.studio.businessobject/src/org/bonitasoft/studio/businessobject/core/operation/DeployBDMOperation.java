@@ -41,7 +41,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -197,29 +196,19 @@ public class DeployBDMOperation implements IRunnableWithProgress {
     }
 
     protected void forceH2Drop() {
-        if(isH2Vendor()) {
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             BonitaStudioLog.error(e);
         }
         try (Connection conn = DriverManager.getConnection(String.format(
-                "jdbc:h2:file:%s/%s;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;",
-                pathToDBFolder(fileStore.getRepositoryAccessor()),getBusinessDataDBName()), "sa", "");
+                "jdbc:h2:file:%s/business_data.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;",
+                pathToDBFolder(fileStore.getRepositoryAccessor())), "sa", "");
                 Statement stmt = conn.createStatement();) {
             stmt.executeUpdate("DROP ALL OBJECTS");
         } catch (SQLException e) {
             BonitaStudioLog.error(e);
         }
-        }
-    }
-
-    private boolean isH2Vendor() {
-        return DatabaseHandler.DEFAULT_DB_VENDOR.equals(fileStore.getRepository().getDatabaseHandler().getBDMDBVendor());
-    }
-
-    private String getBusinessDataDBName() {
-        return fileStore.getRepository().getDatabaseHandler().getBusinessDataDBName();
     }
 
     protected String locateH2jar(RepositoryAccessor repositoryAccessor) throws IOException {

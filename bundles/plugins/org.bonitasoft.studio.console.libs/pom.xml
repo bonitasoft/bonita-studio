@@ -19,7 +19,6 @@
 		<security.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
 		<console.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
 	    <context.config.file>${tomcat.bundle.dir}/server/conf/context.xml</context.config.file>
-	    <database.setup.file>${tomcat.bundle.dir}/setup/database.properties</database.setup.file>
     </properties>
 
 	<dependencies>
@@ -303,23 +302,6 @@
                             </replacements>
                         </configuration>
                     </execution>
-                    <execution>
-						<id>comment-h2-dir-property</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-						<configuration>
-							<file>${database.setup.file}</file>
-							<replacements>
-								<replacement>
-									<token>h2.database.dir=../h2_database</token>
-									<value># Keep this property commented in Studio environment
-#h2.database.dir=../h2_database</value>
-								</replacement>
-							</replacements>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 		</plugins>
