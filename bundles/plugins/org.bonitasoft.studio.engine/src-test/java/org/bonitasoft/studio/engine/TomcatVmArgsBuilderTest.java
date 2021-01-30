@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
@@ -42,16 +41,13 @@ public class TomcatVmArgsBuilderTest {
     private final File dbLocation = new File("dbLocation");
     @Mock
     private IPreferenceStore preferenceStore;
-    @Mock
-    private DatabaseHandler databaseHandler;
 
     @Before
     public void setUp() throws Exception {
         tomcatVmArgsBuilder = spy(new TomcatVmArgsBuilder(repositoryAccessor, preferenceStore));
         doNothing().when(tomcatVmArgsBuilder).addWatchDogProperties(any(StringBuilder.class));
         doReturn("test.bonita.product.application.id").when(tomcatVmArgsBuilder).getProductApplicationId();
-        when(databaseHandler.getDBLocation()).thenReturn(dbLocation);
-        doReturn(databaseHandler).when(tomcatVmArgsBuilder).getDatabaseHandler();
+        doReturn(dbLocation).when(tomcatVmArgsBuilder).getDBLocation();
     }
 
     @Test
