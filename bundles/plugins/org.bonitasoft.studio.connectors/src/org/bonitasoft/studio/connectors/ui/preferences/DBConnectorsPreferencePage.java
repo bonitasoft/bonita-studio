@@ -35,6 +35,7 @@ import org.bonitasoft.studio.connectors.ui.provider.DabaBaseConnectorDefinitionL
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversLabelProvider;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -229,7 +230,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
                 if (dialog.open() == Window.OK) {
                     List<String> jars = getJars();
                     int size = jars.size();
-                    List<IRepositoryFileStore> selectedJars = dialog.getSelectedJars();
+                    List<DependencyFileStore> selectedJars = dialog.getSelectedJars();
                     for (IRepositoryFileStore jar : selectedJars) {
                         if (!jars.contains(jar.getName())) {
                             jars.add(jar.getName());

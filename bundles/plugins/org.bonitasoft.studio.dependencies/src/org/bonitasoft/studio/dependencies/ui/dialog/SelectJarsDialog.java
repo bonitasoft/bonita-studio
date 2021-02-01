@@ -23,6 +23,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -40,8 +41,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SelectJarsDialog extends ManageJarDialog {
 
-    private List<IRepositoryFileStore> selectedJars;
-    private IRepositoryFileStore selectedJar;
+    private List<DependencyFileStore> selectedJars;
+    private DependencyFileStore selectedJar;
 
     public SelectJarsDialog(Shell parentShell) {
         super(parentShell);
@@ -82,11 +83,11 @@ public class SelectJarsDialog extends ManageJarDialog {
         newShell.setText(Messages.selectJars) ;
     }
 
-    public List<IRepositoryFileStore> getSelectedJars() {
+    public List<DependencyFileStore> getSelectedJars() {
         return selectedJars;
     }
 
-    public void setSelectedJars(List<IRepositoryFileStore> selectedJars) {
+    public void setSelectedJars(List<DependencyFileStore> selectedJars) {
         this.selectedJars = selectedJars;
     }
 
@@ -94,7 +95,7 @@ public class SelectJarsDialog extends ManageJarDialog {
         return selectedJar;
     }
 
-    public void setSelectedJar(IRepositoryFileStore selectedJar) {
+    public void setSelectedJar(DependencyFileStore selectedJar) {
         this.selectedJar = selectedJar;
     }
 

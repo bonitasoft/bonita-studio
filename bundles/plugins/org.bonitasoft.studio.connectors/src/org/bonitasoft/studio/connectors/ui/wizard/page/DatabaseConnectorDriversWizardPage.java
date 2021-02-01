@@ -25,6 +25,7 @@ import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFi
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversLabelProvider;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -136,7 +137,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
                 if (dialog.open() == Window.OK) {
                     List<String> jars = getJars();
                     int size = jars.size();
-                    List<IRepositoryFileStore> selectedJars = dialog.getSelectedJars();
+                    List<DependencyFileStore> selectedJars = dialog.getSelectedJars();
                     for (IRepositoryFileStore jar : selectedJars) {
                         jars.add(jar.getName());
                     }

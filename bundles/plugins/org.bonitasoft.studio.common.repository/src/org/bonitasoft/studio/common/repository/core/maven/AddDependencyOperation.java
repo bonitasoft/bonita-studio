@@ -20,6 +20,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.m2e.core.MavenPlugin;
 
 public class AddDependencyOperation extends MavenModelOperation {
 
@@ -43,7 +44,7 @@ public class AddDependencyOperation extends MavenModelOperation {
 
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
-        Model model = readModel(getCurrentProject());
+        Model model = getMavenModel(getCurrentProject(), monitor);
 
         Dependency dependency = new Dependency();
         dependency.setArtifactId(artifactId);

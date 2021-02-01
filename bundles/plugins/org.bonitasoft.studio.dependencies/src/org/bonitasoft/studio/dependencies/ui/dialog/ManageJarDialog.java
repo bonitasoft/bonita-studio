@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.dependencies.ui.dialog;
 
@@ -26,6 +23,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.dependencies.handler.AddJarsHandler;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -38,9 +36,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -58,7 +54,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Aurelien Pupier
- *
  */
 public class ManageJarDialog extends Dialog {
 
@@ -72,18 +67,18 @@ public class ManageJarDialog extends Dialog {
 
     public ManageJarDialog(final Shell parentShell) {
         super(parentShell);
-        libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+        libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.manageJarTitle) ;
+        newShell.setText(Messages.manageJarTitle);
     }
 
     @Override
     protected Control createDialogArea(final Composite parent) {
-        context = new DataBindingContext() ;
+        context = new DataBindingContext();
         final Composite composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
         new Label(composite, SWT.NONE); //dummy
@@ -92,8 +87,6 @@ public class ManageJarDialog extends Dialog {
         createTree(composite);
         return composite;
     }
-
-
 
     protected void createLeftButtonPanel(final Composite composite) {
         final Composite leftPanel = new Composite(composite, composite.getStyle());
@@ -109,24 +102,26 @@ public class ManageJarDialog extends Dialog {
         removeButton.setText(Messages.removeJar);
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-                final IRunnableWithProgress runnable = new IRunnableWithProgress(){
+                final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
                     @Override
                     public void run(final IProgressMonitor monitor)
                             throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.beginToRemoveJars, selection.size());
-                        for(final Object selected :selection.toList()){
+                        for (final Object selected : selection.toList()) {
                             if (monitor.isCanceled()) {
                                 return;
                             }
-                            if(selected instanceof IRepositoryFileStore){
+                            if (selected instanceof IRepositoryFileStore) {
                                 try {
                                     monitor.worked(1);
-                                    monitor.setTaskName(Messages.removingJar + " : "+ ((IRepositoryFileStore) selected).getName());
-                                    ((IRepositoryFileStore) selected).delete() ;
+                                    monitor.setTaskName(
+                                            Messages.removingJar + " : " + ((IRepositoryFileStore) selected).getName());
+                                    ((IRepositoryFileStore) selected).delete();
                                 } catch (final Exception e1) {
                                     BonitaStudioLog.error(e1);
                                 }
@@ -142,23 +137,24 @@ public class ManageJarDialog extends Dialog {
                 } catch (final InterruptedException e2) {
                     BonitaStudioLog.error(e2);
                 }
-                /*Due to some file handle issue and lock on windows we need to warn user if the jars are not correctly deleted*/
-                if(Platform.getOS().equals(Platform.OS_WIN32)){
+                /* Due to some file handle issue and lock on windows we need to warn user if the jars are not correctly deleted */
+                if (Platform.getOS().equals(Platform.OS_WIN32)) {
                     boolean shouldRestart = false;
-                    for(final Object selected :selection.toList()){
-                        if(selected instanceof IRepositoryFileStore){
-                            if(((IRepositoryFileStore) selected).getResource().exists()){
+                    for (final Object selected : selection.toList()) {
+                        if (selected instanceof IRepositoryFileStore) {
+                            if (((IRepositoryFileStore) selected).getResource().exists()) {
                                 shouldRestart = true;
                                 break;
                             }
                         }
                     }
 
-                    if(shouldRestart){
-                        MessageDialog.openInformation(getShell(), Messages.informationDeleteJarTitle, Messages.informationDeleteJarMessage);
+                    if (shouldRestart) {
+                        MessageDialog.openInformation(getShell(), Messages.informationDeleteJarTitle,
+                                Messages.informationDeleteJarMessage);
                     }
                 }
-                /*Refresh viewer*/
+                /* Refresh viewer */
                 tableViewer.setInput(libStore.getChildren());
                 tableViewer.refresh(true);
 
@@ -172,6 +168,7 @@ public class ManageJarDialog extends Dialog {
         addButton.setLayoutData(GridDataFactory.fillDefaults().create());
         addButton.setText(Messages.importJar);
         addButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 try {
@@ -179,8 +176,8 @@ public class ManageJarDialog extends Dialog {
                 } catch (final ExecutionException e1) {
                     BonitaStudioLog.error(e1);
                 }
-                /*Refresh viewer*/
-                tableViewer.setInput(libStore.getChildren()) ;
+                /* Refresh viewer */
+                tableViewer.setInput(libStore.getChildren());
             }
         });
     }
@@ -194,17 +191,14 @@ public class ManageJarDialog extends Dialog {
         tableViewer.setLabelProvider(new FileStoreLabelProvider());
         tableViewer.setInput(libStore.getChildren());
 
-        tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent arg0) {
-                if(removeButton != null){
-                    removeButton.setEnabled(!tableViewer.getSelection().isEmpty());
-                }
+        tableViewer.addSelectionChangedListener(e -> {
+            if (removeButton != null) {
+                DependencyFileStore fStore = (DependencyFileStore) tableViewer.getStructuredSelection()
+                        .getFirstElement();
+                removeButton.setEnabled(!tableViewer.getSelection().isEmpty()
+                        && fStore.canBeDeleted());
             }
         });
-
-
 
     }
 
@@ -241,12 +235,11 @@ public class ManageJarDialog extends Dialog {
         if (returnValue) {
             tableViewer.getTable().dispose();
         }
-        if(context != null){
-            context.dispose() ;
+        if (context != null) {
+            context.dispose();
         }
         return returnValue;
 
     }
-
 
 }
