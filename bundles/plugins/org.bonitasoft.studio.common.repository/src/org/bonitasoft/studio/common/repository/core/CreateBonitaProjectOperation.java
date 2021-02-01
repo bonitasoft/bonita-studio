@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
@@ -94,7 +93,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         File pom = pomFile.getLocation().toFile();
         try {
             if (!pom.createNewFile()) {
-                throw new CoreException(new Status(IStatus.ERROR, getClass(), 
+                throw new CoreException(new Status(IStatus.ERROR, getClass(),
                         "Failed to create pom.xml file.",
                         new IOException("Failed to create pom.xml file.")));
             }

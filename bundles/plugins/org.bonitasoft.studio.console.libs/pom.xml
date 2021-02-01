@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
@@ -22,26 +23,26 @@
 
 	<dependencies>
 		<dependency>
-		    <groupId>org.bonitasoft.engine</groupId>
-		    <artifactId>bonita-client</artifactId>
-		    <version>${engine.version}</version>
-		    <exclusions>
-		        <exclusion>
-		           <groupId>javax.xml.bind</groupId>
-	 	     	   <artifactId>jsr173_api</artifactId>
-		        </exclusion>
-		    </exclusions>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-client</artifactId>
+			<version>${engine.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jsr173_api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>org.bonitasoft.engine</groupId>
-		    <artifactId>bonita-common</artifactId>
-	            <version>${engine.version}</version>
-		    <exclusions>
-		        <exclusion>
-		            <groupId>javax.xml.bind</groupId>
-	 		    	<artifactId>jsr173_api</artifactId>
-		        </exclusion>
-		    </exclusions>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-common</artifactId>
+			<version>${engine.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jsr173_api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
@@ -56,19 +57,19 @@
 							<goal>parse-version</goal>
 						</goals>
 					</execution>
-                    <execution>
-                        <id>regex-property</id>
-                        <goals>
-                          <goal>regex-property</goal>
-                        </goals>
-                        <configuration>
-                          <name>osgiVersion</name>
-                          <value>${parsedVersion.osgiVersion}</value>
-                          <regex>.SNAPSHOT</regex>
-                          <replacement>.qualifier</replacement>
-                          <failIfNoMatch>false</failIfNoMatch>
-                        </configuration>
-                      </execution>
+					<execution>
+						<id>regex-property</id>
+						<goals>
+							<goal>regex-property</goal>
+						</goals>
+						<configuration>
+							<name>osgiVersion</name>
+							<value>${parsedVersion.osgiVersion}</value>
+							<regex>.SNAPSHOT</regex>
+							<replacement>.qualifier</replacement>
+							<failIfNoMatch>false</failIfNoMatch>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -183,12 +184,12 @@
 						<supportedProjectType>eclipse-plugin</supportedProjectType>
 					</supportedProjectTypes>
 					<instructions>
-                        <_removeheaders>
-                            Bnd-LastModified,
-                            Build-Jdk,
-                            Built-By,
-                            Tool
-                        </_removeheaders>
+						<_removeheaders>
+							Bnd-LastModified,
+							Build-Jdk,
+							Built-By,
+							Tool
+						</_removeheaders>
 						<_exportcontents>
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
 							!org.bonitasoft.engine.*.impl.db.archive;version="0.0.0",

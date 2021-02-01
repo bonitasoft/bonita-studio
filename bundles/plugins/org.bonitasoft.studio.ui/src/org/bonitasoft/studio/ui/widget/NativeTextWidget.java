@@ -16,6 +16,7 @@ package org.bonitasoft.studio.ui.widget;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
@@ -36,13 +37,13 @@ public class NativeTextWidget extends TextWidget {
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
             boolean useCompositeMessageDecorator,
             Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
-            boolean transactionalEdit, BiConsumer<String, String> onEdit,
+            boolean transactionalEdit, BiConsumer<String, String> onEdit, Supplier<IStatus> canEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> editableStrategy,
             Optional<DataBindingContext> ctx, int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, transactionalEdit, onEdit,
-                toolkit, proposalProvider, editableStrategy, ctx, style);
+                canEdit, toolkit, proposalProvider, editableStrategy, ctx, style);
     }
 
     @Override
