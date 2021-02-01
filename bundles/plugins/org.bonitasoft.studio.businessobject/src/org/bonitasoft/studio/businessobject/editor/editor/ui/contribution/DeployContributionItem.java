@@ -49,7 +49,7 @@ public class DeployContributionItem extends ContributionItem {
         item = new ToolItem(parent, SWT.PUSH);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ID);
         item.setText(Messages.deploy);
-        item.setToolTipText(Messages.deploy);
+        item.setToolTipText(Messages.deployBdmHint);
         item.setImage(Pics.getImage(PicsConstants.deploy));
         item.addListener(SWT.Selection, event -> deploy(false));
         item.setEnabled(isEnabled());

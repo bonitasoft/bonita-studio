@@ -71,7 +71,7 @@ public class SearchWidget extends TextWidget {
             Optional<DataBindingContext> ctx,
             int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
-                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, toolkit,
+                message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
                 proposalProvider, editableStrategy, ctx, style);
     }
 

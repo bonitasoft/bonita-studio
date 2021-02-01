@@ -59,5 +59,6 @@ public class Messages extends NLS {
     public static String exportCancel;
     public static String exportCancelTitle;
     public static String closeNotificationJobTitle;
+    public static String fieldCannotBeEditedTitle;
 
 }

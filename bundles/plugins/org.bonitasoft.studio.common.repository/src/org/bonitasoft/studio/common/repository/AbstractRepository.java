@@ -89,6 +89,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
+import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
@@ -107,7 +108,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
     public static final Set<String> LEGACY_REPOSITORIES = new HashSet<>();
-     
+
     static {
         LEGACY_REPOSITORIES.add("application_resources");
         LEGACY_REPOSITORIES.add("forms");
@@ -269,6 +270,17 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
         hookResourceListeners();
         updateCurrentRepositoryPreference();
+        new UpdateMavenProjectJob(new IProject[] { project },
+                false,
+                true,
+                true,
+                true, true) {
+
+            @Override
+            public boolean belongsTo(Object family) {
+                return Objects.equals(family, this);
+            }
+        }.schedule();
         return this;
     }
 

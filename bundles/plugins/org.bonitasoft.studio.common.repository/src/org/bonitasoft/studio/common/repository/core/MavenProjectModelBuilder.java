@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -104,23 +103,20 @@ public class MavenProjectModelBuilder {
         model.setDescription(getDescription());
 
         model.addProperty("bonita.version", getBonitaVersion());
-        model.addProperty("groovy.version", "2.4.20");
+        model.addProperty("groovy.version", "2.4.21");
         model.addProperty("maven.compiler.source", "11");
         model.addProperty("maven.compiler.target", "11");
         model.addProperty("project.build.sourceEncoding", "UTF-8");
         model.addProperty("project.reporting.outputEncoding", "UTF-8");
         model.addProperty("build-helper-maven-plugin.version", "3.2.0");
-//        model.addProperty("maven-compiler-plugin.version", "3.8.1");
         model.addProperty("maven-install-plugin.version", "3.0.0-M1");
-//        model.addProperty("groovy-eclipse-compiler.version", "3.6.0-03");
-//        model.addProperty("groovy-eclipse-batch.version", "2.4.21-01");
 
         if (PlatformUtil.isACommunityBonitaProduct()) {
-            model.addDependency(newDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}", Artifact.SCOPE_PROVIDED));
+            model.addDependency(providedDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}"));
         } else {
-            model.addDependency(newDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}", Artifact.SCOPE_PROVIDED));
+            model.addDependency(providedDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}"));
         }
-        model.addDependency(newDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}", Artifact.SCOPE_PROVIDED));
+        model.addDependency(providedDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"));
 
         dependencies.stream().forEach(model::addDependency);
 
@@ -131,13 +127,6 @@ public class MavenProjectModelBuilder {
                 Collections.singletonList("add-source"),
                 createBuilderHelperMavenPluginConfiguration()));
         build.addPlugin(helperPlugin);
-        
-//        Plugin compilerPlugin = plugin("org.apache.maven.plugins", "maven-compiler-plugin",
-//                "${maven-compiler-plugin.version}");
-//        compilerPlugin.setConfiguration(createCompilerPluginConfiguration());
-//        compilerPlugin.addDependency(newDependency("org.codehaus.groovy", "groovy-eclipse-compiler", "${groovy-eclipse-compiler.version}", Artifact.SCOPE_COMPILE));
-//        compilerPlugin.addDependency(newDependency("org.codehaus.groovy", "groovy-eclipse-batch", "${groovy-eclipse-batch.version}", Artifact.SCOPE_COMPILE));
-//        build.addPlugin(compilerPlugin);
 
         PluginManagement pluginManagement = new PluginManagement();
         pluginManagement.addPlugin(plugin("org.apache.maven.plugins", "maven-install-plugin",
@@ -163,9 +152,9 @@ public class MavenProjectModelBuilder {
         return plugin;
     }
 
-    private Dependency newDependency(String groupId, String artifactId, String version, String scope) {
+    private Dependency providedDependency(String groupId, String artifactId, String version) {
         Dependency dependency = new Dependency();
-        dependency.setScope(scope);
+        dependency.setScope("provided");
         dependency.setGroupId(groupId);
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
@@ -188,14 +177,6 @@ public class MavenProjectModelBuilder {
         sources.addChild(srcGroovy);
         sources.addChild(providedGroovySrc);
         pluginConfiguration.addChild(sources);
-        return pluginConfiguration;
-    }
-    
-    private Xpp3Dom createCompilerPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-        Xpp3Dom compilerId = new Xpp3Dom("compilerId");
-        compilerId.setValue("groovy-eclipse-compiler");
-        pluginConfiguration.addChild(compilerId);
         return pluginConfiguration;
     }
 

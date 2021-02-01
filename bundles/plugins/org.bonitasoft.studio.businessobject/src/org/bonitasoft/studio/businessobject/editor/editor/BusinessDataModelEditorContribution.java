@@ -164,15 +164,10 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        if (workingCopyObservable.getValue().getPackages().stream()
-                .map(Package::getBusinessObjects)
-                .flatMap(Collection::stream).count() == 0) {
+        if (!containsBusinessObjects(workingCopyObservable)) {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelNotSavableTitle,
                     Messages.emptyModelNotSavable);
-        } else if (workingCopyObservable.getValue().getPackages().stream() // TODO on packages
-                .map(Package::getBusinessObjects)
-                .flatMap(Collection::stream)
-                .anyMatch(bo -> validator.validate(bo).getSeverity() == ValidationStatus.ERROR)) {
+        } else if (isOnError(workingCopyObservable)) {
             MultiStatus status = workingCopyObservable.getValue().getPackages().stream()
                     .map(Package::getBusinessObjects)
                     .flatMap(Collection::stream)
@@ -184,12 +179,25 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.modelNotSavableTitle,
                     Messages.modelNotSavable);
         } else {
-                modelFormPage.doSave(monitor);
-                constraintFormPage.doSave(monitor);
-                queryFormPage.doSave(monitor);
-                indexFormPage.doSave(monitor);
-                sourceEditor.doSave(monitor);
+            modelFormPage.doSave(monitor);
+            constraintFormPage.doSave(monitor);
+            queryFormPage.doSave(monitor);
+            indexFormPage.doSave(monitor);
+            sourceEditor.doSave(monitor);
         }
+    }
+
+    public boolean containsBusinessObjects(IObservableValue<BusinessObjectModel> workingCopyObservable) {
+        return workingCopyObservable.getValue().getPackages().stream()
+                .map(Package::getBusinessObjects)
+                .flatMap(Collection::stream).count() > 0;
+    }
+
+    public boolean isOnError(IObservableValue<BusinessObjectModel> workingCopyObservable) {
+        return workingCopyObservable.getValue().getPackages().stream()
+                .map(Package::getBusinessObjects)
+                .flatMap(Collection::stream)
+                .anyMatch(bo -> validator.validate(bo).getSeverity() == ValidationStatus.ERROR);
     }
 
     @Override
@@ -306,11 +314,12 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
 
     @Override
     protected void editorFileInputChanged(IFileEditorInput input) {
-        if(BusinessObjectModelFileStore.BOM_FILENAME.equals(input.getName())) {
+        if (BusinessObjectModelFileStore.BOM_FILENAME.equals(input.getName())) {
             BDMArtifactDescriptor artifactDescriptor = loadBdmArtifactDescriptor();
             workingCopyObservable.getRealm().asyncExec(() -> {
                 try {
-                    String stringContent = IOUtils.toString(input.getAdapter(IFile.class).getContents(), StandardCharsets.UTF_8.name());
+                    String stringContent = IOUtils.toString(input.getAdapter(IFile.class).getContents(),
+                            StandardCharsets.UTF_8.name());
                     workingCopyObservable
                             .setValue(converter.toEmfModel(parser.unmarshall(stringContent.getBytes()), artifactDescriptor));
                 } catch (JAXBException | IOException | SAXException | CoreException e) {

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -38,6 +39,7 @@ import org.eclipse.jface.bindings.Trigger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -73,6 +75,7 @@ public class TextWidget extends EditableControlWidget {
         protected Optional<Listener> buttonListner = Optional.empty();
         protected boolean transactionalEdit = false;
         private BiConsumer<String, String> onEdit;
+        private Supplier<IStatus> canEdit;
         protected Optional<IContentProposalProvider> proposalProvider = Optional.empty();
         private Optional<String> tooltip = Optional.empty();
         protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
@@ -124,6 +127,14 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
+        public Builder transactionalEdit(BiConsumer<String /* old value */, String /* new value */> onEdit,
+                Supplier<IStatus> canEdit) {
+            this.transactionalEdit = true;
+            this.onEdit = onEdit;
+            this.canEdit = canEdit;
+            return this;
+        }
+
         /**
          * add an onClick action to the button
          */
@@ -154,11 +165,11 @@ public class TextWidget extends EditableControlWidget {
             final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3())
                     ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
-                            tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
+                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
                             Optional.ofNullable(ctx), style)
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
-                            tooltipButton, transactionalEdit, onEdit, toolkit, proposalProvider, editableStrategy,
+                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
                             Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
@@ -184,6 +195,7 @@ public class TextWidget extends EditableControlWidget {
     private Optional<ToolItem> buttonWithImage = Optional.empty();
     private final boolean transactionalEdit;
     private final Optional<BiConsumer<String, String>> onEdit;
+    private Optional<Supplier<IStatus>> canEdit;
     private boolean editing = false;
     private ToolItem okButton;
     private final Optional<IContentProposalProvider> proposalProvider;
@@ -198,7 +210,7 @@ public class TextWidget extends EditableControlWidget {
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
             boolean useCompositeMessageDecorator,
             Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
-            boolean transactionalEdit, BiConsumer<String, String> onEdit,
+            boolean transactionalEdit, BiConsumer<String, String> onEdit, Supplier<IStatus> canEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
             Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
@@ -206,6 +218,7 @@ public class TextWidget extends EditableControlWidget {
         this.transactionalEdit = transactionalEdit;
         this.style = style;
         this.onEdit = Optional.ofNullable(onEdit);
+        this.canEdit = Optional.ofNullable(canEdit);
         this.proposalProvider = proposalProvider;
         this.enableStrategy = enableStrategy;
         this.ctx = ctx;
@@ -405,6 +418,13 @@ public class TextWidget extends EditableControlWidget {
     }
 
     private void edit(ToolBar toolBar) {
+        if (canEdit.isPresent()) {
+            IStatus canEditStatus = canEdit.get().get();
+            if (!canEditStatus.isOK()) {
+                MessageDialog.openError(getShell(), Messages.fieldCannotBeEditedTitle, canEditStatus.getMessage());
+                return;
+            }
+        }
         Stream.of(toolBar.getItems()).forEach(ToolItem::dispose);
         updateEditableState(true);
 
