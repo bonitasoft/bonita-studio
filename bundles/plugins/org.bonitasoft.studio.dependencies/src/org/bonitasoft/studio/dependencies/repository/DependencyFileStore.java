@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.dependencies.repository;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -145,6 +148,14 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
             return !runtimeDependencies.get(libName).equals(libVersion); // same libname & !same version
         }
         return false;
+    }
+
+    public File getFile() {
+        return getResource().getLocation().toFile();
+    }
+    
+    public List<File> getTransitiveDependencies(){
+        return Collections.emptyList();
     }
 
 }

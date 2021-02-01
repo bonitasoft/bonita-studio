@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -56,9 +57,9 @@ public class JarBarResourceProvider implements BARResourcesProvider {
             for (final Fragment fragment : fragments) {
                 if (fragment.getType().equals(FragmentTypes.JAR)) {
                     if (fragment.isExported()) {
-                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue(), true);
+                        final DependencyFileStore jarArtifact = store.getChild(fragment.getValue(), true);
                         if (jarArtifact != null) {
-                            final File file = jarArtifact.getResource().getLocation().toFile();
+                            final File file = jarArtifact.getFile();
                             try {
                                 resources.add(new BarResource(file.getName(), Files.toByteArray(file)));
                             } catch (final Exception e) {

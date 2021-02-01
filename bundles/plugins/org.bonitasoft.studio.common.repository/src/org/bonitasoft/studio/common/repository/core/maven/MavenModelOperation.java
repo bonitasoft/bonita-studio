@@ -19,10 +19,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -30,26 +29,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
-    private MavenXpp3Reader pomReader = new MavenXpp3Reader();
+    
     private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
-    protected Model readModel(IProject project) throws CoreException {
-        var pomFile = project.getFile("pom.xml");
-        if (!pomFile.exists()) {
-            return null;
-        }
-        try {
-            return pomReader.read(pomFile.getContents());
-        } catch (IOException | XmlPullParserException e) {
-            throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, null, e));
-        }
-    }
-    
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        var pomFile = project.getFile("pom.xml");
+        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
             pomWriter.write(stream, model);
         } catch (IOException e) {
@@ -62,4 +51,16 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     protected IProject getCurrentProject() {
         return RepositoryManager.getInstance().getCurrentRepository().getProject();
     }
+    
+    protected Model getMavenModel(IProject project, IProgressMonitor monitor) throws CoreException {
+        return getMavenProject(project, monitor)
+                .getModel();
+    }
+
+    private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
+        return MavenPlugin.getMavenProjectRegistry().getProject(project)
+                .getMavenProject(monitor);
+    }
+    
+  
 }

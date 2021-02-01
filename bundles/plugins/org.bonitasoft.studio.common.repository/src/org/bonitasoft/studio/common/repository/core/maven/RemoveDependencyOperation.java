@@ -39,7 +39,7 @@ public class RemoveDependencyOperation extends MavenModelOperation {
 
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
-        Model model = readModel(getCurrentProject());
+        Model model = getMavenModel(getCurrentProject(), monitor);
 
         Dependency dependency = new Dependency();
         dependency.setArtifactId(artifactId);
