@@ -29,10 +29,12 @@ public interface BonitaThemeConstants {
     public static final String EDITOR_TOOLBAR_TEXT_COLOR = "editorToolbarTextColor";
     public static final String TABLE_BACKGROUND_COLOR = "tableBackground";
     public static final String NOTIFICATION_COMPOSITE = "notificationComposite";
+    public static final String WIZARD_HIGHLIGHT_BACKGROUND = "wizardHighlightBackground";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
     public static final String TEXT_READ_ONLY = "readOnly";
     public static final String SEARCH_WIDGET = "searchWidget";
+    public static final String SUCCESS_TEXT_COLOR = "sucessTextColor";
 
 }

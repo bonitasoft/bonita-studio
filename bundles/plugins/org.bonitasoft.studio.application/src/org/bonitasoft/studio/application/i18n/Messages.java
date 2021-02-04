@@ -140,6 +140,24 @@ public class Messages extends NLS {
     public static String incompatibleModelFoundTitle;
     public static String incompatibleModelFoundMsg;
     public static String deployArtifacts;
+    public static String extendProjectTitle;
+    public static String extendProjectDescription;
+    public static String addToProject;
+    public static String removeFromProject;
+    public static String find;
+    public static String go;
+    public static String type;
+    public static String all;
+    public static String connectorType;
+    public static String actorFilterType;
+    public static String extensionSelectedForAdd;
+    public static String addDependenciesError;
+    public static String noResultFound;
+    public static String version;
+    public static String install;
+    public static String fetchingExtensions;
+    public static String installingExtensions;
+    public static String filteringExtensions;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

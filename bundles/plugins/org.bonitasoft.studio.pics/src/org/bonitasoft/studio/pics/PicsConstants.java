@@ -414,4 +414,10 @@ public class PicsConstants {
     public static String add_decorator = "decoration/add.png";
     public static String add_subelement_decorator = "decoration/add_subelement.png";
 
+    public static String extendProject24 = "extendProject24.png";
+    public static String extendProject48 = "extendProject48.png";
+
+    public static String connectorDefaultIcon = "connectorDefaultIcon.png";
+    public static String actorfilterDefaultIcon = "actorfilterDefaultIcon.png";
+
 }

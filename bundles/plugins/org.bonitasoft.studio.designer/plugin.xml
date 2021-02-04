@@ -268,7 +268,8 @@
       point="org.bonitasoft.studio.coolbarContributionItem">
    <coolbarItem
          class="org.bonitasoft.studio.designer.ui.contribution.OpenUIDesignerCoolBarItem"
-         toolbarPosition="9">
+         priority="0"
+         toolbarPosition="11">
    </coolbarItem>
 </extension>
 <extension
