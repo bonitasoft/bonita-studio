@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.ui.wizard;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.bonitasoft.studio.ui.databinding.NoMessageWizardPageSupport;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -23,7 +22,6 @@ import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 public class WizardPageBuilder {
 
@@ -43,7 +41,8 @@ public class WizardPageBuilder {
     /**
      * The {@link Supplier} of the {@link DataBindingContext} to use with this page.
      * 
-     * @see {@link org.bonitasoft.studio.ui.wizard.WizardPageBuilder#keepDatabindingContextAlive() keepDatabindingContextAlive}
+     * @see {@link org.bonitasoft.studio.ui.wizard.WizardPageBuilder#keepDatabindingContextAlive()
+     *      keepDatabindingContextAlive}
      */
     public WizardPageBuilder withDatabindingContext(DataBindingContext context) {
         this.context = Optional.ofNullable(context);
@@ -87,13 +86,13 @@ public class WizardPageBuilder {
     public ControlSupplier getControlSupplier() {
         return controlSupplier;
     }
-    
+
     class InternalWizardPage extends WizardPage implements IPageChangedListener {
 
         protected InternalWizardPage(String title) {
             super(title);
         }
-        
+
         @Override
         public void createControl(Composite parent) {
             final DataBindingContext ctx = context.orElse(new DataBindingContext());

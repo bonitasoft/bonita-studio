@@ -81,3 +81,11 @@ Composite#groovyViewer > * > * > * > * > * > * > * {
 #readOnly {
     background-color: #454545;
 }
+
+Label#sucessTextColor {
+    color: #94d66d;
+}
+
+.wizardHighlightBackground {
+    background-color: #2F2F2F;
+}

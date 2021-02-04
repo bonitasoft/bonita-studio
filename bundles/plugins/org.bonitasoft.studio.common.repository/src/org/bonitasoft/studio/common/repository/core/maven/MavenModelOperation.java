@@ -14,53 +14,27 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
-    
-    private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
+    private MavenProjectHelper helper = new MavenProjectHelper();
+
+    protected Model readModel(IProject project) throws CoreException {
+        return helper.getMavenModel(project);
+    }
 
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
-        try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
-            pomWriter.write(stream, model);
-        } catch (IOException e) {
-            throw new CoreException(
-                    new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
-        }
-        pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        helper.saveModel(project, model, monitor);
     }
 
     protected IProject getCurrentProject() {
         return RepositoryManager.getInstance().getCurrentRepository().getProject();
     }
-    
-    protected Model getMavenModel(IProject project, IProgressMonitor monitor) throws CoreException {
-        return getMavenProject(project, monitor)
-                .getModel();
-    }
 
-    private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
-        return MavenPlugin.getMavenProjectRegistry().getProject(project)
-                .getMavenProject(monitor);
-    }
-    
-  
 }

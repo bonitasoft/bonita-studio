@@ -36,14 +36,14 @@
   <extension
         point="org.bonitasoft.studio.coolbarContributionItem">
      <coolbarItem
-           class="org.bonitasoft.studio.engine.coolbar.RunCoolbarItem"
+           class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
            priority="0"
            toolbarPosition="12">
      </coolbarItem>
      <coolbarItem
-           class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
+           class="org.bonitasoft.studio.engine.coolbar.RunCoolbarItem"
            priority="0"
-           toolbarPosition="13">
+           toolbarPosition="15">
      </coolbarItem>
   </extension>
      <extension

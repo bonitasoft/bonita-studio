@@ -1158,24 +1158,33 @@
             toolbarPosition="0">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.SaveCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.ExtendProjectCoolbarItem"
             priority="0"
             toolbarPosition="2">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.CopyCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.DeployCoolbarItem"
+            toolbarPosition="3">
+      </coolbarItem>
+      <coolbarItem
+            class="org.bonitasoft.studio.application.coolbar.SaveCoolbarItem"
             priority="0"
             toolbarPosition="6">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.PasteCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
             priority="0"
-            toolbarPosition="7">
+            toolbarPosition="10">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
             priority="0"
-            toolbarPosition="8">
+            toolbarPosition="13">
+      </coolbarItem>
+      <coolbarItem
+            class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
+            priority="0"
+            toolbarPosition="16">
       </coolbarItem>
       <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem"
@@ -1191,15 +1200,6 @@
             class="org.bonitasoft.studio.application.coolbar.WelcomeCoolbarItem"
             priority="0"
             toolbarPosition="20">
-      </coolbarItem>
-      <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
-            priority="0"
-            toolbarPosition="15">
-      </coolbarItem>
-      <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.DeployCoolbarItem"
-            toolbarPosition="10">
       </coolbarItem>
    </extension>
    <extension

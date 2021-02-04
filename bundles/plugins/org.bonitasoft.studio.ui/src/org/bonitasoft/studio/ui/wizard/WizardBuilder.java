@@ -47,6 +47,7 @@ public class WizardBuilder<T> {
     private int width = SWT.DEFAULT;
     private int height = SWT.DEFAULT;
     private int nbLine = 0;
+    private boolean fixedInitialSize = false;
 
     private WizardBuilder() {
     }
@@ -81,6 +82,14 @@ public class WizardBuilder<T> {
      */
     public WizardBuilder<T> onFinish(FinishHandler<T> handler) {
         this.finishHandler = handler;
+        return this;
+    }
+
+    /**
+     * fix the initial size of the wizard withg the height and width provided
+     */
+    public WizardBuilder<T> withFixedInitialSize() {
+        this.fixedInitialSize = true;
         return this;
     }
 
@@ -140,10 +149,10 @@ public class WizardBuilder<T> {
             @Override
             protected Point getInitialSize() {
                 final Point initialSize = super.getInitialSize();
-                if (initialSize.x > width) {
+                if (!fixedInitialSize && initialSize.x > width) {
                     width = initialSize.x;
                 }
-                if (initialSize.y > height) {
+                if (!fixedInitialSize && initialSize.y > height) {
                     height = initialSize.y;
                 }
                 final Point size = new Point(width == SWT.DEFAULT ? initialSize.x : width,

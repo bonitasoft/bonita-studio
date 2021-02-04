@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -80,7 +79,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         mavenProjectBuilder.setGroupId(DEFAULT_GROUP_ID);
         mavenProjectBuilder.setBonitaVersion(ProductVersion.mavenVersion());
         mavenProjectBuilder.setVersion(DEFAULT_VERSION);
-        IFile pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
+        IFile pomFile = project.getFile("pom.xml");
         if (pomFile.exists()) {
             String backupFileName = "pom.xml.old";
             IFile backupFile = project.getFile(backupFileName);
@@ -93,7 +92,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         File pom = pomFile.getLocation().toFile();
         try {
             if (!pom.createNewFile()) {
-                throw new CoreException(new Status(IStatus.ERROR, getClass(),
+                throw new CoreException(new Status(IStatus.ERROR, getClass(), 
                         "Failed to create pom.xml file.",
                         new IOException("Failed to create pom.xml file.")));
             }

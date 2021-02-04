@@ -77,7 +77,7 @@ public class SearchWidget extends TextWidget {
 
     @Override
     protected Text newText(Composite textContainer) {
-        final Text newText = new Text(textContainer, SWT.SEARCH | SWT.ICON_CANCEL | style);
+        final Text newText = new Text(textContainer, SWT.ICON_SEARCH | SWT.SEARCH | SWT.ICON_CANCEL | style);
         newText.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, verticalAlignment()).create());
         newText.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.SEARCH_WIDGET);
