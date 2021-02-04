@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="sap-jco3-callfunction"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.sapjco3.pages.SapConnectionPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.sapjco3.pages.SapFonctionPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.sapjco3.pages.SapInputPage">
+         </configurationPage>
+         <configurationPage
+               page="org.bonitasoft.studio.connector.wizard.sapjco3.pages.SapOutputPage">
+         </configurationPage>
+      </connectorWizard>
+   </extension>
+
+</plugin>
