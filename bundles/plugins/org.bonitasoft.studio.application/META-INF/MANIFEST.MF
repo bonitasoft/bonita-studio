@@ -72,7 +72,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.identity;bundle-version="7.13.0",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4",
  com.fasterxml.jackson.core.jackson-databind,
- org.restlet
+ org.restlet,
+ org.json
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

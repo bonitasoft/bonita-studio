@@ -14,28 +14,21 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import java.util.List;
+
 public class BonitaArtifactDependency {
 
     private String name;
     private String description;
     private String type;
+    private String bonitaMinVersion;
+    private List<BonitaArtifactConnectorDefinition> definitions;
     private String icon;
     private String groupId;
     private String artifactId;
     private String version;
 
     public BonitaArtifactDependency() {
-    }
-
-    public BonitaArtifactDependency(String name, String description, String type, String icon,
-            String groupId, String artifactId, String version) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.icon = icon;
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
     }
 
     public String getName() {
@@ -60,6 +53,22 @@ public class BonitaArtifactDependency {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getBonitaMinVersion() {
+        return bonitaMinVersion;
+    }
+
+    public void setBonitaMinVersion(String bonitaMinVersion) {
+        this.bonitaMinVersion = bonitaMinVersion;
+    }
+
+    public List<BonitaArtifactConnectorDefinition> getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(List<BonitaArtifactConnectorDefinition> definitions) {
+        this.definitions = definitions;
     }
 
     public String getIcon() {

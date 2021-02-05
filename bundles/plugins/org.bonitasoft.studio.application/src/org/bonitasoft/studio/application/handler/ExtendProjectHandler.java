@@ -26,6 +26,7 @@ import org.bonitasoft.studio.application.ui.control.ExtendProjectPage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,6 +60,9 @@ public class ExtendProjectHandler {
         try {
             container.run(true, false, monitor -> {
                 monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
+                for (BonitaArtifactDependency dep : extendProjectPage.getDependenciesToUpdate()) {
+                    updateDependency(dep, monitor);
+                }
                 for (BonitaArtifactDependency dep : extendProjectPage.getDependenciesToAdd()) {
                     addDependency(dep, monitor);
                 }
@@ -68,6 +72,16 @@ public class ExtendProjectHandler {
             MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getMessage());
         }
         return Optional.of(true);
+    }
+
+    private void updateDependency(BonitaArtifactDependency dep, IProgressMonitor monitor) throws InvocationTargetException {
+        try {
+            UpdateDependencyVersionOperation operation = new UpdateDependencyVersionOperation(dep.getGroupId(),
+                    dep.getArtifactId(), dep.getVersion());
+            operation.run(monitor);
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
+        }
     }
 
     private void addDependency(BonitaArtifactDependency dep, IProgressMonitor monitor) throws InvocationTargetException {

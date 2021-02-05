@@ -14,20 +14,24 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactDependencyLoader;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -46,6 +50,7 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -59,6 +64,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.osgi.framework.Version;
+import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 /**
  * !!! HELLO !!!
@@ -67,7 +77,10 @@ import org.eclipse.swt.widgets.Label;
  */
 public class ExtendProjectPage implements ControlSupplier {
 
-    private static final String DEPENDENCIES_FILE = "https://raw.githubusercontent.com/alachambre/bonita-artifacts-provider/master/provided-dependencies.json";
+    private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/bonitasoft/bonita-marketplace/releases/latest";
+    private static final String ASSET_URL = "https://github.com/bonitasoft/bonita-marketplace/releases/download";
+    private static final String CONNECTORS_ASSET_NAME = "connectors.json";
+    private static final String ACTORS_FILTERS_ASSET_NAME = "actorfilters.json";
     private static final String CONNECTOR_TYPE = "Connector";
     private static final String ACTOR_FILTER_TYPE = "Actor filter";
     private static final int ICON_SIZE = 64;
@@ -80,7 +93,10 @@ public class ExtendProjectPage implements ControlSupplier {
     private Composite dependenciesComposite;
     private List<Dependency> knownDependencies;
     private List<BonitaArtifactDependency> dependencies;
+    private List<BonitaArtifactDependency> newDependencies = new ArrayList<>();
+    private List<BonitaArtifactDependency> dependenciesUpdatable = new ArrayList<>();
     private List<BonitaArtifactDependency> dependenciesToAdd = new ArrayList<>();
+    private List<BonitaArtifactDependency> dependenciesToUpdate = new ArrayList<>();
     private ComboWidget typeComboWidget;
     private ISWTObservableValue typeObservableValue;
     private ScrolledComposite sc;
@@ -131,12 +147,14 @@ public class ExtendProjectPage implements ControlSupplier {
                     monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
                     initVariables();
 
-                    List<BonitaArtifactDependency> dependenciesToDisplay = dependencies.stream()
-                            .filter(dep -> !isKnownDependency(dep, knownDependencies))
-                            .collect(Collectors.toList());
-
-                    monitor.beginTask(Messages.fetchingExtensions, dependenciesToDisplay.size());
-                    dependenciesToDisplay.forEach(dep -> {
+                    monitor.beginTask(Messages.fetchingExtensions, dependenciesToAdd.size() + dependenciesUpdatable.size());
+                    dependenciesUpdatable.forEach(dep -> {
+                        Display.getDefault().syncExec(() -> {
+                            createDependencyControl(dependenciesComposite, dep);
+                        });
+                        monitor.worked(1);
+                    });
+                    newDependencies.forEach(dep -> {
                         Display.getDefault().syncExec(() -> {
                             createDependencyControl(dependenciesComposite, dep);
                         });
@@ -158,8 +176,9 @@ public class ExtendProjectPage implements ControlSupplier {
 
     private void initVariables() {
         try {
-            dependencies = loadDependencies();
+            loadDependencies();
             knownDependencies = helper.getMavenModel(getProject()).getDependencies();
+            splitDependencies();
         } catch (CoreException e) {
             throw new RuntimeException(e);
         }
@@ -195,42 +214,66 @@ public class ExtendProjectPage implements ControlSupplier {
         Display.getDefault().asyncExec(() -> {
             String searchValue = searchWidget.getText();
             Arrays.asList(dependenciesComposite.getChildren()).forEach(Control::dispose);
-            List<BonitaArtifactDependency> filteredDependencies = new ArrayList<>();
-            if (Strings.isNullOrEmpty(searchValue)) {
-                dependencies.forEach(filteredDependencies::add);
-            } else {
-                dependencies.stream()
-                        .filter(dep -> dep.getName().contains(searchValue))
-                        .forEach(filteredDependencies::add);
-            }
-            if (!Objects.equals(typeObservableValue.getValue(), Messages.all)) {
-                String type = Objects.equals(typeObservableValue.getValue(), Messages.connectorType)
-                        ? CONNECTOR_TYPE
-                        : ACTOR_FILTER_TYPE;
-                filteredDependencies.removeIf(dep -> !Objects.equals(dep.getType(), type));
-            }
-            if (filteredDependencies.isEmpty()) {
-                createNoResultFoundLabel(dependenciesComposite);
-            } else {
-                try {
-                    wizardContainer.run(true, false, monitor -> {
-                        monitor.beginTask(Messages.filteringExtensions, filteredDependencies.size());
-                        filteredDependencies.forEach(dep -> {
-                            Display.getDefault().syncExec(() -> {
-                                createDependencyControl(dependenciesComposite, dep);
-                            });
-                            monitor.worked(1);
-                        });
-                        monitor.done();
-                    });
-                } catch (InvocationTargetException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            dependenciesComposite.layout();
-            sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-            sc.layout();
+            List<BonitaArtifactDependency> filteredDependencies = filterDependenciesBySearchValue(searchValue);
+            filterDependenciesByType(filteredDependencies);
+            displayFilteredDependencies(filteredDependencies);
         });
+    }
+
+    private void displayFilteredDependencies(List<BonitaArtifactDependency> filteredDependencies) {
+        if (filteredDependencies.isEmpty()) {
+            createNoResultFoundLabel(dependenciesComposite);
+        } else {
+            try {
+                wizardContainer.run(true, false, monitor -> {
+                    monitor.beginTask(Messages.filteringExtensions, filteredDependencies.size());
+                    filteredDependencies.forEach(dep -> {
+                        Display.getDefault().syncExec(() -> {
+                            createDependencyControl(dependenciesComposite, dep);
+                        });
+                        monitor.worked(1);
+                    });
+                    monitor.done();
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        dependenciesComposite.layout();
+        sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        sc.layout();
+    }
+
+    private void filterDependenciesByType(List<BonitaArtifactDependency> filteredDependencies) {
+        if (!Objects.equals(typeObservableValue.getValue(), Messages.all)) {
+            String type = Objects.equals(typeObservableValue.getValue(), Messages.connectorType)
+                    ? CONNECTOR_TYPE
+                    : ACTOR_FILTER_TYPE;
+            filteredDependencies.removeIf(dep -> !Objects.equals(dep.getType(), type));
+        }
+    }
+
+    private List<BonitaArtifactDependency> filterDependenciesBySearchValue(String searchValue) {
+        List<BonitaArtifactDependency> filteredDependencies = new ArrayList<>();
+        if (Strings.isNullOrEmpty(searchValue)) {
+            dependenciesUpdatable.forEach(filteredDependencies::add);
+            newDependencies.forEach(filteredDependencies::add);
+        } else {
+            dependenciesUpdatable
+                    .stream()
+                    .filter(dep -> matchSearch(dep, searchValue))
+                    .forEach(filteredDependencies::add);
+            newDependencies
+                    .stream()
+                    .filter(dep -> matchSearch(dep, searchValue))
+                    .forEach(filteredDependencies::add);
+        }
+        return filteredDependencies;
+    }
+
+    private boolean matchSearch(BonitaArtifactDependency dep, String searchValue) {
+        return dep.getName().toLowerCase().contains(searchValue.toLowerCase())
+                || dep.getDescription().toLowerCase().contains(searchValue.toLowerCase());
     }
 
     private void createNoResultFoundLabel(Composite parent) {
@@ -240,23 +283,43 @@ public class ExtendProjectPage implements ControlSupplier {
         noResultFoundLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
     }
 
-    protected TextWidget createSearchField(Composite parent) {
-        return new SearchWidget.Builder()
-                .fill()
-                .grabHorizontalSpace()
-                .withButton(Messages.go)
-                .onClickButton(e -> System.out.println(""))
-                .createIn(parent);
+    /**
+     * To test the UI with a local file, comment this method content and use the loader with the URL of the local file
+     * ex:
+     * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
+     */
+    private void loadDependencies() {
+        String latestTag = getLatestTag();
+        String connectorsUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, CONNECTORS_ASSET_NAME);
+        String actorFiltersUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, ACTORS_FILTERS_ASSET_NAME);
+        ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
+        dependencies = loader.load(createURL(connectorsUrl));
+        dependencies.addAll(loader.load(createURL(actorFiltersUrl)));
     }
 
-    private List<BonitaArtifactDependency> loadDependencies() {
-        URL dependenciesFile;
+    private String getLatestTag() {
+        JSONObject release = doGet(createURL(LATEST_RELEASE_URL));
         try {
-            dependenciesFile = new URL(DEPENDENCIES_FILE);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e); // TODO ? 
+            return release.getString("tag_name");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
-        return new ArtifactDependencyLoader().load(dependenciesFile);
+    }
+
+    private JSONObject doGet(URL url) {
+        try {
+            return new JSONObject(new ClientResource(url.toURI()).get().getText());
+        } catch (ResourceException | JSONException | IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private URL createURL(String url) {
+        try {
+            return new URL(url);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createDependencyControl(Composite parent, BonitaArtifactDependency dep) {
@@ -290,39 +353,120 @@ public class ExtendProjectPage implements ControlSupplier {
         title.setText(String.format("%s", dep.getName()));
         title.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.HEADER_FONT));
 
-        createAddButton(dep, contentComposite);
+        boolean compatible = isCompatible(dep);
+        boolean updatable = dependenciesUpdatable.contains(dep);
+
+        if (compatible) {
+            createAddButton(dep, contentComposite, updatable);
+        }
 
         Label version = createLabel(contentComposite, SWT.WRAP);
-        version.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, -5).create());
+        version.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, -5).create());
         version.setText(String.format("%s: %s", Messages.version, dep.getVersion()));
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 
         Label description = createLabel(contentComposite, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
         description.setText(dep.getDescription());
+
+        if (updatable) {
+            createUpdatableComposite(contentComposite);
+        } else if (!compatible) {
+            createIncompatibleComposite(contentComposite);
+        }
+        // TODO check definitions versions
     }
 
-    private void createAddButton(BonitaArtifactDependency dep, Composite parent) {
+    private void createIncompatibleComposite(Composite parent) {
+        Composite incompatibleComposite = new Composite(parent, SWT.NONE);
+        incompatibleComposite
+                .setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
+        incompatibleComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
+        incompatibleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
+
+        Label versionIncompatibleTitle = createLabel(incompatibleComposite, SWT.WRAP);
+        versionIncompatibleTitle.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        versionIncompatibleTitle.setText(Messages.incompatibleExtensionTitle);
+        versionIncompatibleTitle.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+        versionIncompatibleTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.ERROR_TEXT_COLOR);
+
+        Label versionIncompatibleLabel = createLabel(incompatibleComposite, SWT.WRAP);
+        versionIncompatibleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        versionIncompatibleLabel.setText(Messages.incompatibleExtension);
+        versionIncompatibleLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+        versionIncompatibleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.ERROR_TEXT_COLOR);
+    }
+
+    private void createUpdatableComposite(Composite parent) {
+        Composite updatableComposite = new Composite(parent, SWT.NONE);
+        updatableComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
+        updatableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
+        updatableComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
+
+        Label newVersionAvailableLabel = createLabel(updatableComposite, SWT.WRAP);
+        newVersionAvailableLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        newVersionAvailableLabel.setText(Messages.newVersionAvailable);
+        newVersionAvailableLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+        newVersionAvailableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
+
+        Label depUpdatableLabel = createLabel(updatableComposite, SWT.WRAP);
+        depUpdatableLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        depUpdatableLabel.setText(Messages.dependencyUpdatable);
+        depUpdatableLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+        depUpdatableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
+    }
+
+    private boolean isCompatible(BonitaArtifactDependency dep) {
+        Version productVersion = new Version(ProductVersion.CURRENT_VERSION);
+        Version minVersion = new Version(dep.getBonitaMinVersion());
+        return minVersion.compareTo(productVersion) <= 0;
+    }
+
+    private void createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
         Button button = new Button(parent, SWT.CHECK);
         button.setLayoutData(GridDataFactory.fillDefaults().create());
-        button.addListener(SWT.Selection, e -> addDependency(dep, button.getSelection()));
+        button.addListener(SWT.Selection,
+                e -> addDependency(dep, button.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd));
     }
 
-    private boolean isKnownDependency(BonitaArtifactDependency dep, List<Dependency> knownDependencies) {
-        return knownDependencies.stream()
-                .anyMatch(aDep -> Objects.equals(dep.getGroupId(), aDep.getGroupId())
-                        && Objects.equals(dep.getArtifactId(), aDep.getArtifactId())
-                        && Objects.equals(aDep.getVersion(), aDep.getVersion()));
+    /**
+     * If a dependency with the same groupId / artifactId is already present in the maven project, then:
+     * - If the version of the existing dependency is lower than the version of the new dependency, then the new
+     * dependency is added to the "updatable dependencies list".
+     * - Else it is ignored (we do not offer the possibility to downgrade a dependency).
+     * If a dependency is completly new, then is is added to the "new dependencies list".
+     */
+    private void splitDependencies() {
+        for (BonitaArtifactDependency dep : dependencies) {
+            Optional<Dependency> matchingDependency = knownDependencies.stream()
+                    .filter(aDep -> Objects.equals(dep.getGroupId(), aDep.getGroupId())
+                            && Objects.equals(dep.getArtifactId(), aDep.getArtifactId()))
+                    .findFirst();
+            if (matchingDependency.isPresent()) {
+                if (!existingVersionEqualsOrGreater(matchingDependency.get().getVersion(), dep.getVersion())) {
+                    dependenciesUpdatable.add(dep);
+                }
+            } else {
+                newDependencies.add(dep);
+            }
+        }
+    }
+
+    private boolean existingVersionEqualsOrGreater(String existingVersion, String newVersion) {
+        Version existingV = new Version(existingVersion);
+        Version newV = new Version(newVersion);
+
+        return existingV.compareTo(newV) >= 0;
     }
 
     private Image getIcon(BonitaArtifactDependency dep) {
         Image icon = null;
         if (dep.getIcon() != null) {
-            try {
-                icon = getIcon(new URL(dep.getIcon()));
-            } catch (MalformedURLException e) {
-                BonitaStudioLog.error(e);
-            }
+            icon = getIcon(createURL(dep.getIcon()));
         }
         if (icon == null) {
             return Objects.equals(dep.getType(), CONNECTOR_TYPE)
@@ -357,11 +501,11 @@ public class ExtendProjectPage implements ControlSupplier {
         return scaled;
     }
 
-    private void addDependency(BonitaArtifactDependency dep, boolean isSelected) {
+    private void addDependency(BonitaArtifactDependency dep, boolean isSelected, Collection collection) {
         if (isSelected) {
-            dependenciesToAdd.add(dep);
+            collection.add(dep);
         } else {
-            dependenciesToAdd.remove(dep);
+            collection.remove(dep);
         }
     }
 
@@ -375,6 +519,10 @@ public class ExtendProjectPage implements ControlSupplier {
 
     public List<BonitaArtifactDependency> getDependenciesToAdd() {
         return dependenciesToAdd;
+    }
+
+    public List<BonitaArtifactDependency> getDependenciesToUpdate() {
+        return dependenciesToUpdate;
     }
 
     private Label createLabel(Composite parent, int style) {

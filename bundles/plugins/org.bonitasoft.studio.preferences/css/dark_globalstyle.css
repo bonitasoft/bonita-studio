@@ -82,8 +82,12 @@ Composite#groovyViewer > * > * > * > * > * > * > * {
     background-color: #454545;
 }
 
-Label#sucessTextColor {
-    color: #94d66d;
+Label#errorTextColor {
+    color: #de5e5e;
+}
+
+Label#infoTextColor {
+    color: #99b4e0;
 }
 
 .wizardHighlightBackground {
