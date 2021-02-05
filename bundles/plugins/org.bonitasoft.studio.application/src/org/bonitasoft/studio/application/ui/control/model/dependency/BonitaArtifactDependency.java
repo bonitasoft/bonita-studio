@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BonitaArtifactDependency {
 
@@ -26,7 +27,7 @@ public class BonitaArtifactDependency {
     private String icon;
     private String groupId;
     private String artifactId;
-    private String version;
+    private List<BonitaArtifactDependencyVersion> versions;
 
     public BonitaArtifactDependency() {
     }
@@ -95,11 +96,18 @@ public class BonitaArtifactDependency {
         this.artifactId = artifactId;
     }
 
-    public String getVersion() {
-        return version;
+    public List<BonitaArtifactDependencyVersion> getVersions() {
+        return versions;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersions(List<BonitaArtifactDependencyVersion> versions) {
+        this.versions = versions;
+    }
+
+    public Optional<BonitaArtifactDependencyVersion> getLatestCompatibleVersion() {
+        return versions.stream()
+                .filter(BonitaArtifactDependencyVersion::isCompatible)
+                .sorted()
+                .findFirst();
     }
 }

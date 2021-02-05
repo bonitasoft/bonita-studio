@@ -24,6 +24,7 @@ import javax.inject.Named;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.ExtendProjectPage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
@@ -77,7 +78,7 @@ public class ExtendProjectHandler {
     private void updateDependency(BonitaArtifactDependency dep, IProgressMonitor monitor) throws InvocationTargetException {
         try {
             UpdateDependencyVersionOperation operation = new UpdateDependencyVersionOperation(dep.getGroupId(),
-                    dep.getArtifactId(), dep.getVersion());
+                    dep.getArtifactId(), getVersion(dep));
             operation.run(monitor);
         } catch (CoreException e) {
             throw new InvocationTargetException(e);
@@ -87,11 +88,18 @@ public class ExtendProjectHandler {
     private void addDependency(BonitaArtifactDependency dep, IProgressMonitor monitor) throws InvocationTargetException {
         try {
             AddDependencyOperation operation = new AddDependencyOperation(dep.getGroupId(),
-                    dep.getArtifactId(), dep.getVersion());
+                    dep.getArtifactId(), getVersion(dep));
             operation.run(monitor);
         } catch (CoreException e) {
             throw new InvocationTargetException(e);
         }
+    }
+
+    private String getVersion(BonitaArtifactDependency dep) {
+        return dep.getLatestCompatibleVersion()
+                .map(BonitaArtifactDependencyVersion::getVersion)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("No compatible version found for %s:%s", dep.getGroupId(), dep.getArtifactId())));
     }
 
 }
