@@ -31,7 +31,7 @@ import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactDependencyLoader;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -353,17 +353,23 @@ public class ExtendProjectPage implements ControlSupplier {
         title.setText(String.format("%s", dep.getName()));
         title.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.HEADER_FONT));
 
-        boolean compatible = isCompatible(dep);
+        Optional<BonitaArtifactDependencyVersion> latestCompatibleVersion = dep.getLatestCompatibleVersion();
+        String versionToDisplay = latestCompatibleVersion
+                .map(BonitaArtifactDependencyVersion::getVersion)
+                .orElseGet(() -> dep.getVersions().stream()
+                        .sorted().findFirst()
+                        .map(BonitaArtifactDependencyVersion::getVersion)
+                        .orElse(""));
         boolean updatable = dependenciesUpdatable.contains(dep);
 
-        if (compatible) {
+        if (latestCompatibleVersion.isPresent()) {
             createAddButton(dep, contentComposite, updatable);
         }
 
         Label version = createLabel(contentComposite, SWT.WRAP);
         version.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, -5).create());
-        version.setText(String.format("%s: %s", Messages.version, dep.getVersion()));
+        version.setText(String.format("%s: %s", Messages.version, versionToDisplay));
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 
         Label description = createLabel(contentComposite, SWT.WRAP);
@@ -372,7 +378,7 @@ public class ExtendProjectPage implements ControlSupplier {
 
         if (updatable) {
             createUpdatableComposite(contentComposite);
-        } else if (!compatible) {
+        } else if (!latestCompatibleVersion.isPresent()) {
             createIncompatibleComposite(contentComposite);
         }
         // TODO check definitions versions
@@ -420,12 +426,6 @@ public class ExtendProjectPage implements ControlSupplier {
         depUpdatableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
     }
 
-    private boolean isCompatible(BonitaArtifactDependency dep) {
-        Version productVersion = new Version(ProductVersion.CURRENT_VERSION);
-        Version minVersion = new Version(dep.getBonitaMinVersion());
-        return minVersion.compareTo(productVersion) <= 0;
-    }
-
     private void createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
         Button button = new Button(parent, SWT.CHECK);
         button.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -447,7 +447,9 @@ public class ExtendProjectPage implements ControlSupplier {
                             && Objects.equals(dep.getArtifactId(), aDep.getArtifactId()))
                     .findFirst();
             if (matchingDependency.isPresent()) {
-                if (!existingVersionEqualsOrGreater(matchingDependency.get().getVersion(), dep.getVersion())) {
+                Optional<String> version = dep.getLatestCompatibleVersion().map(BonitaArtifactDependencyVersion::getVersion);
+                if (version.isPresent()
+                        && !existingVersionEqualsOrGreater(matchingDependency.get().getVersion(), version.get())) {
                     dependenciesUpdatable.add(dep);
                 }
             } else {
