@@ -158,6 +158,10 @@ public class Messages extends NLS {
     public static String fetchingExtensions;
     public static String installingExtensions;
     public static String filteringExtensions;
+    public static String incompatibleExtension;
+    public static String incompatibleExtensionTitle;
+    public static String dependencyUpdatable;
+    public static String newVersionAvailable;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -61,8 +61,12 @@ CTabFolder {
     background-color: #e9e9e9;
 }
 
-Label#sucessTextColor {
-	color: #3b8228;
+Label#errorTextColor {
+    color: #de5e5e;
+}
+
+Label#infoTextColor {
+    color: #345fa3;
 }
 
 .wizardHighlightBackground {
