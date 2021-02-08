@@ -147,7 +147,8 @@ public class ExtendProjectPage implements ControlSupplier {
                     monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
                     initVariables();
 
-                    monitor.beginTask(Messages.fetchingExtensions, dependenciesToAdd.size() + dependenciesUpdatable.size());
+                    int totalWork = newDependencies.size() + dependenciesUpdatable.size();
+                    monitor.beginTask(Messages.fetchingExtensions, totalWork);
                     dependenciesUpdatable.forEach(dep -> {
                         Display.getDefault().syncExec(() -> {
                             createDependencyControl(dependenciesComposite, dep);
@@ -495,7 +496,6 @@ public class ExtendProjectPage implements ControlSupplier {
         Image scaled = new Image(Display.getDefault(), ICON_SIZE, ICON_SIZE);
         GC gc = new GC(scaled);
         gc.setAntialias(SWT.ON);
-        gc.setInterpolation(SWT.HIGH);
         gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, ICON_SIZE,
                 ICON_SIZE);
         gc.dispose();
