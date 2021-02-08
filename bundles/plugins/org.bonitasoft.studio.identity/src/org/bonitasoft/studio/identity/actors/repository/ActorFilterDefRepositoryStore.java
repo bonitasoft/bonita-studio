@@ -17,12 +17,14 @@ package org.bonitasoft.studio.identity.actors.repository;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
@@ -46,7 +48,7 @@ import org.osgi.framework.Bundle;
 public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryStore<ActorFilterDefFileStore> {
 
     public static final String STORE_NAME = "filters-def";
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
     public static final String DEF_EXT = "def";
     static {
         extensions.add(DEF_EXT);
@@ -55,18 +57,32 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     private DefinitionResourceProvider resourceProvider;
 
     @Override
+    public void createRepositoryStore(IRepository repository) {
+        super.createRepositoryStore(repository);
+        this.resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
+    }
+    
+    @Override
     public ActorFilterDefFileStore createRepositoryFileStore(final String fileName) {
         if (fileName.endsWith(DEF_EXT)) {
             return new ActorFilterDefFileStore(fileName, this);
         }
         return null;
     }
+    
+    @Override
+    public List<ActorFilterDefFileStore> getChildren() {
+        List<ActorFilterDefFileStore> defFileStores = super.getChildren();
+
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        projectDependenciesStore.getActorFilterDefinitions().stream()
+                .map(t -> new DependencyActorFilterDefFileStore(t, this))
+                .forEach(defFileStores::add);
+
+        return defFileStores;
+    }
 
     public DefinitionResourceProvider getResourceProvider() {
-        if (resourceProvider == null) {
-            resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
-            resourceProvider.loadDefinitionsCategories(null);
-        }
         return resourceProvider;
     }
 
@@ -107,8 +123,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     protected ActorFilterDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final ActorFilterDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,
-                    getBundle());
+            final DefinitionResourceProvider resourceProvider = getResourceProvider();
             try {
                 reloadCategories(definition.getContent(), resourceProvider);
             } catch (ReadFileStoreException e) {

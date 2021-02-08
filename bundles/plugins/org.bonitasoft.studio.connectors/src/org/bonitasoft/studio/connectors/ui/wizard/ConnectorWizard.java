@@ -274,10 +274,16 @@ public class ConnectorWizard extends ExtensibleWizard implements
             final ConnectorDefinition definition = definitionStore
                     .getDefinition(connectorWorkingCopy.getDefinitionId(),
                             connectorWorkingCopy.getDefinitionVersion());
-            final AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
+            
+            AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                     .getChild(URI.decode(definition.eResource().getURI()
                             .lastSegment()), true);
-            if (!fStore.isReadOnly() && cleanConfiguration(definition)) {
+            if(fStore == null) {
+                fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
+                        .find(definition)
+                        .orElse(null);
+            }
+            if (fStore != null && !fStore.isReadOnly() && cleanConfiguration(definition)) {
                 MessageDialog.openWarning(
                         Display.getDefault().getActiveShell(),
                         Messages.configurationChangedTitle,
@@ -289,7 +295,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 addAdditionalPage(p);
             }
             addOuputPage(definition);
-        }else {
+        } else {
             selectionPage.addConnectorDefinitionFilter(new DeprecatedConnectorViewerFilter());
         }
 

@@ -37,6 +37,8 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckable;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -91,6 +93,13 @@ public class BuildCustomPageProjectPage extends WizardPage {
                 GridDataFactory.fillDefaults().hint(TABLE_WIDTH_HINT, SWT.DEFAULT).grab(true, true).create());
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new RestAPIExtensionLabelProvider());
+        viewer.addFilter(new ViewerFilter() {
+            
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                return element instanceof CustomPageProjectFileStore && !((CustomPageProjectFileStore)element).isReadOnly();
+            }
+        });
         viewer.setInput(repositoryStore.getChildren());
         ctx.bindSet(selectedFileStores,
                 ViewerProperties.checkedElements(CustomPageProjectFileStore.class).observe((ICheckable) viewer));

@@ -17,11 +17,13 @@ package org.bonitasoft.studio.connectors.repository;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
@@ -46,7 +48,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     public static final String STORE_NAME = "connectors-def";
 
-    private static final Set<String> extensions = new HashSet<String>();
+    private static final Set<String> extensions = new HashSet<>();
 
     public static final String CONNECTOR_DEF_EXT = "def";
     static {
@@ -56,6 +58,26 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     private DefinitionResourceProvider resourceProvider;
 
     @Override
+    public void createRepositoryStore(IRepository repository) {
+        super.createRepositoryStore(repository);
+        resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
+    }
+    
+    @Override
+    public List<ConnectorDefFileStore> getChildren() {
+        List<ConnectorDefFileStore> defFileStores = super.getChildren();
+
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            projectDependenciesStore.getConnectorDefinitions().stream()
+                    .map(def -> new DependencyConnectorDefFileStore(def, this))
+                    .forEach(defFileStores::add);
+        }
+
+        return defFileStores;
+    }
+
+    @Override
     public ConnectorDefFileStore createRepositoryFileStore(final String fileName) {
         if (fileName.endsWith(CONNECTOR_DEF_EXT)) {
             return new ConnectorDefFileStore(fileName, this);
@@ -63,11 +85,8 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         return null;
     }
 
+    @Override
     public DefinitionResourceProvider getResourceProvider() {
-        if (resourceProvider == null) {
-            resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
-            resourceProvider.loadDefinitionsCategories(null);
-        }
         return resourceProvider;
     }
 
@@ -75,8 +94,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     protected ConnectorDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,
-                    getBundle());
+            final DefinitionResourceProvider resourceProvider = getResourceProvider();
             try {
                 reloadCategories(definition.getContent(), resourceProvider);
             } catch (ReadFileStoreException e) {
@@ -147,10 +165,11 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null && filename.endsWith("." + CONNECTOR_DEF_EXT)) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
-                    ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE, 
+                    ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
-                            .validate(inputStream);
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                            filename)))
+                                    .validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

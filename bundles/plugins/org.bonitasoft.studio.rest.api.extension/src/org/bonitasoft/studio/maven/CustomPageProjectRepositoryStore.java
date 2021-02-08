@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.archetype.catalog.Archetype;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractFolderRepositoryStore;
 import org.eclipse.core.resources.IFolder;
@@ -45,10 +45,10 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
         markerUpdateListener = new MarkerUpdateListener(this);
         ResourcesPlugin.getWorkspace().addResourceChangeListener(markerUpdateListener);
     }
-    
+
     private void importProjects() {
         getChildren().stream()
-                .filter(c -> !c.getProject().exists())
+                .filter(c -> c.getProject() != null && !c.getProject().exists())
                 .forEach(c -> {
                     try {
                         c.importProject();

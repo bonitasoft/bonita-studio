@@ -345,8 +345,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
             @Override
             public void widgetSelected(SelectionEvent e) {
                 HashSet<String> existingCatIds = new HashSet<>();
-                existingCatIds.addAll(messageProvider.getProvidedCategoriesIds());
-                existingCatIds.addAll(messageProvider.getUserCategoriesIds());
+                existingCatIds.addAll(messageProvider.getCategoriesIds());
+              //  existingCatIds.addAll(messageProvider.getUserCategoriesIds());
                 List<Category> input = (List<Category>) categoryViewer.getInput();
                 for (Category category : input) {
                     existingCatIds.add(category.getId());

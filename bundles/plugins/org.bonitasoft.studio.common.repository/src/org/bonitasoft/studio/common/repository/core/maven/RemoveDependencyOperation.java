@@ -52,6 +52,7 @@ public class RemoveDependencyOperation extends MavenModelOperation {
                 .removeIf(existingDep -> sameGAV(existingDep, dependency));
 
         saveModel(getCurrentProject(), model, monitor);
+        getProjectDependenciesStore().analyze(monitor);
     }
 
     private boolean sameGAV(Dependency existingDep, Dependency dependency) {

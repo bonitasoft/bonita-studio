@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -97,11 +98,13 @@ public class Repository extends AbstractRepository {
     public Repository(final IWorkspace workspace, final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
+            IEventBroker eventBroker,
             final boolean migrationEnabled) {
         super(workspace,
                 project, 
                 extensionContextInjectionFactory,
                 jdtTypeHierarchyManager, 
+                eventBroker,
                 migrationEnabled);
         updateJob = new SharedRepositoryUpdateBackgroundJob("Update shared repository job", INTERVAL, this);
     }

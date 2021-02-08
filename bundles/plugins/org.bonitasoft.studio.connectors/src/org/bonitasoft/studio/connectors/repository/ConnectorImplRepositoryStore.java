@@ -129,6 +129,12 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
                 }
             }
         }
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            projectDependenciesStore.getConnectorImplementations().stream()
+                    .map(impl -> new DependencyConnectorImplFileStore(impl, this))
+                    .forEach(result::add);
+        }
         return result;
     }
 

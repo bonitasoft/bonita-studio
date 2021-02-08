@@ -19,33 +19,33 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
@@ -59,9 +59,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -70,11 +71,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
 /**
  * @author Romain Bioteau
  */
-public class DefinitionResourceProvider {
+public class DefinitionResourceProvider implements EventHandler {
 
     public static final String pageTilte = "pageTitle";
     public static final String pageField = "label";
@@ -85,32 +88,26 @@ public class DefinitionResourceProvider {
     public static final String fieldDescription = "description";
     public static final String fieldExample = "example";
     private static final String CLASSPATH_DIR = "dependencies";
-    private static final String OUTPUTS_DESC = "outputsDescription";
-    private static final String OUTPUT_DESC = "output.description";
+    public static final String OUTPUTS_DESC = "outputsDescription";
+    public static final String OUTPUT_DESC = "output.description";
 
     private ImageRegistry categoryImageRegistry;
     private final ImageRegistry definitionImageRegistry;
-    private final IRepositoryStore<? extends IRepositoryFileStore> store;
+    private final IRepositoryStore<? extends IRepositoryFileStore<?>> store;
     private final Bundle bundle;
-    private DefinitionControl pluginControl;
-    private StoreControl storeControl;
-    private ArrayList<Category> categories;
+    private List<Category> categories;
     private Category uncategorized;
-    private final Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<>();
-    private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
+    private static final Map<String, ResourceBundle> RESOURCE_BUNDLE_CACHE = new HashMap<>();
+    private static final Map<IRepositoryStore<? extends IRepositoryFileStore<?>>, DefinitionResourceProvider> INSTANCES_MAP;
 
     static {
-        INSTANCES_MAP = new WeakHashMap<>();
+        INSTANCES_MAP = new HashMap<>();
     }
 
     public static DefinitionResourceProvider getInstance(
-            final IRepositoryStore<? extends IRepositoryFileStore> store,
+            final IRepositoryStore<?> store,
             final Bundle bundle) {
-        if (INSTANCES_MAP.get(store) == null) {
-            INSTANCES_MAP.put(store, new DefinitionResourceProvider(store,
-                    bundle));
-        }
-        return INSTANCES_MAP.get(store);
+        return INSTANCES_MAP.computeIfAbsent(store, s -> new DefinitionResourceProvider(s, bundle));
     }
 
     public ImageRegistry getImageRegistry() {
@@ -121,18 +118,19 @@ public class DefinitionResourceProvider {
     }
 
     private DefinitionResourceProvider(
-            final IRepositoryStore<? extends IRepositoryFileStore> store,
+            final IRepositoryStore<? extends IRepositoryFileStore<?>> store,
             final Bundle bundle) {
         this.store = store;
         this.bundle = bundle;
         categoryImageRegistry = createImageRegistry();
         definitionImageRegistry = createImageRegistry();
-        try {
-            pluginControl = new DefinitionControl(bundle, store.getName());
-            storeControl = new StoreControl(store.getResource().getLocation().toFile().getAbsolutePath());
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
+        eventBroker().subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);;
+    }
+
+    private IEventBroker eventBroker() {
+        IEclipseContext context = EclipseContextFactory
+                .getServiceContext(CommonRepositoryPlugin.getDefault().getBundle().getBundleContext());
+        return context.get(IEventBroker.class);
     }
 
     protected ImageRegistry createImageRegistry() {
@@ -152,60 +150,21 @@ public class DefinitionResourceProvider {
 
     public ResourceBundle getResourceBundle(final ConnectorDefinition definition,
             final Locale locale) {
-        if (definition == null || definition.eResource() == null) {
-            return null;
+        if (definition != null) {
+             return RESOURCE_BUNDLE_CACHE.computeIfAbsent(definitionKey(definition), key -> {
+                IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
+                return defStore.find(definition)
+                        .map(DefinitionResourceLoaderProvider.class::cast)
+                        .map(DefinitionResourceLoaderProvider::getBundleResourceLoader)
+                        .map(resourceLoader -> resourceLoader.getResourceBundle(locale))
+                        .orElse(null);
+            });
         }
-        final String cacheKey = getCacheKey(definition, locale);
-        final ResourceBundle resourceBundle = resourceBundleCache.get(cacheKey);
-        if (resourceBundle != null) {
-            return resourceBundle;
-        }
-        final IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()),
-                true);
-        if (fileStore == null) {
-            return null;
-        }
-
-        ConnectorDefinition def = null;
-        try {
-            def = (ConnectorDefinition) fileStore.getContent();
-        } catch (final ReadFileStoreException e2) {
-            BonitaStudioLog.error("Failed to retrieve connector definition", e2);
-        }
-        if (def == null) {
-            return null;
-        }
-        final Resource emfResource = def.eResource();
-        if (emfResource == null) {
-            return null;
-        }
-        String baseName = URI.decode(emfResource.getURI().lastSegment());
-        if (baseName.lastIndexOf(".") != -1) {
-            baseName = baseName.substring(0, baseName.lastIndexOf("."));
-        }
-
-        ResourceBundle bundle = null;
-        try {
-            if (fileStore.canBeShared()) {
-                ResourceBundle.clearCache();
-            }
-            bundle = ResourceBundle.getBundle(baseName, locale, pluginControl);
-        } catch (final MissingResourceException e) {
-            try {
-                ResourceBundle.clearCache(); //Clear the cache to always have updated i18n for custom connectors
-                bundle = ResourceBundle.getBundle(baseName, locale,
-                        storeControl);
-            } catch (final MissingResourceException e1) {
-                return null;
-            }
-        }
-        resourceBundleCache.put(cacheKey, bundle);
-        return bundle;
+        return null;
     }
 
-    private String getCacheKey(final ConnectorDefinition definition, final Locale locale) {
-        return NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false)
-                + locale.toString();
+    private String definitionKey(ConnectorDefinition definition) {
+        return definition.getId()+"-"+definition.getVersion();
     }
 
     private String getMessage(final ConnectorDefinition definition, final String key) {
@@ -341,7 +300,6 @@ public class DefinitionResourceProvider {
                 }
             }
         }
-        resourceBundleCache.clear();
     }
 
     public Set<Locale> getExistingLocale(final ConnectorDefinition definition) {
@@ -526,48 +484,15 @@ public class DefinitionResourceProvider {
         messages.put(fieldId + "." + fieldDescription, value);
     }
 
-    public Set<String> getProvidedCategoriesIds() {
-        final Set<String> providedCategoryIds = new HashSet<>();
-        for (final IRepositoryFileStore defFile : store.getChildren()) {
-            if (!defFile.canBeShared()) { // provided definition
-                try {
-                    final ConnectorDefinition def = (ConnectorDefinition) defFile
-                            .getContent();
-                    for (final Category cat : def.getCategory()) {
-                        providedCategoryIds.add(cat.getId());
-                    }
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
-                }
-
-            }
-        }
-        return providedCategoryIds;
+    public Set<String> getCategoriesIds() {
+        return ((IDefinitionRepositoryStore<?>) store).getDefinitions()
+                .stream()
+                .map(ConnectorDefinition::getCategory)
+                .flatMap(Collection<Category>::stream)
+                .map(Category::getId)
+                .collect(Collectors.toSet());
     }
 
-    public Set<String> getUserCategoriesIds() {
-        final Set<String> userCategoryIds = new HashSet<>();
-        final Set<String> providedCategoryIds = getProvidedCategoriesIds();
-        for (final IRepositoryFileStore defFile : store.getChildren()) {
-            if (defFile.canBeShared()) {
-                try {
-                    final ConnectorDefinition def = (ConnectorDefinition) defFile
-                            .getContent();
-                    if (def != null) {
-                        for (final Category cat : def.getCategory()) {
-                            if (!providedCategoryIds.contains(cat.getId())) {
-                                userCategoryIds.add(cat.getId());
-                            }
-                        }
-                    }
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
-                }
-
-            }
-        }
-        return userCategoryIds;
-    }
 
     public List<Category> getAllCategories() {
         if (categories == null) {
@@ -592,44 +517,20 @@ public class DefinitionResourceProvider {
             return Pics.getImage(PicsConstants.error);
         }
         Image icon = categoryImageRegistry.get(category.getId());
-
         if (icon == null) {
-            final Resource resource = category.eResource();
-            File f = null;
-            if (resource != null) {
-                final URI uri = resource.getURI();
-                f = new File(uri.toFileString());
-                f = f.getParentFile();
+            IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
+            icon = defStore.findFirst(category)
+                    .map(DefinitionResourceLoaderProvider.class::cast)
+                    .map(DefinitionResourceLoaderProvider::getDefinitionImageResourceLoader)
+                    .map(loader -> loader.getIcon(category))
+                    .orElse(null);
+            if (icon != null) {
+                categoryImageRegistry.put(category.getId(), icon);
             } else {
-                f = store.getResource().getLocation().toFile();
-            }
-
-            if (f != null && f.exists() && category.getIcon() != null) {
-                final File iconFile = new File(f, category.getIcon());
-                URL iconURL = null;
-                if (!iconFile.exists()) {
-                    try {
-                        final String name = store.getResource().getName() + "/" + category.getIcon();
-                        final URL resourceURL = bundle.getResource(name);
-                        if (resourceURL != null) {
-                            iconURL = FileLocator.toFileURL(resourceURL);
-                        }
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-                if (iconURL != null || iconFile.exists()) {
-                    try {
-                        if (iconURL == null) {
-                            iconURL = iconFile.toURI().toURL();
-                        }
-                        icon = ImageDescriptor.createFromURL(iconURL)
-                                .createImage();
-                        categoryImageRegistry.put(category.getId(), icon);
-                        return icon;
-                    } catch (final MalformedURLException e) {
-                        BonitaStudioLog.error(e);
-                    }
+                Image image = categoryImageRegistry.get(category.getId());
+                if (image != null) {
+                    image.dispose();
+                    categoryImageRegistry.remove(category.getId());
                 }
             }
         }
@@ -656,7 +557,7 @@ public class DefinitionResourceProvider {
     private List<ConnectorDefinition> getAllDefinitionWithCategotyId(final String id) {
         if (store instanceof IDefinitionRepositoryStore) {
             final List<ConnectorDefinition> result = new ArrayList<>();
-            for (final ConnectorDefinition def : ((IDefinitionRepositoryStore) store).getDefinitions()) {
+            for (final ConnectorDefinition def : ((IDefinitionRepositoryStore<?>) store).getDefinitions()) {
                 for (final Category c : def.getCategory()) {
                     if (c.getId().equals(id)) {
                         result.add(def);
@@ -669,52 +570,21 @@ public class DefinitionResourceProvider {
     }
 
     public void loadDefinitionsCategories(final IProgressMonitor monitor) {
+        RESOURCE_BUNDLE_CACHE.clear();
         categories = new ArrayList<>();
         final Set<String> idsToAdd = new HashSet<>();
-        idsToAdd.addAll(getProvidedCategoriesIds());
-        idsToAdd.addAll(getUserCategoriesIds());
+        idsToAdd.addAll(getCategoriesIds());
         boolean addUnloadableCategory = false;
-        for (final IRepositoryFileStore defFile : store.getChildren()) {
-            if (!defFile.canBeShared()) { // provided definition
-                try {
-                    final ConnectorDefinition def = (ConnectorDefinition) defFile
-                            .getContent();
-                    if (def instanceof UnloadableConnectorDefinition) {
-                        addUnloadableCategory = true;
-                    } else if (def != null) {
-                        for (final Category cat : def.getCategory()) {
-                            if (idsToAdd.contains(cat.getId())) {
-                                categories.add(cat);
-                                idsToAdd.remove(cat.getId());
-                            }
-                        }
+        for (ConnectorDefinition def : ((IDefinitionRepositoryStore<?>) store).getDefinitions()) {
+            if (def instanceof UnloadableConnectorDefinition) {
+                addUnloadableCategory = true;
+            } else if (def != null) {
+                for (final Category cat : def.getCategory()) {
+                    if (idsToAdd.contains(cat.getId())) {
+                        categories.add(cat);
+                        idsToAdd.remove(cat.getId());
                     }
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
                 }
-
-            }
-        }
-
-        for (final IRepositoryFileStore defFile : store.getChildren()) {
-            if (defFile.canBeShared()) { // user definition
-                try {
-                    final ConnectorDefinition def = (ConnectorDefinition) defFile
-                            .getContent();
-                    if (def instanceof UnloadableConnectorDefinition) {
-                        addUnloadableCategory = true;
-                    } else if (def != null) {
-                        for (final Category cat : def.getCategory()) {
-                            if (idsToAdd.contains(cat.getId())) {
-                                categories.add(cat);
-                                idsToAdd.remove(cat.getId());
-                            }
-                        }
-                    }
-                } catch (final ReadFileStoreException e) {
-                    BonitaStudioLog.error("Failed to retrieve connector definition", e);
-                }
-
             }
         }
         if (addUnloadableCategory) {
@@ -724,14 +594,7 @@ public class DefinitionResourceProvider {
         uncategorized.setId(Messages.uncategorized);
         categories.add(uncategorized);
 
-        Collections.sort(categories, new Comparator<Category>() {
-
-            @Override
-            public int compare(final Category c1, final Category c2) {
-                return getCategoryLabel(c1).compareTo(
-                        getCategoryLabel(c2));
-            }
-        });
+        Collections.sort(categories, (c1,c2) -> getCategoryLabel(c1).compareTo(getCategoryLabel(c2)));
     }
 
     public Image getDefinitionIcon(final ConnectorDefinition definition) {
@@ -740,50 +603,22 @@ public class DefinitionResourceProvider {
         }
         final String definitionId = definition.getId() + "_" + definition.getVersion();
         Image icon = definitionImageRegistry.get(definitionId);
-
         if (icon == null || icon.isDisposed()) {
-            final Resource resource = definition.eResource();
-            File f = null;
-            if (resource != null) {
-                final URI uri = resource.getURI();
-                f = new File(URI.decode(uri.toFileString()));
-                f = f.getParentFile();
+            IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
+            icon = defStore.find(definition)
+                    .map(DefinitionResourceLoaderProvider.class::cast)
+                    .map(DefinitionResourceLoaderProvider::getDefinitionImageResourceLoader)
+                    .map(loader -> loader.getIcon(definition))
+                    .orElse(null);
+            if (icon != null) {
+                definitionImageRegistry.put(definitionId, icon);
             } else {
-                f = store.getResource().getLocation().toFile();
-            }
-            if (f != null && f.exists() && definition.getIcon() != null && !definition.getIcon().isEmpty()) {
-                final File iconFile = new File(f, definition.getIcon());
-                URL iconURL = null;
-                if (!iconFile.exists()) {
-                    try {
-                        final String name = store.getResource().getName() + "/" + definition.getIcon();
-                        final URL resourceURL = bundle.getResource(name);
-                        if (resourceURL != null) {
-                            iconURL = FileLocator.toFileURL(resourceURL);
-                        }
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-                if (iconURL != null || iconFile.exists()) {
-                    try {
-                        if (iconURL == null) {
-                            iconURL = iconFile.toURI().toURL();
-                        }
-                        icon = ImageDescriptor.createFromURL(iconURL).createImage();
-                        if (definitionImageRegistry.get(definitionId) != null) {
-                            definitionImageRegistry.remove(definitionId);
-                        }
-                        definitionImageRegistry.put(definitionId, icon);
-                        return icon;
-                    } catch (final MalformedURLException e) {
-                        BonitaStudioLog.error(e);
-                    }
+                Image image = definitionImageRegistry.get(definitionId);
+                if (image != null) {
+                    image.dispose();
+                    definitionImageRegistry.remove(definitionId);
                 }
             }
-        }
-        if (icon == null || icon.isDisposed()) {
-            icon = store.getIcon();
         }
         return icon;
     }
@@ -802,6 +637,11 @@ public class DefinitionResourceProvider {
 
     public void removeCategoryLabel(final Properties messages, final Category c) {
         messages.remove(c.getId() + "." + category);
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        loadDefinitionsCategories(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
 }

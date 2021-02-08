@@ -19,9 +19,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -73,6 +74,8 @@ public interface IRepository extends IFileStoreChangeListener {
     IStatus exportToArchive(String file);
 
     IRepositoryFileStore getFileStore(IResource resource);
+
+    ProjectDependenciesStore getProjectDependenciesStore();
 
     IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource);
 

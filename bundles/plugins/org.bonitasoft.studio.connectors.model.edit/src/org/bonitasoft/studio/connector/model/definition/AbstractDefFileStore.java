@@ -25,7 +25,12 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.provider.BundleDefinitionImageResourceLoader;
+import org.bonitasoft.studio.common.repository.provider.BundleResourceLoader;
+import org.bonitasoft.studio.common.repository.provider.DefinitionImageResourceLoader;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceLoaderProvider;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.OSGIBundleResourceLoader;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -44,15 +49,11 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  * @author Baptiste Mesta
  */
-public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition> {
-
-    AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store;
+public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinition> implements DefinitionResourceLoaderProvider {
 
     public AbstractDefFileStore(final String fileName,
             final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
         super(fileName, store);
-        this.store = store;
-
     }
 
     @Override
@@ -112,16 +113,24 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
         }
         super.delete();
     }
-
+    
+    @Override
+    public BundleResourceLoader getBundleResourceLoader() {
+        return new OSGIBundleResourceLoader(getEMFResource(), getBundle(), store);
+    }
+    
+    @Override
+    public DefinitionImageResourceLoader getDefinitionImageResourceLoader() {
+         return new BundleDefinitionImageResourceLoader(getBundle(), getParentStore());
+    }
+    
     @Override
     public Image getIcon() {
-        ConnectorDefinition def;
         try {
-            def = getContent();
+            return getDefinitionImageResourceLoader().getIcon(getContent());
         } catch (ReadFileStoreException e) {
             return null;
         }
-        return DefinitionResourceProvider.getInstance(getParentStore(), getBundle()).getDefinitionIcon(def);
     }
 
     protected abstract Bundle getBundle();

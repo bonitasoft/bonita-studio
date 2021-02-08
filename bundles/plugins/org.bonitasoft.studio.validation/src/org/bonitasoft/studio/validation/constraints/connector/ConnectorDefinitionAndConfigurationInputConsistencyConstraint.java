@@ -21,7 +21,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.validation.IValidationContext;
 
-public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint extends AbstractLiveValidationMarkerConstraint {
+public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
+        extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency";
 
@@ -33,7 +34,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
     @Override
     protected IStatus performBatchValidation(IValidationContext context) {
         Connector connector = (Connector) context.getTarget();
-        AbstractDefinitionRepositoryStore<?> connectorDefStore = null;
+        AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> connectorDefStore = null;
         boolean isConnector = true;
         if (!(connector instanceof ActorFilter)) {
             connectorDefStore = getConnectorDefinitionRepositoryStore();
@@ -72,9 +73,14 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
         return context.createSuccessStatus();
     }
 
-    protected AbstractDefFileStore getDefFileStore(AbstractDefinitionRepositoryStore<?> connectorDefStore,
+    protected AbstractDefFileStore getDefFileStore(
+            AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> connectorDefStore,
             ConnectorDefinition def) {
-        return (AbstractDefFileStore) connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()), true);
+        AbstractDefFileStore fileStore = connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()), true);
+        if(fileStore == null) {
+            return connectorDefStore.find(def).orElse(null);
+        }
+        return fileStore;
     }
 
     protected IStatus checkInputConsistency(ConnectorConfiguration configuration, ConnectorDefinition def,
@@ -139,11 +145,11 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
         return sb;
     }
 
-    protected AbstractDefinitionRepositoryStore<?> getActorFilterDefinitionStore() {
+    protected AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> getActorFilterDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
     }
 
-    protected AbstractDefinitionRepositoryStore<?> getConnectorDefinitionRepositoryStore() {
+    protected AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> getConnectorDefinitionRepositoryStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
     }
 

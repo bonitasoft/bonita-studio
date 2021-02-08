@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -47,19 +48,14 @@ public class StoreControl extends Control {
             return null ;
         }
 
-        String bundleName = toBundleName(baseName, locale);
         ResourceBundle bundle = null;
-
-
         InputStreamReader reader = null;
         FileInputStream fis = null;
         try {
-
-            File file = new File(pathToBundles, bundleName);
-
-            if (file.isFile()) { // Also checks for existance
+            File file = findCandidate(baseName, locale);
+            if (file != null && file.isFile()) { // Also checks for existance
                 fis = new FileInputStream(file);
-                reader = new InputStreamReader(fis, Charset.forName("UTF-8"));
+                reader = new InputStreamReader(fis, StandardCharsets.UTF_8);
                 bundle = new PropertyResourceBundle(reader);
             }
         } finally {
@@ -71,6 +67,19 @@ public class StoreControl extends Control {
             }
         }
         return bundle;
+    }
+
+    private File findCandidate(String baseName, Locale locale) {
+        String bundleName = toBundleName(baseName, locale);
+        File file = new File(pathToBundles, bundleName);
+        if(file.isFile()) {
+            return file;
+        }
+       File[] candidates = new File(pathToBundles).listFiles( f -> f.getName().startsWith(baseName + "_" + locale.toString()));
+       if(candidates != null && candidates.length > 0) {
+           return candidates[0];
+       }
+       return null;
     }
 
     @Override

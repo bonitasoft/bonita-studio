@@ -39,6 +39,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +63,8 @@ public class AbstractRepositoryTest {
     private DatabaseHandler bonitaHomeHandler;
     @Mock
     private IWorkspaceRoot root;
+    @Mock
+    private IEventBroker eventBroker;
 
     @Test
     public void should_not_refresh_project_when_deleting_a_closed_repository() throws Exception {
@@ -114,8 +117,11 @@ public class AbstractRepositoryTest {
     }
 
     private AbstractRepository newRepository() throws CoreException, MigrationException {
-        final AbstractRepository repo = spy(new TestRepository(workspace, project, extensionContextInjectionFactory,
-                jdtTypeHierarchyManager, true));
+        final AbstractRepository repo = spy(new TestRepository(workspace, project,
+                extensionContextInjectionFactory,
+                jdtTypeHierarchyManager, 
+                eventBroker,
+                true));
         doReturn(bonitaHomeHandler).when(repo).getDatabaseHandler();
         doNothing().when(repo).hookResourceListeners();
         doNothing().when(repo).removeResourceListeners();
@@ -130,8 +136,8 @@ class TestRepository extends AbstractRepository {
 
     public TestRepository(IWorkspace workspace, IProject project,
             ExtensionContextInjectionFactory extensionContextInjectionFactory,
-            JDTTypeHierarchyManager jdtTypeHierarchyManager, boolean migrationEnabled) {
-        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager, migrationEnabled);
+            JDTTypeHierarchyManager jdtTypeHierarchyManager,IEventBroker eventBroker, boolean migrationEnabled) {
+        super(workspace, project, extensionContextInjectionFactory, jdtTypeHierarchyManager,eventBroker, migrationEnabled);
     }
 
 }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -35,7 +36,6 @@ import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.connector.model.ConnectorModelPlugin;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceImpl;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
@@ -55,7 +55,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
-        implements IDefinitionRepositoryStore {
+        implements IDefinitionRepositoryStore<T> {
 
     private final List<T> providedConnectorDefFileStore = new ArrayList<T>();
     private final List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
@@ -79,7 +79,37 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 .map(this::toConnectorDefinition)
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public Optional<T> find(ConnectorDefinition definition) {
+        return getChildren().stream()
+                .filter(fStore -> {
+                    try {
+                        ConnectorDefinition def = (ConnectorDefinition) fStore.getContent();
+                        return Objects.equals(def.getId(), definition.getId())
+                                && Objects.equals(def.getVersion(), definition.getVersion());
+                    } catch (ReadFileStoreException e) {
+                        return false;
+                    }
+                })
+                .findFirst();
+    }
+
+    @Override
+    public Optional<T> findFirst(Category category) {
+        return getChildren().stream()
+                .filter(fStore -> {
+                    try {
+                        ConnectorDefinition def = (ConnectorDefinition) fStore.getContent();
+                        return def.getCategory().stream()
+                                .anyMatch(c -> Objects.equals(c.getId(), category.getId()));
+                    } catch (ReadFileStoreException e) {
+                        return false;
+                    }
+                })
+                .findFirst();
+    }
+
     private ConnectorDefinition toConnectorDefinition(IRepositoryFileStore fStore) {
         ConnectorDefinition def;
         try {
@@ -87,7 +117,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         } catch (Exception e) {
             def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
             def.setId(fStore.getName());
-            def.setVersion(""); 
+            def.setVersion("");
         }
         if (def == null) {
             def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
@@ -110,7 +140,6 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
     public List<T> getChildren() {
         final List<T> result = super.getChildren();
         if (providedConnectorDefFileStore.isEmpty()) {
-            BonitaStudioLog.info("Loading provided connector definitions...", ConnectorModelPlugin.PLUGIN_ID);
             final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
             if (connectorDefs != null) {
                 while (connectorDefs.hasMoreElements()) {

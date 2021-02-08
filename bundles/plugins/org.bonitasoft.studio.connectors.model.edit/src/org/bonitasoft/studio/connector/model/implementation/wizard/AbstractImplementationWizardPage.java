@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
+import java.io.File;
 import java.util.List;
 
 import org.bonitasoft.studio.common.FileUtil;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -39,6 +41,7 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -63,6 +66,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -94,7 +98,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 
     public AbstractImplementationWizardPage(final ConnectorImplementation implementation,
             final List<ConnectorImplementation> existingImpl, final List<ConnectorDefinition> definitions,
-            final SourceRepositoryStore<AbstractFileStore> sourceStore, final String pageTitle, final String pageDescription,
+            final SourceRepositoryStore<AbstractFileStore> sourceStore, final String pageTitle,
+            final String pageDescription,
             final DefinitionResourceProvider messageProvider) {
         super(true, AbstractImplementationWizardPage.class.getName());
         setTitle(pageTitle);
@@ -165,8 +170,9 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             if (value.toString().contains(" ")) {
                 return ValidationStatus.error("Whitespace is not allowed in version id");
             }
-            if (!FileUtil.isValidName(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
-                    value.toString(), true))) {
+            if (!FileUtil
+                    .isValidName(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),
+                            value.toString(), true))) {
                 return ValidationStatus.error(Messages.invalidFileName);
             }
             return Status.OK_STATUS;
@@ -181,7 +187,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
                 if (observableIdText.getValue().toString().contains(" ")) {
                     return ValidationStatus.error("Whitespace is not allowed in definition id");
                 }
-                final String implID = NamingUtils.toConnectorImplementationFilename(observableIdText.getValue().toString(),
+                final String implID = NamingUtils.toConnectorImplementationFilename(
+                        observableIdText.getValue().toString(),
                         observableVersionText.getValue().toString(), false);
                 for (final ConnectorImplementation impl : existingImpl) {
                     final String existingId = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(),
@@ -210,11 +217,13 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 
         final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         descriptionText
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).span(2, 1).create());
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).span(2, 1).create());
         final UpdateValueStrategy descStrategy = new UpdateValueStrategy();
         descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
         context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), EMFObservables
-                .observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DESCRIPTION),
+                .observeValue(implementation,
+                        ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DESCRIPTION),
                 descStrategy, null);
 
         createClassAndPackageName(mainComposite);
@@ -328,7 +337,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             }
         });
         packageTargetToModel.setAfterGetValidator(
-                value -> JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6));
+                value -> JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_1_6,
+                        JavaCore.VERSION_1_6));
 
         final UpdateValueStrategy packageModelToTarget = new UpdateValueStrategy();
         packageModelToTarget.setConverter(new Converter(String.class, String.class) {
@@ -467,12 +477,18 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final SelectJarsDialog dialog = new SelectJarsDialog(Display.getDefault().getActiveShell());
-                if (dialog.open() == Dialog.OK) {
-                    for (final IRepositoryFileStore jarFile : dialog.getSelectedJars()) {
+                if (dialog.open() == Window.OK) {
+                    for (final DependencyFileStore jarFile : dialog.getSelectedJars()) {
                         final String jar = jarFile.getName();
                         if (!implementation.getJarDependencies().getJarDependency().contains(jar)) {
                             implementation.getJarDependencies().getJarDependency().add(jar);
                         }
+                        List<String> jarDependency = implementation.getJarDependencies().getJarDependency();
+                        jarFile.getTransitiveDependencies()
+                                .stream()
+                                .map(File::getName)
+                                .filter(fileName -> !jarDependency.contains(fileName))
+                                .forEach(jarDependency::add);
                     }
                 }
             }
@@ -480,7 +496,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
         });
 
         removeButton = new Button(buttonComposite, SWT.FLAT);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
+        removeButton
+                .setLayoutData(GridDataFactory.fillDefaults().hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create());
         removeButton.setText(Messages.remove);
         removeButton.addSelectionListener(new SelectionAdapter() {
 

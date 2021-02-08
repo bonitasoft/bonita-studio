@@ -27,7 +27,6 @@ import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefiniti
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorDefinitionWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
@@ -54,7 +53,7 @@ public class ConnectorDefFileStore extends AbstractDefFileStore implements IRena
         try {
             def = getContent();
         } catch (ReadFileStoreException e) {
-           return getName();
+            return getName();
         }
         if (def != null) {
             String defName = store.getResourceProvider().getConnectorDefinitionLabel(def);
@@ -67,21 +66,6 @@ public class ConnectorDefFileStore extends AbstractDefFileStore implements IRena
     }
 
     @Override
-    public Image getIcon() {
-        ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) getParentStore();
-        ConnectorDefinition def;
-        try {
-            def = getContent();
-        } catch (ReadFileStoreException e) {
-           return null;
-        }
-        if (def != null) {
-            return store.getResourceProvider().getDefinitionIcon(def);
-        }
-        return null;
-    }
-
-    @Override
     protected IWorkbenchPart doOpen() {
         ConnectorDefRepositoryStore repositoryFileStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
@@ -91,7 +75,7 @@ public class ConnectorDefFileStore extends AbstractDefFileStore implements IRena
         try {
             wizard = new ConnectorDefinitionWizard(getContent(), messageProvider);
         } catch (ReadFileStoreException e) {
-           return null;
+            return null;
         }
         WizardDialog wd = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), wizard,
                 messageProvider);

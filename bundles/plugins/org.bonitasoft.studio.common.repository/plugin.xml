@@ -75,5 +75,16 @@
              validatorId="org.eclipse.wst.html.core.HTMLValidator">
        </remove>
     </extension>
+    <extension
+          id="analyzePluginMarkerType"
+          name="Bonita Project Analyze Plugin Marker Type"
+          point="org.eclipse.core.resources.markers">
+       <super
+             type="org.eclipse.core.resources.problemmarker">
+       </super>
+       <persistent
+             value="true">
+       </persistent>
+    </extension>
    
 </plugin>

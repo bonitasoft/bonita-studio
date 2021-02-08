@@ -60,6 +60,20 @@ public class ThemeRepositoryStore extends CustomPageProjectRepositoryStore<Theme
     }
 
     @Override
+    public List<ThemeFileStore> getChildren() {
+        List<ThemeFileStore> themes = super.getChildren();
+
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            projectDependenciesStore.getThemes().stream()
+                    .map(t -> new DependencyThemeFileStore(t, this))
+                    .forEach(themes::add);
+        }
+
+        return themes;
+    }
+
+    @Override
     public Archetype getArchetype() {
         return ThemeArchetype.INSTANCE;
     }

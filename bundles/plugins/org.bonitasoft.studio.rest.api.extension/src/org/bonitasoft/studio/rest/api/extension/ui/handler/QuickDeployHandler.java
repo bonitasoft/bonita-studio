@@ -81,9 +81,11 @@ public class QuickDeployHandler {
             }
 
             if (customPageFilseStore != null) {
-                IStatus buildStatus = build(customPageFilseStore);
-                if (!buildStatus.isOK()) {
-                    return ValidationStatus.error(String.format(Messages.buildHasFailed, customPageFilseStore.getDisplayName()));
+                if(!customPageFilseStore.isReadOnly()) {
+                    IStatus buildStatus = build(customPageFilseStore);
+                    if (!buildStatus.isOK()) {
+                        return ValidationStatus.error(String.format(Messages.buildHasFailed, customPageFilseStore.getDisplayName()));
+                    }
                 }
                 final DeployCustomPageOperation deployRestAPIExtensionOperation = new DeployCustomPageOperation(
                         BOSEngineManager.getInstance(),
