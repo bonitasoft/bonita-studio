@@ -16,43 +16,48 @@ package org.bonitasoft.studio.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.junit.Assert.assertNotSame;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
+import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
 
 public class BonitaProjectIT {
 
     private MavenXpp3Reader reader = new MavenXpp3Reader();
-    
+
     @Test
     public void should_create_a_bonita_project() throws Exception {
-
-        // Create a new project
-        new ProgressMonitorDialog(Display.getDefault().getActiveShell())
-                .run(true, false,
-                        monitor -> TeamRepositoryUtil.createNewLocalRepository("Bonita Test Project", monitor));
-
-
         // Validate the default maven model
-        IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+        AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        IProject project = currentRepository.getProject();
         assertThat(project.getFile("pom.xml").exists()).isTrue();
-        
+
+        IMarker[] markers = project.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+        for (IMarker m : markers) {
+            BonitaStudioLog.warning(m.toString(), "org.bonitasoft.studio.tests");
+        }
+
         Model model = reader.read(project.getFile("pom.xml").getContents());
         assertThat(model.getGroupId()).isEqualTo("com.company");
-        assertThat(model.getArtifactId()).isEqualTo("bonita-test-project");
+        assertThat(model.getArtifactId()).isEqualTo("my-project");
         assertThat(model.getVersion()).isEqualTo("1.0.0-SNAPSHOT");
-        assertThat(model.getName()).isEqualTo("Bonita Test Project");
+        assertThat(model.getName()).isEqualTo("My project");
         assertThat(model.getProperties()).contains(entry("bonita.version", ProductVersion.mavenVersion()));
 
         // Validate the project natures and builders
@@ -60,11 +65,25 @@ public class BonitaProjectIT {
                 JavaCore.NATURE_ID,
                 "org.eclipse.jdt.groovy.core.groovyNature",
                 IMavenConstants.NATURE_ID);
-        
+
         assertThat(project.getDescription().getBuildSpec()).extracting(ICommand::getBuilderName)
-            .containsOnly(IMavenConstants.BUILDER_ID,
-                    "org.eclipse.jdt.core.javabuilder",
-                    "org.eclipse.wst.validation.validationbuilder");
+                .containsOnly(IMavenConstants.BUILDER_ID,
+                        "org.eclipse.jdt.core.javabuilder",
+                        "org.eclipse.wst.validation.validationbuilder");
+
+        // Check default organization 
+        OrganizationRepositoryStore orgaStore = currentRepository
+                .getRepositoryStore(OrganizationRepositoryStore.class);
+        assertNotSame(0, orgaStore.getChildren().size());
+
+        // Check provided scripts 
+        ProvidedGroovyRepositoryStore providedScriptStore = currentRepository
+                .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        assertNotSame(0, providedScriptStore.getChildren().size());
+
+        IJavaProject javaProject = currentRepository.getJavaProject();
+        assertThat(javaProject.findType("BonitaUsers")).isNotNull(); // provided script are compiling
+        assertThat(javaProject.findType(AbstractConnector.class.getName())).isNotNull(); // classes in dependencies are in classpath
     }
 
 }

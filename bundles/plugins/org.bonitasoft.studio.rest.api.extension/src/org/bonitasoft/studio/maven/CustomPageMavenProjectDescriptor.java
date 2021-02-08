@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Predicate;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -36,8 +39,12 @@ import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 
 public abstract class CustomPageMavenProjectDescriptor {
 
-    protected final IProject project;
+    protected IProject project;
     private static final String PAGE_PROPERTIES_PATH = "src/main/resources/page.properties";
+
+    public CustomPageMavenProjectDescriptor() {
+
+    }
 
     public CustomPageMavenProjectDescriptor(final IProject project) {
         this.project = project;
@@ -56,27 +63,29 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     public String getName() {
-        return project.getName();
+        return project != null ? project.getName() : getCustomPageName();
     }
 
     public Properties getPageProperties() {
         final Properties properties = new Properties();
-        InputStream contents = null;
-        try {
-            final IFile propertyFile = getPropertyFile();
-            if (!propertyFile.exists()) {
-                return properties;
-            }
-            contents = propertyFile.getContents();
-            properties.load(contents);
-        } catch (IOException | CoreException e) {
-            BonitaStudioLog.error(e);
-        } finally {
-            if (contents != null) {
-                try {
-                    contents.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
+        if (project != null) {
+            InputStream contents = null;
+            try {
+                final IFile propertyFile = getPropertyFile();
+                if (!propertyFile.exists()) {
+                    return properties;
+                }
+                contents = propertyFile.getContents();
+                properties.load(contents);
+            } catch (IOException | CoreException e) {
+                BonitaStudioLog.error(e);
+            } finally {
+                if (contents != null) {
+                    try {
+                        contents.close();
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         }
@@ -84,14 +93,16 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     public void savePageProperties(final Properties pageProperties) {
-        final IFile propertyFile = getPropertyFile();
-        final File file = propertyFile.getLocation().toFile();
-        file.delete();
-        try (final FileWriter fileWriter = new FileWriter(file);) {
-            pageProperties.store(fileWriter, null);
-            propertyFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException | IOException e) {
-            BonitaStudioLog.error(e);
+        if (project != null) {
+            final IFile propertyFile = getPropertyFile();
+            final File file = propertyFile.getLocation().toFile();
+            file.delete();
+            try (final FileWriter fileWriter = new FileWriter(file);) {
+                pageProperties.store(fileWriter, null);
+                propertyFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (final CoreException | IOException e) {
+                BonitaStudioLog.error(e);
+            }
         }
     }
 
@@ -101,7 +112,7 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     protected void ensureProjectOpen() {
-        if (!project.isOpen()) {
+        if (project != null && !project.isOpen()) {
             try {
                 project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e) {
@@ -111,13 +122,16 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     public Optional<MavenProject> getMavenProject() {
-        try {
-            return Optional.ofNullable(MavenPlugin.getMavenProjectRegistry().getProject(project)
-                    .getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR));
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-            return Optional.empty();
-        }
+        return Optional.ofNullable(project).map(p -> {
+            try {
+                return MavenPlugin.getMavenProjectRegistry().getProject(p)
+                        .getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                return null;
+            }
+        })
+                .filter(Objects::nonNull);
     }
 
     public String getArtifactId() {
@@ -149,6 +163,15 @@ public abstract class CustomPageMavenProjectDescriptor {
                 .filter(Objects::nonNull)
                 .filter(value -> !(value.trim().startsWith("${") && value.trim().endsWith("}")))
                 .filter(value -> !(value.trim().startsWith("custompage_${") && value.trim().endsWith("}")));
+    }
+    
+    protected Optional<? extends ZipEntry> findZipEntry(File file, Predicate<? super ZipEntry> entryPredicate)
+            throws IOException {
+        try (ZipFile zipFile = new ZipFile(file)) {
+            return zipFile.stream()
+                    .filter(entryPredicate)
+                    .findFirst();
+        }
     }
 
 }

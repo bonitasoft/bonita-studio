@@ -12,6 +12,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateV
 
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
+import org.bonitasoft.studio.rest.api.extension.core.repository.DependencyRestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.ui.wizard.RestAPIExtensionLabelProvider;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -24,6 +25,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -55,7 +58,13 @@ public class SelectRestAPIExtensionControlSupplier implements ControlSupplier {
         restApiExtensionViewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(TABLE_WIDTH_HINT, SWT.DEFAULT).span(2, 1)
                         .create());
-
+        restApiExtensionViewer.addFilter(new ViewerFilter() {
+            
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                return !(element instanceof DependencyRestAPIExtensionFileStore);
+            }
+        });
         restApiExtensionViewer.setContentProvider(ArrayContentProvider.getInstance());
         restApiExtensionViewer.setLabelProvider(new RestAPIExtensionLabelProvider());
         restApiExtensionViewer.setInput(repositoryStore.getChildren());

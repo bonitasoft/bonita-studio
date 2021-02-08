@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.svn.core.resource.IRepositoryResource;
 import org.junit.Before;
@@ -63,10 +64,12 @@ public class RepositoryTest {
     private JDTTypeHierarchyManager jdtManager;
     @Mock
     private IProject project;
+    @Mock
+    private IEventBroker eventBroker;
 
     @Before
     public void setUp() throws Exception, CoreException {
-        sharedRepository = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtManager, true));
+        sharedRepository = spy(new Repository(workspace, project, extensionContextInjectionFactory, jdtManager, eventBroker, true));
         doReturn(lockManager).when(sharedRepository).createLockManager();
         when(lockManager.runScanResourcesLockOperation(any(IResource.class))).thenReturn(scan);
         when(fileStore.getResource()).thenReturn(resource);

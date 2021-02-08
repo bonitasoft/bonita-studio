@@ -27,7 +27,6 @@ import org.bonitasoft.studio.connector.model.definition.dialog.ConnectorDefiniti
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.ui.wizard.FilterDefinitionWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.Bundle;
@@ -64,21 +63,6 @@ public class ActorFilterDefFileStore extends AbstractDefFileStore implements IRe
             return defName + " (" + def.getVersion() + ")";
         }
         return super.getDisplayName();
-    }
-
-    @Override
-    public Image getIcon() {
-        ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) getParentStore();
-        ConnectorDefinition def;
-        try {
-            def = getContent();
-        } catch (ReadFileStoreException e) {
-            return null;
-        }
-        if (def != null) {
-            return store.getResourceProvider().getDefinitionIcon(def);
-        }
-        return null;
     }
 
     @Override

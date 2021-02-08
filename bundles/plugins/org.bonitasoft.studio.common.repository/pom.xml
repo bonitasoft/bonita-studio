@@ -12,5 +12,60 @@
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.common.repository</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	
+
+	<properties>
+		<lib.dir>lib</lib.dir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bonitasoft.maven</groupId>
+			<artifactId>bonita-project-report-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>dependency-report-model</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.maven</groupId>
+									<artifactId>bonita-project-report-model</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${lib.dir}</outputDirectory>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${lib.dir}</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

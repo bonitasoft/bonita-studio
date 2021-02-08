@@ -24,10 +24,16 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.PluginManagement;
+import org.apache.maven.model.Repository;
+import org.apache.maven.model.RepositoryPolicy;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class MavenProjectModelBuilder {
+
+    public static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
+    public static final String BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
+    public static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.0.1-SNAPSHOT";
 
     private String artifactId;
     private String groupId;
@@ -110,6 +116,7 @@ public class MavenProjectModelBuilder {
         model.addProperty("project.reporting.outputEncoding", "UTF-8");
         model.addProperty("build-helper-maven-plugin.version", "3.2.0");
         model.addProperty("maven-install-plugin.version", "3.0.0-M1");
+        model.addProperty("bonita-project-maven-plugin.version", BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
 
         if (PlatformUtil.isACommunityBonitaProduct()) {
             model.addDependency(providedDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}"));
@@ -131,9 +138,31 @@ public class MavenProjectModelBuilder {
         PluginManagement pluginManagement = new PluginManagement();
         pluginManagement.addPlugin(plugin("org.apache.maven.plugins", "maven-install-plugin",
                 "${maven-install-plugin.version}"));
+        pluginManagement.addPlugin(
+                plugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID, BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
+                        "${bonita-project-maven-plugin.version}"));
+
         build.setPluginManagement(pluginManagement);
         model.setBuild(build);
+
+        model.addPluginRepository(repository("ossrh-snapshot", "ossrh-snapshot",
+                "https://oss.sonatype.org/content/repositories/snapshots/", false, true));
+
         return model;
+    }
+
+    private Repository repository(String id, String name, String url, boolean release, boolean snapshot) {
+        Repository repository = new Repository();
+        repository.setId(id);
+        repository.setName(name);
+        repository.setUrl(url);
+        RepositoryPolicy releaseRepositoryPolicy = new RepositoryPolicy();
+        releaseRepositoryPolicy.setEnabled(release);
+        repository.setReleases(releaseRepositoryPolicy);
+        RepositoryPolicy snapshotRepositoryPolicy = new RepositoryPolicy();
+        snapshotRepositoryPolicy.setEnabled(snapshot);
+        repository.setSnapshots(snapshotRepositoryPolicy);
+        return repository;
     }
 
     private PluginExecution pluginExecution(String phase, List<String> goals, Object configuration) {

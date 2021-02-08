@@ -42,6 +42,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
@@ -80,6 +82,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -89,7 +92,6 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.ui.internal.UpdateMavenProjectJob;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
@@ -149,16 +151,22 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
 
     private boolean enableOpenIntroListener = true;
 
+    private ProjectDependenciesStore projectDependenciesStore;
+
+    private IEventBroker eventBroker;
+
     public AbstractRepository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
             final JDTTypeHierarchyManager jdtTypeHierarchyManager,
+            IEventBroker eventBroker,
             final boolean migrationEnabled) {
         this.workspace = workspace;
         this.project = project;
         this.jdtTypeHierarchyManager = jdtTypeHierarchyManager;
         this.migrationEnabled = migrationEnabled;
         this.extensionContextInjectionFactory = extensionContextInjectionFactory;
+        this.eventBroker = eventBroker;
         this.projectFileListener = createProjectFileChangeListener();
     }
 
@@ -258,6 +266,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
+
+        this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
+        this.projectDependenciesStore.analyze(monitor);
+
         enableBuild();
         projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
         if (migrationEnabled()) {
@@ -270,17 +282,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
         hookResourceListeners();
         updateCurrentRepositoryPreference();
-        new UpdateMavenProjectJob(new IProject[] { project },
-                false,
-                true,
-                true,
-                true, true) {
 
-            @Override
-            public boolean belongsTo(Object family) {
-                return Objects.equals(family, this);
-            }
-        }.schedule();
         return this;
     }
 
@@ -622,6 +624,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             }
         }
         return null;
+    }
+
+    @Override
+    public ProjectDependenciesStore getProjectDependenciesStore() {
+        return projectDependenciesStore;
     }
 
     @Override

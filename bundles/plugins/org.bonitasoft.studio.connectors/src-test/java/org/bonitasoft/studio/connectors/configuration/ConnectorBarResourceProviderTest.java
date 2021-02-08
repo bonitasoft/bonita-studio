@@ -77,7 +77,7 @@ public class ConnectorBarResourceProviderTest {
 
     @Mock
     private DependencyFileStore libFileStore;
-
+    
     @Before
     public void initRepositoryAccessor() throws Exception {
         when(repositoryAccessor.getRepositoryStore(ConnectorImplRepositoryStore.class)).thenReturn(connectorImplStore);

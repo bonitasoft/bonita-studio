@@ -180,7 +180,7 @@ public class BonitaSuite extends Suite {
         preferenceStore.setValue(BonitaPreferenceConstants.HIDE_BDM_REFACTOR_PREVIEW, true);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
+        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         FileActionDialog.setDisablePopup(true);
     }
 

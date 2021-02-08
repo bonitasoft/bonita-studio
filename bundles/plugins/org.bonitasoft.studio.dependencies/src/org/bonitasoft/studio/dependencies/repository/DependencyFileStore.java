@@ -15,7 +15,10 @@
 package org.bonitasoft.studio.dependencies.repository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +74,11 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
         if (content instanceof InputStream) {
             try {
                 if (getResource().exists()) {
-                    getResource().setContents((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    getResource().setContents((InputStream) content, IResource.FORCE,
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
-                    getResource().create((InputStream) content, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    getResource().create((InputStream) content, IResource.FORCE,
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
@@ -109,7 +114,8 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
                 final IProject project = repository.getProject();
                 project.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 if (repository.isBuildEnable()) {
-                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
+                            AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
 
             }
@@ -153,9 +159,19 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
     public File getFile() {
         return getResource().getLocation().toFile();
     }
-    
-    public List<File> getTransitiveDependencies(){
+
+    public List<File> getTransitiveDependencies() {
         return Collections.emptyList();
     }
 
+    @Override
+    public byte[] toByteArray() throws IOException {
+        File file = getFile();
+        if (file.isFile()) {
+            return Files.readAllBytes(file.toPath());
+        } else {
+            throw new FileNotFoundException(String.format("%s not found", file));
+
+        }
+    }
 }

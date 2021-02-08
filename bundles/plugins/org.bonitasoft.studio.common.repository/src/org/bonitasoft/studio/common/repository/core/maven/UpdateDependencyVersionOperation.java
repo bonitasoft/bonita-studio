@@ -58,6 +58,7 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
             model.removeDependency(dependencyToUpdate.get());
             model.addDependency(dependencyUpdated);
             saveModel(getCurrentProject(), model, monitor);
+            getProjectDependenciesStore().analyze(monitor);
         }
     }
 

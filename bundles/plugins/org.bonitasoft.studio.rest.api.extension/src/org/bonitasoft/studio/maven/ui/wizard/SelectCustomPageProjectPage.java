@@ -10,6 +10,9 @@ package org.bonitasoft.studio.maven.ui.wizard;
 
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -25,10 +28,12 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.AbstractTableViewer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -41,6 +46,8 @@ public class SelectCustomPageProjectPage extends WizardPage {
     protected final WidgetFactory widgetFactory;
     private final IObservableValue fileStoreObservable;
     private DataBindingContext context;
+    private TableViewer viewer;
+    private List<ViewerFilter> filters = new ArrayList<>();
 
     public SelectCustomPageProjectPage(final CustomPageProjectRepositoryStore<? extends CustomPageProjectFileStore> repositoryStore,
             final WidgetFactory widgetFactory,
@@ -70,14 +77,15 @@ public class SelectCustomPageProjectPage extends WizardPage {
     }
 
     protected void doCreateContent(final Composite mainComposite, final DataBindingContext context) {
-        final TableViewer restApiExtensionViewer = widgetFactory.newTableViewer(mainComposite, "restApiTable");
-        restApiExtensionViewer.getControl()
+        viewer = widgetFactory.newTableViewer(mainComposite, "restApiTable");
+        viewer.getControl()
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(TABLE_WIDTH_HINT, SWT.DEFAULT).span(2, 1).create());
 
-        restApiExtensionViewer.setContentProvider(ArrayContentProvider.getInstance());
-        restApiExtensionViewer.setLabelProvider(new RestAPIExtensionLabelProvider());
-        restApiExtensionViewer.setInput(repositoryStore.getChildren());
-        restApiExtensionViewer.addDoubleClickListener(new IDoubleClickListener() {
+        viewer.setContentProvider(ArrayContentProvider.getInstance());
+        viewer.setLabelProvider(new RestAPIExtensionLabelProvider());
+        filters.stream().forEach(viewer::addFilter);
+        viewer.setInput(repositoryStore.getChildren());
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
 
             @Override
             public void doubleClick(final DoubleClickEvent event) {
@@ -90,8 +98,12 @@ public class SelectCustomPageProjectPage extends WizardPage {
                 }
             }
         });
-        context.bindValue(ViewersObservables.observeSingleSelection(restApiExtensionViewer), fileStoreObservable,
+        context.bindValue(ViewersObservables.observeSingleSelection(viewer), fileStoreObservable,
                 updateValueStrategy().withValidator(selectionValidator()).create(), null);
+    }
+    
+    public void addFilter(ViewerFilter filter) {
+        filters.add(filter);
     }
 
     private IValidator selectionValidator() {

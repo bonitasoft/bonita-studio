@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -38,7 +36,6 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ActorFilterImplRepositoryStore extends AbstractConnectorImplRepositoryStore<ActorFilterImplFileStore> {
 
@@ -115,7 +112,8 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
     @Override
     public List<ActorFilterImplFileStore> getChildren() {
         List<ActorFilterImplFileStore> result = super.getChildren();
-        Enumeration<URL> connectorImplementations = IdentityPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*.impl", false);
+        Enumeration<URL> connectorImplementations = IdentityPlugin.getDefault().getBundle().findEntries(STORE_NAME,
+                "*.impl", false);
         if (connectorImplementations != null) {
             while (connectorImplementations.hasMoreElements()) {
                 URL url = connectorImplementations.nextElement();
@@ -129,6 +127,14 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
                 }
             }
         }
+
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            projectDependenciesStore.getActorFilterImplementations().stream()
+                    .map(t -> new DependencyActorFilterImplFileStore(t, this))
+                    .forEach(result::add);
+        }
+
         return result;
     }
 
@@ -139,12 +145,14 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if(filename != null && filename.endsWith("."+ IMPL_EXT)) {
-            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
-                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))).validate(inputStream);
+        if (filename != null && filename.endsWith("." + IMPL_EXT)) {
+            return new XMLModelCompatibilityValidator(
+                    new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
+                            String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                            String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                                    filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }
-  
+
 }

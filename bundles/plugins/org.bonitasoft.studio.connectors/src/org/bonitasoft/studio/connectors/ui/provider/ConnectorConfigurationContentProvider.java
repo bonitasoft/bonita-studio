@@ -59,8 +59,7 @@ ITreeContentProvider {
 		connectorConfStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
 
 		final Bundle bundle = getBundle();
-		messageProvider = DefinitionResourceProvider.getInstance(
-				connectorDefStore, bundle);
+		messageProvider = DefinitionResourceProvider.getInstance(connectorDefStore, bundle);
 		definitionCategoryContentProvider = new DefinitionCategoryContentProvider(messageProvider.getAllCategories());
 		unloadableCategoryName = messageProvider.getUnloadableCategory().getId();
 		unCategorizedCategory = messageProvider.getUncategorizedCategory();

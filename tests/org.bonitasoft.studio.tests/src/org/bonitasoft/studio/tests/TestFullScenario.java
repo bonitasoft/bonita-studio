@@ -178,7 +178,6 @@ public class TestFullScenario {
      * @throws IOException
      */
     public void execute() throws Exception {
-        BOSEngineManager.getInstance().start();
         final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
         final IStatus status = (IStatus) deployProcessCommand.execute(new ExecutionEvent());

@@ -18,18 +18,25 @@ import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IRepositoryFactory;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.team.TeamPlugin;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 
 public class RepositoryFactory implements IRepositoryFactory {
 
     @Override
     public AbstractRepository newRepository(final String name, final boolean migrationEnabled) {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IEclipseContext context = EclipseContextFactory.getServiceContext(TeamPlugin.getDefault().getBundle().getBundleContext());
+        IEventBroker eventBroker = context.get(IEventBroker.class);
         return new Repository(workspace,
                 workspace.getRoot().getProject(name),
                 new ExtensionContextInjectionFactory(),
                 new JDTTypeHierarchyManager(),
+                eventBroker,
                 migrationEnabled);
     }
 

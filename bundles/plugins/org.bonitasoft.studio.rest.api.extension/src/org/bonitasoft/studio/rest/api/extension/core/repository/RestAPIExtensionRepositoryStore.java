@@ -22,6 +22,8 @@ import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
+import org.bonitasoft.studio.theme.DependencyThemeFileStore;
+import org.bonitasoft.studio.theme.ThemeFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.Image;
@@ -53,6 +55,20 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     @Override
     public Archetype getArchetype() {
         return RestAPIExtensionArchetype.INSTANCE;
+    }
+    
+    @Override
+    public List<RestAPIExtensionFileStore> getChildren() {
+        List<RestAPIExtensionFileStore> extensions = super.getChildren();
+
+        var projectDependenciesStore = getRepository().getProjectDependenciesStore();
+        if (projectDependenciesStore != null) {
+            projectDependenciesStore.getRestAPIExtensions().stream()
+                    .map(ext -> new DependencyRestAPIExtensionFileStore(ext, this))
+                    .forEach(extensions::add);
+        }
+
+        return extensions;
     }
 
     @Override

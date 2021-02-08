@@ -71,7 +71,10 @@ public abstract class DeployCustomPageWizard extends Wizard {
     @Override
     public boolean performFinish() {
         final CustomPageProjectFileStore fileStore = fileStoreObservable.getValue();
-        return build(fileStore) && deploy(fileStore);
+        if(!fileStore.isReadOnly()) {
+            return build(fileStore) && deploy(fileStore);
+        }
+        return deploy(fileStore);
     }
 
     protected boolean deploy(final CustomPageProjectFileStore fileStore) {

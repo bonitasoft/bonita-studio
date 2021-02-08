@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core.maven;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -35,6 +36,10 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
     protected IProject getCurrentProject() {
         return RepositoryManager.getInstance().getCurrentRepository().getProject();
+    }
+    
+    protected ProjectDependenciesStore getProjectDependenciesStore() {
+        return RepositoryManager.getInstance().getCurrentRepository().getProjectDependenciesStore();
     }
 
 }

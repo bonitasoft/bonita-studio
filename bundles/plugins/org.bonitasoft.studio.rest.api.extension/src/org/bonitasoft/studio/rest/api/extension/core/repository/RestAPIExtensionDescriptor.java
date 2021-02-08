@@ -34,8 +34,12 @@ import com.google.common.base.Strings;
 
 public class RestAPIExtensionDescriptor extends CustomPageMavenProjectDescriptor {
 
-    protected final static String SRC_PROJECT_PATH = "src/main/groovy/";
+    protected static final String SRC_PROJECT_PATH = "src/main/groovy/";
 
+    public RestAPIExtensionDescriptor() {
+        
+    }
+    
     public RestAPIExtensionDescriptor(final IProject project) {
         super(project);
     }
@@ -76,7 +80,7 @@ public class RestAPIExtensionDescriptor extends CustomPageMavenProjectDescriptor
         String value = pageProperties.getProperty(PagePropertyConstants.API_EXTENSIONS);
         if (value != null && !value.isEmpty()) {
             return Stream.of(value.trim().split(","))
-                    .map(apiName -> apiName.trim())
+                    .map(String::trim)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();

@@ -14,7 +14,7 @@
 
     <properties>
         <javaOPTS>-Xmx1g</javaOPTS>
-        <additionalArgs>-Dbonita.noregister=1 -DLAZYLOAD_ENGINE -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
+        <additionalArgs>-Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</additionalArgs>
 		<target.test.dir>${test.workspace.dir}/community/junit/lé test</target.test.dir>
     </properties>
 

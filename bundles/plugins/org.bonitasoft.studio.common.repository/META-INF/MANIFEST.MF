@@ -47,10 +47,15 @@ Require-Bundle: org.eclipse.ui,
  org.codehaus.groovy;bundle-version="2.4.16";visibility:=reexport,
  org.eclipse.m2e.maven.runtime,
  org.eclipse.m2e.core;bundle-version="1.16.0",
- org.eclipse.m2e.core.ui
+ org.eclipse.m2e.core.ui,
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.4.4";visibility:=reexport,
+ com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.4.4";visibility:=reexport,
+ com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4";visibility:=reexport,
+ org.eclipse.osgi.services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.common.repository,
+Export-Package: org.bonitasoft.plugin.analyze.report.model,
+ org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.core,
  org.bonitasoft.studio.common.repository.core.job,
  org.bonitasoft.studio.common.repository.core.maven,
@@ -67,10 +72,12 @@ Export-Package: org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.common.repository.ui,
  org.bonitasoft.studio.common.repository.ui.viewer,
  org.bonitasoft.studio.common.repository.ui.wizard
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/bonita-project-report-model.jar
 Import-Package: javax.annotation;version="1.2.0",
  javax.inject;version="1.0.0",
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.session
+Automatic-Module-Name: org.bonitasoft.studio.common.repository

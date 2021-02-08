@@ -17,6 +17,8 @@ import org.bonitasoft.studio.maven.ui.handler.CustomPageProjectSelectionProvider
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.Wizard;
 
 public abstract class DeleteCustomPageProjectWizard extends Wizard {
@@ -38,6 +40,13 @@ public abstract class DeleteCustomPageProjectWizard extends Wizard {
     public void addPages() {
         super.addPages();
         final SelectCustomPageProjectPage selectionPage = new SelectCustomPageProjectPage(repositoryStore, widgetFactory, fileStoreObservable);
+        selectionPage.addFilter(new ViewerFilter() {
+            
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                return element instanceof CustomPageProjectFileStore && !((CustomPageProjectFileStore)element).isReadOnly();
+            }
+        });
         selectionPage.setTitle(getSelectionPageTitle());
         selectionPage.setDescription(getSelectionPageDeleteDescription());
         addPage(selectionPage);

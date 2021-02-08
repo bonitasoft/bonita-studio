@@ -45,5 +45,6 @@ Require-Bundle: org.eclipse.core.runtime,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.preferences,
  org.eclipse.e4.ui.css.swt,
- org.eclipse.e4.ui.css.core;bundle-version="0.12.900"
+ org.eclipse.e4.ui.css.core;bundle-version="0.12.900",
+ org.eclipse.osgi.services;bundle-version="3.8.0"
 Bundle-ActivationPolicy: lazy

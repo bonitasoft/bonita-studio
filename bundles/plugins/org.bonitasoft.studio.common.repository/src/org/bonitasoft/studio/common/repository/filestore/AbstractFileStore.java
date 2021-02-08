@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,9 +47,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -63,8 +67,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.progress.IProgressService;
-
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -230,13 +232,18 @@ public abstract class AbstractFileStore<T>
             boolean exists = resource.exists();
             checkParentExists(resource);
             doSave(content);
-            try {
-                getResource().refreshLocal(IResource.DEPTH_ZERO, AbstractRepository.NULL_PROGRESS_MONITOR);
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            if (!exists) {
-                refreshExplorerView();
+            if (PlatformUI.isWorkbenchRunning()) {
+                new WorkspaceJob("Refresh resources...") {
+
+                    @Override
+                    public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                        getResource().refreshLocal(IResource.DEPTH_ZERO, monitor);
+                        if (!exists) {
+                            refreshExplorerView();
+                        }
+                        return Status.OK_STATUS;
+                    }
+                }.schedule();
             }
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this));
         } else {
@@ -248,9 +255,9 @@ public abstract class AbstractFileStore<T>
 
     private void checkParentExists(IResource resource) {
         IContainer parent = resource.getParent();
-        if(parent != null && !parent.exists() && parent instanceof IFolder) {
+        if (parent != null && !parent.exists() && parent instanceof IFolder) {
             try {
-                ((IFolder)parent).create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
+                ((IFolder) parent).create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
             }
@@ -496,7 +503,7 @@ public abstract class AbstractFileStore<T>
         if (resource.exists()) {
             final File file = resource.getLocation().toFile();
             if (file.isFile()) {
-                return Files.toByteArray(file);
+                return Files.readAllBytes(file.toPath());
             }
         }
         throw new FileNotFoundException(String.format("%s not found", resource.getLocation().toOSString()));

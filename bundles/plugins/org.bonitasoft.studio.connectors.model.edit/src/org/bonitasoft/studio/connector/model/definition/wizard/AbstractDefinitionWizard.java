@@ -122,7 +122,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     @Override
     public void addPages() {
         final List<ConnectorDefinition> existinfDefinitions = new ArrayList<>();
-        for (final ConnectorDefinition def : ((IDefinitionRepositoryStore) defStore).getDefinitions()) {
+        for (final ConnectorDefinition def : defStore.getDefinitions()) {
             if (originalDefinition == null || !(def.getId().equals(originalDefinition.getId())
                     && def.getVersion().equals(originalDefinition.getVersion()))) {
                 existinfDefinitions.add(def);

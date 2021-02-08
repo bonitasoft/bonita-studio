@@ -26,8 +26,11 @@ import org.eclipse.core.runtime.Path;
 public class ThemeExtensionDescriptor extends CustomPageMavenProjectDescriptor {
 
     private static final String MAIN_SCSS_PATH = "src/scss/main.scss";
-    private static final String BONITA_VARIABLES_SCSS_PATH = "src/scss/_bonita_variables.scss";;
+    private static final String BONITA_VARIABLES_SCSS_PATH = "src/scss/_bonita_variables.scss";
 
+    public ThemeExtensionDescriptor() {
+    }
+    
     public ThemeExtensionDescriptor(IProject project) {
         super(project);
     }
