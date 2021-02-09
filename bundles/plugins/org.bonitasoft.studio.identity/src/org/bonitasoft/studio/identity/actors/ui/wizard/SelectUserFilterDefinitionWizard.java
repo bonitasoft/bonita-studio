@@ -35,20 +35,18 @@ public class SelectUserFilterDefinitionWizard extends Wizard {
 
     private SelectUserFilterDefinitionWizardPage page;
     private ConnectorDefinition definition;
-    private final DefinitionResourceProvider messageProvider;
 
     public SelectUserFilterDefinitionWizard(){
         setDefaultPageImageDescriptor(Pics.getWizban()) ;
         setWindowTitle(Messages.selectActorFitlerDefinition);
         IRepositoryStore<? extends IRepositoryFileStore> store =RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
-        messageProvider = DefinitionResourceProvider.getInstance(store, IdentityPlugin.getDefault().getBundle()) ;
     }
 
     @Override
     public void addPages() {
         Connector dummy =  ProcessFactory.eINSTANCE.createConnector() ;
         dummy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration()) ;
-        page =  new SelectUserFilterDefinitionWizardPage(dummy,messageProvider);
+        page =  new SelectUserFilterDefinitionWizardPage(dummy);
         addPage(page) ;
     }
 

@@ -5,21 +5,18 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
-import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -29,40 +26,38 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
 
-    protected final DefinitionResourceProvider messageProvider;
-
-    public ConnectorDefinitionTreeLabelProvider(
-            DefinitionResourceProvider messageProvider) {
-        this.messageProvider = messageProvider;
-    }
-
     @Override
     public String getText(Object element) {
-    	if(AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
-    		return Messages.all;
-    	}
-        if (element instanceof ConnectorDefinition) {
+        if (AbstractUniqueDefinitionContentProvider.ROOT.equals(element)) {
+            return Messages.all;
+        }
+        if (element instanceof ExtendedConnectorDefinition) {
             return getLabelFor(element);
-        } else if (element instanceof Category) {
-            return messageProvider.getCategoryLabel((Category) element);
+        } else if (element instanceof ExtendedCategory) {
+            String label = ((ExtendedCategory) element).getLabel();
+            if (label == null) {
+                return ((ExtendedCategory) element).getId();
+            }
+            return label;
         }
         return super.getText(element);
     }
 
     protected String getLabelFor(Object element) {
-        String desc = messageProvider
-                .getConnectorDefinitionDescription((ConnectorDefinition) element);
-        String connectorDefinitionLabel = messageProvider
-                .getConnectorDefinitionLabel((ConnectorDefinition) element);
+        if(!(element instanceof ExtendedConnectorDefinition)){
+            return null;
+        }
+        ExtendedConnectorDefinition def = (ExtendedConnectorDefinition) element;
+        String desc = def.getConnectorDefinitionDescription();
+        String connectorDefinitionLabel = def.getConnectorDefinitionLabel();
         if(connectorDefinitionLabel==null){
-            connectorDefinitionLabel = ((ConnectorDefinition) element).getId();
+            connectorDefinitionLabel = def.getId();
         }
         String text = connectorDefinitionLabel
-                + " (" + ((ConnectorDefinition) element).getVersion() + ")";
+                + " (" + def.getVersion() + ")";
         if (desc != null && !desc.isEmpty()) {
             text = text + " -- " + desc;
         }
@@ -73,11 +68,10 @@ public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
     public Image getImage(Object element) {
         if (element instanceof UnloadableConnectorDefinition) {
             return Pics.getImage(PicsConstants.error);
-        } else if (element instanceof ConnectorDefinition) {
-            return messageProvider
-                    .getDefinitionIcon((ConnectorDefinition) element);
-        } else if (element instanceof Category) {
-            return messageProvider.getCategoryIcon((Category) element);
+        } else if (element instanceof ExtendedConnectorDefinition) {
+            return ((ExtendedConnectorDefinition) element).getImage();
+        } else if (element instanceof ExtendedCategory) {
+            return ((ExtendedCategory)element).getImage();
         }
         return super.getImage(element);
     }

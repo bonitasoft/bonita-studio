@@ -295,16 +295,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     }
 
     private void reloadCategories() {
-        boolean reloadCategories = false;
-        for (final Category c : definitionWorkingCopy.getCategory()) {
-            if (!messageProvider.getAllCategories().contains(c)) {
-                reloadCategories = true;
-                break;
-            }
-        }
-        if (reloadCategories) {
-            messageProvider.loadDefinitionsCategories(null);
-        }
+       messageProvider.loadDefinitionsCategories(null);
     }
 
     protected List<IFile> openPropertiesEditor(final Set<Locale> selectedLocales) {

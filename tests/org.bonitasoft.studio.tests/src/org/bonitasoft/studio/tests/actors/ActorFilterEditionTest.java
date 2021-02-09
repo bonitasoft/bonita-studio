@@ -22,11 +22,12 @@ import static org.junit.Assert.assertTrue;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
-import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
@@ -160,19 +161,17 @@ public class ActorFilterEditionTest {
         final ActorFilterDefRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(
                         ActorFilterDefRepositoryStore.class);
-        final ConnectorDefinition connectorDef = store.getDefinition(id, version);
+        ConnectorDefinitionRegistry connectorDefinitionRegistry = store.getResourceProvider().getConnectorDefinitionRegistry();
+        final ExtendedConnectorDefinition connectorDef = connectorDefinitionRegistry.find(id,version).orElse(null);
         assertEquals("category size should be equal to 1", connectorDef
                 .getCategory().size(), 1);
-        final DefinitionResourceProvider messageProvider = DefinitionResourceProvider
-                .getInstance(store, IdentityPlugin.getDefault().getBundle());
         SWTBotActorFilterUtil.activateActorFilterDefEditionShell(bot);
-        final Category category = connectorDef.getCategory().get(0);
-        String categoryLabel = messageProvider.getCategoryLabel(category);
+        Category c = connectorDef.getCategory().get(0);
+        String categoryLabel = connectorDefinitionRegistry.find(c).map(ExtendedCategory::getLabel).orElse(c.getId());
         if (categoryLabel == null) {
-            categoryLabel = category.getId();
+            categoryLabel = c.getId();
         }
-        final String connectorLabel = new ConnectorDefinitionTreeLabelProvider(messageProvider).getText(connectorDef);
-
+        final String connectorLabel = new ConnectorDefinitionTreeLabelProvider().getText(connectorDef);
         assertNotNull(
                 "could not find " + connectorLabel,
                 bot.tree().getTreeItem(categoryLabel).expand().getNode(connectorLabel));

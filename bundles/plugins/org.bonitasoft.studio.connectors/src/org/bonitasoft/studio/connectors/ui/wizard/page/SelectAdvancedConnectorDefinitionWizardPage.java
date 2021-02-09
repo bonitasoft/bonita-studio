@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -45,16 +46,16 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
  * @author Romain Bioteau
  *
  */
-public class SelectAdvancedConnectorDefinitionWizardPage extends
-AbstractDefinitionSelectionImpementationWizardPage {
+public class SelectAdvancedConnectorDefinitionWizardPage extends AbstractDefinitionSelectionImpementationWizardPage {
 
 	private Connector workingCopy;
 
 	public SelectAdvancedConnectorDefinitionWizardPage(Connector workingCopy,
 			List<ConnectorImplementation> existingImpl,
-			List<ConnectorDefinition> definitions, String pageTitle,
-			String pageDescription, DefinitionResourceProvider messageProvider) {
-		super(existingImpl, definitions, pageTitle, pageDescription, messageProvider);
+			List<ExtendedConnectorDefinition> definitions,
+			String pageTitle,
+			String pageDescription) {
+		super(existingImpl, definitions, pageTitle, pageDescription);
 		this.workingCopy = workingCopy;
 	}
 
@@ -132,9 +133,9 @@ AbstractDefinitionSelectionImpementationWizardPage {
 			IViewerObservableValue versionObservable, final AbstractDefinitionSelectionImpementationWizardPage thisPage) {
 		final Object o = observeSingleSelection.getValue();
 		if(o instanceof ConnectorDefinition){
-			ConnectorDefinition selectedDef = null;
+			ExtendedConnectorDefinition selectedDef = null;
 			String version = (String) versionObservable.getValue();
-			for(ConnectorDefinition def : definitions){
+			for(ExtendedConnectorDefinition def : definitions){
 				if(((ConnectorDefinition) o).getId().equals(def.getId()) && version.equals(def.getVersion())){
 					selectedDef = def;
 					break;

@@ -47,7 +47,7 @@ public class SelectUserConnectorDefinitionWizard extends Wizard {
     public void addPages() {
         Connector dummy = ProcessFactory.eINSTANCE.createConnector();
         dummy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration());
-        page = new SelectUserConnectorDefinitionWizardPage(dummy, messageProvider);
+        page = new SelectUserConnectorDefinitionWizardPage(dummy);
         addPage(page);
     }
 

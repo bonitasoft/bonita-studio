@@ -17,8 +17,7 @@ package org.bonitasoft.studio.connector.wizard.uipath.switchBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
@@ -35,11 +34,12 @@ public class UIPathPageComponentSwitchBuilder extends PageComponentSwitchBuilder
 
     private Map<String, IValidator> customMandatoryValidators;
 
-    public UIPathPageComponentSwitchBuilder(EObject container, ConnectorDefinition definition,
-            ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,
-            DefinitionResourceProvider messageProvider, 
+    public UIPathPageComponentSwitchBuilder(EObject container, 
+            ExtendedConnectorDefinition definition,
+            ConnectorConfiguration connectorConfiguration, 
+            EMFDataBindingContext context,
             AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
-        super(container, definition, connectorConfiguration, context, messageProvider, connectorExpressionContentTypeFilter);
+        super(container, definition, connectorConfiguration, context, connectorExpressionContentTypeFilter);
         this.customMandatoryValidators = new HashMap<>();
     }
 

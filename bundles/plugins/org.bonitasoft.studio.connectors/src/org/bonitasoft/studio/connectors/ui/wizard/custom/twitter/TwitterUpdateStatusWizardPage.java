@@ -25,7 +25,7 @@ public class TwitterUpdateStatusWizardPage extends AbstractTwitterWizardPage {
             EMFDataBindingContext context, Composite pageComposite) {
         return new TwitterUpdateStatusWizardPageComponentSwitch(getContainer(),
                 pageComposite, getElementContainer(), getDefinition(),
-                getConfiguration(), context, getMessageProvider(),
+                getConfiguration(), context, 
                 getExpressionTypeFilter());
     }
 }

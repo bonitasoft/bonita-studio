@@ -25,14 +25,18 @@ public class TwitterDirectMessageWizardPage extends AbstractTwitterWizardPage {
             EMFDataBindingContext context, Composite pageComposite) {
         if (twitterTool.testConnection() == null) {
             return new TwitterDirectMessageWizardPageComponentSwitch(
-                    getContainer(), pageComposite, getElementContainer(),
-                    getDefinition(), getConfiguration(), context,
-                    getMessageProvider(), getExpressionTypeFilter(),
+                    getContainer(),
+                    pageComposite, 
+                    getElementContainer(),
+                    getDefinition(), 
+                    getConfiguration(), 
+                    context,
+                    getExpressionTypeFilter(),
                     twitterTool);
         }
         return new PageComponentSwitch(getContainer(), pageComposite,
                 getElementContainer(), getDefinition(), getConfiguration(),
-                context, getMessageProvider(), getExpressionTypeFilter());
+                context,  getExpressionTypeFilter());
     }
 
 }

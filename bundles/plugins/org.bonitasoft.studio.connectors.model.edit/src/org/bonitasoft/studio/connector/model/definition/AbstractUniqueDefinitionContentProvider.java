@@ -58,8 +58,8 @@ public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDe
 			return super.getElements(ROOT);
 		}else if (element instanceof Category) {
 			Category cat = (Category) element;
-			List<Object> result = new ArrayList<Object>();
-			Set<String> addedId = new HashSet<String>();
+			List<Object> result = new ArrayList<>();
+			Set<String> addedId = new HashSet<>();
 			String parentId = cat.getId();
 			for(Category c : messageProvider.getAllCategories()){
 				if(parentId.equals(c.getParentCategoryId())){

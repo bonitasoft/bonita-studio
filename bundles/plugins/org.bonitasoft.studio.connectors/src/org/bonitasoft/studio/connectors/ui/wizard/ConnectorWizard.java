@@ -37,7 +37,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Array;
@@ -271,9 +273,10 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
         if (editMode) {
             final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
-            final ConnectorDefinition definition = definitionStore
-                    .getDefinition(connectorWorkingCopy.getDefinitionId(),
-                            connectorWorkingCopy.getDefinitionVersion());
+            final ExtendedConnectorDefinition definition = definitionStore.getResourceProvider()
+                    .getConnectorDefinitionRegistry()
+                    .find(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion())
+                    .orElse(null);
             
             AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                     .getChild(URI.decode(definition.eResource().getURI()
@@ -359,9 +362,10 @@ public class ConnectorWizard extends ExtensibleWizard implements
             final DefinitionResourceProvider resourceProvider) {
         return new SelectAdvancedConnectorDefinitionWizardPage(
                 connectorWorkingCopy,
-                Collections.<ConnectorImplementation> emptyList(), getDefinitionStore().getDefinitions(),
+                Collections.<ConnectorImplementation> emptyList(),
+                resourceProvider.getConnectorDefinitionRegistry().getDefinitions(),
                 Messages.selectConnectorDefinitionTitle,
-                Messages.selectConnectorDefinitionDesc, resourceProvider);
+                Messages.selectConnectorDefinitionDesc);
     }
 
     protected IWizardPage getNameAndDescriptionPage() {
@@ -382,14 +386,14 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 ConnectorDefRepositoryStore.class);
     }
 
-    protected void addOuputPage(final ConnectorDefinition definition) {
+    protected void addOuputPage(final ExtendedConnectorDefinition definition) {
         final IWizardPage outputPage = getOutputPageFor(definition);
         if (outputPage != null) {
             addAdditionalPage(outputPage);
         }
     }
 
-    protected IWizardPage getOutputPageFor(final ConnectorDefinition definition) {
+    protected IWizardPage getOutputPageFor(final ExtendedConnectorDefinition definition) {
         AbstractConnectorOutputWizardPage outputPage = null;
         if (!definition.getOutput().isEmpty()) {
             if (!editMode && !supportsDatabaseOutputMode(getDefinition())) {
@@ -431,7 +435,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
     @Override
     public IWizardPage getNextPage(final IWizardPage page) {
         if (page.equals(selectionPage)) {
-            final ConnectorDefinition definition = selectionPage
+            final ExtendedConnectorDefinition definition = selectionPage
                     .getSelectedConnectorDefinition();
             if (definition != null) {
                 extension = findCustomWizardExtension(definition);
@@ -472,7 +476,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
     @Override
     public void recreateConnectorConfigurationPages(
-            final ConnectorDefinition definition,
+            final ExtendedConnectorDefinition definition,
             final boolean clearConfiguration) {
         if (clearConfiguration) {
             clearConnectorConfiguration(definition);
@@ -623,7 +627,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         configuration.getParameters().clear();
     }
 
-    protected List<IWizardPage> getPagesFor(final ConnectorDefinition definition) {
+    protected List<IWizardPage> getPagesFor(final ExtendedConnectorDefinition definition) {
         final List<IWizardPage> result = new ArrayList<>();
 
         if (isDatabaseConnector(definition)) {// DRIVER SELECTION PAGE
@@ -715,7 +719,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     protected SelectDatabaseOutputTypeWizardPage addDatabaseOutputModeSelectionPage(
-            final ConnectorDefinition definition) {
+            final ExtendedConnectorDefinition definition) {
         final SelectDatabaseOutputTypeWizardPage selectOutputPage = new SelectDatabaseOutputTypeWizardPage(
                 isEditMode());
         selectOutputPage.setIsPageFlowContext(isPageFlowContext);
@@ -729,7 +733,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     protected IWizardPage createDefaultConnectorPage(
-            final ConnectorDefinition def, final Page page) {
+            final ExtendedConnectorDefinition def, final Page page) {
         final AbstractConnectorConfigurationWizardPage wizPage = new GeneratedConnectorWizardPage();
         wizPage.setIsPageFlowContext(isPageFlowContext);
         wizPage.setMessageProvider(messageProvider);
@@ -792,17 +796,21 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     @Override
-    public ConnectorDefinition getDefinition() {
-        final IDefinitionRepositoryStore defStore = getDefinitionStore();
+    public ExtendedConnectorDefinition getDefinition() {
+        final ConnectorDefinitionRegistry registry = getDefinitionStore()
+                .getResourceProvider()
+                .getConnectorDefinitionRegistry();
         if (originalConnector != null) {
-            return defStore.getDefinition(originalConnector.getDefinitionId(),
-                    originalConnector.getDefinitionVersion());
+            return registry.find(originalConnector.getDefinitionId(),
+                    originalConnector.getDefinitionVersion())
+                    .orElse(null);
         } else {
             if (connectorWorkingCopy.getDefinitionId() != null
                     && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
-                return defStore.getDefinition(
+                return registry.find(
                         connectorWorkingCopy.getDefinitionId(),
-                        connectorWorkingCopy.getDefinitionVersion());
+                        connectorWorkingCopy.getDefinitionVersion())
+                        .orElse(null);
             }
         }
         return null;

@@ -18,9 +18,8 @@ package org.bonitasoft.studio.connector.wizard.sforce.pages;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
@@ -315,8 +314,10 @@ public class SForceQuerysObjectsWizardPage extends AbstractSforceWizardPage {
 	protected PageComponentSwitch getPageComponentSwitch(
 			EMFDataBindingContext context, Composite pageComposite) {
 		compSwitch = new SForceQueryObjectComponentSwitch(getContainer(),
-				pageComposite, getElementContainer(), getDefinition(),
-				getConfiguration(), context, getMessageProvider(),
+				pageComposite, 
+				getElementContainer(), 
+				getDefinition(),
+				getConfiguration(), context,
 				getExpressionTypeFilter());
 		return compSwitch;
 	}
@@ -328,13 +329,12 @@ public class SForceQuerysObjectsWizardPage extends AbstractSforceWizardPage {
 
 		public SForceQueryObjectComponentSwitch(
 				IWizardContainer iWizardContainer, Composite parent,
-				EObject container, ConnectorDefinition definition,
+				EObject container, ExtendedConnectorDefinition definition,
 				ConnectorConfiguration connectorConfiguration,
 				EMFDataBindingContext context,
-				DefinitionResourceProvider messageProvider,
 				AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 			super(iWizardContainer, parent, container, definition,
-					connectorConfiguration, context, messageProvider,
+					connectorConfiguration, context, 
 					connectorExpressionContentTypeFilter);
 		}
 

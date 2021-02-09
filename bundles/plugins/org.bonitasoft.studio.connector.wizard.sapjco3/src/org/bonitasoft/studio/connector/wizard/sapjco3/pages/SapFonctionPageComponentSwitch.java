@@ -10,8 +10,7 @@ package org.bonitasoft.studio.connector.wizard.sapjco3.pages;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sapjco3.i18n.Messages;
@@ -48,14 +47,13 @@ public class SapFonctionPageComponentSwitch extends PageComponentSwitch {
 
     public SapFonctionPageComponentSwitch(final IWizardContainer iWizardContainer,
             final Composite parent, final EObject container,
-            final ConnectorDefinition definition,
+            final ExtendedConnectorDefinition definition,
             final ConnectorConfiguration connectorConfiguration,
             final EMFDataBindingContext context,
-            final DefinitionResourceProvider messageProvider,
             final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter,
             final SapTool sapTool) {
         super(iWizardContainer, parent, container, definition,
-                connectorConfiguration, context, messageProvider,
+                connectorConfiguration, context,
                 connectorExpressionContentTypeFilter);
         this.sapTool = sapTool;
     }

@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -30,11 +30,6 @@ import java.util.ResourceBundle.Control;
 import org.eclipse.core.runtime.FileLocator;
 import org.osgi.framework.Bundle;
 
-
-/**
- * @author Romain Bioteau
- *
- */
 public class DefinitionControl extends Control {
 
 	private final Bundle osgiBundle;
@@ -56,7 +51,6 @@ public class DefinitionControl extends Control {
 		String bundleName = toBundleName(baseName, locale);
 		ResourceBundle bundle = null;
 
-
 		InputStreamReader reader = null;
 		FileInputStream fis = null;
 		try {
@@ -65,7 +59,7 @@ public class DefinitionControl extends Control {
 				File file = new File(FileLocator.toFileURL(fileurl).getFile());
 				if (file.isFile()) { // Also checks for existance
 					fis = new FileInputStream(file);
-					reader = new InputStreamReader(fis, Charset.forName("UTF-8"));
+					reader = new InputStreamReader(fis, StandardCharsets.UTF_8);
 					bundle = new PropertyResourceBundle(reader);
 				}
 			}

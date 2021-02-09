@@ -21,18 +21,17 @@ import org.bonitasoft.studio.connector.wizard.sforce.componentSwitch.SForceRetri
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author Maxence Raoux
- * 
- */
 public class SForceRetrievesObjectsWizardPage extends AbstractSforceWizardPage {
 
 	@Override
 	protected PageComponentSwitch getPageComponentSwitch(
 			EMFDataBindingContext context, Composite pageComposite) {
 		return new SForceRetrievesObjectsComponentSwitch(getContainer(),
-				pageComposite, getElementContainer(), getDefinition(),
-				getConfiguration(), context, getMessageProvider(),
+				pageComposite, 
+				getElementContainer(), 
+				getDefinition(),
+				getConfiguration(), 
+				context,
 				getExpressionTypeFilter());
 	}
 }

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -30,13 +31,13 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class DefinitionCategoryContentProvider implements ITreeContentProvider {
 
-	private List<Category> categories = new ArrayList<Category>();
+	private List<ExtendedCategory> categories = new ArrayList<>();
 
 	public DefinitionCategoryContentProvider(){
 		
 	}
 	
-	public DefinitionCategoryContentProvider(List<Category> categories){
+	public DefinitionCategoryContentProvider(List<ExtendedCategory> categories){
 		this.categories = categories;
 	}
 	
@@ -64,8 +65,8 @@ public class DefinitionCategoryContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getElements(Object inputElement) {
 		if(inputElement instanceof List){
-			categories  = (List<Category>) inputElement;
-			List<Category> rootCategory = new ArrayList<Category>();
+			categories  = (List<ExtendedCategory>) inputElement;
+			List<Category> rootCategory = new ArrayList<>();
 			for(Category c : categories){
 				if(c.getParentCategoryId() == null || c.getParentCategoryId().isEmpty()){
 					rootCategory.add(c);
@@ -83,7 +84,7 @@ public class DefinitionCategoryContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if(parentElement instanceof Category){
 			String parentId = ((Category) parentElement).getId();
-			List<Category> children = new ArrayList<Category>();
+			List<Category> children = new ArrayList<>();
 			for(Category c : categories){
 				if(parentId.equals(c.getParentCategoryId())){
 					children.add(c);

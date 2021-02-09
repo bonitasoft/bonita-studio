@@ -84,8 +84,14 @@ public class SapConnectionPage extends AbstractPage {
     protected PageComponentSwitch getPageComponentSwitch(final EMFDataBindingContext context,
             final Composite pageComposite) {
         if (libraryLoaded) {
-            cmptSwitch = new SapConnectionPageComponentSwitch(getContainer(), pageComposite, getElementContainer(),
-                    getDefinition(), getConfiguration(), context, getMessageProvider(), getExpressionTypeFilter(), sap,
+            cmptSwitch = new SapConnectionPageComponentSwitch(getContainer(), 
+                    pageComposite, 
+                    getElementContainer(),
+                    getDefinition(),
+                    getConfiguration(), 
+                    context, 
+                    getExpressionTypeFilter(),
+                    sap,
                     this);
             return cmptSwitch;
         } else {

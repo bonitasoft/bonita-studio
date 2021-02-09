@@ -133,21 +133,10 @@ public class DocumentTemplatingConnectorConfigurationWizardPage extends Filtered
         return mainComposite;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.wizard.office.FilteredGeneratedConnectorConfigurationWizardPage#getComponentBuilder(org.eclipse.emf.databinding.
-     * EMFDataBindingContext)
-     */
     @Override
     protected PageComponentSwitchBuilder getComponentBuilder(final EMFDataBindingContext context) {
-        return new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context,
-                getMessageProvider(), getExpressionTypeFilter()) {
+        return new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context, getExpressionTypeFilter()) {
 
-            /*
-             * (non-Javadoc)
-             * @see org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder#createArrayControl(org.eclipse.swt.widgets.Composite,
-             * org.bonitasoft.studio.connector.model.definition.Array)
-             */
             @Override
             public ExpressionCollectionViewer createArrayControl(final Composite composite, final Array array) {
                 viewer = super.createArrayControl(composite, array);

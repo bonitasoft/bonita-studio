@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorConfigurationWizardPage;
@@ -64,7 +64,10 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
         if (page.equals(selectConfigurationPage)) {
             final ConnectorConfiguration conf = selectConfigurationPage.getSelectedConfiguration();
             if (conf != null) {
-                final ConnectorDefinition definition = connectorDefStore.getDefinition(conf.getDefinitionId(), conf.getVersion());
+                final ExtendedConnectorDefinition definition = connectorDefStore.getResourceProvider()
+                        .getConnectorDefinitionRegistry()
+                        .find(conf.getDefinitionId(), conf.getVersion())
+                        .orElse(null);
                 connectorWorkingCopy.setDefinitionId(definition.getId());
                 connectorWorkingCopy.setDefinitionVersion(definition.getVersion());
                 connectorWorkingCopy.setConfiguration(conf);
@@ -80,12 +83,8 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addOuputPage(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition)
-     */
     @Override
-    protected void addOuputPage(final ConnectorDefinition definition) {
+    protected void addOuputPage(final ExtendedConnectorDefinition definition) {
 
     }
 

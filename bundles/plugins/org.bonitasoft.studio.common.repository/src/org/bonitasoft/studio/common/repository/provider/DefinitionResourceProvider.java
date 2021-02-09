@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -49,7 +49,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
-import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
@@ -63,6 +62,7 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -95,10 +95,11 @@ public class DefinitionResourceProvider implements EventHandler {
     private final ImageRegistry definitionImageRegistry;
     private final IRepositoryStore<? extends IRepositoryFileStore<?>> store;
     private final Bundle bundle;
-    private List<Category> categories;
-    private Category uncategorized;
+    private List<ExtendedCategory> categories;
+    private ExtendedCategory uncategorized;
     private static final Map<String, ResourceBundle> RESOURCE_BUNDLE_CACHE = new HashMap<>();
     private static final Map<IRepositoryStore<? extends IRepositoryFileStore<?>>, DefinitionResourceProvider> INSTANCES_MAP;
+    private ConnectorDefinitionRegistry definitionRegistry = new ConnectorDefinitionRegistry();
 
     static {
         INSTANCES_MAP = new HashMap<>();
@@ -151,7 +152,7 @@ public class DefinitionResourceProvider implements EventHandler {
     public ResourceBundle getResourceBundle(final ConnectorDefinition definition,
             final Locale locale) {
         if (definition != null) {
-             return RESOURCE_BUNDLE_CACHE.computeIfAbsent(definitionKey(definition), key -> {
+            return RESOURCE_BUNDLE_CACHE.computeIfAbsent(definitionKey(definition), key -> {
                 IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
                 return defStore.find(definition)
                         .map(DefinitionResourceLoaderProvider.class::cast)
@@ -164,7 +165,7 @@ public class DefinitionResourceProvider implements EventHandler {
     }
 
     private String definitionKey(ConnectorDefinition definition) {
-        return definition.getId()+"-"+definition.getVersion();
+        return definition.getId() + "-" + definition.getVersion();
     }
 
     private String getMessage(final ConnectorDefinition definition, final String key) {
@@ -429,25 +430,26 @@ public class DefinitionResourceProvider implements EventHandler {
         return Collections.unmodifiableList(result);
     }
 
-    public void createIcon(final File imageFile, final String iconName) {
-        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    final IFolder targetFoler = store.getResource();
-                    final IFile iconFile = targetFoler.getFile(iconName);
-                    if (iconFile.exists()) {
-                        iconFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
-                    }
-                    BufferedImage image = ImageIO.read(imageFile);
-                    image = FileUtil.resizeImage(image, 16);
-                    ImageIO.write(image, "PNG", iconFile.getLocation().toFile());
-                } catch (final Exception ex) {
-                    BonitaStudioLog.error(ex);
+    public Image createIcon(final File imageFile, final String iconName) {
+        final IFolder targetFoler = store.getResource();
+        final IFile iconFile = targetFoler.getFile(iconName);
+        BusyIndicator.showWhile(Display.getDefault(), () -> {
+            try {
+                if (iconFile.exists()) {
+                    iconFile.delete(true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
+                BufferedImage image = ImageIO.read(imageFile);
+                image = FileUtil.resizeImage(image, 16);
+                ImageIO.write(image, "PNG", iconFile.getLocation().toFile());
+            } catch (final Exception ex) {
+                BonitaStudioLog.error(ex);
             }
         });
+        try {
+            return ImageDescriptor.createFromURL(iconFile.getLocation().toFile().toURI().toURL()).createImage();
+        } catch (MalformedURLException e) {
+            return null;
+        }
 
     }
 
@@ -485,16 +487,13 @@ public class DefinitionResourceProvider implements EventHandler {
     }
 
     public Set<String> getCategoriesIds() {
-        return ((IDefinitionRepositoryStore<?>) store).getDefinitions()
+        return categories
                 .stream()
-                .map(ConnectorDefinition::getCategory)
-                .flatMap(Collection<Category>::stream)
                 .map(Category::getId)
                 .collect(Collectors.toSet());
     }
 
-
-    public List<Category> getAllCategories() {
+    public List<ExtendedCategory> getAllCategories() {
         if (categories == null) {
             loadDefinitionsCategories(null);
         }
@@ -518,11 +517,8 @@ public class DefinitionResourceProvider implements EventHandler {
         }
         Image icon = categoryImageRegistry.get(category.getId());
         if (icon == null) {
-            IDefinitionRepositoryStore<?> defStore = (IDefinitionRepositoryStore<?>) store;
-            icon = defStore.findFirst(category)
-                    .map(DefinitionResourceLoaderProvider.class::cast)
-                    .map(DefinitionResourceLoaderProvider::getDefinitionImageResourceLoader)
-                    .map(loader -> loader.getIcon(category))
+            icon = definitionRegistry.find(category)
+                    .map(ExtendedCategory::getImage)
                     .orElse(null);
             if (icon != null) {
                 categoryImageRegistry.put(category.getId(), icon);
@@ -538,63 +534,26 @@ public class DefinitionResourceProvider implements EventHandler {
     }
 
     public String getCategoryLabel(final Category category) {
-        final ConnectorDefinition categoryDef = (ConnectorDefinition) category
-                .eContainer();
-        String label = getCategoryLabel(categoryDef, category.getId());
-        if (category.getId().equals(label)) {// Try to find a provided category
-            // label
-            final List<ConnectorDefinition> definitions = getAllDefinitionWithCategotyId(category.getId());
-            for (final ConnectorDefinition def : definitions) {
-                label = getCategoryLabel(def, category.getId());
-                if (!category.getId().equals(label)) {
-                    return label;
-                }
-            }
-        }
-        return label;
-    }
-
-    private List<ConnectorDefinition> getAllDefinitionWithCategotyId(final String id) {
-        if (store instanceof IDefinitionRepositoryStore) {
-            final List<ConnectorDefinition> result = new ArrayList<>();
-            for (final ConnectorDefinition def : ((IDefinitionRepositoryStore<?>) store).getDefinitions()) {
-                for (final Category c : def.getCategory()) {
-                    if (c.getId().equals(id)) {
-                        result.add(def);
-                    }
-                }
-            }
-            return result;
-        }
-        return Collections.emptyList();
+        return definitionRegistry.find(category)
+                .map(ExtendedCategory::getLabel)
+                .orElse("");
     }
 
     public void loadDefinitionsCategories(final IProgressMonitor monitor) {
         RESOURCE_BUNDLE_CACHE.clear();
-        categories = new ArrayList<>();
-        final Set<String> idsToAdd = new HashSet<>();
-        idsToAdd.addAll(getCategoriesIds());
-        boolean addUnloadableCategory = false;
-        for (ConnectorDefinition def : ((IDefinitionRepositoryStore<?>) store).getDefinitions()) {
-            if (def instanceof UnloadableConnectorDefinition) {
-                addUnloadableCategory = true;
-            } else if (def != null) {
-                for (final Category cat : def.getCategory()) {
-                    if (idsToAdd.contains(cat.getId())) {
-                        categories.add(cat);
-                        idsToAdd.remove(cat.getId());
-                    }
-                }
-            }
-        }
-        if (addUnloadableCategory) {
-            categories.add(getUnloadableCategory());
-        }
-        uncategorized = ConnectorDefinitionFactory.eINSTANCE.createCategory();
+        categories = definitionRegistry
+                .build((IDefinitionRepositoryStore<IRepositoryFileStore<?>>) store)
+                .getCategories()
+                .stream()
+                .collect(Collectors.toList());
+        
+        uncategorized = new ExtendedCategory(ConnectorDefinitionFactory.eINSTANCE.createCategory(),
+                null,
+                Messages.uncategorized);
         uncategorized.setId(Messages.uncategorized);
         categories.add(uncategorized);
 
-        Collections.sort(categories, (c1,c2) -> getCategoryLabel(c1).compareTo(getCategoryLabel(c2)));
+        Collections.sort(categories, (c1, c2) -> getCategoryLabel(c1).compareTo(getCategoryLabel(c2)));
     }
 
     public Image getDefinitionIcon(final ConnectorDefinition definition) {
@@ -642,6 +601,18 @@ public class DefinitionResourceProvider implements EventHandler {
     @Override
     public void handleEvent(Event event) {
         loadDefinitionsCategories(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
+    public Category getParentCategory(Category category) {
+        return definitionRegistry.findParentCategory(category);
+    }
+
+    public Category getCategory(Category category) {
+        return definitionRegistry.find(category).orElse(null);
+    }
+
+    public ConnectorDefinitionRegistry getConnectorDefinitionRegistry() {
+        return definitionRegistry;
     }
 
 }

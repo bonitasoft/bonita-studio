@@ -22,8 +22,9 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
-import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -36,7 +37,7 @@ import org.osgi.framework.Bundle;
  */
 public abstract class AbstractDefinitionContentProvider implements ITreeContentProvider {
 
-    protected final List<ConnectorDefinition> connectorDefList;
+    protected final List<ExtendedConnectorDefinition> connectorDefList;
     protected final DefinitionResourceProvider messageProvider;
     protected final String unloadableCategoryName;
     protected DefinitionCategoryContentProvider definitionCategoryContentProvider;
@@ -50,9 +51,9 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
         final AbstractDefinitionRepositoryStore<?> connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
                 .getInstance().getRepositoryStore(
                         getDefStoreClass());
-        connectorDefList = connectorDefStore.getDefinitions();
+        connectorDefList = connectorDefStore.getResourceProvider().getConnectorDefinitionRegistry().getDefinitions();
         if (userDefinitionOnly) {
-            final List<ConnectorDefinition> toRemove = new ArrayList<ConnectorDefinition>();
+            final List<ConnectorDefinition> toRemove = new ArrayList<>();
             final String absolutePathOfConnectorDefStoreResource = connectorDefStore.getResource().getLocation().toFile().getAbsolutePath();
             for (final ConnectorDefinition definition : connectorDefList) {
                 final Resource eResource = definition.eResource();
@@ -92,9 +93,9 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 
     @Override
     public Object[] getChildren(final Object element) {
-        if (element instanceof Category) {
-            final Category cat = (Category) element;
-            final List<Object> result = new ArrayList<Object>();
+        if (element instanceof ExtendedCategory) {
+            final ExtendedCategory cat = (ExtendedCategory) element;
+            final List<Object> result = new ArrayList<>();
             final String parentId = cat.getId();
             for(final Category c : messageProvider.getAllCategories()){
                 if(parentId.equals(c.getParentCategoryId())){
@@ -108,7 +109,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
                     }
                 } else {
                     if (def.getCategory().isEmpty()
-                            && cat.getId().equals(org.bonitasoft.studio.common.repository.Messages.uncategorized)) {//FIXME category id is nls string????
+                            && cat.getId().equals(org.bonitasoft.studio.common.repository.Messages.uncategorized)) {
                         result.add(def);
                     }
                     for (final Category c : def.getCategory()) {
@@ -129,13 +130,13 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 
     @Override
     public Object[] getElements(final Object element) {
-        final List<Category> categories = getRootCategories();
+        final List<ExtendedCategory> categories = getRootCategories();
         return categories.toArray();
     }
 
-    private List<Category> getRootCategories() {
-        final List<Category> categories = new ArrayList<Category>();
-        for(final Category c : messageProvider.getAllCategories()){
+    private List<ExtendedCategory> getRootCategories() {
+        final List<ExtendedCategory> categories = new ArrayList<>();
+        for(final ExtendedCategory c : messageProvider.getAllCategories()){
             if(c.getParentCategoryId() == null || c.getParentCategoryId().isEmpty()){
                 categories.add(c);
             }
@@ -152,16 +153,12 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
             }
             for(final Category c : def.getCategory()){
                 if(definitionCategoryContentProvider.isLeafCategory(def, c)){
-                    return c;
+                    return messageProvider.getCategory(c);
                 }
             }
         }else if(element instanceof Category){
             final Category category = (Category) element ;
-            for(final Category c : messageProvider.getAllCategories()){
-                if(c.getId().equals(category.getParentCategoryId())){
-                    return c;
-                }
-            }
+            return messageProvider.getParentCategory(category);
         }
         return null;
     }

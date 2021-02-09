@@ -20,12 +20,12 @@ import static org.junit.Assert.assertNull;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.Category;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
@@ -138,15 +138,13 @@ public class ConnectorEditionTest {
         bot.button(IDialogConstants.FINISH_LABEL).click();
         final ConnectorDefRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final ConnectorDefinition connectorDef = store.getDefinition(id, version);
+        ConnectorDefinitionRegistry connectorDefinitionRegistry = store.getResourceProvider().getConnectorDefinitionRegistry();
+        final ExtendedConnectorDefinition connectorDef = connectorDefinitionRegistry.find(id,version).orElse(null);
         assertEquals("category size should be equal to 1", 1, connectorDef.getCategory().size());
-        final DefinitionResourceProvider messageProvider = DefinitionResourceProvider
-                .getInstance(store, ConnectorPlugin.getDefault().getBundle());
         SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
-        final Category category = connectorDef.getCategory().get(0);
-        String categoryLabel = messageProvider.getCategoryLabel(category) == null ? category.getId()
-                : messageProvider.getCategoryLabel(category);
-        final String connectorLabel = new ConnectorDefinitionTreeLabelProvider(messageProvider).getText(connectorDef);
+        ExtendedCategory category = connectorDefinitionRegistry.find(connectorDef.getCategory().get(0)).orElse(null);
+        String categoryLabel = category.getLabel() == null ? category.getId() : category.getLabel();
+        final String connectorLabel = new ConnectorDefinitionTreeLabelProvider().getText(connectorDef);
         assertNotNull("could not find " + connectorLabel,
                 bot.tree().getTreeItem(categoryLabel).expand().getNode(connectorLabel));
         bot.button(IDialogConstants.CANCEL_LABEL).click();

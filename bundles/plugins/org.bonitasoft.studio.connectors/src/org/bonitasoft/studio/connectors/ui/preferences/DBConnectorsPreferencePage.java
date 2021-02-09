@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
@@ -355,8 +356,8 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         DefinitionResourceProvider messageProvider = DefinitionResourceProvider.getInstance(connectorDefStore,
                 ConnectorPlugin.getDefault().getBundle());
-        List<Category> categories = messageProvider.getAllCategories();
-        for (Category category : categories) {
+        List<ExtendedCategory> categories = messageProvider.getAllCategories();
+        for (ExtendedCategory category : categories) {
             if (DATABASE.equals(category.getId())) {
                 return category;
             }

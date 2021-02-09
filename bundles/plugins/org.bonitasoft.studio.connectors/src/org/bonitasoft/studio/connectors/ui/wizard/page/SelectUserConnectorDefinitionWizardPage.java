@@ -48,8 +48,8 @@ public class SelectUserConnectorDefinitionWizardPage extends SelectConnectorDefi
 	private final ConnectorConfRepositoryStore connectorConfStore;
 	private final ConnectorImplRepositoryStore connectorImplStore;
 
-	public SelectUserConnectorDefinitionWizardPage(final Connector connectorWorkingCopy,final DefinitionResourceProvider messageProvider) {
-		super(connectorWorkingCopy,messageProvider) ;
+	public SelectUserConnectorDefinitionWizardPage(final Connector connectorWorkingCopy) {
+		super(connectorWorkingCopy) ;
 		connectorConfStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
 		connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 	}

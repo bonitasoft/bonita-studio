@@ -30,13 +30,15 @@ public class SapFonctionPage extends AbstractPage {
 
 		if (this.libraryLoaded && sapTool != null && sapTool.userWantToUseIt && sapTool.connectionOK) {
 			return new SapFonctionPageComponentSwitch(getContainer(),
-					pageComposite, getElementContainer(), getDefinition(),
-					getConfiguration(), context, getMessageProvider(),
-					getExpressionTypeFilter(), sapTool);
+					pageComposite, getElementContainer(), 
+					getDefinition(),
+					getConfiguration(), context,
+					getExpressionTypeFilter(),
+					sapTool);
 		} else {
 			return new PageComponentSwitch(getContainer(), pageComposite,
 					getElementContainer(), getDefinition(), getConfiguration(),
-					context, getMessageProvider(), getExpressionTypeFilter());
+					context, getExpressionTypeFilter());
 		}
 	}
 

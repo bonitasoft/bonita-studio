@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 
 /**
@@ -25,20 +25,15 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
  */
 public class ConnectorDefinitionExplorerLabelProvider extends ConnectorDefinitionTreeLabelProvider {
 
-   
-
-    public ConnectorDefinitionExplorerLabelProvider(
-			DefinitionResourceProvider messageProvider) {
-		super(messageProvider);
-	}
-
 	protected String getLabelFor(Object element) {
-        String connectorDefinitionLabel = messageProvider
-                .getConnectorDefinitionLabel((ConnectorDefinition) element);
-        if(connectorDefinitionLabel==null){
-            connectorDefinitionLabel = ((ConnectorDefinition) element).getId();
-        }
-        return connectorDefinitionLabel;
+	    if(element instanceof ExtendedConnectorDefinition) {
+	         String connectorDefinitionLabel = ((ExtendedConnectorDefinition) element).getConnectorDefinitionLabel();
+	         if(connectorDefinitionLabel==null){
+	             connectorDefinitionLabel = ((ConnectorDefinition) element).getId();
+	         }
+	         return connectorDefinitionLabel;
+	    }
+        return null;
     }
 
     

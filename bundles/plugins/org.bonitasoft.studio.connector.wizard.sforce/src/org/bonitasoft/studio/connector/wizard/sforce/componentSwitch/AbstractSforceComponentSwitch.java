@@ -20,8 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sforce.tooling.SalesforceTool;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -53,13 +52,12 @@ public abstract class AbstractSforceComponentSwitch extends PageComponentSwitch 
 
 	public AbstractSforceComponentSwitch(IWizardContainer iWizardContainer,
 			Composite parent, EObject container,
-			ConnectorDefinition definition,
+			ExtendedConnectorDefinition definition,
 			ConnectorConfiguration connectorConfiguration,
 			EMFDataBindingContext context,
-			DefinitionResourceProvider messageProvider,
 			AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		super(iWizardContainer, parent, container, definition,
-				connectorConfiguration, context, messageProvider,
+				connectorConfiguration, context,
 				connectorExpressionContentTypeFilter);
 		sfTool = SalesforceTool.getInstance();
 		allSforceObject = sfTool.getAllSForceObjects();

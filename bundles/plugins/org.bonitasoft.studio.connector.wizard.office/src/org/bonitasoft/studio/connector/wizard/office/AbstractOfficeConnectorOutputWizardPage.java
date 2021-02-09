@@ -81,10 +81,8 @@ public abstract class AbstractOfficeConnectorOutputWizardPage extends ConnectorO
 
     protected PageComponentSwitch getPageComponenetSwitch(EMFDataBindingContext context, final Composite outputFileNameComposite, final Connector connector) {
         final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), connector.getConfiguration(), context,
-                getMessageProvider(),
                 new ConnectorAvailableExpressionTypeFilter());
-        final PageComponentSwitch componentSwitch = new PageComponentSwitch(getContainer(), outputFileNameComposite, builder);
-        return componentSwitch;
+        return new PageComponentSwitch(getContainer(), outputFileNameComposite, builder);
     }
 
     protected Widget findWidgetWithInput(final ConnectorDefinition connectorDefinition, String inputName) {

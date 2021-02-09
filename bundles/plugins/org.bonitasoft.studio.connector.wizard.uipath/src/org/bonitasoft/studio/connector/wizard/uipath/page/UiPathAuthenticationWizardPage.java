@@ -96,7 +96,8 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
 
             UIPathPageComponentSwitchBuilder builder = new UIPathPageComponentSwitchBuilder(getElementContainer(),
                     getDefinition(),
-                    getConfiguration(), context, getMessageProvider(), getExpressionTypeFilter());
+                    getConfiguration(), context,
+                    getExpressionTypeFilter());
 
             createRadioButtons(mainComposite, context);
             addValidators(builder);

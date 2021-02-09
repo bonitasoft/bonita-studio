@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
@@ -65,14 +66,12 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
     private final Connector connectorWorkingCopy;
     private EMFDataBindingContext context;
     private WizardPageSupport pageSupport;
-    private final DefinitionResourceProvider messageProvider;
 
-    public SelectConnectorDefinitionWizardPage(final Connector connectorWorkingCopy,final DefinitionResourceProvider messageProvider) {
+    public SelectConnectorDefinitionWizardPage(final Connector connectorWorkingCopy) {
         super(SelectConnectorDefinitionWizardPage.class.getName());
         setTitle(Messages.selectConnectorDefinitionTitle);
         setDescription(Messages.selectConnectorDefinitionDesc);
         this.connectorWorkingCopy = connectorWorkingCopy ;
-        this.messageProvider = messageProvider;
     }
 
 
@@ -111,7 +110,7 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
         treeViewer = new TreeViewer(treeComposite, SWT.SINGLE | SWT.BORDER);
         treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         treeViewer.setContentProvider(getContentProvider());
-        treeViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider));
+        treeViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider());
         treeViewer.addSelectionChangedListener(this);
         treeViewer.addDoubleClickListener(this);
         treeViewer.addFilter(new ViewerFilter() {
@@ -124,26 +123,26 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
                         return false;
                     }
                     for(final Object c : iTreeContentProvider.getChildren(element)){
-                        if(c instanceof ConnectorDefinition){
-                            return selectDefinition(searchText, (ConnectorDefinition) c);
+                        if(c instanceof ExtendedConnectorDefinition){
+                            return selectDefinition(searchText, (ExtendedConnectorDefinition) c);
                         }else{
                             if(select(viewer, element, c)){
                                 return true;
                             }
                         }
                     }
-                }else if(element instanceof ConnectorDefinition){
-                    return selectDefinition(searchText, (ConnectorDefinition) element);
+                }else if(element instanceof ExtendedConnectorDefinition){
+                    return selectDefinition(searchText, (ExtendedConnectorDefinition) element);
                 }
                 return false;
             }
 
-            private boolean selectDefinition(final Text searchText, final ConnectorDefinition element) {
+            private boolean selectDefinition(final Text searchText, final ExtendedConnectorDefinition element) {
                 if (searchText == null || searchText.isDisposed() || searchText.getText().isEmpty()) {
                     return true;
                 }
                 final String text = searchText.getText();
-                final String connectorDefinitionLabel = messageProvider.getConnectorDefinitionLabel(element);
+                final String connectorDefinitionLabel = element.getConnectorDefinitionLabel();
                 if(connectorDefinitionLabel != null){
                     return connectorDefinitionLabel.contains(text);
                 }else{

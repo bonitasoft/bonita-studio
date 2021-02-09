@@ -38,8 +38,8 @@ public class SelectUserFilterDefinitionWizardPage extends SelectFilterDefinition
     private Button removeButton;
     private ConnectorDefinition selection;
 
-    public SelectUserFilterDefinitionWizardPage(Connector connectorWorkingCopy,DefinitionResourceProvider messageProvider) {
-        super(connectorWorkingCopy,messageProvider) ;
+    public SelectUserFilterDefinitionWizardPage(Connector connectorWorkingCopy) {
+        super(connectorWorkingCopy) ;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class SelectUserFilterDefinitionWizardPage extends SelectFilterDefinition
                 if(selection != null){
                     ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
                     String fileName = selection.eResource().getURI().lastSegment() ;
-                    IRepositoryFileStore file = store.getChild(fileName, true) ;
-                    if(FileActionDialog.confirmDeletionQuestion(fileName)){
+                    IRepositoryFileStore file = store.find(selection).orElse(null) ;
+                    if(file != null && FileActionDialog.confirmDeletionQuestion(fileName)){
                         file.delete() ;
                     }
                     refresh() ;

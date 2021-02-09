@@ -16,8 +16,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.custom;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorConfigurationSupport;
@@ -42,13 +41,12 @@ public class MailContentComponentSwitch extends PageComponentSwitch {
 
     public MailContentComponentSwitch(final IWizardContainer iWizardContainer,
             final Composite parent, final EObject container,
-            final ConnectorDefinition definition,
+            final ExtendedConnectorDefinition definition,
             final ConnectorConfiguration connectorConfiguration,
             final EMFDataBindingContext context,
-            final DefinitionResourceProvider messageProvider,
             final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
         super(iWizardContainer, parent, container, definition, connectorConfiguration,
-                context, messageProvider, connectorExpressionContentTypeFilter);
+                context, connectorExpressionContentTypeFilter);
         connectorConfigurationSupport = new ConnectorConfigurationSupport(connectorConfiguration);
     }
 
@@ -82,7 +80,7 @@ public class MailContentComponentSwitch extends PageComponentSwitch {
         richTextViewer.addFilter(getConnectorExpressionContentTypeFilter());
 
         final Expression exp = (Expression) parameter.getExpression();
-        final String desc = getMessageProvider().getFieldDescription(getDefinition(), object.getId());
+        final String desc = getDefinition().getFieldDescription(object.getId());
         if (desc != null && !desc.isEmpty()) {
             richTextViewer.setHint(desc);
         }

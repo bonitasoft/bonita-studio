@@ -17,6 +17,7 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
@@ -52,7 +53,7 @@ public class TestConnectorWizard extends ConnectorWizard {
     }
 
     @Override
-    protected void addOuputPage(final ConnectorDefinition definition) {
+    protected void addOuputPage(final ExtendedConnectorDefinition definition) {
         if (!definition.getOutput().isEmpty()) {
             AbstractConnectorOutputWizardPage outputPage = null;
             if (supportsDatabaseOutputMode(definition)) {
@@ -74,7 +75,7 @@ public class TestConnectorWizard extends ConnectorWizard {
     }
 
     @Override
-    protected IWizardPage getOutputPageFor(final ConnectorDefinition definition) {
+    protected IWizardPage getOutputPageFor(final ExtendedConnectorDefinition definition) {
         return null;
     }
 
@@ -115,10 +116,13 @@ public class TestConnectorWizard extends ConnectorWizard {
     }
 
     @Override
-    public ConnectorDefinition getDefinition() {
+    public ExtendedConnectorDefinition getDefinition() {
         final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         if (connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
-            return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion());
+            return defStore.getResourceProvider()
+                    .getConnectorDefinitionRegistry()
+                    .find(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion())
+                    .orElse(null);
         }
         return null;
     }
@@ -126,7 +130,7 @@ public class TestConnectorWizard extends ConnectorWizard {
     @Override
     public IWizardPage getNextPage(final IWizardPage page) {
         if (page.equals(selectionPage)) {
-            final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
+            final ExtendedConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
             if (definition != null) {
                 extension = findCustomWizardExtension(definition);
                 recreateConnectorConfigurationPages(definition, false);

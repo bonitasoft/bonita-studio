@@ -16,6 +16,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.Set;
 
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -161,7 +162,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         if (!event.equals(currentEvent)) {
             connector.setEvent(event);
             final ConnectorWizard connectorWizard = (ConnectorWizard) getWizard();
-            final ConnectorDefinition definition = connectorWizard.getDefinition();
+            final ExtendedConnectorDefinition definition = connectorWizard.getDefinition();
             if (definition != null) {
                 connectorWizard.recreateConnectorConfigurationPages(definition, false);
             }

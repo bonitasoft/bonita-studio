@@ -19,7 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -48,7 +48,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     private ConnectorConfiguration configuration;
     private Page page;
     private EObject elementContainer;
-    private ConnectorDefinition definition;
+    private ExtendedConnectorDefinition definition;
     private final EMFDataBindingContext context;
     private WizardPageSupport supportPage;
     private DefinitionResourceProvider messageProvider;
@@ -118,11 +118,11 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         this.elementContainer = elementContainer;
     }
 
-    public ConnectorDefinition getDefinition() {
+    public ExtendedConnectorDefinition getDefinition() {
         return definition;
     }
 
-    public void setDefinition(final ConnectorDefinition definition) {
+    public void setDefinition(final ExtendedConnectorDefinition definition) {
         this.definition = definition;
     }
 
