@@ -14,11 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,14 +25,11 @@ import java.util.Optional;
 import org.apache.maven.model.Dependency;
 import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactDependencyLoader;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
@@ -51,24 +44,18 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osgi.framework.Version;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 /**
  * !!! HELLO !!!
@@ -77,13 +64,7 @@ import org.restlet.resource.ResourceException;
  */
 public class ExtendProjectPage implements ControlSupplier {
 
-    private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/bonitasoft/bonita-marketplace/releases/latest";
-    private static final String ASSET_URL = "https://github.com/bonitasoft/bonita-marketplace/releases/download";
-    private static final String CONNECTORS_ASSET_NAME = "connectors.json";
-    private static final String ACTORS_FILTERS_ASSET_NAME = "actorfilters.json";
-    private static final String CONNECTOR_TYPE = "Connector";
-    private static final String ACTOR_FILTER_TYPE = "Actor filter";
-    private static final int ICON_SIZE = 64;
+    public static final int ICON_SIZE = 64;
 
     private MavenProjectHelper helper = new MavenProjectHelper();
     private RepositoryAccessor repositoryAccessor;
@@ -177,7 +158,7 @@ public class ExtendProjectPage implements ControlSupplier {
 
     private void initVariables() {
         try {
-            loadDependencies();
+            dependencies = BonitaMarketplace.getInstance().getDependencies();
             knownDependencies = helper.getMavenModel(getProject()).getDependencies();
             splitDependencies();
         } catch (CoreException e) {
@@ -248,8 +229,8 @@ public class ExtendProjectPage implements ControlSupplier {
     private void filterDependenciesByType(List<BonitaArtifactDependency> filteredDependencies) {
         if (!Objects.equals(typeObservableValue.getValue(), Messages.all)) {
             String type = Objects.equals(typeObservableValue.getValue(), Messages.connectorType)
-                    ? CONNECTOR_TYPE
-                    : ACTOR_FILTER_TYPE;
+                    ? BonitaMarketplace.CONNECTOR_TYPE
+                    : BonitaMarketplace.ACTOR_FILTER_TYPE;
             filteredDependencies.removeIf(dep -> !Objects.equals(dep.getType(), type));
         }
     }
@@ -284,49 +265,10 @@ public class ExtendProjectPage implements ControlSupplier {
         noResultFoundLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
     }
 
-    /**
-     * To test the UI with a local file, comment this method content and use the loader with the URL of the local file
-     * ex:
-     * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
-     */
-    private void loadDependencies() {
-        String latestTag = getLatestTag();
-        String connectorsUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, CONNECTORS_ASSET_NAME);
-        String actorFiltersUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, ACTORS_FILTERS_ASSET_NAME);
-        ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
-        dependencies = loader.load(createURL(connectorsUrl));
-        dependencies.addAll(loader.load(createURL(actorFiltersUrl)));
-    }
-
-    private String getLatestTag() {
-        JSONObject release = doGet(createURL(LATEST_RELEASE_URL));
-        try {
-            return release.getString("tag_name");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private JSONObject doGet(URL url) {
-        try {
-            return new JSONObject(new ClientResource(url.toURI()).get().getText());
-        } catch (ResourceException | JSONException | IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private URL createURL(String url) {
-        try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void createDependencyControl(Composite parent, BonitaArtifactDependency dep) {
         boolean addSeparator = parent.getChildren().length > 0;
 
-        Image icon = getIcon(dep);
+        Image icon = dep.getIconImage();
 
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -464,43 +406,6 @@ public class ExtendProjectPage implements ControlSupplier {
         Version newV = new Version(newVersion);
 
         return existingV.compareTo(newV) >= 0;
-    }
-
-    private Image getIcon(BonitaArtifactDependency dep) {
-        Image icon = null;
-        if (dep.getIcon() != null) {
-            icon = getIcon(createURL(dep.getIcon()));
-        }
-        if (icon == null) {
-            return Objects.equals(dep.getType(), CONNECTOR_TYPE)
-                    ? Pics.getImage(PicsConstants.connectorDefaultIcon)
-                    : Pics.getImage(PicsConstants.actorfilterDefaultIcon);
-        }
-        if (icon.getBounds().height != ICON_SIZE || icon.getBounds().width != ICON_SIZE) {
-            icon = resize(icon);
-        }
-        return icon;
-    }
-
-    private Image getIcon(URL url) {
-        try {
-            ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(url);
-            return manager.createImage(imageDescriptor);
-        } catch (Exception e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
-    }
-
-    private Image resize(Image image) {
-        Image scaled = new Image(Display.getDefault(), ICON_SIZE, ICON_SIZE);
-        GC gc = new GC(scaled);
-        gc.setAntialias(SWT.ON);
-        gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, ICON_SIZE,
-                ICON_SIZE);
-        gc.dispose();
-        iconsToDispose.add(scaled);
-        return scaled;
     }
 
     private void addDependency(BonitaArtifactDependency dep, boolean isSelected, Collection collection) {
