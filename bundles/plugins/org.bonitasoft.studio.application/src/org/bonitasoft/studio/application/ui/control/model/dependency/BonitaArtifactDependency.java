@@ -17,6 +17,8 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.swt.graphics.Image;
+
 public class BonitaArtifactDependency {
 
     private String name;
@@ -28,6 +30,7 @@ public class BonitaArtifactDependency {
     private String groupId;
     private String artifactId;
     private List<BonitaArtifactDependencyVersion> versions;
+    private Image iconImage;
 
     public BonitaArtifactDependency() {
     }
@@ -109,5 +112,13 @@ public class BonitaArtifactDependency {
                 .filter(BonitaArtifactDependencyVersion::isCompatible)
                 .sorted()
                 .findFirst();
+    }
+
+    public void setIconImage(Image iconImage) {
+        this.iconImage = iconImage;
+    }
+
+    public Image getIconImage() {
+        return iconImage;
     }
 }
