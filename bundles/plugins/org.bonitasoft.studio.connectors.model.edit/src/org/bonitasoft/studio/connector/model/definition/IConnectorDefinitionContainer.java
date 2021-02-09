@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition;
 
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 
 /**
  * @author Romain Bioteau
@@ -23,9 +24,9 @@ package org.bonitasoft.studio.connector.model.definition;
  */
 public interface IConnectorDefinitionContainer {
 
-    ConnectorDefinition getDefinition() ;
+    ExtendedConnectorDefinition getDefinition() ;
 
-    void recreateConnectorConfigurationPages(ConnectorDefinition definition,boolean clearConfiguration);
+    void recreateConnectorConfigurationPages(ExtendedConnectorDefinition definition,boolean clearConfiguration);
     
 
 }

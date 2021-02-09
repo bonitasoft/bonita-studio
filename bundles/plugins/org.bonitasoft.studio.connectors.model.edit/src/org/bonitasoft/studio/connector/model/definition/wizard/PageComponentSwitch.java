@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.Component;
@@ -82,10 +82,17 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         this.componentBuilder = componentBuilder;
     }
 
-    public PageComponentSwitch(final IWizardContainer iWizardContainer, final Composite parent, final EObject container, final ConnectorDefinition definition,
-            final ConnectorConfiguration connectorConfiguration, final EMFDataBindingContext context, final DefinitionResourceProvider messageProvider,
+    public PageComponentSwitch(final IWizardContainer iWizardContainer,
+            final Composite parent,
+            final EObject container, 
+            final ExtendedConnectorDefinition definition,
+            final ConnectorConfiguration connectorConfiguration, 
+            final EMFDataBindingContext context, 
             final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
-        this(iWizardContainer, parent, new PageComponentSwitchBuilder(container, definition, connectorConfiguration, context, messageProvider,
+        this(iWizardContainer, parent, new PageComponentSwitchBuilder(container, 
+                definition, 
+                connectorConfiguration, 
+                context, 
                 connectorExpressionContentTypeFilter));
     }
 
@@ -308,11 +315,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return componentBuilder.container;
     }
 
-    protected DefinitionResourceProvider getMessageProvider() {
-        return componentBuilder.messageProvider;
-    }
-
-    protected ConnectorDefinition getDefinition() {
+    protected ExtendedConnectorDefinition getDefinition() {
         return componentBuilder.definition;
     }
 

@@ -2,9 +2,8 @@ package org.bonitasoft.studio.connector.wizard.sapjco3.pages;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Select;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connector.wizard.sapjco3.i18n.Messages;
@@ -39,11 +38,15 @@ public class SapConnectionPageComponentSwitch extends PageComponentSwitch {
 
 	private static String DESTINATION_DATA = "destinationData";
 
-	public SapConnectionPageComponentSwitch(IWizardContainer iWizardContainer, Composite parent, EObject container,
-			ConnectorDefinition definition, ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,
-			DefinitionResourceProvider messageProvider, AvailableExpressionTypeFilter connectorExpressionContentTypeFilter,
+	public SapConnectionPageComponentSwitch(IWizardContainer iWizardContainer, 
+	        Composite parent, 
+	        EObject container,
+	        ExtendedConnectorDefinition definition, 
+			ConnectorConfiguration connectorConfiguration, 
+			EMFDataBindingContext context,
+			AvailableExpressionTypeFilter connectorExpressionContentTypeFilter,
 			SapTool sap, SapConnectionPage connectionPage) {
-		super(iWizardContainer, parent, container, definition, connectorConfiguration, context, messageProvider,
+		super(iWizardContainer, parent, container, definition, connectorConfiguration, context,
 				connectorExpressionContentTypeFilter);
 		this.sap = sap;
 		this.connectionPage = connectionPage;

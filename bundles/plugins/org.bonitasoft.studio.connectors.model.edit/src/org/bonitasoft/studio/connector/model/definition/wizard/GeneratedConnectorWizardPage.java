@@ -33,17 +33,17 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
 
     protected PageComponentSwitch componentSwitch;
 
-    public GeneratedConnectorWizardPage(final String pageName){
+    public GeneratedConnectorWizardPage(final String pageName) {
         super(pageName);
     }
 
-    public GeneratedConnectorWizardPage(){
+    public GeneratedConnectorWizardPage() {
         super();
     }
 
     @Override
     public Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
-        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
@@ -54,26 +54,30 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, pageComposite);
         componentSwitch.setIsPageFlowContext(isPageFlowContext());
 
-        for(final Component component : page.getWidget()){
-            componentSwitch.doSwitch(component) ;
+        for (final Component component : page.getWidget()) {
+            componentSwitch.doSwitch(component);
         }
-        for(final Section section : componentSwitch.getSectionsToExpand()){
-            section.setExpanded(true) ;
+        for (final Section section : componentSwitch.getSectionsToExpand()) {
+            section.setExpanded(true);
         }
         return mainComposite;
     }
 
     protected PageComponentSwitch getPageComponentSwitch(
             final EMFDataBindingContext context, final Composite pageComposite) {
-        if(componentSwitch == null){
-            final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context,
-                    getMessageProvider(), getExpressionTypeFilter());
+        if (componentSwitch == null) {
+            final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(),
+                    getDefinition(),
+                    getConfiguration(),
+                    context,
+                    getExpressionTypeFilter());
             componentSwitch = new PageComponentSwitch(getContainer(), pageComposite, builder);
         }
         return componentSwitch;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
      */
     @Override
@@ -81,7 +85,8 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override

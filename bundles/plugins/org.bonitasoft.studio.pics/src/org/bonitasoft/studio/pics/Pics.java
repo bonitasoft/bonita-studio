@@ -84,7 +84,7 @@ public class Pics extends AbstractUIPlugin {
     private static boolean isDarkTheme() {
         try {
             IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-            if (engine.getActiveTheme() != null
+            if (engine != null && engine.getActiveTheme() != null
                     && Objects.equals(engine.getActiveTheme().getId(),
                             "org.bonitasoft.studio.preferences.theme.dark")) {
                 return true;

@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Group;
@@ -30,6 +32,7 @@ import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.eclipse.swt.graphics.Image;
@@ -43,7 +46,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
     private ConnectorDefRepositoryStore connectorDefStore;
     private ConnectorImplRepositoryStore connectorImplStore;
-    private DefinitionResourceProvider connectorResourceProvider;
+    private ConnectorDefinitionRegistry registry;
 
     private List<String> connectorsToSkip = Arrays.asList("uipath-add-queueItem", "uipath-getjob", "uipath-startjob", "sap-jco3-callfunction");
 
@@ -52,15 +55,17 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
         super.setUp();
         connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-        connectorResourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore,
-                ConnectorPlugin.getDefault().getBundle());
+        registry = DefinitionResourceProvider
+                .getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle())
+                .getConnectorDefinitionRegistry();
     }
 
     public void testProvidedDefinitionsSanity() throws Exception {
         final StringBuilder testReport = new StringBuilder("testProvidedDefinitionsSanity report:");
-        for (final ConnectorDefinition definition : connectorDefStore.getDefinitions()) {
+        for (final ExtendedConnectorDefinition definition : registry.getDefinitions()) {
             final String resourceName = definition.eResource().getURI().lastSegment();
-            if (connectorDefStore.getChild(resourceName, true).isReadOnly()) {
+            ConnectorDefFileStore child = connectorDefStore.find(definition).orElse(null);
+            if (child != null && child.isReadOnly()) {
                 if (!(definition.getId() != null && !definition.getId().isEmpty())) {
                     testReport.append("\n");
                     testReport.append("Missing definition id for " + resourceName);
@@ -80,7 +85,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     testReport.append("Missing definition icon for " + resourceName);
                 }
 
-                final Image definitionIcon = connectorResourceProvider.getDefinitionIcon(definition);
+                final Image definitionIcon = definition.getImage();
                 if (definitionIcon == null) {
                     testReport.append("\n");
                     testReport.append("Missing definition icon file for " + resourceName);
@@ -114,13 +119,13 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                         testReport.append("Invalid page id in " + resourceName);
                     }
 
-                    final String pageTitle = connectorResourceProvider.getPageTitle(definition, p.getId());
+                    final String pageTitle = definition.getPageTitle(p.getId());
                     if (!(pageTitle != null && !pageTitle.isEmpty())) {
                         testReport.append("\n");
                         testReport.append("Invalid page title for " + p.getId() + " in " + resourceName);
                     }
 
-                    final String pageDescription = connectorResourceProvider.getPageDescription(definition, p.getId());
+                    final String pageDescription = definition.getPageDescription(p.getId());
                     if (!(pageDescription != null && !pageDescription.isEmpty())) {
                         testReport.append("\n");
                         testReport.append("Invalid page description for " + p.getId() + " in " + resourceName);
@@ -163,7 +168,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
     }
 
     private void parsePageWidget(final Component component, final List<String> bindInputs, final String resourceName,
-            final ConnectorDefinition def, final StringBuilder testReport) {
+            final ExtendedConnectorDefinition def, final StringBuilder testReport) {
         final String componentId = component.getId();
         if (component instanceof Group) {
             if (!(componentId != null && !componentId.isEmpty())) {
@@ -171,7 +176,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                 testReport.append("Invalid widget id in " + resourceName);
             }
 
-            final String fieldLabel = connectorResourceProvider.getFieldLabel(def, componentId);
+            final String fieldLabel = def.getFieldLabel(componentId);
             if (!(fieldLabel != null && !fieldLabel.isEmpty())) {
                 testReport.append("\n");
                 testReport.append("The widget " + componentId + " has no label in " + resourceName);
@@ -184,7 +189,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                 testReport.append("\n");
                 testReport.append("Invalid widget id in " + resourceName);
             }
-            final String fieldLabel = connectorResourceProvider.getFieldLabel(def, componentId);
+            final String fieldLabel = def.getFieldLabel(componentId);
             if (!(fieldLabel != null && !fieldLabel.isEmpty())) {
                 if (!("sap-jco2-callfunction.def".equals(resourceName)
                         && ("inputParameters".equals(componentId) || "outputParameters".equals(componentId)))) {
@@ -239,7 +244,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                 }
                 if (implementation.getJarDependencies() != null) {
                     for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
-                        final InputStream stream = connectorResourceProvider.getDependencyInputStream(jarName);
+                        final InputStream stream = connectorDefStore.getResourceProvider().getDependencyInputStream(jarName);
                         if (stream == null) {
                             testReport.append("\n");
                             testReport.append("A provided lib has not been found (" + jarName + ") for " + resourceName);

@@ -31,8 +31,11 @@ public class SForceUpdatesObjectWizardPage extends AbstractSforceWizardPage {
 	protected PageComponentSwitch getPageComponentSwitch(
 			EMFDataBindingContext context, Composite pageComposite) {
 		return new SForceUpdatesObjectComponentSwitch(getContainer(),
-				pageComposite, getElementContainer(), getDefinition(),
-				getConfiguration(), context, getMessageProvider(),
+				pageComposite, 
+				getElementContainer(),
+				getDefinition(),
+				getConfiguration(),
+				context, 
 				getExpressionTypeFilter());
 	}
 }

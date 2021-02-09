@@ -14,8 +14,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.custom.twitter;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -42,13 +41,12 @@ public class TwitterUpdateStatusWizardPageComponentSwitch extends
 
     public TwitterUpdateStatusWizardPageComponentSwitch(
             IWizardContainer iWizardContainer, Composite parent,
-            EObject container, ConnectorDefinition definition,
+            EObject container, ExtendedConnectorDefinition definition,
             ConnectorConfiguration connectorConfiguration,
             EMFDataBindingContext context,
-            DefinitionResourceProvider messageProvider,
             AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
         super(iWizardContainer, parent, container, definition,
-                connectorConfiguration, context, messageProvider,
+                connectorConfiguration, context,
                 connectorExpressionContentTypeFilter);
     }
 

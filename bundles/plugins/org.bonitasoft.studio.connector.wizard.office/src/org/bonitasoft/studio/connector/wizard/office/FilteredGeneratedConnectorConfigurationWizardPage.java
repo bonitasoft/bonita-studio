@@ -65,7 +65,7 @@ public class FilteredGeneratedConnectorConfigurationWizardPage extends Generated
 
     protected PageComponentSwitchBuilder getComponentBuilder(EMFDataBindingContext context) {
         return new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context,
-                getMessageProvider(), getExpressionTypeFilter());
+                 getExpressionTypeFilter());
     }
 
 }

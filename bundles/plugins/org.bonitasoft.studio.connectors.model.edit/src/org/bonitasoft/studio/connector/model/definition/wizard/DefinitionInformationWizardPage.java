@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValid
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
@@ -45,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -303,7 +305,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
             }
         });
         categoryViewer.setContentProvider(new DefinitionCategoryContentProvider());
-        categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider) {
+        categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider() {
 
             @Override
             public String getText(Object element) {
@@ -314,17 +316,17 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
                 return label;
             }
         });
-        final List<Category> allCategories = messageProvider.getAllCategories();
+        final List<ExtendedCategory> allCategories = messageProvider.getAllCategories();
         categoryViewer.setInput(allCategories);
-        final Category selectedCategory = getSelectedCategory(allCategories);
+        final ExtendedCategory selectedCategory = getSelectedCategory(allCategories);
         if (selectedCategory != null) {
             categoryViewer.setSelection(new StructuredSelection(selectedCategory));
         }
         categoryViewer.addSelectionChangedListener(event -> {
             if (!((IStructuredSelection) event.getSelection()).isEmpty()) {
-                Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                ExtendedCategory selection = (ExtendedCategory) ((IStructuredSelection) event.getSelection()).getFirstElement();
                 definition.getCategory().clear();
-                definition.getCategory().add(selection);
+                definition.getCategory().add(EcoreUtil.copy(selection.getCategory()));
                 List<Category> categories = (List<Category>) categoryViewer.getInput();
                 List<Category> parentCategories = new ArrayList<>();
                 getParentCategories(parentCategories, categories, selection);
@@ -346,7 +348,6 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
             public void widgetSelected(SelectionEvent e) {
                 HashSet<String> existingCatIds = new HashSet<>();
                 existingCatIds.addAll(messageProvider.getCategoriesIds());
-              //  existingCatIds.addAll(messageProvider.getUserCategoriesIds());
                 List<Category> input = (List<Category>) categoryViewer.getInput();
                 for (Category category : input) {
                     existingCatIds.add(category.getId());
@@ -357,22 +358,24 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
                     Category newCategory = dialog.getCategory();
                     String displayName = dialog.getDisplayName();
                     messageProvider.setCategoryLabel(messages, newCategory.getId(), displayName);
+                    Image newIcon = null;
                     if (imageFile != null) {
-                        messageProvider.createIcon(imageFile, newCategory.getIcon());
+                        newIcon = messageProvider.createIcon(imageFile, newCategory.getIcon());
                     }
                     input = (List<Category>) categoryViewer.getInput();
-                    input.add(newCategory);
+                    
+                    input.add(new ExtendedCategory(newCategory, newIcon, displayName));
                     categoryViewer.setInput(input);
                 }
             }
         });
     }
 
-    protected Category getSelectedCategory(List<Category> allCategories) {
+    protected ExtendedCategory getSelectedCategory(List<ExtendedCategory> allCategories) {
         if (definition != null) {
             for (Category c : definition.getCategory()) {
                 if (!new DefinitionCategoryContentProvider(allCategories).hasChildren(c)) {
-                    return c;
+                    return messageProvider.getConnectorDefinitionRegistry().find(c).orElse(null);
                 }
             }
         }
@@ -382,7 +385,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
     protected void getParentCategories(List<Category> parentCategories, List<Category> allCategories, Category selection) {
         for (Category c : allCategories) {
             if (selection.getParentCategoryId() != null && selection.getParentCategoryId().equals(c.getId())) {
-                parentCategories.add(c);
+                parentCategories.add(EcoreUtil.copy(c));
                 getParentCategories(parentCategories, allCategories, c);
             }
         }

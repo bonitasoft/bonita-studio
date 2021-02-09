@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.ImportDefinitionDepedenciesOperation;
@@ -118,7 +119,7 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                     final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
                     if (dialog.open() == Dialog.OK) {
                         final IConnectorDefinitionContainer connectorWizard = (IConnectorDefinitionContainer) getWizard();
-                        final ConnectorDefinition def = connectorWizard.getDefinition();
+                        final ExtendedConnectorDefinition def = connectorWizard.getDefinition();
                         final IWizardPage namePage = getWizard().getPage(SelectNameAndDescWizardPage.class.getName());
                         if (namePage != null) {
                             final IWizardPage previousNamePage = namePage.getPreviousPage();

@@ -19,7 +19,7 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -59,15 +59,13 @@ public class TwitterDirectMessageWizardPageComponentSwitch extends
 
     public TwitterDirectMessageWizardPageComponentSwitch(
             IWizardContainer iWizardContainer, Composite parent,
-            EObject container, ConnectorDefinition definition,
+            EObject container, ExtendedConnectorDefinition definition,
             ConnectorConfiguration connectorConfiguration,
             EMFDataBindingContext context,
-            DefinitionResourceProvider messageProvider,
             AvailableExpressionTypeFilter connectorExpressionContentTypeFilter,
             TwitterTools twitterTools) {
         super(iWizardContainer, parent, container, definition,
-                connectorConfiguration, context, messageProvider,
-                connectorExpressionContentTypeFilter);
+                connectorConfiguration, context,  connectorExpressionContentTypeFilter);
         this.twitterTools = twitterTools;
     }
 

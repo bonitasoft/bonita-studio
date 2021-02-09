@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,12 +39,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-
 /**
  * @author Romain Bioteau
- *
  */
-public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage implements ICanFinishProvider {
+public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage
+        implements ICanFinishProvider {
 
     private static final String FAKE_SCRIPT_EXPRESSION = "fakeScriptExpression";
     private static final String SCRIPT_INPUT_NAME = "script";
@@ -61,16 +58,19 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         pageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(3, 10).create());
         pageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context,
-                getMessageProvider(), getExpressionTypeFilter());
+        final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(),
+                getDefinition(),
+                getConfiguration(),
+                context,
+                getExpressionTypeFilter());
         builder.setIsPageFlowContext(isPageFlowContext());
         createScriptEditorControl(pageComposite, context, builder);
-
 
         return mainComposite;
     }
 
-    public ExpressionViewer createScriptEditorControl(final Composite composite, final EMFDataBindingContext context, final PageComponentSwitchBuilder builder) {
+    public ExpressionViewer createScriptEditorControl(final Composite composite, final EMFDataBindingContext context,
+            final PageComponentSwitchBuilder builder) {
         final ConnectorParameter parameter = getScriptConnectorParameter();
         builder.createFieldLabel(composite, SWT.CENTER, SCRIPT_INPUT_NAME, true);
         final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite, SWT.BORDER);
@@ -86,9 +86,11 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
             viewer.setMessage(desc);
         }
         context.bindValue(ViewersObservables.observeSingleSelection(viewer),
-                EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
+                EMFObservables.observeValue(parameter,
+                        ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
 
-        context.bindValue(EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
+        context.bindValue(
+                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
                 EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
                 mandatoryScriptContentStrategy(fieldName), mandatoryScriptContentStrategy(fieldName));
 
@@ -129,7 +131,8 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         for (final ConnectorParameter param : configuration.getParameters()) {
             if (FAKE_SCRIPT_EXPRESSION.equals(param.getKey())) {
                 final AbstractExpression expression = param.getExpression();
-                if (expression != null && expression instanceof Expression && ((Expression) expression).getContent() != null
+                if (expression != null && expression instanceof Expression
+                        && ((Expression) expression).getContent() != null
                         && !((Expression) expression).getContent().isEmpty()) {
                     return true;
                 }

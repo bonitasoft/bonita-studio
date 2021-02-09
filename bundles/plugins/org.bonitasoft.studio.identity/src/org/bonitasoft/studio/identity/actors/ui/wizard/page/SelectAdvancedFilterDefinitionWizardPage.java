@@ -17,6 +17,7 @@ package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -35,9 +36,10 @@ public class SelectAdvancedFilterDefinitionWizardPage extends SelectAdvancedConn
 
     public SelectAdvancedFilterDefinitionWizardPage(Connector workingCopy,
             List<ConnectorImplementation> existingImpl,
-            List<ConnectorDefinition> definitions, String pageTitle,
-            String pageDescription, DefinitionResourceProvider messageProvider) {
-        super(workingCopy, existingImpl, definitions, pageTitle, pageDescription, messageProvider);
+            List<ExtendedConnectorDefinition> definitions, 
+            String pageTitle,
+            String pageDescription) {
+        super(workingCopy, existingImpl, definitions, pageTitle, pageDescription);
     }
 
     @Override

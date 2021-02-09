@@ -21,7 +21,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -78,16 +80,15 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
     }
 
     @Override
-    public ConnectorDefinition getDefinition() {
-        ActorFilterDefRepositoryStore defStore = (ActorFilterDefRepositoryStore) RepositoryManager.getInstance()
-                .getRepositoryStore(ActorFilterDefRepositoryStore.class);
+    public ExtendedConnectorDefinition getDefinition() {
+        ConnectorDefinitionRegistry registry = getDefinitionStore().getResourceProvider().getConnectorDefinitionRegistry();
         if (getOriginalConnector() != null) {
-            return defStore.getDefinition(getOriginalConnector().getDefinitionId(),
-                    getOriginalConnector().getDefinitionVersion());
+            return registry.find(getOriginalConnector().getDefinitionId(),
+                    getOriginalConnector().getDefinitionVersion()).orElse(null);
         } else {
             if (connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
-                return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(),
-                        connectorWorkingCopy.getDefinitionVersion());
+                return registry.find(connectorWorkingCopy.getDefinitionId(),
+                        connectorWorkingCopy.getDefinitionVersion()).orElse(null);
             }
         }
         return null;
@@ -97,8 +98,10 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
     protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(Connector connectorWorkingCopy,
             DefinitionResourceProvider resourceProvider) {
         return new SelectAdvancedFilterDefinitionWizardPage(connectorWorkingCopy,
-                Collections.<ConnectorImplementation> emptyList(), getDefinitionStore().getDefinitions(),
-                Messages.selectFilterDefinitionTitle, Messages.selectFilterDefinitionDesc, resourceProvider);
+                Collections.<ConnectorImplementation> emptyList(), 
+                resourceProvider.getConnectorDefinitionRegistry().getDefinitions(),
+                Messages.selectFilterDefinitionTitle, 
+                Messages.selectFilterDefinitionDesc);
     }
 
     @Override

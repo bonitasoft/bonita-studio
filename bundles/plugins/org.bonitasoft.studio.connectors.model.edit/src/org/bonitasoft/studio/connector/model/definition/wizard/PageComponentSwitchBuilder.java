@@ -21,10 +21,9 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Checkbox;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Group;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.List;
@@ -83,9 +82,7 @@ import com.google.common.base.Strings;
  */
 public class PageComponentSwitchBuilder {
 
-    protected final ConnectorDefinition definition;
-
-    protected DefinitionResourceProvider messageProvider;
+    protected final ExtendedConnectorDefinition definition;
 
     private boolean isPageFlowContext = false;
 
@@ -101,24 +98,26 @@ public class PageComponentSwitchBuilder {
 
     private final ConnectorConfigurationSupport connectorConfigurationSupport;
 
-    public PageComponentSwitchBuilder(final EObject container, final ConnectorDefinition definition,
-            final ConnectorConfiguration connectorConfiguration, final EMFDataBindingContext context,
-            final DefinitionResourceProvider messageProvider,
+    public PageComponentSwitchBuilder(final EObject container, 
+            final ExtendedConnectorDefinition definition,
+            final ConnectorConfiguration connectorConfiguration, 
+            final EMFDataBindingContext context,
             final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
         super();
         this.definition = definition;
         this.connectorConfigurationSupport = new ConnectorConfigurationSupport(connectorConfiguration);
-        this.messageProvider = messageProvider;
         this.container = container;
         this.context = context;
         this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
     }
 
-    public PageComponentSwitchBuilder(final EObject container, final ConnectorDefinition definition,
-            final ConnectorConfiguration connectorConfiguration, final EMFDataBindingContext context,
-            final DefinitionResourceProvider messageProvider,
-            final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter, final int labelWidth) {
-        this(container, definition, connectorConfiguration, context, messageProvider, connectorExpressionContentTypeFilter);
+    public PageComponentSwitchBuilder(final EObject container, 
+            final ExtendedConnectorDefinition definition,
+            final ConnectorConfiguration connectorConfiguration,
+            final EMFDataBindingContext context,
+            final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter, 
+            final int labelWidth) {
+        this(container, definition, connectorConfiguration, context, connectorExpressionContentTypeFilter);
         this.labelWidth = labelWidth;
     }
 
@@ -148,7 +147,7 @@ public class PageComponentSwitchBuilder {
         viewer.setIsPageFlowContext(isPageFlowContext);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setExpressionNameResolver(new ConnectorInputNameResolver(parameter.getKey()));
-        final String example = messageProvider.getFieldExample(definition, object.getId());
+        final String example = definition.getFieldExample(object.getId());
         if (!Strings.isNullOrEmpty(example)) {
             viewer.setExample(example);
         }
@@ -168,7 +167,7 @@ public class PageComponentSwitchBuilder {
     }
 
     private void handleDescription(final Text object, final ExpressionViewer viewer) {
-        final String desc = messageProvider.getFieldDescription(definition, object.getId());
+        final String desc = definition.getFieldDescription(object.getId());
         if (desc != null && !desc.isEmpty()) {
             viewer.setMessage(desc);
         }
@@ -248,16 +247,11 @@ public class PageComponentSwitchBuilder {
     }
 
     public String getLabel(final String inputName) {
-        String label = messageProvider.getFieldLabel(definition, inputName);
-        if (label == null) {
-            label = "";
-        }
-
-        return label;
+        return definition.getFieldLabel(inputName);
     }
 
     public String getDescription(final String inputName) {
-        return messageProvider.getFieldDescription(definition, inputName);
+        return definition.getFieldDescription(inputName);
     }
 
     public CheckBoxExpressionViewer createCheckboxControl(final Composite composite, final Checkbox object) {
@@ -316,7 +310,7 @@ public class PageComponentSwitchBuilder {
             } else {
                 label = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
             }
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = definition.getFieldDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
                 controlDecoration.setDescriptionText(desc);

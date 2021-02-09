@@ -24,6 +24,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.BundleDefinitionImageResourceLoader;
 import org.bonitasoft.studio.common.repository.provider.BundleResourceLoader;
@@ -90,6 +92,7 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
+            rebuildConnectorRegistry();
         }
     }
 
@@ -112,6 +115,11 @@ public abstract class AbstractDefFileStore extends EMFFileStore<ConnectorDefinit
             BonitaStudioLog.warning(e.getMessage(), "org.bonitasoft.studio.connectors.model.edit");
         }
         super.delete();
+        rebuildConnectorRegistry();
+    }
+
+    private void rebuildConnectorRegistry() {
+        ((IDefinitionRepositoryStore<IRepositoryFileStore<?>>) store).getResourceProvider().loadDefinitionsCategories(null);
     }
     
     @Override

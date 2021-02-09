@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -39,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
 public abstract class AbstractConnectorOutputWizardPage extends WizardPage implements IBonitaVariableContext {
 
     private EObject elementContainer;
-    private ConnectorDefinition definition;
+    private ExtendedConnectorDefinition definition;
     protected final EMFDataBindingContext context;
     private Connector connector;
     private WizardPageSupport pageSupport;
@@ -77,11 +78,11 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
     
     }
 
-    public ConnectorDefinition getDefinition() {
+    public ExtendedConnectorDefinition getDefinition() {
         return definition;
     }
 
-    public void setDefinition(ConnectorDefinition definition) {
+    public void setDefinition(ExtendedConnectorDefinition definition) {
         this.definition = definition;
     }
 

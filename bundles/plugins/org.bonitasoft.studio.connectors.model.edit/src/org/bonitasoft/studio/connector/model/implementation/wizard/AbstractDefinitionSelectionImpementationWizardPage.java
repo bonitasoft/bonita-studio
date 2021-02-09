@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.TreeExplorer;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -69,7 +69,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         implements ISelectionChangedListener {
 
     protected ConnectorImplementation implementation;
-    protected ConnectorDefinition selectedDefinition;
+    protected ExtendedConnectorDefinition selectedDefinition;
     protected EMFDataBindingContext context;
     protected UpdateValueStrategy defIdStrategy;
     protected UpdateValueStrategy defModelStrategy;
@@ -78,32 +78,32 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
     private WizardPageSupport pageSupport;
     private final Boolean checkOnlyCustom;
     private Button onlyCustomCheckbox;
-    private final DefinitionResourceProvider messageProvider;
-    protected final List<ConnectorDefinition> definitions;
+    protected final List<ExtendedConnectorDefinition> definitions;
     private List<ViewerFilter> filters = new ArrayList<>();
     private final ViewerFilter customConnectorFilter = new CustomConnectorViewerFilter();
     private Composite cloudValidationComposite;
     private CLabel cloudValidationLabel;
 
     public AbstractDefinitionSelectionImpementationWizardPage(final ConnectorImplementation implementation,
-            final List<ConnectorImplementation> existingImpl, final List<ConnectorDefinition> definitions,
-            final String pageTitle, final String pageDescription, final DefinitionResourceProvider messageProvider) {
+            final List<ConnectorImplementation> existingImpl, 
+            final List<ExtendedConnectorDefinition> definitions,
+            final String pageTitle,
+            final String pageDescription) {
         super(true, AbstractDefinitionSelectionImpementationWizardPage.class.getName());
         setTitle(pageTitle);
         setDescription(pageDescription);
         this.implementation = implementation;
-        this.messageProvider = messageProvider;
         this.definitions = definitions;
         checkOnlyCustom = implementation.getDefinitionId() == null;
     }
 
     public AbstractDefinitionSelectionImpementationWizardPage(final List<ConnectorImplementation> existingImpl,
-            final List<ConnectorDefinition> definitions, final String pageTitle, final String pageDescription,
-            final DefinitionResourceProvider messageProvider) {
+            final List<ExtendedConnectorDefinition> definitions, 
+            final String pageTitle, 
+            final String pageDescription) {
         super(true, AbstractDefinitionSelectionImpementationWizardPage.class.getName());
         setTitle(pageTitle);
         setDescription(pageDescription);
-        this.messageProvider = messageProvider;
         this.definitions = definitions;
         checkOnlyCustom = false;
     }
@@ -167,9 +167,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
                     versionCombo.getCombo().setEnabled(versions.size() > 1);
                     if (versions.size() == 1) {
-                        for (final ConnectorDefinition def : definitions) {
+                        for (final ExtendedConnectorDefinition def : definitions) {
                             if (defId.equals(def.getId())) {
-                                descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));
+                                descriptionLabel.setText(def.getConnectorDefinitionDescription());
                                 descriptionGroup.layout(true);
                                 break;
                             }
@@ -213,9 +213,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                     final String defId = ((ConnectorDefinition) sel).getId();
                     final String version = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
                     if (defId != null && version != null) {
-                        for (final ConnectorDefinition def : definitions) {
+                        for (final ExtendedConnectorDefinition def : definitions) {
                             if (defId.equals(def.getId()) && version.equals(def.getVersion())) {
-                                descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));
+                                descriptionLabel.setText(def.getConnectorDefinitionDescription());
                                 descriptionGroup.layout(true);
                                 break;
                             }
@@ -292,7 +292,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         final ITreeContentProvider contentProvider = getContentProvider();
         final ITreeContentProvider customContentProvider = getCustomContentProvider();
         explorer.setContentProvider(customContentProvider);
-        explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
+        explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider());
         explorer.addRightTreeFilter(customConnectorFilter);
         explorer.addLeftTreeFilter(new ViewerFilter() {
 
@@ -430,11 +430,11 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
     protected abstract void bindValue();
 
-    public void setSelectedConnectorDefinition(final ConnectorDefinition selectedDefinition) {
+    public void setSelectedConnectorDefinition(final ExtendedConnectorDefinition selectedDefinition) {
         this.selectedDefinition = selectedDefinition;
     }
 
-    public ConnectorDefinition getSelectedConnectorDefinition() {
+    public ExtendedConnectorDefinition getSelectedConnectorDefinition() {
         return selectedDefinition;
     }
 

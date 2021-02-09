@@ -60,14 +60,12 @@ public class SelectFilterDefinitionWizardPage extends SelectConnectorDefinitionW
     private final Connector connectorWorkingCopy;
     private EMFDataBindingContext context;
     private WizardPageSupport pageSupport;
-    private final DefinitionResourceProvider messageProvider;
 
-    public SelectFilterDefinitionWizardPage(Connector connectorWorkingCopy,DefinitionResourceProvider messageProvider) {
-        super(connectorWorkingCopy,messageProvider);
+    public SelectFilterDefinitionWizardPage(Connector connectorWorkingCopy) {
+        super(connectorWorkingCopy);
         setTitle(Messages.selectFilterDefinitionTitle);
         setDescription(Messages.selectFilterDefinitionDesc);
         this.connectorWorkingCopy = connectorWorkingCopy ;
-        this.messageProvider = messageProvider;
     }
 
 
@@ -78,7 +76,7 @@ public class SelectFilterDefinitionWizardPage extends SelectConnectorDefinitionW
         filterTree = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter(), true);
         filterTree.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
         filterTree.getViewer().setContentProvider(getContentProvider());
-        filterTree.getViewer().setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider));
+        filterTree.getViewer().setLabelProvider(new ConnectorDefinitionTreeLabelProvider());
         filterTree.getViewer().addSelectionChangedListener(this) ;
         filterTree.getViewer().addDoubleClickListener(this) ;
         filterTree.getViewer().addFilter(new ViewerFilter() {

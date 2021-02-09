@@ -91,7 +91,8 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
     @Override
     protected IWizardPage getDefinitionSelectionWizardPage(
     		List<ConnectorImplementation> existingImplementation) {
-    	return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getPageTitle(),getPageDescription(),messageProvider){
+    	return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,existingImplementation,
+    	        messageProvider.getConnectorDefinitionRegistry().getDefinitions(),getPageTitle(),getPageDescription()){
 
 			@Override
 			protected ITreeContentProvider getContentProvider() {

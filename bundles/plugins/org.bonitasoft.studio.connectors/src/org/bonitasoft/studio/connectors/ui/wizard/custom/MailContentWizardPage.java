@@ -27,7 +27,13 @@ public class MailContentWizardPage extends GeneratedConnectorWizardPage {
 	@Override
 	protected PageComponentSwitch getPageComponentSwitch(
 			EMFDataBindingContext context, Composite pageComposite) {
-		return new MailContentComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
+		return new MailContentComponentSwitch(getContainer(), 
+		        pageComposite, 
+		        getElementContainer(), 
+		        getDefinition(), 
+		        getConfiguration(), 
+		        context,
+		        getExpressionTypeFilter());
 	}
 
 }

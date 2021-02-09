@@ -32,7 +32,7 @@ public class SForceCreateObjectWizardPage extends AbstractSforceWizardPage {
 			EMFDataBindingContext context, Composite pageComposite) {
 		return new SForceCreateObjectComponentSwitch(getContainer(),
 				pageComposite, getElementContainer(), getDefinition(),
-				getConfiguration(), context, getMessageProvider(),
+				getConfiguration(), context, 
 				getExpressionTypeFilter());
 	}
 }

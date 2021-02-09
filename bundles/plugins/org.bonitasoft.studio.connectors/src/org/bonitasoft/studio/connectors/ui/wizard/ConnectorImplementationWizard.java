@@ -143,7 +143,10 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 	protected IWizardPage getDefinitionSelectionWizardPage(
 			List<ConnectorImplementation> existingImplementation) {
-		return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getSelectionPageTitle(),getSelectionPageDescription(),messageProvider){
+		return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,
+		        existingImplementation,
+		        messageProvider.getConnectorDefinitionRegistry().getDefinitions(),
+		        getSelectionPageTitle(),getSelectionPageDescription()){
 
 			@Override
 			protected ITreeContentProvider getContentProvider() {

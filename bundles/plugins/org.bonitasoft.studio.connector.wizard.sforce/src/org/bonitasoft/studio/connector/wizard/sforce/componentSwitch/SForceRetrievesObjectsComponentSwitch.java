@@ -16,8 +16,7 @@
  */
 package org.bonitasoft.studio.connector.wizard.sforce.componentSwitch;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.List;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
@@ -45,14 +44,15 @@ public class SForceRetrievesObjectsComponentSwitch extends
 	private ExpressionCollectionViewer expIdColViewer;
 
 	public SForceRetrievesObjectsComponentSwitch(
-			IWizardContainer iWizardContainer, Composite parent,
-			EObject container, ConnectorDefinition definition,
+			IWizardContainer iWizardContainer,
+			Composite parent,
+			EObject container, 
+			ExtendedConnectorDefinition definition,
 			ConnectorConfiguration connectorConfiguration,
 			EMFDataBindingContext context,
-			DefinitionResourceProvider messageProvider,
 			AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		super(iWizardContainer, parent, container, definition,
-				connectorConfiguration, context, messageProvider,
+				connectorConfiguration, context, 
 				connectorExpressionContentTypeFilter);
 	}
 

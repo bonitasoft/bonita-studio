@@ -24,9 +24,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Group;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
@@ -34,6 +35,7 @@ import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.identity.IdentityPlugin;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefFileStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
 
@@ -46,7 +48,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
 
     private ActorFilterDefRepositoryStore connectorDefStore;
     private ActorFilterImplRepositoryStore connectorImplStore;
-    private DefinitionResourceProvider connectorResourceProvider;
+    private ConnectorDefinitionRegistry connectorResourceProvider;
 
     @Override
     protected void setUp() throws Exception {
@@ -54,14 +56,15 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
         connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
         connectorResourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore,
-                IdentityPlugin.getDefault().getBundle());
+                IdentityPlugin.getDefault().getBundle()).getConnectorDefinitionRegistry();
     }
 
     public void testProvidedActorFilterDefinitionsSanity() throws Exception {
         final StringBuilder testReport = new StringBuilder("testProvidedActorFilterDefinitionsSanity report:");
-        for (final ConnectorDefinition definition : connectorDefStore.getDefinitions()) {
+        for (final ExtendedConnectorDefinition definition : connectorResourceProvider.getDefinitions()) {
             final String resourceName = definition.eResource().getURI().lastSegment();
-            if (connectorDefStore.getChild(resourceName, true).isReadOnly()) {
+            ActorFilterDefFileStore fileStore = connectorDefStore.find(definition).orElse(null);
+            if (fileStore != null && fileStore.isReadOnly()) {
                 if (!(definition.getId() != null && !definition.getId().isEmpty())) {
                     testReport.append("\n");
                     testReport.append("Missing definition id for " + resourceName);
@@ -79,7 +82,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                     }
                 }
 
-                if (connectorResourceProvider.getDefinitionIcon(definition) == null) {
+                if (definition.getImage() == null) {
                     if (!isKnownMissingIcon(resourceName)) {
                         testReport.append("\n");
                         testReport.append("Missing definition icon file for " + resourceName);
@@ -109,13 +112,13 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                         testReport.append("Invalid page id in " + resourceName);
                     }
 
-                    final String pageTitle = connectorResourceProvider.getPageTitle(definition, p.getId());
+                    final String pageTitle = definition.getPageTitle(p.getId());
                     if (!(pageTitle != null && !pageTitle.isEmpty())) {
                         testReport.append("\n");
                         testReport.append("Invalid page title for " + p.getId() + " in " + resourceName);
                     }
 
-                    final String pageDescription = connectorResourceProvider.getPageDescription(definition, p.getId());
+                    final String pageDescription = definition.getPageDescription(p.getId());
                     if (!(pageDescription != null && !pageDescription.isEmpty())) {
                         testReport.append("\n");
                         testReport.append("Invalid page description for " + p.getId() + " in " + resourceName);
@@ -166,14 +169,14 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
     }
 
     private void parsePageWidget(final Component component, final List<String> bindInputs, final String resourceName,
-            final ConnectorDefinition def, final StringBuilder testReport) {
+            final ExtendedConnectorDefinition def, final StringBuilder testReport) {
         if (component instanceof Group) {
             if (!(component.getId() != null && !component.getId().isEmpty())) {
                 testReport.append("\n");
                 testReport.append("Invalid widget id in " + resourceName);
             }
 
-            final String fieldLabel = connectorResourceProvider.getFieldLabel(def, component.getId());
+            final String fieldLabel = def.getFieldLabel(component.getId());
             if (!(fieldLabel != null && !fieldLabel.isEmpty())) {
                 testReport.append("\n");
                 testReport.append("The widget " + component.getId() + " has no label in " + resourceName);
@@ -186,7 +189,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 testReport.append("\n");
                 testReport.append("Invalid widget id in " + resourceName);
             }
-            final String fieldLabel = connectorResourceProvider.getFieldLabel(def, component.getId());
+            final String fieldLabel = def.getFieldLabel(component.getId());
             if (!(fieldLabel != null && !fieldLabel.isEmpty())) {
                 testReport.append("\n");
                 testReport.append("The widget " + component.getId() + " has no label in " + resourceName);
@@ -237,7 +240,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 }
 
                 for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
-                    final InputStream stream = connectorResourceProvider.getDependencyInputStream(jarName);
+                    final InputStream stream = connectorDefStore.getResourceProvider().getDependencyInputStream(jarName);
                     if (stream == null) {
                         testReport.append("\n");
                         testReport.append("A provided lib has not been found (" + jarName + ") for " + resourceName);

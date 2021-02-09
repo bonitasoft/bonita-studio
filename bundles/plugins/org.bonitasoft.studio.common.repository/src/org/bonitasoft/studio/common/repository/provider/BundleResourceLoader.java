@@ -20,5 +20,5 @@ import java.util.ResourceBundle;
 public interface BundleResourceLoader {
 
     ResourceBundle getResourceBundle(Locale locale);
-    
+ 
 }

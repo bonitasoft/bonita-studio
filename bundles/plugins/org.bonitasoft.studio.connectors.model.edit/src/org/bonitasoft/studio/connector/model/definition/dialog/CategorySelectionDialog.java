@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -42,14 +43,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 
-/**
- * @author Romain Bioteau
- *
- */
 public class CategorySelectionDialog extends Dialog {
 
     private TreeViewer categoryViewer;
-    private List<Category> categories  = new ArrayList<Category>() ;
+    private List<ExtendedCategory> categories  = new ArrayList<>() ;
     private DataBindingContext context;
     private final DefinitionResourceProvider messageProvider;
 
@@ -76,7 +73,7 @@ public class CategorySelectionDialog extends Dialog {
         categoryViewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION) ;
         categoryViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         categoryViewer.setContentProvider(new DefinitionCategoryContentProvider()) ;
-        categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider)) ;
+        categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider()) ;
         categoryViewer.setInput(getAllCategories()) ;
         final IViewerObservableList observeSelection = ViewerProperties.multipleSelection().observe(categoryViewer);
         MultiValidator validator = new MultiValidator() {
@@ -106,16 +103,16 @@ public class CategorySelectionDialog extends Dialog {
         return closed;
     }
 
-    protected List<Category> getAllCategories() {
+    protected List<ExtendedCategory> getAllCategories() {
         return messageProvider.getAllCategories();
     }
 
 
-    public List<Category> getCategories(){
+    public List<ExtendedCategory> getCategories(){
         return categories ;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<ExtendedCategory> categories) {
         this.categories = categories;
     }
 

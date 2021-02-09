@@ -41,7 +41,7 @@ public class JarBundleResourceLoader implements BundleResourceLoader {
                     new JarControl(new File(definition.getFilePath())));
         } catch (final MissingResourceException e) {
             BonitaStudioLog.error(e);
-            return null;
+            return ResourceBundle.getBundle("");
         }
     }
 

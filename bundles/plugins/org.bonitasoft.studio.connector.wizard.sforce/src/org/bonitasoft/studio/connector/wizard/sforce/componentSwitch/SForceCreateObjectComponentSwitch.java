@@ -19,9 +19,8 @@ package org.bonitasoft.studio.connector.wizard.sforce.componentSwitch;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -53,13 +52,12 @@ public class SForceCreateObjectComponentSwitch extends
 
 	public SForceCreateObjectComponentSwitch(IWizardContainer iWizardContainer,
 			Composite parent, EObject container,
-			ConnectorDefinition definition,
+			ExtendedConnectorDefinition definition,
 			ConnectorConfiguration connectorConfiguration,
 			EMFDataBindingContext context,
-			DefinitionResourceProvider messageProvider,
 			AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		super(iWizardContainer, parent, container, definition,
-				connectorConfiguration, context, messageProvider,
+				connectorConfiguration, context,
 				connectorExpressionContentTypeFilter);
 	}
 

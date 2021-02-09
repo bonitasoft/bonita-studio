@@ -16,9 +16,8 @@
  */
 package org.bonitasoft.studio.connector.wizard.sforce.componentSwitch;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Array;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
@@ -46,13 +45,12 @@ public class SForceUpdatesObjectComponentSwitch extends
 
 	public SForceUpdatesObjectComponentSwitch(
 			IWizardContainer iWizardContainer, Composite parent,
-			EObject container, ConnectorDefinition definition,
+			EObject container, ExtendedConnectorDefinition definition,
 			ConnectorConfiguration connectorConfiguration,
 			EMFDataBindingContext context,
-			DefinitionResourceProvider messageProvider,
 			AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		super(iWizardContainer, parent, container, definition,
-				connectorConfiguration, context, messageProvider,
+				connectorConfiguration, context,
 				connectorExpressionContentTypeFilter);
 	}
 
