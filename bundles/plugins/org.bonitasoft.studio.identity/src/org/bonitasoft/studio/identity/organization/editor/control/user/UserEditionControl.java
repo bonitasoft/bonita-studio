@@ -274,7 +274,7 @@ public class UserEditionControl {
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
         passwordField.observeText(SWT.Modify).addValueChangeListener(e -> {
             if (!Strings.isNullOrEmpty(e.diff.getOldValue())) { // This event is triggered when the pwd is updated AND when the first user is selected -> old value empty
-                if(passwordObservable.getValue() != null) {
+                if (passwordObservable.getValue() != null) {
                     passwordObservable.getValue().setEncrypted(false);
                 }
             }
@@ -299,7 +299,7 @@ public class UserEditionControl {
                 selectedUserObservable, OrganizationPackage.Literals.USER__USER_NAME);
         UserNameValidator nameValidator = new UserNameValidator(formPage.observeWorkingCopy(), selectedUserObservable);
         new TextWidget.Builder()
-                .transactionalEdit()
+                .transactionalEdit((oldValue, newValue) -> refactorMemberships(oldValue, newValue))
                 .withLabel(Messages.userName)
                 .labelAbove()
                 .fill()
@@ -310,6 +310,13 @@ public class UserEditionControl {
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
+    }
+
+    private void refactorMemberships(String oldValue, String newValue) {
+        formPage.observeMemberships().stream()
+                .filter(m -> Objects.equals(m.getUserName(), oldValue))
+                .forEach(m -> m.setUserName(newValue));
+        formPage.refreshSelectedUser();
     }
 
     public IObservableValue<String> observeSectionTitle() {
