@@ -14,13 +14,11 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
+
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
@@ -29,6 +27,7 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.ComboFieldEditor;
@@ -115,20 +114,18 @@ public class BonitaAppearancePreferencePage extends AbstractBonitaPreferencePage
         return false;
     }
 
-    @SuppressWarnings("restriction")
     private void applyThemePreference() {
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .getString(BonitaThemeConstants.STUDIO_THEME_PREFERENCE);
-
         if (engine.getActiveTheme() == null || !Objects.equals(value, engine.getActiveTheme().getId())) {
-            BonitaStudioLog.info(String.format("Applying theme %s", value), BonitaStudioPreferencesPlugin.PLUGIN_ID);
-            engine.setTheme(value, true);
-            Map<String, Object> parameters = new HashMap();
-            parameters.put("title", Messages.themeChangedTitle);
-            parameters.put("content", Messages.themeChanged);
-            new CommandExecutor().executeCommand(NOTIFY_RESTART_COMMAND, parameters);
-            PlatformUtil.openIntroIfNoOtherEditorOpen();
+            if (MessageDialog.openQuestion(getShell(),
+                    Messages.bind(Messages.restartQuestion_title, new Object[] { bonitaStudioModuleName }),
+                    Messages.updateThemeAndRestartQuestion)) {
+                BonitaStudioLog.info(String.format("Applying theme %s", value), BonitaStudioPreferencesPlugin.PLUGIN_ID);
+                engine.setTheme(value, true);
+                PlatformUI.getWorkbench().restart();
+            }
         }
     }
 

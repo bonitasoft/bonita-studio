@@ -74,7 +74,6 @@ public class Messages extends NLS {
     public static String light;
     public static String dark;
     public static String theme;
-    public static String themeChangedTitle;
-    public static String themeChanged;
     public static String notifyBdmDeploymentRequiredMessage;
+    public static String updateThemeAndRestartQuestion;
 }
