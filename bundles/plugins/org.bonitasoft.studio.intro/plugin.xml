@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="icons/bonitasoft-icon-16-16-transparent.png"
+            id="org.bonitasoft.studio.application.intro"
+            label="%openWelcomePage_label">
+      </intro>
+      <introProductBinding
+            introId="org.bonitasoft.studio.application.intro"
+            productId="org.bonitasoft.studio.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            configurer="org.bonitasoft.studio.intro.configurer.BontaIntroConfigurer"
+            content="content/introContent.xml"
+            id="org.bonitasoft.studio.application.configId"
+            introId="org.bonitasoft.studio.application.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  style="$theme$">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
+</plugin>
