@@ -162,6 +162,9 @@ public class Messages extends NLS {
     public static String incompatibleExtensionTitle;
     public static String dependencyUpdatable;
     public static String newVersionAvailable;
+    public static String projectExtensions;
+    public static String openMarketplace;
+    public static String openMarketplaceTooltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -6,6 +6,7 @@
     <elements xsi:type="commands:Command" xmi:id="_1hVzYAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFile.command" commandName="%newFile"/>
     <elements xsi:type="commands:Command" xmi:id="_4djs4AYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.command" commandName="%newFolder"/>
     <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.extend.project.command" commandName="%extendProject"/>
+    <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_NR20wKiaEemxstQeqTvXDA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_6p_NQK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.handler.deployArtifacts" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.DeployArtifactsHandler" command="_yyuWEK0kEem8O8pWB8c8Fg"/>
@@ -13,5 +14,6 @@
     <elements xsi:type="commands:Handler" xmi:id="_6Dw1sAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFile.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewFileHandler" command="_1hVzYAYDEeq5-uUHHFYRTg"/>
     <elements xsi:type="commands:Handler" xmi:id="_89teUAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewFolderHandler" command="_4djs4AYDEeq5-uUHHFYRTg"/>
     <elements xsi:type="commands:Handler" xmi:id="_Nlng4GIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.extend.project.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.ExtendProjectHandler" command="_Cv2RMGIUEeuoz-OKLL5EHA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_YIwPgGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenExtensionViewHandler" command="_RH3msGrHEeuYIIt6RJgX4w"/>
   </fragments>
 </fragment:ModelFragments>

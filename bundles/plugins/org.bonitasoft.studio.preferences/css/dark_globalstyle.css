@@ -90,6 +90,14 @@ Label#infoTextColor {
     color: #99b4e0;
 }
 
+Label#titleTextColor { 
+	color: #b4bec8;
+}
+
+Label#toolbarTextColor { 
+	color: #757575;
+}
+
 .wizardHighlightBackground {
     background-color: #2F2F2F;
 }
