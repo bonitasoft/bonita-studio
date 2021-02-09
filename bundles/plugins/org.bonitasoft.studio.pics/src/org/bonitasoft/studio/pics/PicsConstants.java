@@ -420,4 +420,7 @@ public class PicsConstants {
     public static String connectorDefaultIcon = "connectorDefaultIcon.png";
     public static String actorfilterDefaultIcon = "actorfilterDefaultIcon.png";
 
+    public static String openMarketplace = "open_marketplace.png";
+    public static String openMarketplaceHot = "open_marketplace_hot.png";
+
 }

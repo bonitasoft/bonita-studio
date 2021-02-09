@@ -782,6 +782,13 @@
             name="%projectExplorer"
             restorable="true">
       </view>
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionViewPart"
+            id="org.bonitasoft.studio.application.extension.view"
+            name="%projectExtensionView"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.activities">
@@ -1003,6 +1010,12 @@
                variable="activeWorkbenchWindow.activePerspective">
            <equals
                   value="org.bonitasoft.studio.identity.organization.perspective">
+            </equals>
+         </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+           <equals
+                  value="org.bonitasoft.studio.application.extension.perspective">
             </equals>
          </with>
          </or>
@@ -1489,6 +1502,11 @@
             class="org.bonitasoft.studio.application.perspective.MarkdownEditorPerspectiveFactory"
             id="org.bonitasoft.studio.perspective.markdownEditor"
             name="Markdown Editor Perspective">
+      </perspective>
+      <perspective
+            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionPerspective"
+            id="org.bonitasoft.studio.application.extension.perspective"
+            name="%projectExtensionPerspective">
       </perspective>
    </extension>
    <extension
