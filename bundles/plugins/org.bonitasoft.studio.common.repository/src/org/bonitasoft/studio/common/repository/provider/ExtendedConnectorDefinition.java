@@ -265,4 +265,10 @@ public class ExtendedConnectorDefinition implements ConnectorDefinition, Localiz
     private String buildKey(String id, String suffix) {
         return String.format("%s.%s", id, suffix);
     }
+    
+    public void dispose() {
+        if(icon != null) {
+            icon.dispose();
+        }
+    }
 }

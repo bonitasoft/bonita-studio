@@ -75,9 +75,11 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         List<ActorFilterDefFileStore> defFileStores = super.getChildren();
 
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
-        projectDependenciesStore.getActorFilterDefinitions().stream()
-                .map(t -> new DependencyActorFilterDefFileStore(t, this))
-                .forEach(defFileStores::add);
+        if(projectDependenciesStore != null) {
+            projectDependenciesStore.getActorFilterDefinitions().stream()
+            .map(t -> new DependencyActorFilterDefFileStore(t, this))
+            .forEach(defFileStores::add);
+        }
 
         return defFileStores;
     }
