@@ -44,8 +44,7 @@ public class ConnectorDefinitionRegistry {
 
     public synchronized ConnectorDefinitionRegistry build(IDefinitionRepositoryStore<IRepositoryFileStore<?>> store) {
         BonitaStudioLog.info(String.format("Building %s registry...", ((IRepositoryStore<?>) store).getName()), CommonRepositoryPlugin.PLUGIN_ID);
-        definitionRegistry.clear();
-        categoryRegistry.clear();
+        clearRegistries();
         for (ConnectorDefinition definition : store.getDefinitions()) {
             DefinitionResourceLoaderProvider resourceLoaderProvider = store.find(definition)
                     .map(DefinitionResourceLoaderProvider.class::cast).orElse(null);
@@ -81,6 +80,13 @@ public class ConnectorDefinitionRegistry {
         }
 
         return this;
+    }
+
+    private void clearRegistries() {
+        definitionRegistry.values().forEach(ExtendedConnectorDefinition::dispose);
+        definitionRegistry.clear();
+        categoryRegistry.values().forEach(ExtendedCategory::dispose);
+        categoryRegistry.clear();
     }
 
     private String getCategoryLabel(ResourceBundle resourceBundle, Category category) {

@@ -177,4 +177,10 @@ public class ExtendedCategory implements Category {
     public Category getCategory() {
         return category;
     }
+    
+    public void dispose() {
+        if(icon != null) {
+            icon.dispose();
+        }
+    }
 }
