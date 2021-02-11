@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Baptiste Mesta
@@ -42,26 +43,26 @@ public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerCon
             for (final Element el : ((Container) eObj.eContainer()).getElements()) {
                 if (!el.equals(eObj) && el.getName().equals(((Element) eObj).getName())
                         && ((AbstractProcess) el).getVersion().equals(((AbstractProcess) eObj).getVersion())) {
-                    return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + el.getName() });
+                    return ctx.createFailureStatus(Messages.Validation_Element_SameName + ": " + el.getName());
                 }
             }
 
             final Pool p = (Pool) eObj;
-            final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-            final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
+            DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+            List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
             for (final AbstractProcess other_p : allProcesses) {
                 if (!EcoreUtil.equals(p, other_p)
                         && !sameEObjectId(p, other_p)
                         && p.getName().equals(other_p.getName())
                         && p.getVersion().equals(other_p.getVersion())) {
-                    return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process, p.getName(), p.getVersion()) });
+                    return ctx.createFailureStatus(NLS.bind(Messages.Validation_Duplicate_Process, p.getName(), p.getVersion()));
                 }
             }
         }
 
         return ctx.createSuccessStatus();
     }
-
+    
     protected boolean sameEObjectId(final Pool p, final AbstractProcess other_p) {
         final String eObjectID = ModelHelper.getEObjectID(p);
         final String eObjectID2 = ModelHelper.getEObjectID(other_p);

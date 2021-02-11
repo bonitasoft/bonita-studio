@@ -17,17 +17,11 @@ package org.bonitasoft.studio.designer.core.repository;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.json.JSONException;
@@ -41,16 +35,26 @@ import com.google.common.io.Files;
  */
 public class JSONFileStore extends AbstractFileStore<JSONObject> {
 
+    private JSONObject content;
+
     public JSONFileStore(final String fileName, final IRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
+    @Override
+    protected JSONObject getUnsafeContent() throws ReadFileStoreException {
+        if(content == null) {
+            content = super.getUnsafeContent();
+        }
+        return content;
+    }
+    
     protected String getStringAttribute(final String attribute) throws JSONException, ReadFileStoreException {
-        return getContent().getString(attribute);
+        return getUnsafeContent().getString(attribute);
     }
 
     protected boolean getBooleanAttribute(final String attribute) throws JSONException, ReadFileStoreException {
-        return getContent().getBoolean(attribute);
+        return getUnsafeContent().getBoolean(attribute);
     }
 
     @Override

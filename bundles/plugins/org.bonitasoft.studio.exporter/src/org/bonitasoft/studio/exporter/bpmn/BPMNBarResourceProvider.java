@@ -17,6 +17,7 @@ package org.bonitasoft.studio.exporter.bpmn;
 import static com.google.common.io.Files.toByteArray;
 
 import java.io.File;
+import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Activator;
@@ -50,9 +52,11 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                         .getRepositoryStore(DiagramRepositoryStore.class);
                 ConnectorDefRepositoryStore connectorDefRepoStore = RepositoryManager.getInstance()
                         .getRepositoryStore(ConnectorDefRepositoryStore.class);
+                List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
+                List<ConnectorDefinition> definitions = connectorDefRepoStore.getDefinitions();
                 IModelSearch modelSearch = new ModelSearch(
-                        () -> diagramRepoStore.getAllProcesses(),
-                        () -> connectorDefRepoStore.getDefinitions());
+                        () -> allProcesses,
+                        () -> definitions);
                 new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
                         destFile);
                 builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));

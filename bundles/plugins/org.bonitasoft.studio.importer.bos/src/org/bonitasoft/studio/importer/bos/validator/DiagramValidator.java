@@ -16,8 +16,10 @@ package org.bonitasoft.studio.importer.bos.validator;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -37,7 +39,12 @@ public class DiagramValidator implements BosImporterStatusProvider {
     public ImportBosArchiveStatusBuilder buildStatus(ImportBosArchiveOperation operation,
             ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
             throws ValidationException {
+        DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        repositoryStore.computeProcesses(monitor);
         for (final IRepositoryFileStore diagramFileStore : operation.getImportedProcesses()) {
+            if(monitor.isCanceled()) {
+                break;
+            }
             try {
                 final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
                 final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
@@ -52,8 +59,11 @@ public class DiagramValidator implements BosImporterStatusProvider {
                 }
             } catch (final ReadFileStoreException | InvocationTargetException | InterruptedException e) {
                 throw new ValidationException(e, "Failed to validate diagram content");
+            }finally {
+                repositoryStore.resetComputedProcesses();
             }
         }
+        repositoryStore.resetComputedProcesses();
         return statusBuilder;
     }
 }

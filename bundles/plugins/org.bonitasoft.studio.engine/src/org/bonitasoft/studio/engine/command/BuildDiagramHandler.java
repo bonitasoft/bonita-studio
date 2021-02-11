@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.engine.command;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
@@ -26,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 public class BuildDiagramHandler {
 
@@ -37,7 +40,8 @@ public class BuildDiagramHandler {
         private RepositoryAccessor repositoryAccessor;
         private String processUUID;
 
-        BuildDiagramRunnable(RepositoryAccessor repositoryAccessor, String fileName, String destinationPath, String processUUID) {
+        BuildDiagramRunnable(RepositoryAccessor repositoryAccessor, String fileName, String destinationPath,
+                String processUUID) {
             this.repositoryAccessor = repositoryAccessor;
             this.fileName = fileName;
             this.destinationPath = destinationPath;
@@ -69,16 +73,26 @@ public class BuildDiagramHandler {
             @Named("fileName") String fileName,
             @Named("destinationPath") String destinationPath,
             @Named("process") String processUUID) {
-        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName, destinationPath, processUUID);
+        DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false, diagramRepositoryStore::computeProcesses);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+        BuildDiagramRunnable runnable = new BuildDiagramRunnable(repositoryAccessor, fileName, destinationPath,
+                processUUID);
         Display.getDefault().syncExec(runnable);
+        diagramRepositoryStore.resetComputedProcesses();
         return runnable.getStatus();
     }
 
-    private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName, String processUUID) {
-       return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+    private List<AbstractProcess> retrieveProcesses(RepositoryAccessor repositoryAccessor, String fileName,
+            String processUUID) {
+        return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(fileName, true)
                 .getProcesses().stream().filter(pool -> {
-                    if(processUUID != null) {
+                    if (processUUID != null) {
                         return Objects.equals(processUUID, ModelHelper.getEObjectID(pool));
                     }
                     return true;
