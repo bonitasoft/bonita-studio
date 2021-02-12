@@ -37,9 +37,9 @@ public class ProcessNamesExpressionNatureProvider implements IExpressionNaturePr
 
     @Override
     public Expression[] getExpressions(final EObject context) {
-        final List<Expression> result = new ArrayList<Expression>();
+        final List<Expression> result = new ArrayList<>();
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final List<String> names = new ArrayList<String>();
+        final List<String> names = new ArrayList<>();
         final MainProcess diagram = ModelHelper.getMainProcess(context);
         for(final EObject p : ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL)){
             if(!names.contains(((Pool) p).getName())){

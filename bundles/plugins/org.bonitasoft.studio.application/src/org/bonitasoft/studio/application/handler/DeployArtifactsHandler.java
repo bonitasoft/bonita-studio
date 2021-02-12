@@ -143,7 +143,11 @@ public class DeployArtifactsHandler {
                 });
             }
         }
-        progressService.busyCursorWhile(monitor -> repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor));
+        DiagramRepositoryStore diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        progressService.busyCursorWhile(monitor -> {
+                diagramStore.computeProcesses(monitor);
+                repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);}
+        );
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
                 new EnvironmentProviderFactory().getEnvironmentProvider());
         if (defaultSelection != null) {
@@ -160,6 +164,7 @@ public class DeployArtifactsHandler {
         if (result.isPresent()) {
             openStatusDialog(activeShell, result.get(), repositoryAccessor);
         }
+        diagramStore.resetComputedProcesses();
     }
 
     private Artifact asArtifact(IRepositoryFileStore<?> fStore) {

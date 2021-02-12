@@ -76,7 +76,9 @@ public class ProvidedContentFilter extends ViewerFilter {
             return ((IJavaElement) element).getJavaProject().getProject().isOpen();
         }
 
-        if (element instanceof IResource && RepositoryManager.getInstance().hasActiveRepository()) {
+        if (element instanceof IResource 
+                && RepositoryManager.getInstance().hasActiveRepository() 
+                && ((IResource) element).getLocation() != null) {
             try {
                 IRepositoryFileStore fStore = RepositoryManager.getInstance().getCurrentRepository()
                         .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);

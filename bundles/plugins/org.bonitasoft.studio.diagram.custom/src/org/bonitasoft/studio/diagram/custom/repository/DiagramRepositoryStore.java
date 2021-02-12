@@ -19,9 +19,9 @@ import static com.google.common.collect.Iterables.filter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,14 +31,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -73,6 +70,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
+import org.eclipse.emf.edapt.internal.common.URIUtils;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Release;
@@ -99,6 +97,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     private final Map<String, String> eObjectIdToLabel = new HashMap<>();
     private Synchronizer synchronizer;
+    private List<AbstractProcess> computedProcessesList;
 
     @Override
     public void createRepositoryStore(IRepository repository) {
@@ -295,17 +294,10 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         return super.doImportInputStream(newFileName, originalStream);
     }
 
-    protected String getValidFileName(final String fileName,
-            final InputStream is) {
-        FileOutputStream fos = null;
-        File tmpFile = null;
+    protected String getValidFileName(final String fileName, final InputStream is) {
         try {
-            tmpFile = File.createTempFile("tmp", fileName,
-                    ProjectUtil.getBonitaStudioWorkFolder());
-            fos = new FileOutputStream(tmpFile);
-            FileUtil.copy(is, fos);
-            final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
-                    tmpFile).getFeatureValueFromEObjectType(
+            final Map<String, String[]> featureValueFromEObjectType = EMFResourceUtil.getFeatureValueFromEObjectType(
+                            is,
                             "process:MainProcess",
                             ProcessPackage.Literals.ELEMENT__NAME,
                             ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
@@ -317,22 +309,12 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         } catch (final Exception e) {
             BonitaStudioLog.error(e, Activator.PLUGIN_ID);
         } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e, Activator.PLUGIN_ID);
-                }
-            }
             if (is != null) {
                 try {
                     is.close();
                 } catch (final IOException e) {
                     BonitaStudioLog.error(e, Activator.PLUGIN_ID);
                 }
-            }
-            if (tmpFile != null && tmpFile.exists()) {
-                tmpFile.delete();
             }
         }
         return fileName;
@@ -341,17 +323,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     public Set<String> getAllProcessIds() {
         final Set<String> resut = new HashSet<>();
         for (final DiagramFileStore fStore : getChildren()) {
-            final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore
-                    .getResource().getLocation().toFile());
-            String[] poolIds = null;
-            try {
-                poolIds = emfResourceUtil
-                        .getEObectIfFromEObjectType("process:Pool");
-            } catch (final FeatureNotFoundException e) {
+            File file = fStore.getResource().getLocation().toFile();
+            try (InputStream is = Files.newInputStream(file.toPath())) {
+                String[] poolIds = EMFResourceUtil.getEObectIfFromEObjectType(is, "process:Pool");
+                if (poolIds != null) {
+                    resut.addAll(Arrays.asList(poolIds));
+                }
+            } catch (final FeatureNotFoundException | IOException e) {
                 BonitaStudioLog.error(e);
-            }
-            if (poolIds != null) {
-                resut.addAll(Arrays.asList(poolIds));
             }
         }
         return resut;
@@ -359,29 +338,26 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     public AbstractProcess getProcessByUUID(final String processUUID) {
         for (final DiagramFileStore fStore : getChildren()) {
-            final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore
-                    .getResource().getLocation().toFile());
-            String[] poolIds = null;
-            try {
-                poolIds = emfResourceUtil
-                        .getEObectIfFromEObjectType("process:Pool");
-            } catch (final FeatureNotFoundException e) {
-                BonitaStudioLog.error(e);
-            }
-            if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
-                try {
-                    MainProcess diagram = fStore.getContent();
-                    for (final Element pool : diagram.getElements()) {
-                        if (pool instanceof Pool
-                                && processUUID.equals(ModelHelper
-                                        .getEObjectID(pool))) {
-                            return (AbstractProcess) pool;
+            File file = fStore.getResource().getLocation().toFile();
+            try (InputStream is = Files.newInputStream(file.toPath())) {
+                String[] poolIds = EMFResourceUtil.getEObectIfFromEObjectType(is,"process:Pool");
+                if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
+                    try {
+                        MainProcess diagram = fStore.getContent();
+                        for (final Element pool : diagram.getElements()) {
+                            if (pool instanceof Pool
+                                    && processUUID.equals(ModelHelper
+                                            .getEObjectID(pool))) {
+                                return (AbstractProcess) pool;
+                            }
                         }
+                    } catch (ReadFileStoreException e) {
+                        BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
+                        return null;
                     }
-                } catch (ReadFileStoreException e) {
-                   BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
-                   return null;
                 }
+            } catch (FeatureNotFoundException | IOException e) {
+                BonitaStudioLog.error(e);
             }
         }
         return null;
@@ -538,17 +514,12 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     private String getModelVersion(final Resource resource) {
-        final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
-                new File(resource.getURI().toFileString()))
-                        .getFeatureValueFromEObjectType(
-                                "process:MainProcess",
-                                ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
-        String modelVersion = null;
-        for (final Entry<String, String[]> e : featureValueFromEObjectType
-                .entrySet()) {
-            modelVersion = e.getValue()[0];
+        try (InputStream is = URIUtils.getInputStream(resource.getURI())) {
+            return DiagramCompatibilityValidator.readModelVersion(is);
+        } catch (IOException | FeatureNotFoundException e) {
+            BonitaStudioLog.error(e);
+            return null;
         }
-        return modelVersion;
     }
 
     public void updateProcessLabel(final String processId,
@@ -558,16 +529,42 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public void close() {
-         BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
         super.close();
     }
 
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null && filename.endsWith(".proc")) {
-            return new DiagramCompatibilityValidator(String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)).validate(inputStream);
+            return new DiagramCompatibilityValidator(
+                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))
+                            .validate(inputStream);
         }
         return super.validate(filename, inputStream);
+    }
+    
+    public List<AbstractProcess> computeProcesses(IProgressMonitor monitor) {
+        monitor.beginTask(Messages.loadingAllProcesses, IProgressMonitor.UNKNOWN);
+        computedProcessesList = getAllProcesses();
+        return computedProcessesList;
+    }
+    
+    public void resetComputedProcesses() {
+        if(computedProcessesList != null) {
+            computedProcessesList.clear();
+            computedProcessesList = null;
+        }
+    }
+    
+    public boolean hasComputedProcesses() {
+        return computedProcessesList != null;
+    }
+
+    public List<AbstractProcess> getComputedProcesses() {
+        if(!hasComputedProcesses()) {
+            throw new IllegalArgumentException("Project process list not computed yet !");
+        }
+        return computedProcessesList;
     }
 }

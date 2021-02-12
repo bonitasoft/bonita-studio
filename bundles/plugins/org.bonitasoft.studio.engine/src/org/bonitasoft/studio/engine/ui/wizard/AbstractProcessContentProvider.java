@@ -18,11 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -35,10 +30,10 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class AbstractProcessContentProvider implements ITreeContentProvider {
 
-    private final DiagramRepositoryStore diagramStore;
+    private final List<MainProcess> allDiagrams;
 
-    public AbstractProcessContentProvider() {
-        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+    public AbstractProcessContentProvider(List<MainProcess> allDiagrams) {
+        this.allDiagrams = allDiagrams;
     }
 
     /*
@@ -66,7 +61,7 @@ public class AbstractProcessContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getChildren(final Object element) {
         if (element instanceof MainProcess) {
-            final List<Object> result = new ArrayList<Object>();
+            final List<Object> result = new ArrayList<>();
             for (final EObject process : ModelHelper.getAllItemsOfType((EObject) element, ProcessPackage.Literals.POOL)) {
                 if (!process.equals(element)) {
                     result.add(process);
@@ -83,20 +78,7 @@ public class AbstractProcessContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object[] getElements(final Object element) {
-        final List<Object> rootElement = new ArrayList<Object>();
-        for (final IRepositoryFileStore file : diagramStore.getChildren()) {
-            try {
-                final Object content = file.getContent();
-                if (content != null) {
-                    rootElement.add(content);
-                }
-            } catch (final ReadFileStoreException e) {
-                BonitaStudioLog.error("Failed to retrieve diagram content", e);
-            }
-
-        }
-
-        return rootElement.toArray();
+        return allDiagrams.toArray();
     }
 
     /*
