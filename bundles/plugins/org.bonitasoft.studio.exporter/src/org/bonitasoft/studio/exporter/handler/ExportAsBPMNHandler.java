@@ -16,6 +16,7 @@ package org.bonitasoft.studio.exporter.handler;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.model.IModelSearch;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -74,8 +76,9 @@ public class ExportAsBPMNHandler {
                                         .getRepositoryStore(DiagramRepositoryStore.class);
                                 ConnectorDefRepositoryStore connectorDefRepoStore = repositoryAccessor
                                         .getRepositoryStore(ConnectorDefRepositoryStore.class);
+                                List<AbstractProcess> allProcesses = diagramRepoStore.getAllProcesses();
                                 IModelSearch modelSearch = new ModelSearch(
-                                        () -> diagramRepoStore.getAllProcesses(),
+                                        () -> allProcesses,
                                         () -> connectorDefRepoStore.getDefinitions());
                                 transformer.export(
                                         new BonitaModelExporterImpl(diagram.eResource(), modelSearch),

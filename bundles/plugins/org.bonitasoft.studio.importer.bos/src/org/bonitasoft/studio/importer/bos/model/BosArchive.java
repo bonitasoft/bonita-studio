@@ -26,10 +26,12 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramLegacyFormsValidator;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.json.JSONException;
 
@@ -46,6 +48,7 @@ public class BosArchive {
     private static final String TO_OPEN = "toOpen";
     private static final Properties FALLBACK_PROPERTIES = new Properties();
     private String version;
+    private final DiagramLegacyFormsValidator legacyFormsValidator = new DiagramLegacyFormsValidator();
 
     static {
         FALLBACK_PROPERTIES.put(VERSION, "6.0.0");
@@ -58,7 +61,8 @@ public class BosArchive {
         this.archiveFile = archiveFile;
     }
 
-    public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor) throws IOException {
+    public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor)
+            throws IOException {
         final IStatus validationStatus = validate();
         final ImportArchiveModel archiveModel = new ImportArchiveModel(this);
         archiveModel.setValidationStatus(validationStatus);
@@ -128,6 +132,18 @@ public class BosArchive {
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
                 file.getParentRepositoryStore().ifPresent(repositoryStore -> {
                     IStatus validationStatus = validateFile(file, repositoryStore);
+                    if (isDiagram(file)) {
+                        MultiStatus multiStatus = new MultiStatus(BosArchive.class, 0, null);
+                        multiStatus.add(validationStatus);
+                        try (ZipFile archive = getZipFile();
+                                InputStream is = archive.getInputStream(archive.getEntry(file.getPath()));) {
+                            multiStatus.add(legacyFormsValidator.validate(is));
+                        } catch (IOException e) {
+                            ((MultiStatus) validationStatus).add(
+                                    ValidationStatus.error(String.format("Failed to read %s", file.getFileName())));
+                        }
+                        validationStatus = multiStatus;
+                    }
                     file.setValidationStatus(validationStatus);
                     if (validationStatus.getSeverity() == IStatus.ERROR) {
                         archiveModel.setValidationStatus(validationStatus);
@@ -187,6 +203,10 @@ public class BosArchive {
         } catch (IOException e) {
             return ValidationStatus.error(String.format("Failed to read %s", file.getFileName()));
         }
+    }
+
+    private boolean isDiagram(ImportFileStoreModel file) {
+        return file.getFileName().endsWith(".proc");
     }
 
     private boolean isLegacySoapXSD(AbstractFolderModel store, ImportFileStoreModel file) {

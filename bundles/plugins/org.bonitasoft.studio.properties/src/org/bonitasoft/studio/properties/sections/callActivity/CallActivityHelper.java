@@ -16,11 +16,10 @@ package org.bonitasoft.studio.properties.sections.callActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.model.IProcessContextProvider;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -33,12 +32,18 @@ import org.eclipse.emf.ecore.EObject;
 
 public class CallActivityHelper {
 
-    private final RepositoryAccessor repositoryAccessor;
-
+    private final IProcessContextProvider processProvider;
     private final CallActivitySelectionProvider selectionProvider;
 
-    public CallActivityHelper(RepositoryAccessor repositoryAccessor, CallActivitySelectionProvider selectionProvider) {
-        this.repositoryAccessor = repositoryAccessor;
+    public CallActivityHelper(RepositoryAccessor repositoryAccessor, 
+            CallActivitySelectionProvider selectionProvider) {
+        this.processProvider = () -> repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class).getAllProcesses();
+        this.selectionProvider = selectionProvider;
+    }
+    
+    public CallActivityHelper(List<AbstractProcess> allProcesses, 
+            CallActivitySelectionProvider selectionProvider) {
+        this.processProvider = () -> allProcesses;
         this.selectionProvider = selectionProvider;
     }
 
@@ -72,8 +77,7 @@ public class CallActivityHelper {
     }
 
     protected AbstractProcess findProcess(final String subprocessName, final String subprocessVersion) {
-        final DiagramRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
-        return ModelHelper.findProcess(subprocessName, subprocessVersion, repositoryStore.getAllProcesses());
+        return ModelHelper.findProcess(subprocessName, subprocessVersion, processProvider.getAllProcesses());
     }
 
     protected String getCalledProcessVersion(final CallActivity callActivity) {

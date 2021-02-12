@@ -55,7 +55,7 @@ public class ProcessSelector {
             return processFromEvent.get();
         }
         final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+        final boolean isADiagram = editor instanceof DiagramEditor;
         if (isADiagram) {
             final List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer()
                     .getSelectedEditParts();
@@ -86,10 +86,13 @@ public class ProcessSelector {
             return s1.compareTo(s2);
         });
         Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
+        DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
         if (processFromEvent.isPresent()) {
             AbstractProcess selectedProcess = processFromEvent.get();
             final Set<AbstractProcess> calledProcesses = new HashSet<>();
-            findCalledProcesses(selectedProcess, calledProcesses);
+            findCalledProcesses(selectedProcess, allProcesses, calledProcesses);
             if (!calledProcesses.isEmpty()) {
                 result.addAll(calledProcesses);
             }
@@ -102,14 +105,14 @@ public class ProcessSelector {
                 for (final EObject p : ModelHelper.getAllItemsOfType(processInEditor, ProcessPackage.Literals.POOL)) {
                     result.add((AbstractProcess) p);
                     final Set<AbstractProcess> calledProcesses = new HashSet<>();
-                    findCalledProcesses((AbstractProcess) p, calledProcesses);
+                    findCalledProcesses((AbstractProcess) p, allProcesses, calledProcesses);
                     if (!calledProcesses.isEmpty()) {
                         result.addAll(calledProcesses);
                     }
                 }
-            } else if(processInEditor != null) {
+            } else if (processInEditor != null) {
                 final Set<AbstractProcess> calledProcesses = new HashSet<>();
-                findCalledProcesses(processInEditor, calledProcesses);
+                findCalledProcesses(processInEditor, allProcesses, calledProcesses);
                 if (!calledProcesses.isEmpty()) {
                     result.addAll(calledProcesses);
                 }
@@ -119,24 +122,24 @@ public class ProcessSelector {
         return result;
     }
 
-    private void findCalledProcesses(final AbstractProcess process, final Set<AbstractProcess> result) {
+    private void findCalledProcesses(final AbstractProcess process, List<AbstractProcess> allProcesses,
+            final Set<AbstractProcess> result) {
         final List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process,
                 ProcessPackage.Literals.CALL_ACTIVITY);
-        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class);
         for (final CallActivity callActivity : callActivities) {
             final Expression calledName = callActivity.getCalledActivityName();
             if (calledName != null && calledName.getContent() != null && !calledName.getContent().isEmpty()) {
                 final Expression calledVersion = callActivity.getCalledActivityVersion();
                 String version = null;
-                if (calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()) {
+                if (calledVersion != null && calledVersion.getContent() != null
+                        && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
                 final AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version,
-                        diagramStore.getAllProcesses());
+                        allProcesses);
                 if (subProcess != null && !containsSubProcess(subProcess, result)) {
                     result.add(subProcess);
-                    findCalledProcesses(subProcess, result);
+                    findCalledProcesses(subProcess, allProcesses, result);
                 }
             }
         }
@@ -157,7 +160,7 @@ public class ProcessSelector {
         final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
         if (editor instanceof DiagramEditor) {
             final EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-            if(root.eResource() == null) {
+            if (root.eResource() == null) {
                 return null;
             }
             return ModelHelper.getMainProcess(root);

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -102,7 +101,10 @@ public class CallActivityConstraint extends AbstractLiveValidationMarkerConstrai
                 return null;
             }
         }));
-        return new CallActivityHelper(repositoryAccessor, callActivitySelectionProvider);
+        
+        DiagramRepositoryStore diagramRepoStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
+        return new CallActivityHelper(allProcesses, callActivitySelectionProvider);
     }
 
     private boolean exist(final String subprocessTarget, final List<Data> data) {

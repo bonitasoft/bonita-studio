@@ -29,6 +29,7 @@ import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ProcessSelector;
@@ -73,13 +74,24 @@ public class RunProcessCommand extends AbstractHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
-        final Set<AbstractProcess> executableProcesses = new ProcessSelector(event).getExecutableProcesses();
+        ProcessSelector processSelector = new ProcessSelector(event);
+       DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+       if(runSynchronously) {
+           diagramStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
+       }else {
+           try {
+               PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> diagramStore.computeProcesses(monitor));
+           } catch (InvocationTargetException | InterruptedException e) {
+               BonitaStudioLog.error(e);
+           }
+       }
+       final Set<AbstractProcess> executableProcesses = processSelector.getExecutableProcesses();
         if (executableProcesses.isEmpty()) {
             MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.noProcessToRunTitle,
                     Messages.noProcessToRun);
             return ValidationStatus.cancel(Messages.noProcessToRunTitle);
         }
-        
+
         final List<AbstractProcess> processes = new ArrayList<>(executableProcesses);
         final RunProcessesValidationOperation validationOperation = new RunProcessesValidationOperation(
                 new BatchValidationOperation(
@@ -92,7 +104,8 @@ public class RunProcessCommand extends AbstractHandler {
             if (runSynchronously) {
                 validationOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
-                new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true, false,
+                new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true,
+                        false,
                         validationOperation);
             }
         } catch (final InvocationTargetException e) {
@@ -101,6 +114,7 @@ public class RunProcessCommand extends AbstractHandler {
             //Continue
         }
         if (!validationOperation.displayConfirmationDialog()) {
+            diagramStore.resetComputedProcesses();
             return null;
         }
 
@@ -113,6 +127,7 @@ public class RunProcessCommand extends AbstractHandler {
                 Display.getDefault().syncExec(runProcessOperation);
                 url = runProcessOperation.getUrl();
                 status = runProcessOperation.getStatus();
+                diagramStore.resetComputedProcesses();
             } else {
                 Job job = new Job(Messages.running) {
 
@@ -122,6 +137,7 @@ public class RunProcessCommand extends AbstractHandler {
                             runProcessOperation.run(monitor);
                             url = runProcessOperation.getUrl();
                             status = runProcessOperation.getStatus();
+                            diagramStore.resetComputedProcesses();
                         } catch (InvocationTargetException | InterruptedException e) {
                             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
                         }
@@ -169,7 +185,8 @@ public class RunProcessCommand extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        if (RepositoryManager.getInstance().hasActiveRepository() && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
+        if (RepositoryManager.getInstance().hasActiveRepository()
+                && RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             boolean diagramSelectedInExplorer = fileStoreFinder
                     .findSelectedFileStore(RepositoryManager.getInstance().getCurrentRepository())
                     .filter(DiagramFileStore.class::isInstance).isPresent();

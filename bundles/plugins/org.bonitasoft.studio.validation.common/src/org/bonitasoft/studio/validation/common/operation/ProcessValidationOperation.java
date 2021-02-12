@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 public class ProcessValidationOperation extends WorkspaceModifyOperation {
@@ -65,12 +66,13 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
     @Override
     protected void execute(IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance().newValidator(
-                EvaluationMode.BATCH);
+        final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance()
+                .newValidator(EvaluationMode.BATCH);
         validator.setIncludeLiveConstraints(true);
         listOfProcessesToValidate.stream().forEach( process -> {
             if(!monitor.isCanceled()) {
-                monitor.setTaskName(Messages.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
+                BonitaStudioLog.info(String.format("Validating %s (%s)...",process.getName(),process.getVersion()), ValidationCommonPlugin.PLUGIN_ID);
+                monitor.setTaskName(NLS.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
                 ProcessValidationStatus processValidationStatus = new ProcessValidationStatus(process,validator.validate(process, monitor));
                 status.add(processValidationStatus);
                 if(forceMarkerUpdate || processValidationStatus.getSeverity() == IStatus.ERROR) {
@@ -86,6 +88,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
                        BonitaStudioLog.error(e);
                     }
                 }
+                
             }
         });
     }

@@ -101,7 +101,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
     public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
-    public static final String VALIDATE_DIAGRAM_COMMAND = "org.bonitasoft.studio.validation.command.headlessDiagramValidation";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 

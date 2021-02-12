@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.service.ConstraintRegistry;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -48,6 +49,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -70,7 +72,6 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         this.validationMarkerProvider = validationMarkerProvider;
     }
 
-
     @Override
     protected void execute(final IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
@@ -84,7 +85,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                 final DiagramEditPart diagramEp = entry.getValue();
                 final Diagram diagram = entry.getKey();
                 if (diagramEp != null && !monitor.isCanceled()) {
-                    monitor.setTaskName(Messages.bind(
+                    monitor.setTaskName(NLS.bind(
                             Messages.validatingProcess, ((MainProcess) diagramEp.resolveSemanticElement()).getName(),
                             ((MainProcess) diagramEp.resolveSemanticElement()).getVersion()));
                     final TransactionalEditingDomain txDomain = TransactionUtil.getEditingDomain(diagram);

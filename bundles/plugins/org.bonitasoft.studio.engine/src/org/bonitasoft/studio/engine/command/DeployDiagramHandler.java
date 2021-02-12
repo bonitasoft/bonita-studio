@@ -68,6 +68,13 @@ public class DeployDiagramHandler {
             @Optional @Named(PROCESS_UUID_PARAMETER) String processUUID) {
         boolean shouldDisablePopup = shouldDisablePopup(disablePopup);
         String configurationId = retrieveDefaultConfiguration();
+        DiagramRepositoryStore diagamStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        boolean resetComputedProcesses = false;
+        if(!diagamStore.hasComputedProcesses()) {
+            diagamStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
+            resetComputedProcesses = true;
+        }
+
         DiagramFileStore diagramFileStore = retrieveDiagram(repositoryAccessor, fileName);
         List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses().stream()
                 .filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process)))
@@ -82,16 +89,19 @@ public class DeployDiagramHandler {
             deployOperation.setDisablePopup(shouldDisablePopup);
             processes.forEach(deployOperation::addProcessToDeploy);
             if (!shouldDisablePopup) {
-                runInJob(diagramFileStore, deployOperation);
+                runInJob(diagramFileStore, deployOperation, diagamStore, resetComputedProcesses);
             } else {
                 deployOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+                if(resetComputedProcesses) {
+                    diagamStore.resetComputedProcesses();
+                }
                 return deployOperation.getStatus();
             }
         }
         return Status.OK_STATUS;
     }
 
-    private void runInJob(DiagramFileStore diagramFileStore, DeployProcessOperation deployOperation) {
+    private void runInJob(DiagramFileStore diagramFileStore, DeployProcessOperation deployOperation, DiagramRepositoryStore diagamStore, boolean resetComputedProcesses) {
         Job deployJob = new Job(String.format(Messages.deployingProcessesFrom, diagramFileStore.getName())) {
 
             @Override
@@ -103,6 +113,9 @@ public class DeployDiagramHandler {
 
             @Override
             public void done(IJobChangeEvent event) {
+                if(resetComputedProcesses) {
+                    diagamStore.resetComputedProcesses();
+                }
                 Display.getDefault().syncExec(() -> displayDeployResult(event.getResult()));
             }
         });
@@ -148,7 +161,8 @@ public class DeployDiagramHandler {
                         new ValidationMarkerProvider()));
         validationOperation.addProcesses(processes);
         try {
-            new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true, false,
+            new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true,
+                    false,
                     validationOperation);
         } catch (InvocationTargetException | InterruptedException e) {
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);

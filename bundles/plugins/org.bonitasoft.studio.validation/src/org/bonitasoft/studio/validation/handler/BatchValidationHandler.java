@@ -66,8 +66,16 @@ public class BatchValidationHandler extends AbstractHandler {
         if (!PlatformUI.isWorkbenchRunning()) {
             return IStatus.OK;
         }
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final Map<?, ?> parameters = event.getParameters();
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+        DiagramRepositoryStore diagramRepositoryStore = currentRepository
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        try {
+            service.run(true, false, diagramRepositoryStore::computeProcesses);
+        } catch (InvocationTargetException | InterruptedException e) {
+            throw new ExecutionException("Error during processes loading.", e);
+        }
         ProcessValidationOperation validateOperation = new ProcessValidationOperation().forceMarkerUpdate();
         ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
                 currentRepository.getProject().getLocation().toFile(), currentRepository)
@@ -81,7 +89,7 @@ public class BatchValidationHandler extends AbstractHandler {
         }
 
         MultiStatus aggregatedStatus = new MultiStatus(ValidationPlugin.PLUGIN_ID, -1, null, null);
-        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+
         try {
             service.run(true, true, monitor -> {
                 validateModelCompatibility.run(monitor);
@@ -97,6 +105,8 @@ public class BatchValidationHandler extends AbstractHandler {
             throw new ExecutionException("Error during Validation", e);
         } catch (final InterruptedException e) {
             //Validation cancelled
+        }finally {
+            diagramRepositoryStore.resetComputedProcesses();
         }
 
         if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
