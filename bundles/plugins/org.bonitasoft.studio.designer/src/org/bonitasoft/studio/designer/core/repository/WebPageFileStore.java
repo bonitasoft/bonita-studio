@@ -137,7 +137,6 @@ public class WebPageFileStore extends InFolderJSONFileStore
         } catch (final JSONException | ReadFileStoreException e) {
             return super.getDisplayName();
         }
-
     }
 
     public String getDescription() {
@@ -221,8 +220,10 @@ public class WebPageFileStore extends InFolderJSONFileStore
             if (res != 0) {
                 return res;
             }
-            String myName = getDisplayName() != null ? getDisplayName() : getName();
-            String otherName = o.getDisplayName() != null ? o.getDisplayName() : o.getName();
+            String myDisplayName = getDisplayName();
+            String otherDisplayName = o.getDisplayName() ;
+            String myName = myDisplayName!= null ? myDisplayName : getName();
+            String otherName = otherDisplayName != null ? otherDisplayName : o.getName();
             return myName.compareTo(otherName);
         }
         return 0;

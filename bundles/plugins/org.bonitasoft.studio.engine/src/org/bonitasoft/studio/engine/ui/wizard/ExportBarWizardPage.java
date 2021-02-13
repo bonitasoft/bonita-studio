@@ -27,16 +27,17 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
-import org.bonitasoft.studio.engine.operation.ProcessValidationOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.validation.common.operation.ProcessValidationOperation;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -105,14 +106,18 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 
     private Button configButton;
 
-    protected ExportBarWizardPage() {
+    private List<MainProcess> allDiagrams;
+
+    protected ExportBarWizardPage(List<MainProcess> allDiagrams) {
         super(ExportBarWizardPage.class.getName());
+        this.allDiagrams = allDiagrams;
         setTitle(Messages.buildTitle);
         setDescription(Messages.buildDesc);
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         final String confId = ConfigurationPlugin.getDefault().getPreferenceStore()
                 .getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION);
         setConfigurationId(confId);
+        
     }
 
     /*
@@ -178,7 +183,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
             }
 
         });
-        viewer.setContentProvider(new AbstractProcessContentProvider());
+        viewer.setContentProvider(new AbstractProcessContentProvider(allDiagrams));
         viewer.setInput(new Object());
 
         final IObservableSet checkedElementsObservable = ViewersObservables.observeCheckedElements(viewer,
@@ -458,9 +463,15 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
      *
      */
     protected boolean validateBeforeExport(final Set<AbstractProcess> selectedList) {
-        ProcessValidationOperation processValidationOperation = new ProcessValidationOperation(selectedList);
-        processValidationOperation.run();
-        IStatus status = processValidationOperation.getStatus();
+        ProcessValidationOperation validationOperation = new ProcessValidationOperation();
+        selectedList.stream().forEach(validationOperation::addProcess);
+        try {
+            getContainer().run(true, false, validationOperation);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
+        IStatus status = validationOperation.getStatus();
         if (status.getSeverity() == IStatus.ERROR || status.getSeverity() == IStatus.WARNING) {
             final StringBuilder report = new StringBuilder("");
             final List<String> alreadyInReport = new ArrayList<>(selectedList.size());

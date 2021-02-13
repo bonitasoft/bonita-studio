@@ -131,7 +131,8 @@ public class BarExporter {
 
         try {
             final BusinessArchive archive = builder.done();
-            BonitaStudioLog.info("Build complete for process " + process.getName() + " (" + process.getVersion() + " ).",
+            BonitaStudioLog.info(
+                    "Build complete for process " + process.getName() + " (" + process.getVersion() + " ).",
                     EnginePlugin.PLUGIN_ID);
             return archive;
         } catch (final InvalidBusinessArchiveFormatException e) {
@@ -171,9 +172,13 @@ public class BarExporter {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
         }
+        DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        List<AbstractProcess> allProcesses = diagramRepositoryStore.hasComputedProcesses()
+                ? diagramRepositoryStore.getComputedProcesses()
+                : diagramRepositoryStore.getAllProcesses();
         return new DesignProcessDefinitionBuilder(new RCPEngineDefintionBuilderProvider(),
-                new ModelSearch(() -> RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class)
-                        .getAllProcesses()));
+                new ModelSearch(() -> allProcesses));
     }
 
     /**
@@ -284,7 +289,5 @@ public class BarExporter {
         }
         return res;
     }
-
-
 
 }

@@ -15,11 +15,13 @@
 package org.bonitasoft.studio.engine.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.eclipse.core.runtime.IStatus;
@@ -37,8 +39,10 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 public class ExportBarWizard extends Wizard {
 
     protected ExportBarWizardPage page;
+    private List<MainProcess> allDiagrams;
 
-    public ExportBarWizard() {
+    public ExportBarWizard(List<MainProcess> allDiagrams) {
+        this.allDiagrams = allDiagrams;
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
         IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault()
@@ -54,7 +58,7 @@ public class ExportBarWizard extends Wizard {
 
     @Override
     public void addPages() {
-        page = new ExportBarWizardPage();
+        page = new ExportBarWizardPage(allDiagrams);
         addPage(page);
     }
 

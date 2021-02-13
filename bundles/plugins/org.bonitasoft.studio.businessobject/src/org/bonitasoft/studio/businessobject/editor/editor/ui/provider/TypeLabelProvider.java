@@ -163,8 +163,12 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
 
     @Override
     public void dispose() {
-        errorColor.dispose();
-        darkModeSelectLineUnfocused.dispose();
+        if (errorColor != null) {
+            errorColor.dispose();
+        }
+        if (darkModeSelectLineUnfocused != null) {
+            darkModeSelectLineUnfocused.dispose();
+        }
         super.dispose();
     }
 

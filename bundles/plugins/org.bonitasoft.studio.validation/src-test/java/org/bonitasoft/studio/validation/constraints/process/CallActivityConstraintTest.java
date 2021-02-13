@@ -24,16 +24,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.InputMappingAssignationType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.builders.CallActivityBuilder;
 import org.bonitasoft.studio.model.process.builders.ContractBuilder;
 import org.bonitasoft.studio.model.process.builders.ContractInputBuilder;
-import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.InputMappingBuilder;
 import org.bonitasoft.studio.model.process.builders.PoolBuilder;
 import org.bonitasoft.studio.properties.sections.callActivity.CallActivityHelper;

@@ -77,13 +77,13 @@ public class ListSubprocessContributionItem extends CompoundContributionItem {
          */
         @Override
         protected IContributionItem[] getContributionItems() {
-            final List<IContributionItem> res = new ArrayList<IContributionItem>();
+            final List<IContributionItem> res = new ArrayList<>();
             IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
-            diagramSotre = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
+            diagramSotre = repository.getRepositoryStore(DiagramRepositoryStore.class) ;
             try {
                 for(AbstractProcess process : diagramSotre.getAllProcesses()){
                     if (process.getName().equals(subprocessName)) {
-                        Map<String, String> params = new HashMap<String, String>();
+                        Map<String, String> params = new HashMap<>();
                         params.put(OpenSpecificProcessCommand.PARAMETER_PROCESS_NAME, process.getName());
                         params.put(OpenSpecificProcessCommand.PARAMETER_PROCESS_VERSION, process.getVersion());
                         CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), null, OpenSpecificProcessCommand.ID, CommandContributionItem.STYLE_PUSH);
