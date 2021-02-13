@@ -16,16 +16,13 @@ package org.bonitasoft.studio.designer.ui.property.section.control;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProvider;
 import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
@@ -96,22 +93,21 @@ public class WebPageNameResourceChangeListener implements IResourceChangeListene
     }
 
     private void updateMatchingFormMapping(MainProcess container, JSONObject jsonObject, String name) {
-        List<Expression> expressions = ModelHelper.getAllElementOfTypeIn(container, FormMapping.class)
+        ModelHelper.getAllElementOfTypeIn(container, FormMapping.class)
                 .stream()
                 .map(FormMapping::getTargetForm)
-                .collect(Collectors.toList());
-        for (Expression expression : expressions) {
-            try {
-                if (jsonObject.has(expression.getContent())
-                        && Objects.equals(jsonObject.get(expression.getContent()), name)) {
-                    expressionItemProvider.setPropertyValue(expression,
+                .filter(expression -> jsonObject.has(expression.getContent()))
+                .filter(expression -> {
+                    try {
+                        return Objects.equals(jsonObject.get(expression.getContent()), name);
+                    } catch (JSONException e1) {
+                       return false;
+                    }
+                })
+                .filter(expression -> !Objects.equals(expression.getName(), name))
+                .forEach(expression -> expressionItemProvider.setPropertyValue(expression,
                             ExpressionPackage.Literals.EXPRESSION__NAME.getName(),
-                            name);
-                }
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }
+                            name));
     }
 
     public void setMainProcess(MainProcess mainProcess) {

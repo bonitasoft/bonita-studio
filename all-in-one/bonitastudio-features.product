@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx512m -Xms512m  -Dosgi.requiredJavaVersion=11 -Dfile.encoding=UTF8
+      <vmArgs>-Xmx1g -Xms512m  -Dosgi.requiredJavaVersion=11 -Dfile.encoding=UTF8
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread
       </vmArgsMac>

@@ -14,20 +14,16 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelVersionValidator;
 import org.bonitasoft.studio.diagram.custom.Activator;
-import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -47,20 +43,12 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
 
     @Override
     public IStatus validate(InputStream inputStream) {
-        Path tmpFile = null;
         MultiStatus result = new MultiStatus(Activator.PLUGIN_ID, 0, null, null);
         try {
-            tmpFile = Files.createTempFile("tmpProc", "");
-            Files.copy(inputStream, tmpFile, StandardCopyOption.REPLACE_EXISTING);
-            EMFResourceUtil emfResourceUtil = new EMFResourceUtil(tmpFile.toFile());
-            String mainProcessUUID = Stream.of(emfResourceUtil.getEObectIfFromEObjectType("process:MainProcess"))
-                    .findFirst().orElse(null);
-            if (mainProcessUUID == null) {
+            String bonitaModelVersion = readModelVersion(inputStream);
+            if (bonitaModelVersion == null) {
                 return ValidationStatus.ok();
             }
-            String bonitaModelVersion = emfResourceUtil.getFeatureValueFromEObjectId(mainProcessUUID,
-                    "process:MainProcess",
-                    "bonitaModelVersion");
             IStatus modelVersionStatus = new ModelVersionValidator(ModelVersion.CURRENT_DIAGRAM_VERSION,
                     incompatibleModelMessage,
                     migrationWarningMessage).validate(bonitaModelVersion);
@@ -69,25 +57,26 @@ public class DiagramCompatibilityValidator implements IValidator<InputStream> {
             } else {
                 result.add(modelVersionStatus);
             }
-            for (String uuid : emfResourceUtil.getEObectIfFromEObjectType("process:FormMapping")) {
-                String formMappingType = emfResourceUtil.getFeatureValueFromEObjectId(uuid, "process:FormMapping",
-                        "type");
-                if (Objects.equals(formMappingType, "LEGACY")) {
-                    result.add(ValidationStatus.warning(Messages.containsLegacyFormsWarning));
-                }
-            }
             return result;
-        } catch (IOException | FeatureNotFoundException e) {
+        } catch (FeatureNotFoundException e) {
             BonitaStudioLog.error(e);
             return ValidationStatus.error("Failed to validate process compatibility", e);
-        } finally {
-            if (tmpFile != null) {
-                try {
-                    Files.deleteIfExists(tmpFile);
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e);
+        } 
+    }
+    
+    public static String readModelVersion(InputStream is) throws FeatureNotFoundException {
+        String xmiType = "process:MainProcess";
+        try(Scanner scanner = new Scanner(Channels.newChannel(is), StandardCharsets.UTF_8.name())){
+            String xmiTypePattern = EMFResourceUtil.toXMITypePattern(xmiType);
+            String xsiTypePattern = EMFResourceUtil.toXSITypePattern(xmiType);
+            String tagTypePattern = EMFResourceUtil.toTagTypePattern(xmiType);
+            while(scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if(line.contains(xmiTypePattern) || line.contains(xsiTypePattern) || line.contains(tagTypePattern)){
+                    return EMFResourceUtil.getFeatureValue(line, xmiType, "bonitaModelVersion");
                 }
             }
+            return null;
         }
     }
 

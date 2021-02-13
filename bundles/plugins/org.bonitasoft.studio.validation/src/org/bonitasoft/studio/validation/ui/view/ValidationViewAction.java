@@ -64,6 +64,11 @@ public class ValidationViewAction extends Action {
     @Override
     public void run() {
         DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false, store::computeProcesses);
+        } catch (InvocationTargetException | InterruptedException e) {
+           BonitaStudioLog.error(e);
+        }
         final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory(
                 org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
                 new ValidationMarkerProvider());
@@ -85,6 +90,7 @@ public class ValidationViewAction extends Action {
                 modelValidator.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 IStatus status = modelValidator.getStatus();
                 if (status.getSeverity() == IStatus.ERROR) {
+                    store.resetComputedProcesses();
                     MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,
                             status.getChildren()[0].getMessage());
                     Display.getDefault().asyncExec(() -> activePage.closeEditor(ieditor, false));
@@ -103,7 +109,7 @@ public class ValidationViewAction extends Action {
         } catch (final InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-
+        store.resetComputedProcesses();
         if (tableViewer != null) {
             tableViewer.setInput(ieditor);
         }

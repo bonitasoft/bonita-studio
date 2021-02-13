@@ -16,14 +16,12 @@
  */
 package org.bonitasoft.studio.common.platform.tools;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 /**
@@ -33,19 +31,15 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 public class CopyInputStream{
 
     private final InputStream _is;
-	private File file;
+	private Path file;
 
 
     public CopyInputStream(InputStream is){
         _is = is;
-        FileOutputStream _copy = null;
+        OutputStream _copy = null;
         try {
-            file = new File(ProjectUtil.getBonitaStudioWorkFolder(), UUID.randomUUID().toString());
-			file.delete();
-			file.createNewFile();
-			_copy = new FileOutputStream(file);
-		} catch (final FileNotFoundException e) {
-			BonitaStudioLog.error(e);
+            file = Files.createTempFile("copy","");
+			_copy = Files.newOutputStream(file);
 		} catch (final IOException e) {
 			BonitaStudioLog.error(e);
 		}
@@ -64,7 +58,7 @@ public class CopyInputStream{
         }
     }
 
-    private int copy(FileOutputStream outputStream) throws IOException {
+    private int copy(OutputStream outputStream) throws IOException {
         int read = 0;
         int chunk = 0;
         final byte[] buffer = new byte[256];
@@ -77,7 +71,7 @@ public class CopyInputStream{
 
     public InputStream getCopy() {
         try {
-			return new FileInputStream(file);
+			return Files.newInputStream(file);
 		} catch (final IOException e) {
 			BonitaStudioLog.error(e);
 		}
@@ -92,12 +86,16 @@ public class CopyInputStream{
 				BonitaStudioLog.error(e);
 			}
     	}
-    	if(file != null && file.exists()){
-    		file.delete();
+    	if(file != null && file.toFile().exists()){
+    		try {
+                Files.delete(file);
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
     	}
     }
 
     public File getFile() {
-        return file;
+        return file.toFile();
     }
 }

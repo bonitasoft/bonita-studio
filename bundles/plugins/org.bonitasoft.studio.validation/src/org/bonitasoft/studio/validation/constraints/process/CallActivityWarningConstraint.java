@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -41,14 +44,23 @@ public class CallActivityWarningConstraint extends AbstractLiveValidationMarkerC
                 final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
                 final Expression subprocessVersion = subProcess.getCalledActivityVersion();
                 if (subprocessVersion != null) {
-                    final AbstractProcess subProc = diagramStore.findProcess(subprocessName.getContent(), subprocessVersion.getContent());
+                    List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
+                    final AbstractProcess subProc = findProcess(subprocessName.getContent(), subprocessVersion.getContent(), allProcesses);
                     if (subProc == null) {
-                        return ctx.createFailureStatus(new Object[] { Messages.Validation_Subprocess_Not_Found });
+                        return ctx.createFailureStatus(Messages.Validation_Subprocess_Not_Found);
                     }
                 }
             }
         }
         return ctx.createSuccessStatus();
+    }
+
+    private AbstractProcess findProcess(String processName, String processVersion, List<AbstractProcess> allProcesses) {
+        return allProcesses.stream()
+                .filter(p -> Objects.equals(p.getName(), processName))
+                .filter(p -> Objects.equals(p.getVersion(), processVersion))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

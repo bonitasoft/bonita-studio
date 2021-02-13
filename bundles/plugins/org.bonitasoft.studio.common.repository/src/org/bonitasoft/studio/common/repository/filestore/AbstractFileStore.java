@@ -93,6 +93,13 @@ public abstract class AbstractFileStore<T>
         doCheckModelVersion();
         return doGetContent();
     }
+    
+    /**
+     * Retrieve content without checking model compatibility
+     */
+    protected T getUnsafeContent() throws ReadFileStoreException {
+        return doGetContent();
+    }
 
     protected void doCheckModelVersion() throws ReadFileStoreException {
         if (getResource() != null && getResource().exists()) {
