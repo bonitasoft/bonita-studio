@@ -117,7 +117,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         List<ContractInput> inputs = new ArrayList<>();
         viewer.getTextWidget().getDisplay().syncExec(() -> {
             Object data = viewer.getTextWidget().getData(INPUTS);
-            if (data != null && data instanceof List) {
+            if (data instanceof List) {
                 ((List) data).stream()
                         .filter(ContractInput.class::isInstance)
                         .forEach(input -> inputs.add((ContractInput) input));
