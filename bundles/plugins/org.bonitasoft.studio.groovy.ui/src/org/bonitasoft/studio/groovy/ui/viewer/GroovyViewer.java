@@ -55,6 +55,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.preferences.PreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -65,6 +66,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.CompositeRuler;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -279,16 +281,14 @@ public class GroovyViewer implements IDocumentListener {
                 knowVariables.add(n.getName());
             }
         }
-        if (providedVariables != null) {
-            for (final ScriptVariable n : providedVariables) {
-                knowVariables.add(n.getName());
-            }
+        for (final ScriptVariable n : providedVariables) {
+            knowVariables.add(n.getName());
         }
         unknownElementsIndexer = new UnknownElementsIndexer(getGroovyCompilationUnit());
         unknownElementsIndexer.addJobChangeListener(
                 new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
 
-        Map<String, ScriptVariable> c = new HashMap<String, ScriptVariable>();
+        Map<String, ScriptVariable> c = new HashMap<>();
         nodes.forEach(n -> c.put(n.getName(), n));
         providedVariables.forEach(n -> c.put(n.getName(), n));
         editor.setContext(c);
@@ -315,7 +315,14 @@ public class GroovyViewer implements IDocumentListener {
         return nodes;
     }
 
+    
     public void dispose() {
+        SourceViewer viewer = (SourceViewer) editor.getViewer();
+        if(viewer != null) {
+            // Stops reconciler thread before deleting groovy file
+            viewer.unconfigure();
+        }
+       
         final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance()
                 .getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         GroovyFileStore fStore = store.getChild(GroovyFileStore.EXPRESSION_SCRIPT_NAME, true);

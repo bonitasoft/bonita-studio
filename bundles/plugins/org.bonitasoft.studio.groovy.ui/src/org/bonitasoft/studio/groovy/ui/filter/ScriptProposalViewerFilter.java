@@ -31,9 +31,10 @@ public class ScriptProposalViewerFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        return element instanceof Category
+        return proposalToFilter.isEmpty() ||
+                (element instanceof Category
                 ? filterCategory((Category) element)
-                : filterProposal((ScriptProposal) element);
+                : filterProposal((ScriptProposal) element));
     }
 
     private boolean filterProposal(ScriptProposal proposal) {

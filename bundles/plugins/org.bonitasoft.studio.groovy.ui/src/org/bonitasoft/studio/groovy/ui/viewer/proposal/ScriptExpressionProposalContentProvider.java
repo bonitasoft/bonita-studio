@@ -59,7 +59,7 @@ public class ScriptExpressionProposalContentProvider implements ITreeContentProv
     @Override
     public boolean hasChildren(Object element) {
         if (element instanceof Category) {
-            return (!((Category) element).getProposals().isEmpty()
+            return (((Category) element).hasProposals()
                     || !((Category) element).getSubcategories().isEmpty());
         }
         return element instanceof ScriptProposal
