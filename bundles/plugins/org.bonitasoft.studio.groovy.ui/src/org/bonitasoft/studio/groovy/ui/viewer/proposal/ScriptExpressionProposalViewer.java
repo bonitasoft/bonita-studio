@@ -69,7 +69,7 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof Category) {
-                    return !((Category) element).getProposals().isEmpty()
+                    return ((Category) element).hasProposals()
                             || !((Category) element).getSubcategories().isEmpty();
                 }
                 return true;

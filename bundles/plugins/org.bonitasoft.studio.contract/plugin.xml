@@ -40,7 +40,8 @@
       <javaCompletionProposalComputer
             activate="true"
             categoryId="org.codehaus.groovy.contract.input.category"
-            class="org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer">
+            class="org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer"
+            requiresUIThread="false">
          <partition
                type="__dftl_partition_content_type">
          </partition>

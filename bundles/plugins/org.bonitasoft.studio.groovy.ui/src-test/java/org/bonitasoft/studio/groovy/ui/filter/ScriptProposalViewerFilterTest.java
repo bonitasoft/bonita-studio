@@ -16,8 +16,8 @@ public class ScriptProposalViewerFilterTest {
         Category category = new Category("categoryId", "categoryName", null);
         ScriptProposal proposal1 = new ScriptProposal("proposal1", "");
         ScriptProposal proposal2 = new ScriptProposal("proposal2", "");
-        category.addScriptProposal(proposal1);
-        category.addScriptProposal(proposal2);
+        category.addScriptProposalSupplier(()->proposal1);
+        category.addScriptProposalSupplier(()->proposal2);
 
         List<ScriptProposal> proposalToFilter = Arrays.asList(proposal1);
         ScriptProposalViewerFilter filter = new ScriptProposalViewerFilter(proposalToFilter);
@@ -40,8 +40,8 @@ public class ScriptProposalViewerFilterTest {
         parentProposal2.addChild(childProposal2);
         parentProposal2.addChild(childProposal3);
 
-        category.addScriptProposal(parentProposal1);
-        category.addScriptProposal(parentProposal2);
+        category.addScriptProposalSupplier(()-> parentProposal1);
+        category.addScriptProposalSupplier(()-> parentProposal2);
 
         List<ScriptProposal> proposalToFilter = Arrays.asList(childProposal1, childProposal2);
         ScriptProposalViewerFilter filter = new ScriptProposalViewerFilter(proposalToFilter);
@@ -54,11 +54,11 @@ public class ScriptProposalViewerFilterTest {
     public void should_filter_simple_category() {
         Category category1 = new Category("categoryId1", "categoryName1", null);
         ScriptProposal proposal1 = new ScriptProposal("proposal1", "");
-        category1.addScriptProposal(proposal1);
+        category1.addScriptProposalSupplier(()-> proposal1);
 
         Category category2 = new Category("categoryId2", "categoryName2", null);
         ScriptProposal proposal2 = new ScriptProposal("proposal2", "");
-        category2.addScriptProposal(proposal2);
+        category2.addScriptProposalSupplier(()-> proposal2);
 
         List<ScriptProposal> proposalToFilter = Arrays.asList(proposal1);
         ScriptProposalViewerFilter filter = new ScriptProposalViewerFilter(proposalToFilter);
@@ -74,7 +74,7 @@ public class ScriptProposalViewerFilterTest {
         ScriptProposal parentProposal1 = new ScriptProposal("parentProposal1", "");
         ScriptProposal childProposal1 = new ScriptProposal("childProposal1", "");
         parentProposal1.addChild(childProposal1);
-        subCategory1.addScriptProposal(childProposal1);
+        subCategory1.addScriptProposalSupplier(()-> childProposal1);
         category1.addSubcategory(subCategory1);
 
         Category category2 = new Category("categoryId2", "categoryName2", null);
@@ -87,8 +87,8 @@ public class ScriptProposalViewerFilterTest {
 
         parentProposal2.addChild(childProposal2);
         parentProposal2.addChild(childProposal3);
-        subCategory2.addScriptProposal(parentProposal2);
-        subCategory3.addScriptProposal(parentProposal3);
+        subCategory2.addScriptProposalSupplier(()-> parentProposal2);
+        subCategory3.addScriptProposalSupplier(()-> parentProposal3);
         category2.addSubcategory(subCategory2);
         category2.addSubcategory(subCategory3);
 
