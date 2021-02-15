@@ -102,6 +102,9 @@ public final class Messages extends NLS {
     public static String continueLabel;
     public static String updateAllModels;
 
+    public static String convertingDependencies;
+    public static String lookupDependencyFor;
+
     private Messages() {
         // Do not instantiate
     }

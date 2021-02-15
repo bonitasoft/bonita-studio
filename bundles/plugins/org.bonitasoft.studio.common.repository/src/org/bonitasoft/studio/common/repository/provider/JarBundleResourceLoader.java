@@ -15,12 +15,16 @@
 package org.bonitasoft.studio.common.repository.provider;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 
 public class JarBundleResourceLoader implements BundleResourceLoader {
 
@@ -32,17 +36,20 @@ public class JarBundleResourceLoader implements BundleResourceLoader {
 
     @Override
     public ResourceBundle getResourceBundle(final Locale locale) {
-        try {
-            String baseName = definition.getJarEntry();
-            if (baseName.lastIndexOf(".") != -1) {
-                baseName = baseName.substring(0, baseName.lastIndexOf("."));
-            }
-            return ResourceBundle.getBundle(baseName, locale,
-                    new JarControl(new File(definition.getFilePath())));
-        } catch (final MissingResourceException e) {
-            BonitaStudioLog.error(e);
-            return ResourceBundle.getBundle("");
+        String baseName = definition.getJarEntry();
+        if (baseName.lastIndexOf(".") != -1) {
+            baseName = baseName.substring(0, baseName.lastIndexOf("."));
         }
+        File file = new File(definition.getFilePath());
+        if (file.isFile()) {
+            try (URLClassLoader urlClassLoader = new URLClassLoader(new URL[] { file.toURI().toURL() })) {
+                return ResourceBundle.getBundle(baseName, locale, urlClassLoader);
+            } catch (final MissingResourceException | IOException e) {
+                BonitaStudioLog.warning(e.getMessage(), CommonRepositoryPlugin.PLUGIN_ID);
+
+            }
+        }
+        return null;
     }
 
 }

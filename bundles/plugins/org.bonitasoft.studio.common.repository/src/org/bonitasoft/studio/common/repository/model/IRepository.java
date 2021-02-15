@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -94,4 +95,7 @@ public interface IRepository extends IFileStoreChangeListener {
     void addProjectListener(IBonitaProjectListener listener);
 
     List<ProcessModelTransformation> getProcessModelTransformations();
+    
+    LocalDependenciesStore getLocalDependencyStore();
+    
 }

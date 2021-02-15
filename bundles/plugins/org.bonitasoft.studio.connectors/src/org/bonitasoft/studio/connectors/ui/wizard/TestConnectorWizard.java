@@ -62,7 +62,7 @@ public class TestConnectorWizard extends ConnectorWizard {
                 outputPage = new TestConnectorOutputWizardPage();
                 createDefaultOutputs(definition);
             }
-            outputPage.setElementContainer(container);
+            outputPage.setElementContainer(modelContainer);
             outputPage.setConnector(connectorWorkingCopy);
             outputPage.setDefinition(definition);
             addAdditionalPage(outputPage);

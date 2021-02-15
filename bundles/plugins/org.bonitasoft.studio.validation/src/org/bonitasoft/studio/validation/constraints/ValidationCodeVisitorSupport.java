@@ -17,6 +17,7 @@ package org.bonitasoft.studio.validation.constraints;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.validation.ValidationPlugin;
@@ -41,7 +42,8 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
     private final IValidationContext context;
     private final Set<MethodSignature> declaredMethodsSignature = new HashSet<>();
 
-    public ValidationCodeVisitorSupport(final IValidationContext context, final Expression expression, final ModuleNode node) {
+    public ValidationCodeVisitorSupport(final IValidationContext context, final Expression expression,
+            final ModuleNode node) {
         dependenciesName = retrieveDependenciesList(expression);
         okStatus = context.createSuccessStatus();
         errorStatus = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
@@ -65,12 +67,17 @@ public class ValidationCodeVisitorSupport extends CodeVisitorSupport {
     }
 
     private Set<String> retrieveDependenciesList(final Expression expression) {
-        final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         final Set<String> result = new HashSet<>();
-        if (engineExpression != null) {
-            for (final org.bonitasoft.engine.expression.Expression dep : engineExpression.getDependencies()) {
-                result.add(dep.getName());
+        try {
+            final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                    .createExpression(expression);
+            if (engineExpression != null) {
+                for (final org.bonitasoft.engine.expression.Expression dep : engineExpression.getDependencies()) {
+                    result.add(dep.getName());
+                }
             }
+        } catch (RuntimeException e) {
+            BonitaStudioLog.error(e);
         }
         return result;
     }

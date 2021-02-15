@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +36,9 @@ public class ProjectDependenciesResolver {
 
     public List<Artifact> getCompileDependencies(IProject project, IProgressMonitor monitor) throws CoreException {
         MavenProject mavenProject = getMavenProject(project, monitor);
+        if(mavenProject == null) {
+            return Collections.emptyList();
+        }
         List<Dependency> dependencies = mavenProject.getDependencies();
         return mavenProject.getArtifacts().stream()
                 .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()))
@@ -56,6 +60,9 @@ public class ProjectDependenciesResolver {
     public Optional<Artifact> findCompileDependency(String fileName, IProject project, IProgressMonitor monitor)
             throws CoreException {
         MavenProject mavenProject = getMavenProject(project, monitor);
+        if(mavenProject == null) {
+            return Optional.empty();
+        }
         return mavenProject.getArtifacts().stream()
                 .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()))
                 .filter(artifact -> artifact.getFile() != null && artifact.getFile().exists())
@@ -66,6 +73,9 @@ public class ProjectDependenciesResolver {
     public List<Artifact> getTransitiveDependencies(IProject project, Artifact artifact, IProgressMonitor monitor)
             throws CoreException {
         MavenProject mavenProject = getMavenProject(project, monitor);
+        if(mavenProject == null) {
+            return Collections.emptyList();
+        }
         IMavenProjectFacade mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
         DependencyNode node = MavenPlugin.getMavenModelManager()
                 .readDependencyTree(mavenProjectFacade, mavenProject, Artifact.SCOPE_COMPILE, monitor);
@@ -81,6 +91,9 @@ public class ProjectDependenciesResolver {
 
     private MavenProject getMavenProject(IProject project, IProgressMonitor monitor) throws CoreException {
         IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (projectFacade == null) {
+            return null;
+        }
         return projectFacade.getMavenProject(monitor);
     }
 

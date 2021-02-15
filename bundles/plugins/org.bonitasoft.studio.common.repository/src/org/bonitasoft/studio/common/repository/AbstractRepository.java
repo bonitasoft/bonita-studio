@@ -58,6 +58,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
@@ -271,7 +272,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         this.projectDependenciesStore.analyze(monitor);
 
         enableBuild();
-        projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
+        for(IBonitaProjectListener listener : projectListeners) {
+            listener.projectOpened(this, monitor);
+        }
         if (migrationEnabled()) {
             try {
                 RepositoryManager.getInstance().setCurrentRepository(this);
@@ -326,7 +329,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
         isLoaded = false;
         removeResourceListeners();
-        projectListeners.stream().forEach(l -> l.projectClosed(this, NULL_PROGRESS_MONITOR));
+        for(IBonitaProjectListener listener : projectListeners) {
+            listener.projectClosed(this, NULL_PROGRESS_MONITOR);
+        }
     }
 
     private void enableOpenIntroListener() {
@@ -914,6 +919,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     @Override
     public List<ProcessModelTransformation> getProcessModelTransformations() {
         return PROCESS_MODEL_TRANSFORMATIONS;
+    }
+   
+    @Override
+    public LocalDependenciesStore getLocalDependencyStore() {
+       return new LocalDependenciesStore(getProject());
     }
 
 }

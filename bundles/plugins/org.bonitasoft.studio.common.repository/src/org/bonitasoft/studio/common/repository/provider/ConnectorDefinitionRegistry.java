@@ -66,10 +66,7 @@ public class ConnectorDefinitionRegistry {
                                     && extendedCategory.getLabel() != null
                                     && !extendedCategory.getLabel().isEmpty()
                                     && !Objects.equals(extendedCategory.getLabel(), ec.getLabel())) {
-                                BonitaStudioLog.warning(
-                                        String.format("Conflicting labels found for category '%s' with '%s' locale (%s != %s)",
-                                                ec.getId(), Platform.getNL(), extendedCategory.getLabel(), ec.getLabel()),
-                                        CommonRepositoryPlugin.PLUGIN_ID);
+                                //Keep existing category label
                             } else if (extendedCategory == null || (extendedCategory != null
                                     && (extendedCategory.getLabel() == null
                                             || extendedCategory.getLabel().isEmpty()))) {

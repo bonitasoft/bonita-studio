@@ -20,9 +20,9 @@ package org.bonitasoft.studio.datatools;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.ConnectionProfileException;
@@ -280,12 +280,12 @@ public class ConnectionProfileUtil {
             defaultDriverJar = fileStore.getDefault();
         }
         final StringBuilder sb = new StringBuilder();
-        for (final IRepositoryFileStore f : depStore.getChildren()) {
+        for (final DependencyFileStore f : depStore.getChildren()) {
             if (!DB2_ID.equals(driverId) && defaultDriverJar != null && defaultDriverJar.equals(f.getName())) {
-                sb.append(f.getResource().getLocation().toFile().getAbsolutePath());
+                sb.append(f.getFile().getAbsolutePath());
                 sb.append(IDriverMgmtConstants.PATH_DELIMITER);
             } else if (defaultDriverJar == null || DB2_ID.equals(driverId)) {
-                sb.append(f.getResource().getLocation().toFile().getAbsolutePath());
+                sb.append(f.getFile().getAbsolutePath());
                 sb.append(IDriverMgmtConstants.PATH_DELIMITER);
             }
         }

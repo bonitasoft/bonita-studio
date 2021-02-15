@@ -40,22 +40,17 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());
 
-        Optional<Dependency> dependencyToUpdate = model.getDependencies()
-                .stream()
-                .filter(dep -> Objects.equals(dep.getGroupId(), groupId))
-                .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
-                .findFirst();
-
-        if (dependencyToUpdate.isPresent()) {
+        Dependency dependencyToUpdate = helper.findDependency(model, groupId, artifactId).orElse(null);
+        if (dependencyToUpdate != null) {
             Dependency dependencyUpdated = new Dependency();
             dependencyUpdated.setArtifactId(artifactId);
             dependencyUpdated.setGroupId(groupId);
             dependencyUpdated.setVersion(newVersion);
-            dependencyUpdated.setClassifier(dependencyToUpdate.get().getClassifier());
-            dependencyUpdated.setScope(dependencyToUpdate.get().getScope());
-            dependencyUpdated.setType(dependencyToUpdate.get().getType());
+            dependencyUpdated.setClassifier(dependencyToUpdate.getClassifier());
+            dependencyUpdated.setScope(dependencyToUpdate.getScope());
+            dependencyUpdated.setType(dependencyToUpdate.getType());
 
-            model.removeDependency(dependencyToUpdate.get());
+            model.removeDependency(dependencyToUpdate);
             model.addDependency(dependencyUpdated);
             saveModel(getCurrentProject(), model, monitor);
             getProjectDependenciesStore().analyze(monitor);
