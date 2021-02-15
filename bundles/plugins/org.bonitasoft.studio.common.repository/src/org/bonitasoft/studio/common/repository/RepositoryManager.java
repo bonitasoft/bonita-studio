@@ -42,7 +42,6 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
@@ -172,7 +171,7 @@ public class RepositoryManager {
 
     public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
         AbstractRepository currentRepository = getCurrentRepository();
-        if (repositoryName.equals(currentRepository.getName())) {
+        if(repositoryName.equals(currentRepository.getName())) {
             return currentRepository;
         }
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();

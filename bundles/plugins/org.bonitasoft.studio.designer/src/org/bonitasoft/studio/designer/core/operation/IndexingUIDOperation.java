@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,9 +32,7 @@ import org.restlet.representation.EmptyRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-
 public class IndexingUIDOperation implements IRunnableWithProgress {
-
 
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
@@ -47,24 +46,26 @@ public class IndexingUIDOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.setTaskName(Messages.indexingUIDPages);
-        PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
-                ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
-        URI uri = null;
-        try {
-            uri = urlBuilder.indexation().toURI();
-        } catch (MalformedURLException | URISyntaxException e1) {
-            throw new InvocationTargetException(e1);
-        }
-        Context currentContext = Context.getCurrent();
-        try {
-            ClientResource clientResource = new ClientResource(uri);
-            clientResource.post(new EmptyRepresentation());
-        } catch (ResourceException e) {
-            throw new InvocationTargetException(e,
-                    "Failed to post on " + uri);
-        }finally {
-            Context.setCurrent(currentContext);
+        if (UIDesignerServerManager.getInstance().isStarted()) {
+            monitor.setTaskName(Messages.indexingUIDPages);
+            PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
+                    ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
+            URI uri = null;
+            try {
+                uri = urlBuilder.indexation().toURI();
+            } catch (MalformedURLException | URISyntaxException e1) {
+                throw new InvocationTargetException(e1);
+            }
+            Context currentContext = Context.getCurrent();
+            try {
+                ClientResource clientResource = new ClientResource(uri);
+                clientResource.post(new EmptyRepresentation());
+            } catch (ResourceException e) {
+                throw new InvocationTargetException(e,
+                        "Failed to post on " + uri);
+            } finally {
+                Context.setCurrent(currentContext);
+            }
         }
     }
 

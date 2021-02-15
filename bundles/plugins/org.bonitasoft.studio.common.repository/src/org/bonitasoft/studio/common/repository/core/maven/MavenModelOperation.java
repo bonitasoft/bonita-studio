@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public abstract class MavenModelOperation implements IWorkspaceRunnable {
 
-    private MavenProjectHelper helper = new MavenProjectHelper();
+    protected MavenProjectHelper helper = new MavenProjectHelper();
 
     protected Model readModel(IProject project) throws CoreException {
         return helper.getMavenModel(project);

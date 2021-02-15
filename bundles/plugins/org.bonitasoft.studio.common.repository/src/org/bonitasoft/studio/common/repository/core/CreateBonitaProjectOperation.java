@@ -119,8 +119,11 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     }
 
     private String toArtifactId(String displayName) {
-        String artifactId = displayName.toLowerCase();
-        return artifactId.replace(" ", "-");
+        String artifactId = displayName.toLowerCase().replace(" ", "-");
+        if(!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
+            return "my-project";
+        }
+        return artifactId;
     }
 
     public CreateBonitaProjectOperation addBuilder(final String builderId) {

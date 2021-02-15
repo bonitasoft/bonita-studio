@@ -6,6 +6,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Named;
@@ -99,7 +100,12 @@ public class ImportBosHandler {
     }
 
     private AbstractRepository getTargetRepository(RepositoryAccessor repositoryAccessor) {
-        return repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository());
+        String targetRepository = switchRepositoryStrategy.getTargetRepository();
+        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+        if(Objects.equals(targetRepository, currentRepository.getName())){
+            return currentRepository;
+        }
+        return repositoryAccessor.getRepository(targetRepository);
     }
 
     private void switchToRepository(IProgressMonitor monitor) {

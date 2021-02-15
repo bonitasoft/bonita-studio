@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -118,7 +119,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
     private static final String DATASOURCE_CONNECTOR_D = "database-datasource";
 
-    protected final EObject container;
+    protected final EObject modelContainer;
 
     protected Connector connectorWorkingCopy;
 
@@ -146,10 +147,10 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
     private EMFModelUpdater<Connector> modelUpdater = new EMFModelUpdater<>();
 
-    public ConnectorWizard(final EObject container,
+    public ConnectorWizard(final EObject modelContainer,
             final EStructuralFeature connectorContainmentFeature,
             final Set<EStructuralFeature> featureToCheckForUniqueID) {
-        this.container = container;
+        this.modelContainer = modelContainer;
         connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector();
         final ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE
                 .createConnectorConfiguration();
@@ -168,7 +169,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
             final EStructuralFeature connectorContainmentFeature,
             final Set<EStructuralFeature> featureToCheckForUniqueID) {
         Assert.isNotNull(connector);
-        container = connector.eContainer();
+        modelContainer = connector.eContainer();
         originalConnector = connector;
         this.connectorContainmentFeature = connectorContainmentFeature;
         connectorWorkingCopy = modelUpdater.from(connector).getWorkingCopy();
@@ -225,28 +226,24 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     protected void initializeContainment() {
-        if (container instanceof Element) {
+        if (modelContainer instanceof Element) {
+            String containerName = ((Element) modelContainer)
+                    .getName();
             final AbstractProcess process = ModelHelper
-                    .getParentProcess(container);
+                    .getParentProcess(modelContainer);
             final EObject processCopy = EcoreUtil.copy(process);
-            EObject containerCopy = null;
-            for (final EObject element : ModelHelper.getAllItemsOfType(
-                    processCopy, container.eClass())) {
-                if (element instanceof Element && container instanceof Element) {
-                    final String containerName = ((Element) container)
-                            .getName();
-                    if (((Element) element).getName().equals(containerName)) {
-                        containerCopy = element;
-                        break;
-                    }
-                }
-            }
-
-            @SuppressWarnings("unchecked")
-            final List<EObject> connectors = (List<EObject>) containerCopy
-                    .eGet(connectorContainmentFeature);
-            connectors.clear();
-            connectors.add(connectorWorkingCopy);
+            ModelHelper.getAllItemsOfType(processCopy, modelContainer.eClass())
+                    .stream()
+                    .filter(Element.class::isInstance)
+                    .map(Element.class::cast)
+                    .filter(element -> Objects.equals(element.getName(), containerName))
+                    .findFirst()
+                    .ifPresent(containerCopy -> {
+                        final List<EObject> connectors = (List<EObject>) containerCopy
+                                .eGet(connectorContainmentFeature);
+                        connectors.clear();
+                        connectors.add(connectorWorkingCopy);
+                    });
         }
     }
 
@@ -277,11 +274,11 @@ public class ConnectorWizard extends ExtensibleWizard implements
                     .getConnectorDefinitionRegistry()
                     .find(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion())
                     .orElse(null);
-            
+
             AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                     .getChild(URI.decode(definition.eResource().getURI()
                             .lastSegment()), true);
-            if(fStore == null) {
+            if (fStore == null) {
                 fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore<?>) definitionStore)
                         .find(definition)
                         .orElse(null);
@@ -369,10 +366,10 @@ public class ConnectorWizard extends ExtensibleWizard implements
     }
 
     protected IWizardPage getNameAndDescriptionPage() {
-        return useEvents ? new SelectEventConnectorNameAndDescWizardPage(container,
+        return useEvents ? new SelectEventConnectorNameAndDescWizardPage(modelContainer,
                 connectorWorkingCopy, originalConnector,
                 featureToCheckForUniqueID)
-                : new SelectNameAndDescWizardPage(container,
+                : new SelectNameAndDescWizardPage(modelContainer,
                         connectorWorkingCopy, originalConnector,
                         featureToCheckForUniqueID);
     }
@@ -411,7 +408,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
 
             }
             outputPage.setMessageProvider(messageProvider);
-            outputPage.setElementContainer(container);
+            outputPage.setElementContainer(modelContainer);
             outputPage.setConnector(connectorWorkingCopy);
             outputPage.setDefinition(definition);
         }
@@ -649,7 +646,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 if (definition.getPage().size() > i) {
                     p.setPage(definition.getPage().get(i));
                 }
-                p.setElementContainer(container);
+                p.setElementContainer(modelContainer);
                 p.setExpressionTypeFilter(getExpressionTypeFilter());
                 result.add(p);
             }
@@ -727,7 +724,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         selectOutputPage.setConfiguration(connectorWorkingCopy
                 .getConfiguration());
         selectOutputPage.setDefinition(definition);
-        selectOutputPage.setElementContainer(container);
+        selectOutputPage.setElementContainer(modelContainer);
         selectOutputPage.setExpressionTypeFilter(getExpressionTypeFilter());
         return selectOutputPage;
     }
@@ -739,7 +736,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
         wizPage.setMessageProvider(messageProvider);
         wizPage.setConfiguration(connectorWorkingCopy.getConfiguration());
         wizPage.setDefinition(def);
-        wizPage.setElementContainer(container);
+        wizPage.setElementContainer(modelContainer);
         wizPage.setPage(page);
         wizPage.setExpressionTypeFilter(getExpressionTypeFilter());
         return wizPage;
@@ -756,7 +753,7 @@ public class ConnectorWizard extends ExtensibleWizard implements
     @Override
     public boolean performFinish() {
         final EditingDomain editingDomain = AdapterFactoryEditingDomain
-                .getEditingDomainFor(container);
+                .getEditingDomainFor(modelContainer);
         if (editMode) {
             modelUpdater.update();
         } else {
@@ -769,20 +766,20 @@ public class ConnectorWizard extends ExtensibleWizard implements
     protected CompoundCommand createPerformFinishCommandOnCreation(
             final EditingDomain editingDomain) {
         final CompoundCommand cc = new CompoundCommand("Add Connector");
-        cc.append(AddCommand.create(editingDomain, container,
+        cc.append(AddCommand.create(editingDomain, modelContainer,
                 connectorContainmentFeature, connectorWorkingCopy));
         return cc;
     }
 
     protected CompoundCommand createPerformFinishCommandOnEdition(
             final EditingDomain editingDomain) {
-        final List<?> connectorsList = (List<?>) container
+        final List<?> connectorsList = (List<?>) modelContainer
                 .eGet(connectorContainmentFeature);
         final int index = connectorsList.indexOf(originalConnector);
         final CompoundCommand cc = new CompoundCommand("Update Connector");
-        cc.append(RemoveCommand.create(editingDomain, container,
+        cc.append(RemoveCommand.create(editingDomain, modelContainer,
                 connectorContainmentFeature, originalConnector));
-        cc.append(AddCommand.create(editingDomain, container,
+        cc.append(AddCommand.create(editingDomain, modelContainer,
                 connectorContainmentFeature, connectorWorkingCopy, index));
         return cc;
     }

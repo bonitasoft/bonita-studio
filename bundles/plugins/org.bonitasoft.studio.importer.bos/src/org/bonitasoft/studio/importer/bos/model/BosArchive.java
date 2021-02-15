@@ -6,6 +6,10 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +21,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -28,6 +34,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramLegacyFormsValidator;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,6 +63,7 @@ public class BosArchive {
 
     private boolean openAll = false;
     private final File archiveFile;
+    private MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
 
     public BosArchive(File archiveFile) {
         this.archiveFile = archiveFile;
@@ -353,5 +361,45 @@ public class BosArchive {
 
     public String getFileName() {
         return archiveFile.getName();
+    }
+    
+    public Model readMavenProject() {
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+            return zipFile.stream()
+                    .filter(entry -> entry.getName().matches("[^/]*/pom.xml"))
+                    .findFirst()
+                    .flatMap(this::loadMavenModel)
+                    .orElse(null);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private Optional<Model> loadMavenModel(ZipEntry pomEntry) {
+        try (ZipFile zipFile = new ZipFile(archiveFile);
+                InputStream inputStream = zipFile.getInputStream(pomEntry)) {
+            return Optional.of(mavenXpp3Reader.read(inputStream));
+        } catch (final IOException | XmlPullParserException e) {
+            BonitaStudioLog.error("Failed to load pom file from archive", e);
+            return Optional.empty();
+        }
+    }
+
+    public void extractLibFolder(Path tempDirectory) {
+        try (ZipFile zipFile = new ZipFile(archiveFile)) {
+             zipFile.stream()
+                    .filter(entry -> entry.getName().matches("[^/]*/lib/.*.jar"))
+                    .forEach(entry -> {
+                        try (InputStream is = zipFile.getInputStream(entry)){
+                            Files.copy(is, 
+                                    tempDirectory.resolve(Paths.get(entry.getName()).toFile().getName()), 
+                                    StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                           BonitaStudioLog.error(e);
+                        }
+                    });
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -17,7 +17,10 @@ package org.bonitasoft.studio.common.repository.core.maven;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Objects;
+import java.util.Optional;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
@@ -55,6 +58,14 @@ public class MavenProjectHelper {
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
         pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+    }
+    
+    public Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {
+        return model.getDependencies()
+                .stream()
+                .filter(dep -> Objects.equals(dep.getGroupId(), groupId))
+                .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
+                .findFirst();
     }
 
 }

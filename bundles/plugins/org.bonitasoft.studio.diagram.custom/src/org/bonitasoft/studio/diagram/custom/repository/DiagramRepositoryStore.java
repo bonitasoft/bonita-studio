@@ -82,7 +82,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore> {
 
-    private static final String STORE_NAME = "diagrams";
+    public static final String STORE_NAME = "diagrams";
     private static final Set<String> extensions = new HashSet<>();
     static {
         extensions.add("proc");

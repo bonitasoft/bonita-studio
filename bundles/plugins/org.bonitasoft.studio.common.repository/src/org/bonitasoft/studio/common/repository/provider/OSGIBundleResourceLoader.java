@@ -18,6 +18,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.emf.common.util.URI;
@@ -57,6 +59,7 @@ public class OSGIBundleResourceLoader implements BundleResourceLoader {
                 return ResourceBundle.getBundle(baseName, locale,
                         new StoreControl(store.getResource().getLocation().toFile().getAbsolutePath()));
             } catch (final MissingResourceException e1) {
+                BonitaStudioLog.warning(e.getMessage(), CommonRepositoryPlugin.PLUGIN_ID);
                 return null;
             }
         }
