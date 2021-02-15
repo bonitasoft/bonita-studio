@@ -2,12 +2,14 @@ package org.bonitasoft.studio.groovy.ui.viewer.proposal.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.eclipse.swt.graphics.Image;
 
 public class Category implements DescriptionProvider{
 
-    private List<ScriptProposal> proposals = new ArrayList<>();
+    private List<Supplier<ScriptProposal>> proposals = new ArrayList<>();
     private List<Category> subcategories = new ArrayList<>();
     private String name;
     private Image icon;
@@ -21,13 +23,19 @@ public class Category implements DescriptionProvider{
         this.icon = icon;
     }
 
-    public void addScriptProposal(ScriptProposal proposal) {
-        proposal.setCategory(this);
+    public void addScriptProposalSupplier(Supplier<ScriptProposal> proposal) {
         proposals.add(proposal);
+    }
+    
+    public boolean hasProposals() {
+        return !proposals.isEmpty();
     }
 
     public List<ScriptProposal> getProposals() {
-        return proposals;
+        return proposals.stream()
+                .map(Supplier::get)
+                .map(p -> {p.setCategory(Category.this); return p;})
+                .collect(Collectors.toList());
     }
 
     public String getName() {
