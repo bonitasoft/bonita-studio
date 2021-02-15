@@ -4,22 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.Query;
-import org.bonitasoft.engine.bdm.model.field.Field;
-import org.bonitasoft.engine.bdm.model.field.RelationField;
-import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -28,23 +21,16 @@ import org.bonitasoft.studio.expression.editor.ExpressionProviderService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
-import org.bonitasoft.studio.groovy.library.GroovyFunction;
-import org.bonitasoft.studio.groovy.library.IFunction;
 import org.bonitasoft.studio.groovy.ui.Activator;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.proposal.CodeTemplatesProvider;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.codehaus.groovy.eclipse.quickfix.GroovyQuickFixPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.text.templates.Template;
 
 public class ScriptExpressionContext {
 
@@ -107,8 +93,9 @@ public class ScriptExpressionContext {
         addProposals(input, docCategory, repositoryAccessor, processContext);
 
         IExpressionProvider documentRefExressionProvider = getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
-        Category docRefCategory = context.addCategory(new Category(ExpressionConstants.DOCUMENT_REF_TYPE, Messages.documents,
-                documentRefExressionProvider.getTypeIcon()));
+        Category docRefCategory = context
+                .addCategory(new Category(ExpressionConstants.DOCUMENT_REF_TYPE, Messages.documents,
+                        documentRefExressionProvider.getTypeIcon()));
         docRefCategory.setDescription(Messages.documentsCategoryDescription);
         addProposals(input, docRefCategory, repositoryAccessor, processContext);
 
@@ -155,127 +142,27 @@ public class ScriptExpressionContext {
         FunctionsRepositoryFactory.getUserFunctionCatgory()
                 .getFunctions()
                 .stream()
-                .map(ScriptExpressionContext::toProposal)
-                .forEach(category::addScriptProposal);
+                .map(FunctionScriptProposalSupplier::new)
+                .forEach(category::addScriptProposalSupplier);
     }
 
-    private static ScriptProposal toProposal(IFunction function) {
-        Template template = new Template(function.getSignature() + " - " + function.getOwner(),
-                function.getDocumentation(),
-                GroovyQuickFixPlugin.GROOVY_CONTEXT_TYPE,
-                createFunctionPattern(function),
-                true);
-        ScriptProposal scriptProposal = new ScriptProposal(function.getSignature() + " - " + function.getOwner(),
-                template);
-        scriptProposal.setDescription(template.getDescription());
-        return scriptProposal;
-    }
+   
 
-    private static ScriptProposal toDAOProposal(IMethod method, String daoName, BusinessObjectModel bdm) {
-        GroovyFunction function = new GroovyFunction(method);
-        Template template = new Template(function.getSignature(),
-                function.getDocumentation(),
-                GroovyQuickFixPlugin.GROOVY_CONTEXT_TYPE,
-                createDAOFunctionPattern(daoName, function),
-                true);
-        ScriptProposal scriptProposal = new ScriptProposal(function.getName(),
-                template);
-        findQuery(method, bdm).ifPresent(q -> scriptProposal.setDescription(q.getDescription()));
-        return scriptProposal;
-    }
-
-    private static Optional<Query> findQuery(IMethod method, BusinessObjectModel bdm) {
-        String daoFullyQualifiedName = method.getDeclaringType().getFullyQualifiedName();
-         return findBusinessObjectFromDAO(daoFullyQualifiedName, bdm)
-                .flatMap(bo -> bo.getQueries().stream()
-                        .filter(q -> q.getName().equals(method.getElementName()))
-                        .findFirst())
-                .filter(Objects::nonNull);
-    }
     
-    private static Optional<BusinessObject> findBusinessObjectFromDAO(String daoType, BusinessObjectModel bdm) {
-        String businessObjectQualifiedName = daoType.substring(0, daoType.length() - 3);
-        return bdm.getBusinessObjects().stream()
-                .filter(bo -> bo.getQualifiedName().equals(businessObjectQualifiedName))
-                .findFirst();
-    }
-    
-    private static String createFunctionPattern(IFunction function) {
-        String toInsert = "";
-        if (function.isStatic()) {
-            toInsert += "${:newType(" + function.getOwner() + ")}";
-        } else {
-            toInsert = "new ${:newType(" + function.getOwner() + ")}()";
-        }
-        toInsert += "." + function.getName();
-        if (function.getParametersCount() > 0) {
-            toInsert += "("
-                    + function.getParameterNames().stream().map(p -> "${" + p + "}").collect(Collectors.joining(", "))
-                    + ")";
-        } else {
-            toInsert += "()";
-        }
-        return toInsert;
-    }
-
-    private static String createDAOFunctionPattern(String daoName, IFunction function) {
-        String toInsert = daoName + "." + function.getName();
-        if (function.getParametersCount() > 0) {
-            toInsert += "("
-                    + function.getParameterNames().stream().map(p -> "${" + p + "}").collect(Collectors.joining(", "))
-                    + ")";
-        } else {
-            toInsert += "()";
-        }
-        return toInsert;
-    }
 
     private static void addUserTemplatesProposals(Category category, CodeTemplatesProvider codeTemplatesProvider) {
         codeTemplatesProvider.getBonitaUsersTemplates()
-                .forEach(template -> category.addScriptProposal(toProposal(template)));
-    }
-
-    private static ScriptProposal toProposal(Template template) {
-        ScriptProposal scriptProposal = new ScriptProposal(template.getName(), template);
-        scriptProposal.setDescription(template.getDescription());
-        return scriptProposal;
+                .forEach(template -> category.addScriptProposalSupplier(new TemplateScriptProposalSupplier(template)));
     }
 
     private static void addProposals(List<ScriptVariable> input, Category category,
             RepositoryAccessor repositoryAccessor, EObject processContext) {
         input.stream()
                 .filter(v -> Objects.equals(v.getCategory(), category.getId()))
-                .map(scriptVariable -> toProposal(scriptVariable, repositoryAccessor, processContext))
-                .forEach(category::addScriptProposal);
+                .map(scriptVariable -> new VariableScriptProposalSupplier(scriptVariable, repositoryAccessor, processContext))
+                .forEach(category::addScriptProposalSupplier);
     }
 
-    private static ScriptProposal toProposal(ScriptVariable scriptVariable,
-            RepositoryAccessor repositoryAccessor, EObject processContext) {
-        ScriptProposal scriptProposal = new ScriptProposal(scriptVariable.getName(), scriptVariable.getType());
-        scriptProposal.setDescription(scriptVariable.getDescription());
-        String type = scriptVariable.getType();
-        if (isBusinessObject(type, repositoryAccessor)) {
-            addBusinessVariableProposalChildren(scriptProposal, repositoryAccessor);
-        }else if(List.class.getName().equals(type)){ 
-            findData(scriptVariable.getName(),processContext)
-                .ifPresent( d -> scriptProposal.setType(DataUtil.getDisplayTypeName(d)));
-            findDocument(scriptVariable.getName(),processContext)
-            .ifPresent( d -> scriptProposal.setType("List<Document>"));
-        }
-        return scriptProposal;
-    }
-
-    private static Optional<Data> findData(String name, EObject processContext) {
-      return ModelHelper.getAccessibleData(processContext, true).stream()
-       .filter(d -> Objects.equals(d.getName(), name))
-       .findFirst();
-    }
-    
-    private static Optional<Document> findDocument(String name, EObject processContext) {
-        return ModelHelper.getParentPool(processContext).getDocuments().stream()
-         .filter(d -> Objects.equals(d.getName(), name))
-         .findFirst();
-      }
 
     private static void addDAOProposals(List<ScriptVariable> input, Category category, BusinessObjectModel bdm) {
         input.stream()
@@ -305,47 +192,21 @@ public class ScriptExpressionContext {
                             return false;
                         }
                     })
-                    .map(method -> toDAOProposal(method, variable.getName(), bdm))
-                    .forEach(cat::addScriptProposal);
+                    .map(method -> new DAOScriptProposalSupplier(method, variable.getName(), bdm))
+                    .forEach(cat::addScriptProposalSupplier);
         } catch (JavaModelException e) {
             BonitaStudioLog.error(e);
         }
         return cat;
     }
-
-    private static boolean isBusinessObject(String type, RepositoryAccessor repositoryAccessor) {
-        return getBusinessObjectModelRepository(repositoryAccessor)
-                .getChildByQualifiedName(type)
-                .isPresent();
+    
+    static Optional<BusinessObject> findBusinessObjectFromDAO(String daoType, BusinessObjectModel bdm) {
+        String businessObjectQualifiedName = daoType.substring(0, daoType.length() - 3);
+        return bdm.getBusinessObjects().stream()
+                .filter(bo -> bo.getQualifiedName().equals(businessObjectQualifiedName))
+                .findFirst();
     }
 
-    private static void addBusinessVariableProposalChildren(ScriptProposal scriptProposal,
-            RepositoryAccessor repositoryAccessor) {
-        getBusinessObjectModelRepository(repositoryAccessor)
-                .getBusinessObjectByQualifiedName(scriptProposal.getType())
-                .ifPresent(bo -> bo.getFields().stream()
-                        .map(ScriptExpressionContext::toProposal)
-                        .forEach(scriptProposal::addChild));
-    }
-
-    private static BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> getBusinessObjectModelRepository(
-            RepositoryAccessor repositoryAccessor) {
-        @SuppressWarnings("unchecked")
-        BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> repositoryStore = repositoryAccessor
-                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        return repositoryStore;
-    }
-
-    private static ScriptProposal toProposal(Field field) {
-        String type = field instanceof SimpleField ? ((SimpleField) field).getType().getClazz().getName()
-                : ((RelationField) field).getReference().getSimpleName();
-        if (field.isCollection() != null && field.isCollection()) {
-            type = "List<" + type + ">";
-        }
-        ScriptProposal scriptProposal = new ScriptProposal(field.getName(), type);
-        scriptProposal.setDescription(field.getDescription());
-        return scriptProposal;
-    }
 
     private static IExpressionProvider getExpressionProvider(String expressionType) {
         return ExpressionProviderService.getInstance().getExpressionProvider(expressionType);

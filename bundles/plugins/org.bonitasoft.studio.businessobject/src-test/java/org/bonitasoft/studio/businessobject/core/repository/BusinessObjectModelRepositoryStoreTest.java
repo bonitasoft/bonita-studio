@@ -17,7 +17,6 @@ package org.bonitasoft.studio.businessobject.core.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +25,6 @@ import java.util.Optional;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,13 +69,6 @@ public class BusinessObjectModelRepositoryStoreTest {
     public void shouldGetChildFromPackage_ReturnNullIfNoPackageFound() throws Exception {
         doReturn(businessObjectFileStore).when(storeUnderTest).getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
         assertThat(storeUnderTest.getChildByQualifiedName("org.bonitasoft.notexists")).isEmpty();
-    }
-
-    @Test
-    public void should_return_an_empty_list_if_DAO_type_is_not_found() throws Exception {
-        final IJavaProject javaProject = mock(IJavaProject.class);
-
-        assertThat(storeUnderTest.allBusinessObjectDao(javaProject)).isEmpty();
     }
 
     @Test

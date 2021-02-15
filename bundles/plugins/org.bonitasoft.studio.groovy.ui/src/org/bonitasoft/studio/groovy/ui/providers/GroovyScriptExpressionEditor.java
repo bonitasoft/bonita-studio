@@ -744,9 +744,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 BonitaStudioLog.error(e);
             }
         }
-        if (groovyViewer != null) {
-            groovyViewer.dispose();
-        }
     }
 
     @Override
