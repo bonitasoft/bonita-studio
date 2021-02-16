@@ -26,7 +26,7 @@
                     <italic>true</italic>
                     <fontSize>58</fontSize>
                     <color>#0B4361</color>
-                    <versionLabel>${branding.version}</versionLabel>
+                    <versionLabel>${branding.version.short}</versionLabel>
                     <buildId>${unqualifiedVersion}.${buildQualifier}</buildId>
                     <buildIdX>5</buildIdX>
                     <buildIdY>280</buildIdY>
