@@ -16,7 +16,6 @@ package org.bonitasoft.studio.intro.content;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
     protected static final List<DOMContentProvider> CONTENT_PROVIDERS = new ArrayList<>();
     private static final Map<String, String> VIDEO_CAMP_SERIES_ID_BY_LOCALE = new HashMap<>();
-    private static final String LOCATION_HEADER = "Location";
 
     static {
         VIDEO_CAMP_SERIES_ID_BY_LOCALE.put("fr", "699");
@@ -154,38 +152,18 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
             throws IOException {
         Map<String, Object> procurementParam = new HashMap<>();
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.file",
-                URLEncoder.encode(resolveRedirection(new URL(redirectUrl(redirectId, product))).toString(), "UTF-8"));
+                URLEncoder.encode(new URL(redirectUrl(redirectId, product)).toString(), "UTF-8"));
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName", projectName);
         return procurementParam;
     }
 
-    public static URL resolveRedirection(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        if (isRedirect(connection.getResponseCode())) {
-            String newUrl = connection.getHeaderField(LOCATION_HEADER);
-            return new URL(newUrl);
-        }
-        return url;
-    }
-
-    private static boolean isRedirect(int statusCode) {
-        if (statusCode != HttpURLConnection.HTTP_OK) {
-            if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP
-                    || statusCode == HttpURLConnection.HTTP_MOVED_PERM
-                    || statusCode == HttpURLConnection.HTTP_SEE_OTHER) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     public static String redirectUrl(String redirectId) {
         return redirectUrl(redirectId, "bos");
     }
 
     public static String redirectUrl(String redirectId, String product) {
         return String.format(
-                "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
+                "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
                 redirectId,
                 product,
                 ProductVersion.majorVersion(),
