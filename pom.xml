@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>7.12.1</version>
+	<version>7.12.1.1</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
@@ -16,10 +16,10 @@
 		<branding.version>2021.1</branding.version>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.12.41</ui.designer.version>
-		<business.data.repository.version>${project.version}</business.data.repository.version>
-		<engine.version>${project.version}</engine.version>
-		<filters.version>${project.version}</filters.version>
-		<platform.version>${project.parent.version}</platform.version>
+		<business.data.repository.version>7.12.1</business.data.repository.version>
+		<engine.version>7.12.1</engine.version>
+		<filters.version>7.12.1</filters.version>
+		<platform.version>7.12.1</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>

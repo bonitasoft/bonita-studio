@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Designer macosx fragment
 Bundle-SymbolicName: org.bonitasoft.studio.designer.macosx
-Bundle-Version: 7.12.1
+Bundle-Version: 7.12.1.1
 Bundle-Vendor: Bonitasoft S.A.
 Fragment-Host: org.bonitasoft.studio.designer;bundle-version="7.10.0"
 Automatic-Module-Name: org.bonitasoft.studio.designer.macosx
