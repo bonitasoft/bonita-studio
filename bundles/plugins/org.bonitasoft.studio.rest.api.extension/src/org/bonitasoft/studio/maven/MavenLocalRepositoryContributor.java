@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class MavenLocalRepositoryContributor {
 
-    public static final String BONITA_ARTIFACT_VERSION = ProductVersion.mavenVersion();
+    public static final String BONITA_ARTIFACT_VERSION = System.getProperty("engine.version",ProductVersion.mavenVersion());
 
     private final MavenInstallFileCommand installCommand;
     private final DependencyCatalog catalog;
