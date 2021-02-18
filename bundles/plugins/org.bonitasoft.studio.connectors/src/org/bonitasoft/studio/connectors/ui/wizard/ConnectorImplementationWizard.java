@@ -33,7 +33,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ImportDefinitionDepedenciesOperation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
@@ -47,7 +46,6 @@ import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.ConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -247,9 +245,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 					try {
 						ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(implWorkingCopy.getDefinitionId(),implWorkingCopy.getDefinitionVersion()) ;
-                        new ImportDefinitionDepedenciesOperation(definition, messageProvider,
-                                RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class))
-                                        .run(monitor);
 						ClassGenerator.generateConnectorImplementationAbstractClass(implWorkingCopy,definition,getAbstractClassName(),sourceStore, monitor) ;
 						fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,definition,sourceStore, monitor) ;
 					} catch (Exception e) {

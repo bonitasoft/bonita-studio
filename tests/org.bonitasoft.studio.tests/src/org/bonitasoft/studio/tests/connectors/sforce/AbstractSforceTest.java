@@ -13,6 +13,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connector.wizard.sforce.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
@@ -56,6 +58,9 @@ public abstract class AbstractSforceTest implements SWTBotConstants {
 
     @Before
     public void setUp() throws Exception {
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-salesforce", "1.1.3")
+            .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        
         SWTBotTestUtil.getKeybord();
         sftoolMockUtil = new SalesforceMockUtil();
         sftoolMockUtil.initMock();

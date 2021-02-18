@@ -582,18 +582,6 @@ public class DefinitionResourceProvider implements EventHandler {
         return icon;
     }
 
-    public InputStream getDependencyInputStream(final String jarName) {
-        final URL url = bundle.getResource(CLASSPATH_DIR + "/" + jarName);
-        if (url != null) {
-            try {
-                return url.openStream();
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
-    }
-
     public void removeCategoryLabel(final Properties messages, final Category c) {
         messages.remove(c.getId() + "." + category);
     }

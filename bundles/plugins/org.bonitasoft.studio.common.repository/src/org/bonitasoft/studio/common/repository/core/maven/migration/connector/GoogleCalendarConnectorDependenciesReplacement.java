@@ -14,9 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 public class GoogleCalendarConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
+    
+    private static final Set<String> DEFINITIONS = Set.of(
+            "google-calendar-v3-create-event",
+            "google-calendar-v3-delete-event",
+            "google-calendar-v3-get-event",
+            "google-calendar-v3-move-event",
+            "google-calendar-v3-update-event");
 
     public GoogleCalendarConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-google-calendar-v3", "1.1.0"),
@@ -26,6 +35,11 @@ public class GoogleCalendarConnectorDependenciesReplacement extends BonitaJarDep
                 "bonita-connector-google-calendar-v3-get-event-impl-1.0.0.jar",
                 "bonita-connector-google-calendar-v3-move-event-impl-1.0.0.jar",
                 "bonita-connector-google-calendar-v3-update-event-impl-1.0.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

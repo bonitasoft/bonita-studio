@@ -14,10 +14,31 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class DatabaseConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
+    
+    private static final Set<String> DEFINITIONS = Set.of(
+            "database-jdbc",
+            "database-access",
+            "database-as400",
+            "database-datasource",
+            "database-db2",
+            "database-h2",
+            "database-hsqldb",
+            "database-informix",
+            "database-ingres",
+            "database-mssqlserver",
+            "database-mysql",
+            "database-oracle10g",
+            "database-oracle11g",
+            "database-postgresql84",
+            "database-postgresql92",
+            "database-sybase",
+            "database-teradata");
     
     public DatabaseConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-database", "2.0.3"),
@@ -47,4 +68,8 @@ public class DatabaseConnectorDependenciesReplacement extends BonitaJarDependenc
                 "bonita-connector-database-teradata-impl-.*.jar");
     }
 
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
+    }
 }

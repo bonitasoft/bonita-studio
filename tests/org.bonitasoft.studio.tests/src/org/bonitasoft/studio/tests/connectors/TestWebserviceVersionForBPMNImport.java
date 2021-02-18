@@ -16,12 +16,22 @@ package org.bonitasoft.studio.tests.connectors;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestWebserviceVersionForBPMNImport {
 
+    @Before
+    public void init() throws Exception {
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-webservice", "1.3.2");
+        addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
+    
     @Test
     public void testWebserviceIDAndVersionUsedInBPMImportISOK() {
         //WARNING: if you have to change something in this test, you need to modify BPMNToProc.handleConnector

@@ -438,17 +438,18 @@ public class ExportConnectorArchiveOperation {
                         }
                     }
                 }
-            }else{ //Search in provided jars
-                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
-                if(is != null){
-                    final IFile jarFile = classpathFolder.getFile(jarName) ;
-                    if(!jarFile.exists()){
-                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
-                    }
-                }else{
-                    return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;
-                }
             }
+//            else{ //Search in provided jars
+//                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
+//                if(is != null){
+//                    final IFile jarFile = classpathFolder.getFile(jarName) ;
+//                    if(!jarFile.exists()){
+//                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
+//                    }
+//                }else{
+//                    return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;
+//                }
+//            }
         }
         for(final String jarName : impl.getJarDependencies().getJarDependency()){
             if(ignoredLibs.contains(jarName)){
@@ -465,17 +466,18 @@ public class ExportConnectorArchiveOperation {
                         }
                     }
                 }
-            }else{ //Search in provided jars
-                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
-                if(is != null){
-                    final IFile jarFile = classpathFolder.getFile(jarName) ;
-                    if(!jarFile.exists()){
-                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
-                    }
-                }else{
-                    return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;
-                }
             }
+//            else{ //Search in provided jars
+//                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
+//                if(is != null){
+//                    final IFile jarFile = classpathFolder.getFile(jarName) ;
+//                    if(!jarFile.exists()){
+//                        jarFile.create(is, true, AbstractRepository.NULL_PROGRESS_MONITOR) ;
+//                    }
+//                }else{
+//                    return ValidationStatus.error(Messages.bind(Messages.implementationDepNotFound,jarName)) ;
+//                }
+//            }
         }
         return Status.OK_STATUS ;
     }

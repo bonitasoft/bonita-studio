@@ -18,12 +18,19 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class GroovyScriptConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
+    private static final String DEFINITION_ID = "scripting-groovy-script";
+    
     public GroovyScriptConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-groovy", "1.1.2"),
                 "bonita-connector-groovy-1.1.1.jar", 
                 "bonita-connector-scripting-groovy-impl-.*.jar",
                 "bonita-connector-scripting-groovy-script-impl-.*.jar",
                 "bonita-connector-scripting-1.1.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

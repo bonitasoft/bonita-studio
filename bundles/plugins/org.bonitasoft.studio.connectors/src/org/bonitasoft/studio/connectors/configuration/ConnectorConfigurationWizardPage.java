@@ -16,12 +16,9 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -34,7 +31,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
@@ -42,7 +38,6 @@ import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFacto
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -55,7 +50,6 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -76,8 +70,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -209,7 +201,6 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
             if(dispose){
                 adapterFactory.dispose() ;
             }
-            checkImplementationDependencies(impl) ;
             viewer.refresh() ;
             getContainer().updateMessage() ;
         }
@@ -295,8 +286,6 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         return Pics.getImage("connector.png",ConnectorPlugin.getDefault());
     }
 
-
-
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
         if(selectImplementationButton != null && !selectImplementationButton.isDisposed()){
@@ -304,32 +293,6 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         }
         if(clearImplementationButton != null && !clearImplementationButton.isDisposed()){
             clearImplementationButton.setEnabled(!viewer.getSelection().isEmpty()) ;
-        }
-    }
-
-    protected void checkImplementationDependencies(final ConnectorImplementation implementation) {
-        if(!implementation.getJarDependencies().getJarDependency().isEmpty()){
-            try {
-                final IProgressService service =  PlatformUI.getWorkbench().getProgressService() ;
-                service.run(true, false, new IRunnableWithProgress() {
-
-                    @Override
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(Messages.addingImplementationDependencies, IProgressMonitor.UNKNOWN) ;
-                        final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-                        for(final String jarName : implementation.getJarDependencies().getJarDependency()){
-                            if( depStore.getChild(jarName, true) == null){
-                                final InputStream is = getResourceProvider().getDependencyInputStream(jarName) ;
-                                if(is != null){
-                                    depStore.importInputStream(jarName, is) ;
-                                }
-                            }
-                        }
-                    }
-                }) ;
-            } catch (final Exception e){
-                BonitaStudioLog.error(e) ;
-            }
         }
     }
 

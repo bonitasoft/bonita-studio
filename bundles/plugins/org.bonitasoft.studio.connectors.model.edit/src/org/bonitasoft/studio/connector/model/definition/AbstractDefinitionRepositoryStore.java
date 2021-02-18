@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -39,8 +38,6 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceImpl;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -57,20 +54,10 @@ import org.osgi.framework.Bundle;
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IDefinitionRepositoryStore<T> {
 
-    private final List<T> providedConnectorDefFileStore = new ArrayList<T>();
-    private final List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
+   // private final List<T> providedConnectorDefFileStore = new ArrayList<T>();
 
     public AbstractDefinitionRepositoryStore() {
         super();
-        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements(
-                        "org.bonitasoft.studio.connectors.connectorDefFilter")) {
-            try {
-                filters.add((IConnectorDefinitionFilter) elem.createExecutableExtension("class"));
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
     }
 
     @Override
@@ -135,44 +122,32 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 .findFirst()
                 .orElse(null);
     }
-
-    @Override
-    public List<T> getChildren() {
-        final List<T> result = super.getChildren();
-        if (providedConnectorDefFileStore.isEmpty()) {
-            final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
-            if (connectorDefs != null) {
-                while (connectorDefs.hasMoreElements()) {
-                    final URL url = connectorDefs.nextElement();
-                    final String[] segments = url.getFile().split("/");
-                    final String fileName = segments[segments.length - 1];
-                    if (fileName.lastIndexOf(".") != -1) {
-                        final String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                        if (getCompatibleExtensions().contains(extension)) {
-                            final T defFileStore = getDefFileStore(url);
-                            boolean filtered = false;
-                            for (final IConnectorDefinitionFilter filter : filters) {
-                                try {
-                                    if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
-                                        filtered = true;
-                                    }
-                                } catch (ReadFileStoreException e) {
-                                    filtered = true;
-                                }
-                            }
-                            if (!filtered) {
-                                providedConnectorDefFileStore.add(defFileStore);
-                                result.add(defFileStore);
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            result.addAll(providedConnectorDefFileStore);
-        }
-        return result;
-    }
+//
+//    @Override
+//    public List<T> getChildren() {
+//        final List<T> result = super.getChildren();
+////        if (providedConnectorDefFileStore.isEmpty()) {
+////            final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
+////            if (connectorDefs != null) {
+////                while (connectorDefs.hasMoreElements()) {
+////                    final URL url = connectorDefs.nextElement();
+////                    final String[] segments = url.getFile().split("/");
+////                    final String fileName = segments[segments.length - 1];
+////                    if (fileName.lastIndexOf(".") != -1) {
+////                        final String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+////                        if (getCompatibleExtensions().contains(extension)) {
+////                            final T defFileStore = getDefFileStore(url);
+////                                providedConnectorDefFileStore.add(defFileStore);
+////                                result.add(defFileStore);
+////                        }
+////                    }
+////                }
+////            }
+////        } else {
+////            result.addAll(providedConnectorDefFileStore);
+////        }
+//        return result;
+//    }
 
     @Override
     public T getChild(final String fileName, boolean force) {
@@ -180,19 +155,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         if (file == null) {
             final URL url = getBundle().getResource(getName() + "/" + fileName);
             if (url != null) {
-                final T defFileStore = getDefFileStore(url);
-                if (defFileStore != null) {
-                    for (final IConnectorDefinitionFilter filter : filters) {
-                        try {
-                            if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
-                                return null;
-                            }
-                        } catch (ReadFileStoreException e) {
-                            return null;
-                        }
-                    }
-                }
-                return defFileStore;
+                return getDefFileStore(url);
             } else {
                 return null;
             }
@@ -228,7 +191,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                         .copy(((DocumentRoot) r.getContents().get(0)).getConnectorDefinition());
                 root.setConnectorDefinition(definition);
                 resource.getContents().add(root);
-                final Map<String, String> options = new HashMap<String, String>();
+                final Map<String, String> options = new HashMap<>();
                 options.put(XMLResource.OPTION_ENCODING, "UTF-8");
                 options.put(XMLResource.OPTION_XML_VERSION, "1.0");
                 final File target = new File(resourceURI.toFileString());

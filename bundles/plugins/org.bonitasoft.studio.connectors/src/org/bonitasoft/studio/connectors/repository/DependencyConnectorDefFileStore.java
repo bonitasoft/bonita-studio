@@ -89,6 +89,11 @@ public class DependencyConnectorDefFileStore extends ConnectorDefFileStore {
         return false;
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return true;
+    }
+    
     private static Map<String, Object> loadOptions() {
         Map<String, Object> loadOptions = new HashMap<>();
         loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);

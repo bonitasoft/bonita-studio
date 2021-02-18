@@ -14,14 +14,27 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class RestConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final Set<String> DEFINITIONS = Set.of(
+            "rest-get",
+            "rest-post",
+            "rest-put",
+            "rest-delete");
+    
     public RestConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-rest", "1.0.10"), 
                 "bonita-connector-rest-1.0.*.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

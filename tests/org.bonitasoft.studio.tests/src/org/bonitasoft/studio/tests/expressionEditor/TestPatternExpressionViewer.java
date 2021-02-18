@@ -23,7 +23,9 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -44,6 +46,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +73,12 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
+    @Before
+    public void setUp() throws Exception {
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3")
+                .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
 
     @Test
     public void testPatternExpressionViewer() {

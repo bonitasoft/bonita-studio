@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -25,13 +22,11 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
-import org.bonitasoft.studio.connector.model.definition.ImportDefinitionDepedenciesOperation;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
@@ -229,17 +224,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         if (page == null) {
             // something must have happened getting the next page
             return;
-        }
-        if (page instanceof AbstractConnectorConfigurationWizardPage) {
-            ImportDefinitionDepedenciesOperation importDefinitionDepedenciesOperation = new ImportDefinitionDepedenciesOperation(
-                    ((AbstractConnectorConfigurationWizardPage) page).getDefinition(),
-                    ((AbstractConnectorConfigurationWizardPage) page).getMessageProvider(), RepositoryManager.getInstance().getRepositoryStore(
-                            DependencyRepositoryStore.class));
-            try {
-                run(true, false, importDefinitionDepedenciesOperation);
-            } catch (InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
         }
 
         // show the next page

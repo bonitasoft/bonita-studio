@@ -23,7 +23,9 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
@@ -39,13 +41,20 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-public class TestTestConnectorOperation {
+public class TestConnectorOperationIT {
 
     private static final String GROOVY_DEF_VERSION = "1.0.1";
     private static final String GROOVY_DEF_ID = "scripting-groovy-script";
 
+    @Before
+    public void init() throws Exception {
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2");
+        addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
     @Test
     public void testBasicGroovyScript() throws InvocationTargetException, InterruptedException, ReadFileStoreException {
         TestConnectorOperation testConnectorOperation = createOperation();
@@ -71,9 +80,8 @@ public class TestTestConnectorOperation {
     }
 
     private ConnectorImplementation createConnectorImplementation() throws ReadFileStoreException {
-        ConnectorImplRepositoryStore c = RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorImplRepositoryStore.class);
-        return c.getChild(String.format("%s.impl", GROOVY_DEF_ID), true).getContent();
+        ConnectorImplRepositoryStore c = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        return c.getImplementations(GROOVY_DEF_ID, GROOVY_DEF_VERSION).stream().findFirst().orElse(null);
     }
 
     private Connector createConnectorOutput() {

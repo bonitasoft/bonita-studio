@@ -72,8 +72,9 @@ public class DependencyLookup {
                     csvData[6]);
         } else { //Not found
             String fileName = csvData[0];
-            String name = new File(fileName).getName();
-            return readPomProperties(fileName)
+            File file = new File(fileName);
+            String name = file.getName();
+            return readPomProperties(file)
                     .map(pomProperties -> new DependencyLookup(fileName,
                             csvData[1],
                             Status.valueOf(enumFormat(csvData)),
@@ -112,8 +113,7 @@ public class DependencyLookup {
         return csvData[2].toUpperCase().replace(" ", "_");
     }
 
-    private static Optional<Properties> readPomProperties(String filePath) {
-        File file = new File(filePath);
+    public static Optional<Properties> readPomProperties(File file) {
         String fileName = file.getName();
         String fileNameWithoutExtension = fileName.substring(0, fileName.length() - 4);
         try (JarFile jarFile = new JarFile(file)) {

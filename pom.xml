@@ -22,6 +22,7 @@
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
+		<bonita-project-report-model.version>0.0.1-SNAPSHOT</bonita-project-report-model.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.exclusions>
@@ -238,6 +239,11 @@
 				<groupId>org.bonitasoft.engine.data</groupId>
 				<artifactId>bonita-business-data-generator</artifactId>
 				<version>${engine.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bonitasoft.maven</groupId>
+				<artifactId>bonita-project-report-model</artifactId>
+				<version>${bonita-project-report-model.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>

@@ -57,10 +57,9 @@ public class AddDependencyOperation extends MavenModelOperation {
                 .stream()
                 .noneMatch(existingDep -> sameGAV(existingDep, dependency))) {
             model.getDependencies().add(dependency);
+            saveModel(getCurrentProject(), model, monitor);
+            getProjectDependenciesStore().analyze(monitor);
         }
-
-        saveModel(getCurrentProject(), model, monitor);
-        getProjectDependenciesStore().analyze(monitor);
     }
 
     private boolean sameGAV(Dependency existingDep, Dependency dependency) {

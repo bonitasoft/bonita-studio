@@ -38,6 +38,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -68,12 +69,14 @@ public class TestSubprocess {
     private RepositoryAccessor repositoryAccessor;
 
     @Before
-    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public void setUp() throws Exception {
         session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         store = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2");
+        addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @After

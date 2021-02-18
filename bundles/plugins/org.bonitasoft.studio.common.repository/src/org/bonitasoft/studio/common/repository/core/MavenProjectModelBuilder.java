@@ -110,6 +110,7 @@ public class MavenProjectModelBuilder {
 
         model.addProperty("bonita.version", getBonitaVersion());
         model.addProperty("groovy.version", "2.4.21");
+        model.addProperty("slf4j-api.version", "1.7.30");
         model.addProperty("maven.compiler.source", "11");
         model.addProperty("maven.compiler.target", "11");
         model.addProperty("project.build.sourceEncoding", "UTF-8");
@@ -124,6 +125,7 @@ public class MavenProjectModelBuilder {
             model.addDependency(providedDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}"));
         }
         model.addDependency(providedDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"));
+        model.addDependency(providedDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
 
         dependencies.stream().forEach(model::addDependency);
 

@@ -19,10 +19,17 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class SingleUserActorFilterDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final String DEFINITION_ID = "bonita-actorfilter-single-user";
+    
     public SingleUserActorFilterDependenciesReplacement() {
         super(dependency(ACTOR_FILTER_GROUP_ID, "bonita-actorfilter-single-user", "1.0.0"), 
                 "bonita-actorfilter-single-user-1.0.0.jar",
                 "bonita-userfilter-single-user-impl-1.0.0-SNAPSHOT.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

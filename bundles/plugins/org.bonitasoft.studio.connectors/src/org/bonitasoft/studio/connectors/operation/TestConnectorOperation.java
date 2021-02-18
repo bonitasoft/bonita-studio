@@ -16,7 +16,6 @@ package org.bonitasoft.studio.connectors.operation;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -53,16 +52,14 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
 import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -91,13 +88,11 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -130,7 +125,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String, Serializable>>();
     private final Map<String, Serializable> outputValues = new HashMap<String, Serializable>();
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
-    private Set<IRepositoryFileStore> additionalJars = new HashSet<>();
+    private Set<DependencyFileStore> additionalJars = new HashSet<>();
     private final List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
     private final Map<String, org.bonitasoft.studio.model.expression.Expression> invalidExpressionForTest = new HashMap<String, org.bonitasoft.studio.model.expression.Expression>();
     private IStatus status;
@@ -243,15 +238,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                     }
                 }
             }
-            final IFolder folder = project.getFolder("lib");
-            for (final IResource member : folder.members()) {
-                if (Objects.equals(member.getFileExtension(), "jar")) {
-                    if (shouldAddJarToClasspath(member.getLocation().toFile())) {
-                        jars.add(member.getLocation().toFile().toURI().toURL());
-                    }
-
-                }
-            }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
@@ -259,8 +245,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     private boolean shouldAddJarToClasspath(File jar) {
-        return implementation.getJarDependencies() != null && implementation.getJarDependencies().getJarDependency().contains(jar.getName()) || additionalJars.stream()
-                .map(IRepositoryFileStore::getName).anyMatch(jarName -> Objects.equals(jarName, jar.getName()));
+        return implementation.getJarDependencies() != null
+                && implementation.getJarDependencies().getJarDependency().contains(jar.getName())
+                || additionalJars.stream()
+                        .map(IRepositoryFileStore::getName).anyMatch(jarName -> Objects.equals(jarName, jar.getName()));
     }
 
     private void configureProcess(final Configuration configuration, final ConnectorImplementation implem) {
@@ -303,42 +291,32 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         if (!additionalJars.isEmpty()) {
             for (final FragmentContainer fc : configuration.getProcessDependencies()) {
                 if (FragmentTypes.OTHER.equals(fc.getId())) {
-                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject()
-                            .getFolder("lib");
-                    if (libFolder.exists()) {
-                        try {
-                            for (final IResource f : libFolder.members()) {
-                                if (f instanceof IFile && ((IFile) f).getFileExtension() != null
-                                        && ((IFile) f).getFileExtension().equalsIgnoreCase("jar")
-                                        && isSelectedJar(((IFile) f).getName())) {
-                                    final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-                                    fragment.setExported(true);
-                                    fragment.setKey(f.getName());
-                                    fragment.setValue(f.getName());
-                                    fragment.setType(FragmentTypes.JAR);
-                                    final AdapterFactoryEditingDomain domain = createEditingDomain();
-                                    domain.getCommandStack().execute(
-                                            AddCommand.create(domain, fc,
-                                                    ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
-                                                    fragment));
-                                }
-                            }
-                        } catch (final CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
+                    for (final DependencyFileStore f : additionalJars) {
+                        final Fragment fragment = createJarFragment(f.getFile());
+                        final AdapterFactoryEditingDomain domain = createEditingDomain();
+                        domain.getCommandStack().execute(
+                                AddCommand.create(domain, fc,
+                                        ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
+                                        fragment));
+                        f.getTransitiveDependencies().stream()
+                                .map(TestConnectorOperation::createJarFragment)
+                                .forEach(frag -> domain.getCommandStack().execute(
+                                        AddCommand.create(domain, fc,
+                                                ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS,
+                                                frag)));
                     }
                 }
             }
         }
     }
 
-    private boolean isSelectedJar(final String fileName) {
-        for (final IRepositoryFileStore fileStore : additionalJars) {
-            if (fileStore.getName().equals(fileName)) {
-                return true;
-            }
-        }
-        return false;
+    private static Fragment createJarFragment(File f) {
+        final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+        fragment.setExported(true);
+        fragment.setKey(f.getName());
+        fragment.setValue(f.getName());
+        fragment.setType(FragmentTypes.JAR);
+        return fragment;
     }
 
     private AdapterFactoryEditingDomain createEditingDomain() {
@@ -446,21 +424,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
     public static Set<String> checkImplementationDependencies(final ConnectorImplementation implementation,
             final IProgressMonitor monitor) {
-        final Set<String> dependencies = new HashSet<String>();
+        final Set<String> dependencies = new HashSet<>();
         if (!implementation.getJarDependencies().getJarDependency().isEmpty()) {
-            final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
-                    .getRepositoryStore(DependencyRepositoryStore.class);
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(
-                    RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),
-                    ConnectorPlugin.getDefault().getBundle());
             for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
                 dependencies.add(jarName);
-                if (depStore.getChild(jarName, true) == null) {
-                    final InputStream is = resourceProvider.getDependencyInputStream(jarName);
-                    if (is != null) {
-                        depStore.importInputStream(jarName, is);
-                    }
-                }
             }
         }
         return dependencies;
@@ -516,11 +483,11 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
-    public Set<IRepositoryFileStore> getAdditionalJars() {
+    public Set<DependencyFileStore> getAdditionalJars() {
         return additionalJars;
     }
 
-    public void setAdditionalJars(final Set<IRepositoryFileStore> additionalJars) {
+    public void setAdditionalJars(final Set<DependencyFileStore> additionalJars) {
         this.additionalJars = additionalJars;
     }
 

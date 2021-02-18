@@ -15,6 +15,8 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,10 +41,9 @@ public class TestSwitchRepository extends TestCase {
             final DiagramFileStore newDiagram = new NewDiagramCommandHandler().newDiagram();
             newDiagram.open();
         }
+        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
     }
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
+   
     @Override
     protected void tearDown() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);

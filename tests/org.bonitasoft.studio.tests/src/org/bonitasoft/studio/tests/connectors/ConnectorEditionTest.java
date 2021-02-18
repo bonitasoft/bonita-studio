@@ -19,7 +19,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.ExtendedCategory;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
@@ -64,6 +66,8 @@ public class ConnectorEditionTest {
     @Before
     public void setUp() throws Exception {
         FileActionDialog.setDisablePopup(true);
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2")
+                .run(AbstractRepository.NULL_PROGRESS_MONITOR);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                 .setValue(BonitaAdvancedPreferencePage.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
     }
@@ -138,8 +142,9 @@ public class ConnectorEditionTest {
         bot.button(IDialogConstants.FINISH_LABEL).click();
         final ConnectorDefRepositoryStore store = RepositoryManager
                 .getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        ConnectorDefinitionRegistry connectorDefinitionRegistry = store.getResourceProvider().getConnectorDefinitionRegistry();
-        final ExtendedConnectorDefinition connectorDef = connectorDefinitionRegistry.find(id,version).orElse(null);
+        ConnectorDefinitionRegistry connectorDefinitionRegistry = store.getResourceProvider()
+                .getConnectorDefinitionRegistry();
+        final ExtendedConnectorDefinition connectorDef = connectorDefinitionRegistry.find(id, version).orElse(null);
         assertEquals("category size should be equal to 1", 1, connectorDef.getCategory().size());
         SWTBotConnectorTestUtil.activateConnectorDefEditionShell(bot);
         ExtendedCategory category = connectorDefinitionRegistry.find(connectorDef.getCategory().get(0)).orElse(null);

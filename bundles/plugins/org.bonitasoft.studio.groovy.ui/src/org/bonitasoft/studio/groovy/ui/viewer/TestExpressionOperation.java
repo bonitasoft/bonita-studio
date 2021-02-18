@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
+import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -48,9 +50,6 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -64,7 +63,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
     private Serializable result;
     private Map<String, Serializable> inputValues = new HashMap<String, Serializable>();
     private org.bonitasoft.studio.model.expression.Expression expression;
-    private Set<IRepositoryFileStore> additionalJars;
+    private Set<DependencyFileStore> additionalJars;
 
     /*
      * (non-Javadoc)
@@ -88,23 +87,17 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             new ConfigurationSynchronizer(proc, configuration).synchronize();
             for (final FragmentContainer fc : configuration.getProcessDependencies()) {
                 if (additionalJars != null && FragmentTypes.OTHER.equals(fc.getId())) {
-                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-                    if (libFolder.exists()) {
-                        for (final IResource f : libFolder.members()) {
-                            if (f instanceof IFile && ((IFile) f).getFileExtension() != null && ((IFile) f).getFileExtension().equalsIgnoreCase("jar")
-                                    && isSelectedJar(((IFile) f).getName())) {
-                                final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-                                fragment.setExported(true);
-                                fragment.setKey(f.getName());
-                                fragment.setValue(f.getName());
-                                fragment.setType(FragmentTypes.JAR);
-                                fc.getFragments().add(fragment);
-                            }
-                        }
+                    for (final DependencyFileStore f : additionalJars) {
+                        final Fragment fragment = createJarFragment(f.getFile());
+                        fc.getFragments().add(fragment);
+                        f.getTransitiveDependencies().stream()
+                                .map(TestExpressionOperation::createJarFragment)
+                                .forEach(frag ->  fc.getFragments().add(frag));
                     }
                 }
                 if (FragmentTypes.GROOVY_SCRIPT.equals(fc.getId())) {
-                    final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+                    final GroovyRepositoryStore store = RepositoryManager.getInstance()
+                            .getRepositoryStore(GroovyRepositoryStore.class);
                     final List<GroovyFileStore> fileStores = store.getChildren();
                     for (final IRepositoryFileStore fileStore : fileStores) {
                         final String name = fileStore.getName();
@@ -118,14 +111,16 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                 }
             }
 
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc, configuration);
+            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,
+                    configuration);
 
             undeployProcess(proc, processApi);
             final ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
             processApi.enableProcess(procId);
             expression.setReturnType(Object.class.getName());
-            result = processApi.evaluateExpressionOnProcessDefinition(EngineExpressionUtil.createExpression(expression), inputValues, procId);
+            result = processApi.evaluateExpressionOnProcessDefinition(EngineExpressionUtil.createExpression(expression),
+                    inputValues, procId);
         } catch (final Exception e) {
             result = e;
         } finally {
@@ -143,13 +138,13 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         }
     }
 
-    private boolean isSelectedJar(final String fileName) {
-        for (final IRepositoryFileStore fileStore : additionalJars) {
-            if (fileStore.getName().equals(fileName)) {
-                return true;
-            }
-        }
-        return false;
+    private static Fragment createJarFragment(File file) {
+        final Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+        fragment.setExported(true);
+        fragment.setKey(file.getName());
+        fragment.setValue(file.getName());
+        fragment.setType(FragmentTypes.JAR);
+        return fragment;
     }
 
     private AbstractProcess createAbstractProcess() {
@@ -167,11 +162,13 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         this.expression = expression;
     }
 
-    protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi) throws InvalidSessionException,
+    protected void undeployProcess(final AbstractProcess process, final ProcessAPI processApi)
+            throws InvalidSessionException,
             ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
         final long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
         if (nbDeployedProcesses > 0) {
-            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses,
+            final List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0,
+                    (int) nbDeployedProcesses,
                     ProcessDeploymentInfoCriterion.DEFAULT);
             for (final ProcessDeploymentInfo info : processes) {
                 if (info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())) {
@@ -190,11 +187,11 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         inputValues = variableMap;
     }
 
-    public Set<IRepositoryFileStore> getAdditionalJars() {
+    public Set<DependencyFileStore> getAdditionalJars() {
         return additionalJars;
     }
 
-    public void setAdditionalJars(final Set<IRepositoryFileStore> additionalJars) {
+    public void setAdditionalJars(final Set<DependencyFileStore> additionalJars) {
         this.additionalJars = additionalJars;
     }
 

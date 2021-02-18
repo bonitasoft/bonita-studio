@@ -24,9 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestSpecificWizardIds {
@@ -45,7 +48,13 @@ public class TestSpecificWizardIds {
 		WIZARD_IDS.put("database-postgresql84","1.0.0");
 		WIZARD_IDS.put("database-postgresql92","1.0.0");
 		WIZARD_IDS.put("database-mssqlserver","1.2.1");
-	};
+	}
+	
+	@Before
+	public void setUp() throws Exception {
+	    AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3");
+	    addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+	}
 
 	@Test
 	public void testSpecificWizardDefinitionId() throws Exception {

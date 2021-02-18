@@ -57,9 +57,15 @@ public class JarLookupOperation implements IRunnableWithProgress {
     private Set<String> repositories = new HashSet<>();
     private File fileToLookup;
     private IStatus status = Status.OK_STATUS;
+    private String localRepositoryUrl;
 
     public JarLookupOperation(File fileToLookup) {
         this.fileToLookup = fileToLookup;
+    }
+
+    public JarLookupOperation addLocalRespository(String localRepositoryUrl) {
+        this.localRepositoryUrl = localRepositoryUrl;
+        return this;
     }
 
     public JarLookupOperation addRemoteRespository(String repositoryUrl) {
@@ -69,14 +75,61 @@ public class JarLookupOperation implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(String.format(Messages.lookupDependencyFor, fileToLookup.getName()), IProgressMonitor.UNKNOWN);
+        monitor.beginTask(String.format(Messages.lookupDependencyFor, fileToLookup.getName()),
+                IProgressMonitor.UNKNOWN);
+        Properties properties = DependencyLookup.readPomProperties(fileToLookup)
+                .orElse(null);
+        if (properties != null) {
+            result = tryGetDependency(properties);
+        }
+        if (result == null) { // Use sha1 lookup
+            try {
+                result = lookup();
+            } catch (CoreException e) {
+                status = e.getStatus();
+            } catch (IOException e) {
+                status = new Status(IStatus.ERROR, getClass(), "Dependency lookup fails for " + fileToLookup.getName(),
+                        e);
+            }
+        }
+    }
+
+    private DependencyLookup tryGetDependency(Properties properties) throws InvocationTargetException {
+        String groupId = properties.getProperty("groupId");
+        String artifactId = properties.getProperty("artifactId");
+        String version = properties.getProperty("version");
+        Path tempLocalRepo = null;
         try {
-            result = lookup();
+            if (localRepositoryUrl == null) {
+                tempLocalRepo = Files.createTempDirectory("m2Repo");
+                localRepositoryUrl = tempLocalRepo.toFile().getAbsolutePath();
+            }
+            File localRepository = new File(localRepositoryUrl);
+            for (String repository : repositories) {
+                    MavenExecutionResult executionResult = runDependencyGetPlugin(groupId, artifactId, version,
+                            null,
+                            localRepository, repository);
+                    if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+                        return new DependencyLookup(fileToLookup.getName(),
+                                null,
+                                DependencyLookup.Status.FOUND,
+                                groupId,
+                                artifactId,
+                                version,
+                                null,
+                                repository);
+                    }
+            }
         } catch (CoreException e) {
             status = e.getStatus();
         } catch (IOException e) {
-            status = new Status(IStatus.ERROR, getClass(), "Dependency lookup fails for " + fileToLookup.getName(), e);
+            throw new InvocationTargetException(e);
+        } finally {
+            if (tempLocalRepo != null && tempLocalRepo.toFile().exists()) {
+                FileUtil.deleteDir(tempLocalRepo.toFile());
+            }
         }
+        return null;
     }
 
     private DependencyLookup lookup() throws IOException, CoreException {
@@ -114,7 +167,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
             throws CoreException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
-        request.setGoals(List.of(String.format("%s:%s:%s", 
+        request.setGoals(List.of(String.format("%s:%s:%s",
                 BONITA_PROJECT_PLUGIN_GROUP_ID,
                 BONITA_PROJECT_PLUGIN_ARTIFACT_ID,
                 LOOKUP_GOAL)));
@@ -123,6 +176,39 @@ public class JarLookupOperation implements IRunnableWithProgress {
         userProperties.setProperty("outputDir", outputDir.toFile().getAbsolutePath());
         if (!repositories.isEmpty()) {
             userProperties.setProperty("repositoryUrl", repositories.stream().collect(Collectors.joining(",")));
+        }
+        request.setUserProperties(userProperties);
+        return context.execute(new ICallable<MavenExecutionResult>() {
+
+            @Override
+            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
+                    throws CoreException {
+                return maven().lookup(Maven.class).execute(request);
+            }
+        }, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
+    private MavenExecutionResult runDependencyGetPlugin(String groupId,
+            String artifactId,
+            String version,
+            String classifier,
+            File localRepo,
+            String remoteRepo) throws CoreException {
+        final IMavenExecutionContext context = maven().createExecutionContext();
+        final MavenExecutionRequest request = context.getExecutionRequest();
+        request.setLocalRepository(null);
+        request.setLocalRepositoryPath(localRepo);
+        request.setGoals(List.of("dependency:get"));
+        Properties userProperties = new Properties();
+        userProperties.setProperty("groupId", groupId);
+        userProperties.setProperty("artifactId", artifactId);
+        userProperties.setProperty("version", version);
+        userProperties.setProperty("packaging", "jar");
+        if (classifier != null) {
+            userProperties.setProperty("classifier", classifier);
+        }
+        if (remoteRepo != null) {
+            userProperties.setProperty("remoteRepositories", remoteRepo);
         }
         request.setUserProperties(userProperties);
         return context.execute(new ICallable<MavenExecutionResult>() {

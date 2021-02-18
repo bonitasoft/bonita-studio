@@ -31,6 +31,7 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -56,9 +57,11 @@ public class TestUserFilterMatchingEngineVersion {
     private RepositoryAccessor repositoryAccessor;
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.actorfilter", "bonita-actorfilter-single-user", "1.0.0");
+        addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @After

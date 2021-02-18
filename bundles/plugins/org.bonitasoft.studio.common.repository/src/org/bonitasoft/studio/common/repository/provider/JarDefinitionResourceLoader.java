@@ -46,13 +46,16 @@ public class JarDefinitionResourceLoader implements DefinitionImageResourceLoade
     }
 
     private Image loadImage(String iconPath) {
-        try (InputStream is = new JarFile(file).getInputStream(new JarEntry(iconPath))) {
-            return ImageDescriptor
-                    .createFromImage(new Image(Display.getCurrent(), new ImageData(is)))
-                    .createImage();
-        } catch (IOException e) {
-            return null;
+        if (iconPath != null) {
+            try (InputStream is = new JarFile(file).getInputStream(new JarEntry(iconPath))) {
+                return ImageDescriptor
+                        .createFromImage(new Image(Display.getCurrent(), new ImageData(is)))
+                        .createImage();
+            } catch (IOException e) {
+                return null;
+            }
         }
+        return null;
     }
 
 }

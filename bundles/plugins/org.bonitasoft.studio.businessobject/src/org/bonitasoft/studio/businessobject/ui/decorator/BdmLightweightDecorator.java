@@ -61,7 +61,8 @@ public class BdmLightweightDecorator extends LabelProvider
 
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        if (!PlatformUI.isWorkbenchRunning() || ResourcesPlugin.getWorkspace() == null || !repositoryAccessor.hasActiveRepository() || !repositoryAccessor.getCurrentRepository().isLoaded()) {
+        if (!PlatformUI.isWorkbenchRunning() || ResourcesPlugin.getWorkspace() == null
+                || !repositoryAccessor.hasActiveRepository() || !repositoryAccessor.getCurrentRepository().isLoaded()) {
             return;
         }
 
@@ -141,8 +142,12 @@ public class BdmLightweightDecorator extends LabelProvider
     }
 
     private boolean isDeployRequired() {
-        return BusinessObjectPlugin.getDefault().getPreferenceStore()
-                .getBoolean(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY);
+        if (BusinessObjectPlugin.getDefault() != null
+                && BusinessObjectPlugin.getDefault().getPreferenceStore() != null) {
+            return BusinessObjectPlugin.getDefault().getPreferenceStore()
+                    .getBoolean(BusinessObjectModelFileStore.BDM_DEPLOY_REQUIRED_PROPERTY);
+        }
+        return false;
     }
 
     private boolean updateDeployRequiredProperty(IResourceDelta delta) {

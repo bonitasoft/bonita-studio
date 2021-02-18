@@ -92,7 +92,7 @@ public class ExportConnectorWizard extends Wizard {
             return new ConnectorImplementationContentProvider(repositoryStore, definition.getId(),
                     definition.getVersion());
         }
-        return new ConnectorImplementationContentProvider(repositoryStore, false);
+        return new ConnectorImplementationContentProvider(repositoryStore, true);
     }
 
     protected IRepositoryStore getRepositoryStore() {

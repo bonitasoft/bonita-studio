@@ -16,7 +16,6 @@ package org.bonitasoft.studio.configuration;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,14 +24,12 @@ import java.util.Set;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -148,26 +145,10 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                 SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion));
         if (implementation != null) {
             updateConnectorDependencies(configuration, association, implementation, cc, editingDomain, false);
-            importImplementationDependencies(implementation);
         }
     }
 
     protected abstract List<ConnectorImplementation> getAllImplementations(String defId, String defVersion);
-
-    protected void importImplementationDependencies(final ConnectorImplementation implementation) {
-        if (!implementation.getJarDependencies().getJarDependency().isEmpty()) {
-            final DefinitionResourceProvider resourceProvider = getDefinitionResourceProvider();
-            final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-            for (final String jarName : implementation.getJarDependencies().getJarDependency()) {
-                if (depStore.getChild(jarName, true) == null) {
-                    final InputStream is = resourceProvider.getDependencyInputStream(jarName);
-                    if (is != null) {
-                        depStore.importInputStream(jarName, is);
-                    }
-                }
-            }
-        }
-    }
 
     protected abstract DefinitionResourceProvider getDefinitionResourceProvider();
 

@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
@@ -201,7 +202,7 @@ public class TestGroovyScriptUtil {
     }
 
     public static Object testScript(final String expression, final String returnType, final Map<String, Serializable> variableMap,
-            final Set<IRepositoryFileStore> additionalJars) throws GroovyException, LoginException, ExpressionEvaluationException, InvocationTargetException,
+            final Set<DependencyFileStore> additionalJars) throws GroovyException, LoginException, ExpressionEvaluationException, InvocationTargetException,
             InterruptedException {
         final TestExpressionOperation operation = new TestExpressionOperation();
         operation.setExpression(ExpressionHelper.createGroovyScriptExpression(expression, returnType));
@@ -212,7 +213,7 @@ public class TestGroovyScriptUtil {
     }
 
     public static void evaluateExpression(final String expressionContent, final String returnType, final Map<String, Serializable> context,
-            final Set<IRepositoryFileStore> additionalJars) {
+            final Set<DependencyFileStore> additionalJars) {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final IRunnableWithProgress testRunnable = new IRunnableWithProgress() {
 

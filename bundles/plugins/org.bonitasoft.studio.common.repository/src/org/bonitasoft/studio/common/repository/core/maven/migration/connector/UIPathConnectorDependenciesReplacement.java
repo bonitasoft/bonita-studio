@@ -14,10 +14,17 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class UIPathConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
+    
+    private static final Set<String> DEFINITIONS = Set.of(
+            "uipath-add-queueItem",
+            "uipath-getjob",
+            "uipath-startjob");
     
     public UIPathConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-uipath", "2.2.0"), 
@@ -30,6 +37,11 @@ public class UIPathConnectorDependenciesReplacement extends BonitaJarDependencyR
                 "bonita-connector-uipath-1.0.2.jar",
                 "bonita-connector-uipath-1.0.1.jar",
                 "bonita-connector-uipath-1.0.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }
