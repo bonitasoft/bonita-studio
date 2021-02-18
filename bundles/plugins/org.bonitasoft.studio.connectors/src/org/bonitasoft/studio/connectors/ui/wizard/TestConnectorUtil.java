@@ -110,7 +110,7 @@ public class TestConnectorUtil {
 			operation.setImplementation(impl) ;
 			operation.setConnectorConfiguration(configuration) ;
 			operation.setConnectorOutput(connector);
-			Set<IRepositoryFileStore> additionalJars = jd != null ? jd.getSelectedJars() :new HashSet<>();
+			Set<DependencyFileStore> additionalJars = jd != null ? jd.getSelectedJars() :new HashSet<>();
 			//Always add BDM jar if present
 			DependencyFileStore bdmJarFileStore = depStore.getChild(BDM_JAR_NAME, false);
             if(bdmJarFileStore != null) {

@@ -97,22 +97,6 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
     }
 
     @Override
-    public ConnectorImplFileStore getChild(String fileName, boolean force) {
-        ConnectorImplFileStore file = super.getChild(fileName, force);
-        if (file == null) {
-            URL url = ConnectorPlugin.getDefault().getBundle().getResource(STORE_NAME + "/" + fileName);
-            if (url != null) {
-                return new URLConnectorImplFileStore(url, this);
-            } else {
-                return null;
-            }
-        } else {
-            return file;
-        }
-
-    }
-
-    @Override
     public List<ConnectorImplFileStore> getChildren() {
         List<ConnectorImplFileStore> result = super.getChildren();
         Enumeration<URL> connectorImplementations = ConnectorPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*.impl", false);

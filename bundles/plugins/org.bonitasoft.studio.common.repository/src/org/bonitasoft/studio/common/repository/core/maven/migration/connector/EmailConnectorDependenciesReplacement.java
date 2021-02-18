@@ -19,6 +19,8 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class EmailConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final String DEFINITION_ID = "email";
+    
     public EmailConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-email", "1.3.0"), 
                 "bonita-connector-email-1.1.0.jar",
@@ -31,6 +33,11 @@ public class EmailConnectorDependenciesReplacement extends BonitaJarDependencyRe
                 "bonita-connector-email-1.3.0.jar",
                 "bonita-connector-email-impl-.*.jar"
                 );
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

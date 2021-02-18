@@ -689,14 +689,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.connectors.database.drivers.prop"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.businessobject"
          download-size="0"
          install-size="0"

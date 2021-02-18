@@ -68,7 +68,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     private static final String CLASS = "class";
     public static final IValidator<InputStream> DEFAULT_MODEL_VALIDATOR = is -> ValidationStatus.ok();
     private IFolder folder;
-    private IRepository repository;
+    protected IRepository repository;
 
     @Override
     public void createRepositoryStore(final IRepository repository) {

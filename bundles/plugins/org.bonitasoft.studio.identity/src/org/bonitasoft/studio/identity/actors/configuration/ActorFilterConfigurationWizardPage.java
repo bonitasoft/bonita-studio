@@ -126,7 +126,6 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
             if (dispose) {
                 adapterFactory.dispose();
             }
-            checkImplementationDependencies(impl);
             viewer.refresh();
             getContainer().updateMessage();
         }

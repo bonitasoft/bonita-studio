@@ -15,7 +15,10 @@
 package org.bonitasoft.studio.common.repository.core.maven.migration;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.JarLookupOperation;
@@ -90,9 +94,16 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 .filter(f -> !dependenciesToRemove.contains(f.getName()))
                 .collect(Collectors.toSet());
 
+        Path localM2Repo;
+        try {
+            localM2Repo = Files.createTempDirectory("localM2repo");
+        } catch (IOException e) {
+            throw new InvocationTargetException(e);
+        }
         for (File jarToLookup : jarsToLookup) {
             JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
             repositories.stream().forEach(jarLookupOperation::addRemoteRespository);
+            jarLookupOperation.addLocalRespository(localM2Repo.toFile().getAbsolutePath());
             monitor.subTask(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
             jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             monitor.worked(1);
@@ -105,6 +116,9 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
             } else {
                 //TODO add a migration issue in the report model
             }
+        }
+        if(localM2Repo != null) {
+            FileUtil.deleteDir(localM2Repo.toFile());
         }
     }
 

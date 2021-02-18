@@ -148,7 +148,7 @@ public class ProjectDependenciesResolver {
             if (a != null) {
                 Artifact artifact = project.getArtifactMap()
                         .get(a.getGroupId() + ":" + node.getArtifact().getArtifactId());
-                if (artifact != null) {
+                if (artifact != null && "compile".equals(artifact.getScope())) {
                     result.add(artifact);
                 }
             }

@@ -14,11 +14,23 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
-
 public class CMISConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
-    
+
+    private static final Set<String> DEFINITIONS = Set.of(
+            "cmis-createfolder",
+            "cmis-deletefolder",
+            "cmis-deletedocument",
+            "cmis-deleteversionofdocument",
+            "cmis-downloaddocument",
+            "cmis-listdocuments",
+            "cmis-uploadnewdocument",
+            "cmis-uploadnewdocuments",
+            "cmis-uploadnewversionofdocument");
+
     public CMISConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-cmis", "3.0.5"),
                 "bonita-connector-cmis-3.0.*.jar",
@@ -29,8 +41,12 @@ public class CMISConnectorDependenciesReplacement extends BonitaJarDependencyRep
                 "bonita-connector-cmis-deleteversionofdocument-impl-.*.jar",
                 "bonita-connector-cmis-downloaddocument-impl-.*.jar",
                 "bonita-connector-cmis-uploadnewdocument-impl-.*.jar",
-                "bonita-connector-cmis-uploadnewversionofdocument-impl-.*.jar"
-                );
+                "bonita-connector-cmis-uploadnewversionofdocument-impl-.*.jar");
+    }
+
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

@@ -30,6 +30,7 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -99,10 +100,12 @@ public class ConnectorImplFileStore extends EMFFileStore<ConnectorImplementation
     protected void doDelete() {
         if (FileActionDialog.confirmDeletionQuestion(getName())) {
             ConnectorImplementation implementation = null;
-            try {
-                implementation = getContent();
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), ConnectorPlugin.PLUGIN_ID);
+            if (getResource() instanceof IFile) {
+                try {
+                    implementation = getContent();
+                } catch (ReadFileStoreException e) {
+                    BonitaStudioLog.warning(e.getMessage(), ConnectorPlugin.PLUGIN_ID);
+                }
             }
             super.doDelete();
             if (implementation != null) {

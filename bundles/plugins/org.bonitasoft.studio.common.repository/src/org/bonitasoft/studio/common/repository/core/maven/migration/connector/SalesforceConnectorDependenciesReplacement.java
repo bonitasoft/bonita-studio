@@ -14,10 +14,19 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class SalesforceConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
+    
+    private static final Set<String> DEFINITIONS = Set.of(
+            "salesforce-createsobject",
+            "salesforce-deletesobjects",
+            "salesforce-querysobjects",
+            "salesforce-retrievesobjects",
+            "salesforce-updatesobject");
     
     public SalesforceConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-salesforce", "1.1.3"), 
@@ -30,6 +39,11 @@ public class SalesforceConnectorDependenciesReplacement extends BonitaJarDepende
                 "bonita-connector-salesforce-querysobjects-impl-.*.jar",
                 "bonita-connector-salesforce-retrievesobjects-impl-.*.jar",
                 "bonita-connector-salesforce-updatesobject-impl-.*.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

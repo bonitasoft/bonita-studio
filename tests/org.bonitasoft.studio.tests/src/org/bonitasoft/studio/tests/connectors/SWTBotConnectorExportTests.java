@@ -30,9 +30,7 @@ import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
-import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ExportConnectorArchiveOperation;
@@ -45,27 +43,14 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotConnectorExportTests {
-
-    private static final String CONNCTOR_EMAIL_IMPL_ID = "email-impl";
-    private String emailConnectorVersion = "1.0.0";
+    
     private SWTGefBot bot = new SWTGefBot();
 
-    @Before
-    public void initializeEmailVersion() {
-        final ConnectorImplRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(ConnectorImplRepositoryStore.class);
-        for (final ConnectorImplementation impl : store.getImplementations()) {
-            if (CONNCTOR_EMAIL_IMPL_ID.equals(impl.getImplementationId())) {
-                emailConnectorVersion = impl.getImplementationVersion();
-            }
-        }
-    }
 
     private void exportConnector(final String connector, final String fileName,
             final boolean hasDependencies, final boolean hasSources) throws Exception {
@@ -89,23 +74,6 @@ public class SWTBotConnectorExportTests {
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.connectors.i18n.Messages.exportStatusTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
         checkExportedFile(exportPath, fileName, hasDependencies, hasSources);
-    }
-
-    @Test
-    public void testBonitaConnectorExport() throws Exception {
-        final String emailConnector = "email-impl (" + emailConnectorVersion
-                + ") -- org.bonitasoft.connectors.email.EmailConnector";
-        final String fileName = "email-impl-" + emailConnectorVersion + ".zip";
-        exportConnector(emailConnector, fileName, true, false);
-    }
-
-    @Test
-    public void testRewriteBonitaConnectorExport() throws Exception {
-        final String emailConnector = "email-impl (" + emailConnectorVersion
-                + ") -- org.bonitasoft.connectors.email.EmailConnector";
-        final String fileName = "email-impl-" + emailConnectorVersion + ".zip";
-        exportConnector(emailConnector, fileName, true, false);
-        exportConnector(emailConnector, fileName, true, false);
     }
 
     @Test

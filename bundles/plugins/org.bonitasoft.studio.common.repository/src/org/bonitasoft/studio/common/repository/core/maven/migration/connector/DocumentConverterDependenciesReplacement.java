@@ -19,6 +19,8 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class DocumentConverterDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final String DEFINITION_ID = "document-converter";
+    
     public DocumentConverterDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-document-converter", "2.1.0"),
                 "bonita-connector-document-converter-2.1.0.jar",
@@ -27,6 +29,11 @@ public class DocumentConverterDependenciesReplacement extends BonitaJarDependenc
                 "bonita-connector-document-converter-1.0.2.jar",
                 "bonita-connector-document-converter-1.0.1.jar",
                 "bonita-connector-document-converter-impl-1.0.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

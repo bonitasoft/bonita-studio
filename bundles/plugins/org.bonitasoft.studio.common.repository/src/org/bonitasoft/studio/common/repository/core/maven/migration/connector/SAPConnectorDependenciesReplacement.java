@@ -18,6 +18,8 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class SAPConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
+    private static final String DEFINITION_ID = "sap-jco3-callfunction";
+    
     public SAPConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-sap", "2.0.2"),
                 "bonita-connector-sap-2.0.2.jar",
@@ -26,6 +28,11 @@ public class SAPConnectorDependenciesReplacement extends BonitaJarDependencyRepl
                 "bonita-connector-sap-jco2-impl-.*.jar",
                 "bonita-sp-connector-sap-1.1.0.jar",
                 "bonita-sp-connector-sap-impl-1.0.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

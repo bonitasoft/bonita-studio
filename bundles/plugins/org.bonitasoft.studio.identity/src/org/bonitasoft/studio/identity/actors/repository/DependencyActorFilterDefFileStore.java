@@ -88,6 +88,11 @@ public class DependencyActorFilterDefFileStore extends ActorFilterDefFileStore {
     public boolean canBeShared() {
         return false;
     }
+    
+    @Override
+    public boolean isReadOnly() {
+        return true;
+    }
 
     private static Map<String, Object> loadOptions() {
         Map<String, Object> loadOptions = new HashMap<>();

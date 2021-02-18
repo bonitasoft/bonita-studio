@@ -19,10 +19,17 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class CustomUserInfoActorFilterDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final String DEFINITION_ID = "bonita-actorfilter-custom-user-info";
+    
     public CustomUserInfoActorFilterDependenciesReplacement() {
         super(dependency(ACTOR_FILTER_GROUP_ID, "bonita-actorfilter-custom-user-info", "1.0.0"), 
                 "bonita-actorfilter-custom-user-info-1.0.0.jar",
                 "bonita-userfilter-custom-user-info-impl-1.0.0-SNAPSHOT.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -48,11 +49,14 @@ public class RemoveDependencyOperation extends MavenModelOperation {
         dependency.setClassifier(classifier);
         dependency.setType(type);
 
-        model.getDependencies()
-                .removeIf(existingDep -> sameGAV(existingDep, dependency));
-
-        saveModel(getCurrentProject(), model, monitor);
-        getProjectDependenciesStore().analyze(monitor);
+        Optional<Dependency> result = model.getDependencies().stream()
+                .filter(existingDep -> sameGAV(existingDep, dependency))
+                .findFirst();
+        if (result.isPresent()) {
+            model.getDependencies().remove(result.get());
+            saveModel(getCurrentProject(), model, monitor);
+            getProjectDependenciesStore().analyze(monitor);
+        }
     }
 
     private boolean sameGAV(Dependency existingDep, Dependency dependency) {

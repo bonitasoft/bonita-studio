@@ -28,7 +28,7 @@ public class BotDatabaseAccesInformationWizardPage extends AbstractBotWizardPage
 
     public BotConnectDatabaseDialog connectToDatabase() {
         SWTBotShell activeShell = bot.activeShell();
-        bot.buttonInGroup(Messages.connect, "Database connection").click();
+        bot.buttonInGroup(Messages.connect, Messages.databaseConnection).click();
         return new BotConnectDatabaseDialog(bot, activeShell);
     }
 

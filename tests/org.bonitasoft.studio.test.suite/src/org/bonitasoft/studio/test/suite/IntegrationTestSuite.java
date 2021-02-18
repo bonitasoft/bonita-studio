@@ -23,7 +23,6 @@ import org.bonitasoft.studio.tests.TestPatchedBundles;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestSpecificWizardIds;
 import org.bonitasoft.studio.tests.actors.TestImportActorFilter;
-import org.bonitasoft.studio.tests.actors.TestProvidedActorFilterDefinitionAndImplementation;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bar.ExportBarIT;
 import org.bonitasoft.studio.tests.bar.TestExportProcessBar;
@@ -39,8 +38,7 @@ import org.bonitasoft.studio.tests.connectors.DriverAssociationContributionIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.connectors.TestImportConnector;
-import org.bonitasoft.studio.tests.connectors.TestProvidedDefinitionAndImplementation;
-import org.bonitasoft.studio.tests.connectors.TestTestConnectorOperation;
+import org.bonitasoft.studio.tests.connectors.TestConnectorOperationIT;
 import org.bonitasoft.studio.tests.connectors.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.deploy.TestDeployCommand;
@@ -66,7 +64,6 @@ import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
 import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.properties.TestMessageRefactoring;
-import org.bonitasoft.studio.tests.repository.TestAddJar;
 import org.bonitasoft.studio.tests.repository.TestImportExportAndDeleteRepository;
 import org.bonitasoft.studio.tests.repository.TestImportRepository;
 import org.bonitasoft.studio.tests.repository.TestRepositoryLocation;
@@ -112,7 +109,6 @@ import org.junit.runners.Suite;
         ProcBuilderTests.class,
         TestImportRepository.class,
         TestImportBPMN2.class,
-        TestAddJar.class,
         TestOperationHistory.class,
         TestDecisionTableToGroovy.class,
         TestSubprocessEventExport.class,
@@ -120,8 +116,6 @@ import org.junit.runners.Suite;
         TestShowEngineLog.class,
         DriverAssociationContributionIT.class,
         TestProcessZoo.class,
-        TestProvidedDefinitionAndImplementation.class,
-        TestProvidedActorFilterDefinitionAndImplementation.class,
         TestDatabaseConnectorResulset.class,
         TestBOSArchiveImport.class,
         TestExportProcessBar.class,
@@ -134,7 +128,7 @@ import org.junit.runners.Suite;
         TestUserFilterMatchingEngineVersion.class,
         TestDeployCommand.class,
         TestValidationConstraints.class,
-        TestTestConnectorOperation.class,
+        TestConnectorOperationIT.class,
         TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
         DocumentMigrationIT.class,

@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,6 +50,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.model.IModelSearch;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.exporter.Activator;
 import org.bonitasoft.studio.exporter.Messages;
@@ -389,7 +392,14 @@ public class BonitaToBPMNExporter {
         }
         Optional<File> connectorDefFile = modelSearch.getConnectorDefinitions().stream()
                 .filter(def -> Objects.equals(def.getId(), connectorDefId))
-                .map(def -> new File(def.eResource().getURI().toFileString()))
+                .map(def -> {
+                    try {
+                        return createTmpDefinitionFile(def);
+                    } catch (IOException e) {
+                       errors.add(e.getMessage());
+                       return null;
+                    }
+                })
                 .findFirst();
         if (connectorDefFile.isPresent()) {
             generateXSDForConnector(connectorDefFile.get());
@@ -397,6 +407,19 @@ public class BonitaToBPMNExporter {
             errors.add("The connector with id " + connectorDefId + " was not found.");
         }
         return connectorDefFile.orElse(null);
+    }
+
+    private File createTmpDefinitionFile(ConnectorDefinition definition) throws IOException {
+        final Map<String, String> options = new HashMap<>();
+        options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+        options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+        Path tmpFile = Files.createTempFile(definition.getId(), ".def");
+        org.bonitasoft.studio.connector.model.definition.DocumentRoot root = (org.bonitasoft.studio.connector.model.definition.DocumentRoot) definition.eResource().getContents().get(0);
+        root.getXMLNSPrefixMap().clear();
+        try (OutputStream os = Files.newOutputStream(tmpFile)) {
+            definition.eResource().save(os, options);
+        }
+        return tmpFile.toFile();
     }
 
     private void addConnectorDefInXsdIfNotYetIncluded(final File connectorDefFile) {
@@ -429,7 +452,7 @@ public class BonitaToBPMNExporter {
 
     private static Templates xslTemplate = null;
 
-    private void generateXSDForConnector(final File connectorToTransform)
+    private void generateXSDForConnector(final File connectorToTransformWC)
             throws URISyntaxException, IOException, TransformerException {
         if (xslTemplate == null) {
             final TransformerFactory transFact = TransformerFactory.newInstance();
@@ -441,15 +464,13 @@ public class BonitaToBPMNExporter {
 
         //FIXME: this is only a workaround because currently we can't serialize the xml file in a way that both EMF and xslt can handle it correctly
         // see http://java.dzone.com/articles/emf-reading-model-xml-%E2%80%93-how
-        final File connectorToTransformWC = File.createTempFile(connectorToTransform.getName(), "");
-        FileUtil.copy(connectorToTransform, connectorToTransformWC);
         FileUtil.replaceStringInFile(connectorToTransformWC,
                 "xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"",
                 "xmlns=\"http://www.bonitasoft.org/ns/connector/definition/6.0\" xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"");
 
         final Source xmlSource = new StreamSource(connectorToTransformWC);
 
-        final String generatedXsdName = connectorToTransform.getName() + "connectors.xsd";
+        final String generatedXsdName = connectorToTransformWC.getName() + "connectors.xsd";
         final File connectorsDefFolder = new File(
                 destBpmnFile.getParentFile().getAbsolutePath() + File.separator + "connectorDefs");
         if (!connectorsDefFolder.exists()) {
@@ -462,7 +483,7 @@ public class BonitaToBPMNExporter {
             transformer.setParameter("indent", true);
             transformer.transform(xmlSource, result);
         } finally {
-            connectorToTransformWC.delete();
+            Files.delete(connectorToTransformWC.toPath());
         }
     }
 
@@ -1193,7 +1214,7 @@ public class BonitaToBPMNExporter {
             if (processSource != null) {
                 inputAssignment.setFrom(createBPMNExpressionFromString(processSource.getName()));
                 final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget(), modelSearch);
-                if(dataTo != null) {
+                if (dataTo != null) {
                     inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
                     dia.getAssignment().add(inputAssignment);
                 }

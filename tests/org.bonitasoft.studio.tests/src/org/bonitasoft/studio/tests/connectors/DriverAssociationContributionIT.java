@@ -25,9 +25,11 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.connectors.util.DriverConstants;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
+@Ignore
 public class DriverAssociationContributionIT {
 
     @Test

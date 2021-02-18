@@ -173,7 +173,7 @@ public class PackageFileStore extends AbstractFileStore<IFolder> {
         if (packageFragment != null) {
             packageFragment.delete(true, new NullProgressMonitor());//delete the first one, we have only one package per Type
             packageFragment = retrieveParentPackageFragment(project, packageFragment);
-            while (!packageFragment.hasChildren()) {
+            while (packageFragment != null && !packageFragment.hasChildren()) {
                 //I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
                 final IPackageFragment parent = retrieveParentPackageFragment(project, packageFragment);
                 packageFragment.delete(true, new NullProgressMonitor());

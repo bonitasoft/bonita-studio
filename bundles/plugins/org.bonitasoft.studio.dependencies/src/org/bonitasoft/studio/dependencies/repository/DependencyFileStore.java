@@ -42,6 +42,8 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class DependencyFileStore extends AbstractFileStore<InputStream> {
 
+    public static final DependencyFileStore NULL = new DependencyFileStore("", null);
+
     public DependencyFileStore(final String fileName, final DependencyRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
@@ -65,10 +67,6 @@ public class DependencyFileStore extends AbstractFileStore<InputStream> {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
     @Override
     protected void doSave(final Object content) {
         if (content instanceof InputStream) {

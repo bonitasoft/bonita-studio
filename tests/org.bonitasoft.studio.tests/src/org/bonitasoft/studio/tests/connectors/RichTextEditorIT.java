@@ -16,6 +16,8 @@ package org.bonitasoft.studio.tests.connectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -30,6 +32,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotBrowser;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,6 +40,12 @@ import org.junit.runner.RunWith;
 public class RichTextEditorIT {
 
     private SWTGefBot bot = new SWTGefBot();
+
+    @Before
+    public void setUp() throws Exception {
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-email", "1.3.0")
+                .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
 
     @Test
     public void should_rich_text_editor_write_html_output() throws Exception {

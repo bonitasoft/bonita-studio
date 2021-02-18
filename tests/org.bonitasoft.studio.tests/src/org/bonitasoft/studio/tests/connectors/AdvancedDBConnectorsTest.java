@@ -9,8 +9,10 @@
 package org.bonitasoft.studio.tests.connectors;
 
 import org.assertj.core.api.Assertions;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -25,10 +27,13 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@Ignore
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class AdvancedDBConnectorsTest {
 
@@ -39,6 +44,13 @@ public class AdvancedDBConnectorsTest {
 
     @Rule
     public final SWTGefBotRule botRule = new SWTGefBotRule(bot);
+    
+    @Before
+    public void setUp() throws Exception {
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3")
+                .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
 
     @Test
     public void testAdvancedDBConnectorsWithGraphicalQueryBuilderContainingVariable()

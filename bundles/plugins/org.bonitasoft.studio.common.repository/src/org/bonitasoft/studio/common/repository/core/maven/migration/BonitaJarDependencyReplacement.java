@@ -92,6 +92,11 @@ public abstract class BonitaJarDependencyReplacement {
         return Stream.of(jarFilePatterns).anyMatch(jarName::matches);
     }
     
+    public boolean matchesDefinition(String definitionId) {
+        return false;
+    }
+
+    
     public Dependency getMavenDependency() {
         return mavenDependency;
     }

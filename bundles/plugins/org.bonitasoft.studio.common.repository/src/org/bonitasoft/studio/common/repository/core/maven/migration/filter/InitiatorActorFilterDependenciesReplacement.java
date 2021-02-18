@@ -19,10 +19,17 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class InitiatorActorFilterDependenciesReplacement extends BonitaJarDependencyReplacement {
     
+    private static final String DEFINITION_ID = "bonita-actorfilter-initiator";
+    
     public InitiatorActorFilterDependenciesReplacement() {
         super(dependency(ACTOR_FILTER_GROUP_ID, "bonita-actorfilter-initiator", "1.0.0"), 
                 "bonita-actorfilter-initiator-1.0.0.jar",
                 "bonita-userfilter-initiator-impl-1.0.0-SNAPSHOT.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

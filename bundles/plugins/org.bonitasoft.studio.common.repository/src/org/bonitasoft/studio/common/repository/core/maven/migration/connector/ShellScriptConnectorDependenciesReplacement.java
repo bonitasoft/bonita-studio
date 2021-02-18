@@ -18,12 +18,19 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class ShellScriptConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
+    private static final String DEFINITION_ID = "scripting-shell";
+    
     public ShellScriptConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-shell-script", "1.1.2"),
                 "bonita-connector-shell-script-1.1.2.jar", 
                 "bonita-connector-shell-script-1.1.0.jar", 
                 "bonita-connector-scripting-1.1.0.jar",
                 "bonita-connector-scripting-shell-impl-.*.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

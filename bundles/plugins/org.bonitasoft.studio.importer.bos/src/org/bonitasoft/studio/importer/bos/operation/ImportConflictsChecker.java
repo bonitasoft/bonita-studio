@@ -64,8 +64,12 @@ public class ImportConflictsChecker {
                         compareDatabaseConnectorProperties(storeInCurrentRepo, importedStore, bosArchive);
                     } else {
                         final File file = storeInCurrentRepo.getResource().getLocation().toFile();
-                        compareFolders(bosArchive, file.listFiles(), importedStore.getFolders());
-                        compareFiles(bosArchive, file.listFiles(), importedStore.getFiles());
+                        File[] files = file.listFiles();
+                        if(files == null) {
+                            files = new File[0];
+                        }
+                        compareFolders(bosArchive, files, importedStore.getFolders());
+                        compareFiles(bosArchive, files, importedStore.getFiles());
                     }
                 });
     }
@@ -124,8 +128,12 @@ public class ImportConflictsChecker {
                         .filter(File::isDirectory)
                         .forEach(folderInCurrentRepo -> {
                             if (Objects.equals(folderInCurrentRepo.getName(), folderFromArchive.getFolderName())) {
-                                compareFolders(bosArchive, folderInCurrentRepo.listFiles(), folderFromArchive.getFolders());
-                                compareFiles(bosArchive, folderInCurrentRepo.listFiles(), folderFromArchive.getFiles());
+                                File[] files = folderInCurrentRepo.listFiles();
+                                if(files == null) {
+                                    files = new File[0];
+                                }
+                                compareFolders(bosArchive, files, folderFromArchive.getFolders());
+                                compareFiles(bosArchive, files, folderFromArchive.getFiles());
                             }
                         }));
     }

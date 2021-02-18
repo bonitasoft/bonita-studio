@@ -18,12 +18,19 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class WebServiceConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
+    private static final String DEFINITION_ID = "webservice";
+    
     public WebServiceConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-webservice", "1.3.2"),
                 "bonita-connector-webservice-1.3.*.jar",
                 "bonita-connector-webservice-1.2.*.jar",
                 "bonita-connector-webservice-1.1.*.jar",
                 "bonita-connector-webservice-impl-1.0.*.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

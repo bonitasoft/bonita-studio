@@ -14,10 +14,17 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class TwitterConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
+   
+    private static final Set<String> DEFINITIONS = Set.of(
+            "twitter-direct",
+            "twitter-update-status");
+    
     
     public TwitterConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-twitter", "1.2.1"),
@@ -25,6 +32,11 @@ public class TwitterConnectorDependenciesReplacement extends BonitaJarDependency
                 "bonita-connector-twitter-1.2.0.jar",
                 "bonita-connector-twitter-direct-impl-.*.jar",
                 "bonita-connector-twitter-update-impl-.*.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

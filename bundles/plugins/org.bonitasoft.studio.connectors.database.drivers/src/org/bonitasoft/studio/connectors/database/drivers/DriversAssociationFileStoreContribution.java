@@ -58,20 +58,20 @@ public class DriversAssociationFileStoreContribution implements
     }
 
     private void createGenericDriverList(final IRepositoryStore<? extends IRepositoryFileStore> repository) {
-        final Enumeration<URL> drivers = ConnectorPlugin.getDefault().getBundle().findEntries("drivers", "*.jar", false);
-        final List<String> jarList = new ArrayList<>();
-        while (drivers.hasMoreElements()) {
-            final URL url = drivers.nextElement();
-            final String file = url.getFile();
-            final String[] segments = file.split("/");
-            final String name = segments[segments.length - 1];
-            jarList.add(name);
-        }
-
-        final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) repository
-                .createRepositoryFileStore(DriverConstants.GENERIC_DEFINITION_ID);
-        file.setAutoAddDriver(false);
-        file.setJarList(jarList);
+//        final Enumeration<URL> drivers = ConnectorPlugin.getDefault().getBundle().findEntries("drivers", "*.jar", false);
+//        final List<String> jarList = new ArrayList<>();
+//        while (drivers.hasMoreElements()) {
+//            final URL url = drivers.nextElement();
+//            final String file = url.getFile();
+//            final String[] segments = file.split("/");
+//            final String name = segments[segments.length - 1];
+//            jarList.add(name);
+//        }
+//
+//        final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) repository
+//                .createRepositoryFileStore(DriverConstants.GENERIC_DEFINITION_ID);
+//        file.setAutoAddDriver(false);
+//        file.setJarList(jarList);
     }
 
     private void createDatabaseDriverAssociation(final IRepositoryStore<? extends IRepositoryFileStore> repository,

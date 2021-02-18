@@ -21,7 +21,6 @@
 		<dependency>
 			<groupId>org.bonitasoft.maven</groupId>
 			<artifactId>bonita-project-report-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -42,7 +41,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.maven</groupId>
 									<artifactId>bonita-project-report-model</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
+									<version>${bonita-project-report-model.version}</version>
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${lib.dir}</outputDirectory>

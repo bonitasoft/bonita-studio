@@ -18,6 +18,8 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDep
 
 public class LDAPConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
+    private static final String DEFINITION_ID = "ldap";
+    
     public LDAPConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-ldap", "1.2.1"), 
                 "bonita-connector-ldap-1.2.1.jar",
@@ -25,6 +27,11 @@ public class LDAPConnectorDependenciesReplacement extends BonitaJarDependencyRep
                 "bonita-connector-ldap-1.1.0.jar",
                 "bonita-connector-ldap-impl-1.0.1.jar",
                 "bonita-connector-ldap-impl-1.0.0.jar");
+    }
+    
+    @Override
+    public boolean matchesDefinition(String definitionId) {
+        return DEFINITION_ID.equals(definitionId);
     }
 
 }

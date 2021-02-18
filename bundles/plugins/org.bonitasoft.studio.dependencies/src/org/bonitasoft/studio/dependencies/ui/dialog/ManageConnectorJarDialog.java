@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -66,7 +67,7 @@ public class ManageConnectorJarDialog extends Dialog {
 	private ViewerFilter searchFilter;
 	protected CheckboxTableViewer languageViewer;
 
-	protected Set<IRepositoryFileStore> selectedJars = new HashSet<>();
+	protected Set<DependencyFileStore> selectedJars = new HashSet<>();
 	private ViewerFilter filter;
 	private String title;
 	private String infoLabel;
@@ -188,14 +189,14 @@ public class ManageConnectorJarDialog extends Dialog {
 	/**
 	 * @return the selectedJars
 	 */
-	public Set<IRepositoryFileStore> getSelectedJars() {
+	public Set<DependencyFileStore> getSelectedJars() {
 		return selectedJars;
 	}
 
 	/**
 	 * @param selectedJars the selectedJars to set
 	 */
-	public void setSelectedJars(Set<IRepositoryFileStore> selectedJars) {
+	public void setSelectedJars(Set<DependencyFileStore> selectedJars) {
 		this.selectedJars = selectedJars;
 	}
 

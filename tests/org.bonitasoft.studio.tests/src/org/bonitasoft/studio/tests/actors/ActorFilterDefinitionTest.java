@@ -19,12 +19,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -40,10 +43,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * @author Aur�lie Zara
- */
-
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ActorFilterDefinitionTest {
 
@@ -53,7 +52,10 @@ public class ActorFilterDefinitionTest {
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
 
     @Before
-    public void activateActorFilterDefinitonShell() {
+    public void activateActorFilterDefinitonShell() throws CoreException {
+        new AddDependencyOperation("org.bonitasoft.actorfilter", "bonita-actorfilter-single-user", "1.0.0")
+            .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        
         SWTBotActorFilterUtil.activateActorFilterDefinitionShell(bot);
         bot.waitUntil(Conditions.shellIsActive("New actor filter definition"));
     }

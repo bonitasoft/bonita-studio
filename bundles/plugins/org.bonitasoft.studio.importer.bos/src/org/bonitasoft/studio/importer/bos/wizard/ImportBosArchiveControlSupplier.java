@@ -661,7 +661,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     private ParseBosArchiveOperation newParseOperation(File selectedFile) {
         return new ParseBosArchiveOperation(selectedFile,
-                mode == RepositoryMode.EXISTING ? repositoryAccessor.getCurrentRepository()
+                mode == RepositoryMode.NEW ? repositoryAccessor.getCurrentRepository()
                         : repositoryAccessor.getRepository(switchRepositoryStrategy.getTargetRepository()));
     }
 

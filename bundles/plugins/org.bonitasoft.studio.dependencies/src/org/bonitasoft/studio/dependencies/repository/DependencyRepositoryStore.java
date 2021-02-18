@@ -15,28 +15,33 @@
 package org.bonitasoft.studio.dependencies.repository;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
-/**
- * @author Romain Bioteau
- */
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
 
     public static final String STORE_NAME = "lib";
@@ -47,47 +52,79 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     private Map<String, String> runtimeDependencies;
+    private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver();
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-     */
+    @Override
+    public void createRepositoryStore(IRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public IFolder getResource() {
+        final IProject project = repository.getProject();
+        return project.getFolder(getName());
+    }
+    
+    @Override
+    protected DependencyFileStore doImportInputStream(String fileName, InputStream inputStream) {
+        return DependencyFileStore.NULL;
+    }
+    
+    @Override
+    protected DependencyFileStore doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
+            throws CoreException {
+        return DependencyFileStore.NULL;
+    }
+    
+    @Override
+    public boolean canBeExported() {
+        return false;
+    }
+    
+    @Override
+    public boolean canBeShared() {
+        return false;
+    }
+    
+    @Override
+    protected List<IResource> listChildren() throws CoreException {
+        return Collections.emptyList();
+    }
+
     @Override
     public DependencyFileStore createRepositoryFileStore(final String fileName) {
-        return new DependencyFileStore(fileName, this);
+        return DependencyFileStore.NULL;
     }
 
     @Override
     public List<DependencyFileStore> getChildren() {
-        List<DependencyFileStore> children = super.getChildren();
         try {
-            new ProjectDependenciesResolver().getCompileDependencies(getRepository().getProject(),
+            return projectDependenciesResolver.getCompileDependencies(getRepository().getProject(),
                     AbstractRepository.NULL_PROGRESS_MONITOR)
                     .stream()
                     .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
-                    .forEach(children::add);
+                    .collect(Collectors.toList());
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
-            return children;
+            return Collections.emptyList();
         }
-        return children;
     }
-    
+
     @Override
     public DependencyFileStore getChild(String fileName, boolean force) {
-         DependencyFileStore fileStore = super.getChild(fileName, force);
-         if(fileStore == null) {
+        DependencyFileStore fileStore = super.getChild(fileName, force);
+        if (fileStore == null) {
             try {
-                return new ProjectDependenciesResolver().findCompileDependency(fileName, getRepository().getProject(),
+                return projectDependenciesResolver.findCompileDependency(fileName, getRepository().getProject(),
                         AbstractRepository.NULL_PROGRESS_MONITOR)
-                 .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
-                 .orElse(null);
+                        .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
+                        .orElse(null);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e);
                 return null;
             }
-         }
-         return fileStore;
+        }
+        return fileStore;
     }
 
     protected static Set<String> retriveAllJarFilesFrom(final File root) {
@@ -105,37 +142,21 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return allJarFiles;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
     @Override
     public String getName() {
         return STORE_NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
     @Override
     public String getDisplayName() {
         return Messages.dependenciesRepository;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return Pics.getImage("dependencies.png", DependenciesPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
     @Override
     public Set<String> getCompatibleExtensions() {
         return extensions;

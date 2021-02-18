@@ -19,8 +19,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
 import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -57,29 +55,6 @@ public class TestImportExportAndDeleteRepository extends TestCase {
         /* Test delete of the artifact */
         artifact.delete();
         assertEquals("The delete of groovy doesn't work.", nbOfGroovyArtifacts, store.getChildren().size());
-    }
-
-    @Test
-    public void testImportExportJar() throws Exception {
-        final DependencyRepositoryStore store = RepositoryManager.getInstance()
-                .getRepositoryStore(DependencyRepositoryStore.class);
-        final int nbOfJarArtifacts = store.getChildren().size();
-        final InputStream stream = TestImportExportAndDeleteRepository.class
-                .getResourceAsStream("JarForTestImportExportRepository.jar");
-        final IRepositoryFileStore artifact = store.importInputStream("JarForTestImportExportRepository.jar", stream);
-        assertEquals("import of jar doesn't work", nbOfJarArtifacts + 1, store.getChildren().size());
-        final String s = System.getProperty("java.io.tmpdir");
-        final File f = new File(s + File.separatorChar + "JarForTestImportExportRepository.jar");
-        f.delete();
-        artifact.export(f.getParentFile().getAbsolutePath());
-        final FileInputStream fis = new FileInputStream(f);
-        assertTrue("The export of jar doesn't work.", fis.read() > 0);
-        fis.close();
-        f.delete();
-
-        /* Test delete of the artifact */
-        artifact.delete();
-        assertEquals("The delete of jar doesn't work.", nbOfJarArtifacts, store.getChildren().size());
     }
 
     @Test
