@@ -15,11 +15,8 @@
 package org.bonitasoft.studio.connectors.operation;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,14 +86,10 @@ import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -107,8 +100,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -161,8 +152,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         APISession session = null;
         ProcessAPI processApi = null;
         long procId = -1;
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URLClassLoader projectClassloader = null;
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
@@ -180,8 +169,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             final ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
             processApi.enableProcess(procId);
-            projectClassloader = createProjectClassloader(monitor);
-            Thread.currentThread().setContextClassLoader(projectClassloader);
             result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(),
                     implementation.getDefinitionVersion(), inputParameters,
                     inputValues, outputOperations, outputValues, procId);
@@ -191,16 +178,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             status = new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, e.getMessage(), e);
             throw new InvocationTargetException(e);
         } finally {
-            if (cl != null) {
-                Thread.currentThread().setContextClassLoader(cl);
-            }
-            if (projectClassloader != null) {
-                try {
-                    projectClassloader.close();
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
             if (processApi != null && procId != -1) {
                 try {
                     processApi.disableProcess(procId);
@@ -213,35 +190,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
             }
         }
-    }
-
-    private URLClassLoader createProjectClassloader(final IProgressMonitor monitor) {
-        final List<URL> jars = new ArrayList<>();
-        try {
-            // Synchronize with build jobs
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
-            Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
-
-            IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
-            IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-            final String workspacePath = project.getLocation().toFile().getParent();
-            final String outputPath = workspacePath + javaProject.getOutputLocation().toString();
-            jars.add(new File(outputPath).toURI().toURL());
-            for (final IClasspathEntry entry : javaProject.getRawClasspath()) {
-                if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-                    File jar = entry.getPath().toFile();
-                    if (!jar.exists()) { // jar location relative to project
-                        jar = new File(workspacePath + File.separator + jar);
-                    }
-                    if (shouldAddJarToClasspath(jar)) {
-                        jars.add(jar.toURI().toURL());
-                    }
-                }
-            }
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]), BusinessArchive.class.getClassLoader());
     }
 
     private boolean shouldAddJarToClasspath(File jar) {
