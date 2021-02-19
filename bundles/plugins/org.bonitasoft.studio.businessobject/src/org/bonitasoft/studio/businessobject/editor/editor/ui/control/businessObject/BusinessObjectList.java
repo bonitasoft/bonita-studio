@@ -266,7 +266,8 @@ public class BusinessObjectList {
     }
 
     private void updatePackage(AbstractBdmFormPage formPage, BusinessObject bo, String name) {
-        Package newPackage = input.getValue().getPackages().stream().filter(pakage -> Objects.equals(name, pakage.getName()))
+        Package newPackage = input.getValue().getPackages().stream()
+                .filter(pakage -> Objects.equals(name, pakage.getName()))
                 .findFirst().orElseThrow(() -> new RuntimeException(String.format("Unable to find package %s", name)));
         Package oldPackage = (Package) bo.eContainer();
 
@@ -365,7 +366,8 @@ public class BusinessObjectList {
     public Function<Object, IStatus> businessObjectStatusProvider(IValidator... validators) {
         return element -> Stream.of(validators)
                 .map(v -> v.validate(element))
-                .map(status -> status instanceof MultiStatus ? Arrays.asList(status.getChildren()) : Arrays.asList(status))
+                .map(status -> status instanceof MultiStatus ? Arrays.asList(status.getChildren())
+                        : Arrays.asList(status))
                 .flatMap(Collection::stream)
                 .collect(StatusCollectors.toMultiStatus());
     }
@@ -432,11 +434,18 @@ public class BusinessObjectList {
         viewer.applyEditorValue();
         List<String> existingPackages = input.getValue().getPackages().stream().map(Package::getName)
                 .collect(Collectors.toList());
-        String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.DEFAULT_PACKAGE_NAME, existingPackages);
+        String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.DEFAULT_PACKAGE_NAME,
+                existingPackages);
         Package newPackage = new PackageBuilder().withName(newPackageName).create();
         input.getValue().getPackages().add(newPackage);
         addBusinessObject(formPage, newPackage, false);
-        viewer.getControl().getDisplay().asyncExec(() -> viewer.editElement(newPackage, 0));
+        viewer.getControl().getDisplay().asyncExec(() -> {
+            if (viewer != null 
+                    && viewer.getControl() != null 
+                    && !viewer.getControl().isDisposed()) {
+                viewer.editElement(newPackage, 0);
+            }
+        });
     }
 
     private void addBusinessObject(AbstractBdmFormPage formPage) {
@@ -462,7 +471,8 @@ public class BusinessObjectList {
                         .withLength(255)
                         .create())
                 .create();
-        formPage.getConverter().createDefaultQueries(newBusinessObject).forEach(newBusinessObject.getDefaultQueries()::add);
+        formPage.getConverter().createDefaultQueries(newBusinessObject)
+                .forEach(newBusinessObject.getDefaultQueries()::add);
         pakage.getBusinessObjects().add(newBusinessObject);
         formPage.getEditorContribution().refreshBusinessObjectList();
         viewer.getControl().getDisplay().asyncExec(() -> {
