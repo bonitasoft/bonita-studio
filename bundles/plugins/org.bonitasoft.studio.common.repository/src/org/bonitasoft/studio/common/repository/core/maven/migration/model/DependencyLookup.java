@@ -17,6 +17,8 @@ package org.bonitasoft.studio.common.repository.core.maven.migration.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -41,6 +43,9 @@ public class DependencyLookup {
     private String version;
     private final String repository;
     private String classifier;
+    private boolean selected;
+    private File tmpFile;
+    private boolean isUsed;
 
     public DependencyLookup(String fileName,
             String sha1,
@@ -58,6 +63,37 @@ public class DependencyLookup {
         this.version = version;
         this.classifier = classifier;
         this.repository = repository;
+        if (status == Status.NOT_FOUND) {
+            tmpFile = copy();
+        }
+    }
+
+    private File copy() {
+        File file = new File(fileName);
+        if (file.isFile()) {
+            String name = file.getName();
+            try {
+                Path tempDirectory = Files.createTempDirectory("depLookup");
+                return Files.copy(file.toPath(), tempDirectory.resolve(name)).toFile();
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
+    }
+
+    public void deleteCopy() {
+        if (tmpFile != null) {
+            try {
+                Files.deleteIfExists(tmpFile.toPath());
+                File parentFile = tmpFile.getParentFile();
+                if(parentFile != null) {
+                    Files.deleteIfExists(parentFile.toPath());
+                }
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     public static DependencyLookup fromCSV(String[] csvData) {
@@ -96,14 +132,14 @@ public class DependencyLookup {
 
     private static String guessClassifier(String fileName, String groupId, String artifactId, String version) {
         String name = new File(fileName).getName();
-        if(name.equals(String.format("%s-%s.jar", artifactId, version))) {
+        if (name.equals(String.format("%s-%s.jar", artifactId, version))) {
             // Not classified
             return null;
         }
         Matcher matcher = Pattern
-                .compile(String.format("%s-%s-(.*).jar", artifactId,version))
+                .compile(String.format("%s-%s-(.*).jar", artifactId, version))
                 .matcher(name);
-        if(matcher.find()) {
+        if (matcher.find()) {
             return matcher.group(1);
         }
         return null;
@@ -114,7 +150,7 @@ public class DependencyLookup {
     }
 
     public static Optional<Properties> readPomProperties(File file) {
-        String fileName = file.getName();
+        var fileName = file.getName();
         String fileNameWithoutExtension = fileName.substring(0, fileName.length() - 4);
         try (JarFile jarFile = new JarFile(file)) {
             return jarFile.stream()
@@ -183,6 +219,22 @@ public class DependencyLookup {
         return repository;
     }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+    
+    public boolean isUsed() {
+        return isUsed;
+    }
+    
+    public void setUsed(boolean isUsed) {
+        this.isUsed = isUsed;
+    }
+
     public Dependency toMavenDependency() {
         Dependency dependency = new Dependency();
         dependency.setArtifactId(artifactId);
@@ -190,6 +242,10 @@ public class DependencyLookup {
         dependency.setGroupId(groupId);
         dependency.setClassifier(classifier);
         return dependency;
+    }
+
+    public File getFile() {
+        return tmpFile;
     }
 
 }

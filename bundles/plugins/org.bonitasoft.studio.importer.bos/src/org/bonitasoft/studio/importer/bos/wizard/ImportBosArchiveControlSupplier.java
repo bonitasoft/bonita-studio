@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -75,6 +76,7 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
@@ -90,7 +92,7 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
 
-public class ImportBosArchiveControlSupplier implements ControlSupplier {
+public class ImportBosArchiveControlSupplier implements ControlSupplier, Supplier<ImportArchiveModel> {
 
     private static final int BUTTON_WIDTH = 80;
     private static final String BOS_EXTENSION = "*.bos";
@@ -144,7 +146,8 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         this.repositoryAccessor = repositoryAccessor;
         this.exceptionDialogHandler = exceptionDialogHandler;
         this.filePath = filePath;
-        newRepoObservable = PojoProperties.<ImportBosArchiveControlSupplier, String> value("newTargetRepo").observe(this);
+        newRepoObservable = PojoProperties.<ImportBosArchiveControlSupplier, String> value("newTargetRepo")
+                .observe(this);
         existingRepoObservable = PojoProperties.<ImportBosArchiveControlSupplier, String> value("existingTargetRepo")
                 .observe(this);
         this.switchRepositoryStrategy = switchRepositoryStrategy;
@@ -179,32 +182,35 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
 
     @Override
     public void pageChanged(PageChangedEvent event) {
-        repositoryModeObservable.setValue(
-                !newRepoObservable.getValue().isEmpty() ? RepositoryMode.NEW : RepositoryMode.EXISTING);
-        if (filePath != null) {
-            Display.getDefault().asyncExec(() -> {
-                File myFile = new File(filePath);
-                if (!myFile.exists()) {
-                    try {
-                        myFile = fetchArchive(filePath);
-                    } catch (FetchRemoteBosArchiveException e) {
-                        textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
-                                .error(String.format(Messages.cannotImportRemoteArchive, e.getLocalizedMessage())));
-                        return;
+        IWizardPage selectedPage = (IWizardPage) event.getSelectedPage();
+        if (Messages.importBosArchiveTitle.equals(selectedPage.getTitle())) {
+            repositoryModeObservable.setValue(
+                    !newRepoObservable.getValue().isEmpty() ? RepositoryMode.NEW : RepositoryMode.EXISTING);
+            if (filePath != null) {
+                Display.getDefault().asyncExec(() -> {
+                    File myFile = new File(filePath);
+                    if (!myFile.exists()) {
+                        try {
+                            myFile = fetchArchive(filePath);
+                        } catch (FetchRemoteBosArchiveException e) {
+                            textWidget.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                                    .error(String.format(Messages.cannotImportRemoteArchive, e.getLocalizedMessage())));
+                            return;
+                        }
                     }
-                }
-                archiveModel = parseArchive(myFile.getAbsolutePath());
-                if (archiveModel != null) {
-                    textWidget
-                            .setMessage(String.format("%s %s (%s)",
-                                    Messages.bosArchiveName,
-                                    myFile.getName(),
-                                    archiveModel.getBosArchive().getVersion()));
-                    importActionSelector.setArchiveModel(archiveModel);
-                    viewer.setInput(archiveModel);
-                    openTree();
-                }
-            });
+                    archiveModel = parseArchive(myFile.getAbsolutePath());
+                    if (archiveModel != null) {
+                        textWidget
+                                .setMessage(String.format("%s %s (%s)",
+                                        Messages.bosArchiveName,
+                                        myFile.getName(),
+                                        archiveModel.getBosArchive().getVersion()));
+                        importActionSelector.setArchiveModel(archiveModel);
+                        viewer.setInput(archiveModel);
+                        openTree();
+                    }
+                });
+            }
         }
     }
 
@@ -813,5 +819,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier {
         if (!newTargetRepo.isEmpty() && archiveModel != null) {
             updateTargetRepository(newTargetRepo);
         }
+    }
+
+    @Override
+    public ImportArchiveModel get() {
+        return archiveModel;
     }
 }

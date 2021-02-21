@@ -50,6 +50,7 @@ public class ParseBosArchiveOperation implements IRunnableWithProgress {
                     throw new InvocationTargetException(e);
                 }
             }
+            monitor.done();
         }
     }
 

@@ -17,20 +17,26 @@ package org.bonitasoft.studio.common.repository.core.maven;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class MavenProjectHelper {
 
@@ -49,7 +55,7 @@ public class MavenProjectHelper {
         }
     }
 
-    public void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
+    public void saveModel(IProject project, Model model) throws CoreException {
         var pomFile = project.getFile("pom.xml");
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
             pomWriter.write(stream, model);
@@ -57,7 +63,22 @@ public class MavenProjectHelper {
             throw new CoreException(
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
-        pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        pomFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
+    public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {
+        IMavenProjectFacade mavenFacade = getMavenProject(project);
+        if(mavenFacade != null) {
+            MavenProject mavenProject = mavenFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+            if(mavenProject != null) {
+                return mavenProject.getRemoteArtifactRepositories(); 
+            }
+        }
+       return Collections.emptyList();
+    }
+    
+    private IMavenProjectFacade getMavenProject(IProject project) throws CoreException {
+        return MavenPlugin.getMavenProjectRegistry().getProject(project);
     }
     
     public Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {

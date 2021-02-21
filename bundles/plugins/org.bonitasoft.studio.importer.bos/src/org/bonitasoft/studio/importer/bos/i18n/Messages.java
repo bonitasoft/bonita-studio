@@ -89,5 +89,14 @@ public class Messages extends NLS {
     public static String updateProjectDependencies;
     public static String dependenciesUsageAnalysis;
     public static String definitionUsageAnalysis;
+    public static String dependenciesPreviewTitle;
+    public static String dependenciesPreviewDescription;
+    public static String groupId;
+    public static String artifactId;
+    public static String version;
+    public static String resolvedFromRepository;
+    public static String cannotBeResolvedAgainstProvidedRepository;
+    public static String unresolvedDependenciesMessage;
+    public static String unusedDependenciesWarning;
 
 }

@@ -1005,4 +1005,11 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.apache.xerces"
+         download-size="0"
+         install-size="0"
+         version="2.12.1.v20201221-1309"
+         unpack="false"/>
+
 </feature>

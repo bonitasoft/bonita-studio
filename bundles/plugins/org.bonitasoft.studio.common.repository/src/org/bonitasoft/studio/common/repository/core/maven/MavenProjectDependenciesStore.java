@@ -40,6 +40,7 @@ import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -64,7 +65,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
-    private static final String ANALYZE_PROJECT_DEPENDENCIES_MESSAGE = "Analyze project dependencies...";
     private static final String DEAULT_REPORT_OUTPUT_FILE = "target/bonita-dependencies.json";
     public static final String PROJECT_DEPENDENCIES_ANALYZED_TOPIC = "bonita/project/analyzed";
     private static final String ANALYZE_PLUGIN_MARKER_TYPE =  CommonRepositoryPlugin.PLUGIN_ID + ".analyzePluginMarkerType";
@@ -153,8 +153,8 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     public IStatus runAnalyzePlugin(IProgressMonitor monitor)
             throws CoreException {
-        monitor.beginTask(ANALYZE_PROJECT_DEPENDENCIES_MESSAGE, IProgressMonitor.UNKNOWN);
-        BonitaStudioLog.info(ANALYZE_PROJECT_DEPENDENCIES_MESSAGE, CommonRepositoryPlugin.PLUGIN_ID);
+        monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
+        BonitaStudioLog.info(Messages.analyzeProjectDependencies, CommonRepositoryPlugin.PLUGIN_ID);
         IMaven maven = MavenPlugin.getMaven();
         final IMavenExecutionContext context = maven.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();

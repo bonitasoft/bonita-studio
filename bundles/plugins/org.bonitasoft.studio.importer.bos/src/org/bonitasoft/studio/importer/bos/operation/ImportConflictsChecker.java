@@ -52,6 +52,7 @@ public class ImportConflictsChecker {
             compareStore(store, bosArchive);
             monitor.worked(1);
         });
+        monitor.done();
     }
 
     private void compareStore(AbstractFolderModel importedStore, BosArchive bosArchive) {

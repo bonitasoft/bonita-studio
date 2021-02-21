@@ -110,9 +110,8 @@ public class BusinessObjectList {
     private IObservableValue<BusinessObject> businessObjectSelectionObservable = new WritableValue<>();
     private ToolItem deleteItem;
     private ToolItem addBoItem;
-    private ToolItem addPackageItem;
     private List<BusinessObject> boToFilter = new ArrayList<>();
-    private Set<Package> expandedPackages = new HashSet();
+    private Set<Package> expandedPackages = new HashSet<>();
 
     public BusinessObjectList(
             Composite parent, AbstractBdmFormPage formPage,
@@ -406,7 +405,7 @@ public class BusinessObjectList {
     }
 
     protected void createAddDeleteItems(AbstractBdmFormPage formPage, ToolBar toolBar) {
-        addPackageItem = new ToolItem(toolBar, SWT.PUSH);
+        ToolItem addPackageItem = new ToolItem(toolBar, SWT.PUSH);
         addPackageItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_PACKAGE_BUTTON_ID);
         addPackageItem.setImage(BusinessObjectPlugin.getImage("/icons/addPackageIcon.png"));
         addPackageItem.setText(Messages.addPackage);
@@ -438,11 +437,12 @@ public class BusinessObjectList {
                 existingPackages);
         Package newPackage = new PackageBuilder().withName(newPackageName).create();
         input.getValue().getPackages().add(newPackage);
-        addBusinessObject(formPage, newPackage, false);
+        BusinessObject newBusinessObject = addBusinessObject(formPage, newPackage);
         viewer.getControl().getDisplay().asyncExec(() -> {
             if (viewer != null 
                     && viewer.getControl() != null 
                     && !viewer.getControl().isDisposed()) {
+                viewer.expandToLevel(newBusinessObject, 1);
                 viewer.editElement(newPackage, 0);
             }
         });
@@ -453,10 +453,17 @@ public class BusinessObjectList {
         Package pakage = selectionObservable.getValue() instanceof Package
                 ? (Package) selectionObservable.getValue()
                 : (Package) ((BusinessObject) selectionObservable.getValue()).eContainer();
-        addBusinessObject(formPage, pakage, true);
+        BusinessObject newBusinessObject = addBusinessObject(formPage, pakage);
+        viewer.getControl().getDisplay().asyncExec(() -> {
+            if (viewer != null 
+                    && viewer.getControl() != null 
+                    && !viewer.getControl().isDisposed()) {
+                viewer.editElement(newBusinessObject, 0);
+            }
+        });
     }
 
-    private void addBusinessObject(AbstractBdmFormPage formPage, Package pakage, boolean edit) {
+    private BusinessObject addBusinessObject(AbstractBdmFormPage formPage, Package pakage) {
         List<String> existingNames = input.getValue().getPackages().stream()
                 .map(Package::getBusinessObjects)
                 .flatMap(Collection::stream)
@@ -475,13 +482,7 @@ public class BusinessObjectList {
                 .forEach(newBusinessObject.getDefaultQueries()::add);
         pakage.getBusinessObjects().add(newBusinessObject);
         formPage.getEditorContribution().refreshBusinessObjectList();
-        viewer.getControl().getDisplay().asyncExec(() -> {
-            if (edit) {
-                viewer.editElement(newBusinessObject, 0);
-            } else {
-                viewer.expandToLevel(newBusinessObject, 1);
-            }
-        });
+        return newBusinessObject;
     }
 
     private void remove(AbstractBdmFormPage formPage) {

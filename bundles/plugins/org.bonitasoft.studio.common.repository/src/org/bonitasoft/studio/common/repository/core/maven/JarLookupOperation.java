@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.maven.Maven;
@@ -35,6 +35,7 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,18 +49,19 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 
 public class JarLookupOperation implements IRunnableWithProgress {
 
+    static final String MAVEN_CENTRAL_URL = "https://repo.maven.apache.org/maven2";
     private static final String LOOKUP_GOAL = "lookup";
     private static final String BONITA_PROJECT_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
     private static final String BONITA_PROJECT_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
     public static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/";
 
     private DependencyLookup result;
-    private Set<String> repositories = new HashSet<>();
-    private File fileToLookup;
+    private List<String> repositories = new ArrayList<>();
+    private JarInputStreamSupplier fileToLookup;
     private IStatus status = Status.OK_STATUS;
     private String localRepositoryUrl;
 
-    public JarLookupOperation(File fileToLookup) {
+    public JarLookupOperation(JarInputStreamSupplier fileToLookup) {
         this.fileToLookup = fileToLookup;
     }
 
@@ -70,26 +72,39 @@ public class JarLookupOperation implements IRunnableWithProgress {
 
     public JarLookupOperation addRemoteRespository(String repositoryUrl) {
         this.repositories.add(repositoryUrl);
+        Collections.sort(repositories, (url1,url2) -> {
+            if(url1.equals(MAVEN_CENTRAL_URL)) {
+                return 1;
+            }
+            return -1;
+        });
         return this;
+    }
+    
+    public List<String> getRemoteRepositories() {
+        return repositories;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(String.format(Messages.lookupDependencyFor, fileToLookup.getName()),
                 IProgressMonitor.UNKNOWN);
-        Properties properties = DependencyLookup.readPomProperties(fileToLookup)
-                .orElse(null);
-        if (properties != null) {
-            result = tryGetDependency(properties);
+        try {
+            result = lookup();
+        } catch (CoreException e) {
+            status = e.getStatus();
+        } catch (IOException e) {
+            status = new Status(IStatus.ERROR, getClass(), "Dependency lookup fails for " + fileToLookup.getName(),
+                    e);
         }
-        if (result == null) { // Use sha1 lookup
-            try {
-                result = lookup();
-            } catch (CoreException e) {
-                status = e.getStatus();
-            } catch (IOException e) {
-                status = new Status(IStatus.ERROR, getClass(), "Dependency lookup fails for " + fileToLookup.getName(),
-                        e);
+        if (result == null || result.getStatus() == DependencyLookup.Status.NOT_FOUND ) { 
+            Properties properties = DependencyLookup.readPomProperties(fileToLookup.toTempFile())
+                    .orElse(null);
+            if (properties != null) {
+                var getResult = tryGetDependency(properties);
+                if(getResult != null) {
+                    result = getResult;
+                }
             }
         }
     }
@@ -136,7 +151,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
         Path tmpLookupOutputFolder = null;
         try {
             tmpLookupOutputFolder = Files.createTempDirectory("depLookup");
-            MavenExecutionResult runLookupPlugin = runLookupPlugin(fileToLookup.toPath(), tmpLookupOutputFolder);
+            MavenExecutionResult runLookupPlugin = runLookupPlugin(fileToLookup.toTempFile().toPath(), tmpLookupOutputFolder);
             BuildSummary buildSummary = runLookupPlugin.getBuildSummary(runLookupPlugin.getProject());
             if (buildSummary instanceof BuildSuccess) {
                 String line = "";
@@ -210,6 +225,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
         if (remoteRepo != null) {
             userProperties.setProperty("remoteRepositories", remoteRepo);
         }
+        userProperties.setProperty("transitive", "false");
         request.setUserProperties(userProperties);
         return context.execute(new ICallable<MavenExecutionResult>() {
 

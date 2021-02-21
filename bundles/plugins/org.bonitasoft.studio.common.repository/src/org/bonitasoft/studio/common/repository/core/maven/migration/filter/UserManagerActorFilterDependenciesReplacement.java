@@ -14,12 +14,16 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.filter;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 
 public class UserManagerActorFilterDependenciesReplacement extends BonitaJarDependencyReplacement {
     
-    private static final String DEFINITION_ID = "bonita-actorfilter-user-manager";
+    private static final Set<String> DEFINITIONS = Set.of(
+            "bonita-actorfilter-user-manager",
+            "user-manager");
     
     public UserManagerActorFilterDependenciesReplacement() {
         super(dependency(ACTOR_FILTER_GROUP_ID, "bonita-actorfilter-user-manager", "1.0.0"), 
@@ -29,7 +33,7 @@ public class UserManagerActorFilterDependenciesReplacement extends BonitaJarDepe
     
     @Override
     public boolean matchesDefinition(String definitionId) {
-        return DEFINITION_ID.equals(definitionId);
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

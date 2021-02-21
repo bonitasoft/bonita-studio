@@ -14,21 +14,21 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.JarLookupOperation;
@@ -41,12 +41,14 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
     public static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/";
     private static final String BDM_CLIENT_POJO_JAR = "bdm-client-pojo.jar";
 
-    private File libFolder;
-    private List<DependencyLookup> result = new ArrayList<>();
+    private List<JarInputStreamSupplier> jars;
+    private Set<DependencyLookup> result = new HashSet<>();
     private Set<String> repositories = new HashSet<>();
+    private Set<String> usedDependencies = new HashSet<>();
+    private Set<String> usedDefinitions = new HashSet<>();
 
-    public ProjectDependenciesMigrationOperation(File libFolder) {
-        this.libFolder = libFolder;
+    public ProjectDependenciesMigrationOperation(List<JarInputStreamSupplier> jars) {
+        this.jars = jars;
     }
 
     public ProjectDependenciesMigrationOperation addRemoteRespository(String repositoryUrl) {
@@ -54,43 +56,70 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
         return this;
     }
 
+    public ProjectDependenciesMigrationOperation addUsedDependencies(Set<String> usedDependencies) {
+        this.usedDependencies = usedDependencies;
+        return this;
+    }
+
+    public ProjectDependenciesMigrationOperation addUsedDefinitions(Set<String> usedDefinitions) {
+        this.usedDefinitions = usedDefinitions;
+        return this;
+    }
+
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.convertingDependencies,
-                libFolder.listFiles(f -> f.getName().endsWith(".jar")).length);
+        monitor.beginTask(Messages.convertingDependencies, jars.size());
         List<BonitaJarDependencyReplacement> replacements = BonitaJarDependencyReplacement
                 .getBonitaJarDependencyReplacements();
 
-        List<String> jars = Stream.of(libFolder.listFiles())
-                .filter(File::isFile)
-                .map(File::getName)
-                .filter(f -> f.toLowerCase().endsWith(".jar"))
+        List<String> jarNames = jars.stream()
+                .map(JarInputStreamSupplier::getName)
                 .collect(Collectors.toList());
 
-        Set<String> dependenciesToRemove = jars.stream()
+        Set<String> dependenciesToRemove = jarNames.stream()
                 .filter(jarName -> replacements.stream().anyMatch(r -> r.matches(jarName)))
                 .collect(Collectors.toSet());
 
         // Search Bonita connectors/actor filters replacements
-        jars.stream()
+        List<DependencyLookup> providedDependencies = jarNames.stream()
                 .flatMap(jarName -> replacements.stream()
                         .filter(r -> r.matches(jarName))
-                        .map(r -> newDependencyLookup(jarName, r)))
+                        .map(r -> newDependencyLookup(jarName, r, usedDependencies.contains(jarName))))
                 .peek(jar -> monitor.worked(1))
-                .forEach(result::add);
+                .collect(Collectors.toList());
+
+        replacements.stream()
+                .filter(r -> usedDefinitions.stream().anyMatch(r::matchesDefinition))
+                .map(r -> newDependencyLookup(null, r, true))
+                .forEach(providedDependencies::add);
+
+        for (DependencyLookup dl : providedDependencies) {
+            Optional<DependencyLookup> search = result.stream()
+                    .filter(d -> Objects.equals(dl.getArtifactId(), d.getArtifactId())
+                            && Objects.equals(dl.getGroupId(), d.getGroupId()))
+                    .findAny();
+            if (search.isPresent()) {
+                DependencyLookup existingDep = search.get();
+                if (!existingDep.isUsed()) {
+                    result.remove(existingDep);
+                    result.add(dl);
+                }
+            } else {
+                result.add(dl);
+            }
+        }
 
         // Remove all transitive jar from bonita artifacts
-        Stream.of(libFolder.listFiles())
-                .filter(jarFile -> dependenciesToRemove.contains(jarFile.getName()))
-                .flatMap(jarFile -> BonitaJarDependencyReplacement.getTransitiveDependencies(jarFile).stream())
+        jars.stream()
+                .filter(jarInputStreamProvider -> dependenciesToRemove.contains(jarInputStreamProvider.getName()))
+                .flatMap(jarInputStreamProvider -> BonitaJarDependencyReplacement
+                        .getTransitiveDependencies(jarInputStreamProvider.toTempFile()).stream())
                 .peek(jar -> monitor.worked(1))
                 .forEach(dependenciesToRemove::add);
 
         dependenciesToRemove.add(BDM_CLIENT_POJO_JAR);
 
-        Set<File> jarsToLookup = Stream.of(libFolder.listFiles())
-                .filter(File::isFile)
-                .filter(f -> f.getName().toLowerCase().endsWith(".jar"))
+        Set<JarInputStreamSupplier> jarsToLookup = jars.stream()
                 .filter(f -> !dependenciesToRemove.contains(f.getName()))
                 .collect(Collectors.toSet());
 
@@ -100,30 +129,38 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
         } catch (IOException e) {
             throw new InvocationTargetException(e);
         }
-        for (File jarToLookup : jarsToLookup) {
+        for (JarInputStreamSupplier jarToLookup : jarsToLookup) {
             JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
-            repositories.stream().forEach(jarLookupOperation::addRemoteRespository);
+            repositories.stream()
+                    .forEach(jarLookupOperation::addRemoteRespository);
             jarLookupOperation.addLocalRespository(localM2Repo.toFile().getAbsolutePath());
-            monitor.subTask(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
+            monitor.setTaskName(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
             jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
             monitor.worked(1);
             var status = jarLookupOperation.getStatus();
             if (status.isOK()) {
                 DependencyLookup dep = jarLookupOperation.getResult();
+                if (usedDependencies.contains(jarToLookup.getName())) {
+                    dep.setUsed(true);
+                }
                 if (isLatestVersion(dep, result)) {
                     result.add(dep);
                 }
             } else {
-                //TODO add a migration issue in the report model
+                BonitaStudioLog.error(String.format("A problem occured while looking up for %s depedency",
+                        jarToLookup.getName()),
+                        status.getException());
             }
         }
-        if(localM2Repo != null) {
+        if (localM2Repo != null) {
             FileUtil.deleteDir(localM2Repo.toFile());
         }
     }
 
-    private DependencyLookup newDependencyLookup(String jarName, BonitaJarDependencyReplacement dep) {
-        return new DependencyLookup(jarName,
+    private DependencyLookup newDependencyLookup(String jarName,
+            BonitaJarDependencyReplacement dep,
+            boolean isUsed) {
+        DependencyLookup dependencyLookup = new DependencyLookup(jarName,
                 null, // no sha1
                 DependencyLookup.Status.FOUND,
                 dep.getMavenDependency().getGroupId(),
@@ -131,9 +168,11 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 dep.getMavenDependency().getVersion(),
                 dep.getMavenDependency().getClassifier(),
                 MAVEN_CENTRAL_REPOSITORY_URL);
+        dependencyLookup.setUsed(isUsed);
+        return dependencyLookup;
     }
 
-    private boolean isLatestVersion(DependencyLookup depToAdd, List<DependencyLookup> dependencies) {
+    private boolean isLatestVersion(DependencyLookup depToAdd, Collection<DependencyLookup> dependencies) {
         List<DependencyLookup> conflictingDependencies = dependencies.stream()
                 .filter(existingDep -> Objects.equals(depToAdd.getGroupId(), existingDep.getGroupId())
                         && Objects.equals(depToAdd.getArtifactId(), existingDep.getArtifactId()))
@@ -149,7 +188,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
         return false; // Conflicting deps found and depToAdd is not the latest version
     }
 
-    public List<DependencyLookup> getResult() {
+    public Set<DependencyLookup> getResult() {
         return result;
     }
 
