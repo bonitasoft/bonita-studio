@@ -122,16 +122,16 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     public Optional<MavenProject> getMavenProject() {
-        return Optional.ofNullable(project).map(p -> {
-            try {
-                return MavenPlugin.getMavenProjectRegistry().getProject(p)
-                        .getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-                return null;
-            }
-        })
-                .filter(Objects::nonNull);
+        return Optional.ofNullable(project)
+                .flatMap(p -> Optional.ofNullable(MavenPlugin.getMavenProjectRegistry().getProject(p)))
+                .flatMap(facade -> {
+                    try {
+                        return Optional.ofNullable(facade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR));
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                        return null;
+                    }
+                });
     }
 
     public String getArtifactId() {
@@ -164,7 +164,7 @@ public abstract class CustomPageMavenProjectDescriptor {
                 .filter(value -> !(value.trim().startsWith("${") && value.trim().endsWith("}")))
                 .filter(value -> !(value.trim().startsWith("custompage_${") && value.trim().endsWith("}")));
     }
-    
+
     protected Optional<? extends ZipEntry> findZipEntry(File file, Predicate<? super ZipEntry> entryPredicate)
             throws IOException {
         try (ZipFile zipFile = new ZipFile(file)) {
