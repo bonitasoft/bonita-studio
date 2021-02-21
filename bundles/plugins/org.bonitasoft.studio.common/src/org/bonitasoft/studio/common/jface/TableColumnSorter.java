@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.jface;
+import java.util.Comparator;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -27,7 +29,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-public class TableColumnSorter extends ViewerComparator {
+public class TableColumnSorter<T> extends ViewerComparator {
 	
 	public static final int ASC = 1;
 	public static final int NONE = 0;
@@ -36,9 +38,9 @@ public class TableColumnSorter extends ViewerComparator {
 	private int direction = 0;
 	private TableColumn column = null;
 	private int columnIndex = 0;
-	final private TableViewer viewer;
+	private final TableViewer viewer;
 
-	final private SelectionListener selectionHandler = new SelectionAdapter() {
+	private final SelectionListener selectionHandler = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			TableColumnSorter sorter = (TableColumnSorter) TableColumnSorter.this.viewer.getComparator();
 			Assert.isTrue(TableColumnSorter.this == sorter);
@@ -47,6 +49,7 @@ public class TableColumnSorter extends ViewerComparator {
 			TableColumnSorter.this.setColumn(selectedColumn);
 		}
 	};
+    private Comparator<T> comparator;
 
 	public TableColumnSorter(TableViewer viewer) {
 		this.viewer = viewer;
@@ -57,6 +60,11 @@ public class TableColumnSorter extends ViewerComparator {
 			tableColumn.addSelectionListener(selectionHandler);
 		}
 	}
+	
+	public TableColumnSorter(TableViewer viewer, Comparator<T> comparator) {
+       this(viewer);
+       this.comparator = comparator;
+    }
 
 	public void setColumn(TableColumn selectedColumn) {
 		if (column == selectedColumn) {
@@ -107,12 +115,17 @@ public class TableColumnSorter extends ViewerComparator {
 	}
 
 	protected int doCompare(Viewer v, Object e1, Object e2) {
-       Assert.isTrue(v == viewer);
-       ILabelProvider labelProvider = (ILabelProvider) viewer.getLabelProvider(columnIndex);
-		String t1 = labelProvider.getText(e1);
-		String t2 = labelProvider.getText(e2);
-		if (t1 == null) t1 = "";
-		if (t2 == null) t2 = "";
-		return t1.compareToIgnoreCase(t2);
+	    if( comparator != null) {
+	        return comparator.compare((T)e1,(T) e2);
+	    }else {
+	        Assert.isTrue(v == viewer);
+	        ILabelProvider labelProvider = (ILabelProvider) viewer.getLabelProvider(columnIndex);
+	         String t1 = labelProvider.getText(e1);
+	         String t2 = labelProvider.getText(e2);
+	         if (t1 == null) t1 = "";
+	         if (t2 == null) t2 = "";
+	         return t1.compareToIgnoreCase(t2);
+	    }
+       
 	}
 }

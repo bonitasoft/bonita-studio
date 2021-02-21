@@ -121,11 +121,11 @@ public class WizardBuilder<T> {
             public void setContainer(IWizardContainer wizardContainer) {
                 super.setContainer(wizardContainer);
                 if (wizardContainer instanceof IPageChangeProvider) {
-                    IWizardPage startingPage = getStartingPage();
-                    if (startingPage instanceof IPageChangedListener) {
-                        ((IPageChangeProvider) wizardContainer)
-                                .addPageChangedListener((IPageChangedListener) startingPage);
-                    }
+                    IPageChangeProvider pageChangeProvider = (IPageChangeProvider) wizardContainer;
+                    Stream.of(getPages())
+                            .filter(IPageChangedListener.class::isInstance)
+                            .map(IPageChangedListener.class::cast)
+                            .forEach(pageChangeProvider::addPageChangedListener);
                 }
             }
 

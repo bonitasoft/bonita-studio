@@ -104,6 +104,7 @@ public final class Messages extends NLS {
 
     public static String convertingDependencies;
     public static String lookupDependencyFor;
+    public static String analyzeProjectDependencies;
 
     private Messages() {
         // Do not instantiate

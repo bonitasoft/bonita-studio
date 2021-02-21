@@ -14,11 +14,15 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.connector;
 
+import java.util.Set;
+
 import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
 
 public class GroovyScriptConnectorDependenciesReplacement extends BonitaJarDependencyReplacement {
 
-    private static final String DEFINITION_ID = "scripting-groovy-script";
+    private static final Set<String> DEFINITIONS = Set.of(
+            "scripting-groovy-script",
+            "scripting-groovy");
     
     public GroovyScriptConnectorDependenciesReplacement() {
         super(dependency(CONNECTOR_GROUP_ID, "bonita-connector-groovy", "1.1.2"),
@@ -30,7 +34,7 @@ public class GroovyScriptConnectorDependenciesReplacement extends BonitaJarDepen
     
     @Override
     public boolean matchesDefinition(String definitionId) {
-        return DEFINITION_ID.equals(definitionId);
+        return DEFINITIONS.contains(definitionId);
     }
 
 }

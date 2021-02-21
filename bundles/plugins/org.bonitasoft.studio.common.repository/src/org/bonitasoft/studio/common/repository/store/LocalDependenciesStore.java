@@ -25,6 +25,7 @@ import org.apache.maven.Maven;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.eclipse.core.resources.IProject;
@@ -33,7 +34,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ICallable;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -49,8 +49,11 @@ public class LocalDependenciesStore {
         this.project = project;
     }
 
-    public void install(DependencyLookup dependencyLookup, IProgressMonitor monitor) throws CoreException {
-        File dependencyFile = new File(dependencyLookup.getFileName());
+    public void install(DependencyLookup dependencyLookup) throws CoreException {
+        if(dependencyLookup.getStatus() == DependencyLookup.Status.FOUND) {
+            return;
+        }
+        File dependencyFile = dependencyLookup.getFile();
         if (!dependencyFile.isFile()) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot install %s dependency. %s is not a file.",
@@ -84,12 +87,13 @@ public class LocalDependenciesStore {
                     String.format("Cannot install %s dependency.",
                             dependencyFile.getName()),
                     e));
+        } finally {
+            dependencyLookup.deleteCopy();
         }
-        project.getFolder(storeName).refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        project.getFolder(storeName).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     public IStatus runBonitaProjectStoreInstall(IProgressMonitor monitor) throws CoreException {
-        IProgressMonitor subMonitor = SubMonitor.convert(monitor);
         IMaven maven = MavenPlugin.getMaven();
         final IMavenExecutionContext context = maven.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
@@ -102,7 +106,7 @@ public class LocalDependenciesStore {
                     throws CoreException {
                 return maven.lookup(Maven.class).execute(request);
             }
-        }, subMonitor);
+        }, monitor);
         if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
             return Status.OK_STATUS;
         } else {

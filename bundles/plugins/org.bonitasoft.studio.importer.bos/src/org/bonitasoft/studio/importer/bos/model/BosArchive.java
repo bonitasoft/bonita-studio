@@ -6,10 +6,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +13,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -28,11 +25,13 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramLegacyFormsValidator;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -67,6 +66,10 @@ public class BosArchive {
 
     public BosArchive(File archiveFile) {
         this.archiveFile = archiveFile;
+    }
+
+    public File getArchiveFile() {
+        return archiveFile;
     }
 
     public ImportArchiveModel toImportModel(AbstractRepository repository, IProgressMonitor monitor)
@@ -137,6 +140,10 @@ public class BosArchive {
             String filePath = Joiner.on('/').join(concat(parentSegments, segments));
             ImportFileStoreModel file = createImportModelFileStore(store, segments.get(0), filePath);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
+                if(store.getFolderName().equals(DiagramRepositoryStore.STORE_NAME)
+                        && !file.getFileName().endsWith(".proc")) {
+                    return;
+                }
                 file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
                 file.getParentRepositoryStore().ifPresent(repositoryStore -> {
                     IStatus validationStatus = validateFile(file, repositoryStore);
@@ -362,7 +369,19 @@ public class BosArchive {
     public String getFileName() {
         return archiveFile.getName();
     }
-    
+
+    public List<JarInputStreamSupplier> loadJarInputStreamSuppliers() {
+        try (var zipFile = getZipFile()) {
+            return zipFile.stream()
+                    .filter(entry -> entry.getName().matches("[^/]*/lib/.*.jar"))
+                    .map(entry -> new BosArchiveJarInputStreamSupplier(getArchiveFile(), entry))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
+        return Collections.emptyList();
+    }
+
     public Model readMavenProject() {
         try (ZipFile zipFile = new ZipFile(archiveFile)) {
             return zipFile.stream()
@@ -374,7 +393,7 @@ public class BosArchive {
             throw new RuntimeException(e);
         }
     }
-    
+
     private Optional<Model> loadMavenModel(ZipEntry pomEntry) {
         try (ZipFile zipFile = new ZipFile(archiveFile);
                 InputStream inputStream = zipFile.getInputStream(pomEntry)) {
@@ -385,21 +404,4 @@ public class BosArchive {
         }
     }
 
-    public void extractLibFolder(Path tempDirectory) {
-        try (ZipFile zipFile = new ZipFile(archiveFile)) {
-             zipFile.stream()
-                    .filter(entry -> entry.getName().matches("[^/]*/lib/.*.jar"))
-                    .forEach(entry -> {
-                        try (InputStream is = zipFile.getInputStream(entry)){
-                            Files.copy(is, 
-                                    tempDirectory.resolve(Paths.get(entry.getName()).toFile().getName()), 
-                                    StandardCopyOption.REPLACE_EXISTING);
-                        } catch (IOException e) {
-                           BonitaStudioLog.error(e);
-                        }
-                    });
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

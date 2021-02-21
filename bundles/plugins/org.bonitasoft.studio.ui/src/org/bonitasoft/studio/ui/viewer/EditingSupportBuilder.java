@@ -68,6 +68,8 @@ public class EditingSupportBuilder<T> {
     public EditingSupport create() {
         return new EditingSupport(viewer) {
 
+            private CellEditor editor;
+
             @Override
             protected void setValue(Object element, Object value) {
                 valueUpdater.accept((T) element, value);
@@ -81,10 +83,12 @@ public class EditingSupportBuilder<T> {
 
             @Override
             protected CellEditor getCellEditor(Object element) {
-                CellEditor editor = cellEditorFunction.apply((T) element);
-                Control control = editor.getControl();
-                if (control != null && control.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY) == null && widgetId != null) {
-                    control.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, widgetId);
+                if(editor == null) {
+                    editor = cellEditorFunction.apply((T) element);
+                    Control control = editor.getControl();
+                    if (control != null && control.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY) == null && widgetId != null) {
+                        control.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, widgetId);
+                    }
                 }
                 return editor;
             }

@@ -32,6 +32,8 @@ public class DatabaseConnectorDependenciesReplacement extends BonitaJarDependenc
             "database-informix",
             "database-ingres",
             "database-mssqlserver",
+            "database-mssqlserver2008",
+            "database-mssqlserver2012",
             "database-mysql",
             "database-oracle10g",
             "database-oracle11g",

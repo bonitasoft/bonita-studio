@@ -30,8 +30,8 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
         return helper.getMavenModel(project);
     }
 
-    protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        helper.saveModel(project, model, monitor);
+    protected void saveModel(IProject project, Model model) throws CoreException {
+        helper.saveModel(project, model);
     }
 
     protected IProject getCurrentProject() {

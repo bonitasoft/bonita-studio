@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.eclipse.core.runtime.CoreException;
@@ -52,7 +49,7 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
 
             model.removeDependency(dependencyToUpdate);
             model.addDependency(dependencyUpdated);
-            saveModel(getCurrentProject(), model, monitor);
+            saveModel(getCurrentProject(), model);
             getProjectDependenciesStore().analyze(monitor);
         }
     }

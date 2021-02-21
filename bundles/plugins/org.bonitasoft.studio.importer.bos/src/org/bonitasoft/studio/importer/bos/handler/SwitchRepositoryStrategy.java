@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.importer.bos.handler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -17,6 +19,7 @@ public class SwitchRepositoryStrategy {
     private String targetRepository;
     private boolean rebuildModel;
     private final RepositoryAccessor repositoryAccessor;
+    private List<TargetProjectChangeListener> targetProjectChangeListerners = new ArrayList<>();
 
     public SwitchRepositoryStrategy(RepositoryAccessor repositoryAccessor, String targetRepository) {
         this.targetRepository = targetRepository;
@@ -32,7 +35,10 @@ public class SwitchRepositoryStrategy {
     }
 
     public void setTargetRepository(String targetRepository) {
-        this.targetRepository = targetRepository;
+        if(!Objects.equals(this.targetRepository, targetRepository)) {
+            this.targetRepository = targetRepository;
+            targetProjectChangeListerners.stream().forEach(l -> l.handleTargetProjectChanged(targetRepository));
+        }
     }
 
     public boolean isRebuildModel() {
@@ -41,6 +47,14 @@ public class SwitchRepositoryStrategy {
 
     public void setRebuildModel(boolean rebuildModel) {
         this.rebuildModel = rebuildModel;
+    }
+    
+    public void addTargetProjectChangeListener(TargetProjectChangeListener targetProjectChangeListerner) {
+        targetProjectChangeListerners.add(targetProjectChangeListerner);
+    }
+    
+    interface TargetProjectChangeListener {
+        void handleTargetProjectChanged(String projectName);
     }
 
 }
