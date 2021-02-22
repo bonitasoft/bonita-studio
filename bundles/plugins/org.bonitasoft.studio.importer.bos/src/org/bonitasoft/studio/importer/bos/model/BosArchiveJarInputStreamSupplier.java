@@ -69,7 +69,7 @@ public class BosArchiveJarInputStreamSupplier implements JarInputStreamSupplier 
     public File toTempFile() {
         if (tempFile == null || !tempFile.toFile().exists()) {
             try {
-                tempFile = Files.createFile(Paths.get(System.getProperty("java.io.tmpdir")).resolve(getName()));
+                tempFile = Paths.get(System.getProperty("java.io.tmpdir")).resolve(getName());
                 Files.copy(get(), tempFile, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 BonitaStudioLog.error(e);

@@ -124,7 +124,6 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
             jars = bosArchive.loadJarInputStreamSuppliers();
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars);
             mavenRepositories.stream()
-                    .filter(repo -> repo.getMirrorId() == null)
                     .map(IRepository::getUrl)
                     .forEach(projectDependenciesMigrationOperation::addRemoteRespository);
             Set<String> usedDependencies = new HashSet<>();
