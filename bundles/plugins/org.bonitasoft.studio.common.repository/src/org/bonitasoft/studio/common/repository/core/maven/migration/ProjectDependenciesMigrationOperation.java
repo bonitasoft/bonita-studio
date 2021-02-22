@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -27,12 +24,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.JarLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -122,39 +120,75 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
         Set<JarInputStreamSupplier> jarsToLookup = jars.stream()
                 .filter(f -> !dependenciesToRemove.contains(f.getName()))
                 .collect(Collectors.toSet());
-
-        Path localM2Repo;
-        try {
-            localM2Repo = Files.createTempDirectory("localM2repo");
-        } catch (IOException e) {
-            throw new InvocationTargetException(e);
-        }
         for (JarInputStreamSupplier jarToLookup : jarsToLookup) {
-            JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
-            repositories.stream()
-                    .forEach(jarLookupOperation::addRemoteRespository);
-            jarLookupOperation.addLocalRespository(localM2Repo.toFile().getAbsolutePath());
-            monitor.setTaskName(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
-            jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
-            monitor.worked(1);
-            var status = jarLookupOperation.getStatus();
-            if (status.isOK()) {
-                DependencyLookup dep = jarLookupOperation.getResult();
+            DependencyLookup dependencyLookup = lookupDependency(monitor, jarToLookup);
+            if (dependencyLookup != null) {
                 if (usedDependencies.contains(jarToLookup.getName())) {
-                    dep.setUsed(true);
+                    dependencyLookup.setUsed(true);
                 }
-                if (isLatestVersion(dep, result)) {
-                    result.add(dep);
+                if (isLatestVersion(dependencyLookup, result)) {
+                    result.add(dependencyLookup);
                 }
-            } else {
-                BonitaStudioLog.error(String.format("A problem occured while looking up for %s depedency",
-                        jarToLookup.getName()),
-                        status.getException());
+                monitor.worked(1);
             }
         }
-        if (localM2Repo != null) {
-            FileUtil.deleteDir(localM2Repo.toFile());
+
+    }
+
+    private DependencyLookup lookupDependency(IProgressMonitor monitor, JarInputStreamSupplier jarToLookup)
+            throws InvocationTargetException, InterruptedException {
+        DependencyLookup dep = null;
+        JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
+        repositories.stream()
+                .forEach(jarLookupOperation::addRemoteRespository);
+        monitor.setTaskName(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
+        jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        var status = jarLookupOperation.getStatus();
+        if (status.isOK()) {
+            dep = jarLookupOperation.getResult();
+            if (dep.getStatus() == Status.FOUND
+                    && DependencyLookup.guessClassifier(jarToLookup.getName(), dep.getGAV()) != null) {
+                GAV gavWithClassifier = dep.getGAV();
+                gavWithClassifier.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), dep.getGAV()));
+                var dependencyGetOperation = new DependencyGetOperation(gavWithClassifier);
+                repositories.stream()
+                        .forEach(dependencyGetOperation::addRemoteRespository);
+                monitor.setTaskName(String.format(Messages.lookupDependencyFor, dep.getGAV()));
+                dependencyGetOperation.run(monitor);
+                status = dependencyGetOperation.getStatus();
+                if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                    dep = dependencyGetOperation.getResult();
+                }
+            } else if (dep.getStatus() == Status.NOT_FOUND) {
+                GAV gav = DependencyLookup.readPomProperties(jarToLookup.toTempFile())
+                        .map(properties -> new GAV(properties.getProperty("groupId"),
+                                properties.getProperty("artifactId"),
+                                properties.getProperty("version")))
+                        .orElse(null);
+                var dependencyGetOperation = new DependencyGetOperation(gav);
+                repositories.stream()
+                        .forEach(dependencyGetOperation::addRemoteRespository);
+                monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
+                dependencyGetOperation.run(monitor);
+                status = dependencyGetOperation.getStatus();
+                if (status.isOK()) {
+                    if (dependencyGetOperation.getResult() != null) {
+                        dep = dependencyGetOperation.getResult();
+                    } else if (DependencyLookup.guessClassifier(jarToLookup.getName(), gav) != null) {
+                        gav.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), gav));
+                        dependencyGetOperation = new DependencyGetOperation(gav);
+                        repositories.stream()
+                                .forEach(dependencyGetOperation::addRemoteRespository);
+                        dependencyGetOperation.run(monitor);
+                        status = dependencyGetOperation.getStatus();
+                        if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                            dep = dependencyGetOperation.getResult();
+                        }
+                    }
+                }
+            }
         }
+        return dep;
     }
 
     private DependencyLookup newDependencyLookup(String jarName,
@@ -163,10 +197,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
         DependencyLookup dependencyLookup = new DependencyLookup(jarName,
                 null, // no sha1
                 DependencyLookup.Status.FOUND,
-                dep.getMavenDependency().getGroupId(),
-                dep.getMavenDependency().getArtifactId(),
-                dep.getMavenDependency().getVersion(),
-                dep.getMavenDependency().getClassifier(),
+                new GAV(dep.getMavenDependency()),
                 MAVEN_CENTRAL_REPOSITORY_URL);
         dependencyLookup.setUsed(isUsed);
         return dependencyLookup;

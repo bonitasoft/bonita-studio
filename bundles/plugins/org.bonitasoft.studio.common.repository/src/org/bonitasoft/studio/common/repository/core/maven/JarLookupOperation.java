@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -59,15 +58,9 @@ public class JarLookupOperation implements IRunnableWithProgress {
     private List<String> repositories = new ArrayList<>();
     private JarInputStreamSupplier fileToLookup;
     private IStatus status = Status.OK_STATUS;
-    private String localRepositoryUrl;
 
     public JarLookupOperation(JarInputStreamSupplier fileToLookup) {
         this.fileToLookup = fileToLookup;
-    }
-
-    public JarLookupOperation addLocalRespository(String localRepositoryUrl) {
-        this.localRepositoryUrl = localRepositoryUrl;
-        return this;
     }
 
     public JarLookupOperation addRemoteRespository(String repositoryUrl) {
@@ -97,54 +90,6 @@ public class JarLookupOperation implements IRunnableWithProgress {
             status = new Status(IStatus.ERROR, getClass(), "Dependency lookup fails for " + fileToLookup.getName(),
                     e);
         }
-        if (result == null || result.getStatus() == DependencyLookup.Status.NOT_FOUND ) { 
-            Properties properties = DependencyLookup.readPomProperties(fileToLookup.toTempFile())
-                    .orElse(null);
-            if (properties != null) {
-                var getResult = tryGetDependency(properties);
-                if(getResult != null) {
-                    result = getResult;
-                }
-            }
-        }
-    }
-
-    private DependencyLookup tryGetDependency(Properties properties) throws InvocationTargetException {
-        String groupId = properties.getProperty("groupId");
-        String artifactId = properties.getProperty("artifactId");
-        String version = properties.getProperty("version");
-        Path tempLocalRepo = null;
-        try {
-            if (localRepositoryUrl == null) {
-                tempLocalRepo = Files.createTempDirectory("m2Repo");
-                localRepositoryUrl = tempLocalRepo.toFile().getAbsolutePath();
-            }
-            File localRepository = new File(localRepositoryUrl);
-            for (String repository : repositories) {
-                    MavenExecutionResult executionResult = runDependencyGetPlugin(groupId, artifactId, version,
-                            null,
-                            localRepository, repository);
-                    if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-                        return new DependencyLookup(fileToLookup.getName(),
-                                null,
-                                DependencyLookup.Status.FOUND,
-                                groupId,
-                                artifactId,
-                                version,
-                                null,
-                                repository);
-                    }
-            }
-        } catch (CoreException e) {
-            status = e.getStatus();
-        } catch (IOException e) {
-            throw new InvocationTargetException(e);
-        } finally {
-            if (tempLocalRepo != null && tempLocalRepo.toFile().exists()) {
-                FileUtil.deleteDir(tempLocalRepo.toFile());
-            }
-        }
-        return null;
     }
 
     private DependencyLookup lookup() throws IOException, CoreException {
@@ -192,40 +137,6 @@ public class JarLookupOperation implements IRunnableWithProgress {
         if (!repositories.isEmpty()) {
             userProperties.setProperty("repositoryUrl", repositories.stream().collect(Collectors.joining(",")));
         }
-        request.setUserProperties(userProperties);
-        return context.execute(new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
-                    throws CoreException {
-                return maven().lookup(Maven.class).execute(request);
-            }
-        }, AbstractRepository.NULL_PROGRESS_MONITOR);
-    }
-
-    private MavenExecutionResult runDependencyGetPlugin(String groupId,
-            String artifactId,
-            String version,
-            String classifier,
-            File localRepo,
-            String remoteRepo) throws CoreException {
-        final IMavenExecutionContext context = maven().createExecutionContext();
-        final MavenExecutionRequest request = context.getExecutionRequest();
-        request.setLocalRepository(null);
-        request.setLocalRepositoryPath(localRepo);
-        request.setGoals(List.of("dependency:get"));
-        Properties userProperties = new Properties();
-        userProperties.setProperty("groupId", groupId);
-        userProperties.setProperty("artifactId", artifactId);
-        userProperties.setProperty("version", version);
-        userProperties.setProperty("packaging", "jar");
-        if (classifier != null) {
-            userProperties.setProperty("classifier", classifier);
-        }
-        if (remoteRepo != null) {
-            userProperties.setProperty("remoteRepositories", remoteRepo);
-        }
-        userProperties.setProperty("transitive", "false");
         request.setUserProperties(userProperties);
         return context.execute(new ICallable<MavenExecutionResult>() {
 

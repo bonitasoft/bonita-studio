@@ -38,11 +38,8 @@ public class DependencyLookup {
     private final String fileName;
     private final String sha1;
     private final Status status;
-    private String groupId;
-    private String artifactId;
-    private String version;
+    private GAV gav;
     private final String repository;
-    private String classifier;
     private boolean selected;
     private File tmpFile;
     private boolean isUsed;
@@ -50,18 +47,12 @@ public class DependencyLookup {
     public DependencyLookup(String fileName,
             String sha1,
             Status status,
-            String groupId,
-            String artifactId,
-            String version,
-            String classifier,
+            GAV gav,
             String repository) {
         this.fileName = fileName;
         this.sha1 = sha1;
         this.status = status;
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-        this.classifier = classifier;
+        this.gav = gav;
         this.repository = repository;
         if (status == Status.NOT_FOUND) {
             tmpFile = copy();
@@ -87,7 +78,7 @@ public class DependencyLookup {
             try {
                 Files.deleteIfExists(tmpFile.toPath());
                 File parentFile = tmpFile.getParentFile();
-                if(parentFile != null) {
+                if (parentFile != null) {
                     Files.deleteIfExists(parentFile.toPath());
                 }
             } catch (IOException e) {
@@ -98,46 +89,44 @@ public class DependencyLookup {
 
     public static DependencyLookup fromCSV(String[] csvData) {
         if (csvData.length == 7) {
+            GAV gav = new GAV(csvData[3],
+                    csvData[4], 
+                    csvData[5]);
             return new DependencyLookup(csvData[0],
                     csvData[1],
                     Status.valueOf(enumFormat(csvData)),
-                    csvData[3],
-                    csvData[4],
-                    csvData[5],
-                    DependencyLookup.guessClassifier(csvData[0], csvData[3], csvData[4], csvData[5]),
+                    gav,
                     csvData[6]);
         } else { //Not found
             String fileName = csvData[0];
             File file = new File(fileName);
             String name = file.getName();
+            GAV defaultGav = new GAV("com.company",  name.replace(".jar", ""),  "1.0.0");
             return readPomProperties(file)
-                    .map(pomProperties -> new DependencyLookup(fileName,
+                    .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),  
+                            pomProperties.getProperty("artifactId"), 
+                            pomProperties.getProperty("version")))
+                    .map(gav -> new DependencyLookup(fileName,
                             csvData[1],
                             Status.valueOf(enumFormat(csvData)),
-                            pomProperties.getProperty("groupId"),
-                            pomProperties.getProperty("artifactId"),
-                            pomProperties.getProperty("version"),
-                            null,
+                            gav,
                             ""))
                     .orElseGet(() -> new DependencyLookup(fileName,
                             csvData[1],
                             Status.valueOf(enumFormat(csvData)),
-                            "com.company",
-                            name.replace(".jar", ""),
-                            "1.0.0",
-                            null,
+                            defaultGav,
                             ""));
         }
     }
 
-    private static String guessClassifier(String fileName, String groupId, String artifactId, String version) {
+    public static String guessClassifier(String fileName, GAV gav) {
         String name = new File(fileName).getName();
-        if (name.equals(String.format("%s-%s.jar", artifactId, version))) {
+        if (name.equals(String.format("%s-%s.jar", gav.getArtifactId(), gav.getVersion()))) {
             // Not classified
             return null;
         }
         Matcher matcher = Pattern
-                .compile(String.format("%s-%s-(.*).jar", artifactId, version))
+                .compile(String.format("%s-%s-(.*).jar", gav.getArtifactId(), gav.getVersion()))
                 .matcher(name);
         if (matcher.find()) {
             return matcher.group(1);
@@ -192,27 +181,27 @@ public class DependencyLookup {
     }
 
     public String getGroupId() {
-        return groupId;
+        return gav.getGroupId();
     }
 
     public void setGroupId(String groupId) {
-        this.groupId = groupId;
+        gav.setGroupId(groupId);
     }
 
     public String getArtifactId() {
-        return artifactId;
+       return gav.getArtifactId();
     }
 
     public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
+        this.gav.setArtifactId(artifactId);
     }
 
     public String getVersion() {
-        return version;
+        return gav.getVersion();
     }
 
     public void setVersion(String version) {
-        this.version = version;
+        gav.setVersion(version);
     }
 
     public String getRepository() {
@@ -226,26 +215,30 @@ public class DependencyLookup {
     public boolean isSelected() {
         return selected;
     }
-    
+
     public boolean isUsed() {
         return isUsed;
     }
-    
+
     public void setUsed(boolean isUsed) {
         this.isUsed = isUsed;
     }
 
     public Dependency toMavenDependency() {
         Dependency dependency = new Dependency();
-        dependency.setArtifactId(artifactId);
-        dependency.setVersion(version);
-        dependency.setGroupId(groupId);
-        dependency.setClassifier(classifier);
+        dependency.setArtifactId(gav.getArtifactId());
+        dependency.setVersion(gav.getVersion());
+        dependency.setGroupId(gav.getGroupId());
+        dependency.setClassifier(gav.getClassifier());
         return dependency;
     }
 
     public File getFile() {
         return tmpFile;
+    }
+
+    public GAV getGAV() {
+        return gav;
     }
 
 }

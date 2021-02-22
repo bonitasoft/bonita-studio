@@ -49,16 +49,18 @@ public class ImportBosHandler {
             ExceptionDialogHandler exceptionDialogHandler,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName") String projectName) {
-       
+
         IObservableList<DependencyLookup> dependenciesLookup = new WritableList<>();
         IObservableList<IRepository> mavenRepositories = new WritableList<>();
         switchRepositoryStrategy = new SwitchRepositoryStrategy(repositoryAccessor,
                 projectName == null ? repositoryAccessor.getCurrentRepository().getName() : projectName);
         String targetProject = switchRepositoryStrategy.getTargetRepository();
         updateRemoteRepositories(targetProject, mavenRepositories, mavenRepositoryRegistry, repositoryAccessor);
-        switchRepositoryStrategy.addTargetProjectChangeListener(newTargetProject -> updateRemoteRepositories(newTargetProject, mavenRepositories, mavenRepositoryRegistry, repositoryAccessor));
+        switchRepositoryStrategy
+                .addTargetProjectChangeListener(newTargetProject -> updateRemoteRepositories(newTargetProject,
+                        mavenRepositories, mavenRepositoryRegistry, repositoryAccessor));
         ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier(
-                repositoryAccessor, 
+                repositoryAccessor,
                 exceptionDialogHandler,
                 file);
         DependenciesPreviewControlSupplier dependenciesPreviewControlSupplier = new DependenciesPreviewControlSupplier(
@@ -95,15 +97,17 @@ public class ImportBosHandler {
         }
     }
 
-    private void updateRemoteRepositories(String targetRepository, 
-            IObservableList<IRepository> mavenRepositories, 
+    private void updateRemoteRepositories(String targetRepository,
+            IObservableList<IRepository> mavenRepositories,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             RepositoryAccessor repositoryAccessor) {
         mavenRepositories.clear();
-        mavenRepositories.addAll(mavenRepositoryRegistry.getGlobalRepositories());
-        AbstractRepository repository = repositoryAccessor.getRepository(targetRepository);
-        if(repository != null && repository.exists()) {
-            mavenRepositories.addAll(mavenRepositoryRegistry.getProjectRepositories(repository.getProject()));
+        if (targetRepository != null && !targetRepository.isBlank()) {
+            mavenRepositories.addAll(mavenRepositoryRegistry.getGlobalRepositories());
+            AbstractRepository repository = repositoryAccessor.getRepository(targetRepository);
+            if (repository != null && repository.exists()) {
+                mavenRepositories.addAll(mavenRepositoryRegistry.getProjectRepositories(repository.getProject()));
+            }
         }
     }
 
@@ -210,8 +214,8 @@ public class ImportBosHandler {
     protected ImportBosArchiveControlSupplier newImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
             ExceptionDialogHandler exceptionDialogHandler,
             String file) {
-        return new ImportBosArchiveControlSupplier(repositoryAccessor, 
-                switchRepositoryStrategy, 
+        return new ImportBosArchiveControlSupplier(repositoryAccessor,
+                switchRepositoryStrategy,
                 exceptionDialogHandler,
                 file);
     }
