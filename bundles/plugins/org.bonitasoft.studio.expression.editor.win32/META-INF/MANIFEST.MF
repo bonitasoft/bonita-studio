@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Expression editor Win32
 Bundle-SymbolicName: org.bonitasoft.studio.expression.editor.win32;singleton:=true
-Bundle-Version: 7.12.2.qualifier
+Bundle-Version: 7.12.3.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: org.bonitasoft.studio.expression.editor;bundle-version="6.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
