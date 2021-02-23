@@ -76,6 +76,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
 
     private DependencyLookup runGetDependency() throws InvocationTargetException {
         try {
+            runDependencyPurgePlugin();
             for (String repository : repositories) {
                 MavenExecutionResult executionResult = runDependencyGetPlugin(repository);
                 if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
@@ -92,6 +93,24 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         return null;
     }
 
+    private MavenExecutionResult runDependencyPurgePlugin() throws CoreException {
+        final IMavenExecutionContext context = maven().createExecutionContext();
+        final MavenExecutionRequest request = context.getExecutionRequest();
+        request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:purge-local-repository"));
+        Properties userProperties = new Properties();
+        userProperties.setProperty("manualInclude",  gav.toString());
+        userProperties.setProperty("actTransitively", "false");
+        request.setUserProperties(userProperties);
+        return context.execute(new ICallable<MavenExecutionResult>() {
+
+            @Override
+            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
+                    throws CoreException {
+                return maven().lookup(Maven.class).execute(request);
+            }
+        }, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
     private MavenExecutionResult runDependencyGetPlugin(String remoteRepo) throws CoreException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();

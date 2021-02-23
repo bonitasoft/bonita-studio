@@ -41,8 +41,10 @@ import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -86,6 +88,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
     public DependencyReport analyze(IProgressMonitor monitor) {
         try {
             project.deleteMarkers(ANALYZE_PLUGIN_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+            IStatus installStatus = getLocalDependencyStore().runBonitaProjectStoreInstall(monitor);
+            if (!installStatus.isOK()) {
+                throw new CoreException(installStatus);
+            }
             IStatus status = runAnalyzePlugin(monitor);
             if (!status.isOK()) {
                 // There is classloader issues that disappears on re run (ClassnotFound exception thrown)
@@ -130,6 +136,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         }
     }
 
+
+    private LocalDependenciesStore getLocalDependencyStore() {
+        return RepositoryManager.getInstance().getRepository(project.getName()).getLocalDependencyStore();
+    }
 
     private void addMarker(IStatus status) {
         try {

@@ -350,10 +350,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                         }
                     });
             mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel);
-            IStatus installStatus = currentRepository.getLocalDependencyStore().runBonitaProjectStoreInstall(monitor);
-            if (!installStatus.isOK()) {
-                status.add(installStatus);
-            }
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
                 projectDependenciesStore.analyze(monitor);
