@@ -165,24 +165,26 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                                 properties.getProperty("artifactId"),
                                 properties.getProperty("version")))
                         .orElse(null);
-                var dependencyGetOperation = new DependencyGetOperation(gav);
-                repositories.stream()
-                        .forEach(dependencyGetOperation::addRemoteRespository);
-                monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
-                dependencyGetOperation.run(monitor);
-                status = dependencyGetOperation.getStatus();
-                if (status.isOK()) {
-                    if (dependencyGetOperation.getResult() != null) {
-                        dep = dependencyGetOperation.getResult();
-                    } else if (DependencyLookup.guessClassifier(jarToLookup.getName(), gav) != null) {
-                        gav.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), gav));
-                        dependencyGetOperation = new DependencyGetOperation(gav);
-                        repositories.stream()
-                                .forEach(dependencyGetOperation::addRemoteRespository);
-                        dependencyGetOperation.run(monitor);
-                        status = dependencyGetOperation.getStatus();
-                        if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                if (gav != null) {
+                    var dependencyGetOperation = new DependencyGetOperation(gav);
+                    repositories.stream()
+                            .forEach(dependencyGetOperation::addRemoteRespository);
+                    monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
+                    dependencyGetOperation.run(monitor);
+                    status = dependencyGetOperation.getStatus();
+                    if (status.isOK()) {
+                        if (dependencyGetOperation.getResult() != null) {
                             dep = dependencyGetOperation.getResult();
+                        } else if (DependencyLookup.guessClassifier(jarToLookup.getName(), gav) != null) {
+                            gav.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), gav));
+                            dependencyGetOperation = new DependencyGetOperation(gav);
+                            repositories.stream()
+                                    .forEach(dependencyGetOperation::addRemoteRespository);
+                            dependencyGetOperation.run(monitor);
+                            status = dependencyGetOperation.getStatus();
+                            if (status.isOK() && dependencyGetOperation.getResult() != null) {
+                                dep = dependencyGetOperation.getResult();
+                            }
                         }
                     }
                 }
