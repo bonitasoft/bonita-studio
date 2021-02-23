@@ -27,7 +27,7 @@ public class DependencyThemeFileStore extends ThemeFileStore {
     private Theme theme;
 
     public DependencyThemeFileStore(Theme theme, ThemeRepositoryStore parentStore) {
-        super(new File(theme.getFilePath()).getName(), parentStore);
+        super(new File(theme.getArtifact().getFile()).getName(), parentStore);
         this.theme = theme;
     }
     
@@ -38,7 +38,7 @@ public class DependencyThemeFileStore extends ThemeFileStore {
     
     @Override
     public File getArchiveFile() {
-        return new File(theme.getFilePath());
+        return new File(theme.getArtifact().getFile());
     }
     
     @Override

@@ -37,7 +37,7 @@ public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor
 
     @Override
     public Properties getPageProperties() {
-        File file = new File(theme.getFilePath());
+        File file = new File(theme.getArtifact().getFile());
         try {
             return findZipEntry(file, entry -> entry.getName().equals("page.properties"))
                     .map(entry -> {

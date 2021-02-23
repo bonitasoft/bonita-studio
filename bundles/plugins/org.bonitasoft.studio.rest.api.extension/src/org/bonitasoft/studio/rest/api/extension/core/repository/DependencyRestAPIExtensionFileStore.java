@@ -27,7 +27,7 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     private RestAPIExtension extension;
 
     public DependencyRestAPIExtensionFileStore(RestAPIExtension extension, RestAPIExtensionRepositoryStore parentStore) {
-        super(new File(extension.getFilePath()).getName(), parentStore);
+        super(new File(extension.getArtifact().getFile()).getName(), parentStore);
         this.extension = extension;
     }
     
@@ -38,7 +38,7 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     
     @Override
     public File getArchiveFile() {
-        return new File(extension.getFilePath());
+        return new File(extension.getArtifact().getFile());
     }
     
     @Override

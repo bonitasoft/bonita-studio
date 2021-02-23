@@ -39,14 +39,14 @@ public class DependencyConnectorDefFileStore extends ConnectorDefFileStore {
 
     public DependencyConnectorDefFileStore(Definition definition,
             AbstractEMFRepositoryStore<ConnectorDefFileStore> store) {
-        super(new File(definition.getFilePath()).getName(), store);
+        super(new File(definition.getArtifact().getFile()).getName(), store);
         this.definition = definition;
     }
 
     @Override
     protected Resource doCreateEMFResource() {
         if (definition != null) {
-            File file = new File(definition.getFilePath());
+            File file = new File(definition.getArtifact().getFile());
             if (file.exists()) {
                 try (InputStream is = new JarFile(file).getInputStream(new JarEntry(definition.getJarEntry()))) {
                     ConnectorDefinitionXMLProcessor connectorDefinitionXMLProcessor = new ConnectorDefinitionXMLProcessor();
@@ -66,7 +66,7 @@ public class DependencyConnectorDefFileStore extends ConnectorDefFileStore {
     
     @Override
     public DefinitionImageResourceLoader getDefinitionImageResourceLoader() {
-        return new JarDefinitionResourceLoader(new File(definition.getFilePath()));
+        return new JarDefinitionResourceLoader(new File(definition.getArtifact().getFile()));
     }
 
     @Override

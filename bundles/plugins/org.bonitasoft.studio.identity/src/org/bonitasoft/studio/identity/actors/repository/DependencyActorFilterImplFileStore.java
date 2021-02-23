@@ -35,14 +35,14 @@ public class DependencyActorFilterImplFileStore extends ActorFilterImplFileStore
 
     public DependencyActorFilterImplFileStore(ActorFilterImplementation implementation,
             AbstractEMFRepositoryStore<ActorFilterImplFileStore> store) {
-        super(new File(implementation.getFilePath()).getName(), store);
+        super(new File(implementation.getArtifact().getFile()).getName(), store);
         this.implementation =implementation;
     }
 
     @Override
     protected Resource doCreateEMFResource() {
         if (implementation != null) {
-            File file = new File(implementation.getFilePath());
+            File file = new File(implementation.getArtifact().getFile());
             if (file.exists()) {
                 try (InputStream is = new JarFile(file).getInputStream(new JarEntry(implementation.getJarEntry()))) {
                     ConnectorImplementationXMLProcessor xmlProcessor = new ConnectorImplementationXMLProcessor();
