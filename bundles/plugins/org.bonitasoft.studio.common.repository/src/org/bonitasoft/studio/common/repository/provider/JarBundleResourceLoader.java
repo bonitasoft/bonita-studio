@@ -40,7 +40,7 @@ public class JarBundleResourceLoader implements BundleResourceLoader {
         if (baseName.lastIndexOf(".") != -1) {
             baseName = baseName.substring(0, baseName.lastIndexOf("."));
         }
-        File file = new File(definition.getFilePath());
+        File file = new File(definition.getArtifact().getFile());
         if (file.isFile()) {
             try (URLClassLoader urlClassLoader = new URLClassLoader(new URL[] { file.toURI().toURL() })) {
                 return ResourceBundle.getBundle(baseName, locale, urlClassLoader);

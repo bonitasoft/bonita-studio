@@ -31,7 +31,7 @@ public class DependencyRestAPIExtensionDescriptor extends RestAPIExtensionDescri
 
     @Override
     public Properties getPageProperties() {
-        File file = new File(extension.getFilePath());
+        File file = new File(extension.getArtifact().getFile());
         try {
             return findZipEntry(file, entry -> entry.getName().equals("page.properties"))
                     .map(entry -> {
