@@ -60,5 +60,6 @@ public class ApplicationEditorProviders {
         layoutProposalProvider.dispose();
         themeProposalProvider.dispose();
         customPageProvider.dispose();
+        profileProposalProvider.dispose();
     }
 }
