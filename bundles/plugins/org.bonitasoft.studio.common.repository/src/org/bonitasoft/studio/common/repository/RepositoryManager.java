@@ -14,11 +14,26 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -27,16 +42,21 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * @author Romain Bioteau
@@ -151,6 +171,10 @@ public class RepositoryManager {
     }
 
     public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
+        AbstractRepository currentRepository = getCurrentRepository();
+        if (repositoryName.equals(currentRepository.getName())) {
+            return currentRepository;
+        }
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(repositoryName);
         if (project == null || !project.exists()) {
@@ -182,49 +206,73 @@ public class RepositoryManager {
 
     public List<IRepository> getAllRepositories() {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final List<IRepository> result = new ArrayList<>();
-        try {
-            workspace.run(new IWorkspaceRunnable() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws CoreException {
-                    result.add(repository);
-                    workspace.getRoot().refreshLocal(IResource.DEPTH_ONE, null);
-                    for (final IProject p : workspace.getRoot().getProjects()) {
-                        if (p.exists() && p.getLocation() != null && p.getLocation().toFile().exists()) {
-                            try {
-                                boolean close = false;
-                                if (!p.isOpen()) {
-                                    p.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-                                    close = true;
-                                }
-                                if (p.getDescription().hasNature(BonitaProjectNature.NATURE_ID)) {
-                                    if (!p.getName().equals(repository.getName())) {
-                                        result.add(createRepository(p.getName(), false));
-                                    }
-                                }
-                                if (close) {
-                                    p.close(AbstractRepository.NULL_PROGRESS_MONITOR);
-                                }
-                            } catch (final CoreException e) {
-                                BonitaStudioLog.error(e);
-                            }
+        return Stream.of(workspace.getRoot().getProjects())
+                .filter(project -> project.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
+                .map( project -> project.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
+                .map( descriptorFile -> {
+                    if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
+                        String projectName = projectName(descriptorFile);
+                        if (!projectName.equals(repository.getName())) {
+                           return createRepository(projectName, false);
+                        }else {
+                            return repository;
                         }
                     }
-                }
-            }, AbstractRepository.NULL_PROGRESS_MONITOR);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-        }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
-        return result;
+    private String projectName(File descriptorFile) {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        try(InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())){
+            Document document = asXMLDocument(is);
+           return (String) xPath.evaluate( "//projectDescription/name/text()", document, XPathConstants.STRING);
+        } catch (IOException | XPathExpressionException e) {
+          BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+
+    private boolean hasNature(File descriptorFile, String natureId) {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        try(InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())){
+            Document document = asXMLDocument(is);
+            NodeList natures = (NodeList) xPath.evaluate( "//projectDescription/natures/nature/text()", document, XPathConstants.NODESET);
+            for (int i = 0; i < natures.getLength(); ++i) {
+                Node item = natures.item(i);
+                if(Objects.equals(item.getTextContent(),natureId)) {
+                    return true;
+                }
+            }
+        } catch (IOException | XPathExpressionException e) {
+          BonitaStudioLog.error(e);
+        }
+        return false;
+    }
+    
+    private static Document asXMLDocument(InputStream source) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        factory.setNamespaceAware(true);
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            return builder.parse(new InputSource(source));
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            return null;
+        }
     }
 
     public void setRepository(final String repositoryName, final IProgressMonitor monitor) {
         setRepository(repositoryName, false, monitor);
     }
 
-    public void setRepository(final String repositoryName, final boolean migrationEnabled, final IProgressMonitor monitor) {
+    public void setRepository(final String repositoryName, final boolean migrationEnabled,
+            final IProgressMonitor monitor) {
         AbstractRepository currentRepository = getCurrentRepository();
         if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
             return;
@@ -242,7 +290,8 @@ public class RepositoryManager {
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
         Object resource = element instanceof IJavaElement ? ((IJavaElement) element).getResource() : element;
-        if(!hasActiveRepository() || !getCurrentRepository().isLoaded() || !getCurrentRepository().getProject().isOpen()) {
+        if (!hasActiveRepository() || !getCurrentRepository().isLoaded()
+                || !getCurrentRepository().getProject().isOpen()) {
             return Optional.empty();
         }
         return getCurrentRepository().getAllStores().stream()
