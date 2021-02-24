@@ -27,25 +27,17 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -66,28 +58,9 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     public static final String STORE_NAME = "process_configurations";
     private static final Set<String> extensions = new HashSet<String>();
     public static final String CONF_EXT = "conf";
-    private Synchronizer synchronizer;
 
     static {
         extensions.add(CONF_EXT);
-    }
-
-    @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-        synchronizer = loadSynchronizer();
-    }
-    
-    private Synchronizer loadSynchronizer() {
-        for (IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements("org.bonitasoft.studio.diagram.custom.configurationSynchronizer")) {
-            try {
-                return (Synchronizer) elem.createExecutableExtension("class");
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
     }
 
     @Override
@@ -130,20 +103,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         final IFile file = getResource().getFile(fileName);
         try {
             if (file.exists()) {
-                String fileNameLabel = fileName;
-                final String processUUID = fileName.substring(0, fileName.lastIndexOf("."));
-                final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
-                        .getRepositoryStore(DiagramRepositoryStore.class);
-                final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
-                if (process != null) {
-                    fileNameLabel = Messages.bind(Messages.localConfigurationFor,
-                            process.getName() + " (" + process.getVersion() + ")");
-                }
-                if (FileActionDialog.overwriteQuestion(fileNameLabel)) {
-                    file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
-                } else {
-                    return createRepositoryFileStore(fileName);
-                }
+               file.setContents(inputStream, true, false, AbstractRepository.NULL_PROGRESS_MONITOR);
             } else {
                 final File f = file.getLocation().toFile();
                 if (!f.getParentFile().exists()) {
@@ -203,8 +163,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport.conf",
-                    copyIs.getFile());
+            final Resource r = getTmpEMFResource("beforeImport.conf",  copyIs.getFile());
             try {
                 r.load(Collections.EMPTY_MAP);
             } catch (final IOException e) {
@@ -217,11 +176,6 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                     final String mVersion = configuration.getVersion();
                     if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
                         configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
-                    }
-                    DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-                    AbstractProcess process = diagramStore.getProcessByUUID(fileName.substring(0, fileName.length() - 5));
-                    if(process != null) {
-                        synchronizer.synchronize((Pool) process, configuration);
                     }
                     try {
                         r.save(Collections.EMPTY_MAP);
