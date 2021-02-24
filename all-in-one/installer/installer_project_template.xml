@@ -345,7 +345,7 @@ ${installdir}/@mac.shortcut.name@/Contents/Eclipse/jre/Contents/Home/bin/java
         </runProgram>
         <launchBrowser>
             <show>0</show>
-            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community</url>
+            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community&amp;lang=${installation_language_code}&amp;utm_source=bonita_wizard&amp;utm_medium=referral&amp;utm_campaign=bonita_install</url>
         </launchBrowser>
     </finalPageActionList>
 
