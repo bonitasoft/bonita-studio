@@ -40,6 +40,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
 
     protected static final List<DOMContentProvider> CONTENT_PROVIDERS = new ArrayList<>();
     private static final Map<String, String> VIDEO_CAMP_SERIES_ID_BY_LOCALE = new HashMap<>();
+    private static final String SEO_PARAMS = "&utm_source=bonita_studio&utm_medium=referral&utm_campaign=bonita_studio";
 
     static {
         VIDEO_CAMP_SERIES_ID_BY_LOCALE.put("fr", "699");
@@ -99,37 +100,37 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
         CONTENT_PROVIDERS.add(new SectionTitleContentProvider("help-title", Messages.help));
 
         CONTENT_PROVIDERS.add(new LinkContentProvider("release-notes-link",
-                redirectUrl("696"),
+                redirectUrl("696", true),
                 Messages.releaseNotes));
         CONTENT_PROVIDERS.add(new LinkContentProvider("getting-started-link",
-                redirectUrl("697"),
+                redirectUrl("697", true),
                 Messages.gettingStarted));
         CONTENT_PROVIDERS.add(new LinkContentProvider("camp-video-series-link",
-                redirectUrl(VIDEO_CAMP_SERIES_ID_BY_LOCALE.getOrDefault(Locale.getDefault().getLanguage(), "698")),
+                redirectUrl(VIDEO_CAMP_SERIES_ID_BY_LOCALE.getOrDefault(Locale.getDefault().getLanguage(), "698"), false),
                 Messages.bonitaCampVideoSeries));
         CONTENT_PROVIDERS.add(new LinkContentProvider("training-link",
-                redirectUrl("701"),
+                redirectUrl("701", true),
                 Messages.officialTraining));
         CONTENT_PROVIDERS.add(new LinkContentProvider("forum-link",
-                redirectUrl("77"),
+                redirectUrl("77", true),
                 Messages.qaForum));
         CONTENT_PROVIDERS.add(new LinkContentProvider("feedback-link",
-                redirectUrl("708"),
+                redirectUrl("708", true),
                 Messages.productFeedback));
         CONTENT_PROVIDERS.add(new LinkContentProvider("report-issue-link",
-                redirectUrl("709"),
+                redirectUrl("709", true),
                 Messages.reportAnIssue));
         CONTENT_PROVIDERS.add(new LinkContentProvider("documentation-link",
-                redirectUrl("695"),
+                redirectUrl("695", true),
                 Messages.documentation));
         CONTENT_PROVIDERS.add(new LinkContentProvider("community-contribution-link",
-                redirectUrl("81"),
+                redirectUrl("81", true),
                 Messages.communityContributions));
         CONTENT_PROVIDERS.add(new LinkContentProvider("blog-link",
-                redirectUrl("703"),
+                redirectUrl("703", true),
                 Messages.blog));
         CONTENT_PROVIDERS.add(new LinkContentProvider("videos-podcasts-link",
-                redirectUrl("702"),
+                redirectUrl("702", false),
                 Messages.videosAndPodcasts));
 
         CONTENT_PROVIDERS.add(new SVGContentProvider("design-icon", "pencil-ruler.svg"));
@@ -152,22 +153,23 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
             throws IOException {
         Map<String, Object> procurementParam = new HashMap<>();
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.file",
-                URLEncoder.encode(new URL(redirectUrl(redirectId, product)).toString(), "UTF-8"));
+                URLEncoder.encode(new URL(redirectUrl(redirectId, product, false)).toString(), "UTF-8"));
         procurementParam.put("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName", projectName);
         return procurementParam;
     }
 
-    public static String redirectUrl(String redirectId) {
-        return redirectUrl(redirectId, "bos");
+    public static String redirectUrl(String redirectId, boolean includeSEOParams) {
+        return redirectUrl(redirectId, "bos", includeSEOParams);
     }
 
-    public static String redirectUrl(String redirectId, String product) {
+    public static String redirectUrl(String redirectId, String product, boolean includeSEOParams) {
         return String.format(
-                "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s",
+                "https://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=%s&bos_redirect_product=%s&bos_redirect_major_version=%s&bos_redirect_minor_version=%s%s",
                 redirectId,
                 product,
                 ProductVersion.majorVersion(),
-                ProductVersion.maintenanceVersion());
+                ProductVersion.maintenanceVersion(),
+                includeSEOParams ? SEO_PARAMS : "");
     }
 
 
