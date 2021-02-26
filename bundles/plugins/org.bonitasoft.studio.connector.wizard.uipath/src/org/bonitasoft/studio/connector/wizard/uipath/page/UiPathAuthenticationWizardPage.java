@@ -73,6 +73,8 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
     private static final String USER_KEY_ID = "userKeyWidget";
     private static final String CLIENT_ID_INPUT = "clientId";
     private static final String CLIENT_ID_ID = "clientIdWidget";
+    private static final String ORGANIZATION_UNIT_ID_INPUT = "organizationUnitId";
+    private static final String ORGANIZATION_UNIT_WIDGET_ID = "organizationUnitIdWidget";
 
     private SelectObservableValue modeObservable;
 
@@ -102,7 +104,11 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
             Label separator = new Label(mainComposite, SWT.HORIZONTAL | SWT.SEPARATOR);
             separator.setLayoutData(GridDataFactory.fillDefaults().create());
 
-            createStackComposite(mainComposite, builder, context);
+            Composite stackParent = new Composite(mainComposite, SWT.NONE);
+            stackParent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+            stackParent.setLayout(GridLayoutFactory.fillDefaults().create());
+            
+            createStackComposite(stackParent, builder, context);
 
             return mainComposite;
         }
@@ -152,11 +158,12 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
 
     protected Composite createCloudComposite(Composite parent, PageComponentSwitchBuilder builder) {
         Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createText(builder, composite, ACCOUNT_LOGICAL_NAME_INPUT, ACCOUNT_LOGICAL_NAME_ID);
         createText(builder, composite, TENANT_LOGICAL_NAME_INPUT, TENANT_LOGICAL_NAME_ID);
+        createText(builder, composite, ORGANIZATION_UNIT_ID_INPUT, ORGANIZATION_UNIT_WIDGET_ID);
         createText(builder, composite, USER_KEY_INPUT, USER_KEY_ID);
         createText(builder, composite, CLIENT_ID_INPUT, CLIENT_ID_ID);
 
@@ -165,7 +172,7 @@ public class UiPathAuthenticationWizardPage extends GeneratedConnectorWizardPage
 
     protected Composite createOnPremiseComposite(Composite parent, PageComponentSwitchBuilder builder) {
         Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createText(builder, composite, URL_INPUT, URL_ID);

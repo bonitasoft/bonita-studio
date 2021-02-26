@@ -208,6 +208,9 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
                     if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
                         configuration.setModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                     }
+                    
+                    applyTransformations(configuration);
+                    
                     try {
                         r.save(r.getDefaultSaveOptions());
                     } catch (final IOException e) {
