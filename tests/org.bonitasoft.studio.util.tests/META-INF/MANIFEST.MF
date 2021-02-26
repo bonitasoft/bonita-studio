@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests
 Bundle-SymbolicName: org.bonitasoft.studio.util.tests
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W9
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
