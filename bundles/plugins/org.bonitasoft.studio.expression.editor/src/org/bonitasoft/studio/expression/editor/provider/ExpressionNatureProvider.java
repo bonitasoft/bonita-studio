@@ -6,20 +6,15 @@
  *      BonitaSoft, 32 rue Gustave Eiffel a 38000 Grenoble
  *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.connector.wizard.sapjco3.providers;
+package org.bonitasoft.studio.expression.editor.provider;
 
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 
-/**
- * @author Maxence Raoux
- *
- */
 public class ExpressionNatureProvider implements IExpressionNatureProvider {
 
 	private final List<String> additionalItems;
@@ -31,11 +26,9 @@ public class ExpressionNatureProvider implements IExpressionNatureProvider {
 
 	@Override
     public Expression[] getExpressions(final EObject context) {
-		final Expression[] expressionTable = new Expression[additionalItems.size()];
-		for (int i = 0; i < additionalItems.size(); i++) {
-			expressionTable[i] = ExpressionHelper.createConstantExpression(additionalItems.get(i), additionalItems.get(i), String.class.getName());
-		}
-		return expressionTable;
+		return additionalItems.stream()
+		        .map(item -> ExpressionHelper.createConstantExpression(item, item, String.class.getName()))
+		        .toArray(Expression[]::new);
 	}
 
 

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,8 +33,10 @@ import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
+import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
@@ -262,4 +265,19 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
 
     }
 
+    protected void applyTransformations(EObject modelObject) {
+        findTransformers(modelObject)
+            .forEach(transformer -> transformer.transform(modelObject));
+        modelObject.eAllContents()
+                .forEachRemaining(eObject -> findTransformers(eObject)
+                        .forEach(transformer -> transformer.transform(eObject)));
+    }
+    
+    private Stream<ProcessModelTransformation> findTransformers(EObject eObject) {
+        return getRepository()
+                .getProcessModelTransformations()
+                .stream()
+                .filter(t -> t.appliesTo(eObject));
+    }
+    
 }

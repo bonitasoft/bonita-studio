@@ -33,17 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.RemoveDanglingReferences;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -53,7 +49,6 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -300,10 +295,10 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     protected String getValidFileName(final String fileName, final InputStream is) {
         try {
             final Map<String, String[]> featureValueFromEObjectType = EMFResourceUtil.getFeatureValueFromEObjectType(
-                            is,
-                            "process:MainProcess",
-                            ProcessPackage.Literals.ELEMENT__NAME,
-                            ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+                    is,
+                    "process:MainProcess",
+                    ProcessPackage.Literals.ELEMENT__NAME,
+                    ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
             if (featureValueFromEObjectType.size() == 1) {
                 final String[] next = featureValueFromEObjectType.values()
                         .iterator().next();
@@ -343,7 +338,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         for (final DiagramFileStore fStore : getChildren()) {
             File file = fStore.getResource().getLocation().toFile();
             try (InputStream is = Files.newInputStream(file.toPath())) {
-                String[] poolIds = EMFResourceUtil.getEObectIfFromEObjectType(is,"process:Pool");
+                String[] poolIds = EMFResourceUtil.getEObectIfFromEObjectType(is, "process:Pool");
                 if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
                     try {
                         MainProcess diagram = fStore.getContent();
@@ -428,9 +423,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
                     .ifPresent(d -> new RemoveDanglingReferences(d).execute());
             diagram.eResource().getContents().removeIf(eObject -> isFormDiagram(eObject));
-            updateConfigurationId(diagramResource, diagram);
-            migrateJavaExpressionType(diagram);
-            migrateConditionExpressionType(diagram);
+
+            applyTransformations(diagram);
 
             ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance()
                     .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
@@ -465,56 +459,10 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         }
     }
 
-    private void migrateJavaExpressionType(MainProcess diagram) {
-        ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
-        modelSearch.getAllItemsOfType(diagram, Expression.class)
-                .stream()
-                .filter(exp -> ExpressionConstants.JAVA_TYPE.equals(exp.getType()))
-                .forEach(this::javaToScriptExpression);
-    }
 
-    private void migrateConditionExpressionType(MainProcess diagram) {
-        ModelSearch modelSearch = new ModelSearch(Collections::emptyList);
-        modelSearch.getAllItemsOfType(diagram, Expression.class)
-                .stream()
-                .filter(exp -> ExpressionConstants.CONDITION_TYPE.equals(exp.getType()))
-                .forEach(this::conditionToScriptExpression);
-    }
-    
-    private void conditionToScriptExpression(Expression exp) {
-        if(exp.hasContent()) {
-            exp.setType(ExpressionConstants.SCRIPT_TYPE);
-            exp.setInterpreter(ExpressionConstants.GROOVY);
-        }else {
-            exp.setType(ExpressionConstants.CONSTANT_TYPE);
-        }
-    }
-
-    private void javaToScriptExpression(Expression exp) {
-        exp.setType(ExpressionConstants.SCRIPT_TYPE);
-        exp.setInterpreter(ExpressionConstants.GROOVY);
-        exp.setContent(String.format("%s.%s()",
-                ((Element) exp.getReferencedElements().get(0)).getName(),
-                exp.getContent()));
-    }
 
     private boolean isFormDiagram(EObject eObject) {
         return eObject instanceof Diagram && "Form".equals(((Diagram) eObject).getType());
-    }
-
-    protected void updateConfigurationId(final Resource diagramResource, final MainProcess diagram) {
-        final String pVersion = diagram.getBonitaVersion();
-        final String mVersion = diagram.getBonitaModelVersion();
-        if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
-            diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-        }
-        if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
-            diagram.setBonitaModelVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
-        }
-        if (diagram.getAuthor() == null) {
-            diagram.setAuthor(System.getProperty("user.name",
-                    "Unknown"));
-        }
     }
 
     protected InputStream openError(final String fileName) {
@@ -581,26 +529,26 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         }
         return super.validate(filename, inputStream);
     }
-    
+
     public List<AbstractProcess> computeProcesses(IProgressMonitor monitor) {
         monitor.beginTask(Messages.loadingAllProcesses, IProgressMonitor.UNKNOWN);
         computedProcessesList = getAllProcesses();
         return computedProcessesList;
     }
-    
+
     public void resetComputedProcesses() {
-        if(computedProcessesList != null) {
+        if (computedProcessesList != null) {
             computedProcessesList.clear();
             computedProcessesList = null;
         }
     }
-    
+
     public boolean hasComputedProcesses() {
         return computedProcessesList != null;
     }
 
     public List<AbstractProcess> getComputedProcesses() {
-        if(!hasComputedProcesses()) {
+        if (!hasComputedProcesses()) {
             throw new IllegalArgumentException("Project process list not computed yet !");
         }
         return computedProcessesList;

@@ -46,6 +46,11 @@ import org.bonitasoft.studio.common.repository.core.ProjectClasspathFactory;
 import org.bonitasoft.studio.common.repository.core.ProjectManifestFactory;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
+import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
+import org.bonitasoft.studio.common.repository.migration.transformation.ConditionExpressionTransformation;
+import org.bonitasoft.studio.common.repository.migration.transformation.DiagramVersionTransformation;
+import org.bonitasoft.studio.common.repository.migration.transformation.JavaGetterExpressionTransformation;
+import org.bonitasoft.studio.common.repository.migration.transformation.UIPathConnectorDefinitionTransformation;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -116,6 +121,12 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         LEGACY_REPOSITORIES.add("customTypes");
         LEGACY_REPOSITORIES.add("src-customTypes");
     }
+
+    private static final List<ProcessModelTransformation> PROCESS_MODEL_TRANSFORMATIONS = List.of(
+            new DiagramVersionTransformation(),
+            new UIPathConnectorDefinitionTransformation(),
+            new JavaGetterExpressionTransformation(),
+            new ConditionExpressionTransformation());
 
     private static final String CLASS = "class";
 
@@ -903,6 +914,11 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         if (!projectListeners.contains(listener)) {
             projectListeners.add(listener);
         }
+    }
+
+    @Override
+    public List<ProcessModelTransformation> getProcessModelTransformations() {
+        return PROCESS_MODEL_TRANSFORMATIONS;
     }
 
 }

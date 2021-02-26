@@ -37,7 +37,8 @@ public class UIPathPageComponentSwitchBuilder extends PageComponentSwitchBuilder
 
     public UIPathPageComponentSwitchBuilder(EObject container, ConnectorDefinition definition,
             ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,
-            DefinitionResourceProvider messageProvider, AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
+            DefinitionResourceProvider messageProvider, 
+            AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
         super(container, definition, connectorConfiguration, context, messageProvider, connectorExpressionContentTypeFilter);
         this.customMandatoryValidators = new HashMap<>();
     }
