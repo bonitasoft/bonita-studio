@@ -23,7 +23,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Retrieve UI Designer Exec War</id>
+                        <id>copy-uid-jar</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>copy</goal>
