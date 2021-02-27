@@ -23,7 +23,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Retrieve UI Designer Exec War</id>
+                        <id>copy-uid-jar</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>copy</goal>
@@ -34,7 +34,6 @@
                                     <groupId>org.bonitasoft.web</groupId>
                                     <artifactId>ui-designer-backend-webapp</artifactId>
                                     <version>${ui.designer.version}</version>
-                                    <classifier>exec-war</classifier>
                                 </artifactItem>
                             </artifactItems>
                             <stripClassifier>true</stripClassifier>
