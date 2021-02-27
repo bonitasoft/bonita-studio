@@ -21,18 +21,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 
 import com.google.common.base.Joiner;
 
 public class WorkspaceSystemProperties {
 
-    private static final String REPOSITORY_PAGES_PROPERTIES = "repository.pages";
-    private static final String REPOSITORY_FRAGMENTS_PROPERTIES = "repository.fragments";
-    private static final String REPOSITORY_WIDGETS_PROPERTIES = "repository.widgets";
-    private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
+    private static final String UID_WORKSPACE_PATH_PROPERTIES = "designer.workspace.path";
+    private static final String WORKSPACE_API_REST_URL = "designer.workspace.apiUrl";
     private static final String SPRING_PROFILES_ACTIVE = "spring.profiles.active";
 
     private AbstractRepository repository;
@@ -41,33 +36,12 @@ public class WorkspaceSystemProperties {
         this.repository = repository;
     }
 
-    public String getPageRepositoryLocation() {
-        final WebPageRepositoryStore webFormRepository = repository.getRepositoryStore(WebPageRepositoryStore.class);
-        if (webFormRepository == null) {
-            throw new IllegalStateException("WebFormRepositoryStore has not be loaded yet.");
-        }
-        return aSystemProperty(REPOSITORY_PAGES_PROPERTIES, webFormRepository.getResource().getLocation().toFile());
-    }
-
-    public String getFragmentRepositoryLocation() {
-        final WebFragmentRepositoryStore webFragmentRepository = repository
-                .getRepositoryStore(WebFragmentRepositoryStore.class);
-        if (webFragmentRepository == null) {
-            throw new IllegalStateException("WebFragmentRepositoryStore has not be loaded yet.");
-        }
-        return aSystemProperty(REPOSITORY_FRAGMENTS_PROPERTIES, webFragmentRepository.getResource().getLocation().toFile());
-    }
-
-    public String getWidgetRepositoryLocation() {
-        final WebWidgetRepositoryStore webWidgetRepository = repository.getRepositoryStore(WebWidgetRepositoryStore.class);
-        if (webWidgetRepository == null) {
-            throw new IllegalStateException("WebWidgetRepositoryStore has not be loaded yet.");
-        }
-        return aSystemProperty(REPOSITORY_WIDGETS_PROPERTIES, webWidgetRepository.getResource().getLocation().toFile());
-    }
-
     public String getRestAPIURL(final int port) throws UnknownHostException {
         return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://%s:%s/api/workspace", InetAddress.getByName(null).getHostAddress(), port));
+    }
+    
+    public String getWorspacePathLocation() {
+        return aSystemProperty(UID_WORKSPACE_PATH_PROPERTIES,  repository.getProject().getLocation().toFile().toURI());
     }
 
     public String activateSpringProfile(final String... profiles) {
@@ -76,11 +50,7 @@ public class WorkspaceSystemProperties {
     }
 
     static String aSystemProperty(final String propertyName, final Object value) {
-        String properyValue = value.toString();
-        if (value instanceof File) {
-            properyValue = "\"" + ((File) value).getAbsolutePath() + "\"";
-        }
-        return "-D" + propertyName + "=" + properyValue;
+        return "-D" + propertyName + "=" + value;
     }
 
 }

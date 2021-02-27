@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.application.actions;
 
 import java.io.File;
-import java.util.Optional;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -41,10 +40,10 @@ public class OpenUIDLogCommand extends AbstractHandler implements IHandler {
     @Override
     public Boolean execute(ExecutionEvent event) throws ExecutionException {
         final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        final Optional<File> logFile = UIDesignerServerManager.getInstance().getLogFile();
-        if (logFile.isPresent() && logFile.get().exists()) {
+        File logFile = UIDesignerServerManager.getInstance().getLogFile();
+        if (logFile.exists()) {
             try {
-                IFileStore fileStore = EFS.getLocalFileSystem().getStore(logFile.get().toURI());
+                IFileStore fileStore = EFS.getLocalFileSystem().getStore(logFile.toURI());
                 final File localFile = fileStore.toLocalFile(EFS.NONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 final long fileSize = localFile.length();
                 if (fileSize < MAX_FILE_SIZE) {

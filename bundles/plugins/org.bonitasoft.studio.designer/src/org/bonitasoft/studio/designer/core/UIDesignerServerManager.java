@@ -14,9 +14,10 @@
  */
 package org.bonitasoft.studio.designer.core;
 
+import static org.bonitasoft.studio.designer.core.WorkspaceSystemProperties.aSystemProperty;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -24,12 +25,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -53,14 +52,14 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.IStreamListener;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStreamMonitor;
 import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -68,14 +67,14 @@ import com.google.common.base.Joiner;
 
 public class UIDesignerServerManager implements IBonitaProjectListener {
 
-    private static final String UI_DESIGNER_BASE_NAME = "ui-designer";
+    private static final String UID_SERVER_PORT = "server.port";
+    private static final String UID_LOGGING_FILE = "logging.file.name";
     private static UIDesignerServerManager INSTANCE;
     private int port = -1;
     private ILaunch launch;
     private int portalPort = 8080;
-    private static final String BONITA_CLIENT_HOME = "bonita.client.home";
-    private static final String PORTAL_BASE_URL = "bonita.portal.origin";
-    private static final String BONITA_DATA_REPOSITORY_ORIGIN = "bonita.data.repository.origin";
+    private static final String PORTAL_BASE_URL = "designer.bonita.portal.url";
+    private static final String BONITA_DATA_REPOSITORY_ORIGIN = "designer.bonita.bdm.url";
     private PageDesignerURLFactory pageDesignerURLBuilder;
 
     private UIDesignerServerManager() {
@@ -139,11 +138,26 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
+                launch.getProcesses()[0].getStreamsProxy().getErrorStreamMonitor().addListener(new IStreamListener() {
+                    
+                    @Override
+                    public void streamAppended(String text, IStreamMonitor monitor) {
+                        System.err.println(text);
+                    }
+                });
+                launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
+                    
+                    @Override
+                    public void streamAppended(String text, IStreamMonitor monitor) {
+                        System.out.println(text);
+                    }
+                });
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 waitForUID(pageDesignerURLBuilder);
                 BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
                         UIDesignerPlugin.PLUGIN_ID);
-            } catch (final CoreException | IOException  e) {
+
+            } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
                 monitor.done();
@@ -172,31 +186,10 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         cr.get();
     }
 
-    private Path logLocation() {
-        return extractLocation().resolve("logs");
-    }
-
-    private Path extractLocation() {
-        Bundle bundle = FrameworkUtil.getBundle(UIDesignerServerManager.class);
-        IPath stateLoc = Platform.getStateLocation(bundle);
-        return stateLoc.toFile().toPath().resolve(".extract");
-    }
-
-    public Optional<File> getLogFile() {
-        final File logDir = logLocation().toFile();
-        final List<File> list = Arrays
-                .asList(logDir
-                        .listFiles((FilenameFilter) (file, fileName) -> fileName.contains(UI_DESIGNER_BASE_NAME)));
-
-        return list.stream()
-                .sorted((file1, file2) -> file1.lastModified() > file2.lastModified()
-                        ? -1
-                        : compareLastModified(file1, file2))
-                .findFirst();
-    }
-
-    private int compareLastModified(File file1, File file2) {
-        return file1.lastModified() < file2.lastModified() ? 1 : 0;
+    public File getLogFile() {
+        IPath location = Platform.getLogFileLocation();
+        IPath path = location.removeLastSegments(1).append("ui-designer.log");
+        return new File(path.toOSString());
     }
 
     public synchronized void stop() {
@@ -245,33 +238,21 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             port = SocketUtil.findFreePort();
             getPreferenceStore().putInt(BonitaPreferenceConstants.UID_PORT, port);
         }
-        File cpJar = configureClasspath();
         return Arrays.asList(
                 getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"),
-                "-classpath",
-                cpJar == null ? "\"" + locateUIDjar() + "\""
-                        : "\"" + locateUIDjar() + "\"" + System.getProperty("path.separator") + "\""
-                                + cpJar.getAbsolutePath() + "\"",
-                "org.apache.tomcat.maven.runner.Tomcat7RunnerCli",
-                workspaceSystemProperties.getPageRepositoryLocation(),
-                workspaceSystemProperties.getWidgetRepositoryLocation(),
-                workspaceSystemProperties.getFragmentRepositoryLocation(),
+                workspaceSystemProperties.getWorspacePathLocation(),
                 workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
                 workspaceSystemProperties.activateSpringProfile("studio"),
-                String.format("-D%s=http://%s:%s", PORTAL_BASE_URL, InetAddress.getByName(null).getHostAddress(),
-                        portalPort),
-                String.format("-D%s=http://%s:%s", BONITA_DATA_REPOSITORY_ORIGIN,
-                        InetAddress.getByName(null).getHostAddress(), DataRepositoryServerManager.getInstance().getPort()),
-                "-Declipse.product=\"" + getProductApplicationId() + "\"",
-                "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
-                " -extractDirectory",
-                String.format("\"%s\"", extractLocation().toFile().getAbsolutePath()),
-                "-httpPort",
-                String.valueOf(port));
-    }
-
-    private String getProductApplicationId() {
-        return Platform.getProduct() != null ? Platform.getProduct().getApplication() : null;
+                aSystemProperty(PORTAL_BASE_URL,
+                        String.format("http://%s:%s", InetAddress.getByName(null).getHostAddress(),
+                                portalPort)),
+                aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
+                        InetAddress.getByName(null).getHostAddress(),
+                        DataRepositoryServerManager.getInstance().getPort())),
+                aSystemProperty(UID_SERVER_PORT, String.valueOf(port)),
+                aSystemProperty(UID_LOGGING_FILE,String.format("\"%s\"", getLogFile().getAbsolutePath())),
+                "-jar",
+                "\"" + locateUIDjar() + "\"");
     }
 
     private static boolean isPortInUse(int port) {
@@ -300,35 +281,6 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
 
     protected ILaunchManager getLaunchManager() {
         return DebugPlugin.getDefault().getLaunchManager();
-    }
-
-    protected File configureClasspath() {
-        final Bundle bundle = Platform.getBundle("org.bonitasoft.studio.common.ex");
-        if (bundle != null) {
-            if (Platform.inDevelopmentMode()) {
-                try {
-                    return new File(new File(FileLocator.getBundleFile(bundle), "lib"), "addons.jar")
-                            .getCanonicalFile();
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            } else {
-                try {
-                    final URL fileUrl = bundle.loadClass("org.bonitasoft.studio.common.ex.contribution.SilentException")
-                            .getClassLoader()
-                            .getResource("com/bonitasoft/studio/logger/LoggerException.class");
-                    URL addonsResource = FileLocator.resolve(fileUrl);
-                    if (addonsResource.toString().startsWith("jar:file")) {
-                        addonsResource = new URL(addonsResource.toString().substring("jar:".length(),
-                                addonsResource.toString().lastIndexOf('!')));
-                    }
-                    return new File(addonsResource.getFile());
-                } catch (final Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        }
-        return null;
     }
 
     public PageDesignerURLFactory getPageDesignerURLBuilder() {
