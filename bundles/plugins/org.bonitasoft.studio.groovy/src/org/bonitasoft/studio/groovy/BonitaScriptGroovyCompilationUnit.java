@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.groovy;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.groovy.ast.ClassNode;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.internal.core.PackageFragment;
 public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
 
     private Map<String, ScriptVariable> context;
+    private Map<String, ClassNode> resolvedTypes = new HashMap<>();
 
     public BonitaScriptGroovyCompilationUnit(PackageFragment parent, String name, WorkingCopyOwner owner) {
         super(parent, name, owner);
@@ -38,9 +40,10 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
             ClassNode scriptClassDummy = moduleInfo.module.getScriptClassDummy();
             context.values().forEach(var -> {
                 String typeName = var.getType();
+                ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName, t -> moduleInfo.resolver.resolve(t));
                 scriptClassDummy.addField(var.getName(),
                         FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
-                        moduleInfo.resolver.resolve(typeName),
+                        resolvedType,
                         null);
             });
 

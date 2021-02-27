@@ -32,10 +32,10 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
@@ -78,8 +78,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         if (!this.folder.exists() && this.folder.getLocation() != null) {
             try {
                 if (!this.folder.getParent().exists()) {
-                     this.folder.getLocation().toFile().mkdirs();
-                     this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    this.folder.getLocation().toFile().mkdirs();
+                    this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 } else {
                     this.folder.create(true, true, AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
@@ -91,8 +91,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     }
 
     protected void processDefaultContribution() {
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.repository.fileContribution");
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(
+                        "org.bonitasoft.studio.repository.fileContribution");
         for (final IConfigurationElement element : elements) {
             IFileStoreContribution contribution;
             try {
@@ -110,16 +111,26 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     public final T importInputStream(final String fileName, final InputStream inputStream) {
         Assert.isNotNull(inputStream);
         Assert.isNotNull(fileName);
+        InputStream newIs = null;
         try {
             if (inputStream.available() == 0) { // empty file case
                 return createEmptyFile(fileName, inputStream);
             }
-        } catch (final IOException e1) {
-            BonitaStudioLog.error(e1);
-        }
-        InputStream newIs = null;
-        try {
             newIs = handlePreImport(fileName, inputStream);
+            if (newIs == null) {
+                return null;
+            }
+            boolean exists = false;
+            try {
+                exists = getResource().members().length > 0;
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+            final T store = doImportInputStream(fileName, newIs);
+            if (!exists) {
+                AbstractFileStore.refreshExplorerView();
+            }
+            return store;
         } catch (final MigrationException e) {
             BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
@@ -140,22 +151,18 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
                                 e).open());
             }
             return null;
-        }
+        } 
+//        finally {
+//            if (newIs != null) {
+//                try {
+//                    newIs.close();
+//                } catch (IOException e) {
+//                    BonitaStudioLog.error(e);
+//                }
+//            }
+//        }
 
-        if (newIs == null) {
-            return null;
-        }
-        boolean exists = false;
-        try {
-            exists = getResource().members().length > 0;
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-        final T store = doImportInputStream(fileName, newIs);
-        if (!exists) {
-            AbstractFileStore.refreshExplorerView();
-        }
-        return store;
+
     }
 
     private T createEmptyFile(final String fileName, final InputStream inputStream) {
@@ -314,7 +321,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
-                BonitaStudioLog.warning(String.format("An error occured wihle refreshing folder %s: %s",folder.getName(),e1.getMessage()),CommonRepositoryPlugin.PLUGIN_ID);
+                BonitaStudioLog.warning(String.format("An error occured wihle refreshing folder %s: %s",
+                        folder.getName(), e1.getMessage()), CommonRepositoryPlugin.PLUGIN_ID);
             }
         }
     }
@@ -348,12 +356,13 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             migrate(fStore, monitor);
         }
     }
-    
+
     @Override
-    public void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor)
+            throws CoreException, MigrationException {
         IResource resource = fileStore.getResource();
-        if(resource instanceof IFile 
-                && resource.exists() 
+        if (resource instanceof IFile
+                && resource.exists()
                 && validate(resource.getName(), ((IFile) resource).getContents()).getSeverity() != IStatus.ERROR) {
             try (final InputStream is = ((IFile) resource).getContents()) {
                 monitor.subTask(fileStore.getName());
@@ -363,7 +372,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
                     resource.refreshLocal(IResource.DEPTH_ONE, monitor);
                 }
             } catch (final IOException e) {
-                throw new MigrationException("Cannot migrate resource " + resource.getName() + " (not a valid file)", e);
+                throw new MigrationException("Cannot migrate resource " + resource.getName() + " (not a valid file)",
+                        e);
             }
         }
     }
@@ -375,7 +385,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
 
     @Override
     public boolean isEmpty() {
-       return !getChildren().stream().findFirst().isPresent();
+        return !getChildren().stream().findFirst().isPresent();
     }
 
     protected List<IResource> listChildren() throws CoreException {
@@ -415,7 +425,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     public StyledString getStyledString() {
         return new StyledString(getDisplayName());
     }
-    
+
     protected IRepository getRepository() {
         return repository;
     }

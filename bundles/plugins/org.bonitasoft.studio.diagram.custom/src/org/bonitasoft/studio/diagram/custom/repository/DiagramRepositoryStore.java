@@ -14,9 +14,6 @@
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.filter;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +25,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +46,6 @@ import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -334,33 +329,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         return resut;
     }
 
-    public AbstractProcess getProcessByUUID(final String processUUID) {
-        for (final DiagramFileStore fStore : getChildren()) {
-            File file = fStore.getResource().getLocation().toFile();
-            try (InputStream is = Files.newInputStream(file.toPath())) {
-                String[] poolIds = EMFResourceUtil.getEObectIfFromEObjectType(is, "process:Pool");
-                if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
-                    try {
-                        MainProcess diagram = fStore.getContent();
-                        for (final Element pool : diagram.getElements()) {
-                            if (pool instanceof Pool
-                                    && processUUID.equals(ModelHelper
-                                            .getEObjectID(pool))) {
-                                return (AbstractProcess) pool;
-                            }
-                        }
-                    } catch (ReadFileStoreException e) {
-                        BonitaStudioLog.warning(fStore.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
-                        return null;
-                    }
-                }
-            } catch (FeatureNotFoundException | IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        return null;
-    }
-
     @Override
     public AdapterFactoryLabelProvider getLabelProvider() {
         if (labelProvider != null) {
@@ -408,16 +376,13 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                 throw new IOException("Resource is empty.");
             }
 
-            final Iterable<EObject> mainProcess = filter(diagramResource.getContents(), instanceOf(MainProcess.class));
-            final Iterator<EObject> iterator = mainProcess.iterator();
-            final MainProcess diagram = (MainProcess) iterator.next();
-            if (iterator.hasNext()) {
-                throw new IOException(
-                        "Resource content is invalid. There should be only one MainProcess per .proc file.");
-            }
-            if (diagram == null) {
-                throw new IOException("Resource content is null.");
-            }
+            MainProcess diagram = diagramResource.getContents().stream()
+                    .filter(MainProcess.class::isInstance)
+                    .map(MainProcess.class::cast)
+                    .findFirst()
+                    .orElseThrow(() -> new IOException(
+                            "Resource content is invalid. There should be only one MainProcess per .proc file."));
+           
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
@@ -446,7 +411,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
-
             return new FileInputStream(new File(diagramResource.getURI()
                     .toFileString()));
         } finally {

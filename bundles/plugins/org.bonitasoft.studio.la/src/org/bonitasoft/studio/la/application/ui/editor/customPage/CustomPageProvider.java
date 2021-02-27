@@ -165,27 +165,30 @@ public class CustomPageProvider implements IResourceChangeListener {
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
         try {
-            event.getDelta().accept(new IResourceDeltaVisitor() {
+            IResourceDelta delta = event.getDelta();
+            if (delta != null) {
+                delta.accept(new IResourceDeltaVisitor() {
 
-                @Override
-                public boolean visit(IResourceDelta delta) throws CoreException {
-                    IResource resource = delta.getResource();
-                    if (resource != null && resource.getLocation() != null
-                            && webPageStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
-                        pages = null;
-                        layouts = null;
-                        return false;
+                    @Override
+                    public boolean visit(IResourceDelta delta) throws CoreException {
+                        IResource resource = delta.getResource();
+                        if (resource != null && resource.getLocation() != null
+                                && webPageStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
+                            pages = null;
+                            layouts = null;
+                            return false;
+                        }
+                        if (resource != null && resource.getLocation() != null
+                                && themeStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
+                            themes = null;
+                            return false;
+                        }
+                        return true;
                     }
-                    if (resource != null && resource.getLocation() != null
-                            && themeStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
-                        themes = null;
-                        return false;
-                    }
-                    return true;
-                }
-            });
+                });
+            }
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
     }
 
