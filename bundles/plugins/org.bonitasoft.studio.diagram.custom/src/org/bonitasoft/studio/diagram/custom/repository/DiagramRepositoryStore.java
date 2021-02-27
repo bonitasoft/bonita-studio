@@ -27,7 +27,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -159,40 +161,27 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         return extensions;
     }
 
-    public List<AbstractProcess> findProcesses(final String processName) {
-        final List<AbstractProcess> result = new ArrayList<>();
-        for (final AbstractProcess proc : getAllProcesses()) {
-            if (proc.getName().equals(processName)) {
-                result.add(proc);
-            }
-        }
-        return result;
+    public List<AbstractProcess> findProcesses(final String name) {
+        List<AbstractProcess> processes = hasComputedProcesses() ? getComputedProcesses() : getAllProcesses();
+        return processes
+                .stream()
+                .filter(p -> Objects.equals(p.getName(), name))
+                .collect(Collectors.toList());
     }
 
-    public AbstractProcess findProcess(final String processName,
-            final String processVersion) {
-        if (processVersion != null && !processVersion.trim().isEmpty()) {
-            for (final AbstractProcess proc : getAllProcesses()) {
-                if (proc.getName().equals(processName)
-                        && proc.getVersion().equals(processVersion)) {
-                    return proc;
-                }
-            }
+    public AbstractProcess findProcess(String name, String version) {
+        List<AbstractProcess> processes = hasComputedProcesses() ? getComputedProcesses() : getAllProcesses();
+        if (version != null && !version.trim().isEmpty()) {
+            return processes.stream()
+                    .filter(p -> Objects.equals(p.getName(), name) && Objects.equals(p.getVersion(), version))
+                    .findFirst()
+                    .orElse(null);
         } else {
             // return the process with the higher version
-            AbstractProcess currentHigher = null;
-            for (final AbstractProcess proc : getAllProcesses()) {
-                if (proc.getName().equals(processName)) {
-                    if (currentHigher == null
-                            || proc.getVersion().compareTo(
-                                    currentHigher.getVersion()) > 0) {
-                        currentHigher = proc;
-                    }
-                }
-            }
-            return currentHigher;
+            return findProcesses(name).stream()
+                    .max((p1,p2) -> p1.getVersion().compareTo(p2.getVersion()))
+                    .orElse(null);
         }
-        return null;
     }
 
     public List<DiagramFileStore> getRecentChildren(final int nbResult) {
@@ -384,7 +373,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     .findFirst()
                     .orElseThrow(() -> new IOException(
                             "Resource content is invalid. There should be only one MainProcess per .proc file."));
-           
+
             //Sanitize model
             new RemoveDanglingReferences(diagram).execute();
             diagram.eResource().getContents().stream().filter(Diagram.class::isInstance).findFirst()
