@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,8 +55,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.GitProvider;
@@ -171,29 +172,27 @@ public class Repository extends AbstractRepository {
         if (getProject().isAccessible()) {
             return RepositoryProvider.getProvider(getProject()) != null;
         } else {
-            try {
-                getProject().open(null);
-                return RepositoryProvider.getProvider(getProject()) != null;
-            } catch (final CoreException ce) {
-                BonitaStudioLog.error(ce);
-            } finally {
-                try {
-                    getProject().close(null);
-                } catch (final CoreException | OperationCanceledException ce) {
-                    BonitaStudioLog.error(ce);
-                }
+            Path gitFolder = getProject().getLocation().toFile().toPath().resolve(".git");
+            Path svnFolder = getProject().getLocation().toFile().toPath().resolve(".svn");
+            return gitFolder.toFile().exists() || svnFolder.toFile().exists();
+        }
+    }
+
+
+    @Override
+    public boolean isShared(String providerId) {
+        IProject project = getProject();
+        IPath location = project.getLocation();
+        if (project.isAccessible()) {
+            return RepositoryProvider.getProvider(project, providerId) != null;
+        } else if(location != null){
+            if(providerId.equals("org.eclipse.egit.core.GitProvider")){
+                return location.toFile().toPath().resolve(".git").toFile().exists();
+            }else if(providerId.equals("org.eclipse.team.svn.core.svnnature")){
+                return location.toFile().toPath().resolve(".svn").toFile().exists();
             }
         }
         return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.Repository#isShared(java.lang.String)
-     */
-    @Override
-    public boolean isShared(String providerId) {
-        return RepositoryProvider.getProvider(getProject(), providerId) != null;
     }
 
     @Override

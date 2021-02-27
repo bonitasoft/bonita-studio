@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -105,6 +106,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
+
         ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
@@ -126,8 +128,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
+            DiagramRepositoryStore repositoryStore = repositoryAccessor
+                    .getRepositoryStore(DiagramRepositoryStore.class);
+            repositoryStore.computeProcesses(monitor);
+            
             validateAllAfterImport(monitor, statusBuilder);
+            
+            repositoryStore.resetComputedProcesses();
         }
+
+      
     }
 
     protected ImportBosArchiveStatusBuilder createStatusBuilder() {
@@ -239,7 +249,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     validator.buildStatus(this, statusBuilder, monitor);
                 } catch (final ValidationException e) {
                     statusBuilder
-                            .addStatus(new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, "Validation error", e));
+                            .addStatus(new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, "Validation error",
+                                    e));
                 }
             }
         }

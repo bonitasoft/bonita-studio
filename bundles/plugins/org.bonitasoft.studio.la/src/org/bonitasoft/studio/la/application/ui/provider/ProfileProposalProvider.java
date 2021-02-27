@@ -24,6 +24,7 @@ import org.bonitasoft.engine.profile.xml.ProfileNode;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.la.application.ui.editor.ApplicationFormPage;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -89,6 +90,10 @@ public class ProfileProposalProvider implements IContentProposalProvider {
     public void setFiltering(Boolean filterProposals) {
         this.filterProposals = filterProposals;
         contentProposals = Optional.empty();
+    }
+    
+    public void dispose() {
+        
     }
 
 }
