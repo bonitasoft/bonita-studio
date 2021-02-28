@@ -76,6 +76,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static final String PORTAL_BASE_URL = "designer.bonita.portal.url";
     private static final String BONITA_DATA_REPOSITORY_ORIGIN = "designer.bonita.bdm.url";
     private PageDesignerURLFactory pageDesignerURLBuilder;
+    private boolean started = false;
 
     private UIDesignerServerManager() {
         addShutdownHook();
@@ -153,10 +154,12 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                     }
                 });
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
-                waitForUID(pageDesignerURLBuilder);
-                BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
-                        UIDesignerPlugin.PLUGIN_ID);
-
+                if (waitForUID(pageDesignerURLBuilder)) {
+                    started = true;
+                    BonitaStudioLog.info(
+                            String.format("UI Designer has been started on http://localhost:%s/bonita", port),
+                            UIDesignerPlugin.PLUGIN_ID);
+                }
             } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
@@ -210,6 +213,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 launch.terminate();
                 BonitaStudioLog.info("UI Designer has been stopped.", UIDesignerPlugin.PLUGIN_ID);
                 launch = null;
+                started = false;
             } catch (DebugException e) {
                 BonitaStudioLog.error(e);
             }
@@ -288,7 +292,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     public boolean isStarted() {
-        return launch != null;
+        return started;
     }
 
     @Override
