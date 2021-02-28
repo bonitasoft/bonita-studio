@@ -77,6 +77,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private static final String PORTAL_BASE_URL = "bonita.portal.origin";
     private static final String BONITA_DATA_REPOSITORY_ORIGIN = "bonita.data.repository.origin";
     private PageDesignerURLFactory pageDesignerURLBuilder;
+    private boolean started = false;
 
     private UIDesignerServerManager() {
         addShutdownHook();
@@ -140,10 +141,13 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
-                waitForUID(pageDesignerURLBuilder);
-                BonitaStudioLog.info(String.format("UI Designer has been started on http://localhost:%s/bonita", port),
-                        UIDesignerPlugin.PLUGIN_ID);
-            } catch (final CoreException | IOException  e) {
+                if (waitForUID(pageDesignerURLBuilder)) {
+                    started = true;
+                    BonitaStudioLog.info(
+                            String.format("UI Designer has been started on http://localhost:%s/bonita", port),
+                            UIDesignerPlugin.PLUGIN_ID);
+                }
+            } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             } finally {
                 monitor.done();
@@ -217,6 +221,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 launch.terminate();
                 BonitaStudioLog.info("UI Designer has been stopped.", UIDesignerPlugin.PLUGIN_ID);
                 launch = null;
+                started = false;
             } catch (DebugException e) {
                 BonitaStudioLog.error(e);
             }
@@ -261,7 +266,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 String.format("-D%s=http://%s:%s", PORTAL_BASE_URL, InetAddress.getByName(null).getHostAddress(),
                         portalPort),
                 String.format("-D%s=http://%s:%s", BONITA_DATA_REPOSITORY_ORIGIN,
-                        InetAddress.getByName(null).getHostAddress(), DataRepositoryServerManager.getInstance().getPort()),
+                        InetAddress.getByName(null).getHostAddress(),
+                        DataRepositoryServerManager.getInstance().getPort()),
                 "-Declipse.product=\"" + getProductApplicationId() + "\"",
                 "-Dbonita.client.home=\"" + System.getProperty(BONITA_CLIENT_HOME) + "\"",
                 " -extractDirectory",
@@ -336,7 +342,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     public boolean isStarted() {
-        return launch != null;
+        return started;
     }
 
     @Override
