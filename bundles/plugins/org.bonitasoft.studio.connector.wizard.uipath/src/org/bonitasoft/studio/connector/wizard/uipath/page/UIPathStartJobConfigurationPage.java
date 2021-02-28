@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
@@ -56,7 +55,6 @@ public class UIPathStartJobConfigurationPage extends GeneratedConnectorWizardPag
                 getDefinition(),
                 getConfiguration(),
                 context,
-                getMessageProvider(),
                 getExpressionTypeFilter());
     }
 
@@ -64,10 +62,9 @@ public class UIPathStartJobConfigurationPage extends GeneratedConnectorWizardPag
 
         UIPathPageComponentSwitch(IWizardContainer wizardContainer,
                 Composite parent, EObject container,
-                ConnectorDefinition definition,
+                ExtendedConnectorDefinition definition,
                 ConnectorConfiguration connectorConfiguration,
                 EMFDataBindingContext context,
-                DefinitionResourceProvider messageProvider,
                 AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
             super(wizardContainer,
                     parent,
@@ -75,7 +72,6 @@ public class UIPathStartJobConfigurationPage extends GeneratedConnectorWizardPag
                     definition,
                     connectorConfiguration,
                     context,
-                    messageProvider,
                     connectorExpressionContentTypeFilter);
         }
 
