@@ -14,8 +14,8 @@
  */
 package org.bonitasoft.studio.groovy;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
@@ -27,7 +27,7 @@ import org.eclipse.jdt.internal.core.PackageFragment;
 public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
 
     private Map<String, ScriptVariable> context;
-    private Map<String, ClassNode> resolvedTypes = new HashMap<>();
+    private Map<String, ClassNode> resolvedTypes = new ConcurrentHashMap<>();
 
     public BonitaScriptGroovyCompilationUnit(PackageFragment parent, String name, WorkingCopyOwner owner) {
         super(parent, name, owner);
@@ -39,14 +39,16 @@ public class BonitaScriptGroovyCompilationUnit extends GroovyCompilationUnit {
         if (context != null) {
             ClassNode scriptClassDummy = moduleInfo.module.getScriptClassDummy();
             context.values().forEach(var -> {
-                String typeName = var.getType();
-                ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName, t -> moduleInfo.resolver.resolve(t));
-                scriptClassDummy.addField(var.getName(),
-                        FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
-                        resolvedType,
-                        null);
+                if (scriptClassDummy.getField(var.getName()) == null) {
+                    String typeName = var.getType();
+                    ClassNode resolvedType = resolvedTypes.computeIfAbsent(typeName,
+                            t -> moduleInfo.resolver.resolve(t));
+                    scriptClassDummy.addField(var.getName(),
+                            FieldNode.ACC_PUBLIC | FieldNode.ACC_FINAL,
+                            resolvedType,
+                            null);
+                }
             });
-
         }
         return moduleInfo;
     }
