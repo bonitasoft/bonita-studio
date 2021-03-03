@@ -22,7 +22,7 @@ import java.util.Optional;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.ui.control.ExtendProjectPage;
+import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -37,27 +37,27 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
 
-public class ExtendProjectHandler {
+public class OpenMarketplaceHandler {
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell) {
 
-        ExtendProjectPage extendProjectPage = new ExtendProjectPage();
+        BonitaMarketplacePage bonitaMarketplacePage = new BonitaMarketplacePage();
 
         WizardBuilder.<Boolean> newWizard()
-                .withTitle(Messages.extendProjectTitle)
+                .withTitle(Messages.projectExtensionsTitle)
                 .needProgress()
                 .havingPage(newPage()
-                        .withTitle(Messages.extendProjectTitle)
+                        .withTitle(Messages.projectExtensionsTitle)
                         .withDescription(Messages.extendProjectDescription)
-                        .withControl(extendProjectPage))
-                .onFinish(container -> performFinish(container, extendProjectPage))
+                        .withControl(bonitaMarketplacePage))
+                .onFinish(container -> performFinish(container, bonitaMarketplacePage))
                 .withSize(800, 800)
                 .withFixedInitialSize()
                 .open(activeShell, Messages.install);
     }
 
-    private Optional<Boolean> performFinish(IWizardContainer container, ExtendProjectPage extendProjectPage) {
+    private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage) {
         try {
             container.run(true, false, monitor -> {
                 monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);

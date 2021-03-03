@@ -32,15 +32,11 @@ public class ProjectExtensionPerspective extends AbstractPerspectiveFactory {
         leftFolder.addView("org.bonitasoft.studio.application.project.explorer");
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.7f, "left");
         bottomLeft.addView(PROBLEM_VIEW_ID);
-
-        layout.addView(ProjectExtensionViewPart.ID, IPageLayout.LEFT, 0.95f, editorArea);
-
-        layout.setEditorAreaVisible(false);
     }
 
     @Override
     public boolean isRelevantFor(IEditorPart part) {
-        return part instanceof ProjectExtensionViewPart;
+        return part instanceof ProjectExtensionEditorPart;
     }
 
     @Override

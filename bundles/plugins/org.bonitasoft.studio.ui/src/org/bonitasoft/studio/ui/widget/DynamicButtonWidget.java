@@ -51,6 +51,7 @@ public class DynamicButtonWidget {
         private Optional<Image> hotImage = Optional.empty();
         private Optional<Consumer<Event>> onClickListener = Optional.empty();
         private Optional<Integer> maxTextWidth = Optional.empty();
+        private Optional<String> cssClass = Optional.empty();
 
         public Builder withText(String text) {
             this.text = Optional.ofNullable(text);
@@ -82,8 +83,14 @@ public class DynamicButtonWidget {
             return this;
         }
 
+        public Builder withCssclass(String cssClass) {
+            this.cssClass = Optional.ofNullable(cssClass);
+            return this;
+        }
+
         public DynamicButtonWidget createIn(Composite parent) {
-            return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth);
+            return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
+                    cssClass);
         }
 
     }
@@ -95,6 +102,7 @@ public class DynamicButtonWidget {
     private Optional<Image> hotImage;
     private Optional<Consumer<Event>> onClickListener;
     private Optional<Integer> maxTextWidth;
+    private Optional<String> cssClass = Optional.empty();
 
     private IThemeEngine engine;
 
@@ -104,7 +112,8 @@ public class DynamicButtonWidget {
             Optional<Image> image,
             Optional<Image> hotImage,
             Optional<Consumer<Event>> onClickListener,
-            Optional<Integer> maxTextWidth) {
+            Optional<Integer> maxTextWidth,
+            Optional<String> cssClass) {
         this.parent = parent;
         this.text = text;
         this.tooltipText = tooltipText;
@@ -112,6 +121,7 @@ public class DynamicButtonWidget {
         this.hotImage = hotImage;
         this.onClickListener = onClickListener;
         this.maxTextWidth = maxTextWidth;
+        this.cssClass = cssClass;
 
         engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
 
@@ -124,9 +134,11 @@ public class DynamicButtonWidget {
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
         container.setLayoutData(GridDataFactory.swtDefaults().create());
+        cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
         ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
+        cssClass.ifPresent(css -> toolbar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
         ToolItem toolItem = new ToolItem(toolbar, SWT.PUSH);
         image.ifPresent(img -> toolItem.setImage(img));
@@ -143,6 +155,7 @@ public class DynamicButtonWidget {
                     .create());
             label.setText(text.get());
             label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+            cssClass.ifPresent(css -> label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
             if (onClickListener.isPresent()) {
                 label.addMouseListener(new MouseAdapter() {
@@ -190,5 +203,4 @@ public class DynamicButtonWidget {
             });
         }
     }
-
 }

@@ -69,12 +69,25 @@ Label#infoTextColor {
     color: #345fa3;
 }
 
-Label#titleTextColor { 
+Label#titleTextColor {
     color: #2e405c;
 }
 
-Label#toolbarTextColor { 
+Label#toolbarTextColor {
     color: #757575;
+}
+
+Label#cardHighlightTitleColor {
+    color: #00808c;
+}
+
+.MPart .cardBackground,
+.MPart .cardBackground > * {
+    background-color: #ffffff;
+}
+
+.MPart .extensionViewBackground {
+    background-color: #f7f7f7;
 }
 
 .wizardHighlightBackground {

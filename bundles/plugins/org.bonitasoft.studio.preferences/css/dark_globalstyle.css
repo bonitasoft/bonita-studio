@@ -98,6 +98,19 @@ Label#toolbarTextColor {
 	color: #757575;
 }
 
+Label#cardHighlightTitleColor { 
+	color: #f2af11;
+}
+
+.MPart .cardBackground,
+.MPart .cardBackground > * { 
+    background-color: #2d3749;
+}
+
+.MPart .extensionViewBackground {
+	background-color: #1a202d;
+}
+
 .wizardHighlightBackground {
     background-color: #2F2F2F;
 }
