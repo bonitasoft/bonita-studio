@@ -78,6 +78,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     private BusinessObjectModelConverter converter = new BusinessObjectModelConverter();
 
+    private BusinessObjectModelFileStore bdmFileStore;
+
     static {
         extensions.add(BDM_TYPE_EXTENSION);
     }
@@ -175,7 +177,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     protected IStatus generateJar(F fileStore) {
         try {
-            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore).run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            new GenerateBDMOperation((BusinessObjectModelFileStore) fileStore)
+                    .run(AbstractRepository.NULL_PROGRESS_MONITOR);
             return Status.OK_STATUS;
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
@@ -232,35 +235,27 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
-        final Optional<BusinessObjectModelFileStore> businessObjectFileStore = Optional
-                .ofNullable((BusinessObjectModelFileStore) getChild(BusinessObjectModelFileStore.BOM_FILENAME, true));
-        return businessObjectFileStore.map(fStore -> {
-                    try {
-                        return fStore.getContent();
-                    } catch (ReadFileStoreException e1) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(model -> model.getBusinessObjectsClassNames()
-                        .stream()
-                        .map(name -> name + "DAO")
-                        .map(daoType -> {
-                            try {
-                                return javaProject.findType(daoType);
-                            } catch (JavaModelException e) {
-                                return null;
-                            }
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+        BusinessObjectModelFileStore fSotre = (BusinessObjectModelFileStore) getChild(
+                BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (fSotre == null || !fSotre.getResource().exists()) {
+            return Collections.emptyList();
+        }
+        return fSotre.allBusinessObjectDao(javaProject);
     }
 
     @Override
     public F getChild(String fileName, boolean force) {
         if (Objects.equals(fileName, BusinessObjectModelFileStore.BDM_ARTIFACT_DESCRIPTOR)) {
             return null;
+        }
+        if (Objects.equals(fileName, BusinessObjectModelFileStore.BOM_FILENAME)) {
+            BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) super.getChild(fileName, force);
+            if (fStore != null && fStore.getResource().exists() && bdmFileStore != null) {
+                return (F) bdmFileStore;
+            } else if (fStore != null) {
+                bdmFileStore = fStore;
+                return (F) bdmFileStore;
+            }
         }
         return (F) super.getChild(fileName, force);
     }
@@ -290,9 +285,10 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         XMLModelCompatibilityValidator validator = new XMLModelCompatibilityValidator(
-                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE,  
+                new ModelNamespaceValidator(ModelVersion.CURRENT_BDM_NAMESPACE,
                         String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                        String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)));
+                        String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                                filename)));
         if (Objects.equals(filename, BusinessObjectModelFileStore.BOM_FILENAME)) {
             return validator.validate(inputStream);
         }
@@ -304,7 +300,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
                         InputStream is = zipFile
                                 .getInputStream(zipFile.getEntry(BusinessObjectModelFileStore.BOM_FILENAME));) {
                     return validator.validate(is);
-                }finally {
+                } finally {
                     tempFile.delete();
                 }
             } catch (IOException e) {
