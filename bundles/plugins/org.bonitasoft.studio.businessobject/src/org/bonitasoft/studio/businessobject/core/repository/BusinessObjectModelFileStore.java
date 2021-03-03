@@ -25,8 +25,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -65,6 +67,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -99,11 +104,27 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
     private CommandExecutor commandExecutor;
+    private List<IType> daoTypes;
 
     public BusinessObjectModelFileStore(final String fileName,
             final IRepositoryStore<? extends AbstractBDMFileStore> store) {
         super(fileName, store);
         commandExecutor = new CommandExecutor();
+    }
+    
+    @Override
+    public BusinessObjectModel getContent() throws ReadFileStoreException {
+        final IFile resource = getResource();
+        if (!resource.exists()) {
+            cachedBusinessObjectModel.clear();
+            daoTypes = null;
+            return null;
+        }
+        final long modificationStamp = resource.getModificationStamp();
+        if (cachedBusinessObjectModel.containsKey(modificationStamp)) {
+            return cachedBusinessObjectModel.get(modificationStamp);
+        }
+        return super.getContent();
     }
 
     @Override
@@ -111,15 +132,14 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         final IFile resource = getResource();
         if (!resource.exists()) {
             cachedBusinessObjectModel.clear();
+            daoTypes = null;
             return null;
         }
         final long modificationStamp = resource.getModificationStamp();
-        if (cachedBusinessObjectModel.containsKey(modificationStamp)) {
-            return cachedBusinessObjectModel.get(modificationStamp);
-        }
         try (InputStream contents = resource.getContents()) {
             final BusinessObjectModel bom = getConverter().unmarshall(ByteStreams.toByteArray(contents));
             cachedBusinessObjectModel.clear();
+            daoTypes = null;
             cachedBusinessObjectModel.put(modificationStamp, bom);
             return bom;
         } catch (final Exception e) {
@@ -161,6 +181,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                 resource.create(source, IResource.FORCE, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
             cachedBusinessObjectModel.clear();
+            daoTypes = null;
             cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -414,6 +435,29 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                     e);
         }
         return ValidationStatus.info(Messages.businessDataModelDeployed);
+    }
+    
+    public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
+        try {
+            if (daoTypes == null) {
+                BusinessObjectModel model = getContent();
+                daoTypes = model.getBusinessObjectsClassNames()
+                        .stream()
+                        .map(name -> name + "DAO")
+                        .map(daoType -> {
+                            try {
+                                return javaProject.findType(daoType);
+                            } catch (JavaModelException e) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            }
+            return daoTypes;
+        } catch (ReadFileStoreException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override

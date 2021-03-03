@@ -36,6 +36,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -96,11 +97,18 @@ public class GenerateBDMOperation implements IRunnableWithProgress {
                 resources.put(BDM_DAO, daoJarContent);
 
                 updateDependency(resources.get(BDM_CLIENT));
+
+                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                BusinessObjectModelRepositoryStore businessObjectModelRepositoryStore = currentRepository
+                        .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+                businessObjectModelRepositoryStore.allBusinessObjectDao(currentRepository.getJavaProject());
+
                 final Map<String, Object> data = new HashMap<>();
                 data.put(MODEL, model);
                 data.put(BDM_DAO, resources.get(BDM_DAO));
-                data.put(BDM_ARTIFACT_DESCRIPTOR,fileStore.loadArtifactDescriptor());
-                data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore()).getConverter().marshall(model)));
+                data.put(BDM_ARTIFACT_DESCRIPTOR, fileStore.loadArtifactDescriptor());
+                data.put(FILE_CONTENT, new String(((BusinessObjectModelRepositoryStore) fileStore.getParentStore())
+                        .getConverter().marshall(model)));
                 eventBroker().send(BDM_DEPLOYED_TOPIC, data);
             } catch (final Exception e) {
                 throw new InvocationTargetException(e);
