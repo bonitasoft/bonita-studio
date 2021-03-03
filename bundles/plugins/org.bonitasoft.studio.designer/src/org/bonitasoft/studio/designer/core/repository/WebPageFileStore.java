@@ -30,7 +30,6 @@ import java.util.logging.Level;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.model.IBuildable;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -38,8 +37,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
-import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
 import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
@@ -102,21 +99,6 @@ public class WebPageFileStore extends InFolderJSONFileStore
             BonitaStudioLog.error(String.format("Failed to open page %s", getId()), e);
         }
         return null;
-    }
-
-    @Override
-    public Set<IRepositoryFileStore<?>> getRelatedFileStore() {
-        if (PlatformUtil.isHeadless() || !UIDesignerServerManager.getInstance().isStarted()) {
-            return super.getRelatedFileStore();
-        }
-        if (webFormBOSArchiveFileStoreProvider != null) {
-            try {
-                return webFormBOSArchiveFileStoreProvider.getRelatedFileStore(this);
-            } catch (BarResourceCreationException | IOException e) {
-                BonitaStudioLog.error("Failed to retrieve page related file store", e);
-            }
-        }
-        return super.getRelatedFileStore();
     }
 
     public String getType() {

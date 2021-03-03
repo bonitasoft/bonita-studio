@@ -26,15 +26,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.editor.EditorUtil;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IResourceContainer;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -43,7 +46,10 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -54,12 +60,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -69,10 +76,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -97,7 +101,6 @@ public class ExportRepositoryWizardPage extends WizardPage {
     private Combo destinationCombo;
 
     private final String defaultFileName;
-    private ViewerFilter[] filters = {};
 
     private Set<Object> defaultSelectedFiles = new HashSet<>();
 
@@ -114,10 +117,6 @@ public class ExportRepositoryWizardPage extends WizardPage {
         this.stores = stores;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
         dbc = new DataBindingContext();
@@ -126,28 +125,12 @@ public class ExportRepositoryWizardPage extends WizardPage {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(new GridLayout(3, false));
 
-        final Section browseRepoSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
+        final ExpandableComposite browseRepoSection = new ExpandableComposite(composite,
+                Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
         browseRepoSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
+        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
 
         browseRepoSection.setText(Messages.browseRepository);
-        browseRepoSection.addExpansionListener(new IExpansionListener() {
-
-            @Override
-            public void expansionStateChanging(final ExpansionEvent event) {
-            }
-
-            @Override
-            public void expansionStateChanged(final ExpansionEvent event) {
-                browseRepoSection.setLayoutData(
-                        GridDataFactory.fillDefaults().grab(true, browseRepoSection.isExpanded()).span(3, 1).create());
-                final Point defaultSize = getShell().getSize();
-                final Point size = getShell().computeSize(SWT.DEFAULT, 500, true);
-                getShell().setSize(defaultSize.x, size.y);
-                getShell().layout(true, true);
-
-            }
-        });
         browseRepoSection.setExpanded(true);
         browseRepoSection.setClient(createViewer(browseRepoSection));
         createDestination(composite);
@@ -161,10 +144,18 @@ public class ExportRepositoryWizardPage extends WizardPage {
         treeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         treeViewer = new CheckboxRepositoryTreeViewer(treeComposite);
-        for (final ViewerFilter filter : filters) {
-            treeViewer.addFilter(filter);
-        }
-        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
+        treeViewer.addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IRepositoryStore) {
+                    return !((IRepositoryStore) element).isEmpty();
+                }
+                return true;
+            }
+        });
+        treeViewer.getTree()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 400).create());
         treeViewer.bindTree(dbc, stores);
         treeViewer.setCheckedElements(defaultSelectedFiles.toArray());
 
@@ -256,7 +247,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
             }
             return !allExportCancel(status);
         } catch (InterruptedException | InvocationTargetException e) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed,
+                    e.getCause().getMessage());
             return false;
         }
     }
@@ -274,43 +266,41 @@ public class ExportRepositoryWizardPage extends WizardPage {
     }
 
     protected boolean performFinishForZipExport() {
-        ExportBosArchiveOperation operation = createExportBOSOperation();
-        try {
-            getContainer().run(false, true, operation::run);
-        } catch (InterruptedException | InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+        File file = new File(getDetinationPath());
+        if (file.exists() && !FileActionDialog.overwriteQuestion(file.getAbsolutePath())) {
             return false;
         }
 
+        boolean disablePopup = FileActionDialog.getDisablePopup();
+        ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
+        try {
+            FileActionDialog.setDisablePopup(true);
+            Set<IRepositoryFileStore> selectedFileStores = getSelectedFileStores();
+            List<IResource> selectedResoureContainer = getSelectedResoureContainer();
+            getContainer().run(true, false, monitor -> {
+                monitor.beginTask(Messages.exporting, IProgressMonitor.UNKNOWN);
+                operation.setDestinationPath(getDetinationPath());
+                operation.setFileStores(selectedFileStores);
+                operation.addResources(selectedResoureContainer);
+                operation.run(monitor);
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            BonitaStudioLog.error(e);
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed,
+                    e.getCause().getMessage());
+            return false;
+        } finally {
+            FileActionDialog.setDisablePopup(disablePopup);
+        }
+
         if (!operation.getStatus().isOK()) {
-            ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, null, operation.getStatus());
+            ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, null,
+                    operation.getStatus());
             return false;
         }
         return true;
     }
 
-    protected ExportBosArchiveOperation createExportBOSOperation() {
-        final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
-        operation.setDestinationPath(getDetinationPath());
-        operation.setFileStores(getSelectedFileStores());
-        operation.addResources(getSelectedResoureContainer());
-        try {
-            final Set<IResource> toOpen = new HashSet<>();
-            for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getEditorReferences()) {
-                final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
-                if (operation.getResources().contains(file)) {
-                    toOpen.add(file);
-                }
-            }
-            operation.setResourcesToOpen(toOpen);
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        }
-
-        return operation;
-    }
 
     private List<IResource> getSelectedResoureContainer() {
         List<IResource> resources = new ArrayList<>();
@@ -318,6 +308,19 @@ public class ExportRepositoryWizardPage extends WizardPage {
             if (element instanceof IResourceContainer) {
                 resources.add(((IResourceContainer) element).getResource());
                 resources.addAll(((IResourceContainer) element).getRelatedResources());
+            }
+        }
+        if (isZip) {
+            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+            IProject project = currentRepository.getProject();
+            IFile pomFile = project
+                    .getFile(IMavenConstants.POM_FILE_NAME);
+            if (pomFile.exists()) {
+                resources.add(pomFile);
+            }
+            IFolder depStore = project.getFolder(LocalDependenciesStore.NAME);
+            if (depStore.exists()) {
+                resources.add(depStore);
             }
         }
         return resources;
@@ -458,10 +461,6 @@ public class ExportRepositoryWizardPage extends WizardPage {
                 addDestinationItem(directoryNames[i]);
             }
         }
-    }
-
-    public void setViewerFilter(final ViewerFilter[] filters) {
-        this.filters = filters;
     }
 
     /**
