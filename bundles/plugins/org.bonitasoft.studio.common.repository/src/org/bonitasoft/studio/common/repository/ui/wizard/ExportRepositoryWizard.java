@@ -36,8 +36,11 @@ public class ExportRepositoryWizard extends Wizard {
     protected Set<Object> defaultSelectedFiles;
     protected final String defaultFileName;
 
-    public ExportRepositoryWizard(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores, final boolean isZip,
-            final Set<Object> defaultSelectedFiles, final String defaultFileName, final String wizardTitle) {
+    public ExportRepositoryWizard(final List<IRepositoryStore<? extends IRepositoryFileStore>> stores, 
+            final boolean isZip,
+            final Set<Object> defaultSelectedFiles, 
+            final String defaultFileName, 
+            final String wizardTitle) {
         this.stores = stores;
         setDefaultPageImageDescriptor(Pics.getWizban());
         setNeedsProgressMonitor(true);
@@ -66,10 +69,6 @@ public class ExportRepositoryWizard extends Wizard {
         addPage(mainPage);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         return mainPage.finish();

@@ -43,7 +43,7 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 public class LocalDependenciesStore {
 
     private IProject project;
-    private String storeName = ".store";
+    public static final String NAME = ".store";
 
     public LocalDependenciesStore(IProject project) {
         this.project = project;
@@ -67,7 +67,7 @@ public class LocalDependenciesStore {
                             project.getName())));
         }
         Path targetFolder = project.getLocation().toFile().toPath()
-                .resolve(storeName)
+                .resolve(NAME)
                 .resolve(dependencyLookup.getGroupId().replace(".", "/"))
                 .resolve(dependencyLookup.getArtifactId())
                 .resolve(dependencyLookup.getVersion());
@@ -90,7 +90,7 @@ public class LocalDependenciesStore {
         } finally {
             dependencyLookup.deleteCopy();
         }
-        project.getFolder(storeName).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+        project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
         return dependencyLookup;
     }
 

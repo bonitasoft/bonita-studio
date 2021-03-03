@@ -25,7 +25,6 @@ import java.util.Set;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
@@ -40,7 +39,6 @@ import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
@@ -51,7 +49,6 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -72,31 +69,18 @@ public class ExportBosArchiveHandler {
             @org.eclipse.e4.core.di.annotations.Optional @Named("diagram") String diagramToExport) {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)) {
             Set<Object> selectedFiles = new HashSet<>();
-          
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                    final MainProcess diagram = diagramToExport != null
-                            ? getDiagram(repositoryAccessor, diagramToExport)
-                            : getDiagramInEditor();
-                    final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = RepositoryManager
-                            .getInstance()
+                    final List<IRepositoryStore<? extends IRepositoryFileStore>> exportableStores = repositoryAccessor
                             .getCurrentRepository()
                             .getAllExportableStores();
-                    if (diagram != null) {
-                        //Use a progress monitor as it can takes a few seconds for big diagrams
-                        monitor.beginTask(String.format(Messages.resolvingDiagramDependencies, 
-                                diagram.getName(),
-                                diagram.getVersion()), 
-                                IProgressMonitor.UNKNOWN);
-                        selectedFiles.addAll(getAllDiagramRelatedFiles(diagram));
-                    } else {
-                        for (final IRepositoryStore<? extends IRepositoryFileStore> store : exportableStores) {
-                            final List<? extends IRepositoryFileStore> files = store.getChildren();
-                            if (files != null) {
-                                for (final IRepositoryFileStore fStore : files) {
-                                    if (fStore != null && fStore.canBeExported()) {
-                                        selectedFiles.add(fStore);
-                                    }
+                    for (final IRepositoryStore<? extends IRepositoryFileStore> store : exportableStores) {
+                        final List<? extends IRepositoryFileStore> files = store.getChildren();
+                        selectedFiles.add(store);
+                        if (files != null) {
+                            for (final IRepositoryFileStore fStore : files) {
+                                if (fStore != null && fStore.canBeExported()) {
+                                    selectedFiles.add(fStore);
                                 }
                             }
                         }
@@ -105,49 +89,26 @@ public class ExportBosArchiveHandler {
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
-            
-            
+
             if (selectedFiles != null) {
                 final ExportRepositoryWizard wizard = new ExportRepositoryWizard(
                         RepositoryManager.getInstance().getCurrentRepository()
                                 .getAllExportableStores(),
-                        true, selectedFiles, getDefaultName(), Messages.ExportButtonLabel);
+                        true, selectedFiles, 
+                        getDefaultName(repositoryAccessor),
+                        Messages.ExportButtonLabel);
                 final WizardDialog dialog = new WizardDialog(
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        wizard) {
-
-                    @Override
-                    protected void initializeBounds() {
-                        super.initializeBounds();
-                        getShell().setSize(600, 600);
-                    }
-                };
+                        wizard);
                 dialog.setTitle(Messages.ExportButtonLabel);
                 dialog.open();
             }
         }
     }
 
-    private MainProcess getDiagram(RepositoryAccessor repositoryAccessor, String diagramToExport) {
-        DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(diagramToExport, true);
-        if (fileStore != null) {
-            try {
-                return fileStore.getContent();
-            } catch (ReadFileStoreException e) {
-                throw new IllegalArgumentException(e.getMessage());
-            }
-        }
-        throw new IllegalArgumentException(String.format("The diagram '%s' doesn't exist", diagramToExport));
-    }
-
-    private String getDefaultName() {
-        final MainProcess diagram = getDiagramInEditor();
-        if (diagram == null) {
-            return RepositoryManager.getInstance().getCurrentRepository().getName() + "_"
-                    + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".bos";
-        }
-        return NamingUtils.toDiagramFilename(diagram).replace(".proc", ".bos");
+    private String getDefaultName(RepositoryAccessor repositoryAccessor) {
+        return repositoryAccessor.getCurrentRepository().getName() + "_"
+                + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".bos";
     }
 
     public static Set<Object> getAllDiagramRelatedFiles(final MainProcess diagram) {
@@ -159,7 +120,7 @@ public class ExportBosArchiveHandler {
             final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
             for (final IBOSArchiveFileStoreProvider provider : fileStoreProvider) {
                 result.addAll(provider.getFileStoreForConfiguration(p, conf));
-                if(provider.distinctByConfiguration()) {
+                if (provider.distinctByConfiguration()) {
                     for (final Configuration config : p.getConfigurations()) {
                         result.addAll(provider.getFileStoreForConfiguration(p, config));
                     }

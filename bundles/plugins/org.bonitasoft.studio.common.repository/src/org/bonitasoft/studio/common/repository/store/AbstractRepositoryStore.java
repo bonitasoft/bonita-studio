@@ -385,7 +385,12 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
 
     @Override
     public boolean isEmpty() {
-        return !getChildren().stream().findFirst().isPresent();
+        try {
+            return !listChildren().stream().findFirst().isPresent();
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            return true;
+        }
     }
 
     protected List<IResource> listChildren() throws CoreException {
