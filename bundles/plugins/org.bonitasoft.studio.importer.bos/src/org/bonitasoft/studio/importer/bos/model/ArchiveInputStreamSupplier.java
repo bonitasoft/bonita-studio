@@ -27,16 +27,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 
-public class BosArchiveJarInputStreamSupplier implements JarInputStreamSupplier {
+public class ArchiveInputStreamSupplier implements InputStreamSupplier {
 
     private ZipFile zipFile;
     private ZipEntry entry;
     private Path tempFile;
     private List<InputStream> openedStreams = new ArrayList<>();
 
-    public BosArchiveJarInputStreamSupplier(File archiveFile, ZipEntry entry) {
+    public ArchiveInputStreamSupplier(File archiveFile, ZipEntry entry) {
         try {
             this.zipFile = new ZipFile(archiveFile);
         } catch (IOException e) {

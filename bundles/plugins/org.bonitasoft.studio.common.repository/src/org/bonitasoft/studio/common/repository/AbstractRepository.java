@@ -794,14 +794,13 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     }
 
     protected BonitaProjectMigrationOperation newProjectMigrationOperation(final IProject project) {
-        return new BonitaProjectMigrationOperation(project, this)
+        return new BonitaProjectMigrationOperation(project)
                 .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature(JavaCore.NATURE_ID)
-                .addNature("org.eclipse.pde.PluginNature")
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
+                .addNature(IMavenConstants.NATURE_ID)
+                .addBuilder(IMavenConstants.BUILDER_ID)
                 .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder("org.eclipse.pde.ManifestBuilder")
-                .addBuilder("org.eclipse.pde.SchemaBuilder")
                 .addBuilder("org.eclipse.wst.validation.validationbuilder");
     }
 

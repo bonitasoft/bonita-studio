@@ -16,23 +16,44 @@ package org.bonitasoft.studio.dependencies.repository;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
+import org.bonitasoft.studio.common.repository.core.IFileInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
+import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -40,6 +61,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.graphics.Image;
 
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
@@ -53,6 +75,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     private Map<String, String> runtimeDependencies;
     private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver();
+    private MavenRepositoryRegistry mavenRepositoryRegistry = new MavenRepositoryRegistry();
 
     @Override
     public void createRepositoryStore(IRepository repository) {
@@ -64,28 +87,28 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         final IProject project = repository.getProject();
         return project.getFolder(getName());
     }
-    
+
     @Override
     protected DependencyFileStore doImportInputStream(String fileName, InputStream inputStream) {
         return DependencyFileStore.NULL;
     }
-    
+
     @Override
     protected DependencyFileStore doImportArchiveData(ImportArchiveData importArchiveData, IProgressMonitor monitor)
             throws CoreException {
         return DependencyFileStore.NULL;
     }
-    
+
     @Override
     public boolean canBeExported() {
         return false;
     }
-    
+
     @Override
     public boolean canBeShared() {
         return false;
     }
-    
+
     @Override
     protected List<IResource> listChildren() throws CoreException {
         return Collections.emptyList();
@@ -217,6 +240,125 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        //NOTHING TO DO
+        // TODO list existing jars from lib folder if it exists
+        // Check if pom file exists 
+        IProject project = getRepository().getProject();
+        if (getResource().exists()) {
+            try {
+                Set<DependencyLookup> dependencyLookups = doMigrateToMavenDependencies(monitor);
+                dependencyLookups.stream()
+                        .forEach(dl -> dl.setSelected(dl.isUsed()));
+                LocalDependenciesStore localDependencyStore = getRepository().getLocalDependencyStore();
+                MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
+                Model mavenModel = mavenProjectHelper.getMavenModel(project);
+                dependencyLookups.stream()
+                        .filter(DependencyLookup::isSelected)
+                        .map(dl -> {
+                            try {
+                                return localDependencyStore.install(dl);
+                            } catch (CoreException e) {
+                                BonitaStudioLog.error(e);
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .map(DependencyLookup::toMavenDependency)
+                        .forEach(newDependeny -> {
+                            Optional<Dependency> dependency = mavenProjectHelper.findDependency(mavenModel,
+                                    newDependeny.getGroupId(),
+                                    newDependeny.getArtifactId());
+                            if (dependency.isPresent()) {
+                                mavenModel.removeDependency(dependency.get());
+                                mavenModel.addDependency(newDependeny);
+                            } else {
+                                mavenModel.addDependency(newDependeny);
+                            }
+                        });
+                mavenProjectHelper.saveModel(project, mavenModel);
+                ProjectDependenciesStore projectDependenciesStore = getRepository().getProjectDependenciesStore();
+                if (projectDependenciesStore != null) {
+                    projectDependenciesStore.analyze(monitor);
+                }
+                getResource().delete(true, monitor);
+            } catch (InvocationTargetException e) {
+                throw new MigrationException(e.getTargetException());
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
+
+    protected Set<DependencyLookup> doMigrateToMavenDependencies(IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException, CoreException {
+        Set<String> usedDependencies = dependencyUsageAnalysis(monitor);
+        Set<String> usedDefinitions = definitionUsageAnalysis(monitor);
+        // Automatic dependency lookup
+        List<InputStreamSupplier> jars = new ArrayList<>();
+        try {
+            jars = createJarInputStreamSuppliers();
+            var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars)
+                    .addUsedDependencies(usedDependencies)
+                    .addUsedDefinitions(usedDefinitions);
+            mavenRepositoryRegistry
+                    .getGlobalRepositories()
+                    .stream()
+                    .map(org.eclipse.m2e.core.repository.IRepository::getUrl)
+                    .forEach(projectDependenciesMigrationOperation::addRemoteRespository);
+            projectDependenciesMigrationOperation.run(monitor);
+            return projectDependenciesMigrationOperation.getResult();
+        } finally {
+            for (InputStreamSupplier jar : jars) {
+                try {
+                    jar.close();
+                } catch (Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+    }
+
+    private List<InputStreamSupplier> createJarInputStreamSuppliers() throws CoreException {
+        return Stream.of(getResource().members())
+                .filter(IFile.class::isInstance)
+                .map(IFile.class::cast)
+                .filter(file -> Objects.equals(file.getFileExtension(), "jar"))
+                .map(file -> new IFileInputStreamSupplier(file))
+                .collect(Collectors.toList());
+    }
+
+    private Set<String> definitionUsageAnalysis(IProgressMonitor monitor)
+            throws CoreException, InvocationTargetException, InterruptedException {
+        IProject project = getRepository().getProject();
+        IFolder diagrams = project.getFolder("diagrams");
+        List<InputStreamSupplier> files = Stream.of(diagrams.members())
+                .filter(IFile.class::isInstance)
+                .map(IFile.class::cast)
+                .filter(file -> Objects.equals("proc", file.getFileExtension()))
+                .map(f -> new IFileInputStreamSupplier(f))
+                .collect(Collectors.toList());
+        DefinitionUsageOperation dependencyUsageOperation = new DefinitionUsageOperation(files);
+        dependencyUsageOperation.run(monitor);
+        return dependencyUsageOperation.getUsedDefinitions();
+    }
+
+    private Set<String> dependencyUsageAnalysis(IProgressMonitor monitor)
+            throws CoreException, InvocationTargetException, InterruptedException {
+        IProject project = getRepository().getProject();
+        IFolder diagrams = project.getFolder("diagrams");
+        IFolder processConfiguration = project.getFolder("process_configurations");
+        List<InputStreamSupplier> files = Stream.concat(
+                Stream.of(diagrams.members())
+                        .filter(IFile.class::isInstance)
+                        .map(IFile.class::cast)
+                        .filter(file -> Objects.equals("proc", file.getFileExtension())),
+                Stream.of(processConfiguration.members())
+                        .filter(IFile.class::isInstance)
+                        .map(IFile.class::cast)
+                        .filter(file -> Objects.equals("conf", file.getFileExtension())))
+                .map(f -> new IFileInputStreamSupplier(f))
+                .collect(Collectors.toList());
+        DependencyUsageOperation dependencyUsageOperation = new DependencyUsageOperation(files);
+        dependencyUsageOperation.run(monitor);
+        return dependencyUsageOperation.getUsedDependencies();
     }
 }

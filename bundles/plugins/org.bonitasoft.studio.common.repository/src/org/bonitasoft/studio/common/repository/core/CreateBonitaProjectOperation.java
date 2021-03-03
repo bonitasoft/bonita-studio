@@ -15,19 +15,17 @@
 package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -45,7 +43,6 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     private final String projectName;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
-    private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
     public CreateBonitaProjectOperation(final IWorkspace workspace, final String projectName) {
         this.workspace = workspace;
@@ -61,7 +58,8 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         project.create(monitor);
         project.open(monitor);
-        createDefaultPomFile(project, monitor);
+        MavenProjectModelBuilder mavenProjectBuilder = defaultMavenProjectBuilder(project.getName());
+        createDefaultPomFile(project, mavenProjectBuilder, monitor);
         project.setDescription(
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
@@ -72,43 +70,55 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                 monitor);
     }
 
-    private void createDefaultPomFile(IProject project, IProgressMonitor monitor) throws CoreException {
+    public static MavenProjectModelBuilder defaultMavenProjectBuilder(String displayName) {
         MavenProjectModelBuilder mavenProjectBuilder = new MavenProjectModelBuilder();
-        mavenProjectBuilder.setDisplayName(project.getName());
+        mavenProjectBuilder.setDisplayName(displayName);
         mavenProjectBuilder.setArtifactId(toArtifactId(mavenProjectBuilder.getDisplayName()));
         mavenProjectBuilder.setGroupId(DEFAULT_GROUP_ID);
         mavenProjectBuilder.setBonitaVersion(ProductVersion.mavenVersion());
         mavenProjectBuilder.setVersion(DEFAULT_VERSION);
+        return mavenProjectBuilder;
+    }
+
+    public static void createDefaultPomFile(IProject project,
+            MavenProjectModelBuilder mavenProjectBuilder,
+            IProgressMonitor monitor) throws CoreException {
+        MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
         IFile pomFile = project.getFile("pom.xml");
         if (pomFile.exists()) {
+            Model model = mavenProjectHelper.getMavenModel(project);
+            mavenProjectBuilder.setGroupId(model.getGroupId());
+            mavenProjectBuilder.setArtifactId(model.getArtifactId());
+            mavenProjectBuilder.setVersion(model.getVersion());
+            if (model.getName() != null && model.getName().isBlank()) {
+                mavenProjectBuilder.setDisplayName(model.getName());
+            }
+            if (model.getDescription() != null && model.getDescription().isBlank()) {
+                mavenProjectBuilder.setDescription(model.getDescription());
+            }
             String backupFileName = "pom.xml.old";
             IFile backupFile = project.getFile(backupFileName);
             while (backupFile.exists()) {
                 backupFileName = nextBackupFileName(backupFileName);
                 backupFile = project.getFile(nextBackupFileName(backupFileName));
             }
-            pomFile.move(backupFile.getProjectRelativePath(), true, new NullProgressMonitor());
+            pomFile.copy(backupFile.getProjectRelativePath(), true, new NullProgressMonitor());
         }
         File pom = pomFile.getLocation().toFile();
         try {
-            if (!pom.createNewFile()) {
-                throw new CoreException(new Status(IStatus.ERROR, getClass(), 
+            if (!pom.exists() && !pom.createNewFile()) {
+                throw new CoreException(new Status(IStatus.ERROR, CreateBonitaProjectOperation.class,
                         "Failed to create pom.xml file.",
                         new IOException("Failed to create pom.xml file.")));
             }
         } catch (IOException e) {
-            throw new CoreException(new Status(IStatus.ERROR, getClass(), "Failed to create pom.xml file.", e));
-        }
-        try (OutputStream stream = new FileOutputStream(pom)) {
-            pomWriter.write(stream, mavenProjectBuilder.toMavenModel());
-        } catch (IOException e) {
             throw new CoreException(
-                    new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
+                    new Status(IStatus.ERROR, CreateBonitaProjectOperation.class, "Failed to create pom.xml file.", e));
         }
-        pomFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+        mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel());
     }
 
-    private String nextBackupFileName(String backupFileName) {
+    private static String nextBackupFileName(String backupFileName) {
         if (backupFileName.endsWith(".old")) {
             return backupFileName + ".1";
         } else {
@@ -118,9 +128,9 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
     }
 
-    private String toArtifactId(String displayName) {
+    private static String toArtifactId(String displayName) {
         String artifactId = displayName.toLowerCase().replace(" ", "-");
-        if(!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
+        if (!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
             return "my-project";
         }
         return artifactId;

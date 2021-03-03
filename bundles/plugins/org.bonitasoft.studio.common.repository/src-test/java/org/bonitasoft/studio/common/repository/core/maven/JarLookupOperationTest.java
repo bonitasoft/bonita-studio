@@ -17,14 +17,14 @@ package org.bonitasoft.studio.common.repository.core.maven;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.junit.Test;
 
 public class JarLookupOperationTest {
 
     @Test
     public void should_give_maven_central_url_the_priority() throws Exception {
-        JarLookupOperation jarLookupOperation = new JarLookupOperation(mock(JarInputStreamSupplier.class));
+        JarLookupOperation jarLookupOperation = new JarLookupOperation(mock(InputStreamSupplier.class));
         jarLookupOperation.addRemoteRespository("url1");
         jarLookupOperation.addRemoteRespository(JarLookupOperation.MAVEN_CENTRAL_URL);
         jarLookupOperation.addRemoteRespository("url2");

@@ -34,7 +34,7 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,10 +56,10 @@ public class JarLookupOperation implements IRunnableWithProgress {
 
     private DependencyLookup result;
     private List<String> repositories = new ArrayList<>();
-    private JarInputStreamSupplier fileToLookup;
+    private InputStreamSupplier fileToLookup;
     private IStatus status = Status.OK_STATUS;
 
-    public JarLookupOperation(JarInputStreamSupplier fileToLookup) {
+    public JarLookupOperation(InputStreamSupplier fileToLookup) {
         this.fileToLookup = fileToLookup;
     }
 

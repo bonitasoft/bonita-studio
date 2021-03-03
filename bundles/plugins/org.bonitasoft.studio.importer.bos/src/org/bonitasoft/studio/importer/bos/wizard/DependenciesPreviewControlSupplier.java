@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
@@ -119,7 +119,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     private void runDependenciesMigrationOperation(IWizardContainer wizardContainer) {
         importArchiveModel = archiveModelSupplier.get();
         BosArchive bosArchive = importArchiveModel.getBosArchive();
-        List<JarInputStreamSupplier> jars = new ArrayList<>();
+        List<InputStreamSupplier> jars = new ArrayList<>();
         try {
             jars = bosArchive.loadJarInputStreamSuppliers();
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars);
@@ -149,7 +149,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
                     Messages.errorOccuredWhileParsingBosArchive, e);
         } finally {
-            for (JarInputStreamSupplier jar : jars) {
+            for (InputStreamSupplier jar : jars) {
                 try {
                     jar.close();
                 } catch (Exception e) {

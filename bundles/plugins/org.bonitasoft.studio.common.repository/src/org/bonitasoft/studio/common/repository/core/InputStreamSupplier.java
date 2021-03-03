@@ -12,13 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository.core.maven.migration;
+package org.bonitasoft.studio.common.repository.core;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-public interface JarInputStreamSupplier extends Supplier<InputStream>, AutoCloseable {
+public interface InputStreamSupplier extends Supplier<InputStream>, AutoCloseable {
 
     String getName();
 
