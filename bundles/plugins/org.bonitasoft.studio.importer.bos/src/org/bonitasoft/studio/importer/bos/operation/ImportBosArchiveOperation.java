@@ -16,7 +16,6 @@ package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,15 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -49,10 +39,12 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
+import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
@@ -65,7 +57,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
+import org.bonitasoft.studio.importer.bos.model.ArchiveInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
@@ -87,11 +79,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
@@ -195,13 +182,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             DiagramRepositoryStore repositoryStore = repositoryAccessor
                     .getRepositoryStore(DiagramRepositoryStore.class);
             repositoryStore.computeProcesses(monitor);
-            
+
             validateAllAfterImport(monitor, statusBuilder);
-            
+
             repositoryStore.resetComputedProcesses();
         }
 
-      
     }
 
     protected Model existingMavenModel(final ImportArchiveModel importArchiveModel) {
@@ -215,7 +201,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         Set<String> usedDefinitions = definitionUsageAnalysis(importArchiveModel, monitor);
         BosArchive bosArchive = importArchiveModel.getBosArchive();
         // Automatic dependency lookup
-        List<JarInputStreamSupplier> jars = new ArrayList<>();
+        List<InputStreamSupplier> jars = new ArrayList<>();
         try {
             jars = bosArchive.loadJarInputStreamSuppliers();
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars)
@@ -229,7 +215,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             projectDependenciesMigrationOperation.run(monitor);
             return projectDependenciesMigrationOperation.getResult();
         } finally {
-            for (JarInputStreamSupplier jar : jars) {
+            for (InputStreamSupplier jar : jars) {
                 try {
                     jar.close();
                 } catch (Exception e) {
@@ -239,85 +225,37 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    public static Set<String> definitionUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
-        Set<String> usedDefinitionId = new HashSet<>();
+    public static Set<String> definitionUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         BosArchive bosArchive = importArchiveModel.getBosArchive();
-        List<AbstractFileModel> files = importArchiveModel.getStores().stream()
+        List<InputStreamSupplier> files = importArchiveModel.getStores().stream()
                 .filter(store -> DiagramRepositoryStore.STORE_NAME.equals(store.getFolderName()))
                 .flatMap(store -> store.getFiles().stream())
+                .filter(f -> f.getFileName().endsWith(".proc"))
+                .map(f -> new ArchiveInputStreamSupplier(bosArchive.getArchiveFile(), bosArchive.getEntry(f.getPath())))
                 .collect(Collectors.toList());
 
-        monitor.beginTask(Messages.definitionUsageAnalysis, files.size());
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        files.stream()
-                .filter(f -> f.getFileName().endsWith(".proc"))
-                .forEach(fileModel -> {
-                    String path = fileModel.getPath();
-                    try (InputStream is = bosArchive.getZipFile().getInputStream(bosArchive.getEntry(path))) {
-                        Document document = asXMLDocument(is);
-                        NodeList nodes = (NodeList) xPath.evaluate("//configuration/@definitionId", document,
-                                XPathConstants.NODESET);
-                        for (int i = 0; i < nodes.getLength(); ++i) {
-                            Node item = nodes.item(i);
-                            usedDefinitionId.add(item.getTextContent());
-                        }
-                    } catch (IOException | XPathExpressionException e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        monitor.worked(1);
-                    }
-                });
-        return usedDefinitionId;
+        DefinitionUsageOperation operation = new DefinitionUsageOperation(files);
+        operation.run(monitor);
+        return operation.getUsedDefinitions();
     }
 
-    public static Set<String> dependencyUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
-        Set<String> usedDependencies = new HashSet<>();
+    public static Set<String> dependencyUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         BosArchive bosArchive = importArchiveModel.getBosArchive();
-        List<AbstractFileModel> files = Stream.concat(
+        List<InputStreamSupplier> files = Stream.concat(
                 importArchiveModel.getStores().stream()
                         .filter(store -> DiagramRepositoryStore.STORE_NAME.equals(store.getFolderName()))
-                        .flatMap(store -> store.getFiles().stream()),
+                        .flatMap(store -> store.getFiles().stream())
+                        .filter(f -> f.getFileName().endsWith(".proc")),
                 importArchiveModel.getStores().stream()
                         .filter(store -> ProcessConfigurationRepositoryStore.STORE_NAME.equals(store.getFolderName()))
-                        .flatMap(store -> store.getFiles().stream()))
+                        .flatMap(store -> store.getFiles().stream())
+                        .filter(f -> f.getFileName().endsWith(".conf")))
+                .map(f -> new ArchiveInputStreamSupplier(bosArchive.getArchiveFile(), bosArchive.getEntry(f.getPath())))
                 .collect(Collectors.toList());
 
-        monitor.beginTask(Messages.dependenciesUsageAnalysis, files.size());
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        files.stream()
-                .filter(f -> f.getFileName().endsWith(".proc") || f.getFileName().endsWith(".conf"))
-                .forEach(fileModel -> {
-                    String path = fileModel.getPath();
-                    try (InputStream is = bosArchive.getZipFile().getInputStream(bosArchive.getEntry(path))) {
-                        Document document = asXMLDocument(is);
-                        NodeList nodes = (NodeList) xPath.evaluate(
-                                "//fragments[@type='JAR' or @type='CONNECTOR' or @type='ACTOR_FILTER'][@exported='true' or not(@exported)]/@value",
-                                document, XPathConstants.NODESET);
-                        for (int i = 0; i < nodes.getLength(); ++i) {
-                            Node item = nodes.item(i);
-                            usedDependencies.add(item.getTextContent());
-                        }
-                    } catch (IOException | XPathExpressionException e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        monitor.worked(1);
-                    }
-                });
-        monitor.done();
-        return usedDependencies;
-    }
-
-    private static Document asXMLDocument(InputStream source) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        factory.setNamespaceAware(true);
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            return builder.parse(new InputSource(source));
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            return null;
-        }
+        DependencyUsageOperation operation = new DependencyUsageOperation(files);
+        operation.run(monitor);
+        return operation.getUsedDependencies();
     }
 
     private DependencyLookup installLocalDependency(DependencyLookup dependencyLookup,

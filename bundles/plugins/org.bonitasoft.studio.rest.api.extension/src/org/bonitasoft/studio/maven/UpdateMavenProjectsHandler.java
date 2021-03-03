@@ -29,10 +29,9 @@ public class UpdateMavenProjectsHandler {
                 .getRepositoryStore(RestAPIExtensionRepositoryStore.class);
         final List<IProject> projects = new ArrayList<>();
         for (final RestAPIExtensionFileStore fStore : repositoryStore.getChildren()) {
-            try {
-                projects.add(fStore.getContent().getProject());
-            } catch (final ReadFileStoreException e) {
-                BonitaStudioLog.error(e);
+            IProject project = fStore.getProject();
+            if (project.exists()) {
+                projects.add(project);
             }
         }
         new UpdateMavenProjectJob(projects.toArray(new IProject[projects.size()]),

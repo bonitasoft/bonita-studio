@@ -49,9 +49,9 @@ public class LocalDependenciesStore {
         this.project = project;
     }
 
-    public void install(DependencyLookup dependencyLookup) throws CoreException {
-        if(dependencyLookup.getStatus() == DependencyLookup.Status.FOUND) {
-            return;
+    public DependencyLookup install(DependencyLookup dependencyLookup) throws CoreException {
+        if (dependencyLookup.getStatus() == DependencyLookup.Status.FOUND) {
+            return dependencyLookup;
         }
         File dependencyFile = dependencyLookup.getFile();
         if (!dependencyFile.isFile()) {
@@ -91,6 +91,7 @@ public class LocalDependenciesStore {
             dependencyLookup.deleteCopy();
         }
         project.getFolder(storeName).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+        return dependencyLookup;
     }
 
     public IStatus runBonitaProjectStoreInstall(IProgressMonitor monitor) throws CoreException {

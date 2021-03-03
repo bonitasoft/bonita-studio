@@ -35,18 +35,16 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
     private final IProject project;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
-    private final AbstractRepository repository;
 
-    public BonitaProjectMigrationOperation(final IProject project, final AbstractRepository repository) {
+    public BonitaProjectMigrationOperation(final IProject project) {
         this.project = project;
-        this.repository = repository;
     }
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
         //In order to force the reorder of natures we must reset description
         String currentVersion = project.getDescription().getComment();
-        if(ProductVersion.canBeMigrated(currentVersion)) {
+        if (ProductVersion.canBeMigrated(currentVersion)) {
             project.setDescription(new ProjectDescriptionBuilder()
                     .withProjectName(project.getName())
                     .withComment(ProductVersion.CURRENT_VERSION)

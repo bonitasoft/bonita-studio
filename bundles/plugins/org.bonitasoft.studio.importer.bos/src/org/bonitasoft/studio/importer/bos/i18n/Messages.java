@@ -87,8 +87,6 @@ public class Messages extends NLS {
     public static String importWithSwitchRepositoryError;
     public static String currentRepoinfo;
     public static String updateProjectDependencies;
-    public static String dependenciesUsageAnalysis;
-    public static String definitionUsageAnalysis;
     public static String dependenciesPreviewTitle;
     public static String dependenciesPreviewDescription;
     public static String groupId;

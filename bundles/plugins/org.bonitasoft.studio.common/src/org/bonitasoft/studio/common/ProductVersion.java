@@ -133,6 +133,14 @@ public class ProductVersion {
             return true;
         }
     }
+    
+    public static boolean isBefore(String currentVersion, String referenceVersion) {
+        try {
+            return Version.valueOf(currentVersion).compareTo(Version.valueOf(referenceVersion)) < 0;
+        } catch (Exception e) {
+            return true;
+        }
+    }
 
     public static String maintenanceVersion() {
         return String.valueOf(new Version(CURRENT_VERSION).getMicro());

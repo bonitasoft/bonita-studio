@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.migration.JarInputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -370,11 +370,11 @@ public class BosArchive {
         return archiveFile.getName();
     }
 
-    public List<JarInputStreamSupplier> loadJarInputStreamSuppliers() {
+    public List<InputStreamSupplier> loadJarInputStreamSuppliers() {
         try (var zipFile = getZipFile()) {
             return zipFile.stream()
                     .filter(entry -> entry.getName().matches("[^/]*/lib/.*.jar"))
-                    .map(entry -> new BosArchiveJarInputStreamSupplier(getArchiveFile(), entry))
+                    .map(entry -> new ArchiveInputStreamSupplier(getArchiveFile(), entry))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             BonitaStudioLog.error(e);

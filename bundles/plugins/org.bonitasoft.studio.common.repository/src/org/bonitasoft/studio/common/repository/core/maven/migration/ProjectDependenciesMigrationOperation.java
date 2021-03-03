@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
 import org.bonitasoft.studio.common.repository.core.maven.JarLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
@@ -39,13 +40,13 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
     public static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/";
     private static final String BDM_CLIENT_POJO_JAR = "bdm-client-pojo.jar";
 
-    private List<JarInputStreamSupplier> jars;
+    private List<InputStreamSupplier> jars;
     private Set<DependencyLookup> result = new HashSet<>();
     private Set<String> repositories = new HashSet<>();
     private Set<String> usedDependencies = new HashSet<>();
     private Set<String> usedDefinitions = new HashSet<>();
 
-    public ProjectDependenciesMigrationOperation(List<JarInputStreamSupplier> jars) {
+    public ProjectDependenciesMigrationOperation(List<InputStreamSupplier> jars) {
         this.jars = jars;
     }
 
@@ -71,7 +72,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 .getBonitaJarDependencyReplacements();
 
         List<String> jarNames = jars.stream()
-                .map(JarInputStreamSupplier::getName)
+                .map(InputStreamSupplier::getName)
                 .collect(Collectors.toList());
 
         Set<String> dependenciesToRemove = jarNames.stream()
@@ -117,10 +118,10 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
 
         dependenciesToRemove.add(BDM_CLIENT_POJO_JAR);
 
-        Set<JarInputStreamSupplier> jarsToLookup = jars.stream()
+        Set<InputStreamSupplier> jarsToLookup = jars.stream()
                 .filter(f -> !dependenciesToRemove.contains(f.getName()))
                 .collect(Collectors.toSet());
-        for (JarInputStreamSupplier jarToLookup : jarsToLookup) {
+        for (InputStreamSupplier jarToLookup : jarsToLookup) {
             DependencyLookup dependencyLookup = lookupDependency(monitor, jarToLookup);
             if (dependencyLookup != null) {
                 if (usedDependencies.contains(jarToLookup.getName())) {
@@ -135,7 +136,7 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
 
     }
 
-    private DependencyLookup lookupDependency(IProgressMonitor monitor, JarInputStreamSupplier jarToLookup)
+    private DependencyLookup lookupDependency(IProgressMonitor monitor, InputStreamSupplier jarToLookup)
             throws InvocationTargetException, InterruptedException {
         DependencyLookup dep = null;
         JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
