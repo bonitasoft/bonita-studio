@@ -14,12 +14,12 @@
  */
 package org.bonitasoft.studio.application.coolbar;
 
-import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.ContributionItem;
@@ -60,9 +60,9 @@ public class DeployCoolbarItem extends ContributionItem
         item.setToolTipText(Messages.DeployButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage("deploy48.png", ApplicationPlugin.getDefault()));
+            item.setImage(Pics.getImage(PicsConstants.deploy48));
         } else {
-            item.setImage(Pics.getImage("deploy24.png", ApplicationPlugin.getDefault()));
+            item.setImage(Pics.getImage(PicsConstants.deploy24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {

@@ -54,15 +54,16 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         if (part instanceof PropertySheet) {
             return null;
         }
-        IPropertySheetPage page = part instanceof ProcessDiagramEditor ? 
-                getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part)
+        IPropertySheetPage page = part instanceof ProcessDiagramEditor
+                ? getBonitaPropertiesBrowserPage((ITabbedPropertySheetPageContributor) part)
                 : Adapters.adapt(part, IPropertySheetPage.class);
         if (page instanceof BonitaPropertiesBrowserPage) {
             if (page instanceof IPageBookViewPage) {
                 initPage((IPageBookViewPage) page);
             }
             page.createControl(getPageBook());
-            page.selectionChanged(part, part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
+            page.selectionChanged(part,
+                    part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
             return new PageRec(part, page);
         }
         return null;
@@ -75,7 +76,7 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
     public IWorkbenchPart getContributingPart() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     }
-    
+
     @Override
     protected IWorkbenchPart getBootstrapPart() {
         return getContributingPart();
@@ -86,7 +87,8 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         // Don't interfere with other property views
         String partID = part.getSite().getId();
         boolean isPropertyView = BonitaPerspectivesUtils.getAllPropertiesViews().contains(partID);
-        return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer) && !(part instanceof ProblemsView);
+        return !isPropertyView && super.isImportant(part) && !(part instanceof BonitaProjectExplorer)
+                && !(part instanceof ProblemsView);
     }
 
 }

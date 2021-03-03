@@ -36,21 +36,24 @@ import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -62,13 +65,12 @@ import org.osgi.framework.Version;
  * Do not forget to add the required css class for the background
  * if you update the controles in the dependencies composite :)
  */
-public class ExtendProjectPage implements ControlSupplier {
+public class BonitaMarketplacePage implements ControlSupplier {
 
     public static final int ICON_SIZE = 64;
 
     private MavenProjectHelper helper = new MavenProjectHelper();
     private RepositoryAccessor repositoryAccessor;
-    private LocalResourceManager manager;
     private List<Image> iconsToDispose = new ArrayList<>();
     private TextWidget searchWidget;
     private Composite dependenciesComposite;
@@ -78,16 +80,16 @@ public class ExtendProjectPage implements ControlSupplier {
     private List<BonitaArtifactDependency> dependenciesUpdatable = new ArrayList<>();
     private List<BonitaArtifactDependency> dependenciesToAdd = new ArrayList<>();
     private List<BonitaArtifactDependency> dependenciesToUpdate = new ArrayList<>();
-    private ComboWidget typeComboWidget;
-    private ISWTObservableValue typeObservableValue;
+    private IObservableValue<String> typeObservableValue;
     private ScrolledComposite sc;
     private IWizardContainer wizardContainer;
     private Composite mainComposite;
 
+    private Button findButton;
+
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         this.wizardContainer = wizardContainer;
-        manager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15, 10).create());
@@ -124,6 +126,7 @@ public class ExtendProjectPage implements ControlSupplier {
     public void pageChanged(PageChangedEvent event) {
         Display.getDefault().asyncExec(() -> {
             try {
+                wizardContainer.getShell().setDefaultButton(null);
                 wizardContainer.run(true, false, monitor -> {
                     monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
                     initVariables();
@@ -172,24 +175,40 @@ public class ExtendProjectPage implements ControlSupplier {
         searchComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
         searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        typeComboWidget = new ComboWidget.Builder()
-                .withLabel(Messages.type)
-                .withItems(Messages.all, Messages.connectorType, Messages.actorFilterType)
-                .fill()
-                .readOnly()
-                .createIn(searchComposite);
-        typeObservableValue = typeComboWidget.observeComboText();
+       var filterComposite = new Composite(searchComposite, SWT.NONE);
+       filterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+       filterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+       
+       Label typeLabel = new Label(filterComposite, SWT.NONE);
+       typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+       typeLabel.setText(Messages.type);
+       
+        Combo combo = new Combo(filterComposite, SWT.READ_ONLY);
+        combo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
+        combo.setItems(Messages.all, Messages.connectorType, Messages.actorFilterType);
+        typeObservableValue = WidgetProperties.text().observe(combo);
         typeObservableValue.setValue(Messages.all);
 
         searchWidget = new SearchWidget.Builder()
                 .fill()
+                .grabVerticalSpace()
                 .grabHorizontalSpace()
                 .createIn(searchComposite);
 
-        Button goButton = new Button(searchComposite, SWT.PUSH);
-        goButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).create());
-        goButton.setText(Messages.go);
-        goButton.addListener(SWT.Selection, e -> applySearch());
+        findButton = new Button(searchComposite, SWT.PUSH);
+        findButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, true).create());
+        findButton.setText(Messages.find);
+        findButton.addListener(SWT.Selection, e -> applySearch());
+
+        searchWidget.addTraverseListener(new TraverseListener() {
+
+            @Override
+            public void keyTraversed(final TraverseEvent event) {
+                if (event.detail == SWT.TRAVERSE_RETURN) {
+                    applySearch();
+                }
+            }
+        });
     }
 
     private void applySearch() {

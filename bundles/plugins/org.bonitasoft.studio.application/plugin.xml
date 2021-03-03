@@ -782,13 +782,6 @@
             name="%projectExplorer"
             restorable="true">
       </view>
-      <view
-            category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionViewPart"
-            id="org.bonitasoft.studio.application.extension.view"
-            name="%projectExtensionView"
-            restorable="true">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.activities">
@@ -1171,7 +1164,7 @@
             toolbarPosition="0">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.ExtendProjectCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.ProjectExtensionsCoolbarItem"
             priority="0"
             toolbarPosition="2">
       </coolbarItem>
@@ -1505,6 +1498,7 @@
       </perspective>
       <perspective
             class="org.bonitasoft.studio.application.views.extension.ProjectExtensionPerspective"
+            fixed="true"
             id="org.bonitasoft.studio.application.extension.perspective"
             name="%projectExtensionPerspective">
       </perspective>
@@ -1599,6 +1593,15 @@
                 </visibleWhen>
             </command>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart"
+            default="false"
+            id="org.bonitasoft.studio.application.extension.editor"
+            name="Project extension editor">
+      </editor>
    </extension>
 
 </plugin>

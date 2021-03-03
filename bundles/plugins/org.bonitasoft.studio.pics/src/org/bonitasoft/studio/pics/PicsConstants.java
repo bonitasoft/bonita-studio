@@ -393,7 +393,6 @@ public class PicsConstants {
 
     public static String duplicate_16 = "duplicate_16.png";
     public static String duplicate_16_dark = "duplicate_16_dark.png";
-
     public static String validate = "validate.png";
 
     public static String copyToClipboard = "copy_clipboard.png";
@@ -403,6 +402,7 @@ public class PicsConstants {
     public static String add_simple = "add_simple.png";
 
     public static String delete = "delete_icon.png";
+    public static String delete_hot = "delete_icon_hot.png";
 
     public static String organization_group = "identity/group.png";
     public static String organization_role = "identity/role.png";
@@ -414,13 +414,17 @@ public class PicsConstants {
     public static String add_decorator = "decoration/add.png";
     public static String add_subelement_decorator = "decoration/add_subelement.png";
 
-    public static String extendProject24 = "extendProject24.png";
-    public static String extendProject48 = "extendProject48.png";
+    public static String openExtensions = "open_extensions.png";
+    public static String openExtensions24 = "coolbar/24/open_extensions.png";
+    public static String openExtensions48 = "coolbar/48/open_extensions.png";
 
     public static String connectorDefaultIcon = "connectorDefaultIcon.png";
     public static String actorfilterDefaultIcon = "actorfilterDefaultIcon.png";
 
     public static String openMarketplace = "open_marketplace.png";
     public static String openMarketplaceHot = "open_marketplace_hot.png";
+
+    public static String deploy24 = "coolbar/24/deploy.png";
+    public static String deploy48 = "coolbar/48/deploy.png";
 
 }

@@ -32,26 +32,25 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-public class ExtendProjectCoolbarItem extends ContributionItem
+public class ProjectExtensionsCoolbarItem extends ContributionItem
         implements IBonitaContributionItem, ISelectionChangedListener {
 
     private ToolItem item;
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
-        //return service.getCommand("org.bonitasoft.studio.application.extend.project.command");
         return service.getCommand("org.bonitasoft.studio.application.show.extensions.command");
     }
 
     @Override
     public void fill(ToolBar toolbar, int index, int iconSize) {
         item = new ToolItem(toolbar, SWT.PUSH);
-        item.setToolTipText(Messages.extendProjectTitle);
+        item.setToolTipText(Messages.projectExtensionsTitle);
         //        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.extendProject48));
+            item.setImage(Pics.getImage(PicsConstants.openExtensions48));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.extendProject24));
+            item.setImage(Pics.getImage(PicsConstants.openExtensions24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
@@ -86,7 +85,7 @@ public class ExtendProjectCoolbarItem extends ContributionItem
 
     @Override
     public String getText() {
-        return Messages.extendProjectTitle;
+        return Messages.projectExtensionsTitle;
     }
 
 }

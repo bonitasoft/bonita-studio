@@ -30,6 +30,8 @@ public interface BonitaThemeConstants {
     public static final String TABLE_BACKGROUND_COLOR = "tableBackground";
     public static final String NOTIFICATION_COMPOSITE = "notificationComposite";
     public static final String WIZARD_HIGHLIGHT_BACKGROUND = "wizardHighlightBackground";
+    public static final String EXTENSION_VIEW_BACKGROUND = "extensionViewBackground";
+    public static final String CARD_BACKGROUND = "cardBackground";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
@@ -39,5 +41,5 @@ public interface BonitaThemeConstants {
     public static final String INFO_TEXT_COLOR = "infoTextColor";
     public static final String TITLE_TEXT_COLOR = "titleTextColor";
     public static final String TOOLBAR_TEXT_COLOR = "toolbarTextColor";
-
+    public static final String CARD_HIGHLIGHT_TITLE_COLOR = "cardHighlightTitleColor";
 }

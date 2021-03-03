@@ -14,27 +14,44 @@
  */
 package org.bonitasoft.studio.application.handler;
 
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionPerspective;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionViewPart;
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorInput;
+import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.ide.IDE;
 
 public class OpenExtensionViewHandler {
 
     @Execute
     public void execute() {
         try {
-            IWorkbench workbench = PlatformUI.getWorkbench();
-            workbench.showPerspective(ProjectExtensionPerspective.EXTENSION_PERSPECTIVE_ID,
-                    workbench.getActiveWorkbenchWindow());
-            IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
-            if (activePage.findView(ProjectExtensionViewPart.ID) == null) {
-                activePage.showView(ProjectExtensionViewPart.ID);
+            BonitaMarketplace marketplace = BonitaMarketplace.getInstance();
+            if (!marketplace.isLoaded()) {
+                try {
+                    PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                        monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
+                        marketplace.loadDependencies();
+                        monitor.done();
+                    });
+                } catch (InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
+                    MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
+                }
             }
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            IDE.openEditor(activePage, ProjectExtensionEditorInput.getInstance(), ProjectExtensionEditorPart.ID, true);
         } catch (WorkbenchException e) {
             throw new RuntimeException(e);
         }

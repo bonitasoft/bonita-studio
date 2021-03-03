@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
-import static org.bonitasoft.studio.application.ui.control.ExtendProjectPage.ICON_SIZE;
+import static org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage.ICON_SIZE;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -98,6 +98,10 @@ public class BonitaMarketplace {
         dependencies.forEach(this::createIcon);
     }
 
+    public boolean isLoaded() {
+        return dependencies != null;
+    }
+
     private void createIcon(BonitaArtifactDependency dep) {
         Image icon = null;
         if (dep.getIcon() != null) {
@@ -133,6 +137,7 @@ public class BonitaMarketplace {
                 // pixel colors will be copied from the bas eimage, the depth and the palette data is only used to defined the default bg
                 ImageData imageData = new ImageData(ICON_SIZE * zoom / 100, ICON_SIZE * zoom / 100,
                         1, new PaletteData(new RGB[] { iconBackground }));
+                imageData.transparentPixel = imageData.palette.getPixel(iconBackground);
                 return imageData;
             }
         };

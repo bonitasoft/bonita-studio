@@ -145,7 +145,6 @@ public class Messages extends NLS {
     public static String addToProject;
     public static String removeFromProject;
     public static String find;
-    public static String go;
     public static String type;
     public static String all;
     public static String connectorType;
@@ -165,6 +164,13 @@ public class Messages extends NLS {
     public static String projectExtensions;
     public static String openMarketplace;
     public static String openMarketplaceTooltip;
+    public static String projectExtensionsTitle;
+    public static String removeExtensionTooltip;
+    public static String details;
+    public static String removeExtensionConfirmationTitle;
+    public static String removeExtensionConfirmation;
+    public static String extensionLoadingErrorTitle;
+    public static String extensionLoadingError;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
