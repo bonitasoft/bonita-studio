@@ -41,6 +41,12 @@ public class AddDependencyOperation extends MavenModelOperation {
         this.version = version;
     }
 
+    public AddDependencyOperation(Dependency dependency) {
+        this(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
+        this.type = dependency.getType();
+        this.classifier = dependency.getClassifier();
+    }
+
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());

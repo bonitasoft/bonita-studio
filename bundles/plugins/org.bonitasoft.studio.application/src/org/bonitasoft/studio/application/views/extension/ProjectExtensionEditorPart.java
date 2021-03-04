@@ -61,6 +61,7 @@ public class ProjectExtensionEditorPart extends EditorPart {
     public static final String ID = "org.bonitasoft.studio.application.extension.editor";
 
     private static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
+    private static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
 
     private RepositoryAccessor repositoryAccessor;
     private MavenProjectHelper mavenHelper;
@@ -251,6 +252,22 @@ public class ProjectExtensionEditorPart extends EditorPart {
         toolbarsComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         createMarketplaceButton(toolbarsComposite);
+        createImportButton(toolbarsComposite);
+    }
+
+    private void createImportButton(Composite parent) {
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.importExtensionButtonLabel)
+                .withMaxTextWidth(150)
+                .withTooltipText(Messages.importExtension)
+                .withImage(Pics.getImage(PicsConstants.import32))
+                .withHotImage(Pics.getImage(PicsConstants.import32Hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .onClick(e -> {
+                    commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND, null);
+                    refreshCards();
+                })
+                .createIn(parent);
     }
 
     private void createMarketplaceButton(Composite parent) {

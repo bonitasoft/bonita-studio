@@ -72,7 +72,7 @@ public class SearchWidget extends TextWidget {
             int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
-                proposalProvider, editableStrategy, ctx, style);
+                proposalProvider, editableStrategy, ctx, style, false);
     }
 
     @Override
