@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.businessobject.core.expression;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -54,7 +55,8 @@ public class DAOExpressionProvider implements IExpressionProvider {
         final Set<Expression> result = new HashSet<>();
         final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> boStore = repositoryAccessor
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        for (final IType t : boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().getJavaProject())) {
+        List<IType> allBusinessObjectDao = boStore.allBusinessObjectDao(repositoryAccessor.getCurrentRepository().getJavaProject());
+        for (final IType t : allBusinessObjectDao) {
             result.add(createExpression(t));
         }
         return result;
