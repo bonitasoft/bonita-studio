@@ -1,0 +1,62 @@
+.widgetBackground {
+   background-color: COLOR-WIDGET-BACKGROUND;
+   background-color-titlebar: COLOR-WIDGET-BACKGROUND;
+}
+
+ /* Customize background for toolbar in Bonita editors */
+.editorFormBackground {
+    text-background-color: #ebebeb;
+}
+
+/* Table background color */
+.tableBackground {
+    background-color: #ffffff;
+}
+
+
+ /* Customize background for toggled sections in Bonita editors */
+.MPart Section#editorSectionBackground,
+.MPart Section#editorSectionBackground > Label,
+.MPart Section#editorSectionBackground > Twistie,
+.MPart Section#editorSectionBackground > ToolBar {
+    background-color: #ebebeb;
+}
+
+#wellInfoLabel {
+	background-color: rgb(229, 245, 255);
+	color: rgb(51, 102, 153);
+}
+
+#wellWarningLabel {
+	background-color: rgb(255, 255, 204);
+	color: rgb(120, 110, 30);
+}
+
+#wellErrorLabel {
+	background-color: rgb(255, 229, 229);
+	color: rgb(204, 0, 0);
+}
+
+CTabFolder {
+	/* Set the styles for the inner tabs: */
+    color: '#org-eclipse-ui-workbench-INACTIVE_TAB_TEXT_COLOR';
+    swt-tab-renderer: url('bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.CTabRendering');
+    swt-tab-outline: '#org-eclipse-ui-workbench-ACTIVE_TAB_OUTLINE_COLOR'; /* border color for selected tab */
+    swt-outer-keyline-color: '#org-eclipse-ui-workbench-ACTIVE_TAB_OUTER_KEYLINE_COLOR'; /* border color for whole tabs container */
+    swt-unselected-tabs-color: '#org-eclipse-ui-workbench-ACTIVE_UNSELECTED_TABS_COLOR_START' '#org-eclipse-ui-workbench-ACTIVE_UNSELECTED_TABS_COLOR_END' 100% 100%; /* title background for unselected tab */
+    swt-selected-tab-fill: '#org-eclipse-ui-workbench-ACTIVE_TAB_BG_END'; /* title background for selected tab */
+    swt-shadow-visible: false;
+    swt-selected-tab-highlight: none;
+}
+
+.notificationComposite,
+.notificationComposite > Composite, 
+.notificationComposite > Composite > *,
+.notificationComposite > Composite > * > * {
+    background-color: #ffffff;
+    color: #4a5568;
+}
+
+#readOnly {
+    background-color: #e9e9e9;
+}
