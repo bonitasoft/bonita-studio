@@ -68,7 +68,7 @@ public class TextAreaWidget extends TextWidget {
             int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
-                Optional.empty(), editableStrategy, ctx, style);
+                Optional.empty(), editableStrategy, ctx, style, false);
     }
 
     /*

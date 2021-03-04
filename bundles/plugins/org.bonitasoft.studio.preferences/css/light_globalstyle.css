@@ -93,3 +93,7 @@ Label#cardHighlightTitleColor {
 .wizardHighlightBackground {
     background-color: #f5f5f5;
 }
+
+Shell Composite#labelComposite {
+	background-color: #ffffff;
+}
