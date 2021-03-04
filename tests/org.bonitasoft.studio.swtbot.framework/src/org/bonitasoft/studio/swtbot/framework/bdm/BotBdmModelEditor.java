@@ -163,7 +163,9 @@ public class BotBdmModelEditor extends BotBase {
         bot.toolbarButtonWithId(AttributeEditionControl.ADD_ATTRIBUTE_BUTTON_ID).click();
         SWTBotText botText = bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR);
         botText.setText(attribute);
+        botText.pressShortcut(Keystrokes.CR);
         attributeTable.pressShortcut(Keystrokes.CR);
+        attributeTable.setFocus();
         try {
             SWTBotTableItem tableItem = attributeTable.getTableItem(attribute);
             setType(packageName, businessObject, tableItem, type, attributeTable);
