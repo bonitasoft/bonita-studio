@@ -94,7 +94,12 @@ public class Messages extends NLS {
     public static String version;
     public static String resolvedFromRepository;
     public static String cannotBeResolvedAgainstProvidedRepository;
-    public static String unresolvedDependenciesMessage;
+    public static String unresolvedLocalDependenciesMessage;
     public static String unusedDependenciesWarning;
+    public static String errorOccuredWhileLookingUpDependencies;
+    public static String cannotBeResolvedAgainstProvidedRepositoryInstalledLocally;
+    public static String unresolvedDependenciesMessage;
+    public static String remoteRepositories;
+    public static String configuredRemoteRepositories;
 
 }

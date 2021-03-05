@@ -28,6 +28,7 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -50,7 +51,7 @@ public class LocalDependenciesStore {
     }
 
     public DependencyLookup install(DependencyLookup dependencyLookup) throws CoreException {
-        if (dependencyLookup.getStatus() == DependencyLookup.Status.FOUND) {
+        if (dependencyLookup.getStatus() == DependencyLookup.Status.FOUND || dependencyLookup.getFile() == null) {
             return dependencyLookup;
         }
         File dependencyFile = dependencyLookup.getFile();
@@ -78,9 +79,8 @@ public class LocalDependenciesStore {
                         String.format("Cannot install %s dependency. Failed to create store folders.",
                                 dependencyFile.getName())));
             }
-            Files.copy(dependencyFile.toPath(), targetFolder
-                    .resolve(String.format("%s-%s.jar", dependencyLookup.getArtifactId(),
-                            dependencyLookup.getVersion())),
+            Files.copy(dependencyFile.toPath(), 
+                    targetFolder.resolve(fileName(dependencyLookup)),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -92,6 +92,19 @@ public class LocalDependenciesStore {
         }
         project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
         return dependencyLookup;
+    }
+
+    private String fileName(DependencyLookup dependencyLookup) {
+        GAV gav = dependencyLookup.getGAV();
+        if(gav.getClassifier() != null) {
+            return String.format("%s-%s-%s.%s", gav.getArtifactId(),
+                    gav.getVersion(),
+                    gav.getClassifier(),
+                    gav.getType());
+        }
+        return String.format("%s-%s.%s", gav.getArtifactId(),
+                gav.getVersion(),
+                gav.getType());
     }
 
     public IStatus runBonitaProjectStoreInstall(IProgressMonitor monitor) throws CoreException {

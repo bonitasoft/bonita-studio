@@ -189,6 +189,9 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                         }
                     }
                 }
+                if(dep.getStatus() == Status.NOT_FOUND && dep.getFile().exists()) {
+                    dep.setStatus(Status.LOCAL);
+                }
             }
         }
         return dep;

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -65,28 +66,54 @@ public class MavenProjectHelper {
         }
         pomFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
-    
+
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {
         IMavenProjectFacade mavenFacade = getMavenProject(project);
-        if(mavenFacade != null) {
+        if (mavenFacade != null) {
             MavenProject mavenProject = mavenFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
-            if(mavenProject != null) {
-                return mavenProject.getRemoteArtifactRepositories(); 
+            if (mavenProject != null) {
+                return mavenProject.getRemoteArtifactRepositories();
             }
         }
-       return Collections.emptyList();
+        return Collections.emptyList();
     }
-    
+
     private IMavenProjectFacade getMavenProject(IProject project) throws CoreException {
         return MavenPlugin.getMavenProjectRegistry().getProject(project);
     }
-    
+
     public Optional<Dependency> findDependency(Model model, String groupId, String artifactId) {
         return model.getDependencies()
                 .stream()
                 .filter(dep -> Objects.equals(dep.getGroupId(), groupId))
                 .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
                 .findFirst();
+    }
+    
+    public Optional<Dependency> findDependency(Model model, Dependency dependency) {
+        return model.getDependencies()
+                .stream()
+                .filter(dep -> Objects.equals(dep.getGroupId(), dependency.getGroupId()))
+                .filter(dep -> Objects.equals(dep.getArtifactId(), dependency.getArtifactId()))
+                .filter(dep -> Objects.equals(dep.getVersion(), dependency.getVersion()))
+                .filter(dep -> Objects.equals(dep.getType(), dependency.getType()))
+                .filter(dep -> Objects.equals(dep.getClassifier(), dependency.getClassifier()))
+                .findFirst();
+    }
+
+    public IStatus mergeDependencies(IProject project, Model model)   {
+        try {
+            Model existingModel = getMavenModel(project);
+            model.getDependencies().stream()
+                .filter(d -> !Objects.equals(Artifact.SCOPE_PROVIDED, d.getScope()))
+                .filter(d -> findDependency(existingModel, d).isEmpty())
+                .forEach(existingModel.getDependencies()::add);
+            saveModel(project, existingModel);
+            return Status.OK_STATUS;
+        } catch (CoreException e) {
+           return e.getStatus();
+        }
+      
     }
 
 }
