@@ -29,7 +29,6 @@ import org.bonitasoft.studio.identity.organization.model.organization.Organizati
 import org.bonitasoft.studio.identity.organization.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.identity.organization.model.organization.User;
 import org.bonitasoft.studio.identity.organization.model.organization.Users;
-import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

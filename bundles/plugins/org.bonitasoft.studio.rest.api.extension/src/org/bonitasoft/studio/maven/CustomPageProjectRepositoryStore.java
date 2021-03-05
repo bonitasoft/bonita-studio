@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.maven.archetype.catalog.Archetype;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -30,6 +31,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 
 public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProjectFileStore>
         extends AbstractFolderRepositoryStore<T> {
@@ -78,7 +80,7 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
             child.removeProject();
         }
     }
-
+    
     @Override
     public void repositoryUpdated() {
         importProjects();
@@ -104,7 +106,7 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
         final IFolder folder = getResource();
         try {
             for (final IResource r : folder.members()) {
-                if (!r.isHidden() && ((IFolder) r).getFile("pom.xml").exists()) {
+                if (r instanceof IFolder && !r.isHidden() && ((IFolder) r).getFile(IMavenConstants.POM_FILE_NAME).exists()) {
                     result.add(createRepositoryFileStore(r.getName()));
                 }
             }
@@ -112,6 +114,13 @@ public abstract class CustomPageProjectRepositoryStore<T extends CustomPageProje
             BonitaStudioLog.error(e);
         }
         return result;
+    }
+    
+    @Override
+    protected List<IResource> listChildren() throws CoreException {
+        return super.listChildren().stream()
+                .filter(IFolder.class::isInstance)
+                .collect(Collectors.toList());
     }
 
     public Optional<T> findByCustomPageId(String pageId) {

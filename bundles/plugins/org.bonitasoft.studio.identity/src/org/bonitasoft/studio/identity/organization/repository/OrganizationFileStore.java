@@ -109,9 +109,9 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
 
     @Override
     protected Organization doGetContent() throws ReadFileStoreException {
-        final DocumentRoot root = (DocumentRoot) super.doGetContent();
-        if (root != null) {
-            return root.getOrganization();
+        Object root = super.doGetContent();
+        if (root instanceof DocumentRoot) {
+            return ((DocumentRoot) root).getOrganization();
         }
         return null;
     }
