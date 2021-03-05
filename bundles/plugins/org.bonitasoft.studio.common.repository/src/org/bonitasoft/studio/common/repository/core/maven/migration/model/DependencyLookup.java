@@ -28,21 +28,23 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 
 public class DependencyLookup {
 
     public enum Status {
-        FOUND, NOT_FOUND
+        NOT_FOUND, LOCAL, FOUND
     }
 
-    private final String fileName;
-    private final String sha1;
-    private final Status status;
+    private String fileName;
+    private String sha1;
+    private Status status;
     private GAV gav;
-    private final String repository;
+    private String repository;
     private boolean selected;
     private File tmpFile;
     private boolean isUsed;
+    private InputStreamSupplier inputStreamSupplier;
 
     public DependencyLookup(String fileName,
             String sha1,
@@ -54,12 +56,22 @@ public class DependencyLookup {
         this.status = status;
         this.gav = gav;
         this.repository = repository;
-        if (status == Status.NOT_FOUND) {
-            tmpFile = copy();
+        if (status == Status.NOT_FOUND && fileName != null) {
+            tmpFile = copy(fileName);
         }
     }
 
-    private File copy() {
+    public DependencyLookup(InputStreamSupplier inputStreamSupplier,
+            Status status,
+            GAV gav) {
+        this.inputStreamSupplier = inputStreamSupplier;
+        this.fileName = inputStreamSupplier.getName();
+        this.status = status;
+        this.gav = gav;
+        tmpFile = inputStreamSupplier.toTempFile();
+    }
+
+    private File copy(String fileName) {
         File file = new File(fileName);
         if (file.isFile()) {
             String name = file.getName();
@@ -74,7 +86,14 @@ public class DependencyLookup {
     }
 
     public void deleteCopy() {
-        if (tmpFile != null) {
+        if (inputStreamSupplier != null) {
+            try {
+                inputStreamSupplier.close();
+            } catch (Exception e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        if (tmpFile != null && tmpFile.exists()) {
             try {
                 Files.deleteIfExists(tmpFile.toPath());
                 File parentFile = tmpFile.getParentFile();
@@ -90,7 +109,7 @@ public class DependencyLookup {
     public static DependencyLookup fromCSV(String[] csvData) {
         if (csvData.length == 7) {
             GAV gav = new GAV(csvData[3],
-                    csvData[4], 
+                    csvData[4],
                     csvData[5]);
             return new DependencyLookup(csvData[0],
                     csvData[1],
@@ -101,10 +120,10 @@ public class DependencyLookup {
             String fileName = csvData[0];
             File file = new File(fileName);
             String name = file.getName();
-            GAV defaultGav = new GAV("com.company",  name.replace(".jar", ""),  "1.0.0");
+            GAV defaultGav = new GAV("com.company", name.replace(".jar", ""), "1.0.0");
             return readPomProperties(file)
-                    .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),  
-                            pomProperties.getProperty("artifactId"), 
+                    .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),
+                            pomProperties.getProperty("artifactId"),
                             pomProperties.getProperty("version")))
                     .map(gav -> new DependencyLookup(fileName,
                             csvData[1],
@@ -189,7 +208,7 @@ public class DependencyLookup {
     }
 
     public String getArtifactId() {
-       return gav.getArtifactId();
+        return gav.getArtifactId();
     }
 
     public void setArtifactId(String artifactId) {
@@ -230,6 +249,9 @@ public class DependencyLookup {
         dependency.setVersion(gav.getVersion());
         dependency.setGroupId(gav.getGroupId());
         dependency.setClassifier(gav.getClassifier());
+        if(!"jar".equals(gav.getType())) {
+            dependency.setType(gav.getType());
+        }
         return dependency;
     }
 
@@ -239,6 +261,10 @@ public class DependencyLookup {
 
     public GAV getGAV() {
         return gav;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

@@ -62,7 +62,11 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         });
         return this;
     }
-
+    
+    public GAV getGav() {
+        return gav;
+    }
+    
     public List<String> getRemoteRepositories() {
         return repositories;
     }
@@ -98,7 +102,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         final MavenExecutionRequest request = context.getExecutionRequest();
         request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:purge-local-repository"));
         Properties userProperties = new Properties();
-        userProperties.setProperty("manualInclude",  gav.toString());
+        userProperties.setProperty("manualInclude",  String.format("%s:%s:%s", gav.getGroupId(), gav.getArtifactId(), gav.getVersion()));
         userProperties.setProperty("actTransitively", "false");
         request.setUserProperties(userProperties);
         return context.execute(new ICallable<MavenExecutionResult>() {

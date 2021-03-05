@@ -11,6 +11,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 public class ImportFolderFileStoreModel extends AbstractFolderModel implements ImportableUnit {
 
@@ -20,7 +22,9 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
 
     @Override
     public Image getImage() {
-        return getParentRepositoryStore().map(IRepositoryStore::getIcon).orElse(null);
+        return getParentRepositoryStore()
+                .map(IRepositoryStore::getIcon)
+                .orElse(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
     }
 
     @Override

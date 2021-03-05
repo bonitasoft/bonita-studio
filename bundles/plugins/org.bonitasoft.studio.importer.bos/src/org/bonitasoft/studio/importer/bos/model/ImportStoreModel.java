@@ -31,10 +31,6 @@ public class ImportStoreModel extends AbstractFolderModel {
         return Optional.ofNullable(getRepositoryStore());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.bos.model.AbstractFolderModel#getImage()
-     */
     @Override
     public Image getImage() {
         return repositoryStore.getIcon();

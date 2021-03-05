@@ -22,31 +22,42 @@ public class GAV {
     private String artifactId;
     private String version;
     private String classifier;
+    private String type = "jar";
 
     public GAV(String groupId, String artifactId, String version) {
-        this(groupId, artifactId, version, null);
+        this(groupId, artifactId, version, null, "jar");
     }
 
     public GAV(String groupId, String artifactId, String version, String classifier) {
+        this(groupId, artifactId, version, classifier, "jar");
+    }
+
+    public GAV(String groupId, String artifactId, String version, String classifier, String type) {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
         this.classifier = classifier;
+        this.type = type;
     }
 
     public GAV(Dependency mavenDependency) {
         this(mavenDependency.getGroupId(),
                 mavenDependency.getArtifactId(),
                 mavenDependency.getVersion(),
-                mavenDependency.getClassifier());
+                mavenDependency.getClassifier(),
+                mavenDependency.getType());
     }
 
+    /**
+     * Respect maven string coordinate format: <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+     */
     @Override
     public String toString() {
-        var label = String.format("%s:%s:%s", groupId, artifactId, version);
+        var label = String.format("%s:%s:%s", groupId, artifactId,type);
         if (classifier != null) {
             label = label + ":" + classifier;
         }
+        label = label + ":" + version;
         return label;
     }
 
@@ -80,6 +91,14 @@ public class GAV {
 
     public void setClassifier(String classifier) {
         this.classifier = classifier;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
 }

@@ -45,6 +45,7 @@ import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperati
 import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
+import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
@@ -157,12 +158,26 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             doImport(importArchiveModel, monitor);
             monitor.subTask("");
             Model importedMavenModel = existingMavenModel(importArchiveModel);
+            LocalDependenciesStore localDependencyStore = currentRepository.getLocalDependencyStore();
             if (!manualDependencyResolution && importedMavenModel == null) {
                 dependenciesLookup = doMigrateToMavenDependencies(importArchiveModel, monitor);
                 dependenciesLookup.stream()
                         .forEach(dl -> dl.setSelected(dl.isUsed()));
+            } else if (!manualDependencyResolution && importedMavenModel != null) {
+                ProjectDependenciesLookupOperation operation = new ProjectDependenciesLookupOperation(
+                        importedMavenModel,
+                        new ArchiveLocalDependencyInputStreamSupplier(importArchiveModel.getBosArchive()));
+                mavenRepositoryRegistry
+                        .getGlobalRepositories()
+                        .stream()
+                        .map(IRepository::getUrl)
+                        .forEach(operation::addRemoteRespository);
+                operation.run(monitor);
+                dependenciesLookup = operation.getResult();
+                dependenciesLookup.stream()
+                        .forEach(dl -> dl.setSelected(true));
             }
-            LocalDependenciesStore localDependencyStore = currentRepository.getLocalDependencyStore();
+
             dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
                     .map(dl -> installLocalDependency(dl, localDependencyStore))
@@ -225,7 +240,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    public static Set<String> definitionUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public static Set<String> definitionUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
         BosArchive bosArchive = importArchiveModel.getBosArchive();
         List<InputStreamSupplier> files = importArchiveModel.getStores().stream()
                 .filter(store -> DiagramRepositoryStore.STORE_NAME.equals(store.getFolderName()))
@@ -239,7 +255,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return operation.getUsedDefinitions();
     }
 
-    public static Set<String> dependencyUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public static Set<String> dependencyUsageAnalysis(ImportArchiveModel importArchiveModel, IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
         BosArchive bosArchive = importArchiveModel.getBosArchive();
         List<InputStreamSupplier> files = Stream.concat(
                 importArchiveModel.getStores().stream()
@@ -260,12 +277,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private DependencyLookup installLocalDependency(DependencyLookup dependencyLookup,
             LocalDependenciesStore localDependencyStore) {
-        if (dependencyLookup.getStatus() == DependencyLookup.Status.NOT_FOUND) {
-            try {
-                localDependencyStore.install(dependencyLookup);
-            } catch (CoreException e) {
-                status.add(e.getStatus());
-            }
+        try {
+            localDependencyStore.install(dependencyLookup);
+        } catch (CoreException e) {
+            status.add(e.getStatus());
         }
         return dependencyLookup;
     }
@@ -276,17 +291,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         try {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
-                    .forEach(newDependeny -> {
-                        Optional<Dependency> dependency = mavenProjectHelper.findDependency(mavenModel,
-                                newDependeny.getGroupId(),
-                                newDependeny.getArtifactId());
-                        if (dependency.isPresent()) {
-                            mavenModel.removeDependency(dependency.get());
-                            mavenModel.addDependency(newDependeny);
-                        } else {
-                            mavenModel.addDependency(newDependeny);
-                        }
-                    });
+                    .filter(dep -> mavenProjectHelper.findDependency(mavenModel, dep).isEmpty())
+                    .forEach(mavenModel::addDependency);
             mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {

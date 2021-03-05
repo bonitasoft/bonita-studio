@@ -29,9 +29,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
@@ -39,6 +41,7 @@ import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.operation.ArchiveLocalDependencyInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -80,8 +83,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 public class DependenciesPreviewControlSupplier implements ControlSupplier {
@@ -112,13 +113,49 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
         if (Messages.dependenciesPreviewTitle.equals(selectedPage.getTitle()) && (importArchiveModel == null
                 || !executions
                         .containsKey(archiveModelSupplier.get().getBosArchive().getArchiveFile().getAbsolutePath()))) {
-            runDependenciesMigrationOperation(selectedPage.getWizard().getContainer());
+            analyzeDependencies(selectedPage.getWizard().getContainer());
         }
     }
 
-    private void runDependenciesMigrationOperation(IWizardContainer wizardContainer) {
+    private void analyzeDependencies(IWizardContainer wizardContainer) {
         importArchiveModel = archiveModelSupplier.get();
         BosArchive bosArchive = importArchiveModel.getBosArchive();
+        Model mavenProject = bosArchive.readMavenProject();
+        if (mavenProject == null) {
+            executeDependenciesMigrationOperation(wizardContainer, bosArchive);
+        } else {
+            executeProjectDependenciesLookup(wizardContainer, bosArchive, mavenProject);
+        }
+    }
+
+    private void executeProjectDependenciesLookup(IWizardContainer wizardContainer,
+            BosArchive bosArchive,
+            Model mavenProject) {
+        try {
+            ProjectDependenciesLookupOperation operation = new ProjectDependenciesLookupOperation(mavenProject,
+                    new ArchiveLocalDependencyInputStreamSupplier(bosArchive));
+            mavenRepositories.stream()
+                    .map(IRepository::getUrl)
+                    .forEach(operation::addRemoteRespository);
+            wizardContainer.run(true, false, operation);
+            dependenciesLookup.clear();
+            dependenciesLookup.addAll(operation.getResult().stream()
+                    .map(dl -> {
+                        dl.setSelected(true);
+                        dl.setUsed(true);
+                        return dl;
+                    })
+                    .collect(Collectors.toList()));
+            executions.put(importArchiveModel.getBosArchive().getArchiveFile().getAbsolutePath(),
+                    dependenciesLookup);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
+                    Messages.errorOccuredWhileLookingUpDependencies, e);
+        }
+    }
+
+    private void executeDependenciesMigrationOperation(IWizardContainer wizardContainer, BosArchive bosArchive) {
         List<InputStreamSupplier> jars = new ArrayList<>();
         try {
             jars = bosArchive.loadJarInputStreamSuppliers();
@@ -143,11 +180,12 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
                         return dl;
                     })
                     .collect(Collectors.toList()));
-            executions.put(importArchiveModel.getBosArchive().getArchiveFile().getAbsolutePath(), dependenciesLookup);
+            executions.put(importArchiveModel.getBosArchive().getArchiveFile().getAbsolutePath(),
+                    dependenciesLookup);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             exceptionDialogHandler.openErrorDialog(Display.getDefault().getActiveShell(),
-                    Messages.errorOccuredWhileParsingBosArchive, e);
+                    Messages.errorOccuredWhileLookingUpDependencies, e);
         } finally {
             for (InputStreamSupplier jar : jars) {
                 try {
@@ -170,7 +208,17 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 25).create());
         container.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        IObservableValue<Boolean> unknownDepObservable = new ComputedValue<Boolean>() {
+        IObservableValue<Boolean> localDepObservable = new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return dependenciesLookup.stream()
+                        .map(DependencyLookup::getStatus)
+                        .anyMatch(DependencyLookup.Status.LOCAL::equals);
+            }
+        };
+
+        IObservableValue<Boolean> notFoundDepObservable = new ComputedValue<Boolean>() {
 
             @Override
             protected Boolean calculate() {
@@ -180,27 +228,28 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
             }
         };
 
-        unknownDepObservable.addValueChangeListener(showUnknownDependenciesPanel(container));
+        localDepObservable.addValueChangeListener(showLocalDependenciesPanel(container));
+        notFoundDepObservable.addValueChangeListener(showNotFoundDependenciesPanel(container));
 
         ExpandableComposite repositoriesExpandable = new ExpandableComposite(container, SWT.NONE,
                 ExpandableComposite.TWISTIE | ExpandableComposite.NO_TITLE_FOCUS_BOX
                         | ExpandableComposite.CLIENT_INDENT);
         repositoriesExpandable.setLayout(GridLayoutFactory.fillDefaults().create());
         repositoriesExpandable.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        repositoriesExpandable.setText("Remote repositories");
+        repositoriesExpandable.setText(Messages.remoteRepositories);
 
         Composite client = new Composite(repositoriesExpandable, SWT.NONE);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         client.setLayout(GridLayoutFactory.fillDefaults().create());
 
         Link description = new Link(client, SWT.NONE);
-        description.setText("<a>Remote repositories</a> to use in your project.");
+        description.setText(Messages.configuredRemoteRepositories);
         description.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_DOC_URL));
         TableViewer repositoriesViewer = new TableViewer(client);
         repositoriesViewer.getControl().setLayoutData(GridDataFactory
                 .fillDefaults()
                 .grab(true, true)
-                .hint(SWT.DEFAULT, 80)
+                .hint(SWT.DEFAULT, 60)
                 .create());
 
         repositoriesViewer.setContentProvider(new ObservableListContentProvider<IRepository>());
@@ -217,21 +266,10 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
         });
 
         repositoriesViewer.setInput(mavenRepositories);
-
         repositoriesExpandable.setClient(client);
-        repositoriesExpandable.addExpansionListener(new IExpansionListener() {
 
-            @Override
-            public void expansionStateChanging(ExpansionEvent e) {
-            }
-
-            @Override
-            public void expansionStateChanged(ExpansionEvent e) {
-                container.layout(true, true);
-            }
-        });
-
-        CheckboxTableViewer dependenciesViewer = CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.FULL_SELECTION);
+        CheckboxTableViewer dependenciesViewer = CheckboxTableViewer.newCheckList(container,
+                SWT.BORDER | SWT.FULL_SELECTION);
         dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true)
                 .create());
@@ -290,14 +328,10 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
                 .withValueUpdater((dep, value) -> dep.setVersion((String) value))
                 .create());
 
-        Comparator<DependencyLookup> selectedComparator = (d1, d2) -> Boolean.valueOf(d2.isSelected())
-                .compareTo(Boolean.valueOf(d1.isSelected()));
-        Comparator<DependencyLookup> resolutionComparator = (d1, d2) -> Boolean
-                .valueOf(d2.getStatus() == Status.NOT_FOUND)
-                .compareTo(Boolean.valueOf(d1.getStatus() == Status.NOT_FOUND));
+        Comparator<DependencyLookup> comparator = Comparator.comparing(DependencyLookup::isSelected)
+                .thenComparing((d1, d2) -> d1.getStatus().compareTo(d2.getStatus()));
 
-        TableColumnSorter<DependencyLookup> tableColumnSorter = new TableColumnSorter<>(dependenciesViewer,
-                selectedComparator.thenComparing(resolutionComparator));
+        TableColumnSorter<DependencyLookup> tableColumnSorter = new TableColumnSorter<>(dependenciesViewer, comparator);
         tableColumnSorter.setColumn(resolutionColumn.getColumn());
 
         TableLayout layout = new TableLayout();
@@ -314,12 +348,24 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
         return container;
     }
 
-    private IValueChangeListener<? super Boolean> showUnknownDependenciesPanel(Composite container) {
+    private IValueChangeListener<? super Boolean> showLocalDependenciesPanel(Composite container) {
         return event -> {
             if (event.diff.getNewValue()) {
-                createUnknownDependenciesPanel(container);
+                createLocalDependenciesPanel(container);
             } else {
                 findControl("info.panel", container)
+                        .ifPresent(Control::dispose);
+            }
+            container.layout();
+        };
+    }
+
+    private IValueChangeListener<? super Boolean> showNotFoundDependenciesPanel(Composite container) {
+        return event -> {
+            if (event.diff.getNewValue()) {
+                createNotFoundDependenciesPanel(container);
+            } else {
+                findControl("error.panel", container)
                         .ifPresent(Control::dispose);
             }
             container.layout();
@@ -332,7 +378,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
                 .findFirst();
     }
 
-    private Composite createUnknownDependenciesPanel(Composite container) {
+    private Composite createLocalDependenciesPanel(Composite container) {
         Composite infoComposite = new Composite(container, SWT.NONE);
         infoComposite.setData("id", "info.panel");
         infoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -340,6 +386,29 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
 
         Label icon = new Label(infoComposite, SWT.NONE);
         Image image = Pics.getImageDescriptor("info_warning.png", BosArchiveImporterPlugin.getDefault())
+                .createImage();
+        icon.setImage(image);
+        icon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).create());
+
+        Link unresolvedDependenciesInfoLabel = new Link(infoComposite, SWT.WRAP);
+        unresolvedDependenciesInfoLabel.setLayoutData(GridDataFactory.fillDefaults()
+                .hint(400, SWT.DEFAULT)
+                .grab(true, true)
+                .create());
+        unresolvedDependenciesInfoLabel.setText(Messages.unresolvedLocalDependenciesMessage);
+        unresolvedDependenciesInfoLabel.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+
+        return infoComposite;
+    }
+
+    private Composite createNotFoundDependenciesPanel(Composite container) {
+        Composite infoComposite = new Composite(container, SWT.NONE);
+        infoComposite.setData("id", "error.panel");
+        infoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        infoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+
+        Label icon = new Label(infoComposite, SWT.NONE);
+        Image image = Pics.getImageDescriptor("error.png", BosArchiveImporterPlugin.getDefault())
                 .createImage();
         icon.setImage(image);
         icon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).create());
@@ -359,6 +428,19 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
         String tooltip = dep.getStatus() == DependencyLookup.Status.FOUND
                 ? String.format(Messages.resolvedFromRepository, dep.getRepository())
                 : Messages.cannotBeResolvedAgainstProvidedRepository;
+        switch (dep.getStatus()) {
+            case FOUND:
+                tooltip = String.format(Messages.resolvedFromRepository, dep.getRepository());
+                break;
+            case LOCAL:
+                tooltip = Messages.cannotBeResolvedAgainstProvidedRepositoryInstalledLocally;
+                break;
+            case NOT_FOUND:
+                tooltip = Messages.cannotBeResolvedAgainstProvidedRepository;
+                break;
+            default:
+                throw new IllegalStateException("Unsupported status: " + dep.getStatus());
+        }
         if (!dep.isUsed()) {
             tooltip = tooltip + System.lineSeparator() + Messages.unusedDependenciesWarning;
         }
@@ -366,9 +448,20 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     }
 
     private Image resolutionIcon(DependencyLookup dep) {
-        ImageDescriptor descriptor = dep.getStatus() == DependencyLookup.Status.FOUND
-                ? Pics.getImageDescriptor("checkmark.png", BosArchiveImporterPlugin.getDefault())
-                : Pics.getImageDescriptor("info_warning.png", BosArchiveImporterPlugin.getDefault());
+        ImageDescriptor descriptor = null;
+        switch (dep.getStatus()) {
+            case FOUND:
+                descriptor = Pics.getImageDescriptor("checkmark.png", BosArchiveImporterPlugin.getDefault());
+                break;
+            case LOCAL:
+                descriptor = Pics.getImageDescriptor("info_warning.png", BosArchiveImporterPlugin.getDefault());
+                break;
+            case NOT_FOUND:
+                descriptor = Pics.getImageDescriptor("error.png", BosArchiveImporterPlugin.getDefault());
+                break;
+            default:
+                throw new IllegalStateException("Unsupported status: " + dep.getStatus());
+        }
         if (!dep.isUsed()) {
             return new DecorationOverlayIcon(descriptor,
                     Pics.getImageDescriptor("problem.gif", BosArchiveImporterPlugin.getDefault()),
@@ -378,10 +471,10 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     }
 
     class OpenBrowserListener extends SelectionAdapter {
-        
+
         private String url;
 
-        OpenBrowserListener(String url){
+        OpenBrowserListener(String url) {
             this.url = url;
         }
 

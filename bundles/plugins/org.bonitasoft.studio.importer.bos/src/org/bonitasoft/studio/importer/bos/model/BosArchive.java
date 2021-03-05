@@ -103,7 +103,8 @@ public class BosArchive {
         final List<String> segments = Splitter.on('/').splitToList(entryName);
         segments.stream()
                 .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent()
-                        || isLegacyFormRepo(segment) || "README.adoc".equals(segment))
+                        || isLegacyFormRepo(segment)
+                        || "README.adoc".equals(segment))
                 .forEach(segment -> handleSegment(archiveModel, segment, segments, repository, resourcesToOpen));
     }
 
