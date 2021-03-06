@@ -30,7 +30,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
@@ -62,7 +61,7 @@ public class BotBdmModelEditor extends BotBase {
     }
 
     public BotBdmModelEditor save() {
-        editor.save();
+        botBdmEditor.save();
         return this;
     }
 
@@ -161,14 +160,11 @@ public class BotBdmModelEditor extends BotBase {
             }
         });
         bot.toolbarButtonWithId(AttributeEditionControl.ADD_ATTRIBUTE_BUTTON_ID).click();
-        SWTBotText botText = bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR);
-        botText.setText(attribute);
-        botText.pressShortcut(Keystrokes.CR);
-        attributeTable.pressShortcut(Keystrokes.CR);
-        attributeTable.setFocus();
+        bot.textWithId(SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR)
+                .setText(attribute)
+                .pressShortcut(Keystrokes.CR);
         try {
-            SWTBotTableItem tableItem = attributeTable.getTableItem(attribute);
-            setType(packageName, businessObject, tableItem, type, attributeTable);
+            setType(packageName, businessObject, attributeTable.getTableItem(attribute), type, attributeTable);
             return this;
         } catch (WidgetNotFoundException e) {
             bot.captureScreenshot(String.format("screenshots/addBDMAttribute%s.jpg", System.currentTimeMillis()));

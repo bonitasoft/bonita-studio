@@ -24,13 +24,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
-import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
-import org.bonitasoft.studio.common.repository.core.maven.JarLookupOperation;
+import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -122,7 +119,11 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 .filter(f -> !dependenciesToRemove.contains(f.getName()))
                 .collect(Collectors.toSet());
         for (InputStreamSupplier jarToLookup : jarsToLookup) {
-            DependencyLookup dependencyLookup = lookupDependency(monitor, jarToLookup);
+            FileDependencyLookupOperation op = new FileDependencyLookupOperation(jarToLookup);
+            repositories.stream()
+                    .forEach(op::addRemoteRespository);
+            op.run(monitor);
+            DependencyLookup dependencyLookup = op.getResult();
             if (dependencyLookup != null) {
                 if (usedDependencies.contains(jarToLookup.getName())) {
                     dependencyLookup.setUsed(true);
@@ -134,67 +135,6 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
             }
         }
 
-    }
-
-    private DependencyLookup lookupDependency(IProgressMonitor monitor, InputStreamSupplier jarToLookup)
-            throws InvocationTargetException, InterruptedException {
-        DependencyLookup dep = null;
-        JarLookupOperation jarLookupOperation = new JarLookupOperation(jarToLookup);
-        repositories.stream()
-                .forEach(jarLookupOperation::addRemoteRespository);
-        monitor.setTaskName(String.format(Messages.lookupDependencyFor, jarToLookup.getName()));
-        jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        var status = jarLookupOperation.getStatus();
-        if (status.isOK()) {
-            dep = jarLookupOperation.getResult();
-            if (dep.getStatus() == Status.FOUND
-                    && DependencyLookup.guessClassifier(jarToLookup.getName(), dep.getGAV()) != null) {
-                GAV gavWithClassifier = dep.getGAV();
-                gavWithClassifier.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), dep.getGAV()));
-                var dependencyGetOperation = new DependencyGetOperation(gavWithClassifier);
-                repositories.stream()
-                        .forEach(dependencyGetOperation::addRemoteRespository);
-                monitor.setTaskName(String.format(Messages.lookupDependencyFor, dep.getGAV()));
-                dependencyGetOperation.run(monitor);
-                status = dependencyGetOperation.getStatus();
-                if (status.isOK() && dependencyGetOperation.getResult() != null) {
-                    dep = dependencyGetOperation.getResult();
-                }
-            } else if (dep.getStatus() == Status.NOT_FOUND) {
-                GAV gav = DependencyLookup.readPomProperties(jarToLookup.toTempFile())
-                        .map(properties -> new GAV(properties.getProperty("groupId"),
-                                properties.getProperty("artifactId"),
-                                properties.getProperty("version")))
-                        .orElse(null);
-                if (gav != null) {
-                    var dependencyGetOperation = new DependencyGetOperation(gav);
-                    repositories.stream()
-                            .forEach(dependencyGetOperation::addRemoteRespository);
-                    monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
-                    dependencyGetOperation.run(monitor);
-                    status = dependencyGetOperation.getStatus();
-                    if (status.isOK()) {
-                        if (dependencyGetOperation.getResult() != null) {
-                            dep = dependencyGetOperation.getResult();
-                        } else if (DependencyLookup.guessClassifier(jarToLookup.getName(), gav) != null) {
-                            gav.setClassifier(DependencyLookup.guessClassifier(jarToLookup.getName(), gav));
-                            dependencyGetOperation = new DependencyGetOperation(gav);
-                            repositories.stream()
-                                    .forEach(dependencyGetOperation::addRemoteRespository);
-                            dependencyGetOperation.run(monitor);
-                            status = dependencyGetOperation.getStatus();
-                            if (status.isOK() && dependencyGetOperation.getResult() != null) {
-                                dep = dependencyGetOperation.getResult();
-                            }
-                        }
-                    }
-                }
-                if(dep.getStatus() == Status.NOT_FOUND && dep.getFile().exists()) {
-                    dep.setStatus(Status.LOCAL);
-                }
-            }
-        }
-        return dep;
     }
 
     private DependencyLookup newDependencyLookup(String jarName,

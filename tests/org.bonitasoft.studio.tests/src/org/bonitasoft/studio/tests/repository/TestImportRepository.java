@@ -14,6 +14,11 @@
  */
 package org.bonitasoft.studio.tests.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,14 +32,11 @@ import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.eclipse.core.runtime.FileLocator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
-/**
- * @author Mickael Istria
- */
-public class TestImportRepository extends TestCase {
+public class TestImportRepository {
 
     private static final String TEST_ATTACHMENT_ARTIFACT_ID = "attachment.txt"; //$NON-NLS-1$
 
@@ -42,22 +44,16 @@ public class TestImportRepository extends TestCase {
 
     private static final String TEST_GROOVY_ARTIFACT_ID = "Test.groovy";
 
-    private File bosFile;
-
     private RepositoryAccessor repositoryAccessor;
 
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         final URL url = TestImportRepository.class.getResource(TEST_ATTACHMENT_BAR_NAME);
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         try {
             final URL fileUrl = FileLocator.toFileURL(url);
-            bosFile = new File(fileUrl.getFile());
+            File bosFile = new File(fileUrl.getFile());
             final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
             op.setArchiveFile(bosFile.getAbsolutePath());
             op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
@@ -68,12 +64,8 @@ public class TestImportRepository extends TestCase {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         final GroovyRepositoryStore gStore = repositoryAccessor.getRepositoryStore(GroovyRepositoryStore.class);
         for (final GroovyFileStore artifact : gStore.getChildren()) {
             artifact.delete();
@@ -91,23 +83,21 @@ public class TestImportRepository extends TestCase {
 
         assertNotNull(fileStore);
         assertEquals(fileStore.getName(), TEST_ATTACHMENT_ARTIFACT_ID);
-        final InputStream is = (InputStream) fileStore.getContent();
-        assertTrue(is.read() > 0);
-        /* don't forget to close the inputStream */
-        is.close();
-
+        try (InputStream is = fileStore.getResource().getContents()) {
+            assertTrue(is.read() > 0);
+        }
     }
 
     @Test
     public void testImportGroovy() throws Exception {
-        final GroovyRepositoryStore gStore = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+        final GroovyRepositoryStore gStore = RepositoryManager.getInstance()
+                .getRepositoryStore(GroovyRepositoryStore.class);
         final GroovyFileStore artifact = gStore.getChild(TEST_GROOVY_ARTIFACT_ID, true);
         assertNotNull(artifact);
         assertEquals(artifact.getName(), TEST_GROOVY_ARTIFACT_ID);
-        final InputStream is = artifact.getResource().getContents();
-        assertTrue(is.read() > 0);
-        /* don't forget to close the inputStream */
-        is.close();
+        try (InputStream is = artifact.getResource().getContents()) {
+            assertTrue(is.read() > 0);
+        }
     }
 
 }

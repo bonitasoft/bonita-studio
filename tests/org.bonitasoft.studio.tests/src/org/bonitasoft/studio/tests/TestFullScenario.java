@@ -90,6 +90,7 @@ public class TestFullScenario {
     @Before
     public void closeEditors() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+        BOSEngineManager.getInstance().start();
     }
     
     @Test

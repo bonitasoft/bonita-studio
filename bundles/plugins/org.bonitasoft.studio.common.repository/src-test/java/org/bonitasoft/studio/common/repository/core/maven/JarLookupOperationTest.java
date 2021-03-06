@@ -26,11 +26,11 @@ public class JarLookupOperationTest {
     public void should_give_maven_central_url_the_priority() throws Exception {
         JarLookupOperation jarLookupOperation = new JarLookupOperation(mock(InputStreamSupplier.class));
         jarLookupOperation.addRemoteRespository("url1");
-        jarLookupOperation.addRemoteRespository(JarLookupOperation.MAVEN_CENTRAL_URL);
+        jarLookupOperation.addRemoteRespository(JarLookupOperation.MAVEN_CENTRAL_REPOSITORY_URL);
         jarLookupOperation.addRemoteRespository("url2");
 
         assertThat(jarLookupOperation.getRemoteRepositories())
-                .containsExactlyInAnyOrder(JarLookupOperation.MAVEN_CENTRAL_URL, "url1", "url2");
+                .containsExactlyInAnyOrder(JarLookupOperation.MAVEN_CENTRAL_REPOSITORY_URL, "url1", "url2");
     }
 
 }

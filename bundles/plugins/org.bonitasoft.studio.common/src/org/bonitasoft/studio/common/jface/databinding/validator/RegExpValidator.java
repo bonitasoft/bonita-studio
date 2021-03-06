@@ -16,17 +16,11 @@
  */
 package org.bonitasoft.studio.common.jface.databinding.validator;
 
-import java.util.regex.Pattern;
-
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
 
-/**
- * @author Romain Bioteau
- *
- */
 public class RegExpValidator implements IValidator {
 
     private final String errorMessage;
@@ -37,12 +31,9 @@ public class RegExpValidator implements IValidator {
         this.regex = regex;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-     */
     @Override
     public IStatus validate(final Object input) {
-        if (input != null && !Pattern.matches(regex, input.toString())) {
+        if (input != null && !input.toString().matches(regex)) {
             return ValidationStatus.error(errorMessage);
         }
         return ValidationStatus.ok() ;

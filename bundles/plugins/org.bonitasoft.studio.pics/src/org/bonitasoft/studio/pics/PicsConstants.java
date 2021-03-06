@@ -430,4 +430,7 @@ public class PicsConstants {
     public static String import32 = "projectExtensions/import_32.png";
     public static String import32Hot = "projectExtensions/import_32_hot.png";
 
+    public static String warning = "info_warning.png";
+    public static String checkmark = "checkmark.png";
+
 }

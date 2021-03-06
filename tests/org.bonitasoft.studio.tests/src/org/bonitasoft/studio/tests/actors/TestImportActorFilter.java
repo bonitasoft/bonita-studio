@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.tests.actors;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
 import java.net.URL;
 
@@ -34,15 +37,16 @@ import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceReposit
 import org.bonitasoft.studio.identity.actors.repository.ImportActorFilterArchiveOperation;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  * @author Aurelie Zara
  *
  */
-public class TestImportActorFilter extends TestCase {
+public class TestImportActorFilter {
 
 
     private ActorFilterDefRepositoryStore cdrs;
@@ -50,15 +54,15 @@ public class TestImportActorFilter extends TestCase {
     private ActorFilterSourceRepositoryStore csrs;
     private DependencyRepositoryStore depStore;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         cdrs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         cirs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
         csrs = RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
         depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
+    @Test
     public void testImportConnector() throws Exception {
         final ImportActorFilterArchiveOperation operation = new ImportActorFilterArchiveOperation() ;
         URL archiveURL = TestImportActorFilter.class.getResource("test-1.0.0.zip");
@@ -81,9 +85,8 @@ public class TestImportActorFilter extends TestCase {
         assertNull("Jar file should not be found after import with sources",depFile);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         IRepositoryFileStore def = cdrs.getChild(NamingUtils.toConnectorDefinitionFilename("test", "1.0.0",true), true);
         if(def != null){
             def.delete();

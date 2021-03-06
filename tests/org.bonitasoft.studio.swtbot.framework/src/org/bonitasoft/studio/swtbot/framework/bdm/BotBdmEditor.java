@@ -22,10 +22,12 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotMultiPageEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 public class BotBdmEditor extends BotBase {
 
+    private static final String BDM_EDITOR_ID = "org.bonitasoft.studio.businessobject.editor";
     protected SWTBotMultiPageEditor editor;
     private BotBdmModelEditor botBdmModelEditor;
     private BotBdmConstraintsEditor botBdmConstraintsEditor;
@@ -34,7 +36,7 @@ public class BotBdmEditor extends BotBase {
 
     public BotBdmEditor(SWTGefBot bot) {
         super(bot);
-        this.editor = bot.multipageEditorByTitle("Business Data Model editor");
+        this.editor = bot.multipageEditorById(BDM_EDITOR_ID);
         new ProjectExplorerBot(bot).bdm();
         this.botBdmModelEditor = new BotBdmModelEditor(bot, editor, this);
         this.botBdmConstraintsEditor = new BotBdmConstraintsEditor(bot, editor, this);
@@ -73,6 +75,22 @@ public class BotBdmEditor extends BotBase {
 
     public BotBdmEditor save() {
         editor.save();
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                if(editor.isDirty()) {
+                    editor.save();
+                    return false;
+                }
+                return true;
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "BDM Editor still ditrty after save !";
+            }
+        });
         return this;
     }
 

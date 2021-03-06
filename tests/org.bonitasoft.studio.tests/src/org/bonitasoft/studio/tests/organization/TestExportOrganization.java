@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.tests.organization;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -21,15 +24,11 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class TestExportOrganization {
 
-/**
- * @author Aur�lie Zara
- */
-
-public class TestExportOrganization extends TestCase {
-
+    @Test
     public void testExportDefaultOrganization() throws Exception {
         final IRepositoryStore<? extends IRepositoryFileStore> organizationStore = RepositoryManager.getInstance()
                 .getRepositoryStore(OrganizationRepositoryStore.class);

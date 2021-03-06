@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.tests.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
@@ -25,22 +29,19 @@ import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
-/**
- * @author Aurelien Pupier
- */
-public class TestImportExportAndDeleteRepository extends TestCase {
+public class TestImportExportAndDeleteRepository {
 
     @Test
     public void testImportExportGroovy() throws Exception {
         /* Join with the job because it adds DefaultUserScript.groovy to the artifacts */
-        final GroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+        final GroovyRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(GroovyRepositoryStore.class);
         final int nbOfGroovyArtifacts = store.getChildren().size();
         final InputStream stream = TestImportExportAndDeleteRepository.class
                 .getResourceAsStream("GroovyScriptForTestImportExportRepository.groovy");
         assertNotNull("Can't test groovy import because cannot retrieve the .groovy file", stream);
-        final GroovyFileStore artifact = store.importInputStream("GroovyScriptForTestImportExportRepository.groovy", stream);
+        final GroovyFileStore artifact = store.importInputStream("GroovyScriptForTestImportExportRepository.groovy",
+                stream);
         assertEquals("import of Groovy doesn't work", nbOfGroovyArtifacts + 1, store.getChildren().size());
         final String s = System.getProperty("java.io.tmpdir");
         final File f = new File(s + File.separatorChar + "GroovyScriptForTestImportExportRepository.groovy");
@@ -48,9 +49,9 @@ public class TestImportExportAndDeleteRepository extends TestCase {
 
         artifact.export(f.getParentFile().getAbsolutePath());
 
-        final FileInputStream fis = new FileInputStream(f);
-        assertTrue("The export of Groovy doesn't work.", fis.read() > 0);
-        fis.close();
+        try (InputStream fis = Files.newInputStream(f.toPath())) {
+            assertTrue("The export of Groovy doesn't work.", fis.read() > 0);
+        }
 
         /* Test delete of the artifact */
         artifact.delete();
@@ -71,9 +72,9 @@ public class TestImportExportAndDeleteRepository extends TestCase {
         f.delete();
         artifact.export(f.getParentFile().getAbsolutePath());
 
-        final FileInputStream fis = new FileInputStream(f);
-        assertTrue("The export of attachment doesn't work.", fis.read() > 0);
-        fis.close();
+        try (InputStream fis = Files.newInputStream(f.toPath())) {
+            assertTrue("The export of attachment doesn't work.", fis.read() > 0);
+        }
 
         /* Test delete of the artifact */
         artifact.delete();

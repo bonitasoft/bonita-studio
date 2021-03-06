@@ -71,7 +71,8 @@ public class AddDependencyOperation extends MavenModelOperation {
     private boolean sameGAV(Dependency existingDep, Dependency dependency) {
         return Objects.equals(existingDep.getGroupId(), dependency.getGroupId())
                 && Objects.equals(existingDep.getArtifactId(), dependency.getArtifactId())
-                && Objects.equals(existingDep.getVersion(), dependency.getVersion());
+                && Objects.equals(existingDep.getVersion(), dependency.getVersion())
+                && Objects.equals(existingDep.getClassifier(), dependency.getClassifier());
     }
 
     public String getClassifier() {

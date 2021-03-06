@@ -15,42 +15,53 @@
 package org.bonitasoft.studio.rest.api.extension.core.repository;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
+import org.bonitasoft.studio.theme.DependencyThemeFileStore;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Image;
 
 public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileStore {
 
     private RestAPIExtension extension;
 
-    public DependencyRestAPIExtensionFileStore(RestAPIExtension extension, RestAPIExtensionRepositoryStore parentStore) {
+    public DependencyRestAPIExtensionFileStore(RestAPIExtension extension,
+            RestAPIExtensionRepositoryStore parentStore) {
         super(new File(extension.getArtifact().getFile()).getName(), parentStore);
         this.extension = extension;
     }
-    
+
     @Override
     protected RestAPIExtensionDescriptor doGetContent() throws ReadFileStoreException {
         return new DependencyRestAPIExtensionDescriptor(extension);
     }
-    
+
     @Override
     public File getArchiveFile() {
         return new File(extension.getArtifact().getFile());
     }
-    
+
     @Override
     public String getDisplayName() {
         return extension.getDisplayName();
     }
-    
+
     @Override
     public String getDescription() {
         return extension.getDescription();
     }
-    
+
     @Override
     public String getName() {
         return getArchiveFile().getName();
@@ -60,9 +71,23 @@ public class DependencyRestAPIExtensionFileStore extends RestAPIExtensionFileSto
     public boolean isReadOnly() {
         return true;
     }
-    
+
     @Override
     public Image getIcon() {
         return Pics.getImage("binary.png", RestAPIExtensionActivator.getDefault());
+    }
+
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        final DeployCustomPageOperation deployOperation = new DeployCustomPageOperation(
+                BOSEngineManager.getInstance(),
+                new HttpClientFactory(),
+                this);
+        try {
+            deployOperation.run(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
+            return new Status(IStatus.ERROR, DependencyThemeFileStore.class, "Failed to deployed rest api extension", e);
+        }
+        return deployOperation.getStatus();
     }
 }

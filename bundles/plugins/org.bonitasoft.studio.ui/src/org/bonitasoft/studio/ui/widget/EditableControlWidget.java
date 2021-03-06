@@ -26,13 +26,13 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -71,16 +71,10 @@ public abstract class EditableControlWidget extends ControlWidget {
         warningColor = resourceManager.createColor(ColorConstants.WARNING_RGB);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.ControlWidget#init()
-     */
     @Override
     protected void init() {
         super.init();
-        if (message.isPresent() || useCompositeMessageDecorator) {
-            createMessageDecorator();
-        }
+        createMessageDecorator();
     }
 
     private void createMessageDecorator() {
@@ -171,7 +165,7 @@ public abstract class EditableControlWidget extends ControlWidget {
         };
     }
 
-    protected ControlMessageSupport bindValidator(DataBindingContext ctx, ISWTObservableValue controlObservable,
+    protected ControlMessageSupport bindValidator(DataBindingContext ctx, IObservableValue controlObservable,
             IObservableValue modelObservable, IValidator validator) {
         final UpdateValueStrategy validateOnlyStrategy = UpdateStrategyFactory.convertUpdateValueStrategy()
                 .withValidator(validator).create();
@@ -208,19 +202,24 @@ public abstract class EditableControlWidget extends ControlWidget {
 
     protected void redraw(final Control toRedraw) {
         toRedraw.getDisplay().asyncExec(() -> {
-            if (toRedraw != null & !toRedraw.isDisposed()) {
+            if (toRedraw != null && !toRedraw.isDisposed()) {
                 toRedraw.redraw();
             }
         });
     }
 
     public void setMessage(String message) {
+        setMessage(message, null);
+    }
+    
+    public void setMessage(String message, Image icon) {
         this.message = Optional.ofNullable(message);
         if (messageDecorator == null) {
             createMessageDecorator();
         } else {
             messageDecorator.setMessage(this.message);
         }
+        messageDecorator.setImage(icon);
         messageDecorator.setStatus(null);
     }
 

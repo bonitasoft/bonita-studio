@@ -175,13 +175,21 @@ public class Messages extends NLS {
     public static String importExtensionTitle;
     public static String importExtension;
     public static String importExtensionButtonLabel;
-    public static String importExtensionAsMavenArtifactLabel;
-    public static String importExtensionAsArchiveLabel;
     public static String importExtensionAsMavenDependencyTip;
     public static String unknownExtensionsDescription;
     public static String unknownExtensionsTitle;
     public static String deleteUnknownTooltip;
     public static String delete;
+    public static String importRemoteDependencyTip;
+    public static String dependencyNotFoundWhenImporting;
+    public static String dependencyCoordinate;
+    public static String manual;
+    public static String fromFile;
+    public static String browse;
+    public static String file;
+    public static String importFromFileTip;
+    public static String resolvedDependency;
+    public static String cannotResolveDependencyInstalledLocally;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

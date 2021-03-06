@@ -85,15 +85,12 @@ public class GroovyFileStore extends AbstractFileStore<String> {
         return JavaCore.createCompilationUnitFrom(getResource());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
+
     @Override
     protected void doSave(final Object content) {
         if (content instanceof String) {
             try {
-                if (getResource().exists() && content != null && content.equals(getContent())) {
+                if (getResource().exists() && content.equals(getContent())) {
                     return;
                 }
             } catch (ReadFileStoreException e1) {

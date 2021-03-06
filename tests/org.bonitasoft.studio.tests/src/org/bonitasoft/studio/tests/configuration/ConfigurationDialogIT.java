@@ -77,6 +77,7 @@ public class ConfigurationDialogIT {
         });
         Assert.assertFalse(runnableEPs.isEmpty());
         gmfEditor.select(runnableEPs.get(0));
+      //  gmfEditor.save();
     }
 
     @Test

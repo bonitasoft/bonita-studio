@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.tests.conditions;
 
+import static org.junit.Assert.assertTrue;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.engine.export.DecisionTableUtil;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -24,15 +26,16 @@ import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.junit.Test;
 
 import groovy.lang.GroovyShell;
-import junit.framework.TestCase;
 
 /**
  * @author Mickael Istria
  */
-public class TestDecisionTableToGroovy extends TestCase {
+public class TestDecisionTableToGroovy {
 
+    @Test
     public void testSimpleDecisionOK() {
         final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
         takeTransition.setTakeTransition(true);
@@ -72,6 +75,7 @@ public class TestDecisionTableToGroovy extends TestCase {
         return exp;
     }
 
+    @Test
     public void testSimpleDecisionKO() {
         final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
         takeTransition.setTakeTransition(true);

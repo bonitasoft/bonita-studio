@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.tests.importer.bpmn2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -40,28 +41,26 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
 
-/**
- * @author Romain Bioteau
- */
-public class TestImportBPMN2 extends TestCase {
+public class TestImportBPMN2 {
 
     private File destFile;
 
     protected org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {
-        org.eclipse.emf.common.util.URI res = URI.createFileURI(file.getAbsolutePath());
-        return res;
+        return URI.createFileURI(file.getAbsolutePath());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @Before
+    public void tearDown() throws Exception {
         if (destFile != null) {
             destFile.delete();
         }
     }
 
+    @Test
     public void testImportBPMN2() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("standardProcess.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
@@ -75,6 +74,7 @@ public class TestImportBPMN2 extends TestCase {
         resource.unload();
     }
 
+    @Test
     public void testImportBPMN2WithUnknownDiagramNS() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("standardProcess_badNameSpace.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
@@ -88,6 +88,7 @@ public class TestImportBPMN2 extends TestCase {
         resource.unload();
     }
 
+    @Test
     public void testImportBPMN2WithOMG_ns() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("testimport.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
@@ -101,6 +102,7 @@ public class TestImportBPMN2 extends TestCase {
         resource.unload();
     }
 
+    @Test
     public void testBug1908a() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("definitionsTest2.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
@@ -114,6 +116,7 @@ public class TestImportBPMN2 extends TestCase {
         resource.unload();
     }
 
+    @Test
     public void testBug1908b() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("definitionsTest3.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
@@ -128,6 +131,7 @@ public class TestImportBPMN2 extends TestCase {
 
     }
 
+    @Test
     public void testImportActivitiSamples() throws Exception {
         String[] fileNames = new String[] {
                 "EasyBugFilingProcess.bpmn",
@@ -141,6 +145,7 @@ public class TestImportBPMN2 extends TestCase {
 
     }
 
+    @Test
     public void testImportSignavioSamples() throws Exception {
         String[] fileNames = new String[] {
                 "Purchase Order-to-Delivery.bpmn",
@@ -152,6 +157,7 @@ public class TestImportBPMN2 extends TestCase {
         }
     }
 
+    @Test
     public void testImportMessageFlow() throws MalformedURLException, IOException {
         destFile = importFileWithName("withMessageFlow.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();
@@ -163,6 +169,7 @@ public class TestImportBPMN2 extends TestCase {
         resource.unload();
     }
 
+    @Test
     public void testImportWithSubProc() throws MalformedURLException, IOException {
         destFile = importFileWithName("withSubProc.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();
@@ -179,6 +186,7 @@ public class TestImportBPMN2 extends TestCase {
         assertThat(subprocess).isPresent();
     }
 
+    @Test
     public void testImportWithAll() throws MalformedURLException, IOException {
         destFile = importFileWithName("withAll.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();

@@ -18,31 +18,9 @@ package org.bonitasoft.studio.common.jface.databinding.validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-
-/**
- * @author Romain Bioteau
- *
- */
 public class RegExpValidatorTest {
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void should_validate_not_accept_string_containing_slash() throws Exception {
