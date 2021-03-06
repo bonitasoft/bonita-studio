@@ -14,17 +14,16 @@
  */
 package org.bonitasoft.studio.tests;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 
 import org.eclipse.core.runtime.Platform;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class TestPathSize {
 
-/**
- * @author Mickael Istria
- */
-public class TestPathSize extends TestCase {
-
+    @Test
     public void testMaxItemSizeIsEclipse() {
         String location = Platform.getBundle("org.eclipse.core.runtime").getLocation();
         if (location.startsWith("reference:file:")) {
@@ -60,9 +59,6 @@ public class TestPathSize extends TestCase {
         }
     }
 
-    /**
-     * 
-     */
     private File findLongestPath(File dir) {
         if (!dir.isDirectory()) {
             return dir;

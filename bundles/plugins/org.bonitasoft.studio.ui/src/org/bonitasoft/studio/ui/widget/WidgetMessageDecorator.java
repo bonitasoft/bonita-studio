@@ -20,14 +20,11 @@ import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -43,7 +40,7 @@ public class WidgetMessageDecorator {
     private final Color warningColor;
     private Color foregroundColor;
     protected Composite composite;
-    private IStatus currentStatus;
+    private Image icon;
 
     public WidgetMessageDecorator(Composite parent, Optional<String> defaultMessage) {
         createComposite(parent);
@@ -54,7 +51,6 @@ public class WidgetMessageDecorator {
         messageLabel = new CustomCLabel(composite, SWT.NONE);
         messageLabel.setTopMargin(1);
         messageLabel.setLeftMargin(0);
-        messageLabel.setFont(getMessageFont());
         messageLabel.setText(defaultMessage.orElse(""));
         foregroundColor = PreferenceUtil.isDarkTheme()
                 ? Display.getDefault().getSystemColor(SWT.COLOR_GRAY)
@@ -65,22 +61,16 @@ public class WidgetMessageDecorator {
 
     protected void createComposite(Composite parent) {
         this.composite = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.NO_TITLE);
+        composite.setLayoutDeferred(true);
+        ((ExpandableComposite) composite).setExpanded(false);
+        composite.setLayoutDeferred(false);
         this.composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
-    }
-
-    private Font getMessageFont() {
-        final FontRegistry fontRegistry = JFaceResources.getFontRegistry();
-        if (fontRegistry.hasValueFor(WidgetMessageDecorator.class.getName())) {
-            return fontRegistry.get(WidgetMessageDecorator.class.getName());
-        }
-        fontRegistry.put(WidgetMessageDecorator.class.getName(),
-                new FontData[] { new FontData(WidgetMessageDecorator.class.getName(), 10, SWT.NORMAL) });
-        return fontRegistry.get(WidgetMessageDecorator.class.getName());
     }
 
     protected void updateExpandState() {
         Composite parent = composite.getParent().getParent();
         ExpandableComposite expandableComposite = (ExpandableComposite) composite;
+        boolean isExpanded = expandableComposite.isExpanded();
         if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
             expandableComposite.setClient(messageLabel);
             expandableComposite.setExpanded(true);
@@ -88,7 +78,9 @@ public class WidgetMessageDecorator {
         } else {
             expandableComposite.setExpanded(false);
         }
-        parent.layout();
+        if(isExpanded != expandableComposite.isExpanded()) {
+            parent.layout();
+        }
     }
 
     public void adapt(FormToolkit toolkit) {
@@ -102,20 +94,19 @@ public class WidgetMessageDecorator {
     }
 
     public void setStatus(IStatus status) {
-        this.currentStatus = status;
         if (status == null || status.isOK()) {
             messageLabel.setText(defaultMessage.orElse(""));
         } else {
             messageLabel.setText(status.getMessage());
         }
-        messageLabel.setForeground(getStatusColor(currentStatus));
+        messageLabel.setForeground(getStatusColor(status));
         messageLabel.setImage(getStatusImage(status));
         updateExpandState();
     }
 
     private Image getStatusImage(IStatus status) {
         if (status == null) {
-            return null;
+            return icon;
         }
         switch (status.getSeverity()) {
             case IStatus.INFO:
@@ -125,7 +116,7 @@ public class WidgetMessageDecorator {
             case IStatus.ERROR:
                 return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
             default:
-                return null;
+                return icon;
         }
     }
 
@@ -143,10 +134,15 @@ public class WidgetMessageDecorator {
     public void setMessage(Optional<String> message) {
         this.defaultMessage = message;
     }
+    
+    public void setImage(Image icon) {
+        this.icon = icon;
+     }
 
     public void setLayoutData(Object layoutData) {
         composite.setLayoutData(layoutData);
     }
+
 }
 
 /**

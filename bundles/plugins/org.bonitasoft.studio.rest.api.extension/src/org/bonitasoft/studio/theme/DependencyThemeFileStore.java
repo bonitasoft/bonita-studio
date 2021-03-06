@@ -15,11 +15,20 @@
 package org.bonitasoft.studio.theme;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.engine.http.HttpClientFactory;
+import org.bonitasoft.studio.maven.operation.DeployCustomPageOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Image;
 
 public class DependencyThemeFileStore extends ThemeFileStore {
@@ -64,5 +73,19 @@ public class DependencyThemeFileStore extends ThemeFileStore {
     @Override
     public Image getIcon() {
         return Pics.getImage("binary.png", RestAPIExtensionActivator.getDefault());
+    }
+    
+    @Override
+    public IStatus deploy(APISession session, Map<String, Object> options, IProgressMonitor monitor) {
+        final DeployCustomPageOperation deployOperation = new DeployCustomPageOperation(
+                BOSEngineManager.getInstance(),
+                new HttpClientFactory(),
+                this);
+        try {
+            deployOperation.run(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
+            return new Status(IStatus.ERROR, DependencyThemeFileStore.class, "Failed to deployed theme", e);
+        }
+        return deployOperation.getStatus();
     }
 }

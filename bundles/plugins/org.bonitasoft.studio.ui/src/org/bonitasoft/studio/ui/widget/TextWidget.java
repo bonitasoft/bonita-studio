@@ -154,11 +154,6 @@ public class TextWidget extends EditableControlWidget {
             return this;
         }
 
-        public Builder inShell() {
-            this.isInShell = true;
-            return this;
-        }
-
         @Override
         public TextWidget createIn(Composite container) {
             if (transactionalEdit && targetToModelStrategy == null) {
@@ -559,7 +554,7 @@ public class TextWidget extends EditableControlWidget {
         return text;
     }
 
-    public ISWTObservableValue observeEnable() {
+    public IObservableValue<Boolean> observeEnable() {
         return WidgetProperties.enabled().observe(text);
     }
 

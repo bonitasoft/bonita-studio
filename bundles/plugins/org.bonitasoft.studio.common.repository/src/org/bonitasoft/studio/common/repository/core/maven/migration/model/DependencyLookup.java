@@ -222,6 +222,14 @@ public class DependencyLookup {
     public void setVersion(String version) {
         gav.setVersion(version);
     }
+    
+    public void setType(String type) {
+        gav.setType(type);
+    }
+    
+    public void setClassifier(String classifier) {
+        gav.setClassifier(classifier);
+    }
 
     public String getRepository() {
         return repository;

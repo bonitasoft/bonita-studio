@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.tests.exporter.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -28,12 +30,11 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
-import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TExpression;
 import org.omg.spec.bpmn.model.TFlowElement;
@@ -41,14 +42,11 @@ import org.omg.spec.bpmn.model.TProcess;
 import org.omg.spec.bpmn.model.TRootElement;
 import org.omg.spec.bpmn.model.TSequenceFlow;
 
-import junit.framework.TestCase;
 
-/**
- * @author Aurelien Pupier
- */
-public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
+public class BPMNSequenceFlowConditionExportImportTest {
 
-    public void testProcessWithConstantCondition() throws ExecutionException, IOException {
+    @Test
+    public void testProcessWithConstantCondition() throws Exception {
         final Expression condition = ExpressionFactory.eINSTANCE.createExpression();
         condition.setContent("toto");
         condition.setType(ExpressionConstants.CONSTANT_TYPE);
@@ -57,7 +55,8 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
         testWithCondition(condition);
     }
 
-    public void testProcessWithGroovyCondition() throws ExecutionException, IOException {
+    @Test
+    public void testProcessWithGroovyCondition() throws Exception {
         final Expression condition = ExpressionFactory.eINSTANCE.createExpression();
         condition.setContent("return true;");
         condition.setInterpreter(ExpressionConstants.GROOVY);
@@ -67,8 +66,7 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
         testWithCondition(condition);
     }
 
-    protected void testWithCondition(final Expression condition)
-            throws ExecutionException, IOException, MalformedURLException {
+    protected void testWithCondition(final Expression condition) throws Exception {
         final DocumentRoot model2 = exportToBPMNProcessWithCondition(condition);
         checkConditionExistAtProcessLevelWithGoodStructure(model2);
 
@@ -99,16 +97,7 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
         assertEquals("Condition type is not the same", initialSQ.getConditionType(), reImportedSQ.getConditionType());
         if (SequenceFlowConditionType.EXPRESSION.equals(initialSQ.getConditionType())) {
             compareConditions(initialSQ.getCondition(), reImportedSQ.getCondition());
-        } else {
-            comparetableDecision(initialSQ.getDecisionTable(), reImportedSQ.getDecisionTable());
-        }
-
-    }
-
-    private void comparetableDecision(final DecisionTable initialDecisionTable,
-            final DecisionTable reImportedDecisionTable) {
-        // TODO Allow to import table decision
-
+        } 
     }
 
     private void compareConditions(final Expression initialCondition, final Expression reImportedCondition) {

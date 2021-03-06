@@ -17,6 +17,7 @@ package org.bonitasoft.studio.tests.parameter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -145,7 +146,10 @@ public class TestProcessParameters {
         Assert.assertTrue("Exported file doesn't exists", exportedFile.exists() && exportedFile.length() > 0);
 
         final Properties p = new Properties();
-        p.load(new FileInputStream(exportedFile));
+        try(InputStream is = new FileInputStream(exportedFile)){
+            p.load(is);
+        }
+      
         Assert.assertEquals("Exported file not xpected parameters count", 3, p.size());
     }
 
@@ -153,6 +157,7 @@ public class TestProcessParameters {
     public void testDeployProcessWithParameters() throws Exception {
         Assert.assertNotNull(pool);
         importParamters();
+        
         final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool,
                 pool.getConfigurations().get(0).getName());
         Assert.assertEquals("Missing parameter in bar", 3, bar.getParameters().size());

@@ -5,6 +5,7 @@
 package org.bonitasoft.studio.tests.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +21,18 @@ import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
 
-/**
- * @author Baptiste Mesta
- *
- */
-public class TestSwitchRepository extends TestCase {
+public class TestSwitchRepository{
 
     private String currentWorkspace;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         if(drs.getAllProcesses().isEmpty()){
             final DiagramFileStore newDiagram = new NewDiagramCommandHandler().newDiagram();
@@ -44,8 +41,8 @@ public class TestSwitchRepository extends TestCase {
         EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
     }
    
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
@@ -54,20 +51,15 @@ public class TestSwitchRepository extends TestCase {
         }
     }
 
-    /**
-     * check that repositories are switched and artifacts are different
-     * @throws InterruptedException
-     * @throws OperationCanceledException
-     */
-    public void testSwitchRepositories() throws OperationCanceledException, InterruptedException {
-
+    @Test
+    public void testSwitchRepositories() throws Exception {
         DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
-        final List<String> availableProcess = new ArrayList<String>();
+        final List<String> availableProcess = new ArrayList<>();
         for (final AbstractProcess process : drs.getAllProcesses()) {
             availableProcess.add(process.getName());
         }
-        final List<String> jars = new ArrayList<String>();
+        final List<String> jars = new ArrayList<>();
         DependencyRepositoryStore depRs = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         for (final IRepositoryFileStore jar : depRs.getChildren()) {
             jars.add(jar.getName());

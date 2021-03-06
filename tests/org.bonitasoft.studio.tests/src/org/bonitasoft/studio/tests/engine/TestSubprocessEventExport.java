@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.tests.engine;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.net.URL;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -26,12 +28,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
-/**
- * @author Romain Bioteau
- */
-public class TestSubprocessEventExport extends TestCase {
+public class TestSubprocessEventExport {
 
     @Test
     public void testExportSubprocessEvent() throws Exception {

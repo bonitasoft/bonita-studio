@@ -11,8 +11,9 @@ package org.bonitasoft.studio.ui.widget;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -35,7 +36,8 @@ public class ComboWidget extends EditableControlWidget {
         @Override
         public ComboWidget createIn(Composite container) {
             final ComboWidget control = new ComboWidget(container, id, labelAbove, horizontalLabelAlignment,
-                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, toolkit);
+                    verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator,
+                    toolkit);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             if (items != null) {
@@ -56,6 +58,7 @@ public class ComboWidget extends EditableControlWidget {
             }
             return control;
         }
+
     }
 
     private Combo combo;
@@ -75,11 +78,11 @@ public class ComboWidget extends EditableControlWidget {
                 message, useCompositeMessageDecorator, Optional.empty(), toolkit);
     }
 
-    public ISWTObservableValue observeComboText() {
+    public IObservableValue<String> observeComboText() {
         return WidgetProperties.text().observe(combo);
     }
 
-    public ISWTObservableValue observeComboText(int delay) {
+    public IObservableValue<String> observeComboText(int delay) {
         return WidgetProperties.text().observeDelayed(delay, combo);
     }
 
@@ -118,5 +121,9 @@ public class ComboWidget extends EditableControlWidget {
 
     public Combo getCombo() {
         return combo;
+    }
+
+    public IObservableValue<Boolean> observeEnable() {
+        return WidgetProperties.enabled().observe(combo);
     }
 }

@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ArchiveLocalDependencyInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -87,6 +89,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 public class DependenciesPreviewControlSupplier implements ControlSupplier {
 
+    private static final String ERROR_PANEL_ID = "error.panel";
+    private static final String LOCAL_PANEL_ID = "local.panel";
     private static final String MAVEN_REPO_DOC_URL = "https://maven.apache.org/guides/introduction/introduction-to-repositories.html";
     private static final String MAVEN_REPO_CONFIG_DOC_URL = "https://maven.apache.org/settings.html#Repositories";
 
@@ -353,7 +357,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
             if (event.diff.getNewValue()) {
                 createLocalDependenciesPanel(container);
             } else {
-                findControl("info.panel", container)
+                findControl(LOCAL_PANEL_ID, container)
                         .ifPresent(Control::dispose);
             }
             container.layout();
@@ -365,14 +369,14 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
             if (event.diff.getNewValue()) {
                 createNotFoundDependenciesPanel(container);
             } else {
-                findControl("error.panel", container)
+                findControl(ERROR_PANEL_ID, container)
                         .ifPresent(Control::dispose);
             }
             container.layout();
         };
     }
 
-    private java.util.Optional<Control> findControl(String id, Composite container) {
+    private Optional<Control> findControl(String id, Composite container) {
         return Stream.of(container.getChildren())
                 .filter(c -> Objects.equals(c.getData("id"), id))
                 .findFirst();
@@ -380,12 +384,12 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
 
     private Composite createLocalDependenciesPanel(Composite container) {
         Composite infoComposite = new Composite(container, SWT.NONE);
-        infoComposite.setData("id", "info.panel");
+        infoComposite.setData("id", LOCAL_PANEL_ID);
         infoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         infoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         Label icon = new Label(infoComposite, SWT.NONE);
-        Image image = Pics.getImageDescriptor("info_warning.png", BosArchiveImporterPlugin.getDefault())
+        Image image = Pics.getImageDescriptor(PicsConstants.warning)
                 .createImage();
         icon.setImage(image);
         icon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).create());
@@ -403,12 +407,12 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
 
     private Composite createNotFoundDependenciesPanel(Composite container) {
         Composite infoComposite = new Composite(container, SWT.NONE);
-        infoComposite.setData("id", "error.panel");
+        infoComposite.setData("id", ERROR_PANEL_ID);
         infoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         infoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
         Label icon = new Label(infoComposite, SWT.NONE);
-        Image image = Pics.getImageDescriptor("error.png", BosArchiveImporterPlugin.getDefault())
+        Image image = Pics.getImageDescriptor(PicsConstants.error)
                 .createImage();
         icon.setImage(image);
         icon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).create());
@@ -451,13 +455,13 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
         ImageDescriptor descriptor = null;
         switch (dep.getStatus()) {
             case FOUND:
-                descriptor = Pics.getImageDescriptor("checkmark.png", BosArchiveImporterPlugin.getDefault());
+                descriptor = Pics.getImageDescriptor(PicsConstants.checkmark);
                 break;
             case LOCAL:
-                descriptor = Pics.getImageDescriptor("info_warning.png", BosArchiveImporterPlugin.getDefault());
+                descriptor = Pics.getImageDescriptor(PicsConstants.warning);
                 break;
             case NOT_FOUND:
-                descriptor = Pics.getImageDescriptor("error.png", BosArchiveImporterPlugin.getDefault());
+                descriptor = Pics.getImageDescriptor(PicsConstants.error);
                 break;
             default:
                 throw new IllegalStateException("Unsupported status: " + dep.getStatus());

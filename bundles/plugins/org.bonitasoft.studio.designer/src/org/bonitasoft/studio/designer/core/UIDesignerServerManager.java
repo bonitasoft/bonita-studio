@@ -52,9 +52,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.IStreamListener;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamMonitor;
 import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -139,20 +137,6 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
-                launch.getProcesses()[0].getStreamsProxy().getErrorStreamMonitor().addListener(new IStreamListener() {
-                    
-                    @Override
-                    public void streamAppended(String text, IStreamMonitor monitor) {
-                        System.err.println(text);
-                    }
-                });
-                launch.getProcesses()[0].getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener() {
-                    
-                    @Override
-                    public void streamAppended(String text, IStreamMonitor monitor) {
-                        System.out.println(text);
-                    }
-                });
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 if (waitForUID(pageDesignerURLBuilder)) {
                     started = true;

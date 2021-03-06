@@ -48,11 +48,10 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 
 public class JarLookupOperation implements IRunnableWithProgress {
 
-    static final String MAVEN_CENTRAL_URL = "https://repo.maven.apache.org/maven2";
     private static final String LOOKUP_GOAL = "lookup";
     private static final String BONITA_PROJECT_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
     private static final String BONITA_PROJECT_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
-    public static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/";
+   static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2";
 
     private DependencyLookup result;
     private List<String> repositories = new ArrayList<>();
@@ -66,7 +65,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
     public JarLookupOperation addRemoteRespository(String repositoryUrl) {
         this.repositories.add(repositoryUrl);
         Collections.sort(repositories, (url1,url2) -> {
-            if(url1.equals(MAVEN_CENTRAL_URL)) {
+            if(url1.equals(MAVEN_CENTRAL_REPOSITORY_URL)) {
                 return 1;
             }
             return -1;

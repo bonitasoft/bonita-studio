@@ -14,23 +14,24 @@
  */
 package org.bonitasoft.studio.tests;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.runtime.Platform;
+import org.junit.Test;
 import org.osgi.framework.Bundle;
 
-import junit.framework.TestCase;
 
-/**
- * @author Mickael Istria
- */
-public class TestPatchedBundles extends TestCase {
+public class TestPatchedBundles{
 
-    String[] PATCHED_BUNDLES = {
+    private static final String[] PATCHED_BUNDLES = {
             "org.eclipse.ui.views.properties.tabbed",
             "org.eclipse.gmf.runtime.lite.svg",
             "org.eclipse.emf.edapt.migration",
             "org.eclipse.datatools.modelbase.sql.query"
     };
 
+    @Test
     public void testPatchedBundles() throws Exception {
         boolean isOk = true;
         final StringBuilder sb = new StringBuilder();
