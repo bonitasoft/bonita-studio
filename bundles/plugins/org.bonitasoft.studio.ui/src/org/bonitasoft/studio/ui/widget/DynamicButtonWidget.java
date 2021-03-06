@@ -18,7 +18,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -105,6 +107,7 @@ public class DynamicButtonWidget {
     private Optional<String> cssClass = Optional.empty();
 
     private IThemeEngine engine;
+    private ToolItem toolItem;
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -140,7 +143,7 @@ public class DynamicButtonWidget {
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
         cssClass.ifPresent(css -> toolbar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
-        ToolItem toolItem = new ToolItem(toolbar, SWT.PUSH);
+        toolItem = new ToolItem(toolbar, SWT.PUSH);
         image.ifPresent(img -> toolItem.setImage(img));
         hotImage.ifPresent(hotImg -> toolItem.setHotImage(hotImg));
         tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));
@@ -162,9 +165,11 @@ public class DynamicButtonWidget {
 
                     @Override
                     public void mouseUp(MouseEvent e) {
-                        Rectangle bounds = label.getBounds();
-                        if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
-                            onClickListener.get().accept(new Event());
+                        if (toolItem.isEnabled()) {
+                            Rectangle bounds = label.getBounds();
+                            if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                                onClickListener.get().accept(new Event());
+                            }
                         }
                     }
                 });
@@ -181,9 +186,11 @@ public class DynamicButtonWidget {
 
                 @Override
                 public void mouseEnter(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-                    engine.applyStyles(label, false);
-                    hotImage.ifPresent(toolItem::setImage);
+                    if (toolItem.isEnabled()) {
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                        engine.applyStyles(label, false);
+                        hotImage.ifPresent(toolItem::setImage);
+                    }
                 }
             });
 
@@ -197,10 +204,17 @@ public class DynamicButtonWidget {
 
                 @Override
                 public void mouseEnter(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-                    engine.applyStyles(label, false);
+                    if (toolItem.isEnabled()) {
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                        engine.applyStyles(label, false);
+                    }
                 }
             });
         }
     }
+
+    public IObservableValue<Boolean> observeEnable() {
+        return WidgetProperties.enabled().observe(toolItem);
+    }
+
 }

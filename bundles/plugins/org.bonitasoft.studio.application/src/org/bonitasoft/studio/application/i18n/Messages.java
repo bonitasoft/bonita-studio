@@ -169,6 +169,7 @@ public class Messages extends NLS {
     public static String details;
     public static String removeExtensionConfirmationTitle;
     public static String removeExtensionConfirmation;
+    public static String removeExtensionsConfirmation;
     public static String extensionLoadingErrorTitle;
     public static String extensionLoadingError;
     public static String importExtensionTitle;
@@ -177,6 +178,10 @@ public class Messages extends NLS {
     public static String importExtensionAsMavenArtifactLabel;
     public static String importExtensionAsArchiveLabel;
     public static String importExtensionAsMavenDependencyTip;
+    public static String unknownExtensionsDescription;
+    public static String unknownExtensionsTitle;
+    public static String deleteUnknownTooltip;
+    public static String delete;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -38,6 +38,12 @@ public class RemoveDependencyOperation extends MavenModelOperation {
         this.version = version;
     }
 
+    public RemoveDependencyOperation(Dependency dep) {
+        this(dep.getGroupId(), dep.getArtifactId(), dep.getVersion());
+        this.type = dep.getType();
+        this.classifier = dep.getClassifier();
+    }
+
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());

@@ -103,7 +103,8 @@ Label#cardHighlightTitleColor {
 }
 
 .MPart .cardBackground,
-.MPart .cardBackground > * { 
+.MPart .cardBackground > *,
+Table#extensionViewBackground { 
     background-color: #2d3749;
 }
 
