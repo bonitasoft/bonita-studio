@@ -62,7 +62,8 @@ public class DeployWizardIT {
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         currentRepository.getAllStores().stream().filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
                 .flatMap(store -> store.getChildren().stream())
-                .filter(fStore -> fStore.canBeDeleted()).forEach(IRepositoryFileStore::delete);
+                .filter(IRepositoryFileStore::canBeDeleted)
+                .forEach(IRepositoryFileStore::delete);
     }
 
     @Test

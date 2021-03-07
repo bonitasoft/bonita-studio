@@ -18,9 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +52,6 @@ import org.osgi.framework.Bundle;
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T>
         implements IDefinitionRepositoryStore<T> {
 
-   // private final List<T> providedConnectorDefFileStore = new ArrayList<T>();
-
-    public AbstractDefinitionRepositoryStore() {
-        super();
-    }
 
     @Override
     public List<ConnectorDefinition> getDefinitions() {
@@ -121,48 +114,6 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 .filter(definition -> Objects.equals(definition.getVersion(), version))
                 .findFirst()
                 .orElse(null);
-    }
-//
-//    @Override
-//    public List<T> getChildren() {
-//        final List<T> result = super.getChildren();
-////        if (providedConnectorDefFileStore.isEmpty()) {
-////            final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
-////            if (connectorDefs != null) {
-////                while (connectorDefs.hasMoreElements()) {
-////                    final URL url = connectorDefs.nextElement();
-////                    final String[] segments = url.getFile().split("/");
-////                    final String fileName = segments[segments.length - 1];
-////                    if (fileName.lastIndexOf(".") != -1) {
-////                        final String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-////                        if (getCompatibleExtensions().contains(extension)) {
-////                            final T defFileStore = getDefFileStore(url);
-////                                providedConnectorDefFileStore.add(defFileStore);
-////                                result.add(defFileStore);
-////                        }
-////                    }
-////                }
-////            }
-////        } else {
-////            result.addAll(providedConnectorDefFileStore);
-////        }
-//        return result;
-//    }
-
-    @Override
-    public T getChild(final String fileName, boolean force) {
-        final T file = super.getChild(fileName, force);
-        if (file == null) {
-            final URL url = getBundle().getResource(getName() + "/" + fileName);
-            if (url != null) {
-                return getDefFileStore(url);
-            } else {
-                return null;
-            }
-        } else {
-            return file;
-        }
-
     }
 
     @Override

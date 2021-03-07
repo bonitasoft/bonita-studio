@@ -25,8 +25,11 @@ import java.util.List;
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -53,6 +56,11 @@ public class TestConfigurationSynhronizer {
     public void setUp() throws Exception {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-email", "1.3.0")
             .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        
+        ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        ConnectorDefinitionRegistry registry = defStore.getResourceProvider().getConnectorDefinitionRegistry();
+        registry.build(defStore);
+        
         configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
     }
     
@@ -170,7 +178,7 @@ public class TestConfigurationSynhronizer {
 
         assertNotNull(configuration.getDefinitionMappings()) ;
         List<DefinitionMapping> mappings = configuration.getDefinitionMappings() ;
-        assertEquals("Connector mapping synchronization failed with 2 connector of same definition",1,mappings.size()) ;
+        assertEquals("Connector definition mapping synchronization failed",1,mappings.size()) ;
 
         FragmentContainer container = getProcessContainer(FragmentTypes.CONNECTOR,configuration) ;
         assertEquals("Connector dependencies synchronization failed with 2 connector of same definition",1,container.getChildren().size()) ;
