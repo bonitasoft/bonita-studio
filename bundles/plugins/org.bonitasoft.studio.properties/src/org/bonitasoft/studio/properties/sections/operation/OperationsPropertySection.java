@@ -26,7 +26,8 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -57,12 +58,11 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
         operationComposite = createViewer(mainComposite);
         operationComposite.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         operationComposite.setContext(context);
-        IObservableValue diagramSelectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
+        IObservableValue<EObject> diagramSelectionObservable = ViewerProperties.singleSelection(EObject.class).observe(selectionProvider);
         operationComposite.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(),
                 diagramSelectionObservable, ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS));
 
-        context.bindValue(diagramSelectionObservable, ViewersObservables.observeSingleSelection(operationComposite));
-
+        context.bindValue(diagramSelectionObservable, ViewerProperties.singleSelection().observe(operationComposite));
     }
 
     protected OperationGroupViewer createViewer(final Composite parent) {
@@ -80,7 +80,7 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
                 ExpressionConstants.SEARCH_INDEX_TYPE,
                 ExpressionConstants.DOCUMENT_REF_TYPE);
 
-        return new OperationGroupViewer(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter);
+        return new OperationGroupViewer(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter, false, this);
     }
 
     @Override
@@ -89,11 +89,6 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
         selectionProvider.setSelection(selection);
     }
 
-    /*
-     * (non-Javadoc)
-     * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#dispose()
-     */
     @Override
     public void dispose() {
         super.dispose();
