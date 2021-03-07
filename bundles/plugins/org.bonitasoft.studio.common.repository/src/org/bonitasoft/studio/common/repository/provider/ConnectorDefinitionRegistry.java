@@ -42,7 +42,7 @@ public class ConnectorDefinitionRegistry {
 
     private static final Locale DEFAULT_LOCALE = new Locale(Platform.getNL());
 
-    public synchronized ConnectorDefinitionRegistry build(IDefinitionRepositoryStore<IRepositoryFileStore<?>> store) {
+    public synchronized ConnectorDefinitionRegistry build(IDefinitionRepositoryStore<? extends IRepositoryFileStore<?>> store) {
         BonitaStudioLog.info(String.format("Building %s registry...", ((IRepositoryStore<?>) store).getName()), CommonRepositoryPlugin.PLUGIN_ID);
         clearRegistries();
         for (ConnectorDefinition definition : store.getDefinitions()) {
