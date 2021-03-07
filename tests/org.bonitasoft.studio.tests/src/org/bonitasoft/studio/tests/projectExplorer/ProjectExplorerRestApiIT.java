@@ -8,8 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.tests.projectExplorer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.RestApiProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
@@ -58,6 +61,9 @@ public class ProjectExplorerRestApiIT {
         restAPIExplorerBot.runRestApiTests(projectName);
         restAPIExplorerBot.deployRestAPi(projectName);
         restAPIExplorerBot.deleteRestApi(projectName);
+        
+        RestAPIExtensionRepositoryStore restAPIExtensionRepositoryStore = repositoryAccessor.getRepositoryStore(RestAPIExtensionRepositoryStore.class);
+        assertThat(restAPIExtensionRepositoryStore.getChildren()).isEmpty();
     }
 
     private void createRestApi(String packageName, String name, String projectName, String pathTemplate) {
