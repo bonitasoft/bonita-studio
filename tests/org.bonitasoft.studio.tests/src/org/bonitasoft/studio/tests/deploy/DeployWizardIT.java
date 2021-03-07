@@ -42,6 +42,8 @@ import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +58,7 @@ public class DeployWizardIT {
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Before
+    @After
     public void cleanRepository() throws Exception {
         new UndeployProcessOperation(BOSEngineManager.getInstance())
                 .undeployAll().run(AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -65,7 +68,7 @@ public class DeployWizardIT {
                 .filter(IRepositoryFileStore::canBeDeleted)
                 .forEach(IRepositoryFileStore::delete);
     }
-
+    
     @Test
     public void should_deploy_a_project_using_wizard() throws Exception {
         BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
@@ -123,6 +126,10 @@ public class DeployWizardIT {
 
         botDeployDialog.artifactsTree().getSWTBotWidget().getTreeItem("Organization").getItems()[0].uncheck();
         assertThat(botDeployDialog.isDefaultUserEnabled()).isTrue();
+
+        assertThat(botDeployDialog.artifactsTree().getSWTBotWidget().getAllItems())
+                .extracting(SWTBotTreeItem::getText)
+                .doesNotContain("REST API extensions");
 
         botDeployDialog.deploy();
         assertThat(bot.button(IDialogConstants.OPEN_LABEL).isEnabled()).isTrue();
