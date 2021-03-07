@@ -14,11 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
-import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.connector.wizard.sforce.i18n.Messages;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -63,22 +60,6 @@ public abstract class AbstractSforceTest implements SWTBotConstants {
     public void setUp() throws Exception {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-salesforce", "1.1.3")
             .run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        
-        
-        ConnectorDefRepositoryStore defRepositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        ConnectorDefinitionRegistry connectorDefinitionRegistry = defRepositoryStore.getResourceProvider().getConnectorDefinitionRegistry();
-        bot.waitUntil(new DefaultCondition() {
-            
-            @Override
-            public boolean test() throws Exception {
-                return connectorDefinitionRegistry.find("salesforce-createsobject", "1.0.1").isPresent();
-            }
-            
-            @Override
-            public String getFailureMessage() {
-                return "Failed to installed salesforce connector";
-            }
-        },10000);
         
         SWTBotTestUtil.getKeybord();
         sftoolMockUtil = new SalesforceMockUtil();

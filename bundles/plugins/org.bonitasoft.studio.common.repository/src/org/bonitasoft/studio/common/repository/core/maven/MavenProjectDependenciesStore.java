@@ -121,7 +121,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                     : project.getLocation().toFile().toPath().resolve(reportPath).toFile();
             if(reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
-                eventBroker.post(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, new HashMap<>());
+                eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, new HashMap<>());
             }
             return dependencyReport;
         } catch (IOException e) {
