@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.properties.BusyFormHandler;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -95,16 +96,21 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
     private EditingDomain editingDomain;
     private ISelection selection;
     private final List<ISelectionChangedListener> listeners = new ArrayList<>();
+    private BusyFormHandler busyFormHandler;
 
     public OperationGroupViewer(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final Composite mainComposite, final ViewerFilter actionExpressionFilter,
-            final ViewerFilter storageExpressionFilter, final boolean isPageFlowContext) {
+            final ViewerFilter storageExpressionFilter,
+            final boolean isPageFlowContext,
+            final BusyFormHandler busyFormHandler) {
         parent = mainComposite;
+        this.busyFormHandler = busyFormHandler;
         container = new Composite(mainComposite, SWT.NONE);
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 20, 0, 0).create());
         operationComposite = new Composite(container, SWT.NONE);
-        operationComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 5).create());
+        operationComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 5).create());
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         final Composite buttonComposite = new Composite(container, SWT.NONE);
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
@@ -128,7 +134,10 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
 
             @Override
             public void handleListChange(final ListChangeEvent event) {
-                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                if (busyFormHandler != null) {
+                    busyFormHandler.setBusy(true);
+                }
+                Display.getDefault().asyncExec(new Runnable() {
 
                     @Override
                     public void run() {
@@ -147,6 +156,9 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                         }
                         updateOrderButtons();
                         refresh();
+                        if (busyFormHandler != null) {
+                            busyFormHandler.setBusy(false);
+                        }
                     }
                 });
 
@@ -157,8 +169,7 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
     public OperationGroupViewer(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final Composite mainComposite, final ViewerFilter actionExpressionFilter,
             final ViewerFilter storageExpressionFilter) {
-        this(tabbedPropertySheetPage, mainComposite, actionExpressionFilter, storageExpressionFilter, false);
-
+        this(tabbedPropertySheetPage, mainComposite, actionExpressionFilter, storageExpressionFilter, false, null);
     }
 
     private void createAddButton(final Composite mainComposite) {
@@ -206,7 +217,8 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
                 storageExp = ExpressionFactory.eINSTANCE.createExpression();
                 if (getEditingDomain() != null) {
                     cc.append(
-                            SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND,
+                            SetCommand.create(getEditingDomain(), action,
+                                    ExpressionPackage.Literals.OPERATION__LEFT_OPERAND,
                                     storageExp));
                 } else {
                     action.setLeftOperand(storageExp);
@@ -422,35 +434,21 @@ public class OperationGroupViewer implements IBonitaVariableContext, ISelectionP
         return eObject;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.operation.OperationsComposite#refresh()
-     */
     public void refresh() {
         if (!parent.isDisposed()) {
             final Composite shell = parent.getParent().getParent().getParent().getParent();
             shell.layout(true, true);
-            parent.layout(true, true);
-            container.layout(true, true);
             if (tabbedPropertySheetPage != null) {
                 tabbedPropertySheetPage.resizeScrolledComposite();
             }
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-     */
     @Override
     public boolean isOverViewContext() {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-     */
     @Override
     public void setIsOverviewContext(boolean isOverviewContext) {
         //NOTHING TO DO

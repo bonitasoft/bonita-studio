@@ -33,7 +33,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author aurelie Zara
  * @author Romain Bioteau
  */
-public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPropertySection {
+public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPropertySection implements BusyFormHandler {
 
     protected Form form;
     private TabbedPropertySheetPage tabbedPropertySheetPage;
@@ -81,6 +81,11 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
         form.update();
         form.setFocus();
+    }
+    
+    @Override
+    public void setBusy(boolean busy) {
+        form.setBusy(busy);
     }
 
     protected int getDescriptionSeverity() {
