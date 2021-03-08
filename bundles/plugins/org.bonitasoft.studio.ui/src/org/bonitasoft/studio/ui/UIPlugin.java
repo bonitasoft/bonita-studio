@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.ui;
 
+import org.bonitasoft.studio.ui.preference.PreferenceConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -105,6 +106,10 @@ public class UIPlugin extends AbstractUIPlugin {
         }
 
         return result;
+    }
+
+    public boolean isNotificationEnabled() {
+        return getPreferenceStore().getBoolean(PreferenceConstants.ENABLE_NOTIFICATIONS);
     }
 
 }
