@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.util.test;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,12 +29,8 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.m2e.core.internal.IMavenConstants;
-import org.eclipse.m2e.core.internal.preferences.MavenPreferenceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.runner.Description;
@@ -97,6 +91,7 @@ public class BonitaSuite extends Suite {
 
                 @Override
                 public void testStarted(Description description) throws Exception {
+                    Platform.getLog(BonitaSuite.class).info(String.format("Start: %s",description.getDisplayName()));
                     startTime = System.currentTimeMillis();
                     success = true;
                     System.out.print(
@@ -147,6 +142,7 @@ public class BonitaSuite extends Suite {
                                                 time(),
                                                 ConsoleColors.RESET));
                     }
+                    Platform.getLog(BonitaSuite.class).info(String.format("End: %s",description.getDisplayName()));
                 }
 
                 protected String time() {

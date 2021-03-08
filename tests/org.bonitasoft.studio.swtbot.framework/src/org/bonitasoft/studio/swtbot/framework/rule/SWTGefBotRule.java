@@ -53,16 +53,12 @@ public class SWTGefBotRule implements TestRule {
         this.bot = bot;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.junit.rules.TestRule#apply(org.junit.runners.model.Statement, org.junit.runner.Description)
-     */
     @Override
     public Statement apply(final Statement base, final Description description) {
-        return statement(base);
+        return statement(base, description);
     }
 
-    private Statement statement(final Statement base) {
+    private Statement statement(final Statement base, Description description) {
         return new Statement() {
 
             @Override
@@ -70,8 +66,10 @@ public class SWTGefBotRule implements TestRule {
                 beforeStatement();
                 try {
                     base.evaluate();
+                }catch(Throwable t) {
+                    bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(), description.getMethodName()));
                 } finally {
-                    afterStatement();
+                    afterStatement(description);
                 }
 
             }
@@ -79,11 +77,11 @@ public class SWTGefBotRule implements TestRule {
         };
     }
 
-    protected void afterStatement() {
+    protected void afterStatement(Description description) {
         try {
             bot.waitUntil(BonitaBPMConditions.noPopupActive());
         } catch (final TimeoutException e) {
-            bot.captureScreenshot(String.format("screenshots/OpenedShellAfterTest%s.jpg", System.currentTimeMillis()));
+            bot.captureScreenshot(String.format("screenshots/OpenedShellAfter_%s_%s.jpg", description.getClassName(), description.getMethodName()));
             closeAllShells(bot, e);
         }
         try {

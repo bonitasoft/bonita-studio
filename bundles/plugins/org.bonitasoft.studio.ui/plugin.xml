@@ -25,5 +25,11 @@
             apply="always">
       </fragment>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.ui.preference.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
