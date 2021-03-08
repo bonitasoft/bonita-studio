@@ -236,6 +236,7 @@ public class ImportExtensionPage implements ControlSupplier {
             if (file.exists()) {
                 try (InputStreamSupplier iss = new FileInputStreamSupplier(file)) {
                     FileDependencyLookupOperation operation = new FileDependencyLookupOperation(iss);
+                    wizardContainer.run(true, false, mavenRepositoryRegistry.updateRegistry());
                     mavenRepositoryRegistry.getGlobalRepositories().stream()
                             .map(IRepository::getUrl)
                             .forEach(operation::addRemoteRespository);

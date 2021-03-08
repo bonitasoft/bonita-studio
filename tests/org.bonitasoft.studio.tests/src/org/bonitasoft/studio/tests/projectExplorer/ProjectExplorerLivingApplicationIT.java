@@ -28,7 +28,9 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.core.ImportApplicationAction;
 import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
@@ -59,6 +61,11 @@ public class ProjectExplorerLivingApplicationIT {
     public void init() throws Exception {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        repositoryAccessor.getCurrentRepository().getAllStores().stream()
+                .filter(store -> !OrganizationRepositoryStore.class.isInstance(store))
+                .flatMap(store -> store.getChildren().stream())
+                .filter(IRepositoryFileStore::canBeDeleted)
+                .forEach(IRepositoryFileStore::delete);
         BOSEngineManager.getInstance().start();
         LivingApplicationPlugin.getDefault().getPreferenceStore()
                 .setValue(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG, true);
@@ -137,11 +144,11 @@ public class ProjectExplorerLivingApplicationIT {
     }
 
     private String findNewApplicationName() {
-        List<String> existingApplicationNameList = repositoryAccessor.getRepositoryStore(ApplicationRepositoryStore.class)
+        List<String> existingApplicationNameList = repositoryAccessor
+                .getRepositoryStore(ApplicationRepositoryStore.class)
                 .getChildren().stream().map(ApplicationFileStore::getDisplayName).collect(Collectors.toList());
-        String newName = StringIncrementer.getNextIncrement(NewApplicationHandler.DEFAULT_FILE_NAME,
+        return StringIncrementer.getNextIncrement(NewApplicationHandler.DEFAULT_FILE_NAME,
                 existingApplicationNameList);
-        return newName;
     }
 
 }

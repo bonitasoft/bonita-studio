@@ -175,7 +175,6 @@ public class Messages extends NLS {
     public static String importExtensionTitle;
     public static String importExtension;
     public static String importExtensionButtonLabel;
-    public static String importExtensionAsMavenDependencyTip;
     public static String unknownExtensionsDescription;
     public static String unknownExtensionsTitle;
     public static String deleteUnknownTooltip;
