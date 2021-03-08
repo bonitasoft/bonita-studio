@@ -48,10 +48,7 @@ public class NativeTextWidget extends TextWidget {
 
     @Override
     protected Color getBorderColor(Control focused, Control container) {
-        if (status.isOK() || status.getSeverity() == IStatus.INFO) {
-            return container.getBackground(); // Transparent
-        }
-        return getStatusColor(status);
+        return container.getBackground();
     }
 
     @Override

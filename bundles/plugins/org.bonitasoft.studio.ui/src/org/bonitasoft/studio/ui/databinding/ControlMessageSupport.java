@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.ui.databinding;
 
+import java.util.Objects;
+
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.DisposeEvent;
 import org.eclipse.core.databinding.observable.IDisposeListener;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -26,8 +29,8 @@ import org.eclipse.core.runtime.IStatus;
 
 public abstract class ControlMessageSupport {
 
-    private IObservableValue validationStatus;
-    private IObservableList targets;
+    private IObservableValue<IStatus> validationStatus;
+    private IObservableList<IObservable> targets;
 
     private IDisposeListener disposeListener = new IDisposeListener() {
 
@@ -37,10 +40,10 @@ public abstract class ControlMessageSupport {
         }
     };
 
-    private IValueChangeListener statusChangeListener = new IValueChangeListener() {
+    private IValueChangeListener<IStatus> statusChangeListener = new IValueChangeListener<>() {
 
         @Override
-        public void handleValueChange(ValueChangeEvent event) {
+        public void handleValueChange(ValueChangeEvent<? extends IStatus> event) {
             if (statusHasChanged(event)) {
                 statusChanged((IStatus) validationStatus.getValue());
             }
@@ -58,10 +61,8 @@ public abstract class ControlMessageSupport {
         validationStatus.addValueChangeListener(statusChangeListener);
     }
 
-    protected boolean statusHasChanged(ValueChangeEvent event) {
-        final IStatus newStatus = (IStatus) event.diff.getNewValue();
-        final IStatus oldStatus = (IStatus) event.diff.getOldValue();
-        return oldStatus != newStatus;
+    protected boolean statusHasChanged(ValueChangeEvent<? extends IStatus> event) {
+        return !Objects.equals(event.diff.getOldValue(), event.diff.getNewValue());
     }
 
     protected abstract void statusChanged(IStatus status);
