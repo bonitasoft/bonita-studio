@@ -25,11 +25,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.core.runtime.Platform;
@@ -43,7 +40,6 @@ public class ConnectorDefinitionRegistry {
     private static final Locale DEFAULT_LOCALE = new Locale(Platform.getNL());
 
     public synchronized ConnectorDefinitionRegistry build(IDefinitionRepositoryStore<? extends IRepositoryFileStore<?>> store) {
-        BonitaStudioLog.info(String.format("Building %s registry...", ((IRepositoryStore<?>) store).getName()), CommonRepositoryPlugin.PLUGIN_ID);
         clearRegistries();
         for (ConnectorDefinition definition : store.getDefinitions()) {
             DefinitionResourceLoaderProvider resourceLoaderProvider = store.find(definition)

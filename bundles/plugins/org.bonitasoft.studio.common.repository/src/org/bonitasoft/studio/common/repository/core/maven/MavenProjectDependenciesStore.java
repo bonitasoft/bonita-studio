@@ -22,11 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import org.apache.maven.Maven;
-import org.apache.maven.execution.BuildSuccess;
-import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.plugin.analyze.report.model.ActorFilterImplementation;
@@ -39,6 +36,7 @@ import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.jface.databinding.StatusToMarkerSeverity;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -50,14 +48,26 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.m2e.actions.MavenLaunchConstants;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.embedder.ICallable;
-import org.eclipse.m2e.core.embedder.IMaven;
-import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -69,8 +79,9 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
 
     private static final String DEAULT_REPORT_OUTPUT_FILE = "target/bonita-dependencies.json";
     public static final String PROJECT_DEPENDENCIES_ANALYZED_TOPIC = "bonita/project/analyzed";
-    private static final String ANALYZE_PLUGIN_MARKER_TYPE =  CommonRepositoryPlugin.PLUGIN_ID + ".analyzePluginMarkerType";
-    
+    private static final String ANALYZE_PLUGIN_MARKER_TYPE = CommonRepositoryPlugin.PLUGIN_ID
+            + ".analyzePluginMarkerType";
+
     private IProject project;
     private DependencyReport dependencyReport;
     private ObjectMapper mapper = new ObjectMapper().findAndRegisterModules()
@@ -94,13 +105,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             }
             IStatus status = runAnalyzePlugin(monitor);
             if (!status.isOK()) {
-                // There is classloader issues that disappears on re run (ClassnotFound exception thrown)
-                // TODO investigate classloading issues, maybe due to m2e ?
-                // To reproduce: create a new project, install rest connector. First analysis will failed.
-                status = runAnalyzePlugin(monitor);
-                if (!status.isOK()) {
-                    throw new CoreException(status);
-                 }
+                throw new CoreException(status);
             }
 
             IMavenProjectFacade mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
@@ -119,7 +124,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
             var path = Paths.get(reportPath);
             File reportFile = Paths.get(reportPath).isAbsolute() ? path.toFile()
                     : project.getLocation().toFile().toPath().resolve(reportPath).toFile();
-            if(reportFile.isFile()) {
+            if (reportFile.isFile()) {
                 dependencyReport = mapper.readValue(reportFile, DependencyReport.class);
                 eventBroker.send(PROJECT_DEPENDENCIES_ANALYZED_TOPIC, new HashMap<>());
             }
@@ -127,15 +132,14 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         } catch (IOException e) {
             BonitaStudioLog.error(e);
             return null;
-        }catch(CoreException ce) {
+        } catch (CoreException ce) {
             addMarker(ce.getStatus());
-            if(ce.getCause() != null) {
+            if (ce.getCause() != null) {
                 BonitaStudioLog.error(ce.getCause());
             }
             return null;
         }
     }
-
 
     private LocalDependenciesStore getLocalDependencyStore() {
         return RepositoryManager.getInstance().getRepository(project.getName()).getLocalDependencyStore();
@@ -145,9 +149,10 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         try {
             IMarker marker = project.createMarker(ANALYZE_PLUGIN_MARKER_TYPE);
             marker.setAttribute(IMarker.SEVERITY, new StatusToMarkerSeverity(status).toMarkerSeverity());
-            marker.setAttribute(IMarker.MESSAGE, status.getException() != null ? status.getMessage() + ". See details in Studio logs." : status.getMessage());
+            marker.setAttribute(IMarker.MESSAGE, status.getException() != null
+                    ? status.getMessage() + ". See details in Studio logs." : status.getMessage());
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
     }
 
@@ -161,31 +166,59 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                 && MavenProjectModelBuilder.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID.equals(plugin.getArtifactId());
     }
 
-    public IStatus runAnalyzePlugin(IProgressMonitor monitor)
-            throws CoreException {
+    public IStatus runAnalyzePlugin(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
-        BonitaStudioLog.info(Messages.analyzeProjectDependencies, CommonRepositoryPlugin.PLUGIN_ID);
-        IMaven maven = MavenPlugin.getMaven();
-        final IMavenExecutionContext context = maven.createExecutionContext();
-        final MavenExecutionRequest request = context.getExecutionRequest();
-        request.setGoals(List.of("org.bonitasoft.maven:bonita-project-maven-plugin:analyze"));
-        request.setPom(project.getFile("pom.xml").getLocation().toFile());
-        MavenExecutionResult executionResult = context.execute(new ICallable<MavenExecutionResult>() {
-
-            @Override
-            public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
-                    throws CoreException {
-                return maven.lookup(Maven.class).execute(request);
+        final ILaunchConfigurationType launchConfigurationType = DebugPlugin.getDefault().getLaunchManager()
+                .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID);
+        ILaunchConfigurationWorkingCopy workingCopy = null;
+        workingCopy = launchConfigurationType.newInstance(null, Messages.analyzeProjectDependencies);
+        configureAnalyzePluginLaunchConfiguration(workingCopy);
+        final ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, 
+                AbstractRepository.NULL_PROGRESS_MONITOR,
+                false);
+        final IProcess process = launch.getProcesses()[0];
+        waitForBuildProcessTermination(launch);
+        return process.getExitValue() == 0 ? Status.OK_STATUS : new Status(IStatus.ERROR, getClass(), "An error occured while analyzing project dependencies");
+    }
+    
+    private void waitForBuildProcessTermination(final ILaunch launch) {
+        while (!launch.isTerminated()) {
+            try {
+                Thread.sleep(100);
+            } catch (final InterruptedException e) {
             }
-        }, monitor);
-        if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
-            return Status.OK_STATUS;
-        } else {
-            return new Status(IStatus.ERROR,
-                    MavenProjectDependenciesStore.class,
-                    "An error occured while analyzing project dependencies",
-                    executionResult.getExceptions().get(0));
         }
+    }
+
+    private void configureAnalyzePluginLaunchConfiguration(final ILaunchConfigurationWorkingCopy workingCopy)
+            throws CoreException {
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
+                project.getLocation().toFile().getAbsolutePath());
+        workingCopy.setAttribute(MavenLaunchConstants.ATTR_GOALS,
+                "org.bonitasoft.maven:bonita-project-maven-plugin:analyze");
+        workingCopy.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
+        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_SCOPE, "${project}");
+        workingCopy.setAttribute(RefreshTab.ATTR_REFRESH_RECURSIVE, false);
+        workingCopy.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, false);
+        workingCopy.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
+        final IPath path = getJREContainerPath(project);
+        if (path != null) {
+            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH,
+                    path.toPortableString());
+        }
+    }
+
+    private IPath getJREContainerPath(final IProject project) throws CoreException {
+        if (project != null && project.hasNature(JavaCore.NATURE_ID)) {
+            final IJavaProject javaProject = JavaCore.create(project);
+            return Stream.of(javaProject.getRawClasspath())
+                    .filter(entry -> JavaRuntime.JRE_CONTAINER.equals(entry.getPath().segment(0)))
+                    .findFirst()
+                    .map(IClasspathEntry::getPath)
+                    .orElse(null);
+   
+        }
+        return null;
     }
 
     @Override

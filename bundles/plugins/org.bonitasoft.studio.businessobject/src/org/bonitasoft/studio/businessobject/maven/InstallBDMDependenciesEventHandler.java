@@ -29,8 +29,13 @@ import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescripto
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.osgi.service.event.Event;
@@ -77,7 +82,19 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
                 tmpFile.delete();
             }
         }
+        updateProjectMavenConfiguration();
         updateMavenProjects();
+    }
+
+    protected void updateProjectMavenConfiguration() {
+        new WorkspaceJob("Update project") {
+            
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(RepositoryManager.getInstance().getCurrentRepository().getProject(), monitor);    
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     private File daoPomFile(String groupId, String version) throws IOException {

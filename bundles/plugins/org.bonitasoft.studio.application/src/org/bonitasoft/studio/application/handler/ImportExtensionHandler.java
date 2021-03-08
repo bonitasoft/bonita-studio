@@ -138,6 +138,7 @@ public class ImportExtensionHandler {
             GAV gav = new GAV(dependency);
             DependencyGetOperation dependencyGetOperation = new DependencyGetOperation(
                     gav);
+            container.run(true, false, mavenRepositoryRegistry.updateRegistry());
             mavenRepositoryRegistry
                     .getGlobalRepositories()
                     .stream()

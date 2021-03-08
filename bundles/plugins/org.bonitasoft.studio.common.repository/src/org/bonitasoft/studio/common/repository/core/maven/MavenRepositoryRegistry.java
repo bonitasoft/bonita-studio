@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,9 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.repository.RepositoryRegistry;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.m2e.core.repository.IRepositoryRegistry;
 
@@ -59,6 +62,16 @@ public class MavenRepositoryRegistry {
 
     protected IRepositoryRegistry getRepositoryRegistry() {
         return MavenPlugin.getRepositoryRegistry();
+    }
+    
+    public IRunnableWithProgress updateRegistry() {
+        return monitor -> {
+            try {
+                ((RepositoryRegistry) getRepositoryRegistry()).updateRegistry(monitor);
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
+        };
     }
 
 }
