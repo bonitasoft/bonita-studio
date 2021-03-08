@@ -299,6 +299,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars)
                     .addUsedDependencies(usedDependencies)
                     .addUsedDefinitions(usedDefinitions);
+            mavenRepositoryRegistry.updateRegistry().run(monitor);
             mavenRepositoryRegistry
                     .getGlobalRepositories()
                     .stream()
