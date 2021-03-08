@@ -167,6 +167,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 ProjectDependenciesLookupOperation operation = new ProjectDependenciesLookupOperation(
                         importedMavenModel,
                         new ArchiveLocalDependencyInputStreamSupplier(importArchiveModel.getBosArchive()));
+                mavenRepositoryRegistry.updateRegistry().run(monitor);
                 mavenRepositoryRegistry
                         .getGlobalRepositories()
                         .stream()
@@ -222,6 +223,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             var projectDependenciesMigrationOperation = new ProjectDependenciesMigrationOperation(jars)
                     .addUsedDependencies(usedDependencies)
                     .addUsedDefinitions(usedDefinitions);
+            mavenRepositoryRegistry.updateRegistry().run(monitor);
             mavenRepositoryRegistry
                     .getGlobalRepositories()
                     .stream()

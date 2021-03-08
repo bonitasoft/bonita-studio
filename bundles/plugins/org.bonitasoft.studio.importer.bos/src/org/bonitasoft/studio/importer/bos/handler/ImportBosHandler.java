@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import javax.inject.Named;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -103,6 +104,11 @@ public class ImportBosHandler {
             RepositoryAccessor repositoryAccessor) {
         mavenRepositories.clear();
         if (targetRepository != null && !targetRepository.isBlank()) {
+            try {
+                mavenRepositoryRegistry.updateRegistry().run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (InvocationTargetException | InterruptedException e) {
+               BonitaStudioLog.error(e);
+            }
             mavenRepositories.addAll(mavenRepositoryRegistry.getGlobalRepositories());
             AbstractRepository repository = repositoryAccessor.getRepository(targetRepository);
             if (repository != null && repository.exists()) {
