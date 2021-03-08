@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
@@ -46,11 +47,13 @@ import org.bonitasoft.studio.ui.widget.TextWidget.Builder;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -89,7 +92,10 @@ public class ImportExtensionPage implements ControlSupplier {
     private MavenRepositoryRegistry mavenRepositoryRegistry;
     private IWizardContainer wizardContainer;
     private IObservableValue<Dependency> dependencyObservable;
-    private WritableValue<Boolean> editableDependencyObservable;
+    private IObservableValue<Boolean> editableDependencyObservable;
+    private IObservableValue<Boolean> visibleDependencyObservable;
+    private IObservableValue<DependencyLookup> dependencyLookupObservable;
+    private IObservableValue<String> filePathObserveValue;
     private DependencyLookup dependencyLookup;
 
     public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry) {
@@ -103,7 +109,8 @@ public class ImportExtensionPage implements ControlSupplier {
         this.wizardContainer = wizardContainer;
 
         this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
-
+        this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
+        
         Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -120,6 +127,7 @@ public class ImportExtensionPage implements ControlSupplier {
             } else if (dependencyLookup != null && dependencyLookup.getStatus() == Status.FOUND) {
                 editableDependencyObservable.setValue(false);
             }
+            ctx.updateModels();
         });
         return mainComposite;
     }
@@ -175,7 +183,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        IObservableValue<String> filePathObserveValue = PojoProperties
+        filePathObserveValue = PojoProperties
                 .value("filePath", String.class)
                 .observe(this);
         filePathObserveValue.addValueChangeListener(this::analyzeFile);
@@ -187,7 +195,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
-                                .havingValidators(new EmptyInputValidator("")))
+                                .havingValidators(filePathValidator()))
                         .create())
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
@@ -199,6 +207,15 @@ public class ImportExtensionPage implements ControlSupplier {
 
         filePathText.focusButton();
         return parent;
+    }
+
+    private IValidator<String> filePathValidator() {
+        return filePath -> {
+            if (importModeObservable.getValue() == ImportMode.FILE && (filePath == null || filePath.isBlank())) {
+                return ValidationStatus.error("");
+            }
+            return ValidationStatus.ok();
+        };
     }
 
     private void browseFile(Event e) {
@@ -224,9 +241,10 @@ public class ImportExtensionPage implements ControlSupplier {
                             .forEach(operation::addRemoteRespository);
                     wizardContainer.run(true, false, operation);
                     dependencyLookup = operation.getResult();
-                    if(file.getName().endsWith(".zip")) {
+                    if (file.getName().endsWith(".zip")) {
                         dependencyLookup.setType("zip");
                     }
+                    dependencyLookupObservable.setValue(dependencyLookup);
                     dependencyObservable.setValue(dependencyLookup.toMavenDependency());
                     Image image = Pics
                             .getImageDescriptor(
@@ -253,6 +271,14 @@ public class ImportExtensionPage implements ControlSupplier {
                 GridLayoutFactory.fillDefaults().margins(20, 20).spacing(LayoutConstants.getSpacing().x, 10).create());
 
         editableDependencyObservable = new WritableValue<>(true, Boolean.class);
+        visibleDependencyObservable = new ComputedValue<Boolean>() {
+
+            @Override
+            protected Boolean calculate() {
+                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null ;
+            }
+            
+        };
 
         // We do not want to translate the maven property names, it would lead to too many confusions.
         TextWidget groupIdText = createText(dependencyGroup,
@@ -287,7 +313,7 @@ public class ImportExtensionPage implements ControlSupplier {
         subPropertiesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         ComboWidget typeCombo = createCombo(subPropertiesComposite, "Type",
-                PojoProperties.value("type", String.class).observeDetail(dependencyObservable), 
+                PojoProperties.value("type", String.class).observeDetail(dependencyObservable),
                 ctx);
         ctx.bindValue(typeCombo.observeEnable(), editableDependencyObservable);
 
@@ -297,6 +323,10 @@ public class ImportExtensionPage implements ControlSupplier {
                 false,
                 List.of());
         ctx.bindValue(classifierText.observeEnable(), editableDependencyObservable);
+        ctx.bindValue(WidgetProperties.visible().observe(dependencyGroup),
+                visibleDependencyObservable, 
+                neverUpdateValueStrategy().create(), 
+                null);
     }
 
     private TextWidget createText(Composite parent,
@@ -310,7 +340,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .labelAbove()
                 .grabHorizontalSpace()
                 .bindTo(binding)
-                .withTargetToModelStrategy(UpdateStrategyFactory.updateValueStrategy()
+                .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
                                 .havingValidators(validators.toArray(IValidator[]::new))
                                 .create())
@@ -374,9 +404,13 @@ public class ImportExtensionPage implements ControlSupplier {
     public Dependency getDependency() {
         return dependency;
     }
-    
+
     public DependencyLookup getDependencyLookup() {
         return dependencyLookup;
+    }
+    
+    public void setDependencyLookup(DependencyLookup dependencyLookup) {
+        this.dependencyLookup = dependencyLookup;
     }
 
     public void setDependency(Dependency dependency) {
@@ -390,7 +424,7 @@ public class ImportExtensionPage implements ControlSupplier {
     public String getFilePath() {
         return filePath;
     }
-    
+
     public ImportMode getImportMode() {
         return importModeObservable.getValue();
     }
