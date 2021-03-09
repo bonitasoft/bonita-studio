@@ -56,6 +56,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -84,6 +85,9 @@ public class ProjectExtensionEditorPart extends EditorPart {
     private Font titleFont;
     private Font subtitleFont;
     private Font gavFont;
+    private Cursor cursorHand;
+    private Cursor cursorArrow;
+    private ScrolledComposite scrolledComposite;
     private Composite cardComposite;
     private IThemeEngine engine;
     private DataBindingContext ctx;
@@ -110,14 +114,10 @@ public class ProjectExtensionEditorPart extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        initVariables();
+        initVariables(parent);
         parent.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
-        sc.setLayout(GridLayoutFactory.fillDefaults().create());
-        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        Composite mainComposite = createComposite(sc, SWT.NONE); // TODO scroll composite ?
+        Composite mainComposite = createComposite(parent, SWT.NONE);
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 20).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -127,20 +127,25 @@ public class ProjectExtensionEditorPart extends EditorPart {
         Label separator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        createExtensionSection(mainComposite);
-
-        sc.setContent(mainComposite);
-        sc.setExpandVertical(true);
-        sc.setExpandHorizontal(true);
-        sc.setMinHeight(mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        scrolledComposite = createExtensionSection(mainComposite);
     }
 
-    private void createExtensionSection(Composite parent) {
-        cardComposite = createComposite(parent, SWT.NONE);
+    private ScrolledComposite createExtensionSection(Composite parent) {
+        ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+        sc.setLayout(GridLayoutFactory.fillDefaults().create());
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        cardComposite = createComposite(sc, SWT.NONE);
         cardComposite.setLayout(GridLayoutFactory.fillDefaults().margins(40, 20)
                 .spacing(20, 20).numColumns(2).equalWidth(true).create());
         cardComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createExtensionCards(cardComposite);
+
+        sc.setContent(cardComposite);
+        sc.setExpandVertical(true);
+        sc.setExpandHorizontal(true);
+        sc.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        return sc;
     }
 
     private void createExtensionCards(Composite parent) {
@@ -309,6 +314,7 @@ public class ProjectExtensionEditorPart extends EditorPart {
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setHotImage(Pics.getImage(PicsConstants.delete_hot));
         deleteItem.setToolTipText(Messages.removeExtensionTooltip);
+        addMouseHandCursorBehavior(toolBar);
         deleteItem.addListener(SWT.Selection, e -> {
             if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.removeExtensionConfirmationTitle,
                     String.format(Messages.removeExtensionConfirmation, bonitaDep.getName()))) {
@@ -316,7 +322,7 @@ public class ProjectExtensionEditorPart extends EditorPart {
             }
         });
 
-        MouseTrackAdapter cardMouseTracker = new MouseTrackAdapter() {
+        titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
 
             @Override
             public void mouseEnter(MouseEvent e) {
@@ -330,14 +336,22 @@ public class ProjectExtensionEditorPart extends EditorPart {
                 titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
                 engine.applyStyles(titleLabel, false);
             }
-        };
+        });
+    }
 
-        cardComposite.addMouseTrackListener(cardMouseTracker);
-        titleComposite.addMouseTrackListener(cardMouseTracker);
-        titleLabel.addMouseTrackListener(cardMouseTracker);
-        gav.addMouseTrackListener(cardMouseTracker);
-        description.addMouseTrackListener(cardMouseTracker);
-        iconLabel.addMouseTrackListener(cardMouseTracker);
+    private void addMouseHandCursorBehavior(Control control) {
+        control.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                control.setCursor(cursorHand);
+            }
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                control.setCursor(cursorArrow);
+            }
+        });
     }
 
     private void removeExtensions(Dependency... deps) {
@@ -363,6 +377,7 @@ public class ProjectExtensionEditorPart extends EditorPart {
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
             createExtensionCards(cardComposite);
             cardComposite.layout();
+            scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         });
     }
 
@@ -421,11 +436,12 @@ public class ProjectExtensionEditorPart extends EditorPart {
                 .createIn(parent);
     }
 
-    private void initVariables() { // TODO check null
+    private void initVariables(Composite parent) {
         titleFont = new Font(Display.getDefault(), "titleFont", 30, SWT.BOLD);
         subtitleFont = new Font(Display.getDefault(), "subtitleFont", 20, SWT.BOLD);
-        gavFont = new Font(Display.getDefault(), "gavFont", 10, SWT.ITALIC);
-
+        gavFont = new Font(Display.getDefault(), "gavFont", 12, SWT.ITALIC);
+        cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         allDependencies = BonitaMarketplace.getInstance().getDependencies();
     }
 
