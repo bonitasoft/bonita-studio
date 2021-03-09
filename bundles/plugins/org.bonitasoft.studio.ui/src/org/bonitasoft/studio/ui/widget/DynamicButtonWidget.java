@@ -28,6 +28,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -108,6 +109,8 @@ public class DynamicButtonWidget {
 
     private IThemeEngine engine;
     private ToolItem toolItem;
+    private Cursor cursorArrow;
+    private Cursor cursorHand;
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -126,6 +129,8 @@ public class DynamicButtonWidget {
         this.maxTextWidth = maxTextWidth;
         this.cssClass = cssClass;
 
+        cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
 
         createControl();
@@ -182,6 +187,8 @@ public class DynamicButtonWidget {
                     label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
                     engine.applyStyles(label, false);
                     image.ifPresent(toolItem::setImage);
+                    label.setCursor(cursorArrow);
+                    toolbar.setCursor(cursorArrow);
                 }
 
                 @Override
@@ -190,6 +197,8 @@ public class DynamicButtonWidget {
                         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
                         engine.applyStyles(label, false);
                         hotImage.ifPresent(toolItem::setImage);
+                        label.setCursor(cursorHand);
+                        toolbar.setCursor(cursorHand);
                     }
                 }
             });
@@ -200,6 +209,8 @@ public class DynamicButtonWidget {
                 public void mouseExit(MouseEvent e) {
                     label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
                     engine.applyStyles(label, false);
+                    label.setCursor(cursorArrow);
+                    toolbar.setCursor(cursorArrow);
                 }
 
                 @Override
@@ -207,6 +218,8 @@ public class DynamicButtonWidget {
                     if (toolItem.isEnabled()) {
                         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
                         engine.applyStyles(label, false);
+                        label.setCursor(cursorHand);
+                        toolbar.setCursor(cursorHand);
                     }
                 }
             });

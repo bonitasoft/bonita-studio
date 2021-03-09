@@ -63,12 +63,12 @@ public class ImportExtensionHandler {
                         .withTitle(Messages.importExtensionTitle)
                         .withDescription(Messages.importExtension)
                         .withControl(importExtensionPage))
-                .onFinish(container -> performFinish(container, 
-                        importExtensionPage, 
+                .onFinish(container -> performFinish(container,
+                        importExtensionPage,
                         mavenRepositoryRegistry,
                         currentRepository.getLocalDependencyStore(),
                         currentRepository.getProject()))
-                .withSize(700, 800)
+                .withSize(700, 650)
                 .withFixedInitialSize()
                 .open(activeShell, org.bonitasoft.studio.ui.i18n.Messages.importLabel);
     }
