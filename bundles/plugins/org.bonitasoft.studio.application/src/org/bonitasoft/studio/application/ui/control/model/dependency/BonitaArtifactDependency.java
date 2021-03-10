@@ -23,7 +23,8 @@ public class BonitaArtifactDependency {
 
     private String name;
     private String description;
-    private String type;
+    private String type; // for jackson automatic parsing
+    private ArtifactType artifactType;
     private String bonitaMinVersion;
     private List<BonitaArtifactConnectorDefinition> definitions;
     private String icon;
@@ -31,6 +32,8 @@ public class BonitaArtifactDependency {
     private String artifactId;
     private List<BonitaArtifactDependencyVersion> versions;
     private Image iconImage;
+
+    private boolean fromMarketplace = true;
 
     public BonitaArtifactDependency() {
     }
@@ -57,6 +60,24 @@ public class BonitaArtifactDependency {
 
     public void setType(String type) {
         this.type = type;
+        switch (type) {
+            case BonitaMarketplace.CONNECTOR_TYPE:
+                setArtifactType(ArtifactType.CONNECTOR);
+                break;
+            case BonitaMarketplace.ACTOR_FILTER_TYPE:
+                setArtifactType(ArtifactType.ACTOR_FILTER);
+                break;
+            default:
+                setArtifactType(ArtifactType.UNKNOWN);
+        }
+    }
+
+    public void setArtifactType(ArtifactType artifactType) {
+        this.artifactType = artifactType;
+    }
+
+    public ArtifactType getArtifactType() {
+        return artifactType;
     }
 
     public String getBonitaMinVersion() {
@@ -120,5 +141,13 @@ public class BonitaArtifactDependency {
 
     public Image getIconImage() {
         return iconImage;
+    }
+
+    public void setFromMarketplace(boolean fromMarketplace) {
+        this.fromMarketplace = fromMarketplace;
+    }
+
+    public boolean isFromMarketplace() {
+        return fromMarketplace;
     }
 }

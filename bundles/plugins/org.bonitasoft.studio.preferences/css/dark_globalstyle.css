@@ -90,15 +90,18 @@ Label#infoTextColor {
     color: #99b4e0;
 }
 
-Label#titleTextColor { 
+Label#titleTextColor,
+CLabel#titleTextColor { 
 	color: #b4bec8;
 }
 
-Label#toolbarTextColor { 
+Label#toolbarTextColor,
+CLabel#toolbarTextColor { 
 	color: #757575;
 }
 
-Label#cardHighlightTitleColor { 
+Label#cardHighlightTitleColor,
+CLabel#cardHighlightTitleColor { 
 	color: #f2af11;
 }
 

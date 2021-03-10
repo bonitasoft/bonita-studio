@@ -108,6 +108,14 @@ public final class Messages extends NLS {
     public static String dependenciesUsageAnalysis;
     public static String definitionUsageAnalysis;
 
+    public static String connector;
+    public static String actorFilter;
+    public static String theme;
+    public static String page;
+    public static String form;
+    public static String restApi;
+    public static String unknown;
+
     private Messages() {
         // Do not instantiate
     }

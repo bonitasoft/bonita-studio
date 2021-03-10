@@ -418,8 +418,11 @@ public class PicsConstants {
     public static String openExtensions24 = "coolbar/24/open_extensions.png";
     public static String openExtensions48 = "coolbar/48/open_extensions.png";
 
-    public static String connectorDefaultIcon = "connectorDefaultIcon.png";
-    public static String actorfilterDefaultIcon = "actorfilterDefaultIcon.png";
+    public static String connectorDefaultIcon = "projectExtensions/connectorDefaultIcon.png";
+    public static String actorfilterDefaultIcon = "projectExtensions/actorfilterDefaultIcon.png";
+    public static String themeDefaultIcon = "projectExtensions/theme.png";
+    public static String restApiDefaultIcon = "projectExtensions/rest_api.png";
+    public static String pageDefaultIcon = "projectExtensions/page.png";
 
     public static String openMarketplace = "projectExtensions/open_marketplace.png";
     public static String openMarketplaceHot = "projectExtensions/open_marketplace_hot.png";
@@ -432,5 +435,4 @@ public class PicsConstants {
 
     public static String warning = "info_warning.png";
     public static String checkmark = "checkmark.png";
-
 }
