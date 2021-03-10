@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datatools plugin
+Bundle-SymbolicName: org.bonitasoft.studio.datatools
+Bundle-Version: 7.13.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.datatools.DatatoolsPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.datatools.connectivity;bundle-version="1.2.3",
+ org.eclipse.datatools.connectivity.db.generic;bundle-version="1.0.1",
+ org.eclipse.datatools.connectivity.oda;bundle-version="3.3.2",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.bonitasoft.studio.dependencies;bundle-version="1.0.0",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.7.100",
+ org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
+ org.eclipse.core.databinding;bundle-version="1.4.0",
+ org.eclipse.core.databinding.beans;bundle-version="1.2.100",
+ org.eclipse.core.databinding.observable;bundle-version="1.4.0",
+ org.eclipse.core.databinding.property;bundle-version="1.4.0",
+ org.eclipse.emf.databinding;bundle-version="1.2.0",
+ org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
+ org.eclipse.jface.databinding;bundle-version="1.5.0",
+ org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
+ org.eclipse.datatools.connectivity.ui;bundle-version="1.2.1",
+ org.bonitasoft.studio.connectors;bundle-version="1.0.0",
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.datatools,
+ org.bonitasoft.studio.datatools.i18n;x-friends:="org.bonitasoft.studio.tests.ex,org.bonitasoft.studio.swtbot.framework.ex",
+ org.bonitasoft.studio.datatools.ui
