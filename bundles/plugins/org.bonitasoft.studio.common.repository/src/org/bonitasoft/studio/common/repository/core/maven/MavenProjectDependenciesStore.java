@@ -173,14 +173,15 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
         ILaunchConfigurationWorkingCopy workingCopy = null;
         workingCopy = launchConfigurationType.newInstance(null, Messages.analyzeProjectDependencies);
         configureAnalyzePluginLaunchConfiguration(workingCopy);
-        final ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE, 
+        final ILaunch launch = workingCopy.launch(ILaunchManager.RUN_MODE,
                 AbstractRepository.NULL_PROGRESS_MONITOR,
                 false);
         final IProcess process = launch.getProcesses()[0];
         waitForBuildProcessTermination(launch);
-        return process.getExitValue() == 0 ? Status.OK_STATUS : new Status(IStatus.ERROR, getClass(), "An error occured while analyzing project dependencies");
+        return process.getExitValue() == 0 ? Status.OK_STATUS
+                : new Status(IStatus.ERROR, getClass(), "An error occured while analyzing project dependencies");
     }
-    
+
     private void waitForBuildProcessTermination(final ILaunch launch) {
         while (!launch.isTerminated()) {
             try {
@@ -216,7 +217,7 @@ public class MavenProjectDependenciesStore implements ProjectDependenciesStore {
                     .findFirst()
                     .map(IClasspathEntry::getPath)
                     .orElse(null);
-   
+
         }
         return null;
     }

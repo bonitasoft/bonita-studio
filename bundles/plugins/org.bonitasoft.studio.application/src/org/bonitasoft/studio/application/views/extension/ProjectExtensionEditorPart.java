@@ -25,7 +25,9 @@ import java.util.function.Function;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -53,6 +55,7 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
@@ -91,6 +94,7 @@ public class ProjectExtensionEditorPart extends EditorPart {
     private Composite cardComposite;
     private IThemeEngine engine;
     private DataBindingContext ctx;
+    private BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter;
 
     private IObservableList<Dependency> unknownDepSelectionObservable;
 
@@ -101,6 +105,8 @@ public class ProjectExtensionEditorPart extends EditorPart {
         commandExecutor = new CommandExecutor();
         engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         ctx = new DataBindingContext();
+        bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
+                repositoryAccessor.getCurrentRepository().getProjectDependenciesStore());
     }
 
     @Override
@@ -161,7 +167,12 @@ public class ProjectExtensionEditorPart extends EditorPart {
                 if (bonitaDependency.isPresent()) {
                     createCard(parent, dep, bonitaDependency.get());
                 } else if (dep.getScope() == null || Objects.equals(dep.getScope(), "compile")) {
-                    unknownDependencies.add(dep);
+                    BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter.toBonitaArtifactDependency(dep);
+                    if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
+                        unknownDependencies.add(dep);
+                    } else {
+                        createCard(parent, dep, bonitaDep);
+                    }
                 }
             });
 
@@ -276,32 +287,39 @@ public class ProjectExtensionEditorPart extends EditorPart {
         Composite titleComposite = new Composite(cardComposite, SWT.NONE);
         titleComposite.setLayout(
                 GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
-        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        Label iconLabel = new Label(cardComposite, SWT.NONE);
-        iconLabel.setLayoutData(GridDataFactory.fillDefaults()
-                .align(SWT.END, SWT.CENTER)
-                .hint(BonitaMarketplacePage.ICON_SIZE, BonitaMarketplacePage.ICON_SIZE)
-                .span(1, 3)
-                .create());
-        iconLabel.setImage(bonitaDep.getIconImage());
-
-        Label titleLabel = new Label(titleComposite, SWT.WRAP);
-        titleLabel.setLayoutData(GridDataFactory.fillDefaults().create());
+        CLabel titleLabel = new CLabel(titleComposite, SWT.NONE);
+        titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(bonitaDep.getName());
         titleLabel.setFont(subtitleFont);
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
-        Label gav = new Label(titleComposite, SWT.WRAP);
-        gav.setLayoutData(GridDataFactory.fillDefaults().indent(5, 0).create());
+        CLabel gav = new CLabel(titleComposite, SWT.WRAP);
+        gav.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
         gav.setFont(gavFont);
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
 
-        Label description = new Label(titleComposite, SWT.WRAP);
-        description.setLayoutData(GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).create());
-        description.setText(bonitaDep.getDescription());
+        Label type = new Label(cardComposite, SWT.WRAP);
+        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).create());
+        type.setText(bonitaDep.getArtifactType().getName());
+        type.setFont(gavFont);
+        type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+
+        Label iconLabel = new Label(cardComposite, SWT.NONE);
+        iconLabel.setLayoutData(GridDataFactory.fillDefaults()
+                .align(SWT.END, SWT.FILL)
+                .span(1, 2)
+                .hint(BonitaMarketplacePage.ICON_SIZE, BonitaMarketplacePage.ICON_SIZE)
+                .create());
+        iconLabel.setImage(bonitaDep.getIconImage());
+
+        Label description = new Label(cardComposite, SWT.WRAP);
+        description.setLayoutData(
+                GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 50).create());
+        description.setText(bonitaDep.getDescription() != null ? bonitaDep.getDescription() : "");
 
         Label separator = new Label(cardComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
