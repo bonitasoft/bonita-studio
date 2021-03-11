@@ -26,19 +26,16 @@ public class ShareableRepositoryValidator extends RepositoryNameValidator {
     private String[] availableRepositories;
 
     public ShareableRepositoryValidator(String[] availableRepositories) {
+        super(true);
         this.availableRepositories = availableRepositories;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-     */
     @Override
     public IStatus validate(Object value) {
         String repoName = value == null ? "" : value.toString();
         IStatus status = Stream.of(availableRepositories).anyMatch(repoName::equalsIgnoreCase)
-                        ? ValidationStatus.ok()
-                        : super.validate(repoName);
+                ? ValidationStatus.ok()
+                : super.validate(repoName);
         if (org.bonitasoft.studio.team.i18n.Messages.repoAlreadyExist.equals(status.getMessage())) {
             status = ValidationStatus.error(Messages.repoAlreadyShared);
         }

@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.repository.filestore;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IDeployable;
 import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -38,9 +37,6 @@ public class FileStoreFinder {
         return getCurrentStructuredSelection()
                 .map(selection -> {
                     Object element = selection.getFirstElement();
-                    if (element instanceof IProject) {
-                        return RepositoryManager.getInstance().getRepository(((IProject) element).getName());
-                    }
                     if (element instanceof IResource) {
                         return findElementToRename(((IResource) element), currentRepository).orElse(null);
                     }

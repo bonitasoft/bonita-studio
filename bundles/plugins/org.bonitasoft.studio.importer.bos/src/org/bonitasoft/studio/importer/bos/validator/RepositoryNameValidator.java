@@ -24,6 +24,7 @@ public class RepositoryNameValidator extends org.bonitasoft.studio.common.reposi
     private IObservableValue repoMode;
 
     public RepositoryNameValidator(IObservableValue repoMode) {
+        super(true);
         this.repoMode = repoMode;
     }
 

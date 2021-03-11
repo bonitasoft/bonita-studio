@@ -28,7 +28,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
@@ -53,7 +51,6 @@ import org.bonitasoft.studio.common.repository.migration.transformation.DiagramV
 import org.bonitasoft.studio.common.repository.migration.transformation.JavaGetterExpressionTransformation;
 import org.bonitasoft.studio.common.repository.migration.transformation.UIPathConnectorDefinitionTransformation;
 import org.bonitasoft.studio.common.repository.model.IJavaContainer;
-import org.bonitasoft.studio.common.repository.model.IRenamable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -88,8 +85,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -105,7 +100,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.Version;
 import org.xml.sax.InputSource;
 
-public abstract class AbstractRepository implements IRepository, IJavaContainer, IRenamable {
+public abstract class AbstractRepository implements IRepository, IJavaContainer {
 
     private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 
@@ -274,7 +269,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         this.projectDependenciesStore.analyze(monitor);
 
         enableBuild();
-        for(IBonitaProjectListener listener : projectListeners) {
+        for (IBonitaProjectListener listener : projectListeners) {
             listener.projectOpened(this, monitor);
         }
         if (migrationEnabled()) {
@@ -331,7 +326,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
         isLoaded = false;
         removeResourceListeners();
-        for(IBonitaProjectListener listener : projectListeners) {
+        for (IBonitaProjectListener listener : projectListeners) {
             listener.projectClosed(this, NULL_PROGRESS_MONITOR);
         }
     }
@@ -874,40 +869,20 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         projectFileListener.checkVersion(getProject());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRenamable#rename(java.lang.String)
-     */
-    @Override
-    public void rename(String newName) {
-        try {
-            new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false,
-                    new WorkspaceModifyOperation() {
+    public void rename(String newName, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
-                        @Override
-                        protected void execute(IProgressMonitor monitor)
-                                throws CoreException, InvocationTargetException, InterruptedException {
-                            closeAllEditors();
-                            projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
-                            disableBuild();
-                            getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
-                            RepositoryManager.getInstance().setRepository(newName, monitor);
-                        }
-                    });
-        } catch (InvocationTargetException | InterruptedException e) {
-            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Rename failed", e.getMessage(), e).open();
-        }
-    }
-
-    @Override
-    public Optional<String> retrieveNewName() {
-        String currentName = getName();
-        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.rename,
-                Messages.renameProject, currentName, new RepositoryNameValidator());
-        if (dialog.open() == Dialog.OK) {
-            return Optional.of(dialog.getValue());
-        }
-        return Optional.empty();
+            @Override
+            protected void execute(IProgressMonitor monitor)
+                    throws CoreException, InvocationTargetException, InterruptedException {
+                closeAllEditors();
+                projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
+                disableBuild();
+                getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
+                RepositoryManager.getInstance().setRepository(newName, monitor);
+            }
+        };
+        operation.run(monitor);
     }
 
     @Override
@@ -921,10 +896,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
     public List<ProcessModelTransformation> getProcessModelTransformations() {
         return PROCESS_MODEL_TRANSFORMATIONS;
     }
-   
+
     @Override
     public LocalDependenciesStore getLocalDependencyStore() {
-       return new LocalDependenciesStore(getProject());
+        return new LocalDependenciesStore(getProject());
     }
 
 }

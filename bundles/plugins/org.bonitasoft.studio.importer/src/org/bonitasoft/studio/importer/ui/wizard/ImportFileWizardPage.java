@@ -257,7 +257,7 @@ public class ImportFileWizardPage extends WizardPage {
                 final Object value = newRepositoryObservable.getValue();
                 final RepositoryMode mode = (RepositoryMode) selectObservableValue.getValue();
                 if (RepositoryMode.NEW == mode) {
-                    return new RepositoryNameValidator().validate(value);
+                    return new RepositoryNameValidator(true).validate(value);
                 }
                 return ValidationStatus.ok();
             }

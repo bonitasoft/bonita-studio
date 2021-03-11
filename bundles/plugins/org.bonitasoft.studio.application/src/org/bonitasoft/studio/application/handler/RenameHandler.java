@@ -40,9 +40,8 @@ public class RenameHandler extends AbstractHandler {
         AbstractRepository repo = RepositoryManager.getInstance().getCurrentRepository();
         Optional<IRenamable> renamable = selectionFinder.findElementToRename(repo);
         if (renamable.isPresent()) {
-            renamable
-                    .ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
-        } else if(selectionFinder.getCurrentStructuredSelection().isPresent()){
+            renamable.ifPresent(elementToRename -> elementToRename.retrieveNewName().ifPresent(elementToRename::rename));
+        } else if (selectionFinder.getCurrentStructuredSelection().isPresent()) {
             RenameResourceAction renameResourceAction = new RenameResourceAction(
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow());
             renameResourceAction.selectionChanged(selectionFinder.getCurrentStructuredSelection().get());
@@ -57,8 +56,9 @@ public class RenameHandler extends AbstractHandler {
         Optional<IStructuredSelection> selection = selectionFinder.getCurrentStructuredSelection();
         if (selection.isPresent() && selection.get().toList().size() == 1) {
             IResource resource = ((IAdaptable) selection.get().getFirstElement()).getAdapter(IResource.class);
-            if (resource.getAdapter(IProject.class) != null) {
-                return Objects.equals(resource.getAdapter(IProject.class), currentRepository.getProject());
+            if (resource.getAdapter(IProject.class) != null
+                    && Objects.equals(resource.getAdapter(IProject.class), currentRepository.getProject())) {
+                return false;
             }
             return selectionFinder
                     .findElementToRename(resource, RepositoryManager.getInstance().getCurrentRepository())

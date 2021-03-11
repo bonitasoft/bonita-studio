@@ -33,7 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class RepositoryNameValidatorTest {
 
     @Spy
-    private RepositoryNameValidator rnv;
+    private RepositoryNameValidator rnv = new RepositoryNameValidator(true);
 
     @Mock
     private RepositoryManager repoManager;
@@ -48,6 +48,7 @@ public class RepositoryNameValidatorTest {
 
     @Before
     public void setup() throws Throwable {
+        doReturn("existing").when(repo).getName();
         doReturn(repoManager).when(rnv).getRepositoryManager();
         doReturn(repo).when(repoManager).getRepository("existing");
         doReturn(null).when(repoManager).getRepository("notExisting");
@@ -61,6 +62,12 @@ public class RepositoryNameValidatorTest {
     @Test
     public void testNotValid_withExisting() throws Exception {
         Assertions.assertThat(rnv.isValid("existing")).isEqualTo(Messages.projectAlreadyExist);
+    }
+
+    @Test
+    public void testValid_withExisting_if_not_new() throws Exception {
+        rnv.setIsNew(false);
+        Assertions.assertThat(rnv.isValid("existing")).isNull();
     }
 
     @Test

@@ -8,6 +8,7 @@
     <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace"/>
     <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
     <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension"/>
+    <elements xsi:type="commands:Command" xmi:id="_hz1wgIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.command" commandName="%editProjectMetadata"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_NR20wKiaEemxstQeqTvXDA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_6p_NQK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.handler.deployArtifacts" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.DeployArtifactsHandler" command="_yyuWEK0kEem8O8pWB8c8Fg"/>
@@ -17,5 +18,6 @@
     <elements xsi:type="commands:Handler" xmi:id="_Nlng4GIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenMarketplaceHandler" command="_Cv2RMGIUEeuoz-OKLL5EHA"/>
     <elements xsi:type="commands:Handler" xmi:id="_YIwPgGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenExtensionViewHandler" command="_RH3msGrHEeuYIIt6RJgX4w"/>
     <elements xsi:type="commands:Handler" xmi:id="_Nnn2oHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.ImportExtensionHandler" command="_Dh48wHwsEeuY1OE6mEePfw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_sV7PMIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.EditProjectMetadataHandler" command="_hz1wgIGLEeuVgbtqm9bD3Q"/>
   </fragments>
 </fragment:ModelFragments>

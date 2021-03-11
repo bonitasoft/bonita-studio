@@ -210,7 +210,6 @@ public class DynamicButtonWidget {
                     label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
                     engine.applyStyles(label, false);
                     label.setCursor(cursorArrow);
-                    toolbar.setCursor(cursorArrow);
                 }
 
                 @Override
@@ -219,11 +218,25 @@ public class DynamicButtonWidget {
                         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
                         engine.applyStyles(label, false);
                         label.setCursor(cursorHand);
-                        toolbar.setCursor(cursorHand);
                     }
                 }
             });
         }
+
+        toolbar.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                toolbar.setCursor(cursorArrow);
+            }
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                if (toolItem.isEnabled()) {
+                    toolbar.setCursor(cursorHand);
+                }
+            }
+        });
     }
 
     public IObservableValue<Boolean> observeEnable() {
