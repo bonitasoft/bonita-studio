@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -57,6 +58,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -203,18 +205,18 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance().getRepositoryStore(
                 DatabaseConnectorPropertiesRepositoryStore.class);
         final DatabaseConnectorPropertiesFileStore file = dbStore
-                .getChild(implem.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT, true);
+                .getChild(implem.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT,
+                        true);
         String driver = null;
         boolean addDriver = false;
         if (file != null) {
             driver = file.getDefault();
             if (driver != null) {
-                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject()
-                        .getFolder("lib");
-                if (libFolder.getFile(driver).exists()) {
+                final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getCurrentRepository()
+                        .getRepositoryStore(DependencyRepositoryStore.class);
+                Optional<DependencyFileStore> result = depStore.findDependencyByName(driver);
+                if (result.isPresent()) {
                     addDriver = true;
-                } else {
-                    throw new IllegalStateException("Database driver jar " + driver + " not found in repository");
                 }
             } else {
                 throw new IllegalStateException("No active database driver configured for this connector");

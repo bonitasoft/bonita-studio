@@ -178,7 +178,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 dependenciesLookup.stream()
                         .forEach(dl -> dl.setSelected(true));
             }
-
+            
             dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
                     .map(dl -> installLocalDependency(dl, localDependencyStore))

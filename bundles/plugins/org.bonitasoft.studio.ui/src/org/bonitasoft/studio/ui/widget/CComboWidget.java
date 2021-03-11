@@ -17,8 +17,8 @@ package org.bonitasoft.studio.ui.widget;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -77,7 +77,7 @@ public class CComboWidget extends EditableControlWidget {
                 message, useCompositeMessageDecorator, Optional.empty(), toolkit);
     }
 
-    public ISWTObservableValue observeComboText() {
+    public IObservableValue<String> observeComboText() {
         return WidgetProperties.text().observe(combo);
     }
 

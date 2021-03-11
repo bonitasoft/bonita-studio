@@ -80,7 +80,6 @@ public class TextWidget extends EditableControlWidget {
         private Optional<String> tooltip = Optional.empty();
         protected Optional<ComputedValue<Boolean>> editableStrategy = Optional.empty();
         protected int style = SWT.NONE;
-        protected boolean isInShell = false;
 
         public Builder withEditableStrategy(ComputedValue<Boolean> viewerObservableValue) {
             this.editableStrategy = Optional.ofNullable(viewerObservableValue);
@@ -167,11 +166,11 @@ public class TextWidget extends EditableControlWidget {
                     ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
                             tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
-                            Optional.ofNullable(ctx), style, isInShell)
+                            Optional.ofNullable(ctx), style)
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
                             labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
                             tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
-                            Optional.ofNullable(ctx), style, isInShell);
+                            Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
             buttonListner.ifPresent(control::onClickButton);
@@ -206,7 +205,6 @@ public class TextWidget extends EditableControlWidget {
     private Optional<String> tooltipButton;
     private IThemeEngine themeEngine;
     protected int style;
-    private boolean isInShell;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -214,13 +212,11 @@ public class TextWidget extends EditableControlWidget {
             Optional<String> labelButton, Optional<Image> imageButton, Optional<String> tooltipButton,
             boolean transactionalEdit, BiConsumer<String, String> onEdit, Supplier<IStatus> canEdit,
             Optional<FormToolkit> toolkit, Optional<IContentProposalProvider> proposalProvider,
-            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style,
-            boolean isInShell) {
+            Optional<ComputedValue<Boolean>> enableStrategy, Optional<DataBindingContext> ctx, int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, toolkit);
         this.transactionalEdit = transactionalEdit;
         this.style = style;
-        this.isInShell = isInShell;
         this.onEdit = Optional.ofNullable(onEdit);
         this.canEdit = Optional.ofNullable(canEdit);
         this.proposalProvider = proposalProvider;
@@ -307,9 +303,6 @@ public class TextWidget extends EditableControlWidget {
         readOnly = readOnly || transactionalEdit;
         configureBackground(textContainer);
         textContainer.addListener(SWT.Paint, e -> drawBorder(textContainer, e));
-        if (isInShell) {
-            textContainer.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.LABEL_COMPOSITE);
-        }
 
         text = newText(textContainer);
         text.setData(SWTBOT_WIDGET_ID_KEY, id);

@@ -31,14 +31,11 @@ import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
-import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.IFileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
-import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.DefinitionUsageOperation;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperation;
@@ -61,7 +58,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.graphics.Image;
 
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
@@ -362,4 +358,9 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         dependencyUsageOperation.run(monitor);
         return dependencyUsageOperation.getUsedDependencies();
     }
+
+    public Optional<DependencyFileStore> findDependencyByName(String jarName) {
+        return getChildren().stream().filter(dep-> Objects.equals(jarName, dep.getName())).findFirst();
+    }
+    
 }

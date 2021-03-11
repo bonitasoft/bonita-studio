@@ -51,9 +51,11 @@ public class BonitaMarketplace {
     private static final String ASSET_URL = "https://github.com/bonitasoft/bonita-marketplace/releases/download";
     private static final String CONNECTORS_ASSET_NAME = "connectors.json";
     private static final String ACTORS_FILTERS_ASSET_NAME = "actorfilters.json";
+    private static final String DATABASE_DRIVERS_ASSET_NAME = "drivers.json";
 
     public static final String CONNECTOR_TYPE = "Connector";
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
+    public static final String DATABASE_DRIVER_TYPE = "Database driver";
 
     private List<BonitaArtifactDependency> dependencies;
     private LocalResourceManager manager;
@@ -91,10 +93,11 @@ public class BonitaMarketplace {
         String latestTag = getLatestTag();
         String connectorsUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, CONNECTORS_ASSET_NAME);
         String actorFiltersUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, ACTORS_FILTERS_ASSET_NAME);
+        String driversUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, DATABASE_DRIVERS_ASSET_NAME);
         ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
         dependencies = loader.load(createURL(connectorsUrl));
         dependencies.addAll(loader.load(createURL(actorFiltersUrl)));
-
+        dependencies.addAll(loader.load(createURL(driversUrl)));
         dependencies.forEach(this::createIcon);
     }
 

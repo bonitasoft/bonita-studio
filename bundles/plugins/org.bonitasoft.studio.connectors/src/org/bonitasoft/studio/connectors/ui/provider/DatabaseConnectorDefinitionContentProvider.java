@@ -17,72 +17,38 @@
 
 package org.bonitasoft.studio.connectors.ui.provider;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Category;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.osgi.framework.Bundle;
 
-/**
- * @author Aurelie Zara
- *
- */
-public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProvider{
+public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProvider {
 
 
-	private final List<ConnectorDefinition> connectorDefList;
-	private static final String DATASOURCE_CONNECTOR_D = "database-datasource";
+	private final ConnectorDefRepositoryStore connectorDefStore;
+	private static final String DATASOURCE_CONNECTOR_DEF_ID = "database-datasource";
 	
-	public DatabaseConnectorDefinitionContentProvider() {
-		ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-		connectorDefList = connectorDefStore.getDefinitions();
+	public DatabaseConnectorDefinitionContentProvider(ConnectorDefRepositoryStore connectorDefStore) {
+	      this.connectorDefStore = connectorDefStore;
 	}
-
-
-	protected Bundle getBundle() {
-		return ConnectorPlugin.getDefault().getBundle();
-	}
-
-
-	protected Class<?> getDefStoreClass() {
-		return ConnectorDefRepositoryStore.class;
-	}
-
 
 	@Override
 	public Object[] getElements(Object element) {
-		List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
 		if (element instanceof Category) {
 			Category cat = (Category) element;
-
-			for (ConnectorDefinition def : connectorDefList) {
-				for(Category category : def.getCategory()){
-					if (category.getId().equals(cat.getId()) && !def.getId().equals(DATASOURCE_CONNECTOR_D)){
-						result.add(def);
-					}
-				}
-			}
+			return connectorDefStore.getResourceProvider().getConnectorDefinitionRegistry().getDefinitions().stream()
+			        .filter(def -> !DATASOURCE_CONNECTOR_DEF_ID.equals(def.getId()))
+	                .filter(def -> def.getCategory().stream().map(Category::getId).anyMatch(cat.getId()::equals))
+	                .toArray();
 		}
-		return result.toArray();
+		return new Object[0];
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
 	@Override
 	public void dispose() {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 

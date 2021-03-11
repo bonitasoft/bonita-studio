@@ -53,7 +53,7 @@ public class DatabaseDriversContentProvider extends ArrayContentProvider {
 	
 	 
 	protected String getDBPrefFilename(String connectorId) {
-		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
+		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT;
 	}
 
 }

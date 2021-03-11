@@ -539,7 +539,7 @@ public class DefinitionResourceProvider implements EventHandler {
                 .orElse("");
     }
 
-    public void loadDefinitionsCategories(final IProgressMonitor monitor) {
+    public synchronized void loadDefinitionsCategories(final IProgressMonitor monitor) {
         RESOURCE_BUNDLE_CACHE.clear();
         categories = definitionRegistry
                 .build((IDefinitionRepositoryStore<IRepositoryFileStore<?>>) store)

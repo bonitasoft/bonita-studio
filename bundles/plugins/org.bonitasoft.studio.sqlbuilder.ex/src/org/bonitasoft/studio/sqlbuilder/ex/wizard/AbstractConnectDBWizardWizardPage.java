@@ -68,7 +68,7 @@ import org.eclipse.datatools.sqltools.sqleditor.SQLEditorConnectionInfo;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -130,7 +130,7 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
         super.setVisible(visible);
         if (visible) {
             final DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDefinition().getId() + "."
-                    + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT, true);
+                    + DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT, true);
             noActiveDriver = fileStore == null || fileStore.getDefault() == null || fileStore.getDefault().isEmpty();
             if (noActiveDriver) {
                 setMessage(Messages.noActiveDriver, DialogPage.WARNING);
@@ -176,8 +176,8 @@ public abstract class AbstractConnectDBWizardWizardPage extends AbstractConnecto
 
         final ConnectorParameter param = getAdvancedModeParameter();
         radioGroupObservable = new SelectObservableValue(String.class);
-        radioGroupObservable.addOption(Boolean.TRUE.toString(), SWTObservables.observeSelection(useGraphical));
-        radioGroupObservable.addOption(Boolean.FALSE.toString(), SWTObservables.observeSelection(useTextual));
+        radioGroupObservable.addOption(Boolean.TRUE.toString(), WidgetProperties.buttonSelection().observe(useGraphical));
+        radioGroupObservable.addOption(Boolean.FALSE.toString(), WidgetProperties.buttonSelection().observe(useTextual));
 
         context.bindValue(radioGroupObservable,
                 EMFObservables.observeValue(param.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT));

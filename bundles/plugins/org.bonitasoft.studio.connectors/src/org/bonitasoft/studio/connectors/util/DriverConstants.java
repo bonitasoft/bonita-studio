@@ -37,4 +37,16 @@ public interface DriverConstants {
 
     public static final String HSQLDB_DEFINITION_ID = "database-hsqldb";
     public static final String HSQLDB_DRIVER_JARNAME = "hsqldb.jar";
+    
+    public static final String MYSQL_DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
+    public static final String POSTGRES_DRIVER_CLASSNAME = "org.postgresql.Driver";
+    public static final String ORACLE_DRIVER_CLASSNAME = "oracle.jdbc.driver.OracleDriver";
+    public static final String DB2_DRIVER_CLASSNAME = "com.ibm.db2.jcc.DB2Driver";
+    public static final String SQLSERVER_DRIVER_CLASSNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    public static final String TERADATA_DRIVER_CLASSNAME = "com.ncr.teradata.TeraDriver";
+    public static final String H2_DRIVER_CLASSNAME = "org.h2.Driver";
+    public static final String SYBASE_DRIVER_CLASSNAME = "com.sybase.jdbc3.jdbc.SybDriver";
+    public static final String HSQL_DRIVER_CLASSNAME = "org.hsqldb.jdbc.JDBCDriver";
+    public static final String INFORMIX_DRIVER_CLASSNAME = "com.informix.jdbc.IfxDriver";
+    public static final String INGRES_DRIVER_CLASSNAME = "com.ingres.jdbc.IngresDriver";
 }

@@ -14,13 +14,17 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class PostgresJDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class PostgresJDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public PostgresJDBCDriverDependenciesReplacement() {
-        super(dependency("org.postgresql", "postgresql", "42.2.18"), "postgresql-9.2-1002.jdbc4.jar","postgresql-8.3-603.jdbc3.jar");
+        super(dependency("org.postgresql", "postgresql", "42.2.19"), "postgresql-9.2-1002.jdbc4.jar");
     }
 
+    @Override
+    public String getReplacementJarName() {
+        return "postgresql-42.2.19.jar";
+    }
 }

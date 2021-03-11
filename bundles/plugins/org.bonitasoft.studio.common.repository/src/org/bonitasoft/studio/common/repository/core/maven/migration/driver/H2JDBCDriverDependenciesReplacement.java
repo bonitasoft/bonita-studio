@@ -14,13 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class H2JDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class H2JDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public H2JDBCDriverDependenciesReplacement() {
-        super(dependency("com.h2database", "h2", "1.4.200"), "h2-1.*.jar");
+        super(dependency("com.h2database", "h2", "1.4.200"), "h2-1.3.170.jar");
+    }
+    
+    @Override
+    public String getReplacementJarName() {
+        return "h2-1.4.200.jar";
     }
 
 }

@@ -43,7 +43,6 @@ import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
-import org.bonitasoft.studio.ui.widget.TextWidget.Builder;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -54,6 +53,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -74,6 +74,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+
+import com.google.common.util.concurrent.Monitor;
 
 public class ImportExtensionPage implements ControlSupplier {
 
@@ -112,7 +114,10 @@ public class ImportExtensionPage implements ControlSupplier {
         this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
         
         Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults()
+                .margins(10, 10)
+                .extendedMargins(0, 0, 0, 30)
+                .create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createRadioButtons(mainComposite);
@@ -159,7 +164,8 @@ public class ImportExtensionPage implements ControlSupplier {
         manualComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         Link manualCoordinateLink = new Link(manualComposite, SWT.WRAP);
-        manualCoordinateLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        manualCoordinateLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .hint(650, SWT.DEFAULT).create());
         manualCoordinateLink.setText(Messages.importRemoteDependencyTip);
         manualCoordinateLink.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
     }
@@ -170,7 +176,10 @@ public class ImportExtensionPage implements ControlSupplier {
         archiveComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         Label fromFileLabel = new Label(archiveComposite, SWT.WRAP);
-        fromFileLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        fromFileLabel.setLayoutData(GridDataFactory.fillDefaults()
+                .grab(true, false)
+                .hint(650, SWT.DEFAULT)
+                .create());
         fromFileLabel.setText(Messages.importFromFileTip);
 
         createFileBrowser(archiveComposite, ctx);
@@ -204,14 +213,13 @@ public class ImportExtensionPage implements ControlSupplier {
                 .withButton(Messages.browse)
                 .onClickButton(this::browseFile)
                 .createIn(fileBrowserComposite);
-
         filePathText.focusButton();
         return parent;
     }
 
     private IValidator<String> filePathValidator() {
-        return filePath -> {
-            if (importModeObservable.getValue() == ImportMode.FILE && (filePath == null || filePath.isBlank())) {
+        return path -> {
+            if (importModeObservable.getValue() == ImportMode.FILE && (path == null || path.isBlank())) {
                 return ValidationStatus.error("");
             }
             return ValidationStatus.ok();
@@ -240,7 +248,10 @@ public class ImportExtensionPage implements ControlSupplier {
                     mavenRepositoryRegistry.getGlobalRepositories().stream()
                             .map(IRepository::getUrl)
                             .forEach(operation::addRemoteRespository);
-                    wizardContainer.run(true, false, operation);
+                    wizardContainer.run(true, false, monitor -> {
+                        monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                        operation.run(monitor);
+                    });
                     dependencyLookup = operation.getResult();
                     if (file.getName().endsWith(".zip")) {
                         dependencyLookup.setType("zip");
@@ -268,8 +279,9 @@ public class ImportExtensionPage implements ControlSupplier {
         Group dependencyGroup = new Group(parent, SWT.NONE);
         dependencyGroup.setText(Messages.dependencyCoordinate);
         dependencyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        dependencyGroup.setLayout(
-                GridLayoutFactory.fillDefaults().margins(20, 20).spacing(LayoutConstants.getSpacing().x, 10).create());
+        dependencyGroup.setLayout(GridLayoutFactory.fillDefaults()
+                .margins(15, 15)
+                .create());
 
         editableDependencyObservable = new WritableValue<>(true, Boolean.class);
         visibleDependencyObservable = new ComputedValue<Boolean>() {
@@ -310,7 +322,8 @@ public class ImportExtensionPage implements ControlSupplier {
         ctx.bindValue(versionText.observeEnable(), editableDependencyObservable);
 
         Composite subPropertiesComposite = new Composite(dependencyGroup, SWT.NONE);
-        subPropertiesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        subPropertiesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
+                .extendedMargins(0, 0, 0, 15).create());
         subPropertiesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         ComboWidget typeCombo = createCombo(subPropertiesComposite, "Type",
@@ -336,7 +349,7 @@ public class ImportExtensionPage implements ControlSupplier {
             DataBindingContext ctx,
             boolean mandatory,
             List<IValidator> validators) {
-        Builder builder = new TextWidget.Builder()
+       return new TextWidget.Builder()
                 .withLabel(label + (mandatory ? " *" : ""))
                 .labelAbove()
                 .grabHorizontalSpace()
@@ -349,15 +362,14 @@ public class ImportExtensionPage implements ControlSupplier {
                 .inContext(ctx)
                 .fill()
                 .useNativeRender()
-                .inShell();
-        return builder.createIn(parent);
+                .createIn(parent);
     }
 
     private ComboWidget createCombo(Composite parent,
             String label,
             IObservableValue<String> binding,
             DataBindingContext ctx) {
-        ComboWidget.Builder builder = new ComboWidget.Builder()
+        return new ComboWidget.Builder()
                 .withLabel(label)
                 .readOnly()
                 .withItems("jar", "zip")
@@ -366,8 +378,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .bindTo(binding)
                 .inContext(ctx)
                 .fill()
-                .inShell();
-        return builder.createIn(parent);
+                .createIn(parent);
     }
 
     private Composite compositeFor(ImportMode importMode) {

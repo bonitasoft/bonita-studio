@@ -17,6 +17,8 @@
 
 package org.bonitasoft.studio.connectors.ui.provider;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -28,10 +30,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * @author Aurelie Zara
- *
- */
+
 public class DatabaseDriversLabelProvider extends  StyledCellLabelProvider implements ILabelProvider{
 
 	private String defaultDriver;
@@ -55,32 +54,30 @@ public class DatabaseDriversLabelProvider extends  StyledCellLabelProvider imple
 
 	@Override
 	public String getText(Object object){
-		String label = (String)object;
-
-		return label;
-
+		return (String) object;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-	 */
+
 	@Override
 	public Image getImage(Object element) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void update(ViewerCell cell) {
 		if (cell.getElement() instanceof String) {
-			String s = (String)cell.getElement();
+			String jarName = (String)cell.getElement();
 			StyledString styledString = new StyledString();
-			styledString.append(s,null);
-			if (s.equals(defaultDriver)){
-				styledString.append(" (Active)",boldgreen);
+			styledString.append(jarName, null);
+			if (isActive(jarName)){
+				styledString.append(" (Active)", boldgreen);
 			}
 			cell.setText(styledString.getString());
 			cell.setStyleRanges(styledString.getStyleRanges());
 		}
 	}
+
+    private boolean isActive(String jarName) {
+        return Objects.equals(jarName, defaultDriver);
+    }
 }

@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common.repository.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
@@ -27,6 +29,7 @@ import org.apache.maven.model.PluginManagement;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.RepositoryPolicy;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class MavenProjectModelBuilder {
@@ -34,6 +37,7 @@ public class MavenProjectModelBuilder {
     public static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
     public static final String BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
     public static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.0.1-SNAPSHOT";
+    private static final Set<Dependency> INTERNAL_DEPENDENCIES = createInternalDependencies();
 
     private String artifactId;
     private String groupId;
@@ -119,14 +123,8 @@ public class MavenProjectModelBuilder {
         model.addProperty("maven-install-plugin.version", "3.0.0-M1");
         model.addProperty("bonita-project-maven-plugin.version", BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
 
-        if (PlatformUtil.isACommunityBonitaProduct()) {
-            model.addDependency(providedDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}"));
-        } else {
-            model.addDependency(providedDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}"));
-        }
-        model.addDependency(providedDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"));
-        model.addDependency(providedDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
 
+        INTERNAL_DEPENDENCIES.stream().forEach(model::addDependency);
         dependencies.stream().forEach(model::addDependency);
 
         Build build = new Build();
@@ -152,6 +150,20 @@ public class MavenProjectModelBuilder {
 
         return model;
     }
+    
+    private static Set<Dependency> createInternalDependencies() {
+        Set<Dependency> result = new HashSet<>();
+        if (PlatformUtil.isACommunityBonitaProduct()) {
+            result
+                    .add(providedDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}"));
+        } else {
+            result
+                    .add(providedDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}"));
+        }
+        result.add(providedDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"));
+        result.add(providedDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
+        return result;
+    }
 
     private Repository repository(String id, String name, String url, boolean release, boolean snapshot) {
         Repository repository = new Repository();
@@ -175,7 +187,7 @@ public class MavenProjectModelBuilder {
         return execution;
     }
 
-    private Plugin plugin(String groupId, String artifactId, String version) {
+    private static Plugin plugin(String groupId, String artifactId, String version) {
         Plugin plugin = new Plugin();
         plugin.setGroupId(groupId);
         plugin.setArtifactId(artifactId);
@@ -183,7 +195,7 @@ public class MavenProjectModelBuilder {
         return plugin;
     }
 
-    private Dependency providedDependency(String groupId, String artifactId, String version) {
+    private static Dependency providedDependency(String groupId, String artifactId, String version) {
         Dependency dependency = new Dependency();
         dependency.setScope("provided");
         dependency.setGroupId(groupId);
@@ -209,6 +221,10 @@ public class MavenProjectModelBuilder {
         sources.addChild(providedGroovySrc);
         pluginConfiguration.addChild(sources);
         return pluginConfiguration;
+    }
+
+    public static boolean isInternalDependency(Dependency depednency) {
+        return INTERNAL_DEPENDENCIES.stream().map(GAV::new).anyMatch(new GAV(depednency)::equals);
     }
 
 }

@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.migration.transformation.ConditionExpressionTransformation;
+import org.bonitasoft.studio.common.repository.migration.transformation.DatabaseDriverJarReferenceFragmentTransformation;
 import org.bonitasoft.studio.common.repository.migration.transformation.DiagramVersionTransformation;
 import org.bonitasoft.studio.common.repository.migration.transformation.JavaGetterExpressionTransformation;
 import org.bonitasoft.studio.common.repository.migration.transformation.UIPathConnectorDefinitionTransformation;
@@ -128,7 +129,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             new DiagramVersionTransformation(),
             new UIPathConnectorDefinitionTransformation(),
             new JavaGetterExpressionTransformation(),
-            new ConditionExpressionTransformation());
+            new ConditionExpressionTransformation(),
+            new DatabaseDriverJarReferenceFragmentTransformation());
 
     private static final String CLASS = "class";
 

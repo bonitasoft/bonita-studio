@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.util.List;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.eclipse.core.runtime.CoreException;
@@ -21,37 +23,44 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class UpdateDependencyVersionOperation extends MavenModelOperation {
 
-    private final String groupId;
-    private final String artifactId;
-    private final String newVersion;
+    private final List<Dependency> dependenciesToUpdate;
 
+    public UpdateDependencyVersionOperation(List<Dependency> dependenciesToUpdate) {
+        this.dependenciesToUpdate = dependenciesToUpdate;
+    }
+    
+    public UpdateDependencyVersionOperation(Dependency dependencyToUpdate) {
+        this(List.of(dependencyToUpdate));
+    }
+    
     public UpdateDependencyVersionOperation(String groupId,
             String artifactId,
             String version) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.newVersion = version;
+        this(createDependency(groupId, artifactId, version, null));
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());
 
-        Dependency dependencyToUpdate = helper.findDependency(model, groupId, artifactId).orElse(null);
-        if (dependencyToUpdate != null) {
-            Dependency dependencyUpdated = new Dependency();
-            dependencyUpdated.setArtifactId(artifactId);
-            dependencyUpdated.setGroupId(groupId);
-            dependencyUpdated.setVersion(newVersion);
-            dependencyUpdated.setClassifier(dependencyToUpdate.getClassifier());
-            dependencyUpdated.setScope(dependencyToUpdate.getScope());
-            dependencyUpdated.setType(dependencyToUpdate.getType());
+        dependenciesToUpdate.stream().forEach( dependency -> {
+            Dependency dependencyToUpdate = helper.findDependency(model, dependency.getGroupId(), dependency.getArtifactId()).orElse(null);
+            if (dependencyToUpdate != null) {
+                Dependency dependencyUpdated = new Dependency();
+                dependencyUpdated.setArtifactId(dependency.getArtifactId());
+                dependencyUpdated.setGroupId(dependency.getGroupId());
+                dependencyUpdated.setVersion(dependency.getVersion());
+                dependencyUpdated.setClassifier(dependencyToUpdate.getClassifier());
+                dependencyUpdated.setScope(dependencyToUpdate.getScope());
+                dependencyUpdated.setType(dependencyToUpdate.getType());
 
-            model.removeDependency(dependencyToUpdate);
-            model.addDependency(dependencyUpdated);
-            saveModel(getCurrentProject(), model);
-            getProjectDependenciesStore().analyze(monitor);
-        }
+                model.removeDependency(dependencyToUpdate);
+                model.addDependency(dependencyUpdated);
+              
+            }
+        });        
+      
+        saveModel(getCurrentProject(), model, monitor);
     }
 
 }

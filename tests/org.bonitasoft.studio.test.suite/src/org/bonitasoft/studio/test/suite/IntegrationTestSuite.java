@@ -31,7 +31,7 @@ import org.bonitasoft.studio.tests.businessobject.ImportLegacyBDMIT;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.conditions.TestDecisionTableToGroovy;
 import org.bonitasoft.studio.tests.configuration.TestConfigurationSynhronizer;
-import org.bonitasoft.studio.tests.connectors.DriverAssociationContributionIT;
+import org.bonitasoft.studio.tests.connectors.DatabaseDriverConfigurationIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestConnectorOperationIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
@@ -105,7 +105,7 @@ import org.junit.runners.Suite;
         TestImportBPMN2.class,
         TestDecisionTableToGroovy.class,
         TestSubprocessEventExport.class,
-        DriverAssociationContributionIT.class,
+        DatabaseDriverConfigurationIT.class,
         TestProcessZoo.class,
         TestDatabaseConnectorResulset.class,
         TestBOSArchiveImport.class,

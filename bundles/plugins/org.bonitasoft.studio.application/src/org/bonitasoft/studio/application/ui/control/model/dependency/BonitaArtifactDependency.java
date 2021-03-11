@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.maven.model.Dependency;
 import org.eclipse.swt.graphics.Image;
 
 public class BonitaArtifactDependency {
@@ -26,10 +27,10 @@ public class BonitaArtifactDependency {
     private String type; // for jackson automatic parsing
     private ArtifactType artifactType;
     private String bonitaMinVersion;
-    private List<BonitaArtifactConnectorDefinition> definitions;
     private String icon;
     private String groupId;
     private String artifactId;
+    private String scope;
     private List<BonitaArtifactDependencyVersion> versions;
     private Image iconImage;
 
@@ -88,14 +89,6 @@ public class BonitaArtifactDependency {
         this.bonitaMinVersion = bonitaMinVersion;
     }
 
-    public List<BonitaArtifactConnectorDefinition> getDefinitions() {
-        return definitions;
-    }
-
-    public void setDefinitions(List<BonitaArtifactConnectorDefinition> definitions) {
-        this.definitions = definitions;
-    }
-
     public String getIcon() {
         return icon;
     }
@@ -149,5 +142,32 @@ public class BonitaArtifactDependency {
 
     public boolean isFromMarketplace() {
         return fromMarketplace;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public Dependency toMavenDependency() {
+        var dependency = new Dependency();
+        dependency.setGroupId(getGroupId());
+        dependency.setArtifactId(getArtifactId());
+        dependency.setVersion(getBestVersion());
+        String scope = getScope();
+        if (scope != null) {
+            dependency.setScope(scope);
+        }
+        return dependency;
+    }
+
+    public String getBestVersion() {
+        return getLatestCompatibleVersion()
+                .map(BonitaArtifactDependencyVersion::getVersion)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("No compatible version found for %s:%s", getGroupId(), getArtifactId())));
     }
 }

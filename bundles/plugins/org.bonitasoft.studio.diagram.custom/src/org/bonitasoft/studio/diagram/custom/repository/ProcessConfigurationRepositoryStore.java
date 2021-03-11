@@ -173,6 +173,8 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                 final Configuration configuration = (Configuration) r.getContents()
                         .get(0);
                 if (configuration != null) {
+                    applyTransformations(configuration);
+                    
                     final String mVersion = configuration.getVersion();
                     if (!ModelVersion.CURRENT_DIAGRAM_VERSION.equals(mVersion)) {
                         configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);

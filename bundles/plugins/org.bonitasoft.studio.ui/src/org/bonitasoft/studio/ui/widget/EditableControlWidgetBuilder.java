@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.ui.widget;
 
-import org.bonitasoft.studio.ui.widget.TextWidget.Builder;
 import org.eclipse.swt.SWT;
 
 public abstract class EditableControlWidgetBuilder<T, W extends EditableControlWidget>
@@ -21,7 +20,6 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
     protected String message;
     protected boolean useNativeRender = false;
     protected boolean useCompositeMessageDecorator = false;
-    private boolean isInShell;
 
     /**
      * Set the control in read-only mode.
@@ -86,11 +84,6 @@ public abstract class EditableControlWidgetBuilder<T, W extends EditableControlW
     public T useNativeRender() {
         this.useNativeRender = true;
         return (T) this;
-    }
-    
-    public T inShell() {
-        this.isInShell = true;
-        return  (T) this;
     }
 
 }

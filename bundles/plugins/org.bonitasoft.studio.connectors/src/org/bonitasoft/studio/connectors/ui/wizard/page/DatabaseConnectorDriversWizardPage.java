@@ -87,7 +87,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
     }
 
     protected String getDBPrefFilename(String connectorId) {
-        return connectorId + "." + DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
+        return connectorId + "." + DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT;
     }
 
     private Composite createDriverManager(Composite parent) {

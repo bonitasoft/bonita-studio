@@ -8,11 +8,15 @@
  *******************************************************************************/
 package org.bonitasoft.studio.tests.connectors;
 
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
@@ -28,12 +32,10 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@Ignore
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class AdvancedDBConnectorsTest {
 
@@ -44,13 +46,23 @@ public class AdvancedDBConnectorsTest {
 
     @Rule
     public final SWTGefBotRule botRule = new SWTGefBotRule(bot);
-    
+
     @Before
     public void setUp() throws Exception {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        new AddDependencyOperation("com.h2database", "h2", "1.4.200")
+                .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        
+        DatabaseConnectorPropertiesRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+        DatabaseConnectorPropertiesFileStore conf = repositoryStore.getChild("database-h2.properties", false);
+        if(conf == null) {
+            conf = repositoryStore.createRepositoryFileStore("database-h2.properties");
+        }
+        conf.setDefault("h2-1.4.200.jar");
+        conf.setJarList(List.of("h2-1.4.200.jar"));
+        conf.setAutoAddDriver(true);
     }
-
 
     @Test
     public void testAdvancedDBConnectorsWithGraphicalQueryBuilderContainingVariable()
@@ -99,13 +111,14 @@ public class AdvancedDBConnectorsTest {
 
         final BotDatabaseAccesInformationWizardPage daiwp = new BotDatabaseAccesInformationWizardPage(bot);
 
-        final DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository().getDatabaseHandler();
+        final DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
+                .getDatabaseHandler();
         SWTBotShell activeShell = bot.activeShell();
         daiwp.connectToDatabase()
                 .configure(
                         "org.h2.Driver",
                         String.format(
-                                "jdbc:h2:file:%s/bonita_journal.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;",
+                                "jdbc:h2:file:%s/bonita_journal.db;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE;AUTO_SERVER=TRUE;",
                                 databaseHandler.getDBLocation().getAbsolutePath()),
                         "sa",
                         "")

@@ -16,6 +16,7 @@ package org.bonitasoft.studio.businessobject.core;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.businessobject.core.operation.GenerateBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BDMArtifactDescriptor;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
@@ -48,10 +49,11 @@ public class UpdateProjectBDMDependency implements EventHandler {
 
     private void execute(final Event event) {
         final BDMArtifactDescriptor bdmArtifactDescriptor = (BDMArtifactDescriptor) event.getProperty(GenerateBDMOperation.BDM_ARTIFACT_DESCRIPTOR);
+      
         AddDependencyOperation addBDMClientDependencyOperation = new AddDependencyOperation(bdmArtifactDescriptor.getGroupId(), 
                 GenerateBDMOperation.BDM_CLIENT, 
-                bdmArtifactDescriptor.getVersion());
-        addBDMClientDependencyOperation.setScope(AddDependencyOperation.SCOPE_PROVIDED);
+                bdmArtifactDescriptor.getVersion(),
+                Artifact.SCOPE_PROVIDED);
         
         new WorkspaceJob("Update Project BDM dependency") {
             
