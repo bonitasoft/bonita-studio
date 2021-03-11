@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -26,6 +27,15 @@ import org.eclipse.jface.dialogs.IInputValidator;
 public class RepositoryNameValidator implements IInputValidator, IValidator {
 
     private static final String[] reservedChars = new String[] { "/", "\\", ":", "*", "?", "\"", "<", ">", ";", "|" };
+    private boolean isNew;
+
+    public RepositoryNameValidator(boolean isNew) {
+        this.isNew = isNew;
+    }
+
+    protected void setIsNew(boolean isNew) {
+        this.isNew = isNew;
+    }
 
     @Override
     public String isValid(final String newText) {
@@ -37,22 +47,28 @@ public class RepositoryNameValidator implements IInputValidator, IValidator {
             return String.format(Messages.createNewProject_invalidCharacter, invalidChar.get());
         }
 
-        if (getRepositoryManager().getRepository(newText) != null) {
-            return String.format(Messages.projectAlreadyExist, newText);
-        }
-        if (Stream.of(getRepositoryManager().getCurrentRepository()
-                .getProject()
-                .getWorkspace()
-                .getRoot()
-                .getLocation()
-                .toFile()
-                .listFiles())
-                .map(File::getName)
-                .map(String::toLowerCase)
-                .anyMatch(newText.toLowerCase()::equals)) {
-            return String.format(Messages.projectAlreadyExist, newText);
+        if (isNew || !isCurrentName(newText)) {
+            if (getRepositoryManager().getRepository(newText) != null) {
+                return String.format(Messages.projectAlreadyExist, newText);
+            }
+            if (Stream.of(getRepositoryManager().getCurrentRepository()
+                    .getProject()
+                    .getWorkspace()
+                    .getRoot()
+                    .getLocation()
+                    .toFile()
+                    .listFiles())
+                    .map(File::getName)
+                    .map(String::toLowerCase)
+                    .anyMatch(newText.toLowerCase()::equals)) {
+                return String.format(Messages.projectAlreadyExist, newText);
+            }
         }
         return null;
+    }
+
+    private boolean isCurrentName(String newText) {
+        return Objects.equals(newText, getRepositoryManager().getCurrentRepository().getName());
     }
 
     protected Optional<String> isValidFileName(final String newText) {
@@ -68,10 +84,6 @@ public class RepositoryNameValidator implements IInputValidator, IValidator {
         return RepositoryManager.getInstance();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-     */
     @Override
     public IStatus validate(Object value) {
         final String errorMessage = isValid((String) value);

@@ -33,7 +33,7 @@ public class CreateNewLocalRepoHandler extends AbstractHandler {
         final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         final InputDialog inputDialog = new InputDialog(shell, Messages.createNewLocalRepoDialogTitle,
                 Messages.createNewLocalRepoDialogMessage,
-                Messages.createNewLocalRepoDialogDefaultName, new RepositoryNameValidator());
+                Messages.createNewLocalRepoDialogDefaultName, new RepositoryNameValidator(true));
 
         if (inputDialog.open() == Window.OK) {
             final boolean closed = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()

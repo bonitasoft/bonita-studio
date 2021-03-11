@@ -94,6 +94,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
     private static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
+    private static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
     private RepositoryAccessor repositoryAccessor;
     private MavenProjectHelper mavenHelper;
@@ -442,12 +443,18 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        Label title = new Label(composite, SWT.NONE);
-        title.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        Composite titleComposite = createComposite(composite, SWT.NONE);
+        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        Label title = new Label(titleComposite, SWT.NONE);
+        title.setLayoutData(GridDataFactory.fillDefaults().create());
         title.setText(repositoryAccessor.getCurrentRepository().getName());
         title.setFont(titleFont);
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+
+        createEditButton(titleComposite);
 
         Composite toolbarsComposite = createComposite(composite, SWT.NONE);
         toolbarsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -455,6 +462,16 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
         createMarketplaceButton(toolbarsComposite);
         createImportButton(toolbarsComposite);
+    }
+
+    private void createEditButton(Composite parent) {
+        new DynamicButtonWidget.Builder()
+                .withTooltipText(Messages.editProjectMetadata)
+                .withImage(Pics.getImage(PicsConstants.edit32))
+                .withHotImage(Pics.getImage(PicsConstants.edit32Hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .onClick(e -> commandExecutor.executeCommand(EDIT_PROJECT_COMMAND, null))
+                .createIn(parent);
     }
 
     private void createImportButton(Composite parent) {

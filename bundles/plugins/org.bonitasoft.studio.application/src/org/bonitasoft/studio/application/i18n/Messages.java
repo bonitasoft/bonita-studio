@@ -188,6 +188,12 @@ public class Messages extends NLS {
     public static String importFromFileTip;
     public static String resolvedDependency;
     public static String cannotResolveDependencyInstalledLocally;
+    public static String editProjectMetadata;
+    public static String editProjectMetadataDescription;
+    public static String name;
+    public static String description;
+    public static String updatingProjectMetadata;
+    public static String invalidFormat;
 
     public static String addDatabaseDriverTitle;
     public static String addDatabaseDriverDesc;

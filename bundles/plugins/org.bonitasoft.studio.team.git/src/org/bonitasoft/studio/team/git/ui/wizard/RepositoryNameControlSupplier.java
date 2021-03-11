@@ -29,7 +29,8 @@ public class RepositoryNameControlSupplier implements ControlSupplier {
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.jface.wizard.IWizardContainer,
+     * @see org.bonitasoft.studio.ui.wizard.ControlSupplier#createControl(org.eclipse.swt.widgets.Composite,
+     * org.eclipse.jface.wizard.IWizardContainer,
      * org.eclipse.core.databinding.DataBindingContext)
      */
     @Override
@@ -46,7 +47,7 @@ public class RepositoryNameControlSupplier implements ControlSupplier {
                 .grabHorizontalSpace()
                 .withMessage(Messages.workspaceLocationHint)
                 .bindTo(repositoryNameObservable)
-                .withValidator(new RepositoryNameValidator())
+                .withValidator(new RepositoryNameValidator(true))
                 .inContext(ctx)
                 .createIn(composite);
         return composite;

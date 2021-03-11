@@ -494,6 +494,29 @@
                   checkEnabled="true">
             </visibleWhen>
          </command>
+         <command
+               commandId="org.bonitasoft.studio.application.edit.project.command"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </command>
          <separator
                name="org.bonitasoft.studio.application.edit.separator"
                visible="true">
@@ -1600,7 +1623,7 @@
             class="org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart"
             default="false"
             id="org.bonitasoft.studio.application.extension.editor"
-            name="Project extension editor">
+            name="%projectExtensionView">
       </editor>
    </extension>
 

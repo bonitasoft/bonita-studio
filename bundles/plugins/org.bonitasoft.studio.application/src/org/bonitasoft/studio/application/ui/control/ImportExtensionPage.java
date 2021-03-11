@@ -112,7 +112,7 @@ public class ImportExtensionPage implements ControlSupplier {
 
         this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
         this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
-        
+
         Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults()
                 .margins(10, 10)
@@ -284,13 +284,13 @@ public class ImportExtensionPage implements ControlSupplier {
                 .create());
 
         editableDependencyObservable = new WritableValue<>(true, Boolean.class);
-        visibleDependencyObservable = new ComputedValue<Boolean>() {
+        visibleDependencyObservable = new ComputedValue<>() {
 
             @Override
             protected Boolean calculate() {
-                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null ;
+                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null;
             }
-            
+
         };
 
         // We do not want to translate the maven property names, it would lead to too many confusions.
@@ -300,7 +300,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 ctx,
                 true,
                 List.of(new EmptyInputValidator("Group ID"),
-                        new RegExpValidator("Invalid format", "[A-Za-z0-9_\\-.]+")));
+                        new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+")));
         groupIdText.setFocus();
         ctx.bindValue(groupIdText.observeEnable(), editableDependencyObservable);
 
@@ -310,7 +310,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 ctx,
                 true,
                 List.of(new EmptyInputValidator("Artifact ID"),
-                        new RegExpValidator("Invalid format", "[A-Za-z0-9_\\-.]+")));
+                        new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+")));
         ctx.bindValue(artifactIdText.observeEnable(), editableDependencyObservable);
 
         TextWidget versionText = createText(dependencyGroup,
@@ -338,8 +338,8 @@ public class ImportExtensionPage implements ControlSupplier {
                 List.of());
         ctx.bindValue(classifierText.observeEnable(), editableDependencyObservable);
         ctx.bindValue(WidgetProperties.visible().observe(dependencyGroup),
-                visibleDependencyObservable, 
-                neverUpdateValueStrategy().create(), 
+                visibleDependencyObservable,
+                neverUpdateValueStrategy().create(),
                 null);
     }
 
@@ -420,7 +420,7 @@ public class ImportExtensionPage implements ControlSupplier {
     public DependencyLookup getDependencyLookup() {
         return dependencyLookup;
     }
-    
+
     public void setDependencyLookup(DependencyLookup dependencyLookup) {
         this.dependencyLookup = dependencyLookup;
     }
