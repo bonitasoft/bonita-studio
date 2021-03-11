@@ -89,6 +89,10 @@ CLabel#cardHighlightTitleColor {
     background-color: #ffffff;
 }
 
+.MPart .cardBackground > .separator {
+    background-color: rgb(238, 238, 236);
+}
+
 .MPart .extensionViewBackground {
     background-color: #f7f7f7;
 }

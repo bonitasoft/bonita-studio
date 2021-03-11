@@ -14,13 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class HSQLJDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class HSQLJDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public HSQLJDBCDriverDependenciesReplacement() {
         super(dependency("org.hsqldb", "hsqldb", "2.5.1"), "hsqldb.jar");
+    }
+
+    @Override
+    public String getReplacementJarName() {
+        return "hsqldb-2.5.1.jar";
     }
 
 }

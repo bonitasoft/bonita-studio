@@ -14,13 +14,17 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class DerbyJDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class DerbyJDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public DerbyJDBCDriverDependenciesReplacement() {
         super(dependency("org.apache.derby", "derby", "10.15.2.0"), "derby.jar");
     }
 
+    @Override
+    public String getReplacementJarName() {
+        return "derby-10.15.2.0.jar";
+    }
 }

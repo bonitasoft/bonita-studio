@@ -40,9 +40,6 @@ import org.eclipse.swt.widgets.Display;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Romain Bioteau
- */
 public class TestBOSArchiveImport {
 
     RepositoryAccessor repositoryAccessor;

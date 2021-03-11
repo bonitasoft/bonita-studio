@@ -59,7 +59,7 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.driver.MySQL
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.Oracle5JDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.Oracle6JDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.PostgresJDBCDriverDependenciesReplacement;
-import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLLiteJDBCDriverDependenciesReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLiteJDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.driver.SQLServerJDBCDriverDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.filter.CustomUserInfoActorFilterDependenciesReplacement;
 import org.bonitasoft.studio.common.repository.core.maven.migration.filter.InitiatorActorFilterDependenciesReplacement;
@@ -74,34 +74,43 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public abstract class BonitaJarDependencyReplacement {
-    
+
     private static final String IMPLEMENTATION_NS = "http://www.bonitasoft.org/ns/connector/implementation/6.0";
     public static final String CONNECTOR_GROUP_ID = "org.bonitasoft.connectors";
     public static final String ACTOR_FILTER_GROUP_ID = "org.bonitasoft.actorfilter";
+    private static final List<DatabaseDriverDependencyReplacement> DATABASE_DRIVER_DEPENDENCY_REPLACEMENTS = List.of(
+            new DerbyJDBCDriverDependenciesReplacement(),
+            new H2JDBCDriverDependenciesReplacement(),
+            new HSQLJDBCDriverDependenciesReplacement(),
+            new Oracle5JDBCDriverDependenciesReplacement(),
+            new Oracle6JDBCDriverDependenciesReplacement(),
+            new PostgresJDBCDriverDependenciesReplacement(),
+            new SQLiteJDBCDriverDependenciesReplacement(),
+            new SQLServerJDBCDriverDependenciesReplacement(),
+            new MySQLJDBCDriverDependenciesReplacement());
     private static List<BonitaJarDependencyReplacement> REPLACEMENTS;
-    
+
     private String[] jarFilePatterns;
     private Dependency mavenDependency;
-    
-    public BonitaJarDependencyReplacement(Dependency mavenDependency,String... jarFilePatterns) {
+
+    public BonitaJarDependencyReplacement(Dependency mavenDependency, String... jarFilePatterns) {
         this.jarFilePatterns = jarFilePatterns;
         this.mavenDependency = mavenDependency;
     }
-    
+
     public boolean matches(String jarName) {
         return Stream.of(jarFilePatterns).anyMatch(jarName::matches);
     }
-    
+
     public boolean matchesDefinition(String definitionId) {
         return false;
     }
 
-    
     public Dependency getMavenDependency() {
         return mavenDependency;
     }
-    
-    public static Set<String> getTransitiveDependencies(File implementationJarFile){
+
+    public static Set<String> getTransitiveDependencies(File implementationJarFile) {
         try {
             List<Document> descriptors = findImplementationDescriptors(implementationJarFile);
             return descriptors.stream()
@@ -114,7 +123,7 @@ public abstract class BonitaJarDependencyReplacement {
         }
         return Collections.emptySet();
     }
-    
+
     private static Set<String> readJarDependencies(Document document) {
         Set<String> jarDependencies = new HashSet<>();
         NodeList dependencyJars = document.getElementsByTagName("jarDependency");
@@ -127,12 +136,12 @@ public abstract class BonitaJarDependencyReplacement {
     private static List<Document> findImplementationDescriptors(File artifactFile) throws IOException {
         try (JarFile jarFile = new JarFile(artifactFile)) {
             return jarFile.stream()
-            .filter(entry -> entry.getName().endsWith(".impl"))
-            .map(entry -> toDocument(jarFile, entry))
-            .collect(Collectors.toList());
+                    .filter(entry -> entry.getName().endsWith(".impl"))
+                    .map(entry -> toDocument(jarFile, entry))
+                    .collect(Collectors.toList());
         }
     }
-    
+
     private static Document toDocument(JarFile jarFile, JarEntry entry) {
         try (InputStream is = jarFile.getInputStream(entry)) {
             return asXMLDocument(is, IMPLEMENTATION_NS);
@@ -160,7 +169,7 @@ public abstract class BonitaJarDependencyReplacement {
         }
         return null;
     }
-    
+
     protected static Dependency dependency(String groupId, String artifactId, String version) {
         Dependency dependency = new Dependency();
         dependency.setArtifactId(artifactId);
@@ -169,11 +178,15 @@ public abstract class BonitaJarDependencyReplacement {
         dependency.setScope(Artifact.SCOPE_COMPILE);
         return dependency;
     }
-    
-    public static List<BonitaJarDependencyReplacement> getBonitaJarDependencyReplacements(){
-        if(REPLACEMENTS == null) {
+
+    public static List<DatabaseDriverDependencyReplacement> getDatabaseDriverDependencyReplacements() {
+        return DATABASE_DRIVER_DEPENDENCY_REPLACEMENTS;
+    }
+
+    public static List<BonitaJarDependencyReplacement> getBonitaJarDependencyReplacements() {
+        if (REPLACEMENTS == null) {
             REPLACEMENTS = new ArrayList<>();
-            
+
             // Connectors
             REPLACEMENTS.add(new CMISConnectorDependenciesReplacement());
             REPLACEMENTS.add(new DatabaseConnectorDependenciesReplacement());
@@ -190,7 +203,7 @@ public abstract class BonitaJarDependencyReplacement {
             REPLACEMENTS.add(new TwitterConnectorDependenciesReplacement());
             REPLACEMENTS.add(new UIPathConnectorDependenciesReplacement());
             REPLACEMENTS.add(new WebServiceConnectorDependenciesReplacement());
-            
+
             // Actor filters
             REPLACEMENTS.add(new CustomUserInfoActorFilterDependenciesReplacement());
             REPLACEMENTS.add(new InitiatorActorFilterDependenciesReplacement());
@@ -198,21 +211,12 @@ public abstract class BonitaJarDependencyReplacement {
             REPLACEMENTS.add(new SameTaskUserActorFilterDependenciesReplacement());
             REPLACEMENTS.add(new SingleUserActorFilterDependenciesReplacement());
             REPLACEMENTS.add(new UserManagerActorFilterDependenciesReplacement());
-            
+
             // Db drivers
-            REPLACEMENTS.add(new DerbyJDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new H2JDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new HSQLJDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new Oracle5JDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new Oracle6JDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new PostgresJDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new SQLLiteJDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new SQLServerJDBCDriverDependenciesReplacement());
-            REPLACEMENTS.add(new MySQLJDBCDriverDependenciesReplacement());
-            
+            REPLACEMENTS.addAll(getDatabaseDriverDependencyReplacements());
+
         }
         return REPLACEMENTS;
-        
     }
 
 }

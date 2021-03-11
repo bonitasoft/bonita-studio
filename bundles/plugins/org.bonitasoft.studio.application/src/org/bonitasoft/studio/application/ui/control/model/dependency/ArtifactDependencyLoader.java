@@ -26,8 +26,7 @@ public class ArtifactDependencyLoader {
     public List<BonitaArtifactDependency> load(URL url) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            TypeReference<List<BonitaArtifactDependency>> typeReference = new TypeReference<>() {
-            };
+            TypeReference<List<BonitaArtifactDependency>> typeReference = new TypeReference<>() {};
             return objectMapper.readValue(url, typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e);

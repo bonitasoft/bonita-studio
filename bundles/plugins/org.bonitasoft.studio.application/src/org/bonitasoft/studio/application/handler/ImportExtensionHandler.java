@@ -68,8 +68,6 @@ public class ImportExtensionHandler {
                         mavenRepositoryRegistry,
                         currentRepository.getLocalDependencyStore(),
                         currentRepository.getProject()))
-                .withSize(700, 650)
-                .withFixedInitialSize()
                 .open(activeShell, org.bonitasoft.studio.ui.i18n.Messages.importLabel);
     }
 

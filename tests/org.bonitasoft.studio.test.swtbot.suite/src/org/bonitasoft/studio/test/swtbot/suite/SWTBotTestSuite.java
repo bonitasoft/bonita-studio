@@ -64,7 +64,6 @@ import org.bonitasoft.studio.tests.diagram.TestDeleteDiagrams;
 import org.bonitasoft.studio.tests.diagram.TestMoveBetweenLane;
 import org.bonitasoft.studio.tests.diagram.TestOpenDiagram;
 import org.bonitasoft.studio.tests.diagram.TestRenameDiagram;
-import org.bonitasoft.studio.tests.diagram.TestSave;
 import org.bonitasoft.studio.tests.diagram.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionDiagramForDiagramTest;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
@@ -157,7 +156,6 @@ import org.junit.runners.Suite;
         TestRunWithDocument.class,
         TestDocument.class,
         DuplicateCommandTest.class,
-        TestSave.class,
         TestMoveBetweenLane.class,
         TestTimer.class,
         ConnectorEditedInAsingleCommandIT.class,

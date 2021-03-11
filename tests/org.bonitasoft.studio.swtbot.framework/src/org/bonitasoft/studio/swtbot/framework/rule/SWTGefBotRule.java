@@ -68,6 +68,7 @@ public class SWTGefBotRule implements TestRule {
                     base.evaluate();
                 }catch(Throwable t) {
                     bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(), description.getMethodName()));
+                    throw t;
                 } finally {
                     afterStatement(description);
                 }

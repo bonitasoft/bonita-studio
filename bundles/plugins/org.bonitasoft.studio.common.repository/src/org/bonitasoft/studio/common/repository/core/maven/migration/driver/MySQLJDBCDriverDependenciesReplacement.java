@@ -14,13 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class MySQLJDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class MySQLJDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public MySQLJDBCDriverDependenciesReplacement() {
-        super(dependency("mysql", "mysql-connector-java", "8.0.23"), "mysql-connector-java-.*.jar");
+        super(dependency("mysql", "mysql-connector-java", "8.0.23"), "mysql-connector-java-5.1.23-bin.jar");
+    }
+
+    @Override
+    public String getReplacementJarName() {
+        return "mysql-connector-java-8.0.23.jar";
     }
 
 }

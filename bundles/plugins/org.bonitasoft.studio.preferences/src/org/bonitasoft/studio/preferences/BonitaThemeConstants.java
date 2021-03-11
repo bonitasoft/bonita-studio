@@ -43,4 +43,5 @@ public interface BonitaThemeConstants {
     public static final String TOOLBAR_TEXT_COLOR = "toolbarTextColor";
     public static final String CARD_HIGHLIGHT_TITLE_COLOR = "cardHighlightTitleColor";
     public static final String LABEL_COMPOSITE = "labelComposite";
+    public static final String CARD_SEPARATOR = "separator";
 }

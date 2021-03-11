@@ -14,79 +14,47 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class RemoveDependencyOperation extends MavenModelOperation {
 
-    private final String groupId;
-    private final String artifactId;
-    private final String version;
-    private String type = "jar";
-    private String classifier;
+    private final List<Dependency> dependenciesToRemove;
 
+    public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
+        this.dependenciesToRemove = dependenciesToRemove;
+    }
+    
+    public RemoveDependencyOperation(Dependency dependencyToRemove) {
+        this(List.of(dependencyToRemove));
+    }
+    
     public RemoveDependencyOperation(String groupId,
             String artifactId,
             String version) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-    }
-
-    public RemoveDependencyOperation(Dependency dep) {
-        this(dep.getGroupId(), dep.getArtifactId(), dep.getVersion());
-        this.type = dep.getType();
-        this.classifier = dep.getClassifier();
+        this(createDependency(groupId, artifactId, version, null));
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());
+     
+        dependenciesToRemove.stream().forEach( dependency -> {
+            Optional<Dependency> result = model.getDependencies().stream()
+                    .filter(existingDep -> new GAV(existingDep).equals(new GAV(dependency)))
+                    .findFirst();
+            if (result.isPresent()) {
+                model.getDependencies().remove(result.get());
+            }
+        });
 
-        Dependency dependency = new Dependency();
-        dependency.setArtifactId(artifactId);
-        dependency.setGroupId(groupId);
-        dependency.setVersion(version);
-        dependency.setClassifier(classifier);
-        dependency.setType(type);
-
-        Optional<Dependency> result = model.getDependencies().stream()
-                .filter(existingDep -> sameGAV(existingDep, dependency))
-                .findFirst();
-        if (result.isPresent()) {
-            model.getDependencies().remove(result.get());
-            saveModel(getCurrentProject(), model);
-            getProjectDependenciesStore().analyze(monitor);
-        }
-    }
-
-    private boolean sameGAV(Dependency existingDep, Dependency dependency) {
-        return Objects.equals(existingDep.getGroupId(), dependency.getGroupId())
-                && Objects.equals(existingDep.getArtifactId(), dependency.getArtifactId())
-                && Objects.equals(existingDep.getVersion(), dependency.getVersion())
-                && Objects.equals(existingDep.getClassifier(), dependency.getClassifier())
-                && Objects.equals(existingDep.getType(), dependency.getType());
-    }
-
-    public String getClassifier() {
-        return classifier;
-    }
-
-    public void setClassifier(String classifier) {
-        this.classifier = classifier;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+        saveModel(getCurrentProject(), model, monitor);
     }
 
 }

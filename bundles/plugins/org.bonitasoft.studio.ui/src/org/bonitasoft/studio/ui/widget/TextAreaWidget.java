@@ -68,22 +68,14 @@ public class TextAreaWidget extends TextWidget {
             int style) {
         super(container, id, topLabel, horizontalLabelAlignment, verticalLabelAlignment, labelWidth, readOnly, label,
                 message, useCompositeMessageDecorator, labelButton, imageButton, tooltipButton, false, null, null, toolkit,
-                Optional.empty(), editableStrategy, ctx, style, false);
+                Optional.empty(), editableStrategy, ctx, style);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#grabVerticalSpace()
-     */
     @Override
     protected boolean grabVerticalSpace() {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.ui.widget.TextWidget#verticalAlignment()
-     */
     @Override
     protected int verticalAlignment() {
         return SWT.FILL;

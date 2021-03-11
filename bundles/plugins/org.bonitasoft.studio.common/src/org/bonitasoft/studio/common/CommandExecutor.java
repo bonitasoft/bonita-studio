@@ -16,7 +16,9 @@ package org.bonitasoft.studio.common;
 
 import java.util.Map;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.ui.PlatformUI;
@@ -53,6 +55,19 @@ public class CommandExecutor {
             eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
             eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
         }
+    }
+
+    public String getCommandName(String commandId) {
+        if (Workbench.getInstance() != null) {
+            initServices();
+            try {
+                return eCommandService.getCommand(commandId).getName();
+            } catch (NotDefinedException e) {
+                BonitaStudioLog.error(e);
+                return null;
+            }
+        }
+        return null;
     }
 
 }

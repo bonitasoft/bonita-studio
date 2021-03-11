@@ -1,27 +1,26 @@
 /**
  * Copyright (C) 2020 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.datatools;
 
+import java.util.Optional;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.connectors.util.DriverConstants;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
@@ -36,9 +35,6 @@ import org.eclipse.datatools.connectivity.drivers.PropertySetImpl;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 
-/**
- * @author Romain Bioteau
- */
 public class ConnectionProfileUtil {
 
     private static final String CONNECTION_PROFILE_POSTGRES = "org.eclipse.datatools.enablement.postgresql.connectionProfile";
@@ -69,19 +65,6 @@ public class ConnectionProfileUtil {
     public static final String HOST = "hostName"; //$NON-NLS-1$
 
     public static final String DEFAULT_PROFILE_NAME = "database"; //$NON-NLS-1$
-
-    public static final String MYSQL_DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
-    public static final String POSTGRES_DRIVER_CLASSNAME = "org.postgresql.Driver";
-    public static final String ORACLE_DRIVER_CLASSNAME = "oracle.jdbc.driver.OracleDriver";
-    public static final String DB2_DRIVER_CLASSNAME = "com.ibm.db2.jcc.DB2Driver";
-    public static final String SQLSERVER_DRIVER_CLASSNAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    public static final String TERADATA_DRIVER_CLASSNAME = "com.ncr.teradata.TeraDriver";
-    public static final String H2_DRIVER_CLASSNAME = "org.h2.Driver";
-    private static final String SYBASE_DRIVER_CLASSNAME = "com.sybase.jdbc3.jdbc.SybDriver";
-    private static final String HSQL_DRIVER_CLASSNAME = "org.hsqldb.jdbc.JDBCDriver";
-    private static final String INFORMIX_DRIVER_CLASSNAME = "com.informix.jdbc.IfxDriver";
-    private static final String INGRES_DRIVER_CLASSNAME = "com.ingres.jdbc.IngresDriver";
-    private static final String DB2_ID = "database-db2";
 
     public static IConnectionProfile createConnectionProfile(final String providerId,
             final String driverId,
@@ -146,7 +129,7 @@ public class ConnectionProfileUtil {
                 password, driverProperties);
         driverProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE, driverId);
         driverProperties.setProperty(IJDBCConnectionProfileConstants.DRIVER_CLASS_PROP_ID, driverClassname);
-        driverProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, createJarListFromRepository(driverId));
+        driverProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, createJarListFromRepository(driverClassname));
         propSet.setBaseProperties(driverProperties);
         DriverManager.getInstance().addDriverInstance(propSet);
         return driverId;
@@ -156,7 +139,7 @@ public class ConnectionProfileUtil {
             final String password,
             String className, final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = MYSQL_DRIVER_CLASSNAME;
+            className = DriverConstants.MYSQL_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_MYSQL, DRIVERID_MYSQL, "MySql", "MySql", "5.1", className,
                 jdbcUrl, databaseName, user, password);
@@ -166,7 +149,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = POSTGRES_DRIVER_CLASSNAME;
+            className = DriverConstants.POSTGRES_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_POSTGRES, DRIVERID_POSTGRES, "postgres", "postgres", "8.x",
                 className, jdbcUrl, databaseName, user,
@@ -177,7 +160,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = ORACLE_DRIVER_CLASSNAME;
+            className = DriverConstants.ORACLE_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_ORACLE, DRIVERID_ORACLE, "Oracle", "Oracle", "10", className,
                 jdbcUrl, databaseName == null ? user
@@ -189,7 +172,7 @@ public class ConnectionProfileUtil {
             final String password, String className, final String databaseName)
             throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = SQLSERVER_DRIVER_CLASSNAME;
+            className = DriverConstants.SQLSERVER_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_MSSQL, DRIVERID_MSSQL, "sqlserver", "SQL Server", "2008",
                 className, jdbcUrl, databaseName, user,
@@ -206,7 +189,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = DB2_DRIVER_CLASSNAME;
+            className = DriverConstants.DB2_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_DB2_LUW, DRIVERID_DB2_LUW, "db2 udb", "DB2 UDB", "9.1",
                 className, jdbcUrl, databaseName, user,
@@ -223,7 +206,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = SYBASE_DRIVER_CLASSNAME;
+            className = DriverConstants.SYBASE_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_SYBASE, DRIVERID_SYBASE, "sybase", "Sybase_ASE", "15.x",
                 className, jdbcUrl, databaseName, user,
@@ -234,7 +217,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = HSQL_DRIVER_CLASSNAME;
+            className = DriverConstants.HSQL_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_HSQLDB, DRIVERID_HSQL, "HSQLDB", "HSQLDB", "1.8", className,
                 jdbcUrl, databaseName, user, password);
@@ -244,7 +227,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = INFORMIX_DRIVER_CLASSNAME;
+            className = DriverConstants.INFORMIX_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_INFORMIX, DRIVERID_INFORMIX, "Informix", "Informix", "10",
                 className, jdbcUrl, databaseName, user,
@@ -255,7 +238,7 @@ public class ConnectionProfileUtil {
             final String password, String className,
             final String databaseName) throws ConnectionProfileException, ClassNotFoundException {
         if (className == null) {
-            className = INGRES_DRIVER_CLASSNAME;
+            className = DriverConstants.INGRES_DRIVER_CLASSNAME;
         }
         return createConnectionProfile(CONNECTION_PROFILE_INGRES, DRIVERID_INGRES, "Ingres", "Ingres", "2006",
                 className, jdbcUrl, databaseName, user, password);
@@ -269,22 +252,20 @@ public class ConnectionProfileUtil {
                 user, password);
     }
 
-    private static String createJarListFromRepository(final String driverId) {
+    private static String createJarListFromRepository(final String driverClassname) {
         final DatabaseConnectorPropertiesRepositoryStore dbStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
-        final DatabaseConnectorPropertiesFileStore fileStore = dbStore.getChild(driverId + ".properties", true);
+        Optional<DatabaseConnectorPropertiesFileStore> fileStore = dbStore.findByDriverClassName(driverClassname);
         final DependencyRepositoryStore depStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DependencyRepositoryStore.class);
-        String defaultDriverJar = null;
-        if (fileStore != null) {
-            defaultDriverJar = fileStore.getDefault();
-        }
+        String defaultDriverJar = fileStore.map(DatabaseConnectorPropertiesFileStore::getDefault)
+                .orElse(null);
         final StringBuilder sb = new StringBuilder();
         for (final DependencyFileStore f : depStore.getChildren()) {
-            if (!DB2_ID.equals(driverId) && defaultDriverJar != null && defaultDriverJar.equals(f.getName())) {
+            if (!DriverConstants.DB2_DRIVER_CLASSNAME.equals(driverClassname) && defaultDriverJar != null && defaultDriverJar.equals(f.getName())) {
                 sb.append(f.getFile().getAbsolutePath());
                 sb.append(IDriverMgmtConstants.PATH_DELIMITER);
-            } else if (defaultDriverJar == null || DB2_ID.equals(driverId)) {
+            } else if (defaultDriverJar == null || DriverConstants.DB2_DRIVER_CLASSNAME.equals(driverClassname)) {
                 sb.append(f.getFile().getAbsolutePath());
                 sb.append(IDriverMgmtConstants.PATH_DELIMITER);
             }

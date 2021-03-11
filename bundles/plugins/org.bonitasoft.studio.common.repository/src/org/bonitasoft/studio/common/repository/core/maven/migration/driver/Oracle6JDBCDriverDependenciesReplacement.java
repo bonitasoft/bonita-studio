@@ -14,13 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class Oracle6JDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class Oracle6JDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public Oracle6JDBCDriverDependenciesReplacement() {
-        super(dependency("com.oracle.database.jdbc", "ojdbc6", "11.2.0.4"), "ojdbc6.jar");
+        super(dependency("com.oracle.database.jdbc", "ojdbc11", "21.1.0.0"), "ojdbc6.jar");
+    }
+
+    @Override
+    public String getReplacementJarName() {
+        return "ojdbc11-21.1.0.0.jar";
     }
 
 }

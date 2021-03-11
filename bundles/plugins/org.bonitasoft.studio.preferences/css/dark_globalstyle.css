@@ -111,6 +111,11 @@ Table#extensionViewBackground {
     background-color: #2d3749;
 }
 
+.MPart .cardBackground > .separator {
+    background-color: rgb(136, 138, 133);
+}
+
+
 .MPart .extensionViewBackground {
 	background-color: #1a202d;
 }

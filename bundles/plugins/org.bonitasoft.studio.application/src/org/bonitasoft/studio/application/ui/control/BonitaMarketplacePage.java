@@ -19,11 +19,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
-import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
@@ -31,12 +33,12 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarke
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +54,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -63,11 +66,21 @@ import org.osgi.framework.Version;
 /**
  * !!! HELLO !!!
  * Do not forget to add the required css class for the background
- * if you update the controles in the dependencies composite :)
+ * if you update the controls in the dependencies composite :)
  */
 public class BonitaMarketplacePage implements ControlSupplier {
 
     public static final int ICON_SIZE = 64;
+
+    public static final String CONNECTOR_TYPE = Messages.connectorType;
+    public static final String ACTOR_FILTER_TYPE = Messages.actorFilterType;
+    public static final String ALL_TYPE = Messages.all;
+    public static final String DATABASE_DRIVER_TYPE = "Database driver";
+
+    private static final Map<String, String> EXTENSIONS_TYPE = Map.of(
+            CONNECTOR_TYPE, BonitaMarketplace.CONNECTOR_TYPE,
+            ACTOR_FILTER_TYPE, BonitaMarketplace.ACTOR_FILTER_TYPE,
+            DATABASE_DRIVER_TYPE, BonitaMarketplace.DATABASE_DRIVER_TYPE);
 
     private MavenProjectHelper helper = new MavenProjectHelper();
     private RepositoryAccessor repositoryAccessor;
@@ -86,6 +99,16 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private Composite mainComposite;
 
     private Button findButton;
+
+    private String[] extensionTypes;
+
+    public BonitaMarketplacePage(String... extensionTypes) {
+        this.extensionTypes = extensionTypes;
+    }
+
+    public BonitaMarketplacePage() {
+        this(ALL_TYPE, CONNECTOR_TYPE, ACTOR_FILTER_TYPE);
+    }
 
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
@@ -111,7 +134,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         sc.setContent(dependenciesComposite);
         sc.setExpandVertical(true);
         sc.setExpandHorizontal(true);
-        sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+      //  sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
         wizardContainer.getShell().addDisposeListener(e -> iconsToDispose.forEach(Image::dispose));
 
@@ -133,13 +156,13 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
                     int totalWork = newDependencies.size() + dependenciesUpdatable.size();
                     monitor.beginTask(Messages.fetchingExtensions, totalWork);
-                    dependenciesUpdatable.forEach(dep -> {
+                    dependenciesUpdatable.stream().filter(hasSelectedType()).forEach(dep -> {
                         Display.getDefault().syncExec(() -> {
                             createDependencyControl(dependenciesComposite, dep);
                         });
                         monitor.worked(1);
                     });
-                    newDependencies.forEach(dep -> {
+                    newDependencies.stream().filter(hasSelectedType()).forEach(dep -> {
                         Display.getDefault().syncExec(() -> {
                             createDependencyControl(dependenciesComposite, dep);
                         });
@@ -148,7 +171,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
                     // TODO what if all provided dependencies are already installed? 
                     Display.getDefault().asyncExec(() -> {
                         dependenciesComposite.layout();
-                        sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+                        sc.setContent(dependenciesComposite);
+                        Point size = dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                        sc.setMinHeight(size.y);
                         sc.layout();
                     });
                     monitor.done();
@@ -157,6 +182,10 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private Predicate<? super BonitaArtifactDependency> hasSelectedType() {
+        return dep -> Stream.of(extensionTypes).map(EXTENSIONS_TYPE::get).anyMatch(t -> dep.getType().equals(t));
     }
 
     private void initVariables() {
@@ -172,22 +201,27 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private void createSearchComposite(Composite parent) {
         Composite searchComposite = new Composite(parent, SWT.NONE);
-        searchComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        searchComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(extensionTypes.length > 1 ? 3 : 2).create());
         searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-       var filterComposite = new Composite(searchComposite, SWT.NONE);
-       filterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-       filterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
-       
-       Label typeLabel = new Label(filterComposite, SWT.NONE);
-       typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
-       typeLabel.setText(Messages.type);
-       
-        Combo combo = new Combo(filterComposite, SWT.READ_ONLY);
-        combo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
-        combo.setItems(Messages.all, Messages.connectorType, Messages.actorFilterType);
-        typeObservableValue = WidgetProperties.text().observe(combo);
-        typeObservableValue.setValue(Messages.all);
+        if (extensionTypes.length > 1) {
+            var filterComposite = new Composite(searchComposite, SWT.NONE);
+            filterComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+            filterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+
+            Label typeLabel = new Label(filterComposite, SWT.NONE);
+            typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+            typeLabel.setText(Messages.type);
+
+            Combo combo = new Combo(filterComposite, SWT.READ_ONLY);
+            combo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
+            combo.setItems(extensionTypes);
+            typeObservableValue = WidgetProperties.text().observe(combo);
+            typeObservableValue.setValue(extensionTypes[0]);
+        } else {
+            typeObservableValue = new WritableValue<>(extensionTypes[0], String.class);
+        }
 
         searchWidget = new SearchWidget.Builder()
                 .fill()
@@ -196,7 +230,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 .createIn(searchComposite);
 
         findButton = new Button(searchComposite, SWT.PUSH);
-        findButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, true).create());
+        findButton.setLayoutData(
+                GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, true).create());
         findButton.setText(Messages.find);
         findButton.addListener(SWT.Selection, e -> applySearch());
 
@@ -246,17 +281,15 @@ public class BonitaMarketplacePage implements ControlSupplier {
     }
 
     private void filterDependenciesByType(List<BonitaArtifactDependency> filteredDependencies) {
-        if (!Objects.equals(typeObservableValue.getValue(), Messages.all)) {
-            String type = Objects.equals(typeObservableValue.getValue(), Messages.connectorType)
-                    ? BonitaMarketplace.CONNECTOR_TYPE
-                    : BonitaMarketplace.ACTOR_FILTER_TYPE;
+        if (!Objects.equals(typeObservableValue.getValue(), ALL_TYPE)) {
+            var type = EXTENSIONS_TYPE.get(typeObservableValue.getValue());
             filteredDependencies.removeIf(dep -> !Objects.equals(dep.getType(), type));
         }
     }
 
     private List<BonitaArtifactDependency> filterDependenciesBySearchValue(String searchValue) {
         List<BonitaArtifactDependency> filteredDependencies = new ArrayList<>();
-        if (Strings.isNullOrEmpty(searchValue)) {
+        if (searchValue == null || searchValue.isBlank()) {
             dependenciesUpdatable.forEach(filteredDependencies::add);
             newDependencies.forEach(filteredDependencies::add);
         } else {
@@ -305,14 +338,21 @@ public class BonitaMarketplacePage implements ControlSupplier {
         iconLabel.setImage(icon);
 
         Composite contentComposite = new Composite(composite, SWT.NONE);
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 10).create());
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 10).create());
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         contentComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
 
-        Label title = createLabel(contentComposite, SWT.WRAP);
+        Composite heading = new Composite(contentComposite, SWT.NONE);
+        heading.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 0).create());
+        heading.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        heading.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
+
+        Label title = createLabel(heading, SWT.WRAP);
         title.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        title.setText(String.format("%s", dep.getName()));
+        title.setText(dep.getName());
         title.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.HEADER_FONT));
 
         Optional<BonitaArtifactDependencyVersion> latestCompatibleVersion = dep.getLatestCompatibleVersion();
@@ -325,17 +365,17 @@ public class BonitaMarketplacePage implements ControlSupplier {
         boolean updatable = dependenciesUpdatable.contains(dep);
 
         if (latestCompatibleVersion.isPresent()) {
-            createAddButton(dep, contentComposite, updatable);
+            createAddButton(dep, heading, updatable);
         }
 
-        Label version = createLabel(contentComposite, SWT.WRAP);
+        Label version = createLabel(heading, SWT.WRAP);
         version.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, -5).create());
+                GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         version.setText(String.format("%s: %s", Messages.version, versionToDisplay));
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 
         Label description = createLabel(contentComposite, SWT.WRAP);
-        description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
+        description.setLayoutData(GridDataFactory.fillDefaults().hint(620, SWT.DEFAULT).create());
         description.setText(dep.getDescription());
 
         if (updatable) {
@@ -359,19 +399,23 @@ public class BonitaMarketplacePage implements ControlSupplier {
         versionIncompatibleTitle.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         versionIncompatibleTitle.setText(Messages.incompatibleExtensionTitle);
         versionIncompatibleTitle.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-        versionIncompatibleTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.ERROR_TEXT_COLOR);
+        versionIncompatibleTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                BonitaThemeConstants.ERROR_TEXT_COLOR);
 
         Label versionIncompatibleLabel = createLabel(incompatibleComposite, SWT.WRAP);
         versionIncompatibleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         versionIncompatibleLabel.setText(Messages.incompatibleExtension);
         versionIncompatibleLabel.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-        versionIncompatibleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.ERROR_TEXT_COLOR);
+        versionIncompatibleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                BonitaThemeConstants.ERROR_TEXT_COLOR);
     }
 
     private void createUpdatableComposite(Composite parent) {
         Composite updatableComposite = new Composite(parent, SWT.NONE);
-        updatableComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
-        updatableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
+        updatableComposite
+                .setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
+        updatableComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(0, 5).create());
         updatableComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
 
@@ -379,7 +423,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
         newVersionAvailableLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         newVersionAvailableLabel.setText(Messages.newVersionAvailable);
         newVersionAvailableLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-        newVersionAvailableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
+        newVersionAvailableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                BonitaThemeConstants.INFO_TEXT_COLOR);
 
         Label depUpdatableLabel = createLabel(updatableComposite, SWT.WRAP);
         depUpdatableLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -409,7 +454,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
                             && Objects.equals(dep.getArtifactId(), aDep.getArtifactId()))
                     .findFirst();
             if (matchingDependency.isPresent()) {
-                Optional<String> version = dep.getLatestCompatibleVersion().map(BonitaArtifactDependencyVersion::getVersion);
+                Optional<String> version = dep.getLatestCompatibleVersion()
+                        .map(BonitaArtifactDependencyVersion::getVersion);
                 if (version.isPresent()
                         && !existingVersionEqualsOrGreater(matchingDependency.get().getVersion(), version.get())) {
                     dependenciesUpdatable.add(dep);

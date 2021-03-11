@@ -175,8 +175,6 @@ public class Messages extends NLS {
     public static String importExtensionTitle;
     public static String importExtension;
     public static String importExtensionButtonLabel;
-    public static String unknownExtensionsDescription;
-    public static String unknownExtensionDescription;
     public static String unknownExtensionsTitle;
     public static String deleteUnknownTooltip;
     public static String delete;
@@ -190,6 +188,10 @@ public class Messages extends NLS {
     public static String importFromFileTip;
     public static String resolvedDependency;
     public static String cannotResolveDependencyInstalledLocally;
+
+    public static String addDatabaseDriverTitle;
+    public static String addDatabaseDriverDesc;
+    public static String addDatabaseDriverQuestion;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

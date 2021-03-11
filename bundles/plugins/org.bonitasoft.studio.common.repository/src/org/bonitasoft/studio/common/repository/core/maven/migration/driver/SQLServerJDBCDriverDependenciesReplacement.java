@@ -14,13 +14,18 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.migration.driver;
 
-import org.bonitasoft.studio.common.repository.core.maven.migration.BonitaJarDependencyReplacement;
+import org.bonitasoft.studio.common.repository.core.maven.migration.DatabaseDriverDependencyReplacement;
 
 
-public class SQLServerJDBCDriverDependenciesReplacement extends BonitaJarDependencyReplacement {
+public class SQLServerJDBCDriverDependenciesReplacement extends DatabaseDriverDependencyReplacement {
     
     public SQLServerJDBCDriverDependenciesReplacement() {
-        super(dependency("org.xerial", "sqlite-jdbc", "3.34.0"), "sqlite-jdbc-3.*.jar");
+        super(dependency("com.microsoft.sqlserver", "mssql-jdbc", "9.2.1.jre11"), "sqljdbc4.jar");
+    }
+
+    @Override
+    public String getReplacementJarName() {
+        return "mssql-jdbc-9.2.1.jre11.jar";
     }
 
 }

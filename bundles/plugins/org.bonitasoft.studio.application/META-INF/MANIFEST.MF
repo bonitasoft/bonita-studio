@@ -74,7 +74,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  com.fasterxml.jackson.core.jackson-databind,
  org.restlet,
  org.json,
- org.eclipse.m2e.core
+ org.eclipse.m2e.core,
+ org.bonitasoft.studio.connectors;bundle-version="7.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",
@@ -103,6 +104,7 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.application.operation,
  org.bonitasoft.studio.application.splash,
+ org.bonitasoft.studio.application.ui.control,
  org.bonitasoft.studio.application.views,
  org.bonitasoft.studio.application.views.process,
  org.bonitasoft.studio.application.views.provider
