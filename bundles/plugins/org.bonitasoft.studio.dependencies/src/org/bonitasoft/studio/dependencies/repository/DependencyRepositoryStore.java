@@ -360,7 +360,9 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     public Optional<DependencyFileStore> findDependencyByName(String jarName) {
-        return getChildren().stream().filter(dep-> Objects.equals(jarName, dep.getName())).findFirst();
+        return getChildren().stream()
+                .filter(dep-> Objects.equals(jarName, dep.getName()))
+                .findFirst();
     }
     
 }

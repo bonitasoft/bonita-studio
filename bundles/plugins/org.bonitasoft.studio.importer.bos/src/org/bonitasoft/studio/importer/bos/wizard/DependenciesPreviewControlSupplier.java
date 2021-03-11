@@ -332,8 +332,9 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
                 .withValueUpdater((dep, value) -> dep.setVersion((String) value))
                 .create());
 
-        Comparator<DependencyLookup> comparator = Comparator.comparing(DependencyLookup::isSelected)
-                .thenComparing((d1, d2) -> d1.getStatus().compareTo(d2.getStatus()));
+        Comparator<DependencyLookup> comparator = (d1, d2) -> Boolean.valueOf(d2.isSelected())
+                .compareTo(Boolean.valueOf(d1.isSelected()));
+        comparator = comparator.thenComparing((d1, d2) -> d1.getStatus().compareTo(d2.getStatus()));
 
         TableColumnSorter<DependencyLookup> tableColumnSorter = new TableColumnSorter<>(dependenciesViewer, comparator);
         tableColumnSorter.setColumn(resolutionColumn.getColumn());

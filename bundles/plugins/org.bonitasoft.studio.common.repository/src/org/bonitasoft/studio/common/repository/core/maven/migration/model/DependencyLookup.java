@@ -260,6 +260,7 @@ public class DependencyLookup {
         if(!"jar".equals(gav.getType())) {
             dependency.setType(gav.getType());
         }
+        dependency.setScope(gav.getScope());
         return dependency;
     }
 

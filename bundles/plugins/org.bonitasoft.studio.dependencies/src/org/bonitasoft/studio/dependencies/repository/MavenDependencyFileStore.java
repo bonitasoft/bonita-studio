@@ -41,10 +41,6 @@ public class MavenDependencyFileStore extends DependencyFileStore {
         this.artifact = artifact;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return Pics.getImage("jar.gif", DependenciesPlugin.getDefault());
@@ -108,5 +104,5 @@ public class MavenDependencyFileStore extends DependencyFileStore {
             return super.getTransitiveDependencies();
         }
     }
-
+    
 }
