@@ -161,8 +161,10 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
                     }
                 }
                 if (!exists) {
-                    final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
-                    if (jar.equals(defaultDriver) && autoAddDriver && depStore.findDependencyByName(defaultDriver).isPresent()) {
+                    if (jar.equals(defaultDriver)
+                            && autoAddDriver 
+                            && depStore.findDependencyByName(defaultDriver).isPresent()) {
+                        final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
                         depFragment.setExported(true);
                         depFragment.setKey(jar);
                         depFragment.setValue(jar);

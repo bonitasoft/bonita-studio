@@ -16,11 +16,20 @@
  */
 package org.bonitasoft.studio.common.repository.migration;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 
 public interface ProcessModelTransformation {
     
      void transform(EObject modelObject);
+     
+     default List<EObject> markedForRemoval(){
+         return Collections.emptyList();
+     }
+     
+     default void clear() {}
      
      boolean appliesTo(EObject modelObject);
 

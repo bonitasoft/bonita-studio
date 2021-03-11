@@ -29,6 +29,6 @@ public abstract class DatabaseDriverDependencyReplacement extends BonitaJarDepen
 
     public String getFileName() {
         return legacyJarName;
-    } 
+    }
     
 }

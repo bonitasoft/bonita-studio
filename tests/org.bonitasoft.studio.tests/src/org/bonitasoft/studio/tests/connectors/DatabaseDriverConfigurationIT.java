@@ -38,7 +38,7 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.tests.importer.bos.TestBOSArchiveImport;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,11 +64,11 @@ public class DatabaseDriverConfigurationIT {
     public void should_migrate_database_driver_jar_references() throws Exception {
         ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("/DatabaseDriverMigration-1.0.bos"))
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("/DatabaseDriverMigration.bos"))
                         .getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        operation.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
         assertThat(operation.getStatus()).isNotNull();
 
         DependencyRepositoryStore depStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
@@ -101,6 +101,21 @@ public class DatabaseDriverConfigurationIT {
                     .map(Fragment::getValue)
                     .collect(Collectors.toList()))
                             .contains("ojdbc11-21.1.0.0.jar", "postgresql-42.2.19.jar");
+        }
+        
+        process = diagramStore.findProcess("DatabaseDriverMigration", "2.0");
+
+        assertThat(process)
+                .isNotNull();
+        
+        for (Configuration config : process.getConfigurations()) {
+            assertThat(ModelHelper.getAllElementOfTypeIn(config, Fragment.class).stream()
+                    .filter(Fragment::isExported)
+                    .filter(f -> Objects.equals(f.getType(), FragmentTypes.JAR))
+                    .map(Fragment::getValue)
+                    .collect(Collectors.toList()))
+                            .doesNotContain("h2-1.4.200.jar")
+                            .contains("hsqldb-2.5.1.jar");
         }
 
         List<String> dependencies = depStore.getChildren().stream().map(DependencyFileStore::getName)

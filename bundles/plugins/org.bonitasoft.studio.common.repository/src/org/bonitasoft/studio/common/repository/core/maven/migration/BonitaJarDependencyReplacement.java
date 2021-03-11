@@ -171,13 +171,22 @@ public abstract class BonitaJarDependencyReplacement {
     }
 
     protected static Dependency dependency(String groupId, String artifactId, String version) {
+        return dependency(groupId, artifactId, version, Artifact.SCOPE_COMPILE);
+    }
+    
+    protected static Dependency dependency(String groupId, String artifactId, String version, String scope) {
         Dependency dependency = new Dependency();
         dependency.setArtifactId(artifactId);
         dependency.setGroupId(groupId);
         dependency.setVersion(version);
-        dependency.setScope(Artifact.SCOPE_COMPILE);
+        dependency.setScope(scope);
         return dependency;
     }
+    
+
+    public boolean isProvidedScope() {
+        return Objects.equals(Artifact.SCOPE_PROVIDED, mavenDependency.getScope());
+    } 
 
     public static List<DatabaseDriverDependencyReplacement> getDatabaseDriverDependencyReplacements() {
         return DATABASE_DRIVER_DEPENDENCY_REPLACEMENTS;

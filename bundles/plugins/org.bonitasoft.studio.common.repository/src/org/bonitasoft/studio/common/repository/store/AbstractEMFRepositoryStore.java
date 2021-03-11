@@ -38,6 +38,7 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -97,7 +98,6 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
         return migrator;
     }
 
-
     public AdapterFactoryLabelProvider getLabelProvider() {
         if (labelProvider != null) {
             labelProvider.dispose();
@@ -133,7 +133,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
                 || fileName.toLowerCase().endsWith(".gif")
                 || fileName.toLowerCase().endsWith(".jpeg")
                 || fileName.toLowerCase().endsWith(".xsd")) {// not an emf
-                                                                                                                                                                                                                                                                                      // resource
+                                                                                                                                                                                                                                                                               // resource
             return is;
         }
         final CopyInputStream copyIs = new CopyInputStream(is);
@@ -221,15 +221,14 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
             throw new IOException(e1);
         }
 
-       return ReleaseUtils.getNamespaceURI(resourceURI);
+        return ReleaseUtils.getNamespaceURI(resourceURI);
     }
-
 
     public Migrator getMigrator(final String nsURI) {
         Migrator targetMigrator = initializeMigrator();
         if (!targetMigrator.getNsURIs().contains(nsURI)) {
             return MigratorRegistry.getInstance().getMigrator(nsURI);
-        } 
+        }
         return targetMigrator;
     }
 
@@ -262,22 +261,27 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
         return editingDomain.getResourceSet()
                 .createResource(
                         URI.createFileURI(tmpFile.getAbsolutePath()));
-
     }
 
     protected void applyTransformations(EObject modelObject) {
         findTransformers(modelObject)
-            .forEach(transformer -> transformer.transform(modelObject));
+                .forEach(transformer -> transformer.transform(modelObject));
         modelObject.eAllContents()
                 .forEachRemaining(eObject -> findTransformers(eObject)
                         .forEach(transformer -> transformer.transform(eObject)));
+        getRepository()
+                .getProcessModelTransformations().stream().flatMap(t -> t.markedForRemoval().stream())
+                .forEach(toRemove -> EcoreUtil.remove(toRemove));
+        getRepository()
+                .getProcessModelTransformations().stream()
+                .forEach(ProcessModelTransformation::clear);
     }
-    
+
     private Stream<ProcessModelTransformation> findTransformers(EObject eObject) {
         return getRepository()
                 .getProcessModelTransformations()
                 .stream()
                 .filter(t -> t.appliesTo(eObject));
     }
-    
+
 }
