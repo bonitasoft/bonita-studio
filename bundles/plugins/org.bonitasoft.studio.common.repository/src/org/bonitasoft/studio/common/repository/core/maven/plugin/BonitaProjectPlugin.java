@@ -139,7 +139,10 @@ public class BonitaProjectPlugin {
 
     private String getDepenencyReportPath(Object configuration) {
         Xpp3Dom pluginConfiguration = (Xpp3Dom) configuration;
-        return pluginConfiguration.getChild("outputFile").getValue();
+        if(pluginConfiguration != null && pluginConfiguration.getChild("outputFile") != null) {
+            return pluginConfiguration.getChild("outputFile").getValue();
+        }
+        return DEAULT_REPORT_OUTPUT_FILE;
     }
 
     private boolean isBonitaProjectPlugin(Plugin plugin) {
