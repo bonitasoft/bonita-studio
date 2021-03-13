@@ -17,13 +17,6 @@ import org.junit.runner.RunWith;
 public class TestSForceConnection extends AbstractSforceTest {
 
 	@Test
-	public void testConnectionConnect() throws Exception {
-		goToSalesForceWizard(CREATE_OBJECT);
-		connectToSalesforce();
-		bot.button(IDialogConstants.CANCEL_LABEL).click();
-	}
-
-	@Test
 	public void testConnectionDisconnect() throws Exception {
 		goToSalesForceWizard(CREATE_OBJECT);
 		connectToSalesforce();

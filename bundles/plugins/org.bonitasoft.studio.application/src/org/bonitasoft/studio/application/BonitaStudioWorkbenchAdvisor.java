@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -422,6 +423,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableGroovyDSL();
         initXMLandHTMLValidationPreferences();
         setSystemProperties();
+        
+        
+        new InstallLocalRepositoryContribution().execute();
+        
         //Avoid deadlock and thread timeout at startup
         new GroovyConsoleLineTracker();
         repositoryAccessor.start(monitor);

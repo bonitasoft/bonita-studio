@@ -1,12 +1,21 @@
-/*******************************************************************************
- * Copyright (C) 2015 Bonitasoft S.A.
- * Bonitasoft is a trademark of Bonitasoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
- * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
-package org.bonitasoft.studio.maven;
+/**
+ * Copyright (C) 2021 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.common.repository.core.maven.contribution;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -25,7 +34,7 @@ import java.util.Arrays;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.bonitasoft.studio.businessobject.maven.MavenInstallFileCommand;
+import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +46,7 @@ public class MavenLocalRepositoryContributorTest {
 
     private MavenLocalRepositoryContributor contributor;
     @Mock
-    private MavenInstallFileCommand installFileCommand;
+    private MavenInstallFileOperation installFileCommand;
     @Mock
     private ArtifactRepository localRepository;
     @Mock
@@ -53,7 +62,6 @@ public class MavenLocalRepositoryContributorTest {
     public void setUp() throws Exception {
         contributor = spy(
                 new MavenLocalRepositoryContributor(internalRepository, localRepository, catalog, installFileCommand));
-        doReturn(new File("dependencies.csv")).when(catalog).getCatalogFile();
         doReturn(pomFile).when(contributor).toPomFile(notNull(Artifact.class));
         doReturn(artifactFile).when(contributor).toArtifactFile(notNull(Artifact.class));
     }
@@ -64,7 +72,7 @@ public class MavenLocalRepositoryContributorTest {
         final File file = new File("artifactFile");
         when(artifactToInstall.getFile()).thenReturn(file);
         when(artifactFile.exists()).thenReturn(true);
-        when(catalog.getDependencies()).thenReturn(Arrays.asList(artifactToInstall));
+        when(catalog.parseDependencies()).thenReturn(Arrays.asList(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(null);
 
         contributor.execute();
@@ -79,7 +87,7 @@ public class MavenLocalRepositoryContributorTest {
         final File file = mock(File.class);
         when(file.exists()).thenReturn(true);
         when(artifactToInstall.getFile()).thenReturn(file);
-        when(catalog.getDependencies()).thenReturn(Arrays.asList(artifactToInstall));
+        when(catalog.parseDependencies()).thenReturn(Arrays.asList(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(artifactToInstall);
 
         contributor.execute();

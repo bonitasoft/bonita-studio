@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
- 	<extension
-         point="org.bonitasoft.studio.common.poststartup">
-      <contribution
-            class="org.bonitasoft.studio.maven.contribution.InstallRestAPIArchetypeContribution">
-      </contribution>
-   </extension>
    <extension
          point="org.bonitasoft.studio.repositoryStore">
       <repositoryStore

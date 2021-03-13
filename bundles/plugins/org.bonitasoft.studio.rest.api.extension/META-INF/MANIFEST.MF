@@ -7,7 +7,6 @@ Bundle-Version: 7.13.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator
 Bundle-Vendor: Bonitasoft S.A.
 Export-Package: org.bonitasoft.studio.maven,
- org.bonitasoft.studio.maven.contribution,
  org.bonitasoft.studio.maven.i18n,
  org.bonitasoft.studio.maven.model,
  org.bonitasoft.studio.maven.operation,

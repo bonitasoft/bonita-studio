@@ -33,6 +33,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -65,7 +66,8 @@ public class ProjectExplorerBot extends BotBase {
     public BotBdmEditor newBdm() {
         SWTBotTreeItem projectTreeItem = getProjectTreeItem();
         bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu(org.bonitasoft.studio.application.i18n.Messages.businessDataModel)
+        projectTreeItem.contextMenu().menu("New")
+                .menu(org.bonitasoft.studio.application.i18n.Messages.businessDataModel)
                 .click();
         return new BotBdmEditor(bot);
     }
@@ -164,7 +166,8 @@ public class ProjectExplorerBot extends BotBase {
     public SWTBotTree getProjectExplorerTree() {
         bot.waitUntil(
                 Conditions.waitForWidget(
-                        allOf(widgetOfType(Tree.class), withId("org.bonitasoft.studio.application.projectExplorerTree"))),
+                        allOf(widgetOfType(Tree.class),
+                                withId("org.bonitasoft.studio.application.projectExplorerTree"))),
                 120000);
         return bot.treeWithId("org.bonitasoft.studio.application.projectExplorerTree");
     }
@@ -192,19 +195,20 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public void waitUntilActiveEditorTitleIs(String title, Optional<String> extension) {
-        String expectedTitle = extension.isPresent() ? title + extension.get() : title;
-        ICondition condition = new ConditionBuilder()
-                .withTest(() -> {
-                    try {
-                        return Objects.equals(bot.activeEditor().getTitle(), expectedTitle);
-                    } catch (WidgetNotFoundException e) {
-                        return false;
-                    }
-                })
-                .withFailureMessage(() -> String.format("The active editor title should be  %s instead of %s", expectedTitle,
-                        bot.activeEditor().getTitle()))
-                .create();
-        bot.waitUntil(condition, 10000);
+        String expectedTitle = extension.map(ext -> title + ext).orElse(title);
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+                return Objects.equals(ProjectExplorerBot.this.bot.activeEditor().getTitle(), expectedTitle);
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return String.format("The active editor title should be  %s instead of %s", expectedTitle,
+                        ProjectExplorerBot.this.bot.activeEditor().getTitle());
+            }
+        }, 10000);
     }
 
 }

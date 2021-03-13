@@ -14,6 +14,7 @@
 
 
     <modules>
+    	<module>bonita-local-maven-repository</module>
      	<module>bonita-business-data-generator</module>
      	<module>bonita-studio-watchdog</module>
         <module>org.bonitasoft.studio-models</module>
@@ -57,6 +58,7 @@
         <module>org.bonitasoft.studio.importer.bos</module>
         <module>org.bonitasoft.studio.intro</module>
         <module>org.bonitasoft.studio.la</module>
+        <module>org.bonitasoft.studio.local.repository</module>
         <module>org.bonitasoft.studio.migration</module>
         <module>org.bonitasoft.studio.model.edit.custom</module>
         <module>org.bonitasoft.studio.refactoring</module>

@@ -31,15 +31,20 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     protected MavenProjectHelper helper = new MavenProjectHelper();
 
     private boolean disableAnalyze;
-    
+
+    protected boolean modelUpdated = false;
+
     protected Model readModel(IProject project) throws CoreException {
         return helper.getMavenModel(project);
     }
 
     protected void saveModel(IProject project, Model model, IProgressMonitor monitor) throws CoreException {
-        helper.saveModel(project, model);
-        if (!disableAnalyze) {
-            getRepositoryAccessor().getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+        if (modelUpdated) {
+            helper.saveModel(project, model);
+            if (!disableAnalyze) {
+                getRepositoryAccessor().getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+            }
+            modelUpdated = false;
         }
     }
 

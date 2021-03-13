@@ -57,6 +57,7 @@ public class AddDependencyOperation extends MavenModelOperation {
                     .stream()
                     .noneMatch(existingDep -> new GAV(existingDep).equals(new GAV(dep)))) {
                 model.getDependencies().add(dep);
+                modelUpdated = true;
             }
         });
 

@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import org.bonitasoft.studio.maven.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.bonitasoft.studio.swtbot.framework.restApi.RestAPIExtensionCreationWizardBot;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -42,6 +43,7 @@ public class RestApiProjectExplorerBot extends ProjectExplorerBot {
 
     public void runRestApiTests(String restApi) {
         clickOnContextualMenu(getRestApiTreeItem(restApi), "Run JUnit Test");
+        bot.waitUntil(BonitaBPMConditions.noPopupActive(), 200000);
     }
 
     public void deployRestAPi(String restApi) {

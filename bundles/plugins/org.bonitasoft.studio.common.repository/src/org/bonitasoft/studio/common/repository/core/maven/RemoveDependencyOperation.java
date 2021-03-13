@@ -51,6 +51,7 @@ public class RemoveDependencyOperation extends MavenModelOperation {
                     .findFirst();
             if (result.isPresent()) {
                 model.getDependencies().remove(result.get());
+                modelUpdated = true;
             }
         });
 

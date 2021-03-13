@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.bonitasoft.studio.maven.MavenLocalRepositoryContributor;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenLocalRepositoryContributor;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
 import com.google.common.base.Joiner;

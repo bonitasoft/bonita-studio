@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -99,21 +98,6 @@ public class MavenProjectHelper {
                 .filter(dep -> Objects.equals(dep.getType(), dependency.getType()))
                 .filter(dep -> Objects.equals(dep.getClassifier(), dependency.getClassifier()))
                 .findFirst();
-    }
-
-    public IStatus mergeDependencies(IProject project, Model model)   {
-        try {
-            Model existingModel = getMavenModel(project);
-            model.getDependencies().stream()
-                .filter(d -> !Objects.equals(Artifact.SCOPE_PROVIDED, d.getScope()))
-                .filter(d -> findDependency(existingModel, d).isEmpty())
-                .forEach(existingModel.getDependencies()::add);
-            saveModel(project, existingModel);
-            return Status.OK_STATUS;
-        } catch (CoreException e) {
-           return e.getStatus();
-        }
-      
     }
 
 }

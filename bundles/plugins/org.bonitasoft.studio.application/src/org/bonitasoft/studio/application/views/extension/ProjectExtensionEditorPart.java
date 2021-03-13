@@ -33,9 +33,9 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarke
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.extension.ExtensionAction;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
@@ -184,7 +184,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
                     createCard(parent, dep, bonitaDependency.get());
-                } else if (!MavenProjectModelBuilder.isInternalDependency(dep)) {
+                } else if (!ProjectDefaultConfiguration.isInternalDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {

@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
@@ -97,6 +98,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier, Supplie
     private static final int BUTTON_WIDTH = 80;
     private static final String BOS_EXTENSION = "*.bos";
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
+
 
     protected TreeViewer viewer;
     private Section repositorySection;
@@ -286,6 +288,7 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier, Supplie
         existingRepoObservable.setValue(getCurrentRepoNameWithInfo());
 
         new CComboWidget.Builder()
+                .withId(SWTBotConstants.SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO)
                 .withItems(repositories)
                 .labelAbove()
                 .readOnly()

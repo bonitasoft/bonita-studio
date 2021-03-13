@@ -116,6 +116,9 @@ public final class Messages extends NLS {
     public static String restApi;
     public static String unknown;
 
+    public static String dependenciesInstallationMsg;
+    public static String dependenciesInstallation;
+
     private Messages() {
         // Do not instantiate
     }

@@ -243,10 +243,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return project;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepository#open()
-     */
     @Override
     public AbstractRepository open(final IProgressMonitor monitor) {
         try {
