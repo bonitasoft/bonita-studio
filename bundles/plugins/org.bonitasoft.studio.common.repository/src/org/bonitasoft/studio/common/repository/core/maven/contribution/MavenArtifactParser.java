@@ -6,7 +6,7 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.maven;
+package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -16,7 +16,6 @@ import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 
 public class MavenArtifactParser {
 
-    private static final String REPOSITORY_TOKEN = "REPOSITORY_ROOT";
     private final DefaultArtifactFactory artifactFactory;
 
     public MavenArtifactParser(final DefaultArtifactFactory artifactFactory) {
@@ -24,10 +23,7 @@ public class MavenArtifactParser {
     }
 
     public Artifact parse(Path artifactPath) {
-        if (artifactPath.startsWith(REPOSITORY_TOKEN)) {
-            artifactPath = artifactPath.subpath(1, artifactPath.getNameCount());
-        }
-        final String filename = artifactPath.getName(artifactPath.getNameCount() - 1).toString();
+        final String filename = artifactPath.getFileName().toString();
         final String type = filename.endsWith(".jar") ? "jar" : "pom";
         final Artifact artifact = artifactFactory.createArtifactWithClassifier(resolveGroupId(artifactPath),
                 resolveArtifactId(artifactPath),
@@ -43,8 +39,17 @@ public class MavenArtifactParser {
     }
 
     private String resolveClassifier(final String filename) {
-        if (filename.endsWith("sources.jar")) {
+        if (filename.endsWith("-sources.jar")) {
             return "sources";
+        }
+        if (filename.endsWith("-javadoc.jar")) {
+            return "javadoc";
+        }
+        if (filename.endsWith("-noaop.jar")) {
+            return "noaop";
+        }
+        if (filename.endsWith("-no_aop.jar")) {
+            return "no_aop";
         }
         return null;
     }

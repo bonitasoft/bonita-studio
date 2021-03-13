@@ -15,10 +15,7 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.RestApiProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,15 +45,7 @@ public class ProjectExplorerRestApiIT {
         String pathTemplate1 = "pathTemplate1";
 
         createRestApi(packageName, name1, projectName, pathTemplate1);
-        // Set a bonita.version available on maven central
         restAPIExplorerBot.openRestApiPomFile(projectName);
-        SWTBotEditor activeEditor = bot.activeEditor();
-        SWTBotEclipseEditor textEditor = activeEditor.toTextEditor();
-        textEditor.selectLine(19);
-        textEditor.pressShortcut(Keystrokes.DELETE);
-        textEditor.insertText(19, 8, "<bonita.version>7.11.2</bonita.version>\n");
-        activeEditor.save();
-        
         restAPIExplorerBot.buildRestApi(projectName);
         restAPIExplorerBot.runRestApiTests(projectName);
         restAPIExplorerBot.deployRestAPi(projectName);

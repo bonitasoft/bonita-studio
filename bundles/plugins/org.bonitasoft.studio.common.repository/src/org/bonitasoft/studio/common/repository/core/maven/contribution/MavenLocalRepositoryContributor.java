@@ -6,7 +6,7 @@
  * Bonitasoft, 32 rue Gustave Eiffel – 38000 Grenoble
  * or Bonitasoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.maven;
+package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -20,17 +20,17 @@ import java.net.URLDecoder;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.bonitasoft.studio.businessobject.maven.MavenInstallFileCommand;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
 
 public class MavenLocalRepositoryContributor {
 
     public static final String BONITA_ARTIFACT_VERSION = ProductVersion.mavenVersion();
 
-    private final MavenInstallFileCommand installCommand;
+    private final MavenInstallFileOperation installCommand;
     private final DependencyCatalog catalog;
     private final ArtifactRepository localRepository;
     private final ArtifactRepository internalRepository;
@@ -38,7 +38,7 @@ public class MavenLocalRepositoryContributor {
     public MavenLocalRepositoryContributor(final ArtifactRepository internalRepository,
             final ArtifactRepository localRepository,
             final DependencyCatalog catalog,
-            final MavenInstallFileCommand installCommand) {
+            final MavenInstallFileOperation installCommand) {
         this.localRepository = localRepository;
         this.catalog = catalog;
         this.installCommand = installCommand;
@@ -46,10 +46,8 @@ public class MavenLocalRepositoryContributor {
     }
 
     public void execute() throws IOException, CoreException, ArtifactInstallationException {
-        BonitaStudioLog.info("Configuring local m2 repository...", RestAPIExtensionActivator.PLUGIN_ID);
-        File catalogFile = catalog.getCatalogFile();
-        catalog.parse(catalogFile);
-        for (final Artifact artifact : catalog.getDependencies()) {
+        BonitaStudioLog.info("Configuring local m2 repository...", CommonRepositoryPlugin.PLUGIN_ID);
+        for (final Artifact artifact :  catalog.parseDependencies()) {
             final Artifact foundArtifact = localRepository.find(artifact);
             if (foundArtifact == null || !foundArtifact.getFile().exists()) {
                 final File artifactFile = toArtifactFile(artifact);
@@ -65,7 +63,7 @@ public class MavenLocalRepositoryContributor {
                     BonitaStudioLog.warning(
                             String.format("File %s for artifact %s not found in studio internal repository",
                                     artifactFile, artifact),
-                            RestAPIExtensionActivator.PLUGIN_ID);
+                            CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
         }

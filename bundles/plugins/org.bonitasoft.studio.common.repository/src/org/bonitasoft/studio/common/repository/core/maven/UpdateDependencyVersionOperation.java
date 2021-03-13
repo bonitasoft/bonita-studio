@@ -56,7 +56,7 @@ public class UpdateDependencyVersionOperation extends MavenModelOperation {
 
                 model.removeDependency(dependencyToUpdate);
                 model.addDependency(dependencyUpdated);
-              
+                modelUpdated = true;
             }
         });        
       

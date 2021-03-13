@@ -18,10 +18,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -82,11 +83,8 @@ public class TestOrganizationPassword {
         assertNotNull("filePath should not be null", archiveURL.getPath());
         File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
         assertTrue("organization to import does not exist", toImport.exists());
-        FileInputStream fis = new FileInputStream(toImport);
-        String id = toImport.getName();
-        organizationStore.importInputStream(id, fis);
-        if (fis != null) {
-            fis.close();
+        try(InputStream fis = Files.newInputStream(toImport.toPath())){
+            organizationStore.importInputStream(toImport.getName(), fis);
         }
     }
 

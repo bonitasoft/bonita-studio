@@ -90,14 +90,8 @@ public class ProjectExplorerLivingApplicationIT {
         projectExplorerBot.waitUntilActiveEditorTitleIs(appName, ext);
         validateApplicatonExists(appName);
 
-        String newName = findNewApplicationName();
-        livingApplicationBot.renameApplication(appName, newName);
-        projectExplorerBot.waitUntilActiveEditorTitleIs(newName, ext);
-        validateApplicatonExists(newName);
+        livingApplicationBot.deleteApplication(appName);
         validateApplicatonDoesntExist(appName);
-
-        livingApplicationBot.deleteApplication(newName);
-        validateApplicatonDoesntExist(newName);
 
         livingApplicationBot.exportApplication().cancel();
 

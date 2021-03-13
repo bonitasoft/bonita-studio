@@ -14,8 +14,8 @@ import javax.inject.Named;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
-import org.bonitasoft.studio.maven.contribution.InstallRestAPIArchetypeContribution;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
 import org.bonitasoft.studio.theme.ThemeRepositoryStore;
@@ -56,7 +56,7 @@ public class NewThemeHandler extends AbstractHandler {
         try {
             new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, monitor -> {
                 monitor.beginTask(Messages.installingDependencies, IProgressMonitor.UNKNOWN);
-                new InstallRestAPIArchetypeContribution().execute();
+                new InstallLocalRepositoryContribution().execute();
             });
         } catch (InvocationTargetException | InterruptedException e) {
             throw new ExecutionException(e.getMessage(), e);

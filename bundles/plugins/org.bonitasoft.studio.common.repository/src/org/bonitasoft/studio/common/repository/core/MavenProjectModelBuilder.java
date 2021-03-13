@@ -14,30 +14,14 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.maven.model.Build;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.PluginManagement;
-import org.apache.maven.model.Repository;
-import org.apache.maven.model.RepositoryPolicy;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.bonitasoft.studio.common.repository.core.maven.model.MavenDependency;
+import org.bonitasoft.studio.common.repository.core.maven.model.MavenPlugin;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 
 public class MavenProjectModelBuilder {
-
-    public static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
-    public static final String BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
-    public static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.0.1-SNAPSHOT";
-    private static final Set<Dependency> INTERNAL_DEPENDENCIES = createInternalDependencies();
 
     private String artifactId;
     private String groupId;
@@ -45,7 +29,6 @@ public class MavenProjectModelBuilder {
     private String displayName;
     private String description;
     private String bonitaVersion;
-    private List<Dependency> dependencies = new ArrayList<>();
 
     public String getArtifactId() {
         return artifactId;
@@ -95,14 +78,6 @@ public class MavenProjectModelBuilder {
         this.bonitaVersion = bonitaVersion;
     }
 
-    public List<Dependency> getDependencies() {
-        return dependencies;
-    }
-
-    public void setDependencies(List<Dependency> dependencies) {
-        this.dependencies = dependencies;
-    }
-
     public Model toMavenModel() {
         Model model = new Model();
         model.setModelVersion("4.0.0");
@@ -112,119 +87,28 @@ public class MavenProjectModelBuilder {
         model.setVersion(getVersion());
         model.setDescription(getDescription());
 
-        model.addProperty("bonita.version", getBonitaVersion());
-        model.addProperty("groovy.version", "2.4.21");
-        model.addProperty("slf4j-api.version", "1.7.30");
-        model.addProperty("maven.compiler.source", "11");
-        model.addProperty("maven.compiler.target", "11");
-        model.addProperty("project.build.sourceEncoding", "UTF-8");
-        model.addProperty("project.reporting.outputEncoding", "UTF-8");
-        model.addProperty("build-helper-maven-plugin.version", "3.2.0");
-        model.addProperty("maven-install-plugin.version", "3.0.0-M1");
-        model.addProperty("bonita-project-maven-plugin.version", BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION);
+        ProjectDefaultConfiguration defaultConfiguration = new ProjectDefaultConfiguration(bonitaVersion);
+        defaultConfiguration.getProperties()
+                .forEach((key, value) -> model.addProperty(key.toString(), value.toString()));
 
-
-        INTERNAL_DEPENDENCIES.stream().forEach(model::addDependency);
-        dependencies.stream().forEach(model::addDependency);
+        defaultConfiguration.getDependencies().stream()
+                .map(MavenDependency::toProvidedDependency)
+                .forEach(model::addDependency);
 
         Build build = new Build();
-        Plugin helperPlugin = plugin("org.codehaus.mojo", "build-helper-maven-plugin",
-                "${build-helper-maven-plugin.version}");
-        helperPlugin.addExecution(pluginExecution("generate-sources",
-                Collections.singletonList("add-source"),
-                createBuilderHelperMavenPluginConfiguration()));
-        build.addPlugin(helperPlugin);
+        defaultConfiguration.getPlugins().stream()
+                .filter(MavenPlugin::hasExecutions)
+                .map(MavenPlugin::toPlugin)
+                .forEach(build::addPlugin);
 
         PluginManagement pluginManagement = new PluginManagement();
-        pluginManagement.addPlugin(plugin("org.apache.maven.plugins", "maven-install-plugin",
-                "${maven-install-plugin.version}"));
-        pluginManagement.addPlugin(
-                plugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID, BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
-                        "${bonita-project-maven-plugin.version}"));
+        defaultConfiguration.getPlugins().stream()
+                .map(MavenPlugin::toManagedPlugin)
+                .forEach(pluginManagement::addPlugin);
 
         build.setPluginManagement(pluginManagement);
         model.setBuild(build);
-
-        model.addPluginRepository(repository("ossrh-snapshot", "ossrh-snapshot",
-                "https://oss.sonatype.org/content/repositories/snapshots/", false, true));
-
         return model;
-    }
-    
-    private static Set<Dependency> createInternalDependencies() {
-        Set<Dependency> result = new HashSet<>();
-        if (PlatformUtil.isACommunityBonitaProduct()) {
-            result
-                    .add(providedDependency("org.bonitasoft.engine", "bonita-common", "${bonita.version}"));
-        } else {
-            result
-                    .add(providedDependency("com.bonitasoft.engine", "bonita-common-sp", "${bonita.version}"));
-        }
-        result.add(providedDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"));
-        result.add(providedDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
-        return result;
-    }
-
-    private Repository repository(String id, String name, String url, boolean release, boolean snapshot) {
-        Repository repository = new Repository();
-        repository.setId(id);
-        repository.setName(name);
-        repository.setUrl(url);
-        RepositoryPolicy releaseRepositoryPolicy = new RepositoryPolicy();
-        releaseRepositoryPolicy.setEnabled(release);
-        repository.setReleases(releaseRepositoryPolicy);
-        RepositoryPolicy snapshotRepositoryPolicy = new RepositoryPolicy();
-        snapshotRepositoryPolicy.setEnabled(snapshot);
-        repository.setSnapshots(snapshotRepositoryPolicy);
-        return repository;
-    }
-
-    private PluginExecution pluginExecution(String phase, List<String> goals, Object configuration) {
-        PluginExecution execution = new PluginExecution();
-        execution.setPhase(phase);
-        execution.setGoals(goals);
-        execution.setConfiguration(configuration);
-        return execution;
-    }
-
-    private static Plugin plugin(String groupId, String artifactId, String version) {
-        Plugin plugin = new Plugin();
-        plugin.setGroupId(groupId);
-        plugin.setArtifactId(artifactId);
-        plugin.setVersion(version);
-        return plugin;
-    }
-
-    private static Dependency providedDependency(String groupId, String artifactId, String version) {
-        Dependency dependency = new Dependency();
-        dependency.setScope("provided");
-        dependency.setGroupId(groupId);
-        dependency.setArtifactId(artifactId);
-        dependency.setVersion(version);
-        return dependency;
-    }
-
-    private Xpp3Dom createBuilderHelperMavenPluginConfiguration() {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-        Xpp3Dom sources = new Xpp3Dom("sources");
-        Xpp3Dom srcConnectors = new Xpp3Dom("source");
-        srcConnectors.setValue("src-connectors");
-        Xpp3Dom srcFilters = new Xpp3Dom("source");
-        srcFilters.setValue("src-filters");
-        Xpp3Dom srcGroovy = new Xpp3Dom("source");
-        srcGroovy.setValue("src-groovy");
-        Xpp3Dom providedGroovySrc = new Xpp3Dom("source");
-        providedGroovySrc.setValue("src-providedGroovy");
-        sources.addChild(srcConnectors);
-        sources.addChild(srcFilters);
-        sources.addChild(srcGroovy);
-        sources.addChild(providedGroovySrc);
-        pluginConfiguration.addChild(sources);
-        return pluginConfiguration;
-    }
-
-    public static boolean isInternalDependency(Dependency depednency) {
-        return INTERNAL_DEPENDENCIES.stream().map(GAV::new).anyMatch(new GAV(depednency)::equals);
     }
 
 }

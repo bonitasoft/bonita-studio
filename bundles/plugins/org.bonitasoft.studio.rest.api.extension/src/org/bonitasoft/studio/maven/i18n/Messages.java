@@ -94,8 +94,6 @@ public class Messages extends NLS {
     public static String applySecurityChangesTitle;
     public static String applySecurityChangesMsg;
     public static String project;
-    public static String dependenciesInstallation;
-    public static String dependenciesInstallationMsg;
     public static String installingDependencies;
     public static String missingDependency;
     public static String olderVersionToUpdateWarning;

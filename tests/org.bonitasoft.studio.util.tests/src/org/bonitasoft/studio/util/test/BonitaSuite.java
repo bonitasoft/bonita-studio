@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.util.test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -22,16 +23,17 @@ import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.common.ConsoleColors;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -176,8 +178,8 @@ public class BonitaSuite extends Suite {
         preferenceStore.setValue(BonitaPreferenceConstants.HIDE_BDM_REFACTOR_PREVIEW, true);
         WebBrowserUIPlugin.getInstance().getPreferenceStore()
                 .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
-        EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         FileActionDialog.setDisablePopup(true);
+        BOSEngineManager.getInstance().start();
     }
 
 }

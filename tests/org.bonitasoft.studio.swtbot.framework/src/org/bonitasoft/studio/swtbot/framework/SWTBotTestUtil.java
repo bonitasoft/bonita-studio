@@ -967,7 +967,22 @@ public class SWTBotTestUtil implements SWTBotConstants {
         }
         proposalTAble.select(row);
         proposalTAble.pressShortcut(Keystrokes.CR);
-        bot.waitUntil(Conditions.shellCloses(proposalShell));
+        bot.waitUntil(new DefaultCondition() {
+            
+            @Override
+            public boolean test() throws Exception {
+               if(!Conditions.shellCloses(proposalShell).test()){
+                   proposalTAble.pressShortcut(Keystrokes.CR);
+                   return false;
+               }
+               return true;
+            }
+            
+            @Override
+            public String getFailureMessage() {
+                return "Failed to select Expression proposal";
+            }
+        });
     }
 
     public static List<String> listExpressionProposal(final SWTBot bot, final int index) {

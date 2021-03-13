@@ -12,12 +12,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.connector.wizard.sforce.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -27,6 +31,7 @@ import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 
 import com.sforce.ws.ConnectionException;
@@ -55,12 +60,15 @@ public abstract class AbstractSforceTest implements SWTBotConstants {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
+    
+    @BeforeClass
+    public static void installSalesForceConnector() throws CoreException {
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-salesforce", "1.1.3")
+        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
 
     @Before
     public void setUp() throws Exception {
-        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-salesforce", "1.1.3")
-            .run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        
         SWTBotTestUtil.getKeybord();
         sftoolMockUtil = new SalesforceMockUtil();
         sftoolMockUtil.initMock();

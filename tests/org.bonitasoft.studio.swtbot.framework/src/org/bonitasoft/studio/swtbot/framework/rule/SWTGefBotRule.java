@@ -25,6 +25,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -67,6 +68,8 @@ public class SWTGefBotRule implements TestRule {
                 try {
                     base.evaluate();
                 }catch(Throwable t) {
+                    String shellText = bot.activeShell().getText();
+                    BonitaStudioLog.error(String.format("%s failed ! (active shell = %s)", description.getDisplayName(), shellText), t);
                     bot.captureScreenshot(String.format("screenshots/%s_%s.jpg", description.getClassName(), description.getMethodName()));
                     throw t;
                 } finally {
@@ -93,10 +96,24 @@ public class SWTGefBotRule implements TestRule {
     }
 
     private void closeAllShells(SWTWorkbenchBot bot, Exception e) {
+        System.out.println(String.format("Trying to close shell '%s' after test failure %s", bot.activeShell().getText(), e));
+        //Force shell close
         final SWTBotShell[] shells = bot.shells();
         for (final SWTBotShell shell : shells) {
             if (shell.isOpen() && !isEclipseShell(shell)) {
-                System.out.println(String.format("Trying to close shell '%s' after test failure %s", shell.getText(), e));
+                shell.activate();
+                try {
+                    bot.button(IDialogConstants.CANCEL_LABEL).click();
+                    break;
+                }catch (Throwable t) {
+                    // not in a wizard
+                }
+                try {
+                    bot.button(IDialogConstants.CLOSE_LABEL).click();
+                    break;
+                }catch (Throwable t) {
+                    // not in a dialog
+                }
                 try {
                     shell.close();
                 } catch (TimeoutException e1) {

@@ -51,7 +51,7 @@
 					<includes>
 						<include>**/*TestSuite.java</include>
 					</includes>
-					<argLine>-Xmx1g -DLAZYLOAD_ENGINE -Ddisable.notifications -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
+					<argLine>-Xmx1g -Ddisable.notifications -Dbonita.noregister=1 -Declipse.log.level=${tests.log.level}</argLine>
 					<appArgLine>-nl en -clean</appArgLine>
 					
 					<osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
