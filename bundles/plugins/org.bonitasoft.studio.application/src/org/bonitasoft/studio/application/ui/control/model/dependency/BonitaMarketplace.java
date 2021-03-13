@@ -14,27 +14,35 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
-import static org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage.ICON_SIZE;
-
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
+import org.bonitasoft.studio.application.ApplicationPlugin;
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageDataProvider;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
@@ -44,6 +52,8 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 public class BonitaMarketplace {
+
+    private static final String MARKETPLACE = "marketplace";
 
     private static BonitaMarketplace INSTANCE;
 
@@ -57,22 +67,113 @@ public class BonitaMarketplace {
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
     public static final String DATABASE_DRIVER_TYPE = "Database driver";
 
+    private static final String MARKETPLACE_METADATA = "marketplace.version";
+
     private List<BonitaArtifactDependency> dependencies;
     private LocalResourceManager manager;
     private RGB iconBackground;
 
-    private BonitaMarketplace() {
-        manager = new ResourceManagerManger().getResourceManager(Display.getDefault());
+    private File localStore;
 
+    private BonitaMarketplace(IProgressMonitor monitor) {
+        manager = new ResourceManagerManger().getResourceManager(Display.getDefault());
         // Correspond to the css class wizardHighlightBackground -> we can't use css here :'(
         iconBackground = PreferenceUtil.isDarkTheme()
                 ? new RGB(47, 47, 47)
                 : new RGB(245, 245, 245);
+        try {
+            checkStoreContent(monitor);
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
-    public static BonitaMarketplace getInstance() {
+    private void checkStoreContent(IProgressMonitor monitor) throws IOException {
+        IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
+        localStore = new File(stateLocation.toFile(), MARKETPLACE);
+        String currentVersion = readMetadata();
+        String latestVersion = getLatestTag();
+        if (currentVersion == null || currentVersion.isBlank() || !localStore.exists() || !Objects.equals(currentVersion, latestVersion)) {
+            Path tmpFile = Files.createTempFile("bonita-marketplace", ".zip");
+            download(createURL(String.format("%s/%s/%s-%s.zip", ASSET_URL, latestVersion, "bonita-marketplace", latestVersion)),
+                    tmpFile,
+                    monitor);
+            extract(tmpFile, stateLocation.toFile().toPath());
+            Files.delete(tmpFile);
+            updateMetadata(latestVersion);
+        }
+    }
+
+    private void updateMetadata(String latestVersion) {
+        File metadataFile = getMetadataFile();
+        if (metadataFile.exists()) {
+            metadataFile.delete();
+        }
+        try {
+            metadataFile.createNewFile();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        try (OutputStream os = Files.newOutputStream(metadataFile.toPath())) {
+            Properties p = new Properties();
+            p.setProperty("marketplace.version", latestVersion);
+            p.store(os, null);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public File getMetadataFile() {
+        IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
+        return new File(stateLocation.toFile(), MARKETPLACE_METADATA);
+    }
+
+    private String readMetadata() {
+        File metadataFile = getMetadataFile();
+        if (metadataFile.exists()) {
+            try (InputStream is = Files.newInputStream(metadataFile.toPath())) {
+                Properties p = new Properties();
+                p.load(is);
+                return p.getProperty("marketplace.version");
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return null;
+    }
+
+    private void extract(Path sourceZip, Path target) {
+        if (target.toFile().exists()) {
+            FileUtil.deleteDir(target.toFile());
+        }
+        try {
+            PlatformUtil.unzipZipFiles(sourceZip.toFile(), target.toFile(),
+                    AbstractRepository.NULL_PROGRESS_MONITOR);
+        } catch (Exception e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    private void download(URL url, Path target, IProgressMonitor monitor) throws IOException {
+        URLConnection connection = url.openConnection();
+        double completeFileSize = connection.getContentLength();
+        try (ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+                FileOutputStream fileOutputStream = new FileOutputStream(target.toFile());
+                FileChannel fileChannel = fileOutputStream.getChannel()) {
+            long chunkSize = 500;
+            int position = 0;
+            monitor.beginTask(Messages.fetchingExtensions, (int) completeFileSize);
+            monitor.subTask("Downloading: " + target.getFileName().toString());
+            while (position < completeFileSize) {
+                position += fileOutputStream.getChannel().transferFrom(readableByteChannel, position, chunkSize);
+                monitor.worked((int) chunkSize);
+            }
+        }
+    }
+
+    public static BonitaMarketplace getInstance(IProgressMonitor monitor) {
         if (INSTANCE == null) {
-            INSTANCE = new BonitaMarketplace();
+            INSTANCE = new BonitaMarketplace(monitor);
         }
         return INSTANCE;
     }
@@ -90,67 +191,24 @@ public class BonitaMarketplace {
      * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
      */
     public void loadDependencies() {
-        String latestTag = getLatestTag();
-        String connectorsUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, CONNECTORS_ASSET_NAME);
-        String actorFiltersUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, ACTORS_FILTERS_ASSET_NAME);
-        String driversUrl = String.format("%s/%s/%s", ASSET_URL, latestTag, DATABASE_DRIVERS_ASSET_NAME);
-        ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
-        dependencies = loader.load(createURL(connectorsUrl));
-        dependencies.addAll(loader.load(createURL(actorFiltersUrl)));
-        dependencies.addAll(loader.load(createURL(driversUrl)));
-        dependencies.forEach(this::createIcon);
+        if(dependencies == null) {
+            ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
+            dependencies = loader.load(localStore.toPath().resolve("marketplace.json"));
+            dependencies.stream()
+                    .forEach(dep -> {
+                        MarketplaceIconLoader iconLoader = new MarketplaceIconLoader(dep, manager, iconBackground);
+                        dep.setIconImage(iconLoader.load(iconAssetPath(dep.getIcon())));
+                    });
+        }
     }
 
-    public boolean isLoaded() {
-        return dependencies != null;
-    }
-
-    private void createIcon(BonitaArtifactDependency dep) {
-        Image icon = null;
-        if (dep.getIcon() != null) {
-            icon = getIcon(createURL(dep.getIcon()));
-        }
-        if (icon == null) {
-            icon = Objects.equals(dep.getType(), CONNECTOR_TYPE)
-                    ? Pics.getImage(PicsConstants.connectorDefaultIcon)
-                    : Pics.getImage(PicsConstants.actorfilterDefaultIcon);
-        }
-        if (icon.getBounds().height != ICON_SIZE
-                || icon.getBounds().width != ICON_SIZE) {
-            icon = resize(icon);
-        }
-        dep.setIconImage(icon);
-    }
-
-    private Image getIcon(URL url) {
-        try {
-            ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(url);
-            return manager.createImage(imageDescriptor);
-        } catch (Exception e) {
-            BonitaStudioLog.error(e);
+    private Path iconAssetPath(String iconPath) {
+        if (iconPath == null) {
             return null;
         }
-    }
-
-    private Image resize(Image image) {
-        ImageDataProvider provider = new ImageDataProvider() {
-
-            @Override
-            public ImageData getImageData(int zoom) {
-                // pixel colors will be copied from the bas eimage, the depth and the palette data is only used to defined the default bg
-                ImageData imageData = new ImageData(ICON_SIZE * zoom / 100, ICON_SIZE * zoom / 100,
-                        1, new PaletteData(new RGB[] { iconBackground }));
-                imageData.transparentPixel = imageData.palette.getPixel(iconBackground);
-                return imageData;
-            }
-        };
-        Image scaled = manager.createImage(ImageDescriptor.createFromImageDataProvider(provider));
-        GC gc = new GC(scaled);
-        gc.setAntialias(SWT.ON);
-        gc.setInterpolation(SWT.HIGH);
-        gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, ICON_SIZE, ICON_SIZE);
-        gc.dispose();
-        return scaled;
+        return localStore.toPath()
+                .resolve("icons")
+                .resolve(iconPath);
     }
 
     private String getLatestTag() {
@@ -171,6 +229,9 @@ public class BonitaMarketplace {
     }
 
     private URL createURL(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
         try {
             return new URL(url);
         } catch (MalformedURLException e) {

@@ -36,19 +36,17 @@ public class OpenExtensionViewHandler {
     @Execute
     public void execute() {
         try {
-            BonitaMarketplace marketplace = BonitaMarketplace.getInstance();
-            if (!marketplace.isLoaded()) {
-                try {
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                        monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
-                        marketplace.loadDependencies();
-                        monitor.done();
-                    });
-                } catch (InvocationTargetException | InterruptedException e) {
-                    BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
-                    MessageDialog.openError(Display.getDefault().getActiveShell(),
-                            Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
-                }
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
+                    BonitaMarketplace marketplace = BonitaMarketplace.getInstance(monitor);
+                    marketplace.loadDependencies();
+                    monitor.done();
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
+                MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
             }
             IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             IDE.openEditor(activePage, ProjectExtensionEditorInput.getInstance(), ProjectExtensionEditorPart.ID, true);

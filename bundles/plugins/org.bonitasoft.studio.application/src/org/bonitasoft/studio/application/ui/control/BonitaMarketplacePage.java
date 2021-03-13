@@ -151,8 +151,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
             try {
                 wizardContainer.getShell().setDefaultButton(null);
                 wizardContainer.run(true, false, monitor -> {
-                    monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
-                    initVariables();
+                    initVariables(monitor);
 
                     int totalWork = newDependencies.size() + dependenciesUpdatable.size();
                     monitor.beginTask(Messages.fetchingExtensions, totalWork);
@@ -188,9 +187,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
         return dep -> Stream.of(extensionTypes).map(EXTENSIONS_TYPE::get).anyMatch(t -> dep.getType().equals(t));
     }
 
-    private void initVariables() {
+    private void initVariables(IProgressMonitor monitor) {
         try {
-            dependencies = BonitaMarketplace.getInstance().getDependencies();
+            dependencies = BonitaMarketplace.getInstance(monitor).getDependencies();
             knownDependencies = helper.getMavenModel(getProject()).getDependencies();
             splitDependencies();
         } catch (CoreException e) {

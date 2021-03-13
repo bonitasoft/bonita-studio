@@ -32,6 +32,7 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
@@ -130,6 +131,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         if (!(input instanceof ProjectExtensionEditorInput)) {
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
+        allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
         setInput(input);
     }
@@ -504,7 +506,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         gavFont = new Font(Display.getDefault(), "gavFont", 10, SWT.ITALIC);
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
-        allDependencies = BonitaMarketplace.getInstance().getDependencies();
     }
 
     private Composite createComposite(Composite parent, int style) {

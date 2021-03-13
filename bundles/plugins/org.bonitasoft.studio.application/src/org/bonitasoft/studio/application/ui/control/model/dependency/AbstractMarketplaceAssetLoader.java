@@ -14,26 +14,10 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+public abstract class AbstractMarketplaceAssetLoader<T> {
 
-public class ArtifactDependencyLoader extends AbstractMarketplaceAssetLoader<List<BonitaArtifactDependency>> {
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private TypeReference<List<BonitaArtifactDependency>> typeReference = new TypeReference<>() {
-    };
-
-    @Override
-    public List<BonitaArtifactDependency> load(Path target) {
-        try {
-            return objectMapper.readValue(target.toFile(), typeReference);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public abstract T load(Path target);
 
 }
