@@ -67,15 +67,6 @@
        </runtime>
     </extension>
     <extension
-          point="org.eclipse.wst.validation.removeV2Validator">
-       <remove
-             validatorId="org.eclipse.wst.json.core.json">
-       </remove>
-       <remove
-             validatorId="org.eclipse.wst.html.core.HTMLValidator">
-       </remove>
-    </extension>
-    <extension
           id="analyzePluginMarkerType"
           name="Bonita Project Analyze Plugin Marker Type"
           point="org.eclipse.core.resources.markers">

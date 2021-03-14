@@ -75,7 +75,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     public static final String CONNECTOR_TYPE = Messages.connectorType;
     public static final String ACTOR_FILTER_TYPE = Messages.actorFilterType;
     public static final String ALL_TYPE = Messages.all;
-    public static final String DATABASE_DRIVER_TYPE = "Database driver";
+    public static final String DATABASE_DRIVER_TYPE = Messages.databaseDriver;
 
     private static final Map<String, String> EXTENSIONS_TYPE = Map.of(
             CONNECTOR_TYPE, BonitaMarketplace.CONNECTOR_TYPE,
@@ -134,7 +134,6 @@ public class BonitaMarketplacePage implements ControlSupplier {
         sc.setContent(dependenciesComposite);
         sc.setExpandVertical(true);
         sc.setExpandHorizontal(true);
-      //  sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
         wizardContainer.getShell().addDisposeListener(e -> iconsToDispose.forEach(Image::dispose));
 

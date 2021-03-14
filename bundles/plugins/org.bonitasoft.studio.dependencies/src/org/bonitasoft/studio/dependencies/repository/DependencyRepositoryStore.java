@@ -236,8 +236,6 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     @Override
     public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        // TODO list existing jars from lib folder if it exists
-        // Check if pom file exists 
         IProject project = getRepository().getProject();
         if (getResource().exists()) {
             try {

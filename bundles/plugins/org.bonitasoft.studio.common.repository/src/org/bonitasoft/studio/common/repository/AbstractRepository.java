@@ -212,8 +212,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addNature(IMavenConstants.NATURE_ID)
                 .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder("org.eclipse.wst.validation.validationbuilder");
+                .addBuilder("org.eclipse.jdt.core.javabuilder");
     }
 
     /*
@@ -793,8 +792,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
                 .addNature(IMavenConstants.NATURE_ID)
                 .addBuilder(IMavenConstants.BUILDER_ID)
-                .addBuilder("org.eclipse.jdt.core.javabuilder")
-                .addBuilder("org.eclipse.wst.validation.validationbuilder");
+                .addBuilder("org.eclipse.jdt.core.javabuilder");
     }
 
     protected IRunnableWithProgress migrationRunnable() {
@@ -865,7 +863,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         projectFileListener.checkVersion(getProject());
     }
 
-    public void rename(String newName, IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public void rename(String newName, IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
         WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
             @Override

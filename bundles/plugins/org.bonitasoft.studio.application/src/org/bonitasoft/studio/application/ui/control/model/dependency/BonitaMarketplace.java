@@ -53,15 +53,15 @@ import org.restlet.resource.ResourceException;
 
 public class BonitaMarketplace {
 
+    private static final String BONITA_MARKETPLACE_ARCHIVE_NAME = "bonita-marketplace";
+
     private static final String MARKETPLACE = "marketplace";
 
     private static BonitaMarketplace INSTANCE;
 
     private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/bonitasoft/bonita-marketplace/releases/latest";
     private static final String ASSET_URL = "https://github.com/bonitasoft/bonita-marketplace/releases/download";
-    private static final String CONNECTORS_ASSET_NAME = "connectors.json";
-    private static final String ACTORS_FILTERS_ASSET_NAME = "actorfilters.json";
-    private static final String DATABASE_DRIVERS_ASSET_NAME = "drivers.json";
+    private static final String MARKETPLACE_DESCRIPTOR_NAME = "marketplace.json";
 
     public static final String CONNECTOR_TYPE = "Connector";
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
@@ -93,9 +93,14 @@ public class BonitaMarketplace {
         localStore = new File(stateLocation.toFile(), MARKETPLACE);
         String currentVersion = readMetadata();
         String latestVersion = getLatestTag();
-        if (currentVersion == null || currentVersion.isBlank() || !localStore.exists() || !Objects.equals(currentVersion, latestVersion)) {
-            Path tmpFile = Files.createTempFile("bonita-marketplace", ".zip");
-            download(createURL(String.format("%s/%s/%s-%s.zip", ASSET_URL, latestVersion, "bonita-marketplace", latestVersion)),
+        if (currentVersion == null || currentVersion.isBlank()
+                || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
+                || !Objects.equals(currentVersion, latestVersion)) {
+            Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
+            download(createURL(String.format("%s/%s/%s-%s.zip", ASSET_URL,
+                    latestVersion,
+                    BONITA_MARKETPLACE_ARCHIVE_NAME,
+                    latestVersion)),
                     tmpFile,
                     monitor);
             extract(tmpFile, stateLocation.toFile().toPath());
@@ -163,7 +168,7 @@ public class BonitaMarketplace {
             long chunkSize = 500;
             int position = 0;
             monitor.beginTask(Messages.fetchingExtensions, (int) completeFileSize);
-            monitor.subTask("Downloading: " + target.getFileName().toString());
+            monitor.subTask("Downloading: " + url.toString());
             while (position < completeFileSize) {
                 position += fileOutputStream.getChannel().transferFrom(readableByteChannel, position, chunkSize);
                 monitor.worked((int) chunkSize);
@@ -191,24 +196,10 @@ public class BonitaMarketplace {
      * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
      */
     public void loadDependencies() {
-        if(dependencies == null) {
-            ArtifactDependencyLoader loader = new ArtifactDependencyLoader();
-            dependencies = loader.load(localStore.toPath().resolve("marketplace.json"));
-            dependencies.stream()
-                    .forEach(dep -> {
-                        MarketplaceIconLoader iconLoader = new MarketplaceIconLoader(dep, manager, iconBackground);
-                        dep.setIconImage(iconLoader.load(iconAssetPath(dep.getIcon())));
-                    });
+        if (dependencies == null) {
+            ArtifactDependencyLoader loader = new ArtifactDependencyLoader(new MarketplaceIconLoader(localStore, manager, iconBackground));
+            dependencies = loader.load(localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME));
         }
-    }
-
-    private Path iconAssetPath(String iconPath) {
-        if (iconPath == null) {
-            return null;
-        }
-        return localStore.toPath()
-                .resolve("icons")
-                .resolve(iconPath);
     }
 
     private String getLatestTag() {
