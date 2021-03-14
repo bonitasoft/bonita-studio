@@ -175,32 +175,21 @@ public class RepositoryManager {
             return currentRepository;
         }
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IProject project = workspace.getRoot().getProject(repositoryName);
-        if (project == null || !project.exists()) {
-            return null;
-        }
-        boolean toClose = false;
-        try {
-            if (!project.isAccessible()) {
-                project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-                toClose = true;
-            }
-            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
-                return null;
-            }
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        } finally {
-            if (toClose) {
-                try {
-                    project.close(AbstractRepository.NULL_PROGRESS_MONITOR);
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        }
-        return createRepository(repositoryName, migrationEnabled);
+        return Optional.ofNullable(workspace.getRoot().getProject(repositoryName))
+                .filter(IProject::exists)
+                .filter(project -> project.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
+                .map(project -> project.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
+                .map(descriptorFile -> {
+                    if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
+                        String projectName = projectName(descriptorFile);
+                        return createRepository(projectName, migrationEnabled);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .orElse(null);
     }
 
     public List<IRepository> getAllRepositories() {

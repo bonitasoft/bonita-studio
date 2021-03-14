@@ -21,16 +21,22 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ArtifactDependencyLoader extends AbstractMarketplaceAssetLoader<List<BonitaArtifactDependency>> {
+public class ArtifactDependencyLoader {
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private TypeReference<List<BonitaArtifactDependency>> typeReference = new TypeReference<>() {
     };
+    private MarketplaceIconLoader marketplaceIconLoader;
 
-    @Override
+    public ArtifactDependencyLoader(MarketplaceIconLoader marketplaceIconLoader) {
+        this.marketplaceIconLoader = marketplaceIconLoader;
+    }
+
     public List<BonitaArtifactDependency> load(Path target) {
         try {
-            return objectMapper.readValue(target.toFile(), typeReference);
+            List<BonitaArtifactDependency> dependencies = objectMapper.readValue(target.toFile(), typeReference);
+            dependencies.stream().forEach( dep -> dep.setIconImage(marketplaceIconLoader.load(dep)));
+            return dependencies;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

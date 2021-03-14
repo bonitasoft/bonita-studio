@@ -106,22 +106,6 @@
       </perspective>
    </extension>
    <extension
-         id="menuLevelValidator"
-         name="Application descriptor menu level validator"
-         point="org.eclipse.wst.validation.validatorV2">
-      <validator
-            class="org.bonitasoft.studio.la.application.ui.validator.MenuLevelValidator">
-         <include>
-            <rules>
-               <contentType
-                     exactMatch="true"
-                     id="org.bonitasoft.studio.la.applicationDescriptor">
-               </contentType>
-            </rules>
-         </include>
-      </validator>
-   </extension>
-   <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"

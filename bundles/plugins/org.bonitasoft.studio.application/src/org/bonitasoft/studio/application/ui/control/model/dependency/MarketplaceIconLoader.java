@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import static org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage.ICON_SIZE;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -34,23 +35,22 @@ import org.eclipse.swt.graphics.ImageDataProvider;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
-public class MarketplaceIconLoader extends AbstractMarketplaceAssetLoader<Image> {
+public class MarketplaceIconLoader {
 
-    private BonitaArtifactDependency dependency;
     private LocalResourceManager manager;
     private RGB iconBackground;
+    private File localStore;
 
-    public MarketplaceIconLoader(BonitaArtifactDependency dependency,
-            LocalResourceManager manager,
+    public MarketplaceIconLoader(File localStore, LocalResourceManager manager,
             RGB iconBackground) {
-        this.dependency = dependency;
+        this.localStore = localStore;
         this.manager = manager;
         this.iconBackground = iconBackground;
     }
 
-    @Override
-    public Image load(Path target) {
+    public Image load(BonitaArtifactDependency dependency) {
         Image icon = null;
+        Path target = iconAssetPath(dependency.getIcon());
         if (target != null && target.toFile().exists()) {
             try {
                 icon = getIcon(target.toUri().toURL());
@@ -68,6 +68,15 @@ public class MarketplaceIconLoader extends AbstractMarketplaceAssetLoader<Image>
             icon = resize(icon);
         }
         return icon;
+    }
+
+    private Path iconAssetPath(String iconPath) {
+        if (iconPath == null) {
+            return null;
+        }
+        return localStore.toPath()
+                .resolve("icons")
+                .resolve(iconPath);
     }
 
     private Image getIcon(URL url) {

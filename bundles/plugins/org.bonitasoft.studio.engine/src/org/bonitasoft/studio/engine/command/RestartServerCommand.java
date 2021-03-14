@@ -59,7 +59,8 @@ public class RestartServerCommand extends AbstractHandler {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 boolean notifying = notifyRestartServer();
-                BOSEngineManager.getInstance().stop();
+                BOSEngineManager engineManager = BOSEngineManager.getInstance(monitor);
+                engineManager.stop();
                 if (store.getBoolean(DROP_DB_KEY)) {
                     DatabaseHandler databaseHandler = RepositoryManager.getInstance().getCurrentRepository()
                             .getDatabaseHandler();
@@ -69,7 +70,7 @@ public class RestartServerCommand extends AbstractHandler {
                         BonitaStudioLog.error(e);
                     }
                 }
-                BOSEngineManager.getInstance().start();
+                engineManager.start();
                 if (notifying) {
                     BonitaNotificator.openNotification(Messages.restartServerCompletedNotificationTitle,
                             Messages.serverRunningNotificationMessage);

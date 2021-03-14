@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class MavenProjectHelper {
@@ -44,19 +46,19 @@ public class MavenProjectHelper {
     private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
     public Model getMavenModel(IProject project) throws CoreException {
-        var pomFile = project.getFile("pom.xml");
+        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         if (!pomFile.exists()) {
             return null;
         }
-        try {
-            return pomReader.read(pomFile.getContents());
+        try(InputStream is = pomFile.getContents()) {
+            return pomReader.read(is);
         } catch (IOException | XmlPullParserException e) {
             throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, null, e));
         }
     }
 
     public void saveModel(IProject project, Model model) throws CoreException {
-        var pomFile = project.getFile("pom.xml");
+        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
         try (OutputStream stream = new FileOutputStream(pomFile.getLocation().toFile())) {
             pomWriter.write(stream, model);
         } catch (IOException e) {
