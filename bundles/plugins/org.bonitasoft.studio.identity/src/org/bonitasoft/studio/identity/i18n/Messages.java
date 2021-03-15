@@ -190,7 +190,6 @@ public class Messages extends NLS {
     public static String groupNameExample;
     public static String addSubGroup;
     public static String addParentGroup;
-    public static String missingMembershipForUser;
     public static String userPasswordMissing;
     public static String userNameMissing;
     public static String validatingOrganizationContent;

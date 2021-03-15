@@ -46,9 +46,6 @@ public class UserMembershipValidator implements IValidator<User> {
     @Override
     public IStatus validate(User user) {
         List<Membership> userMemberships = getUserMemberships(user);
-        if (userMemberships.isEmpty()) {
-            return ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser, user.getUserName()));
-        }
         for (Membership membership : userMemberships) {
             if (Strings.isNullOrEmpty(membership.getGroupName())) {
                 return ValidationStatus
