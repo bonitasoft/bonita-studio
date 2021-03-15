@@ -163,7 +163,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 dependenciesLookup = doMigrateToMavenDependencies(importArchiveModel, monitor);
                 dependenciesLookup.stream()
                         .forEach(dl -> dl.setSelected(dl.isUsed()));
-            } else if (!manualDependencyResolution && importedMavenModel != null) {
+            } else if (!manualDependencyResolution) {
                 ProjectDependenciesLookupOperation operation = new ProjectDependenciesLookupOperation(
                         importedMavenModel,
                         new ArchiveLocalDependencyInputStreamSupplier(importArchiveModel.getBosArchive()));
