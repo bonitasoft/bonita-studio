@@ -179,28 +179,19 @@ public class RepositoryManager {
         if (project == null || !project.exists()) {
             return null;
         }
-        boolean toClose = false;
-        try {
-            if (!project.isAccessible()) {
-                project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-                toClose = true;
-            }
-            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
-                return null;
-            }
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        } finally {
-            if (toClose) {
-                try {
-                    project.close(AbstractRepository.NULL_PROGRESS_MONITOR);
-                } catch (final CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        }
-        return createRepository(repositoryName, migrationEnabled);
+        return Optional.of(project)
+                .filter(p -> p.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
+                .map(p -> p.getLocation().toFile().toPath()
+                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
+                .map(descriptorFile -> {
+                    if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
+                        return createRepository(repositoryName, migrationEnabled);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .orElse(null);
     }
 
     public List<IRepository> getAllRepositories() {
@@ -208,14 +199,14 @@ public class RepositoryManager {
         return Stream.of(workspace.getRoot().getProjects())
                 .filter(project -> project.getLocation().toFile().toPath()
                         .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
-                .map( project -> project.getLocation().toFile().toPath()
+                .map(project -> project.getLocation().toFile().toPath()
                         .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
-                .map( descriptorFile -> {
+                .map(descriptorFile -> {
                     if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
                         String projectName = projectName(descriptorFile);
                         if (!projectName.equals(repository.getName())) {
-                           return createRepository(projectName, false);
-                        }else {
+                            return createRepository(projectName, false);
+                        } else {
                             return repository;
                         }
                     }
@@ -227,32 +218,33 @@ public class RepositoryManager {
 
     private String projectName(File descriptorFile) {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        try(InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())){
+        try (InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())) {
             Document document = asXMLDocument(is);
-           return (String) xPath.evaluate( "//projectDescription/name/text()", document, XPathConstants.STRING);
+            return (String) xPath.evaluate("//projectDescription/name/text()", document, XPathConstants.STRING);
         } catch (IOException | XPathExpressionException e) {
-          BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
         return null;
     }
 
     private boolean hasNature(File descriptorFile, String natureId) {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        try(InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())){
+        try (InputStream is = java.nio.file.Files.newInputStream(descriptorFile.toPath())) {
             Document document = asXMLDocument(is);
-            NodeList natures = (NodeList) xPath.evaluate( "//projectDescription/natures/nature/text()", document, XPathConstants.NODESET);
+            NodeList natures = (NodeList) xPath.evaluate("//projectDescription/natures/nature/text()", document,
+                    XPathConstants.NODESET);
             for (int i = 0; i < natures.getLength(); ++i) {
                 Node item = natures.item(i);
-                if(Objects.equals(item.getTextContent(),natureId)) {
+                if (Objects.equals(item.getTextContent(), natureId)) {
                     return true;
                 }
             }
         } catch (IOException | XPathExpressionException e) {
-          BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
         return false;
     }
-    
+
     private static Document asXMLDocument(InputStream source) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");

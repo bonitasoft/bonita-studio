@@ -99,7 +99,6 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier, Supplie
     private static final String BOS_EXTENSION = "*.bos";
     private static final String LAST_IMPORT_PATH = "last.bos.import.path";
 
-
     protected TreeViewer viewer;
     private Section repositorySection;
     protected String filePath;
@@ -391,7 +390,10 @@ public class ImportBosArchiveControlSupplier implements ControlSupplier, Supplie
     protected void updateArchiveModel(String targetRepository, IProgressMonitor monitor) {
         if (repositoryAccessor.getRepository(targetRepository) != null && archiveModel != null) {
             final AbstractRepository newRepository = repositoryAccessor.getRepository(targetRepository);
-            newRepository.open(monitor);
+            if (!Objects.equals(repositoryAccessor.getCurrentRepository().getName(),
+                    newRepository.getName())) {
+                newRepository.open(monitor);
+            }
             final ImportConflictsChecker conflictChecker = new ImportConflictsChecker(newRepository);
             try {
                 setArchiveModel(conflictChecker.checkConflicts(archiveModel.getBosArchive(), monitor));
