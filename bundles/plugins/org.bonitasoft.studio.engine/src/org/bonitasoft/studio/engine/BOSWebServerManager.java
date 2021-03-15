@@ -424,7 +424,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         while (tomcat != null
                 && tomcat.getServerState() != IServer.STATE_STOPPED) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(1000);
             } catch (final InterruptedException e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
@@ -552,12 +552,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
 
     @Override
     public void projectClosed(AbstractRepository repository, IProgressMonitor monitor) {
-        BOSEngineManager engineManager = BOSEngineManager.getInstance(monitor);
-        if(engineManager.isRunning()) {
-            engineManager.stop();
-        }else if(tomcat != null && (tomcat.getServerState() == IServer.STATE_STARTING || tomcat.getServerState() == IServer.STATE_STARTED)) {
-            stopServer(monitor);
-        }
+        stopServer(monitor);
     }
 
 }
