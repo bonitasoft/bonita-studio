@@ -171,25 +171,36 @@ public class RepositoryManager {
 
     public AbstractRepository getRepository(final String repositoryName, final boolean migrationEnabled) {
         AbstractRepository currentRepository = getCurrentRepository();
-        if(repositoryName.equals(currentRepository.getName())) {
+        if (repositoryName.equals(currentRepository.getName())) {
             return currentRepository;
         }
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        return Optional.ofNullable(workspace.getRoot().getProject(repositoryName))
-                .filter(IProject::exists)
-                .filter(project -> project.getLocation().toFile().toPath()
-                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile().isFile())
-                .map(project -> project.getLocation().toFile().toPath()
-                        .resolve(IProjectDescription.DESCRIPTION_FILE_NAME).toFile())
-                .map(descriptorFile -> {
-                    if (hasNature(descriptorFile, BonitaProjectNature.NATURE_ID)) {
-                        String projectName = projectName(descriptorFile);
-                        return createRepository(projectName, migrationEnabled);
-                    }
-                    return null;
-                })
-                .filter(Objects::nonNull)
-                .orElse(null);
+        final IProject project = workspace.getRoot().getProject(repositoryName);
+        if (project == null || !project.exists()) {
+            return null;
+        }
+        boolean toClose = false;
+        try {
+            if (!project.isAccessible()) {
+                project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
+                toClose = true;
+            }
+            if (!project.hasNature(BonitaProjectNature.NATURE_ID)) {
+                return null;
+            }
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        } finally {
+            if (toClose) {
+                try {
+                    project.close(AbstractRepository.NULL_PROGRESS_MONITOR);
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+        return createRepository(repositoryName, migrationEnabled);
     }
 
     public List<IRepository> getAllRepositories() {
