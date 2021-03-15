@@ -104,16 +104,11 @@ public class OrganizationValidator implements IValidator<Organization>, Validato
                         }
                     }
                 }
-                if (!membershipFound) {
-                    validationStatus
-                            .add(ValidationStatus
-                                    .error(Messages.bind(Messages.missingMembershipForUser, u.getUserName())));
-                }
             }
         }
 
         Groups groups = organization.getGroups();
-        if(groups != null) {
+        if (groups != null) {
             List<String> invalidGroups = groups.getGroup().stream()
                     .map(Group::getName)
                     .filter(groupName -> groupName.contains("/"))
