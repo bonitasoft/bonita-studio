@@ -122,49 +122,50 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
                     java11DependenciesSeverity).ifPresent(dependenciesToUpdate::add);
 
             Xpp3Dom configuration = (Xpp3Dom) mavenComplierPlugin.getConfiguration();
-            Xpp3Dom sourceElement = configuration.getChild(SOURCE_TAG);
-            if (sourceElement != null
-                    && !JAVA_VERSION.equals(sourceElement.getValue())
-                    && !JAVA_VERSION_PROPERTY_REF.equals(sourceElement.getValue())) {
-                InputLocation location = (InputLocation) sourceElement.getInputLocation();
-                findLocation(location, sourceLocations)
-                        .map(l -> new DependencyToUpdate(l,
-                                SOURCE_TAG,
-                                String.format(Messages.setCompilerSource, JAVA_VERSION),
-                                REST_API_JAVA_11_COMPILER_SOURCE_STATUS_CODE,
-                                JAVA_VERSION,
-                                IStatus.ERROR))
-                        .ifPresent(dependenciesToUpdate::add);
+            if (configuration != null) {
+                Xpp3Dom sourceElement = configuration.getChild(SOURCE_TAG);
+                if (sourceElement != null
+                        && !JAVA_VERSION.equals(sourceElement.getValue())
+                        && !JAVA_VERSION_PROPERTY_REF.equals(sourceElement.getValue())) {
+                    InputLocation location = (InputLocation) sourceElement.getInputLocation();
+                    findLocation(location, sourceLocations)
+                            .map(l -> new DependencyToUpdate(l,
+                                    SOURCE_TAG,
+                                    String.format(Messages.setCompilerSource, JAVA_VERSION),
+                                    REST_API_JAVA_11_COMPILER_SOURCE_STATUS_CODE,
+                                    JAVA_VERSION,
+                                    IStatus.WARNING))
+                            .ifPresent(dependenciesToUpdate::add);
+                }
+                Xpp3Dom targetElement = configuration.getChild(TARGET_TAG);
+                if (targetElement != null
+                        && !JAVA_VERSION.equals(targetElement.getValue())
+                        && !JAVA_VERSION_PROPERTY_REF.equals(targetElement.getValue())) {
+                    InputLocation location = (InputLocation) targetElement.getInputLocation();
+                    findLocation(location, targetLocations)
+                            .map(l -> new DependencyToUpdate(l,
+                                    TARGET_TAG,
+                                    String.format(Messages.setCompilerTarget, JAVA_VERSION),
+                                    REST_API_JAVA_11_COMPILER_TARGET_STATUS_CODE,
+                                    JAVA_VERSION,
+                                    IStatus.WARNING))
+                            .ifPresent(dependenciesToUpdate::add);
+                }
+                Xpp3Dom releaseElement = configuration.getChild(RELEASE_TAG);
+                if (releaseElement != null
+                        && !JAVA_VERSION.equals(releaseElement.getValue())
+                        && !JAVA_VERSION_PROPERTY_REF.equals(releaseElement.getValue())) {
+                    InputLocation location = (InputLocation) releaseElement.getInputLocation();
+                    findLocation(location, releaseLocations)
+                            .map(l -> new DependencyToUpdate(l,
+                                    RELEASE_TAG,
+                                    String.format(Messages.setCompilerRelease, JAVA_VERSION),
+                                    REST_API_JAVA_11_COMPILER_RELEASE_STATUS_CODE,
+                                    JAVA_VERSION,
+                                    IStatus.WARNING))
+                            .ifPresent(dependenciesToUpdate::add);
+                }
             }
-            Xpp3Dom targetElement = configuration.getChild(TARGET_TAG);
-            if (targetElement != null
-                    && !JAVA_VERSION.equals(targetElement.getValue())
-                    && !JAVA_VERSION_PROPERTY_REF.equals(targetElement.getValue())) {
-                InputLocation location = (InputLocation) targetElement.getInputLocation();
-                findLocation(location, targetLocations)
-                        .map(l -> new DependencyToUpdate(l,
-                                TARGET_TAG,
-                                String.format(Messages.setCompilerTarget, JAVA_VERSION),
-                                REST_API_JAVA_11_COMPILER_TARGET_STATUS_CODE,
-                                JAVA_VERSION,
-                                IStatus.ERROR))
-                        .ifPresent(dependenciesToUpdate::add);
-            }
-            Xpp3Dom releaseElement = configuration.getChild(RELEASE_TAG);
-            if (releaseElement != null
-                    && !JAVA_VERSION.equals(releaseElement.getValue())
-                    && !JAVA_VERSION_PROPERTY_REF.equals(releaseElement.getValue())) {
-                InputLocation location = (InputLocation) releaseElement.getInputLocation();
-                findLocation(location, releaseLocations)
-                        .map(l -> new DependencyToUpdate(l,
-                                RELEASE_TAG,
-                                String.format(Messages.setCompilerRelease, JAVA_VERSION),
-                                REST_API_JAVA_11_COMPILER_RELEASE_STATUS_CODE,
-                                JAVA_VERSION,
-                                IStatus.ERROR))
-                        .ifPresent(dependenciesToUpdate::add);
-            }
-
             mavenComplierPlugin.getDependencies()
                     .forEach(dependency -> {
                         validateDependencyToUpdate(
@@ -229,7 +230,7 @@ public class RestAPIDependencyVersionToUpdateFinder extends DependencyVersionToU
             location.setLength(location.getLength() - overflow);
             String message = String.format(Messages.updateJavaVersionMarkerMessage, JAVA_VERSION);
             dependenciesToUpdate.add(new DependencyToUpdate(location, JAVA_VERSION_PROPERTY, message,
-                    REST_API_BONITA_DEPENDENCY_STATUS_CODE, JAVA_VERSION, IStatus.ERROR));
+                    REST_API_BONITA_DEPENDENCY_STATUS_CODE, JAVA_VERSION, IStatus.WARNING));
         }
     }
 
