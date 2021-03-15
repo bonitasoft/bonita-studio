@@ -68,8 +68,7 @@ public class BonitaProjectIT {
 
         assertThat(project.getDescription().getBuildSpec()).extracting(ICommand::getBuilderName)
                 .containsOnly(IMavenConstants.BUILDER_ID,
-                        "org.eclipse.jdt.core.javabuilder",
-                        "org.eclipse.wst.validation.validationbuilder");
+                        "org.eclipse.jdt.core.javabuilder");
 
         // Check default organization 
         OrganizationRepositoryStore orgaStore = currentRepository
