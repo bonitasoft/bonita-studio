@@ -30,6 +30,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -56,7 +58,6 @@ import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
-import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -217,6 +218,17 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         return new BDMArtifactDescriptor()
                 .load(descriptor.getLocation().toFile());
+    }
+    
+    public Dependency getClientMavenDependency() throws CoreException {
+        var descriptor = loadArtifactDescriptor();
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(descriptor.getGroupId());
+        dependency.setArtifactId(GenerateBDMOperation.BDM_CLIENT);
+        dependency.setVersion("1.0.0");
+        dependency.setType("jar");
+        dependency.setScope(Artifact.SCOPE_PROVIDED);
+        return dependency;
     }
 
     @Override

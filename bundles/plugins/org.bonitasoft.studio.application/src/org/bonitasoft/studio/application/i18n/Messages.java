@@ -199,6 +199,8 @@ public class Messages extends NLS {
     public static String addDatabaseDriverDesc;
     public static String addDatabaseDriverQuestion;
     public static String databaseDriver;
+    
+    public static String engineRestartWarning;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

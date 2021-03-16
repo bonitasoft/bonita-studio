@@ -31,12 +31,15 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactTyp
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.extension.ExtensionAction;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
@@ -129,6 +132,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private Composite mainComposite;
 
+    private Composite titleComposite;
+
     public ProjectExtensionEditorPart() {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
@@ -202,7 +207,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
                     createCard(parent, dep, bonitaDependency.get());
-                } else if (!ProjectDefaultConfiguration.isInternalDependency(dep)) {
+                } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
@@ -224,7 +229,23 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         }
     }
 
-    private void createOtherExtensionsSection(Composite parent, List<Dependency> unknownDependencies) {
+    private boolean isBDMDependency(Dependency dep) {
+        var businessObjectModelRepositoryStore = repositoryAccessor
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        BusinessObjectModelFileStore businessObjectModelFileStore = (BusinessObjectModelFileStore) businessObjectModelRepositoryStore
+                .getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        if (businessObjectModelFileStore != null) {
+            try {
+                return Objects.equals(new GAV(businessObjectModelFileStore.getClientMavenDependency()), new GAV(dep));
+            } catch (CoreException e) {
+                BonitaStudioLog.error(e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private void createOtherExtensionsSection(Composite parent, List<Dependency> otherDependencies) {
         Composite unknownExtensionsComposite = createComposite(parent, SWT.NONE);
         unknownExtensionsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         unknownExtensionsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
@@ -236,10 +257,10 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
-        createOtherExtensionViewer(unknownExtensionsComposite, unknownDependencies);
+        createOtherExtensionViewer(unknownExtensionsComposite, otherDependencies);
     }
 
-    private void createOtherExtensionViewer(Composite parent, List<Dependency> unknownDependencies) {
+    private void createOtherExtensionViewer(Composite parent, List<Dependency> otherDependencies) {
         Composite viewerComposite = createComposite(parent, SWT.NONE);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0)
                 .spacing(LayoutConstants.getSpacing().x, 1).create());
@@ -254,13 +275,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         viewer.getTable().setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
                 BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
-        TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
-        viewer.getTable().setLayout(layout);
         viewer.setUseHashlookup(true);
 
         createColumn(viewer, "Group ID", dep -> dep.getGroupId());
@@ -269,8 +283,16 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         createColumn(viewer, "Type", dep -> dep.getType());
         createColumn(viewer, "Classifier", dep -> dep.getClassifier());
 
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(3, true));
+        layout.addColumnData(new ColumnWeightData(3, true));
+        layout.addColumnData(new ColumnWeightData(2, true));
+        layout.addColumnData(new ColumnWeightData(1, true));
+        layout.addColumnData(new ColumnWeightData(2, true));
+        viewer.getTable().setLayout(layout);
+
         viewer.setContentProvider(ArrayContentProvider.getInstance());
-        viewer.setInput(unknownDependencies);
+        viewer.setInput(otherDependencies);
         otherDepSelectionObservable = ViewerProperties.<TableViewer, Dependency> multipleSelection()
                 .observe(viewer);
         ctx.bindValue(deleteButton.observeEnable(), new ComputedValueBuilder<Boolean>()
@@ -443,17 +465,11 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .forEach(jar -> databaseConnectorConfStore.jarRemoved(jar));
     }
 
-    private void refreshCards() {
+    private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
-            createExtensionCards(cardComposite);
-            cardComposite.layout();
-            scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-        });
-    }
-
-    private void refreshMetadata() {
-        Display.getDefault().asyncExec(() -> {
+            if(title.getDisplay() == null || title.getDisplay().isDisposed()) {
+                return;
+            }
             try {
                 Model mavenModel = mavenHelper
                         .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
@@ -469,13 +485,27 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 versionStyle.font = versionFont;
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
-                if (descriptionContent != null) {
+                if (descriptionContent != null && !descriptionContent.isBlank() && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
+                    if (description == null || description.isDisposed()) {
+                        createDescriptionLabel(titleComposite);
+                    }
                     description.setText(descriptionContent);
+                    mainComposite.layout();
+                } else if (description != null && (descriptionContent == null || descriptionContent.isBlank())) {
+                    description.dispose();
+                    description = null;
+                    mainComposite.layout();
+                } else {
+                    titleComposite.getParent().layout();
                 }
-                description.getParent().layout();
             } catch (CoreException e) {
                 throw new RuntimeException(e);
             }
+            
+            Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
+            createExtensionCards(cardComposite);
+            cardComposite.layout();
+            scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         });
     }
 
@@ -489,7 +519,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        Composite titleComposite = createComposite(composite, SWT.NONE);
+        titleComposite = createComposite(composite, SWT.NONE);
         titleComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 3).create());
         titleComposite
@@ -513,16 +543,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createEditButton(titleComposite);
-
-        description = new Label(titleComposite, SWT.WRAP);
-        description.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).span(2, 1)
-                        .create());
-        description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
-                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
-        refreshMetadata();
+        
+        refreshContent();
 
         Composite toolbarsComposite = createComposite(composite, SWT.NONE);
         toolbarsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -530,6 +552,16 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
         createMarketplaceButton(toolbarsComposite);
         createImportButton(toolbarsComposite);
+    }
+
+    public void createDescriptionLabel(Composite titleComposite) {
+        description = new Label(titleComposite, SWT.WRAP);
+        description.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).span(2, 1)
+                        .create());
+        description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
     }
 
     private void createEditButton(Composite parent) {
@@ -597,7 +629,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     }
 
     private Font createFont(Font initialFont, int increaseHeight, int style) {
-        FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style).increaseHeight(increaseHeight);
+        FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style)
+                .increaseHeight(increaseHeight);
         return localResourceManager.createFont(descriptor);
     }
 
@@ -648,9 +681,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 IResource r = delta.getResource();
                 if (Objects.equals(r, repositoryAccessor.getCurrentRepository().getProject()
                         .getFile(IMavenConstants.POM_FILE_NAME))) {
-                    refreshMetadata();
-                    refreshCards();
-                    Display.getDefault().asyncExec(() -> mainComposite.layout());
+                    refreshContent();
                     return false;
                 }
                 return true;
