@@ -16,9 +16,6 @@
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
 		<lib.dir>lib</lib.dir>
-		<security.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/security-config.properties</security.config.file>
-		<console.config.file>${tomcat.bundle.dir}/setup/platform_conf/initial/tenant_template_portal/console-config.properties</console.config.file>
-	    <context.config.file>${tomcat.bundle.dir}/server/conf/context.xml</context.config.file>
     </properties>
 
 	<dependencies>
@@ -188,7 +185,15 @@
 							Bnd-LastModified,
 							Build-Jdk,
 							Built-By,
-							Tool
+							Tool,
+							Include-Resource,
+							Private-Package,
+							Embedded-Artifacts,
+							Embed-Transitive,
+							Embed-StripVersion,
+							Embed-Directory,
+							Embed-Dependency,
+							Created-By
 						</_removeheaders>
 						<_exportcontents>
 							!org.bonitasoft.engine.*.impl.db;version="0.0.0",
@@ -199,6 +204,7 @@
 						<_nouses>true</_nouses>
 						<_noee>true</_noee>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+						<Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
 						<Bundle-Name>Bonita Community Tomcat Bundle</Bundle-Name>
 						<Bundle-Vendor>Bonitasoft S.A.</Bundle-Vendor>
 						<Bundle-Version>${osgiVersion}</Bundle-Version>
@@ -229,41 +235,19 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>groovy-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>Enable web security files hot reload mode</id>
+						<id>configure-bundle</id>
 						<phase>prepare-package</phase>
 						<goals>
-							<goal>replace</goal>
+							<goal>execute</goal>
 						</goals>
 						<configuration>
-							<file>${security.config.file}</file>
-							<replacements>
-								<replacement>
-									<token>security.rest.api.authorizations.check.debug   false</token>
-									<value>security.rest.api.authorizations.check.debug   true</value>
-								</replacement>
-							</replacements>
+							<source>${project.basedir}/src/script/configure-bundle.groovy</source>
 						</configuration>
 					</execution>
-                    <execution>
-                        <id>Configure session cookie path</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                        <configuration>
-                            <file>${context.config.file}</file>
-                            <replacements>
-                                <replacement>
-                                    <token>&lt;Context&gt;</token>
-                                    <value>&lt;Context sessionCookiePath=&quot;/&quot;&gt;</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
-                    </execution>
 				</executions>
 			</plugin>
 		</plugins>

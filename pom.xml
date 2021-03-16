@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<tychoVersion>2.1.0</tychoVersion>
+		<tychoVersion>2.2.0</tychoVersion>
 		<java.version>11</java.version>
 		<os-jvm-flags></os-jvm-flags>
 		<branding.version>2021.2-SNAPSHOT</branding.version>
@@ -38,6 +38,7 @@
 		<tycho.localArtifacts>ignore</tycho.localArtifacts>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<groovy-maven-plugin.groovy.version>3.0.7</groovy-maven-plugin.groovy.version>
 	</properties>
 	<modules>
 		<module>patched-plugins</module>
@@ -137,11 +138,6 @@
 					<version>3.0.0</version>
 				</plugin>
 				<plugin>
-					<groupId>com.google.code.maven-replacer-plugin</groupId>
-					<artifactId>replacer</artifactId>
-					<version>1.5.3</version>
-				</plugin>
-				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tychoVersion}</version>
@@ -193,6 +189,18 @@
 					<groupId>org.codehaus.gmaven</groupId>
 					<artifactId>groovy-maven-plugin</artifactId>
 					<version>2.1.1</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.codehaus.groovy</groupId>
+							<artifactId>groovy</artifactId>
+							<version>${groovy-maven-plugin.groovy.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.codehaus.groovy</groupId>
+							<artifactId>groovy-xml</artifactId>
+							<version>${groovy-maven-plugin.groovy.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
