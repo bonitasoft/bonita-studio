@@ -65,6 +65,10 @@ public class TestSwitchRepository{
             jars.add(jar.getName());
         }
 
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+
+        
         currentWorkspace = RepositoryManager.getInstance().getCurrentRepository().getName();
         final char[] newWorkspacechar = currentWorkspace.toCharArray();
         for (int i = 0; i < newWorkspacechar.length; i++) {
