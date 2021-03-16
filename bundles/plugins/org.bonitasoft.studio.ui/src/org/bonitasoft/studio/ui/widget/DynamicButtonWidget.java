@@ -55,6 +55,7 @@ public class DynamicButtonWidget {
         private Optional<Consumer<Event>> onClickListener = Optional.empty();
         private Optional<Integer> maxTextWidth = Optional.empty();
         private Optional<String> cssClass = Optional.empty();
+        private Optional<Object> layoutData = Optional.empty();
 
         public Builder withText(String text) {
             this.text = Optional.ofNullable(text);
@@ -91,9 +92,14 @@ public class DynamicButtonWidget {
             return this;
         }
 
+        public Builder withLayoutData(Object layoutData) {
+            this.layoutData = Optional.ofNullable(layoutData);
+            return this;
+        }
+
         public DynamicButtonWidget createIn(Composite parent) {
             return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
-                    cssClass);
+                    cssClass, layoutData);
         }
 
     }
@@ -106,6 +112,7 @@ public class DynamicButtonWidget {
     private Optional<Consumer<Event>> onClickListener;
     private Optional<Integer> maxTextWidth;
     private Optional<String> cssClass = Optional.empty();
+    private Optional<Object> layoutData;
 
     private IThemeEngine engine;
     private ToolItem toolItem;
@@ -119,7 +126,8 @@ public class DynamicButtonWidget {
             Optional<Image> hotImage,
             Optional<Consumer<Event>> onClickListener,
             Optional<Integer> maxTextWidth,
-            Optional<String> cssClass) {
+            Optional<String> cssClass,
+            Optional<Object> layoutData) {
         this.parent = parent;
         this.text = text;
         this.tooltipText = tooltipText;
@@ -128,6 +136,7 @@ public class DynamicButtonWidget {
         this.onClickListener = onClickListener;
         this.maxTextWidth = maxTextWidth;
         this.cssClass = cssClass;
+        this.layoutData = layoutData;
 
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
@@ -141,7 +150,7 @@ public class DynamicButtonWidget {
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
-        container.setLayoutData(GridDataFactory.swtDefaults().create());
+        container.setLayoutData(layoutData.orElse(GridDataFactory.swtDefaults().create()));
         cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
         ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT);

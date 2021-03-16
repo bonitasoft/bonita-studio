@@ -436,6 +436,6 @@ public class PicsConstants {
     public static String warning = "info_warning.png";
     public static String checkmark = "checkmark.png";
 
-    public static String edit32 = "projectExtensions/edit.png";
-    public static String edit32Hot = "projectExtensions/edit_hot.png";
+    public static String editProject = "projectExtensions/edit.png";
+    public static String editProjectHot = "projectExtensions/edit_hot.png";
 }
