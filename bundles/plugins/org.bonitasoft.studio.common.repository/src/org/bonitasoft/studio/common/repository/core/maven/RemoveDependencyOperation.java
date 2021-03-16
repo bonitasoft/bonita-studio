@@ -15,7 +15,8 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -30,11 +31,11 @@ public class RemoveDependencyOperation extends MavenModelOperation {
     public RemoveDependencyOperation(List<Dependency> dependenciesToRemove) {
         this.dependenciesToRemove = dependenciesToRemove;
     }
-    
+
     public RemoveDependencyOperation(Dependency dependencyToRemove) {
         this(List.of(dependencyToRemove));
     }
-    
+
     public RemoveDependencyOperation(String groupId,
             String artifactId,
             String version) {
@@ -44,16 +45,22 @@ public class RemoveDependencyOperation extends MavenModelOperation {
     @Override
     public void run(IProgressMonitor monitor) throws CoreException {
         Model model = readModel(getCurrentProject());
-     
-        dependenciesToRemove.stream().forEach( dependency -> {
-            Optional<Dependency> result = model.getDependencies().stream()
-                    .filter(existingDep -> new GAV(existingDep).equals(new GAV(dependency)))
-                    .findFirst();
-            if (result.isPresent()) {
-                model.getDependencies().remove(result.get());
-                modelUpdated = true;
+
+        List<Dependency> removeDependencies = dependenciesToRemove.stream()
+                .map(dependency -> model.getDependencies().stream()
+                        .filter(existingDep -> new GAV(existingDep).equals(new GAV(dependency)))
+                        .findFirst()
+                        .orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (!removeDependencies.isEmpty()) {
+            for (Dependency dep : removeDependencies) {
+                model.getDependencies().remove(dep);
+                getLocalStore().remove(dep);
             }
-        });
+            modelUpdated = true;
+        }
 
         saveModel(getCurrentProject(), model, monitor);
     }

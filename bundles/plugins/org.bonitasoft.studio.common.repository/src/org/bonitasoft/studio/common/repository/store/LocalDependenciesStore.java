@@ -20,9 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
-import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -55,11 +55,8 @@ public class LocalDependenciesStore {
                             dependencyFile.getName(),
                             project.getName())));
         }
-        Path targetFolder = project.getLocation().toFile().toPath()
-                .resolve(NAME)
-                .resolve(dependencyLookup.getGroupId().replace(".", "/"))
-                .resolve(dependencyLookup.getArtifactId())
-                .resolve(dependencyLookup.getVersion());
+        Dependency dependency = dependencyLookup.toMavenDependency();
+        Path targetFolder = dependencyPath(dependency);
         try {
             Files.createDirectories(targetFolder);
             if (!targetFolder.toFile().exists()) {
@@ -68,7 +65,7 @@ public class LocalDependenciesStore {
                                 dependencyFile.getName())));
             }
             Files.copy(dependencyFile.toPath(), 
-                    targetFolder.resolve(fileName(dependencyLookup)),
+                    targetFolder.resolve(dependencyFileName(dependency)),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -82,17 +79,51 @@ public class LocalDependenciesStore {
         return dependencyLookup;
     }
 
-    private String fileName(DependencyLookup dependencyLookup) {
-        GAV gav = dependencyLookup.getGAV();
-        if(gav.getClassifier() != null) {
-            return String.format("%s-%s-%s.%s", gav.getArtifactId(),
-                    gav.getVersion(),
-                    gav.getClassifier(),
-                    gav.getType());
+    public Path dependencyPath(Dependency dependency) {
+        return project.getLocation().toFile().toPath()
+                .resolve(NAME)
+                .resolve(dependency.getGroupId().replace(".", "/"))
+                .resolve(dependency.getArtifactId())
+                .resolve(dependency.getVersion());
+    }
+
+    private String dependencyFileName(Dependency dependency) {
+        if(dependency.getClassifier() != null) {
+            return String.format("%s-%s-%s.%s", dependency.getArtifactId(),
+                    dependency.getVersion(),
+                    dependency.getClassifier(),
+                    dependency.getType());
         }
-        return String.format("%s-%s.%s", gav.getArtifactId(),
-                gav.getVersion(),
-                gav.getType());
+        return String.format("%s-%s.%s", dependency.getArtifactId(),
+                dependency.getVersion(),
+                dependency.getType());
+    }
+
+    public void remove(Dependency dependency) throws CoreException {
+        Path dependencyPath = dependencyPath(dependency).resolve(dependencyFileName(dependency));
+        if(dependencyPath.toFile().exists()) {
+            try {
+                Files.delete(dependencyPath);
+            } catch (IOException e) {
+                throw new CoreException(new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + dependencyPath, e));
+            }
+            Path parent = dependencyPath.getParent();
+            while (parent.toFile().exists() && isEmptyFolder(parent)) {
+                try {
+                    Files.delete(parent);
+                } catch (IOException e) {
+                    throw new CoreException(new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + parent, e));
+                }
+                parent = parent.getParent();
+            }
+        }
+        
+        project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
+    private boolean isEmptyFolder(Path folder) {
+        var children = folder.toFile().listFiles();
+        return children == null ||  children.length == 0;
     }
 
 }

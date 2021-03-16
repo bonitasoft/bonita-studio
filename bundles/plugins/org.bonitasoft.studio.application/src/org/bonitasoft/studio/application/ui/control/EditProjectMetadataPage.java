@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.ui.control;
 
+import java.util.Objects;
+
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -26,6 +28,8 @@ import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -52,7 +56,10 @@ public class EditProjectMetadataPage implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         Composite composite = new Composite(parent, SWT.None);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(20, 10).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
+                .margins(10, 10)
+                .spacing(20, 10)
+                .extendedMargins(0, 0, 0, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
@@ -61,7 +68,9 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(name)
-                .withValidator(new RepositoryNameValidator(false))
+                .withValidator(new MultiValidator.Builder()
+                        .havingValidators(new RepositoryNameValidator(false), engineRestartWarning(name.getValue()))
+                        .create())
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -119,6 +128,12 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         return composite;
+    }
+
+    private IValidator<String> engineRestartWarning(String originalName) {
+        return name -> !Objects.equals(originalName, name) 
+                ? ValidationStatus.warning(Messages.engineRestartWarning)
+                : ValidationStatus.ok();
     }
 
     public String getName() {

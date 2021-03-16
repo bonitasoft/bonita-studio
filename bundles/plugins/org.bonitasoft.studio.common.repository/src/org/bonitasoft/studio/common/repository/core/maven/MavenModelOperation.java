@@ -18,6 +18,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -72,6 +73,10 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
         RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
         return repositoryAccessor;
+    }
+
+    protected LocalDependenciesStore getLocalStore() {
+        return getRepositoryAccessor().getCurrentRepository().getLocalDependencyStore();
     }
 
     static Dependency createDependency(String groupId, String artifactId, String version, String scope) {

@@ -80,5 +80,5 @@ public class BDMArtifactDescriptor {
         }
         descriptorPropertyFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
-
+ 
 }
