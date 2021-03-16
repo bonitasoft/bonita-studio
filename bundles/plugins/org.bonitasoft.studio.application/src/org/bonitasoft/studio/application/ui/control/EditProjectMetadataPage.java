@@ -109,6 +109,7 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .withLabel(Messages.description)
                 .labelAbove()
                 .heightHint(100)
+                .widthHint(500)
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(description)

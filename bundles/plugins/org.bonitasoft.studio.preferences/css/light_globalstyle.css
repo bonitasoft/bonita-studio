@@ -70,7 +70,8 @@ Label#infoTextColor {
 }
 
 Label#titleTextColor,
-CLabel#titleTextColor {
+CLabel#titleTextColor,
+StyledText#titleTextColor {
     color: #2e405c;
 }
 

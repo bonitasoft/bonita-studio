@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
@@ -63,6 +64,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
@@ -72,11 +76,15 @@ import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -101,9 +109,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private MavenProjectHelper mavenHelper;
     private CommandExecutor commandExecutor;
     private List<BonitaArtifactDependency> allDependencies;
-    private Font titleFont;
-    private Font subtitleFont;
-    private Font gavFont;
     private Cursor cursorHand;
     private Cursor cursorArrow;
     private ScrolledComposite scrolledComposite;
@@ -111,12 +116,23 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private IThemeEngine engine;
     private DataBindingContext ctx;
     private BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter;
-
     private IObservableList<Dependency> otherDepSelectionObservable;
+    private MavenProjectHelper mavenProjectHelper;
+    private Label description;
+    private StyledText title;
+    private LocalResourceManager localResourceManager;
+
+    private Font titleFont;
+    private Font subtitleFont;
+    private Font gavFont;
+    private Font versionFont;
+
+    private Composite mainComposite;
 
     public ProjectExtensionEditorPart() {
         repositoryAccessor = new RepositoryAccessor();
         repositoryAccessor.init();
+        localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         mavenHelper = new MavenProjectHelper();
         commandExecutor = new CommandExecutor();
         engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
@@ -141,7 +157,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         initVariables(parent);
         parent.setLayout(GridLayoutFactory.fillDefaults().create());
 
-        Composite mainComposite = createComposite(parent, SWT.NONE);
+        mainComposite = createComposite(parent, SWT.NONE);
         mainComposite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 20).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -304,7 +320,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
         Composite titleComposite = new Composite(cardComposite, SWT.NONE);
         titleComposite.setLayout(
-                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 2).create());
+                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
@@ -421,7 +437,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     }
 
     private void updateDatabaseDriverConfiguration(Dependency... deps) {
-        DatabaseConnectorPropertiesRepositoryStore databaseConnectorConfStore = repositoryAccessor.getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+        DatabaseConnectorPropertiesRepositoryStore databaseConnectorConfStore = repositoryAccessor
+                .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         Stream.of(deps).map(d -> String.format("%s-%s.jar", d.getArtifactId(), d.getVersion()))
                 .forEach(jar -> databaseConnectorConfStore.jarRemoved(jar));
     }
@@ -432,6 +449,33 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
             createExtensionCards(cardComposite);
             cardComposite.layout();
             scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        });
+    }
+
+    private void refreshMetadata() {
+        Display.getDefault().asyncExec(() -> {
+            try {
+                Model mavenModel = mavenHelper
+                        .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
+                String name = mavenModel.getName();
+                String version = mavenModel.getVersion();
+                String descriptionContent = mavenModel.getDescription();
+                title.setText(String.format("%s %s", name, version));
+
+                StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(), title.getBackground());
+                titleStyle.font = titleFont;
+                StyleRange versionStyle = new StyleRange(name.length() + 1, version.length(), title.getForeground(),
+                        title.getBackground());
+                versionStyle.font = versionFont;
+                title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
+
+                if (descriptionContent != null) {
+                    description.setText(descriptionContent);
+                }
+                description.getParent().layout();
+            } catch (CoreException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
@@ -446,34 +490,79 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         Composite titleComposite = createComposite(composite, SWT.NONE);
-        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        titleComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 3).create());
+        titleComposite
+                .setLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.FILL).create());
 
-        Label title = new Label(titleComposite, SWT.NONE);
-        title.setLayoutData(GridDataFactory.fillDefaults().create());
-        title.setText(repositoryAccessor.getCurrentRepository().getName());
-        title.setFont(titleFont);
+        Composite labelComposite = createComposite(titleComposite, SWT.NONE);
+        labelComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y).create());
+        labelComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
+
+        title = new StyledText(labelComposite, SWT.NONE);
+        title.setEditable(false);
+        title.setEnabled(false);
+        title.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.END).create());
+
+        // Create all the font used in the page once, using the default font from the first label created
+        initFont(title.getFont());
+
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createEditButton(titleComposite);
 
+        description = new Label(titleComposite, SWT.WRAP);
+        description.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).span(2, 1)
+                        .create());
+        description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+
+        refreshMetadata();
+
         Composite toolbarsComposite = createComposite(composite, SWT.NONE);
         toolbarsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        toolbarsComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        toolbarsComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).create());
 
         createMarketplaceButton(toolbarsComposite);
         createImportButton(toolbarsComposite);
     }
 
     private void createEditButton(Composite parent) {
-        new DynamicButtonWidget.Builder()
-                .withTooltipText(Messages.editProjectMetadata)
-                .withImage(Pics.getImage(PicsConstants.edit32))
-                .withHotImage(Pics.getImage(PicsConstants.edit32Hot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> commandExecutor.executeCommand(EDIT_PROJECT_COMMAND, null))
-                .createIn(parent);
+        Label editLabel = new Label(parent, SWT.NONE);
+        editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
+        editLabel.setImage(Pics.getImage(PicsConstants.editProject));
+        editLabel.setFont(titleFont);
+
+        editLabel.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                Rectangle bounds = editLabel.getBounds();
+                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                    commandExecutor.executeCommand(EDIT_PROJECT_COMMAND, null);
+                }
+            }
+        });
+
+        editLabel.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                editLabel.setImage(Pics.getImage(PicsConstants.editProject));
+                editLabel.setCursor(cursorArrow);
+            }
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                editLabel.setImage(Pics.getImage(PicsConstants.editProjectHot));
+                editLabel.setCursor(cursorHand);
+            }
+        });
     }
 
     private void createImportButton(Composite parent) {
@@ -500,10 +589,19 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .createIn(parent);
     }
 
+    private void initFont(Font defaultFont) {
+        titleFont = createFont(defaultFont, 20, SWT.BOLD);
+        subtitleFont = createFont(defaultFont, 8, SWT.BOLD);
+        gavFont = createFont(defaultFont, 0, SWT.ITALIC);
+        versionFont = createFont(defaultFont, 2, SWT.ITALIC);
+    }
+
+    private Font createFont(Font initialFont, int increaseHeight, int style) {
+        FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style).increaseHeight(increaseHeight);
+        return localResourceManager.createFont(descriptor);
+    }
+
     private void initVariables(Composite parent) {
-        titleFont = new Font(Display.getDefault(), "titleFont", 30, SWT.BOLD);
-        subtitleFont = new Font(Display.getDefault(), "subtitleFont", 20, SWT.BOLD);
-        gavFont = new Font(Display.getDefault(), "gavFont", 10, SWT.ITALIC);
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
     }
@@ -516,21 +614,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     @Override
     public void setFocus() {
-    }
-
-    @Override
-    public void dispose() {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-        if (titleFont != null) {
-            titleFont.dispose();
-        }
-        if (subtitleFont != null) {
-            subtitleFont.dispose();
-        }
-        if (gavFont != null) {
-            gavFont.dispose();
-        }
-        super.dispose();
     }
 
     @Override
@@ -565,7 +648,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 IResource r = delta.getResource();
                 if (Objects.equals(r, repositoryAccessor.getCurrentRepository().getProject()
                         .getFile(IMavenConstants.POM_FILE_NAME))) {
+                    refreshMetadata();
                     refreshCards();
+                    Display.getDefault().asyncExec(() -> mainComposite.layout());
                     return false;
                 }
                 return true;
