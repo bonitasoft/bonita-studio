@@ -426,12 +426,16 @@ public class PicsConstants {
 
     public static String openMarketplace = "projectExtensions/open_marketplace.png";
     public static String openMarketplaceHot = "projectExtensions/open_marketplace_hot.png";
+    public static String openMarketplace64 = "projectExtensions/open_marketplace_64.png";
+    public static String openMarketplace64Hot = "projectExtensions/open_marketplace_64_hot.png";
 
     public static String deploy24 = "coolbar/24/deploy.png";
     public static String deploy48 = "coolbar/48/deploy.png";
 
     public static String import32 = "projectExtensions/import_32.png";
     public static String import32Hot = "projectExtensions/import_32_hot.png";
+    public static String import64 = "projectExtensions/import_64.png";
+    public static String import64Hot = "projectExtensions/import_64_hot.png";
 
     public static String warning = "info_warning.png";
     public static String checkmark = "checkmark.png";

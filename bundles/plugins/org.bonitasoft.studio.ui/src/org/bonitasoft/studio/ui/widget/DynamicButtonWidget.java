@@ -29,6 +29,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -56,6 +57,7 @@ public class DynamicButtonWidget {
         private Optional<Integer> maxTextWidth = Optional.empty();
         private Optional<String> cssClass = Optional.empty();
         private Optional<Object> layoutData = Optional.empty();
+        private Optional<Font> font = Optional.empty();
 
         public Builder withText(String text) {
             this.text = Optional.ofNullable(text);
@@ -97,9 +99,14 @@ public class DynamicButtonWidget {
             return this;
         }
 
+        public Builder withFont(Font font) {
+            this.font = Optional.ofNullable(font);
+            return this;
+        }
+
         public DynamicButtonWidget createIn(Composite parent) {
             return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
-                    cssClass, layoutData);
+                    cssClass, layoutData, font);
         }
 
     }
@@ -113,6 +120,7 @@ public class DynamicButtonWidget {
     private Optional<Integer> maxTextWidth;
     private Optional<String> cssClass = Optional.empty();
     private Optional<Object> layoutData;
+    private Optional<Font> font;
 
     private IThemeEngine engine;
     private ToolItem toolItem;
@@ -127,7 +135,8 @@ public class DynamicButtonWidget {
             Optional<Consumer<Event>> onClickListener,
             Optional<Integer> maxTextWidth,
             Optional<String> cssClass,
-            Optional<Object> layoutData) {
+            Optional<Object> layoutData,
+            Optional<Font> font) {
         this.parent = parent;
         this.text = text;
         this.tooltipText = tooltipText;
@@ -137,6 +146,7 @@ public class DynamicButtonWidget {
         this.maxTextWidth = maxTextWidth;
         this.cssClass = cssClass;
         this.layoutData = layoutData;
+        this.font = font;
 
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
@@ -171,6 +181,7 @@ public class DynamicButtonWidget {
                     .hint(maxTextWidth.orElse(SWT.DEFAULT), SWT.DEFAULT)
                     .create());
             label.setText(text.get());
+            font.ifPresent(label::setFont);
             label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
             cssClass.ifPresent(css -> label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 

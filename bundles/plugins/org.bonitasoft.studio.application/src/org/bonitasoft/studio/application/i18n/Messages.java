@@ -194,13 +194,12 @@ public class Messages extends NLS {
     public static String description;
     public static String updatingProjectMetadata;
     public static String invalidFormat;
-
     public static String addDatabaseDriverTitle;
     public static String addDatabaseDriverDesc;
     public static String addDatabaseDriverQuestion;
     public static String databaseDriver;
-    
     public static String engineRestartWarning;
+    public static String enhanceProject;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
