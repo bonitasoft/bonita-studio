@@ -64,7 +64,7 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
                 new DependencyCatalog(rootFolder,
                         new MavenArtifactParser((DefaultArtifactFactory) maven
                                 .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class))),
-                new MavenInstallFileOperation(maven()));
+                new MavenInstallFileOperation(maven(), internalRepository, maven.getLocalRepository()));
     }
 
     protected IMaven maven() {

@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.maven.Maven;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -37,9 +38,19 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 public class MavenInstallFileOperation {
 
     private final IMaven mavenEngine;
+    private ArtifactRepository internalRepository;
+    private ArtifactRepository localRepository;
 
     public MavenInstallFileOperation(final IMaven mavenEngine) {
         this.mavenEngine = mavenEngine;
+    }
+    
+    public MavenInstallFileOperation(final IMaven mavenEngine,
+            ArtifactRepository internalRepository,
+            ArtifactRepository localRepository ) {
+        this.mavenEngine = mavenEngine;
+        this.internalRepository = internalRepository;
+        this.localRepository = localRepository;
     }
 
     public MavenExecutionResult execute(final Properties configuration,
@@ -47,8 +58,12 @@ public class MavenInstallFileOperation {
             throws CoreException {
         final IMavenExecutionContext context = mavenEngine.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
+        if(internalRepository != null) {
+            request.setLocalRepository(internalRepository);
+            request.setOffline(true);
+        }
         request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-install-plugin:%s:install-file", DefaultPluginVersions.MAVEN_INSTALL_PLUGIN_VERSION)));
-        request.setUpdateSnapshots(true);
+        request.setUpdateSnapshots(internalRepository == null);
         request.setInteractiveMode(false);
         request.setCacheNotFound(true);
         return context.execute(new ICallable<MavenExecutionResult>() {
@@ -61,7 +76,8 @@ public class MavenInstallFileOperation {
                     systemProperties.setProperty((String) key, configuration.getProperty((String) key));
                 }
                 request.setSystemProperties(systemProperties);
-                return mavenEngine.lookup(Maven.class).execute(request);
+                Maven maven = mavenEngine.lookup(Maven.class);
+                return maven.execute(request);
             }
         }, monitor);
 
@@ -105,6 +121,9 @@ public class MavenInstallFileOperation {
             } else {
                 properties.setProperty("pomFile", pomFile.getAbsolutePath());
             }
+        }
+        if(localRepository != null) {
+            properties.setProperty("localRepositoryPath", localRepository.getBasedir());
         }
         final MavenExecutionResult executionResult = execute(properties,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
