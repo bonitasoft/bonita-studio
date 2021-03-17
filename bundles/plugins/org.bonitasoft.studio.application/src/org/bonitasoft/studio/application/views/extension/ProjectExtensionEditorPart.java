@@ -19,14 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
@@ -41,14 +39,10 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
-import org.bonitasoft.studio.common.repository.extension.ExtensionAction;
-import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
-import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -61,23 +55,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
-import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.m2e.core.internal.IMavenConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -92,12 +77,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 public class ProjectExtensionEditorPart extends EditorPart implements IResourceChangeListener {
@@ -116,7 +98,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Cursor cursorArrow;
     private ScrolledComposite scrolledComposite;
     private Composite cardComposite;
-    private IThemeEngine engine;
     private DataBindingContext ctx;
     private BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter;
     private IObservableList<Dependency> otherDepSelectionObservable;
@@ -144,7 +125,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         mavenHelper = new MavenProjectHelper();
         commandExecutor = new CommandExecutor();
-        engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         ctx = new DataBindingContext();
         bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
                 repositoryAccessor.getCurrentRepository().getProjectDependenciesStore());
@@ -210,23 +190,27 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 if (bonitaDependency
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
-                    createCard(parent, dep, bonitaDependency.get());
+                    new ExtensionCard(parent, repositoryAccessor, dep, bonitaDependency.get(), subtitleFont, gavFont,
+                            this::removeExtensions);
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        createCard(parent, dep, bonitaDep);
+                        new ExtensionCard(parent, repositoryAccessor, dep, bonitaDep, subtitleFont, gavFont,
+                                this::removeExtensions);
                     }
                 }
             });
 
             if (!otherDependencies.isEmpty()) {
-                Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-                separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+                if (parent.getChildren().length > 0) {
+                    Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
+                    separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+                }
 
-                createOtherExtensionsSection(parent, otherDependencies);
+                new OtherExtensionsComposite(parent, otherDependencies, subtitleFont, this::removeExtensions, ctx);
             }
 
             if (cardComposite.getChildren().length == 0) {
@@ -277,204 +261,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         createImportBigButton(buttonComposite);
     }
 
-    private void createOtherExtensionsSection(Composite parent, List<Dependency> otherDependencies) {
-        Composite unknownExtensionsComposite = createComposite(parent, SWT.NONE);
-        unknownExtensionsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-        unknownExtensionsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-
-        Label title = new Label(unknownExtensionsComposite, SWT.WRAP);
-        title.setLayoutData(GridDataFactory.fillDefaults().create());
-        title.setText(Messages.unknownExtensionsTitle);
-        title.setFont(subtitleFont);
-        title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
-        createOtherExtensionViewer(unknownExtensionsComposite, otherDependencies);
-    }
-
-    private void createOtherExtensionViewer(Composite parent, List<Dependency> otherDependencies) {
-        Composite viewerComposite = createComposite(parent, SWT.NONE);
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0)
-                .spacing(LayoutConstants.getSpacing().x, 1).create());
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        DynamicButtonWidget deleteButton = createToolbar(viewerComposite);
-
-        TableViewer viewer = new TableViewer(viewerComposite,
-                SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        viewer.getTable().setHeaderVisible(true);
-        viewer.getTable().setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
-        viewer.setUseHashlookup(true);
-
-        createColumn(viewer, "Group ID", dep -> dep.getGroupId());
-        createColumn(viewer, "Artifact ID", dep -> dep.getArtifactId());
-        createColumn(viewer, "Version", dep -> dep.getVersion());
-        createColumn(viewer, "Type", dep -> dep.getType());
-        createColumn(viewer, "Classifier", dep -> dep.getClassifier());
-
-        TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(3, true));
-        layout.addColumnData(new ColumnWeightData(3, true));
-        layout.addColumnData(new ColumnWeightData(2, true));
-        layout.addColumnData(new ColumnWeightData(1, true));
-        layout.addColumnData(new ColumnWeightData(2, true));
-        viewer.getTable().setLayout(layout);
-
-        viewer.setContentProvider(ArrayContentProvider.getInstance());
-        viewer.setInput(otherDependencies);
-        otherDepSelectionObservable = ViewerProperties.<TableViewer, Dependency> multipleSelection()
-                .observe(viewer);
-        ctx.bindValue(deleteButton.observeEnable(), new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !otherDepSelectionObservable.isEmpty())
-                .build());
-    }
-
-    protected DynamicButtonWidget createToolbar(Composite parent) {
-        Composite composite = createComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
-
-        return new DynamicButtonWidget.Builder()
-                .withText(Messages.delete)
-                .withTooltipText(Messages.deleteUnknownTooltip)
-                .withImage(Pics.getImage(PicsConstants.delete))
-                .withHotImage(Pics.getImage(PicsConstants.delete_hot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> {
-                    String depList = otherDepSelectionObservable.stream()
-                            .map(dep -> String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(),
-                                    dep.getVersion()))
-                            .reduce("", (dep1, dep2) -> dep1.isEmpty() ? dep2 : String.format("%s\n%s", dep1, dep2));
-                    if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                            Messages.removeExtensionConfirmationTitle,
-                            String.format(Messages.removeExtensionsConfirmation, depList))) {
-                        removeExtensions(otherDepSelectionObservable.toArray(Dependency[]::new));
-                    }
-                })
-                .createIn(composite);
-    }
-
-    private void createColumn(TableViewer viewer, String title, Function<Dependency, String> textProvider) {
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
-        column.getColumn().setText(title);
-        column.setLabelProvider(new LabelProviderBuilder<Dependency>()
-                .withTextProvider(textProvider)
-                .createColumnLabelProvider());
-    }
-
-    private void createCard(Composite parent, Dependency dep, BonitaArtifactDependency bonitaDep) {
-        Composite cardComposite = new Composite(parent, SWT.BORDER);
-        cardComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
-        cardComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        cardComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-
-        Composite titleComposite = new Composite(cardComposite, SWT.NONE);
-        titleComposite.setLayout(
-                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
-        titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-
-        CLabel titleLabel = new CLabel(titleComposite, SWT.NONE);
-        titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        titleLabel.setText(bonitaDep.getName());
-        titleLabel.setFont(subtitleFont);
-        titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-
-        CLabel gav = new CLabel(titleComposite, SWT.WRAP);
-        gav.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
-        gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
-        gav.setFont(gavFont);
-        gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
-
-        Label type = new Label(cardComposite, SWT.WRAP);
-        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).create());
-        type.setText(bonitaDep.getArtifactType().getName());
-        type.setFont(gavFont);
-        type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
-
-        Label iconLabel = new Label(cardComposite, SWT.NONE);
-        iconLabel.setLayoutData(GridDataFactory.fillDefaults()
-                .align(SWT.END, SWT.FILL)
-                .span(1, 2)
-                .hint(BonitaMarketplacePage.ICON_SIZE, BonitaMarketplacePage.ICON_SIZE)
-                .create());
-        iconLabel.setImage(bonitaDep.getIconImage());
-
-        Label description = new Label(cardComposite, SWT.WRAP);
-        description.setLayoutData(
-                GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 50).create());
-        description.setText(bonitaDep.getDescription() != null ? bonitaDep.getDescription() : "");
-
-        Label separator = new Label(cardComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
-        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        separator.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_SEPARATOR);
-
-        ExtensionAction action = ExtensionActionRegistry.getInstance()
-                .getAction(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
-        if (action != null) {
-            ToolBar leftToolbar = new ToolBar(cardComposite,
-                    SWT.HORIZONTAL | SWT.WRAP | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
-            leftToolbar.setLayoutData(
-                    GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.FILL).create());
-            leftToolbar.setLayout(GridLayoutFactory.fillDefaults().create());
-
-            action.fill(leftToolbar);
-        }
-
-        ToolBar toolBar = new ToolBar(cardComposite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
-        toolBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(action == null ? 2 : 1, 1)
-                .align(SWT.END, SWT.FILL).create());
-        toolBar.setLayout(GridLayoutFactory.fillDefaults().create());
-
-        ToolItem deleteItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteItem.setImage(Pics.getImage(PicsConstants.delete));
-        deleteItem.setHotImage(Pics.getImage(PicsConstants.delete_hot));
-        deleteItem.setToolTipText(Messages.removeExtensionTooltip);
-        addMouseHandCursorBehavior(toolBar);
-        deleteItem.addListener(SWT.Selection, e -> {
-            if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                    Messages.removeExtensionConfirmationTitle,
-                    String.format(Messages.removeExtensionConfirmation, bonitaDep.getName()))) {
-                removeExtensions(dep);
-            }
-        });
-
-        titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                        BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR);
-                engine.applyStyles(titleLabel, false);
-            }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-                engine.applyStyles(titleLabel, false);
-            }
-        });
-    }
-
-    private void addMouseHandCursorBehavior(Control control) {
-        control.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                control.setCursor(cursorHand);
-            }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                control.setCursor(cursorArrow);
-            }
-        });
-    }
-
     private void removeExtensions(Dependency... deps) {
         RemoveDependencyOperation operation = new RemoveDependencyOperation(
                 Stream.of(deps).collect(Collectors.toList()));
@@ -499,7 +285,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            if (title.getDisplay() == null || title.getDisplay().isDisposed()) {
+            if (mainComposite.isDisposed() || title.getDisplay() == null || title.getDisplay().isDisposed()) {
                 return;
             }
             try {
@@ -570,7 +356,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         title.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.END).create());
 
         // Create all the font used in the page once, using the default font from the first label created
-        initFont(title.getFont());
+        initFonts(title.getFont());
 
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
@@ -681,7 +467,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .createIn(parent);
     }
 
-    private void initFont(Font defaultFont) {
+    private void initFonts(Font defaultFont) {
         titleFont = createFont(defaultFont, 20, SWT.BOLD);
         subtitleFont = createFont(defaultFont, 8, SWT.BOLD);
         gavFont = createFont(defaultFont, 0, SWT.ITALIC);
