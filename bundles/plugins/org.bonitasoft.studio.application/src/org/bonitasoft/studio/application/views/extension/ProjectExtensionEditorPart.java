@@ -129,10 +129,14 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Font subtitleFont;
     private Font gavFont;
     private Font versionFont;
+    private Font emptyMessageFont;
 
     private Composite mainComposite;
+    private Composite toolbarComposite;
 
     private Composite titleComposite;
+
+    private Font bigButtonFont;
 
     public ProjectExtensionEditorPart() {
         repositoryAccessor = new RepositoryAccessor();
@@ -224,6 +228,13 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
                 createOtherExtensionsSection(parent, otherDependencies);
             }
+
+            if (cardComposite.getChildren().length == 0) {
+                toolbarComposite.setVisible(false);
+                createEmptyExtensionComposite(cardComposite);
+            } else {
+                toolbarComposite.setVisible(true);
+            }
         } catch (CoreException e) {
             throw new RuntimeException(e);
         }
@@ -243,6 +254,27 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
             }
         }
         return false;
+    }
+
+    private void createEmptyExtensionComposite(Composite parent) {
+        Composite composite = createComposite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.setLayoutData(
+                GridDataFactory.fillDefaults().span(2, 1).grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
+
+        Label label = new Label(composite, SWT.NONE);
+        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
+        label.setText(Messages.enhanceProject);
+        label.setFont(emptyMessageFont);
+        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+
+        Composite buttonComposite = createComposite(composite, SWT.NONE);
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
+
+        createMarketplaceBigButton(buttonComposite);
+        createImportBigButton(buttonComposite);
     }
 
     private void createOtherExtensionsSection(Composite parent, List<Dependency> otherDependencies) {
@@ -467,7 +499,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            if(title.getDisplay() == null || title.getDisplay().isDisposed()) {
+            if (title.getDisplay() == null || title.getDisplay().isDisposed()) {
                 return;
             }
             try {
@@ -485,7 +517,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 versionStyle.font = versionFont;
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
-                if (descriptionContent != null && !descriptionContent.isBlank() && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
+                if (descriptionContent != null && !descriptionContent.isBlank()
+                        && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
                     if (description == null || description.isDisposed()) {
                         createDescriptionLabel(titleComposite);
                     }
@@ -501,7 +534,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
             } catch (CoreException e) {
                 throw new RuntimeException(e);
             }
-            
+
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
             createExtensionCards(cardComposite);
             cardComposite.layout();
@@ -543,15 +576,15 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createEditButton(titleComposite);
-        
+
         refreshContent();
 
-        Composite toolbarsComposite = createComposite(composite, SWT.NONE);
-        toolbarsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        toolbarsComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+        toolbarComposite = createComposite(composite, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).create());
 
-        createMarketplaceButton(toolbarsComposite);
-        createImportButton(toolbarsComposite);
+        createMarketplaceButton(toolbarComposite);
+        createImportButton(toolbarComposite);
     }
 
     public void createDescriptionLabel(Composite titleComposite) {
@@ -569,6 +602,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         editLabel.setImage(Pics.getImage(PicsConstants.editProject));
         editLabel.setFont(titleFont);
+        editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         editLabel.addMouseListener(new MouseAdapter() {
 
@@ -609,6 +643,19 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .createIn(parent);
     }
 
+    private void createImportBigButton(Composite parent) {
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.importExtensionButtonLabel)
+                .withMaxTextWidth(200)
+                .withTooltipText(Messages.importExtension)
+                .withImage(Pics.getImage(PicsConstants.import64))
+                .withHotImage(Pics.getImage(PicsConstants.import64Hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .withFont(bigButtonFont)
+                .onClick(e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND, null))
+                .createIn(parent);
+    }
+
     private void createMarketplaceButton(Composite parent) {
         new DynamicButtonWidget.Builder()
                 .withText(Messages.openMarketplace)
@@ -621,11 +668,26 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .createIn(parent);
     }
 
+    private void createMarketplaceBigButton(Composite parent) {
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.openMarketplace)
+                .withMaxTextWidth(200)
+                .withTooltipText(Messages.openMarketplaceTooltip)
+                .withImage(Pics.getImage(PicsConstants.openMarketplace64))
+                .withHotImage(Pics.getImage(PicsConstants.openMarketplace64Hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .withFont(bigButtonFont)
+                .onClick(e -> commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, null))
+                .createIn(parent);
+    }
+
     private void initFont(Font defaultFont) {
         titleFont = createFont(defaultFont, 20, SWT.BOLD);
         subtitleFont = createFont(defaultFont, 8, SWT.BOLD);
         gavFont = createFont(defaultFont, 0, SWT.ITALIC);
         versionFont = createFont(defaultFont, 2, SWT.ITALIC);
+        emptyMessageFont = createFont(defaultFont, 10, SWT.NORMAL);
+        bigButtonFont = createFont(defaultFont, 4, SWT.NORMAL);
     }
 
     private Font createFont(Font initialFont, int increaseHeight, int style) {
