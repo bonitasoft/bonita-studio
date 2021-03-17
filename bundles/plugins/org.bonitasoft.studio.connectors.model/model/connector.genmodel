@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bonitasoft.studio.connectors.model/src"
+    editDirectory="/org.bonitasoft.studio.connectors.model.edit/src" modelPluginID="org.bonitasoft.studio.connectors.model"
+    modelName="Connector" modelPluginClass="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" providerRootExtendsClass="" optimizedHasChildren="true">
+  <foreignModel>definition.ecore</foreignModel>
+  <foreignModel>implementation.ecore</foreignModel>
+  <genPackages prefix="ConnectorDefinition" basePackage="org.bonitasoft.studio.connector.model"
+      resource="XML" disposableProviderFactory="true" fileExtensions="def" ecorePackage="definition.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="definition.ecore#//Orientation">
+      <genEnumLiterals ecoreEnumLiteral="definition.ecore#//Orientation/HORIZONTAL"/>
+      <genEnumLiterals ecoreEnumLiteral="definition.ecore#//Orientation/VERTICAL"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="definition.ecore#//OrientationObject"/>
+    <genClasses ecoreClass="definition.ecore#//Array">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Array/colsCaption"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Array/cols"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Array/fixedCols"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Array/fixedRows"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Array/rows"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Category">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/icon"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/parentCategoryId"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Checkbox"/>
+    <genClasses image="false" ecoreClass="definition.ecore#//Component">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Component/id"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//ConnectorDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//ConnectorDefinition/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//ConnectorDefinition/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//ConnectorDefinition/icon"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//ConnectorDefinition/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//ConnectorDefinition/input"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//ConnectorDefinition/output"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//ConnectorDefinition/page"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//ConnectorDefinition/jarDependency"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference definition.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference definition.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//DocumentRoot/connectorDefinition"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Group">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//Group/widget"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Group/optional"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Input">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/mandatory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/type"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//List">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//List/showDocuments"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Output">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Output/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Output/type"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Page">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definition.ecore#//Page/widget"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Page/id"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Password"/>
+    <genClasses ecoreClass="definition.ecore#//RadioGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//RadioGroup/choices"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//RadioGroup/orientation"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Select">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Select/items"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Select/readOnly"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//Text">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Text/showDocuments"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//TextArea"/>
+    <genClasses image="false" ecoreClass="definition.ecore#//Widget"/>
+    <genClasses ecoreClass="definition.ecore#//WidgetComponent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//WidgetComponent/inputName"/>
+    </genClasses>
+    <genClasses ecoreClass="definition.ecore#//UnloadableConnectorDefinition"/>
+    <genClasses ecoreClass="definition.ecore#//ScriptEditor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//ScriptEditor/interpreter"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="ConnectorImplementation" basePackage="org.bonitasoft.studio.connector.model"
+      resource="XML" disposableProviderFactory="true" fileExtensions="impl" ecorePackage="implementation.ecore#/">
+    <genClasses ecoreClass="implementation.ecore#//ConnectorImplementation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/implementationId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/implementationVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/definitionId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/definitionVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/implementationClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/hasSources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute implementation.ecore#//ConnectorImplementation/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference implementation.ecore#//ConnectorImplementation/jarDependencies"/>
+    </genClasses>
+    <genClasses ecoreClass="implementation.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference implementation.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference implementation.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference implementation.ecore#//DocumentRoot/connectorImplementation"/>
+    </genClasses>
+    <genClasses ecoreClass="implementation.ecore#//JarDependencies">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute implementation.ecore#//JarDependencies/jarDependency"/>
+    </genClasses>
+    <genClasses ecoreClass="implementation.ecore#//UnloadableConnectorImplementation"/>
+  </genPackages>
+</genmodel:GenModel>

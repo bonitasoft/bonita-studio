@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.bonitasoft.studio.bundles</groupId>
+        <artifactId>plugins</artifactId>
+        <version>7.13.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+    <artifactId>org.omg.schema.spec.bpmn</artifactId>
+    <version>1.0.0</version>
+    <packaging>eclipse-plugin</packaging>
+    
+    <properties>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+</project>
