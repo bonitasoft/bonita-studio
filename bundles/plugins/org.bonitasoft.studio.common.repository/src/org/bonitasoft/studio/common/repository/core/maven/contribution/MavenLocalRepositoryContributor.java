@@ -16,6 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.time.Duration;
+import java.time.Instant;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
@@ -25,6 +27,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.PerformanceStats;
 
 public class MavenLocalRepositoryContributor {
 
@@ -47,6 +50,7 @@ public class MavenLocalRepositoryContributor {
 
     public void execute() throws IOException, CoreException, ArtifactInstallationException {
         BonitaStudioLog.info("Configuring local m2 repository...", CommonRepositoryPlugin.PLUGIN_ID);
+        Instant start = Instant.now();
         for (final Artifact artifact :  catalog.parseDependencies()) {
             final Artifact foundArtifact = localRepository.find(artifact);
             if (foundArtifact == null || !foundArtifact.getFile().exists()) {
@@ -67,6 +71,7 @@ public class MavenLocalRepositoryContributor {
                 }
             }
         }
+        BonitaStudioLog.info(String.format("Required dependencies installed in Local m2 repository in %ss", Duration.between(start, Instant.now()).getSeconds()),CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     protected File toArtifactFile(final Artifact artifact) throws MalformedURLException, UnsupportedEncodingException {
