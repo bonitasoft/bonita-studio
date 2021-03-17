@@ -58,6 +58,8 @@ public class DynamicButtonWidget {
         private Optional<String> cssClass = Optional.empty();
         private Optional<Object> layoutData = Optional.empty();
         private Optional<Font> font = Optional.empty();
+        private Optional<String> defaultTextColorCssId = Optional.empty();
+        private Optional<String> hoverTextColorCssId = Optional.empty();
 
         public Builder withText(String text) {
             this.text = Optional.ofNullable(text);
@@ -94,6 +96,12 @@ public class DynamicButtonWidget {
             return this;
         }
 
+        public Builder withTextColors(String defaultTextColorCssId, String hoverTextColorCssId) {
+            this.defaultTextColorCssId = Optional.ofNullable(defaultTextColorCssId);
+            this.hoverTextColorCssId = Optional.ofNullable(hoverTextColorCssId);
+            return this;
+        }
+
         public Builder withLayoutData(Object layoutData) {
             this.layoutData = Optional.ofNullable(layoutData);
             return this;
@@ -106,7 +114,7 @@ public class DynamicButtonWidget {
 
         public DynamicButtonWidget createIn(Composite parent) {
             return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
-                    cssClass, layoutData, font);
+                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId);
         }
 
     }
@@ -118,7 +126,7 @@ public class DynamicButtonWidget {
     private Optional<Image> hotImage;
     private Optional<Consumer<Event>> onClickListener;
     private Optional<Integer> maxTextWidth;
-    private Optional<String> cssClass = Optional.empty();
+    private Optional<String> cssClass;
     private Optional<Object> layoutData;
     private Optional<Font> font;
 
@@ -126,6 +134,8 @@ public class DynamicButtonWidget {
     private ToolItem toolItem;
     private Cursor cursorArrow;
     private Cursor cursorHand;
+    private Optional<String> defaultTextColorCssId;
+    private Optional<String> hoverTextColorCssId;
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -136,7 +146,9 @@ public class DynamicButtonWidget {
             Optional<Integer> maxTextWidth,
             Optional<String> cssClass,
             Optional<Object> layoutData,
-            Optional<Font> font) {
+            Optional<Font> font,
+            Optional<String> defaultTextColorCssId,
+            Optional<String> hoverTextColorCssId) {
         this.parent = parent;
         this.text = text;
         this.tooltipText = tooltipText;
@@ -147,6 +159,8 @@ public class DynamicButtonWidget {
         this.cssClass = cssClass;
         this.layoutData = layoutData;
         this.font = font;
+        this.defaultTextColorCssId = defaultTextColorCssId;
+        this.hoverTextColorCssId = hoverTextColorCssId;
 
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
@@ -182,7 +196,8 @@ public class DynamicButtonWidget {
                     .create());
             label.setText(text.get());
             font.ifPresent(label::setFont);
-            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                    defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
             cssClass.ifPresent(css -> label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
             if (onClickListener.isPresent()) {
@@ -204,7 +219,8 @@ public class DynamicButtonWidget {
 
                 @Override
                 public void mouseExit(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                            defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
                     engine.applyStyles(label, false);
                     image.ifPresent(toolItem::setImage);
                     label.setCursor(cursorArrow);
@@ -214,7 +230,8 @@ public class DynamicButtonWidget {
                 @Override
                 public void mouseEnter(MouseEvent e) {
                     if (toolItem.isEnabled()) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
                         engine.applyStyles(label, false);
                         hotImage.ifPresent(toolItem::setImage);
                         label.setCursor(cursorHand);
@@ -227,7 +244,8 @@ public class DynamicButtonWidget {
 
                 @Override
                 public void mouseExit(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                            defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
                     engine.applyStyles(label, false);
                     label.setCursor(cursorArrow);
                 }
@@ -235,7 +253,8 @@ public class DynamicButtonWidget {
                 @Override
                 public void mouseEnter(MouseEvent e) {
                     if (toolItem.isEnabled()) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
                         engine.applyStyles(label, false);
                         label.setCursor(cursorHand);
                     }

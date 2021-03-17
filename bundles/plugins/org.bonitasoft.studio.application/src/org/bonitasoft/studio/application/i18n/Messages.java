@@ -200,6 +200,11 @@ public class Messages extends NLS {
     public static String databaseDriver;
     public static String engineRestartWarning;
     public static String enhanceProject;
+    public static String updateExtensionTooltip;
+    public static String updateExtension;
+    public static String removeExtension;
+    public static String updateExtensionConfirmationTitle;
+    public static String updateExtensionConfirmation;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

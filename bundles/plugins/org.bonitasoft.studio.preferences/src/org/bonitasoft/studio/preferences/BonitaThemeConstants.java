@@ -32,6 +32,7 @@ public interface BonitaThemeConstants {
     public static final String WIZARD_HIGHLIGHT_BACKGROUND = "wizardHighlightBackground";
     public static final String EXTENSION_VIEW_BACKGROUND = "extensionViewBackground";
     public static final String CARD_BACKGROUND = "cardBackground";
+    public static final String CARD_SEPARATOR = "separator";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";
@@ -39,9 +40,11 @@ public interface BonitaThemeConstants {
     public static final String SEARCH_WIDGET = "searchWidget";
     public static final String ERROR_TEXT_COLOR = "errorTextColor";
     public static final String INFO_TEXT_COLOR = "infoTextColor";
+    public static final String SUCCESS_TEXT_COLOR = "successTextColor";
+    public static final String SUCCESS_HOVER_TEXT_COLOR = "successHoverTextColor";
     public static final String TITLE_TEXT_COLOR = "titleTextColor";
     public static final String TOOLBAR_TEXT_COLOR = "toolbarTextColor";
+    public static final String GAV_TEXT_COLOR = "gavTextColor";
     public static final String CARD_HIGHLIGHT_TITLE_COLOR = "cardHighlightTitleColor";
     public static final String LABEL_COMPOSITE = "labelComposite";
-    public static final String CARD_SEPARATOR = "separator";
 }

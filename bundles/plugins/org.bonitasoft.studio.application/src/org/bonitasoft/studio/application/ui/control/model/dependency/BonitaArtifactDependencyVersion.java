@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.osgi.framework.Version;
 
@@ -40,8 +41,11 @@ public class BonitaArtifactDependencyVersion implements Comparable<BonitaArtifac
 
     @Override
     public int compareTo(BonitaArtifactDependencyVersion other) {
-        Version thisVersion = new Version(version);
-        Version otherVersion = new Version(other.getVersion());
+        return compareTo(new ComparableVersion(other.getVersion()));
+    }
+
+    public int compareTo(ComparableVersion otherVersion) {
+        ComparableVersion thisVersion = new ComparableVersion(version);
         return otherVersion.compareTo(thisVersion); // The latest version has the priority
     }
 
