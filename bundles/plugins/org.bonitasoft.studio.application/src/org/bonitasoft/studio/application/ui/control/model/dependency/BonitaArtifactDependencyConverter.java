@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -63,6 +64,9 @@ public class BonitaArtifactDependencyConverter {
     public BonitaArtifactDependency toBonitaArtifactDependency(Dependency dep) {
         BonitaArtifactDependency bonitaDep = new BonitaArtifactDependency();
         bonitaDep.setFromMarketplace(false);
+        BonitaArtifactDependencyVersion version = new BonitaArtifactDependencyVersion();
+        version.setVersion(dep.getVersion());
+        bonitaDep.setVersions(Arrays.asList(version));
         ArtifactType type = findType(dep);
         bonitaDep.setArtifactType(type);
         if (Objects.equals(type, ArtifactType.UNKNOWN)) {

@@ -86,8 +86,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     public static final String ID = "org.bonitasoft.studio.application.extension.editor";
 
-    private static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
-    private static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
+    public static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
+    public static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
     private static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
     private RepositoryAccessor repositoryAccessor;
@@ -190,7 +190,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 if (bonitaDependency
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
-                    new ExtensionCard(parent, repositoryAccessor, dep, bonitaDependency.get(), subtitleFont, gavFont,
+                    new ExtensionCard(parent, repositoryAccessor, ctx, dep, bonitaDependency.get(), subtitleFont, gavFont,
                             this::removeExtensions);
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
@@ -198,7 +198,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        new ExtensionCard(parent, repositoryAccessor, dep, bonitaDep, subtitleFont, gavFont,
+                        new ExtensionCard(parent, repositoryAccessor, ctx, dep, bonitaDep, subtitleFont, gavFont,
                                 this::removeExtensions);
                     }
                 }

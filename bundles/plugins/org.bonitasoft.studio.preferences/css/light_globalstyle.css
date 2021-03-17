@@ -69,6 +69,16 @@ Label#infoTextColor {
     color: #345fa3;
 }
 
+Label#successTextColor,
+CLabel#successTextColor {
+ color: #3c8228;
+}
+
+Label#successHoverTextColor,
+CLabel#successHoverTextColor {
+    color: #2a5c1c;
+}
+
 Label#titleTextColor,
 CLabel#titleTextColor,
 StyledText#titleTextColor {
@@ -78,6 +88,11 @@ StyledText#titleTextColor {
 Label#toolbarTextColor,
 CLabel#toolbarTextColor {
     color: #3b3b3b;
+}
+
+Label#gavTextColor,
+CLabel#gavTextColor { 
+    color: #757575;
 }
 
 Label#cardHighlightTitleColor,

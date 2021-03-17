@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.ui.control.model.dependency;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class BonitaArtifactDependency {
     private String groupId;
     private String artifactId;
     private String scope;
-    private List<BonitaArtifactDependencyVersion> versions;
+    private List<BonitaArtifactDependencyVersion> versions = new ArrayList();
     private Image iconImage;
 
     private boolean fromMarketplace = true;

@@ -442,4 +442,7 @@ public class PicsConstants {
 
     public static String editProject = "projectExtensions/edit.png";
     public static String editProjectHot = "projectExtensions/edit_hot.png";
+
+    public static String updateDependency = "projectExtensions/update.png";
+    public static String updateDependencyHot = "projectExtensions/update_hot.png";
 }

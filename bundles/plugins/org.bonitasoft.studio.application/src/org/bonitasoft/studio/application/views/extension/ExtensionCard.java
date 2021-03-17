@@ -14,17 +14,26 @@
  */
 package org.bonitasoft.studio.application.views.extension;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
+import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -37,16 +46,15 @@ import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 
 public class ExtensionCard extends Composite {
 
     private RepositoryAccessor repositoryAccessor;
+    private DataBindingContext ctx;
     private Dependency dep;
     private BonitaArtifactDependency bonitaDep;
     private Font subtitleFont;
@@ -55,12 +63,14 @@ public class ExtensionCard extends Composite {
     private Cursor cursorHand;
     private Cursor cursorArrow;
     private IThemeEngine engine;
+    private CommandExecutor commandExecutor;
 
-    public ExtensionCard(Composite parent, RepositoryAccessor repositoryAccessor, Dependency dep,
+    public ExtensionCard(Composite parent, RepositoryAccessor repositoryAccessor, DataBindingContext ctx, Dependency dep,
             BonitaArtifactDependency bonitaDep, Font subtitleFont, Font gavFont,
             Consumer<Dependency> removeExtensionsOperation) {
         super(parent, SWT.BORDER);
         this.repositoryAccessor = repositoryAccessor;
+        this.ctx = ctx;
         this.dep = dep;
         this.bonitaDep = bonitaDep;
         this.subtitleFont = subtitleFont;
@@ -69,6 +79,7 @@ public class ExtensionCard extends Composite {
         this.cursorHand = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+        this.commandExecutor = new CommandExecutor();
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -102,38 +113,61 @@ public class ExtensionCard extends Composite {
             action.fill(leftToolbar);
         }
 
-        var toolBar = new ToolBar(parent, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
-        toolBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(action == null ? 2 : 1, 1)
-                .align(SWT.END, SWT.FILL).create());
-        toolBar.setLayout(GridLayoutFactory.fillDefaults().create());
+        var toolbarComposite = new Composite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL)
+                .span(action != null ? 1 : 2, 1).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        var deleteItem = new ToolItem(toolBar, SWT.PUSH);
-        deleteItem.setImage(Pics.getImage(PicsConstants.delete));
-        deleteItem.setHotImage(Pics.getImage(PicsConstants.delete_hot));
-        deleteItem.setToolTipText(Messages.removeExtensionTooltip);
-        addMouseHandCursorBehavior(toolBar);
-        deleteItem.addListener(SWT.Selection, e -> {
-            if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                    Messages.removeExtensionConfirmationTitle,
-                    String.format(Messages.removeExtensionConfirmation, bonitaDep.getName()))) {
-                removeExtensionsOperation.accept(dep);
-            }
-        });
+        if (isUpdatable()) { // Only ext from marketplace FOR NOW -> TODO
+            new DynamicButtonWidget.Builder()
+                    .withText(Messages.updateExtension)
+                    .withTooltipText(Messages.updateExtensionTooltip)
+                    .withImage(Pics.getImage(PicsConstants.updateDependency))
+                    .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .withTextColors(BonitaThemeConstants.SUCCESS_TEXT_COLOR, BonitaThemeConstants.SUCCESS_HOVER_TEXT_COLOR)
+                    .onClick(e -> updateExtension())
+                    .createIn(toolbarComposite);
+        }
+
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.removeExtension)
+                .withTooltipText(Messages.removeExtensionTooltip)
+                .withImage(Pics.getImage(PicsConstants.delete))
+                .withHotImage(Pics.getImage(PicsConstants.delete_hot))
+                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .onClick(e -> {
+                    if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                            Messages.removeExtensionConfirmationTitle,
+                            String.format(Messages.removeExtensionConfirmation, bonitaDep.getName()))) {
+                        removeExtensionsOperation.accept(dep);
+                    }
+                })
+                .createIn(toolbarComposite);
     }
 
-    private void addMouseHandCursorBehavior(Control control) {
-        control.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                control.setCursor(cursorHand);
+    private void updateExtension() {
+        String latestVersion = bonitaDep.getLatestCompatibleVersion()
+                .map(BonitaArtifactDependencyVersion::getVersion)
+                .orElseThrow(() -> new IllegalArgumentException("No update available"));
+        if (MessageDialog.openQuestion(getShell(), Messages.updateExtensionConfirmationTitle,
+                String.format(Messages.updateExtensionConfirmation, bonitaDep.getName(), dep.getVersion(), latestVersion))) {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    try {
+                        new UpdateDependencyVersionOperation(bonitaDep.getGroupId(), bonitaDep.getArtifactId(),
+                                latestVersion)
+                                        .disableAnalyze()
+                                        .run(monitor);
+                    } catch (CoreException e) {
+                        throw new InvocationTargetException(e);
+                    }
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(e);
             }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                control.setCursor(cursorArrow);
-            }
-        });
+        }
     }
 
     private void createDescriptionLabel(Composite parent) {
@@ -158,7 +192,7 @@ public class ExtensionCard extends Composite {
         type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).create());
         type.setText(bonitaDep.getArtifactType().getName());
         type.setFont(gavFont);
-        type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+        type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 
     private void createTitleComposite(Composite parent) {
@@ -179,9 +213,9 @@ public class ExtensionCard extends Composite {
         gav.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
         gav.setFont(gavFont);
-        gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TOOLBAR_TEXT_COLOR);
+        gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
 
-        // TODO will probably be removed if we do not ahve the time to create the click behavior on the cards :'(.
+        // TODO will probably be removed if we do not have the time to create the click behavior on the cards :'(.
         titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
 
             @Override
@@ -197,6 +231,23 @@ public class ExtensionCard extends Composite {
                 engine.applyStyles(titleLabel, false);
             }
         });
+    }
+
+    private boolean isUpdatable() {
+        if (bonitaDep.isFromMarketplace()) {
+            return bonitaDep.getLatestCompatibleVersion()
+                    .map(latest -> {
+                        try {
+                            return latest.compareTo(new ComparableVersion(dep.getVersion())) < 0;
+                        } catch (IllegalArgumentException e) {
+                            // version badly formatted, unable to compare
+                            BonitaStudioLog.error(e);
+                            return false;
+                        }
+                    })
+                    .orElse(false);
+        }
+        return false;
     }
 
 }
