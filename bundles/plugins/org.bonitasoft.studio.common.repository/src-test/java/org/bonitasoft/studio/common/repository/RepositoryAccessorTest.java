@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Before;
@@ -47,7 +48,6 @@ public class RepositoryAccessorTest {
         repositoryAccessor = new RepositoryAccessor(repositoryManager);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void should_access_a_repositoryStore() throws Exception {
         //When
@@ -83,6 +83,6 @@ public class RepositoryAccessorTest {
 
         //Then
         verify(repositoryManager).getCurrentRepository();
-        verify(repository).create(monitor);
+        verify(repository).create(ProjectMetadata.defaultMetadata(), monitor);
     }
 }

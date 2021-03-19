@@ -34,7 +34,11 @@ public class TextAreaWidget extends TextWidget {
 
         @Override
         public TextAreaWidget createIn(Composite container) {
-            final TextAreaWidget control = new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
+            final TextAreaWidget control = useNativeRender ? 
+                    new NativeTextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
+                            verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
+                            imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), style)
+                    : new TextAreaWidget(container, id, labelAbove, horizontalLabelAlignment,
                     verticalLabelAlignment, labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
                     imageButton, tooltipButton, toolkit, editableStrategy, Optional.ofNullable(ctx), style);
             control.init();
@@ -52,7 +56,10 @@ public class TextAreaWidget extends TextWidget {
         }
     }
 
-    protected TextAreaWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
+    protected TextAreaWidget(Composite container, 
+            String id, 
+            boolean topLabel, 
+            int horizontalLabelAlignment,
             int verticalLabelAlignment,
             int labelWidth,
             boolean readOnly,

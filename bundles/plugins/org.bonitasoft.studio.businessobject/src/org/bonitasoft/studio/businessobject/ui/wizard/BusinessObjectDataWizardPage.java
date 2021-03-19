@@ -34,6 +34,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -110,9 +111,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     }
 
     private RepositoryAccessor repositoryAccessor() {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 
     /*

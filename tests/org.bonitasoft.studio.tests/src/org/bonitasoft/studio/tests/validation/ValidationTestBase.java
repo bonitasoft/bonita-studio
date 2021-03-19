@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -38,8 +39,7 @@ public class ValidationTestBase {
         batchValidator.setIncludeLiveConstraints(true);
         batchValidator.setReportSuccesses(true);
 
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
 
     /**

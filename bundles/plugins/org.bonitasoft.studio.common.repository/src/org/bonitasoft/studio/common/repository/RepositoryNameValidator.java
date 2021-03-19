@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository;
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.eclipse.core.databinding.validation.IValidator;
@@ -24,17 +25,13 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IInputValidator;
 
-public class RepositoryNameValidator implements IInputValidator, IValidator {
+public class RepositoryNameValidator implements IInputValidator, IValidator<String> {
 
     private static final String[] reservedChars = new String[] { "/", "\\", ":", "*", "?", "\"", "<", ">", ";", "|" };
-    private boolean isNew;
+    private Supplier<Boolean> newProjectSupplier;
 
-    public RepositoryNameValidator(boolean isNew) {
-        this.isNew = isNew;
-    }
-
-    protected void setIsNew(boolean isNew) {
-        this.isNew = isNew;
+    public RepositoryNameValidator(Supplier<Boolean> newProjectSupplier) {
+        this.newProjectSupplier = newProjectSupplier;
     }
 
     @Override
@@ -47,7 +44,7 @@ public class RepositoryNameValidator implements IInputValidator, IValidator {
             return String.format(Messages.createNewProject_invalidCharacter, invalidChar.get());
         }
 
-        if (isNew || !isCurrentName(newText)) {
+        if (newProjectSupplier.get() || !isCurrentName(newText)) {
             if (getRepositoryManager().getRepository(newText) != null) {
                 return String.format(Messages.projectAlreadyExist, newText);
             }
@@ -85,7 +82,7 @@ public class RepositoryNameValidator implements IInputValidator, IValidator {
     }
 
     @Override
-    public IStatus validate(Object value) {
+    public IStatus validate(String value) {
         final String errorMessage = isValid((String) value);
         return errorMessage == null ? ValidationStatus.ok() : ValidationStatus.error(errorMessage);
     }

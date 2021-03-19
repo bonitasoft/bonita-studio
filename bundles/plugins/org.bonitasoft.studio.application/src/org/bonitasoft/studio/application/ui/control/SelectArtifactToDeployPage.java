@@ -648,7 +648,7 @@ public class SelectArtifactToDeployPage implements ControlSupplier {
         }
         if (selectedOrganization != null) {
             IStatus status = new EmptyInputValidator(org.bonitasoft.studio.identity.i18n.Messages.defaultUser)
-                    .validate(user);
+                    .validate((String)user);
             if (!status.isOK()) {
                 return status;
             }

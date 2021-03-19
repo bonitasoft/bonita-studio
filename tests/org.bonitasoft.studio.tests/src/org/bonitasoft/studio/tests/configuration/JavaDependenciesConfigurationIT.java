@@ -43,6 +43,9 @@ public class JavaDependenciesConfigurationIT {
     public void testImportAndRunProcessWithLotOfDependencies() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(JavaDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
@@ -54,6 +57,9 @@ public class JavaDependenciesConfigurationIT {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();

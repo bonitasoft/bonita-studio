@@ -35,6 +35,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -81,8 +82,7 @@ public class ExportBarIT {
     public void init() throws Exception {
         engineManager = BOSEngineManager.getInstance();
         session = engineManager.loginDefaultTenant(new NullProgressMonitor());
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
 
     @After

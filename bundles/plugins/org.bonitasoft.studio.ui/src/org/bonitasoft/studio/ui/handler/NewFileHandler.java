@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -53,9 +54,7 @@ public abstract class NewFileHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        execute(Display.getDefault().getActiveShell(), repositoryAccessor);
+        execute(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
 }

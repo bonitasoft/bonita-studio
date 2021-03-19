@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.model.organization.CustomUserInfoDefinition;
@@ -94,8 +95,7 @@ public class OrganizationIT {
 
     @Before
     public void init() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         BOSEngineManager.getInstance().start();
     }
 

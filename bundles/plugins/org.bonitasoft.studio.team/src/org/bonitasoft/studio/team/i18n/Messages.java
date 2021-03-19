@@ -72,10 +72,6 @@ public class Messages extends NLS {
     public static String synchronizeAllManually;
     public static String synchronizeAllAutomatically;
     public static String createNewLocalRepo;
-    public static String createNewLocalRepoDialogTitle;
-    public static String createNewLocalRepoDialogMessage;
-    public static String createNewLocalRepoDialogDefaultName;
-    public static String createNewLocalRepo_emptyText;
     public static String team_empty;
     public static String lockLabel;
     public static String unlockLabel;

@@ -217,6 +217,9 @@ public class BPMNConnectorExportImportTest {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         BPMNConnectorExportImportTest.class.getResource("diagramToTestConnectorBPMNImportExport-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());

@@ -117,7 +117,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             }
             try {
                 if (!DataRepositoryServerManager.getInstance().isStarted()) {
-                    DataRepositoryServerManager.getInstance().start(monitor);
+                    DataRepositoryServerManager.getInstance().start(AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             } catch (Exception e1) {
                 BonitaStudioLog.error(e1);
@@ -146,9 +146,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 }
             } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
-            } finally {
-                monitor.done();
-            }
+            } 
         }
     }
 

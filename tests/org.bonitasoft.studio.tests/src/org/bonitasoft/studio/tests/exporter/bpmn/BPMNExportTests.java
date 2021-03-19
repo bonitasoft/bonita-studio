@@ -78,6 +78,9 @@ public class BPMNExportTests {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final MainProcess c = (MainProcess) ((ProcessDiagramEditor) bot.activeEditor().getReference()

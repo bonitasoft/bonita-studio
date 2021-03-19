@@ -302,9 +302,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     }
 
     private RepositoryAccessor repositoryAccessor() {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 
     @Override

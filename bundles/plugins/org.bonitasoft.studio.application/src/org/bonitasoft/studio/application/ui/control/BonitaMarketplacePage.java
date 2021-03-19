@@ -31,6 +31,7 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
@@ -481,8 +482,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private IProject getProject() {
         if (repositoryAccessor == null) {
-            repositoryAccessor = new RepositoryAccessor();
-            repositoryAccessor.init();
+            repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         }
         return repositoryAccessor.getCurrentRepository().getProject();
     }

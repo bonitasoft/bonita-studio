@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.identity.actors.ui.handler;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefFileStore;
@@ -31,8 +32,7 @@ public class ExportActorFilterFromDefinitionHandler extends AbstractHandler {
     private FileStoreFinder fileStoreFinder;
 
     public ExportActorFilterFromDefinitionHandler() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         fileStoreFinder = new FileStoreFinder();
     }
 

@@ -20,17 +20,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.i18n.Messages;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
@@ -48,6 +52,7 @@ public class WizardBuilder<T> {
     private int height = SWT.DEFAULT;
     private int nbLine = 0;
     private boolean fixedInitialSize = false;
+    private CanFinishSupplier canFinishSupplier;
 
     private WizardBuilder() {
     }
@@ -128,6 +133,14 @@ public class WizardBuilder<T> {
                             .forEach(pageChangeProvider::addPageChangedListener);
                 }
             }
+            
+            @Override
+            public boolean canFinish() {
+                if(canFinishSupplier != null) {
+                    return super.canFinish() && canFinishSupplier.canFinish((WizardDialog) this.getContainer());
+                }
+                return super.canFinish();
+            }
 
         };
         pages.stream().forEachOrdered(page -> wizard.addPage(page.asPage()));
@@ -144,7 +157,7 @@ public class WizardBuilder<T> {
      * @param finishButton The label of the finish button
      */
     public Optional<T> open(Shell shell, String finishButton) {
-        new CustomLabelWizardDialog(shell, asWizard(), finishButton) {
+        CustomLabelWizardDialog dialog = new CustomLabelWizardDialog(shell, asWizard(), finishButton) {
 
             @Override
             protected Point getInitialSize() {
@@ -160,8 +173,39 @@ public class WizardBuilder<T> {
                 size.y = size.y + convertHeightInCharsToPixels(nbLine);
                 return size;
             }
-        }.open();
+
+        };
+        dialog.addPageChangedListener(
+                event -> updateNextAndBackButtonLabel((IWizardPage) event.getSelectedPage(), dialog));
+        dialog.open();
         return finishResult;
+    }
+
+    private void updateNextAndBackButtonLabel(IWizardPage selectedPage, CustomLabelWizardDialog dialog) {
+        pages.stream()
+                .filter(p -> Objects.equals(p.getTitle(), selectedPage.getTitle()))
+                .findFirst()
+                .ifPresent(p -> {
+                    Button nextButton = dialog.getNextButton();
+                    if (nextButton != null) {
+                        nextButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, String.valueOf(IDialogConstants.NEXT_ID));
+                        if (p.getNextPageButtonLabel() != null) {
+                            nextButton.setText(p.getNextPageButtonLabel() + " >");
+                        } else {
+                            nextButton.setText(IDialogConstants.NEXT_LABEL);
+                        }
+                    }
+                    Button backButton = dialog.getBackButton();
+                    if (backButton != null) {
+                        backButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, String.valueOf(IDialogConstants.BACK_ID));
+                        if (p.getBackPageButtonLabel() != null) {
+                            backButton.setText("< " + p.getBackPageButtonLabel());
+                        } else {
+                            backButton.setText(IDialogConstants.BACK_LABEL);
+                        }
+                    }
+
+                });
     }
 
     /**
@@ -185,6 +229,11 @@ public class WizardBuilder<T> {
      */
     public WizardBuilder<T> verticalHeightAdjustment(int nbLine) {
         this.nbLine = nbLine;
+        return this;
+    }
+
+    public WizardBuilder<T> canFinishProvider(CanFinishSupplier canFinishSupplier) {
+        this.canFinishSupplier = canFinishSupplier;
         return this;
     }
 }

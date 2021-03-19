@@ -39,15 +39,9 @@ public class BosArchiveProcessor extends ToProcProcessor {
     private RepositoryAccessor repositoryAccessor;
 
     public BosArchiveProcessor() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL,
-     * org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public File createDiagram(final URL sourceFileURL, final IProgressMonitor progressMonitor) throws Exception {
         final File archiveFile = new File(URI.decode(sourceFileURL.getFile()));
@@ -79,10 +73,6 @@ public class BosArchiveProcessor extends ToProcProcessor {
         return operation.getFileStoresToOpen();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#getExtension()
-     */
     @Override
     public String getExtension() {
         return ".bos";

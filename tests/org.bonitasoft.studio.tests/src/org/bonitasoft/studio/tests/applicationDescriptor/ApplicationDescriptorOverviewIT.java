@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
@@ -44,8 +45,7 @@ public class ApplicationDescriptorOverviewIT {
 
     @Before
     public void init() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         BOSEngineManager.getInstance().start();
 
         initPref = LivingApplicationPlugin.getDefault().getPreferenceStore()

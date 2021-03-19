@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
@@ -76,9 +77,7 @@ public abstract class AbstractFormPage<T> extends FormPage {
     }
 
     protected RepositoryAccessor repositoryAccessor() {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 
     public ToolBarManager getToolbarManager() {

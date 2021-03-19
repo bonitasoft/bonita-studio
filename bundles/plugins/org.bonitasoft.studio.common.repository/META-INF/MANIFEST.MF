@@ -76,6 +76,7 @@ Export-Package: org.bonitasoft.plugin.analyze.report.model,
  org.bonitasoft.studio.common.repository.provider,
  org.bonitasoft.studio.common.repository.store,
  org.bonitasoft.studio.common.repository.ui,
+ org.bonitasoft.studio.common.repository.ui.validator,
  org.bonitasoft.studio.common.repository.ui.viewer,
  org.bonitasoft.studio.common.repository.ui.wizard
 Bundle-ClassPath: .,

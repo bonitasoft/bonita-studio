@@ -78,14 +78,9 @@ public class ExportBusinessDataModelHandler extends AbstractHandler {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         return execute(Display.getDefault().getActiveShell(), repositoryAccessor);
     }
 

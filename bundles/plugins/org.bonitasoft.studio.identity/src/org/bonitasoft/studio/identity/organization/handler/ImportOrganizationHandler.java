@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
@@ -149,9 +150,7 @@ public class ImportOrganizationHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        execute(repositoryAccessor);
+        execute(RepositoryManager.getInstance().getAccessor());
         return null;
     }
 

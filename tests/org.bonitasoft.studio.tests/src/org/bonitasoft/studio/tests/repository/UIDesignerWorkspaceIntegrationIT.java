@@ -82,8 +82,7 @@ public class UIDesignerWorkspaceIntegrationIT {
     @Test
     public void create_a_new_page_should_trigger_a_refresh_on_a_page_filestore() throws Exception {
         waitForServer();
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final CreateFormOperation createFormOperation = new CreateFormOperation(new PageDesignerURLFactory(
                 InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)), repositoryAccessor);
         createFormOperation.setArtifactName("MyNewForm");

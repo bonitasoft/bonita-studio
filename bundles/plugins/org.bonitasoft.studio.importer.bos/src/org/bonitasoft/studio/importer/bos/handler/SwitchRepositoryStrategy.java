@@ -20,6 +20,7 @@ public class SwitchRepositoryStrategy {
     private boolean rebuildModel;
     private final RepositoryAccessor repositoryAccessor;
     private List<TargetProjectChangeListener> targetProjectChangeListerners = new ArrayList<>();
+    private boolean createNewProject;
 
     public SwitchRepositoryStrategy(RepositoryAccessor repositoryAccessor, String targetRepository) {
         this.targetRepository = targetRepository;
@@ -28,6 +29,14 @@ public class SwitchRepositoryStrategy {
 
     public boolean isSwitchRepository() {
         return !Objects.equals(targetRepository, repositoryAccessor.getCurrentRepository().getName());
+    }
+    
+    public boolean isCreateNewProject() {
+        return createNewProject;
+    }
+    
+    public void setCreateNewProject(boolean createNewProject) {
+        this.createNewProject = createNewProject;
     }
 
     public String getTargetRepository() {
@@ -39,14 +48,6 @@ public class SwitchRepositoryStrategy {
             this.targetRepository = targetRepository;
             targetProjectChangeListerners.stream().forEach(l -> l.handleTargetProjectChanged(targetRepository));
         }
-    }
-
-    public boolean isRebuildModel() {
-        return rebuildModel;
-    }
-
-    public void setRebuildModel(boolean rebuildModel) {
-        this.rebuildModel = rebuildModel;
     }
     
     public void addTargetProjectChangeListener(TargetProjectChangeListener targetProjectChangeListerner) {

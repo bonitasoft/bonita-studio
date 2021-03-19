@@ -523,8 +523,7 @@ public abstract class AbstractFileStore<T>
 
     public RepositoryAccessor getRepositoryAccessor() {
         if (repositoryAccessor == null) {
-            repositoryAccessor = new RepositoryAccessor();
-            repositoryAccessor.init();
+            repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         }
         return repositoryAccessor;
     }

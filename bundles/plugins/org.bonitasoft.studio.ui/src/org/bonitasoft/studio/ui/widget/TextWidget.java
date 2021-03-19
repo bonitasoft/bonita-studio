@@ -47,7 +47,6 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
@@ -327,7 +326,7 @@ public class TextWidget extends EditableControlWidget {
 
         if (transactionalEdit) {
             final ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
-            toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
+            toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
             toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
             createEditItem(toolBar);
             text.addListener(SWT.FocusOut, event -> {
@@ -362,8 +361,8 @@ public class TextWidget extends EditableControlWidget {
             toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
             toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
             ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
-            bWithImage.setImage(imageButton.get());
-            bWithImage.setToolTipText(tooltipButton.orElse(""));
+            imageButton.ifPresent(bWithImage::setImage);
+            tooltipButton.ifPresent(bWithImage::setToolTipText);
             buttonWithImage = Optional.of(bWithImage);
         }
     }
@@ -430,7 +429,8 @@ public class TextWidget extends EditableControlWidget {
         final ToolItem cancelButton = new ToolItem(toolBar, SWT.FLAT);
         cancelButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON);
-        cancelButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "error.png").createImage());
+        cancelButton.setImage(Pics.getImageDescriptor(PicsConstants.error)
+                .createImage());
         cancelButton.setToolTipText(Messages.revertEdit);
         cancelButton.addListener(SWT.Selection, cancelListener(toolBar));
         cancelButton.addListener(SWT.Dispose, event -> cancelButton.getImage().dispose());
@@ -438,7 +438,8 @@ public class TextWidget extends EditableControlWidget {
         okButton = new ToolItem(toolBar, SWT.FLAT);
         okButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON);
-        okButton.setImage(ImageDescriptor.createFromFile(TextWidget.class, "checked.png").createImage());
+        okButton.setImage(Pics.getImageDescriptor(PicsConstants.checkmark)
+                .createImage());
         okButton.setToolTipText(Messages.applyEdit);
         okButton.addListener(SWT.Selection, okListener(toolBar));
         okButton.addListener(SWT.Dispose, event -> okButton.getImage().dispose());

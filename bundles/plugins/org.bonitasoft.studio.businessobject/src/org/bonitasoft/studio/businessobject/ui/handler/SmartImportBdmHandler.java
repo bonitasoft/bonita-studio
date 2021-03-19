@@ -38,6 +38,7 @@ import org.bonitasoft.studio.businessobject.ui.wizard.SmartImportBdmPage;
 import org.bonitasoft.studio.common.ZipUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.commands.AbstractHandler;
@@ -61,7 +62,7 @@ public class SmartImportBdmHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        execute(Display.getDefault().getActiveShell(), new RepositoryAccessor().init());
+        execute(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
 

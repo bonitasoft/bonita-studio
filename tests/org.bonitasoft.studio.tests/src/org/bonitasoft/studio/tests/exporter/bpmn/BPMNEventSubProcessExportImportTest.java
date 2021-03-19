@@ -89,6 +89,9 @@ public class BPMNEventSubProcessExportImportTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNEventSubProcessExportImportTest.class.getResource("diagramtoTestEventSubProcess-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());

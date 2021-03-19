@@ -20,33 +20,34 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
+import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-public class TestSwitchRepository{
+public class TestSwitchRepository {
 
     private String currentWorkspace;
 
     @Before
     public void setUp() throws Exception {
-        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        if(drs.getAllProcesses().isEmpty()){
+        final DiagramRepositoryStore drs = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        if (drs.getAllProcesses().isEmpty()) {
             final DiagramFileStore newDiagram = new NewDiagramCommandHandler().newDiagram();
             newDiagram.open();
         }
         EnginePlugin.getDefault().getPreferenceStore().setValue(EnginePreferenceConstants.LAZYLOAD_ENGINE, true);
     }
-   
+
     @After
     public void tearDown() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
-        if(!RepositoryManager.getInstance().getCurrentRepository().getName().equals(currentWorkspace)){
+        if (!RepositoryManager.getInstance().getCurrentRepository().getName().equals(currentWorkspace)) {
             TeamRepositoryUtil.switchToRepository(currentWorkspace, new NullProgressMonitor());
         }
     }
@@ -60,7 +61,8 @@ public class TestSwitchRepository{
             availableProcess.add(process.getName());
         }
         final List<String> jars = new ArrayList<>();
-        DependencyRepositoryStore depRs = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+        DependencyRepositoryStore depRs = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
         for (final IRepositoryFileStore jar : depRs.getChildren()) {
             jars.add(jar.getName());
         }
@@ -68,7 +70,6 @@ public class TestSwitchRepository{
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
-        
         currentWorkspace = RepositoryManager.getInstance().getCurrentRepository().getName();
         final char[] newWorkspacechar = currentWorkspace.toCharArray();
         for (int i = 0; i < newWorkspacechar.length; i++) {
@@ -79,16 +80,23 @@ public class TestSwitchRepository{
         assertThat(RepositoryManager.getInstance().getCurrentRepository().getProject().isOpen()).isTrue();
         assertEquals(newWorkspace, RepositoryManager.getInstance().getCurrentRepository().getName());
 
-
         drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        assertEquals(0, drs.getAllProcesses().size()) ; //new repo should be empty
+        assertEquals(0, drs.getAllProcesses().size()); //new repo should be empty
 
         TeamRepositoryUtil.switchToRepository(currentWorkspace, new NullProgressMonitor());
         assertEquals(currentWorkspace, RepositoryManager.getInstance().getCurrentRepository().getName());
         drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         depRs = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        assertEquals(availableProcess.size(), drs.getAllProcesses().size()) ; //new repo should be empty
-        assertEquals(jars.size(),depRs.getChildren().size());
+        assertEquals(availableProcess.size(), drs.getAllProcesses().size()); //new repo should be empty
+
+        assertThat(new TestAsyncThread(10, 200) {
+
+            @Override
+            public boolean isTestGreen() throws Exception {
+                return jars.size() == RepositoryManager.getInstance()
+                        .getRepositoryStore(DependencyRepositoryStore.class).getChildren().size();
+            }
+        }.evaluate()).isTrue();
     }
 
 }

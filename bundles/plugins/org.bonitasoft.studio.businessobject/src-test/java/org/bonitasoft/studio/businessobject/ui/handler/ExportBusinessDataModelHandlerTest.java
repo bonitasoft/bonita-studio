@@ -23,7 +23,6 @@ import org.bonitasoft.studio.businessobject.ui.wizard.ExportBusinessDataModelWiz
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

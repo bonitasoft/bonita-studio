@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.Version;
@@ -27,7 +28,6 @@ public class ProductVersion {
     public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String CURRENT_VERSION = manifestVersion(true);
-    public static final Version VERSION_7_8_0 = new Version("7.8.0");
 
     public static final String CURRENT_YEAR = "2021";
 
@@ -110,10 +110,10 @@ public class ProductVersion {
         if (version == null) {
             return true;
         }
-        final Version initialVersion = new Version("6.0.0");
-        Version current = new Version("0.0.0");
+        final DefaultArtifactVersion initialVersion = new DefaultArtifactVersion("6.0.0");
+        DefaultArtifactVersion current = new DefaultArtifactVersion("0.0.0");
         try {
-            current = Version.parseVersion(version);
+            current = new DefaultArtifactVersion(version);
         } catch (final IllegalArgumentException e) {
             return false;
         }
@@ -122,13 +122,13 @@ public class ProductVersion {
     }
 
     public static String majorVersion() {
-        final Version productVersion = new Version(CURRENT_VERSION);
-        return String.format("%s.%s", productVersion.getMajor(), productVersion.getMinor());
+        final DefaultArtifactVersion productVersion = new DefaultArtifactVersion(CURRENT_VERSION);
+        return String.format("%s.%s", productVersion.getMajorVersion(), productVersion.getMinorVersion());
     }
 
     public static boolean isBefore780Version(String version) {
         try {
-            return Version.valueOf(version).compareTo(VERSION_7_8_0) < 0;
+            return new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("7.8.0")) < 0;
         } catch (Exception e) {
             return true;
         }
@@ -136,7 +136,7 @@ public class ProductVersion {
     
     public static boolean isBefore(String currentVersion, String referenceVersion) {
         try {
-            return Version.valueOf(currentVersion).compareTo(Version.valueOf(referenceVersion)) < 0;
+            return new DefaultArtifactVersion(currentVersion).compareTo(new DefaultArtifactVersion(referenceVersion)) < 0;
         } catch (Exception e) {
             return true;
         }
@@ -147,8 +147,8 @@ public class ProductVersion {
     }
 
     public static Version minorVersion(String version) {
-        Version v = new Version(version);
-        return new Version(v.getMajor(), v.getMinor(), 0);
+        DefaultArtifactVersion v = new DefaultArtifactVersion(version);
+        return new Version(v.getMajorVersion(), v.getMinorVersion(), 0);
     }
 
     public static String toMinorVersionString(Version version) {

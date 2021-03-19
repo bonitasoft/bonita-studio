@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.common.repository.model;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
@@ -86,7 +88,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
 
-    IRepository create(IProgressMonitor monitor);
+    IRepository create(ProjectMetadata metadata, IProgressMonitor monitor);
 
     boolean isOnline();
 
@@ -97,5 +99,10 @@ public interface IRepository extends IFileStoreChangeListener {
     List<ProcessModelTransformation> getProcessModelTransformations();
     
     LocalDependenciesStore getLocalDependencyStore();
+
+    void rename(String name, IProgressMonitor monitor) 
+            throws InvocationTargetException, InterruptedException;
+    
+    boolean closeAllEditors();
     
 }

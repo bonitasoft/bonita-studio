@@ -20,6 +20,7 @@ import java.net.URL;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -33,8 +34,7 @@ public class TestSubprocessEventExport {
     @Test
     public void testExportSubprocessEvent() throws Exception {
         DiagramFileStore initialPa = null;
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final DiagramRepositoryStore drs = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestSubprocessEventExport.class.getResource("TestSubp-1.0.bos"));

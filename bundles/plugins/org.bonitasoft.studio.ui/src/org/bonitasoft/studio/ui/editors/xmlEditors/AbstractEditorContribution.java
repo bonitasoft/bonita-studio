@@ -9,6 +9,7 @@
 package org.bonitasoft.studio.ui.editors.xmlEditors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -27,9 +28,7 @@ public abstract class AbstractEditorContribution
     }
 
     private RepositoryAccessor repositoryAccessor() {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 
     @Override

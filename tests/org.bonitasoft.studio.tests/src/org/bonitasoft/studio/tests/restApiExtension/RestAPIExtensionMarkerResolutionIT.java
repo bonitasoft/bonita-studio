@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -38,8 +39,7 @@ public class RestAPIExtensionMarkerResolutionIT {
 
     @Before
     public void init() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         cleanRestApiRepositoryStore();
     }
 

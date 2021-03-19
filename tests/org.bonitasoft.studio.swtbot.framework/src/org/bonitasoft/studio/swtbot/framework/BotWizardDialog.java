@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework;
 
+import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -43,6 +44,15 @@ public abstract class BotWizardDialog extends BotDialog {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         return this;
     }
+    
+    /**
+     * Click on back.
+     */
+    public BotWizardDialog back() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.BACK_LABEL)), 5000);
+        bot.button(IDialogConstants.BACK_LABEL).click();
+        return this;
+    }
 
     public boolean canFlipToNextPage() {
         try {
@@ -51,4 +61,5 @@ public abstract class BotWizardDialog extends BotDialog {
             return false;
         }
     }
+
 }

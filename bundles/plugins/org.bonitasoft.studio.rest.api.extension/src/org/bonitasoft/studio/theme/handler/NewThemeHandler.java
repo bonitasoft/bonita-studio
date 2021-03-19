@@ -14,6 +14,7 @@ import javax.inject.Named;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
@@ -81,9 +82,8 @@ public class NewThemeHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
         WidgetFactory widgetFactory = new WidgetFactory();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         execute(Display.getDefault().getActiveShell(), repositoryAccessor, widgetFactory,
                 repositoryAccessor.getWorkspace());
         return null;

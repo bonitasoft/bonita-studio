@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -42,11 +43,10 @@ import org.eclipse.osgi.util.NLS;
  */
 public class CallActivityConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    private RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+    private RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
-        repositoryAccessor.init();
         final CallActivity callActivity = (CallActivity) ctx.getTarget();
         CallActivityHelper callActivityHelper = createHelper(callActivity);
         final Expression subprocessName = callActivity.getCalledActivityName();

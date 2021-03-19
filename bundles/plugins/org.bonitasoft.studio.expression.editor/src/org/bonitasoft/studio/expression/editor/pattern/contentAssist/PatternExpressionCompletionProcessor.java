@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.pattern.GroovyExpressionPartitioner;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.groovy.BonitaScriptGroovyCompilationUnit;
@@ -68,8 +69,7 @@ public class PatternExpressionCompletionProcessor implements IContentAssistProce
     }
 
     protected ExtendedJavaContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        final RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final GroovyCompilationUnitFactory gcuf = new GroovyCompilationUnitFactory(repositoryAccessor);
         ICompilationUnit newCompilationUnit;
         try {

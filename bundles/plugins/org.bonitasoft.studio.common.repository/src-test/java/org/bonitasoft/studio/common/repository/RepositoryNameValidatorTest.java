@@ -17,23 +17,21 @@ package org.bonitasoft.studio.common.repository;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
+import java.util.function.Supplier;
+
 import org.assertj.core.api.Assertions;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RepositoryNameValidatorTest {
-
-    @Spy
-    private RepositoryNameValidator rnv = new RepositoryNameValidator(true);
 
     @Mock
     private RepositoryManager repoManager;
@@ -46,8 +44,8 @@ public class RepositoryNameValidatorTest {
     @Mock
     private IWorkspaceRoot wsRoot;
 
-    @Before
-    public void setup() throws Throwable {
+    public RepositoryNameValidator createFixture(Supplier<Boolean> newProjectSupplier) throws Exception {
+        RepositoryNameValidator rnv = Mockito.spy(new RepositoryNameValidator(newProjectSupplier));
         doReturn("existing").when(repo).getName();
         doReturn(repoManager).when(rnv).getRepositoryManager();
         doReturn(repo).when(repoManager).getRepository("existing");
@@ -57,34 +55,39 @@ public class RepositoryNameValidatorTest {
         doReturn(ws).when(project).getWorkspace();
         doReturn(wsRoot).when(ws).getRoot();
         doReturn(new IResource[] {}).when(wsRoot).members();
+        return rnv;
     }
 
     @Test
     public void testNotValid_withExisting() throws Exception {
-        Assertions.assertThat(rnv.isValid("existing")).isEqualTo(Messages.projectAlreadyExist);
+        RepositoryNameValidator validator = createFixture(() -> true );
+        Assertions.assertThat(validator.isValid("existing")).isEqualTo(Messages.projectAlreadyExist);
     }
 
     @Test
     public void testValid_withExisting_if_not_new() throws Exception {
-        rnv.setIsNew(false);
-        Assertions.assertThat(rnv.isValid("existing")).isNull();
+        RepositoryNameValidator validator = createFixture(() -> false );
+        Assertions.assertThat(validator.isValid("existing")).isNull();
     }
 
     @Test
     public void testNotValid_withEmpty() throws Exception {
-        Assertions.assertThat(rnv.isValid("")).isEqualTo(Messages.createNewProject_emptyText);
+        RepositoryNameValidator validator = createFixture(() -> false );
+        Assertions.assertThat(validator.isValid("")).isEqualTo(Messages.createNewProject_emptyText);
     }
 
     @Test
     public void testNotValid_withinvalidFileCharactersAsterisk() throws Exception {
+        RepositoryNameValidator validator = createFixture(() -> false );
         doReturn(null).when(repoManager).getRepository(anyString());
-        Assertions.assertThat(rnv.isValid("a*")).isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "*"));
+        Assertions.assertThat(validator.isValid("a*")).isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "*"));
     }
 
     @Test
     public void testNotValid_withinvalidFileCharactersDoubleQuote() throws Exception {
+        RepositoryNameValidator validator = createFixture(() -> false );
         doReturn(null).when(repoManager).getRepository(anyString());
-        Assertions.assertThat(rnv.isValid("a\""))
+        Assertions.assertThat(validator.isValid("a\""))
                 .isEqualTo(String.format(Messages.createNewProject_invalidCharacter, "\""));
     }
 

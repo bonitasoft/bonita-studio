@@ -44,6 +44,9 @@ public class CallActivityMappingIT {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         CallActivityMappingIT.class.getResource("ITTest-CallActivityMapping-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);

@@ -47,6 +47,21 @@ public class BotImportBOSDialog extends BotWizardDialog {
         });
         return this;
     }
+    
+    
+    @Override
+    public BotImportBOSDialog next() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.buttonWithId(String.valueOf(IDialogConstants.NEXT_ID))), 5000);
+        bot.buttonWithId(String.valueOf(IDialogConstants.NEXT_ID)).click();
+        return this;
+    }
+    
+    @Override
+    public BotImportBOSDialog back() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.buttonWithId(String.valueOf(IDialogConstants.BACK_ID))), 5000);
+        bot.buttonWithId(String.valueOf(IDialogConstants.BACK_ID)).click();
+        return this;
+    }
 
     public SWTBotTree tree() {
         final SWTBotTree tree = bot.tree();
@@ -65,7 +80,8 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public void importArchive() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 10000);
+        // Wait extension resolution
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 50000);
         bot.button(Messages.importButtonLabel).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
         bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
@@ -91,15 +107,17 @@ public class BotImportBOSDialog extends BotWizardDialog {
         return new File(FileLocator.toFileURL(bosURLInClasspath).getFile()).getAbsolutePath();
     }
 
-    public void newProject(String repoName) {
+    public BotImportBOSDialog newProject(String repoName) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository)));
         bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository).click();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithId("newRepoTextWidget")));
-        bot.textWithId("newRepoTextWidget").setText(repoName);
-        bot.sleep(400);//Delayed observable (typeText crashes on windows :S)
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON)));
+        bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON).click();
+        bot.textWithId(SWTBOT_ID_NEW_PROJECT_NAME_TEXT_ID).setText(repoName);
+        bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON).click();
+        return this;
     }
 
-    public void existingRepository(String repoName, Boolean current) {
+    public BotImportBOSDialog existingRepository(String repoName, Boolean current) {
         String name = current ? repoName + " " + Messages.currentRepoinfo : repoName;
         bot.waitUntil(
                 Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository)));
@@ -109,10 +127,19 @@ public class BotImportBOSDialog extends BotWizardDialog {
         bot.shell(Messages.importBosArchiveTitle).activate();
         bot.waitUntil(Conditions.shellIsActive(Messages.importBosArchiveTitle));
         bot.ccomboBoxWithId(SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO).setSelection(name);
+        return this;
     }
 
     @Override
     public void finish() {
         importArchive();
+    }
+
+    public BotImportBOSDialog existingRepository() {
+        SWTBotShell activeShell = bot.activeShell();
+        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository).click();
+        activeShell.setFocus();
+        bot.shell(Messages.importBosArchiveTitle).activate();
+        return this;
     }
 }

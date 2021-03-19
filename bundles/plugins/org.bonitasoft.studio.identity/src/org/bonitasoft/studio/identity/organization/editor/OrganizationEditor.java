@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.group.GroupFormPage;
@@ -64,8 +65,7 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
 
     @Override
     protected void initVariablesAndListeners() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         xmlProcessor = new OrganizationXMLProcessor();
         IDocument document = fSourceEditor.getDocumentProvider().getDocument(getEditorInput());
         overviewFormPage.init(workingCopyObservable, document, xmlProcessor);

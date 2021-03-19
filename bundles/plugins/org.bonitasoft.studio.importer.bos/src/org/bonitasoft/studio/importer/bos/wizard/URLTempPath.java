@@ -25,10 +25,16 @@ public class URLTempPath {
 
     private URL url;
     private Path tmpPath;
+    private String originalURL;
 
-    public URLTempPath(URL remoteURL, Path tempFile) {
+    public URLTempPath(String originalURL, URL remoteURL, Path tempFile) {
+        this.originalURL = originalURL;
         url = remoteURL;
         tmpPath = tempFile;
+    }
+    
+    public String getOriginalURL() {
+        return originalURL;
     }
 
     public URL getUrl() {

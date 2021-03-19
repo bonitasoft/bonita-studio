@@ -66,6 +66,9 @@ public class TestTimer implements SWTBotConstants {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestTimer.class.getResource("TestTimer_1_0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());

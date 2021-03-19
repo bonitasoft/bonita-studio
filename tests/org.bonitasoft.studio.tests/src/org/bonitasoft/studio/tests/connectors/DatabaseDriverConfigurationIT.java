@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
@@ -50,8 +51,7 @@ public class DatabaseDriverConfigurationIT {
     @After
     @Before
     public void cleanRepository() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
 
         repositoryAccessor.getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class).getChildren()
                 .stream().forEach(IRepositoryFileStore::delete);

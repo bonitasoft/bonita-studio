@@ -87,8 +87,8 @@ public class Messages extends NLS {
     public static String importWithSwitchRepositoryError;
     public static String currentRepoinfo;
     public static String updateProjectDependencies;
-    public static String dependenciesPreviewTitle;
-    public static String dependenciesPreviewDescription;
+    public static String extensionsPreviewTitle;
+    public static String extensionsPreviewDescription;
     public static String groupId;
     public static String artifactId;
     public static String version;
@@ -101,5 +101,10 @@ public class Messages extends NLS {
     public static String unresolvedDependenciesMessage;
     public static String remoteRepositories;
     public static String configuredRemoteRepositories;
+    public static String description;
+    public static String bosArchiveContentTitle;
+    public static String bosArchiveContentDescription;
+    public static String detailsPageButtonLabel;
+    public static String extensionPageLabel;
 
 }

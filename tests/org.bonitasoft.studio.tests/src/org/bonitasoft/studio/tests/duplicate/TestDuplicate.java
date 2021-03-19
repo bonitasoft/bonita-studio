@@ -91,6 +91,9 @@ public class TestDuplicate {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestDuplicate.class.getResource("Test confirmation template-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final int nbEditorBefore = bot.editors().size();

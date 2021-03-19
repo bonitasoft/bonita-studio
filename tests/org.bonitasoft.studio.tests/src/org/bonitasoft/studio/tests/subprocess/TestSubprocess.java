@@ -71,8 +71,7 @@ public class TestSubprocess {
     @Before
     public void setUp() throws Exception {
         session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         store = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2");

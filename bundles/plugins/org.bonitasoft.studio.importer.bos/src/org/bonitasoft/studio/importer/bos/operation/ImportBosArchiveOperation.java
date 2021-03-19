@@ -207,7 +207,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     protected Model existingMavenModel(final ImportArchiveModel importArchiveModel) {
-        return importArchiveModel.getBosArchive().readMavenProject();
+        return importArchiveModel.getBosArchive().getMavenProject();
     }
 
     protected Set<DependencyLookup> doMigrateToMavenDependencies(ImportArchiveModel importArchiveModel,

@@ -15,18 +15,17 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -54,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 public class ImportWorkspaceApplication implements IApplication {
 
     public static final String IMPORT_CACHE_FOLDER = ".importCache";
-    private final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+    private final RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
 
     /*
      * (non-Javadoc)
@@ -62,7 +61,6 @@ public class ImportWorkspaceApplication implements IApplication {
      */
     @Override
     public Object start(IApplicationContext context) throws Exception {
-        repositoryAccessor.init();
         final String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
         final Optional<String> scan = Stream.of(args).filter("-scan"::equals).findFirst();
         final Optional<String> export = Stream.of(args).filter(arg -> arg.startsWith("-export=")).findFirst();

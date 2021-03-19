@@ -102,6 +102,9 @@ public class DataWizardIT {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         DataWizardIT.class.getResource("ProcessWithData_1_0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
