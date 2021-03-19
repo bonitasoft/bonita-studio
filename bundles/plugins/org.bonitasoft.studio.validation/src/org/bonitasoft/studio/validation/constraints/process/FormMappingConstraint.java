@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Element;
@@ -132,8 +133,6 @@ public class FormMappingConstraint extends AbstractLiveValidationMarkerConstrain
     }
 
     protected RepositoryAccessor getRepositoryAccessor() {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 }

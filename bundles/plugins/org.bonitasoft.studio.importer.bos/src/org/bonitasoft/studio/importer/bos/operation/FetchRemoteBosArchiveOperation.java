@@ -74,7 +74,7 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithStatus {
                 }
             }
             httpConnection.disconnect();
-            ulrTempPath = new URLTempPath(httpConnection.getURL(), tempFile);
+            ulrTempPath = new URLTempPath(url, httpConnection.getURL(), tempFile);
         } catch (IOException e) {
            status = new Status(IStatus.ERROR, BosArchiveImporterPlugin.PLUGIN_ID, e.getLocalizedMessage(),e);
         } finally {

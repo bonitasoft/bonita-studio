@@ -181,7 +181,7 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
         final UpdateValueStrategy pathStrategy = new UpdateValueStrategy();
         final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.destinationLabel);
         pathStrategy.setBeforeSetValidator(value -> {
-            final IStatus status = emptyValidator.validate(value);
+            final IStatus status = emptyValidator.validate((String)value);
             if (!status.isOK()) {
                 return status;
             }

@@ -27,6 +27,7 @@ import java.util.zip.ZipInputStream;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -49,8 +50,7 @@ public class TestExportProcessBar  {
     
     @Test
     public void testExportProcessBarWithAttachmentAndSeveralPool() throws Exception {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         
 
         /* Import the processus */

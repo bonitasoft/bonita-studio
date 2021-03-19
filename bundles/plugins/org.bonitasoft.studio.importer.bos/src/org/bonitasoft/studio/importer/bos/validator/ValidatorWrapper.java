@@ -14,26 +14,26 @@
  */
 package org.bonitasoft.studio.importer.bos.validator;
 
-import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import java.util.function.Supplier;
+
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-public class RepositoryNameValidator extends org.bonitasoft.studio.common.repository.RepositoryNameValidator {
+public class ValidatorWrapper<T> implements IValidator<T> {
 
-    private IObservableValue repoMode;
+    private IValidator<T> validatorDelegate;
+    private Supplier<Boolean> applyValidator;
 
-    public RepositoryNameValidator(IObservableValue repoMode) {
-        super(true);
-        this.repoMode = repoMode;
+    public ValidatorWrapper(IValidator<T> validator, Supplier<Boolean> applyValidator) {
+        this.validatorDelegate = validator;
+        this.applyValidator = applyValidator;
     }
 
     @Override
-    public IStatus validate(Object value) {
-        final RepositoryMode mode = (RepositoryMode) repoMode.getValue();
-        if (RepositoryMode.NEW == mode) {
-            final String errorMessage = isValid((String) value);
-            return errorMessage == null ? ValidationStatus.ok() : ValidationStatus.error(errorMessage);
+    public IStatus validate(T value) {
+        if (applyValidator.get()) {
+            return validatorDelegate.validate(value);
         }
         return ValidationStatus.ok();
     }

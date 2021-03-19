@@ -26,13 +26,13 @@ public class ShareableRepositoryValidator extends RepositoryNameValidator {
     private String[] availableRepositories;
 
     public ShareableRepositoryValidator(String[] availableRepositories) {
-        super(true);
+        super(() -> true);
         this.availableRepositories = availableRepositories;
     }
 
     @Override
-    public IStatus validate(Object value) {
-        String repoName = value == null ? "" : value.toString();
+    public IStatus validate(String value) {
+        String repoName = value == null ? "" : value;
         IStatus status = Stream.of(availableRepositories).anyMatch(repoName::equalsIgnoreCase)
                 ? ValidationStatus.ok()
                 : super.validate(repoName);

@@ -54,8 +54,7 @@ public class ExportBosArchiveIT {
 
     @Test
     public void should_not_export_ui_designer_metadata() throws Exception {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
                 .getRepositoryStore(WebPageRepositoryStore.class);
 

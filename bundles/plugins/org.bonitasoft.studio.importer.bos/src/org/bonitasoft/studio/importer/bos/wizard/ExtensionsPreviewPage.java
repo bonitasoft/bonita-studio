@@ -87,7 +87,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
-public class DependenciesPreviewControlSupplier implements ControlSupplier {
+public class ExtensionsPreviewPage implements ControlSupplier {
 
     private static final String ERROR_PANEL_ID = "error.panel";
     private static final String LOCAL_PANEL_ID = "local.panel";
@@ -95,15 +95,15 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     private static final String MAVEN_REPO_CONFIG_DOC_URL = "https://maven.apache.org/settings.html#Repositories";
 
     private IObservableList<DependencyLookup> dependenciesLookup;
-    private ImportBosArchiveControlSupplier archiveModelSupplier;
+    private ImportBosArchivePage archiveModelSupplier;
     private ExceptionDialogHandler exceptionDialogHandler;
     private Map<String, List<DependencyLookup>> executions = new HashMap<>();
     private ImportArchiveModel importArchiveModel;
     private IObservableList<IRepository> mavenRepositories;
 
-    public DependenciesPreviewControlSupplier(IObservableList<DependencyLookup> dependenciesLookup,
+    public ExtensionsPreviewPage(IObservableList<DependencyLookup> dependenciesLookup,
             IObservableList<IRepository> mavenRepositories,
-            ImportBosArchiveControlSupplier archiveModelSupplier,
+            ImportBosArchivePage archiveModelSupplier,
             ExceptionDialogHandler exceptionDialogHandler) {
         this.dependenciesLookup = dependenciesLookup;
         this.mavenRepositories = mavenRepositories;
@@ -114,7 +114,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     @Override
     public void pageChanged(PageChangedEvent event) {
         IWizardPage selectedPage = (IWizardPage) event.getSelectedPage();
-        if (Messages.dependenciesPreviewTitle.equals(selectedPage.getTitle()) && (importArchiveModel == null
+        if (Messages.extensionsPreviewTitle.equals(selectedPage.getTitle()) && (importArchiveModel == null
                 || !executions
                         .containsKey(archiveModelSupplier.get().getBosArchive().getArchiveFile().getAbsolutePath()))) {
             analyzeDependencies(selectedPage.getWizard().getContainer());
@@ -124,7 +124,7 @@ public class DependenciesPreviewControlSupplier implements ControlSupplier {
     private void analyzeDependencies(IWizardContainer wizardContainer) {
         importArchiveModel = archiveModelSupplier.get();
         BosArchive bosArchive = importArchiveModel.getBosArchive();
-        Model mavenProject = bosArchive.readMavenProject();
+        Model mavenProject = bosArchive.getMavenProject();
         if (mavenProject == null) {
             executeDependenciesMigrationOperation(wizardContainer, bosArchive);
         } else {

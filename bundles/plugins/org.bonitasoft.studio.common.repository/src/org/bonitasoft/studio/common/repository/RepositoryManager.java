@@ -38,6 +38,7 @@ import javax.xml.xpath.XPathFactory;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.IBonitaProjectListenerProvider;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -73,6 +74,7 @@ public class RepositoryManager {
     private AbstractRepository repository;
     private IPreferenceStore preferenceStore;
     private IConfigurationElement repositoryImplementationElement;
+    private RepositoryAccessor repositoryAccessor;
 
     private RepositoryManager() {
         final IConfigurationElement[] repositoryFactories = BonitaStudioExtensionRegistryManager.getInstance()
@@ -262,7 +264,8 @@ public class RepositoryManager {
         setRepository(repositoryName, false, monitor);
     }
 
-    public void setRepository(final String repositoryName, final boolean migrationEnabled,
+    public void setRepository(final String repositoryName,
+            final boolean migrationEnabled,
             final IProgressMonitor monitor) {
         AbstractRepository currentRepository = getCurrentRepository();
         if (currentRepository != null && currentRepository.getName().equals(repositoryName)) {
@@ -274,9 +277,11 @@ public class RepositoryManager {
         if (currentRepository == null) {
             currentRepository = createRepository(repositoryName, migrationEnabled);
         }
-        currentRepository.create(monitor);
+        ProjectMetadata metadata = ProjectMetadata.read(currentRepository.getProject());
+        metadata.setName(repositoryName);
+        currentRepository.create(metadata, monitor);
         currentRepository.open(monitor);
-        this.repository = currentRepository;
+        setCurrentRepository(currentRepository);
     }
 
     public Optional<IRepositoryStore<? extends IRepositoryFileStore>> getRepositoryStore(Object element) {
@@ -304,6 +309,14 @@ public class RepositoryManager {
 
     public void setCurrentRepository(AbstractRepository repository) {
         this.repository = repository;
+    }
+
+    public RepositoryAccessor getAccessor() {
+        return repositoryAccessor;
+    }
+
+    public void setRepositoryAccessor(RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
     }
 
 }

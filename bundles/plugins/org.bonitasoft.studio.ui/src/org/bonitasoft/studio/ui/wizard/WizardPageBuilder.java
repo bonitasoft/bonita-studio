@@ -29,6 +29,8 @@ public class WizardPageBuilder {
     private String description;
     private ControlSupplier controlSupplier;
     private Optional<DataBindingContext> context = Optional.empty();
+    private String nextPageButtonLabel;
+    private String backPageButtonLabel;
 
     private WizardPageBuilder() {
         //PRIVATE
@@ -105,6 +107,28 @@ public class WizardPageBuilder {
         public void pageChanged(PageChangedEvent event) {
             controlSupplier.pageChanged(event);
         }
+    }
+
+    public WizardPageBuilder withNextPageButtonLabel(String nextPageButtonLabel) {
+        this.nextPageButtonLabel = nextPageButtonLabel;
+        return this;
+    }
+    
+    public WizardPageBuilder withBackPageButtonLabel(String backPageButtonLabel) {
+        this.backPageButtonLabel = backPageButtonLabel;
+        return this;
+    }
+    
+    public String getNextPageButtonLabel() {
+        return nextPageButtonLabel;
+    }
+    
+    public String getBackPageButtonLabel() {
+        return backPageButtonLabel;
+    }
+    
+    public String getTitle() {
+        return title;
     }
 
 }

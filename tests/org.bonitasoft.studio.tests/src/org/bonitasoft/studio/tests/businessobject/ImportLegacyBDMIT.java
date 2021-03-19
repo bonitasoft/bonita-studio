@@ -26,6 +26,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
@@ -53,8 +54,7 @@ public class ImportLegacyBDMIT {
     @Before
     public void setUp() throws Exception {
         BOSEngineManager.getInstance().start();
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         depStore = repositoryAccessor.getRepositoryStore(DependencyRepositoryStore.class);
         defStore = repositoryAccessor.getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }

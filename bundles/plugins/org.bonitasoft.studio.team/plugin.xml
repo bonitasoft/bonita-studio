@@ -60,11 +60,6 @@
             name="status">
       </command>
       <command
-            defaultHandler="org.bonitasoft.studio.team.ui.handler.CreateNewLocalRepoHandler"
-            id="org.bonitasoft.studio.repository.ex.createLocal"
-            name="%createNewLocalRepository">
-      </command>
-      <command
             defaultHandler="org.bonitasoft.studio.team.ui.handler.SwitchRepositoriesWorkspaceHandler"
             id="org.bonitasoft.studio.repository.switch"
             name="%Change_Repository">
@@ -184,7 +179,7 @@
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.fileMenu?before=org.bonitasoft.studio.application.command.deployArtifacts">
          <command
-               commandId="org.bonitasoft.studio.repository.ex.createLocal"
+               commandId="org.bonitasoft.studio.application.newproject.command"
                style="push">
          </command>
          <separator
@@ -236,7 +231,7 @@
             icon="icons/change-repository.png">
       </image>
       <image
-            commandId="org.bonitasoft.studio.repository.ex.createLocal"
+            commandId="org.bonitasoft.studio.application.newproject.command"
             icon="icons/new-local-repository.png">
       </image>
    </extension>

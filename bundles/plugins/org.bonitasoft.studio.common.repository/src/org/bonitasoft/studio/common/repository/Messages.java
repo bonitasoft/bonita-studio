@@ -119,6 +119,9 @@ public final class Messages extends NLS {
     public static String dependenciesInstallationMsg;
     public static String dependenciesInstallation;
 
+    public static String creatingNewProject;
+    public static String invalidFormat;
+
     private Messages() {
         // Do not instantiate
     }

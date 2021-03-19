@@ -27,7 +27,6 @@ import java.util.Optional;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
@@ -35,6 +34,7 @@ import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOp
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
+import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.SWT;
@@ -74,8 +73,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
-
-import com.google.common.util.concurrent.Monitor;
 
 public class ImportExtensionPage implements ControlSupplier {
 
@@ -299,8 +296,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 PojoProperties.value("groupId", String.class).observeDetail(dependencyObservable),
                 ctx,
                 true,
-                List.of(new EmptyInputValidator("Group ID"),
-                        new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+")));
+                List.of(new MavenIdValidator("Group ID")));
         groupIdText.setFocus();
         ctx.bindValue(groupIdText.observeEnable(), editableDependencyObservable);
 
@@ -309,8 +305,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 PojoProperties.value("artifactId", String.class).observeDetail(dependencyObservable),
                 ctx,
                 true,
-                List.of(new EmptyInputValidator("Artifact ID"),
-                        new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+")));
+                List.of(new MavenIdValidator("Artifact ID")));
         ctx.bindValue(artifactIdText.observeEnable(), editableDependencyObservable);
 
         TextWidget versionText = createText(dependencyGroup,

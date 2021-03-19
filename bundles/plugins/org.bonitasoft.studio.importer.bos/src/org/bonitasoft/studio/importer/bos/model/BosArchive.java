@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -53,7 +54,7 @@ public class BosArchive {
     private static final String VERSION = "version";
     private static final String TO_OPEN = "toOpen";
     private static final Properties FALLBACK_PROPERTIES = new Properties();
-    private String version;
+    private String bonitaVersion;
     private final DiagramLegacyFormsValidator legacyFormsValidator = new DiagramLegacyFormsValidator();
 
     static {
@@ -63,6 +64,7 @@ public class BosArchive {
     private boolean openAll = false;
     private final File archiveFile;
     private MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
+    private Model mavenProject;
 
     public BosArchive(File archiveFile) {
         this.archiveFile = archiveFile;
@@ -141,7 +143,7 @@ public class BosArchive {
             String filePath = Joiner.on('/').join(concat(parentSegments, segments));
             ImportFileStoreModel file = createImportModelFileStore(store, segments.get(0), filePath);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
-                if(store.getFolderName().equals(DiagramRepositoryStore.STORE_NAME)
+                if (store.getFolderName().equals(DiagramRepositoryStore.STORE_NAME)
                         && !file.getFileName().endsWith(".proc")) {
                     return;
                 }
@@ -284,17 +286,22 @@ public class BosArchive {
     }
 
     private IStatus validateArchiveCompatibility() throws IOException {
-        final Properties manifest = readManifest();
-        String version = manifest.getProperty(VERSION);
-        DefaultArtifactVersion defaultArtifactVersion = new DefaultArtifactVersion(version);
-        this.version = String.format("%s.%s.%s", defaultArtifactVersion.getMajorVersion(),
-                defaultArtifactVersion.getMinorVersion(), defaultArtifactVersion.getIncrementalVersion());
-        if (!canImport(this.version)) {
+        Model mavenProject = getMavenProject();
+        if(mavenProject != null && ProjectDefaultConfiguration.getBonitaVersion(mavenProject) != null) {
+            bonitaVersion = ProjectDefaultConfiguration.getBonitaVersion(mavenProject);
+        } else {
+            final Properties manifest = readManifest();
+            String manifestVersion = manifest.getProperty(VERSION);
+            DefaultArtifactVersion defaultArtifactVersion = new DefaultArtifactVersion(manifestVersion);
+            this.bonitaVersion = String.format("%s.%s.%s", defaultArtifactVersion.getMajorVersion(),
+                    defaultArtifactVersion.getMinorVersion(), defaultArtifactVersion.getIncrementalVersion());
+        }
+        if (!canImport(this.bonitaVersion)) {
             return ValidationStatus
                     .error(Messages.bind(Messages.incompatibleProductVersion,
                             ProductVersion
                                     .toMinorVersionString(ProductVersion.minorVersion(ProductVersion.CURRENT_VERSION)),
-                            ProductVersion.toMinorVersionString(ProductVersion.minorVersion(version))));
+                            ProductVersion.toMinorVersionString(ProductVersion.minorVersion(bonitaVersion))));
         }
         return ValidationStatus.ok();
     }
@@ -359,8 +366,8 @@ public class BosArchive {
         return RepositoryManager.getInstance().getCurrentRepository().getAllStores();
     }
 
-    public String getVersion() {
-        return version;
+    public String getBonitaVersion() {
+        return bonitaVersion;
     }
 
     public ZipFile getZipFile() throws IOException {
@@ -383,16 +390,19 @@ public class BosArchive {
         return Collections.emptyList();
     }
 
-    public Model readMavenProject() {
-        try (ZipFile zipFile = new ZipFile(archiveFile)) {
-            return zipFile.stream()
-                    .filter(entry -> entry.getName().matches("[^/]*/pom.xml"))
-                    .findFirst()
-                    .flatMap(this::loadMavenModel)
-                    .orElse(null);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
+    public Model getMavenProject() {
+        if (mavenProject == null) {
+            try (ZipFile zipFile = new ZipFile(archiveFile)) {
+                mavenProject = zipFile.stream()
+                        .filter(entry -> entry.getName().matches("[^/]*/pom.xml"))
+                        .findFirst()
+                        .flatMap(this::loadMavenModel)
+                        .orElse(null);
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return mavenProject;
     }
 
     private Optional<Model> loadMavenModel(ZipEntry pomEntry) {

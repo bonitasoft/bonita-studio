@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateCustomWidgetOperation;
@@ -58,9 +59,7 @@ public class CreateCustomWidgetHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        create(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE, repositoryAccessor);
+        create(Display.getDefault().getActiveShell(), PageDesignerURLFactory.INSTANCE, RepositoryManager.getInstance().getAccessor());
         return null;
     }
 }

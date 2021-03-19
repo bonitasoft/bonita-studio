@@ -26,7 +26,7 @@ public class ImportArchiveModel {
         StringBuilder message = new StringBuilder(String.format("%s %s (%s)",
                 Messages.bosArchiveName,
                 bosArchive.getFileName(),
-                bosArchive.getVersion()));
+                bosArchive.getBonitaVersion()));
         return ValidationStatus.info(message.toString());
     }
 

@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.document.ui.validator;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Resource;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -23,8 +23,7 @@ public class AdditionalResourceProjectPathValidator implements IValidator<Resour
     protected RepositoryAccessor repositoryAccessor;
 
     public AdditionalResourceProjectPathValidator() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
 
     @Override

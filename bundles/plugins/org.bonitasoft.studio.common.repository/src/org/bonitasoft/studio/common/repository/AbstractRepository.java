@@ -31,17 +31,20 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
@@ -79,6 +82,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -173,7 +177,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     }
 
     @Override
-    public AbstractRepository create(final IProgressMonitor monitor) {
+    public AbstractRepository create(ProjectMetadata metadata, final IProgressMonitor monitor) {
         final long init = System.currentTimeMillis();
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
@@ -181,7 +185,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         try {
             disableBuild();
             if (!project.exists()) {
-                workspace.run(newProjectWorkspaceOperation(project.getName(), workspace), monitor);
+                workspace.run(newProjectWorkspaceOperation(metadata, workspace), monitor);
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -204,9 +208,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectFileListener);
     }
 
-    protected CreateBonitaProjectOperation newProjectWorkspaceOperation(final String projectName,
+    protected CreateBonitaProjectOperation newProjectWorkspaceOperation(final ProjectMetadata metadata,
             final IWorkspace workspace) {
-        return new CreateBonitaProjectOperation(workspace, projectName)
+        return new CreateBonitaProjectOperation(workspace, metadata)
                 .addNature(BonitaProjectNature.NATURE_ID)
                 .addNature(JavaCore.NATURE_ID)
                 .addNature("org.eclipse.jdt.groovy.core.groovyNature")
@@ -233,10 +237,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepository#getProject()
-     */
     @Override
     public IProject getProject() {
         return project;
@@ -244,6 +244,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public AbstractRepository open(final IProgressMonitor monitor) {
+        SubMonitor subMonitor = SubMonitor.convert(monitor)
+                .newChild(IProgressMonitor.UNKNOWN, SubMonitor.SUPPRESS_SUBTASK);
         try {
             if (!project.isOpen()) {
                 BonitaStudioLog.log("Opening project: " + project.getName());
@@ -254,23 +256,25 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         }
         try {
             connect(project);
-            initRepositoryStores(monitor);
-            MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, monitor);
+            initRepositoryStores(NULL_PROGRESS_MONITOR);
+            MavenPlugin.getProjectConfigurationManager()
+                    .updateProjectConfiguration(project, subMonitor);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
 
         this.projectDependenciesStore = new MavenProjectDependenciesStore(project, eventBroker);
-        this.projectDependenciesStore.analyze(monitor);
+        this.projectDependenciesStore
+                .analyze(subMonitor);
 
         enableBuild();
         for (IBonitaProjectListener listener : projectListeners) {
-            listener.projectOpened(this, monitor);
+            listener.projectOpened(this,subMonitor);
         }
         if (migrationEnabled()) {
             try {
                 RepositoryManager.getInstance().setCurrentRepository(this);
-                migrate(monitor);
+                migrate(subMonitor);
             } catch (final MigrationException | CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
@@ -300,7 +304,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     public void close() {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
-            disableOpenIntroListener(); // avoid intro part flickering
             closeAllEditors();
             if (project.isOpen()) {
                 if (stores != null) {
@@ -312,8 +315,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
-        } finally {
-            enableOpenIntroListener();
         }
         if (stores != null) {
             stores.clear();
@@ -338,23 +339,30 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         this.enableOpenIntroListener = false;
     }
 
-    protected void closeAllEditors() {
+    public boolean closeAllEditors() {
+        disableOpenIntroListener();
+        final AtomicBoolean allEditorClosed = new AtomicBoolean(true);
         if (PlatformUI.isWorkbenchRunning()) {
             Display.getDefault().syncExec(() -> {
+
                 final IWorkbenchWindow activeWorkbenchWindow = PlatformUI
                         .getWorkbench().getActiveWorkbenchWindow();
                 if (activeWorkbenchWindow != null
                         && activeWorkbenchWindow.getActivePage() != null) {
                     if (!activeWorkbenchWindow.getActivePage().closeAllEditors(false)) {
+                        allEditorClosed.set(false);;
                         return;
                     }
                 }
+                enableOpenIntroListener();
                 while (activeWorkbenchWindow.getActivePage().getActiveEditor() != null
                         && !(activeWorkbenchWindow.getActivePage().getActivePart() instanceof ViewIntroAdapterPart)) {
                     Display.getDefault().readAndDispatch();
                 }
+
             });
         }
+        return allEditorClosed.get();
     }
 
     protected synchronized void initRepositoryStores(final IProgressMonitor monitor) {
@@ -863,21 +871,24 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         projectFileListener.checkVersion(getProject());
     }
 
+    @Override
     public void rename(String newName, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+        if (closeAllEditors()) {
+            WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
-            @Override
-            protected void execute(IProgressMonitor monitor)
-                    throws CoreException, InvocationTargetException, InterruptedException {
-                closeAllEditors();
-                projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
-                disableBuild();
-                getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
-                RepositoryManager.getInstance().setRepository(newName, monitor);
-            }
-        };
-        operation.run(monitor);
+                @Override
+                protected void execute(IProgressMonitor monitor)
+                        throws CoreException, InvocationTargetException, InterruptedException {
+                    projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
+                    disableBuild();
+                    getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
+                    RepositoryManager.getInstance().setRepository(newName, monitor);
+                }
+            };
+            operation.run(monitor);
+            PlatformUtil.openIntroIfNoOtherEditorOpen();
+        }
     }
 
     @Override

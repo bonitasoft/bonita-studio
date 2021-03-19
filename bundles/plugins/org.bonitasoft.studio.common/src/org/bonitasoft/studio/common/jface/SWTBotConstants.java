@@ -141,4 +141,8 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.cancelEdit";
 
     public static final String SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO = "SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO";
+
+    public static final String SWTBOT_ID_NEW_PROJECT_NAME_TEXT_ID = "SWTBOT_ID_NEW_PROJECT_NAME_TEXT_ID";
+
+    public static final String SWTBOT_ID_NEW_PROJECT_VERSION_TEXT_ID = "SWTBOT_ID_NEW_PROJECT_VERSION_TEXT_ID";
 }

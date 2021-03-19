@@ -49,8 +49,7 @@ public class TestImportRepository {
     @Before
     public void setUp() throws Exception {
         final URL url = TestImportRepository.class.getResource(TEST_ATTACHMENT_BAR_NAME);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         try {
             final URL fileUrl = FileLocator.toFileURL(url);
             File bosFile = new File(fileUrl.getFile());

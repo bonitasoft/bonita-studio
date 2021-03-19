@@ -19,19 +19,19 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginExecution;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
+    private static final String BONITA_VERSION = "bonita.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
     private static final String SLF4J_VERSION = "1.7.30";
     private static final String GROOVY_VERSION = "2.4.21";
 
-  
-  
     private static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(
             new BonitaCommonDependency(),
             new MavenDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"),
@@ -51,21 +51,22 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         buildHelperPlugin.addExecution(pluginExecution("generate-sources", List.of("add-source"),
                 createBuilderHelperMavenPluginConfiguration()));
         addPlugin(buildHelperPlugin);
-        
+
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
 
-        properties.setProperty("bonita.version", bonitaVersion);
+        properties.setProperty(BONITA_VERSION, bonitaVersion);
         properties.setProperty("groovy.version", GROOVY_VERSION);
         properties.setProperty("slf4j-api.version", SLF4J_VERSION);
         properties.setProperty("maven.compiler.source", JAVA_VERSION);
         properties.setProperty("maven.compiler.target", JAVA_VERSION);
         properties.setProperty("project.build.sourceEncoding", ENCODING_CHARSET);
         properties.setProperty("project.reporting.outputEncoding", ENCODING_CHARSET);
-        plugins.stream().forEach(plugin -> properties.setProperty(plugin.getVersionPropertyName(), plugin.getVersion()));
+        plugins.stream()
+                .forEach(plugin -> properties.setProperty(plugin.getVersionPropertyName(), plugin.getVersion()));
     }
 
     private void addDependency(MavenDependency mavenDependency) {
-       dependencies.add(mavenDependency);
+        dependencies.add(mavenDependency);
     }
 
     private void addPlugin(MavenPlugin plugin) {
@@ -79,7 +80,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     public List<MavenPlugin> getPlugins() {
         return plugins;
     }
-    
+
     public List<MavenDependency> getDependencies() {
         return dependencies;
     }
@@ -110,9 +111,16 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         execution.setConfiguration(configuration);
         return execution;
     }
-    
+
     public static boolean isInternalDependency(Dependency dependency) {
         return PROVIDED_DEPENDENCIES.stream().map(MavenDependency::toGAV).anyMatch(new GAV(dependency)::equals);
+    }
+
+    public static String getBonitaVersion(Model model) {
+        if (model.getProperties().containsKey(BONITA_VERSION)) {
+            return model.getProperties().getProperty(BONITA_VERSION);
+        }
+        return null;
     }
 
 }

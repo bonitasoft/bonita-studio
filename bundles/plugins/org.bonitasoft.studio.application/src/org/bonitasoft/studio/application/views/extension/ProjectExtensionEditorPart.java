@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -45,7 +46,6 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -100,8 +100,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Composite cardComposite;
     private DataBindingContext ctx;
     private BonitaArtifactDependencyConverter bonitaArtifactDependencyConverter;
-    private IObservableList<Dependency> otherDepSelectionObservable;
-    private MavenProjectHelper mavenProjectHelper;
     private Label description;
     private StyledText title;
     private LocalResourceManager localResourceManager;
@@ -120,8 +118,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Font bigButtonFont;
 
     public ProjectExtensionEditorPart() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         mavenHelper = new MavenProjectHelper();
         commandExecutor = new CommandExecutor();
@@ -246,7 +243,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         composite.setLayoutData(
                 GridDataFactory.fillDefaults().span(2, 1).grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
 
-        Label label = new Label(composite, SWT.NONE);
+        Label label = new Label(composite, SWT.WRAP | SWT.CENTER);
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
         label.setText(Messages.enhanceProject);
         label.setFont(emptyMessageFont);
@@ -285,9 +282,10 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            if (mainComposite.isDisposed() || title.getDisplay() == null || title.getDisplay().isDisposed()) {
+            if (title.isDisposed()) {
                 return;
             }
+            boolean layoutMainCompsite = false;
             try {
                 Model mavenModel = mavenHelper
                         .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
@@ -303,17 +301,18 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 versionStyle.font = versionFont;
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
+              
                 if (descriptionContent != null && !descriptionContent.isBlank()
                         && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
                     if (description == null || description.isDisposed()) {
                         createDescriptionLabel(titleComposite);
                     }
                     description.setText(descriptionContent);
-                    mainComposite.layout();
+                    layoutMainCompsite = true;
                 } else if (description != null && (descriptionContent == null || descriptionContent.isBlank())) {
                     description.dispose();
                     description = null;
-                    mainComposite.layout();
+                    layoutMainCompsite = true;
                 } else {
                     titleComposite.getParent().layout();
                 }
@@ -323,7 +322,11 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
             createExtensionCards(cardComposite);
-            cardComposite.layout();
+            if(!layoutMainCompsite) {
+                cardComposite.layout();
+            }else {
+                mainComposite.layout();
+            }
             scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         });
     }

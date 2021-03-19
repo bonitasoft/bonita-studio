@@ -70,9 +70,7 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
     }
 
     protected RepositoryAccessor getRepositoryAccessor() {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        return repositoryAccessor;
+        return RepositoryManager.getInstance().getAccessor();
     }
 
     protected LocalDependenciesStore getLocalStore() {

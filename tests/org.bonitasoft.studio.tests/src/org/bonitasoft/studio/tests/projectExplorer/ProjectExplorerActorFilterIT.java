@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ActorFilterDefinitionProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ActorFilterImplementationProjectExplorerBot;
@@ -34,7 +33,6 @@ public class ProjectExplorerActorFilterIT {
     private static final String VERSION = "1.0.0";
     private SWTGefBot bot = new SWTGefBot();
     private ProjectExplorerBot projectExplorerBot;
-    private RepositoryAccessor repositoryAccessor;
 
     @Rule
     public SWTGefBotRule botRule = new SWTGefBotRule(bot);
@@ -42,8 +40,6 @@ public class ProjectExplorerActorFilterIT {
     @Before
     public void init() throws Exception {
         projectExplorerBot = new ProjectExplorerBot(bot);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
     }
 
     @Test

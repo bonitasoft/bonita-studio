@@ -121,6 +121,9 @@ public class BPMNExportImportMessageDataTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNExportImportMessageDataTest.class.getResource("MessageDataTestValue-1.0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());

@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ConnectorDefinitionProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ConnectorImplementationProjectExplorerBot;
@@ -45,8 +46,7 @@ public class ProjectExplorerConnectorIT {
     @Before
     public void init() throws Exception {
         projectExplorerBot = new ProjectExplorerBot(bot);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
 
     @Test

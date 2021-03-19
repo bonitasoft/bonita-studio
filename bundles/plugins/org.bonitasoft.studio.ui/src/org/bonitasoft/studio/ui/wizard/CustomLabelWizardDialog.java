@@ -62,5 +62,13 @@ public class CustomLabelWizardDialog extends WizardDialog {
             getButton(IDialogConstants.CANCEL_ID).forceFocus();
         }
     }
+    
+    public Button getNextButton() {
+        return getButton(IDialogConstants.NEXT_ID);
+    }
+    
+    public Button getBackButton() {
+        return getButton(IDialogConstants.BACK_ID);
+    }
 
 }

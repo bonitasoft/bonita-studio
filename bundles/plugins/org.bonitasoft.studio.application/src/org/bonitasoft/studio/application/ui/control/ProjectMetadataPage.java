@@ -16,16 +16,17 @@ package org.bonitasoft.studio.application.ui.control;
 
 import java.util.Objects;
 
-import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -34,23 +35,19 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class EditProjectMetadataPage implements ControlSupplier {
+public class ProjectMetadataPage implements ControlSupplier {
 
-    private IObservableValue<String> name = new WritableValue<>();
-    private IObservableValue<String> description = new WritableValue<>();
-    private IObservableValue<String> groupId = new WritableValue<>();
-    private IObservableValue<String> artifactId = new WritableValue<>();
-    private IObservableValue<String> version = new WritableValue<>();
+    private IObservableValue<ProjectMetadata> metadataObservale;
+    private boolean createProject;
 
-    public EditProjectMetadataPage(Model model) {
-        name.setValue(model.getName());
-        description.setValue(model.getDescription());
-        groupId.setValue(model.getGroupId());
-        artifactId.setValue(model.getArtifactId());
-        version.setValue(model.getVersion());
+    public ProjectMetadataPage(ProjectMetadata metadata, boolean createProject) {
+        this.createProject = createProject;
+        this.metadataObservale = new WritableValue<ProjectMetadata>(metadata, ProjectMetadata.class);
     }
 
     @Override
@@ -62,14 +59,17 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .extendedMargins(0, 0, 0, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
+        IObservableValue<String> nameObservable = PojoProperties.value("name", String.class)
+                .observeDetail(metadataObservale);
         new TextWidget.Builder()
                 .withLabel(Messages.name)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(name)
+                .bindTo(nameObservable)
                 .withValidator(new MultiValidator.Builder()
-                        .havingValidators(new RepositoryNameValidator(false), engineRestartWarning(name.getValue()))
+                        .havingValidators(new RepositoryNameValidator(() -> createProject),
+                                engineRestartWarning(nameObservable.getValue()))
                         .create())
                 .inContext(ctx)
                 .useNativeRender()
@@ -80,7 +80,7 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(version)
+                .bindTo(PojoProperties.value("version").observeDetail(metadataObservale))
                 .withValidator(new EmptyInputValidator(Messages.version))
                 .inContext(ctx)
                 .useNativeRender()
@@ -91,11 +91,8 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(groupId)
-                .withValidator(new MultiValidator.Builder()
-                        .havingValidators(new EmptyInputValidator("Group ID"),
-                                new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+"))
-                        .create())
+                .bindTo(PojoProperties.value("groupId").observeDetail(metadataObservale))
+                .withValidator(new MavenIdValidator("Group ID"))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -105,54 +102,45 @@ public class EditProjectMetadataPage implements ControlSupplier {
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(artifactId)
-                .withValidator(new MultiValidator.Builder()
-                        .havingValidators(new EmptyInputValidator("Artifact ID"),
-                                new RegExpValidator(Messages.invalidFormat, "[A-Za-z0-9_\\-.]+"))
-                        .create())
+                .bindTo(PojoProperties.value("artifactId").observeDetail(metadataObservale))
+                .withValidator(new MavenIdValidator("Artifact ID"))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
 
-        new TextAreaWidget.Builder()
+        TextWidget textArea = new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
                 .labelAbove()
                 .heightHint(100)
                 .widthHint(500)
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(description)
+                .bindTo(PojoProperties.value("description").observeDetail(metadataObservale))
                 .inContext(ctx)
                 .horizontalSpan(2)
                 .useNativeRender()
                 .createIn(composite);
+        textArea.getTextControl().addTraverseListener(new TraverseListener() {
+
+            @Override
+            public void keyTraversed(final TraverseEvent event) {
+                if (event.detail == SWT.TRAVERSE_TAB_NEXT
+                        || event.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+                    event.doit = true;
+                }
+            }
+        });
 
         return composite;
     }
 
     private IValidator<String> engineRestartWarning(String originalName) {
-        return name -> !Objects.equals(originalName, name) 
+        return name -> !Objects.equals(originalName, name)
                 ? ValidationStatus.warning(Messages.engineRestartWarning)
                 : ValidationStatus.ok();
     }
 
-    public String getName() {
-        return name.getValue();
-    }
-
-    public String getGroupId() {
-        return groupId.getValue();
-    }
-
-    public String getArtifactId() {
-        return artifactId.getValue();
-    }
-
-    public String getVersion() {
-        return version.getValue();
-    }
-
-    public String getDescription() {
-        return description.getValue();
+    public ProjectMetadata getMetadata() {
+        return metadataObservale.getValue();
     }
 }

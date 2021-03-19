@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.handler.NewApplicationHandler;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
@@ -49,8 +50,7 @@ public class OpenExistingApplicationIT {
 
     @Before
     public void init() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         initPref = LivingApplicationPlugin.getDefault().getPreferenceStore()
                 .getBoolean(NewApplicationHandler.DO_NOT_SHOW_HELP_MESSAGE_DIALOG);
         LivingApplicationPlugin.getDefault().getPreferenceStore()

@@ -44,6 +44,9 @@ public class TestRunWithDocument {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestRunWithDocument.class.getResource("ProcessWithAttachment_1_0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
         runAndCheckResult();
     }

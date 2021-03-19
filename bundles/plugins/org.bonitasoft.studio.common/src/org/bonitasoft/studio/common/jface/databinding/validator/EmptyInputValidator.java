@@ -21,10 +21,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 
-/**
- * @author Romain Bioteau
- */
-public class EmptyInputValidator implements IValidator {
+public class EmptyInputValidator implements IValidator<String> {
 
     private final String inputName;
 
@@ -32,12 +29,8 @@ public class EmptyInputValidator implements IValidator {
         this.inputName = inputName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-     */
     @Override
-    public IStatus validate(final Object input) {
+    public IStatus validate(final String input) {
         return input == null || isNullOrEmpty(input.toString()) ? ValidationStatus.error(Messages.bind(Messages.emptyField, inputName)) : ValidationStatus.ok();
     }
 

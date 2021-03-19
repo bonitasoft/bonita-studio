@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.internal.resources.File;
@@ -53,8 +54,7 @@ public class CustomOpenActionProvider extends CommonActionProvider {
             openFileAction = new OpenEditorActionGroup((IViewPart) viewSite.getPart());
             contribute = true;
         }
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         fileStoreFinder = new FileStoreFinder();
     }
 

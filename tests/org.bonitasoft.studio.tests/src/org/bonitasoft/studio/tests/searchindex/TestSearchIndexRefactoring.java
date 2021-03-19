@@ -70,8 +70,7 @@ public class TestSearchIndexRefactoring {
     }
 
     private MainProcess importDiagramAndOpen() throws IOException, InvocationTargetException, InterruptedException, ReadFileStoreException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator.toFileURL(TestRunSearchIndex.class.getResource(DIAGRAM_NAME));
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());

@@ -25,6 +25,7 @@ import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -46,8 +47,7 @@ public class TestBOSArchiveImport {
 
     @Before
     public void cleanDiagrams() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);

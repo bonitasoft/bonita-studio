@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ProjectFileChangeListener;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -140,13 +141,13 @@ public class Repository extends AbstractRepository {
     }
 
     @Override
-    public AbstractRepository create(IProgressMonitor monitor) {
+    public AbstractRepository create(ProjectMetadata metadata, IProgressMonitor monitor) {
         //Initialize SVN extensions
         if (PlatformUI.isWorkbenchRunning() && !PlatformUtil.isHeadless()) {
             CoreExtensionsManager.instance().getAccessibleClients();
             new TeamPreferenceInitializer().initializeDefaultPreferences();
         }
-        return super.create(monitor);
+        return super.create(metadata, monitor);
     }
 
     @Override

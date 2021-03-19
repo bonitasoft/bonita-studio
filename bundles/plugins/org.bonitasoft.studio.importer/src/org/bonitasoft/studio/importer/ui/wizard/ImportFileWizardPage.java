@@ -254,10 +254,10 @@ public class ImportFileWizardPage extends WizardPage {
 
             @Override
             protected IStatus validate() {
-                final Object value = newRepositoryObservable.getValue();
+                final String value = newRepositoryObservable.getValue();
                 final RepositoryMode mode = (RepositoryMode) selectObservableValue.getValue();
                 if (RepositoryMode.NEW == mode) {
-                    return new RepositoryNameValidator(true).validate(value);
+                    return new RepositoryNameValidator(() -> true).validate(value);
                 }
                 return ValidationStatus.ok();
             }

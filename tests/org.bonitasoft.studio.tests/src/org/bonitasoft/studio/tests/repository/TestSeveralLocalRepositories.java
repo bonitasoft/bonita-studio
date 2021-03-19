@@ -9,14 +9,15 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive;
 
 import java.util.Objects;
 
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
-import org.bonitasoft.studio.team.i18n.Messages;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -58,13 +59,14 @@ public class TestSeveralLocalRepositories {
         openNewLocalRepoDialog();
 
         /* Test can't finish for empty name */
-        bot.text().setText("");
-        assertNotEnabled(bot.button(IDialogConstants.OK_LABEL));
+        bot.textWithLabel(Messages.name).setText("");
+        assertNotEnabled(bot.button(Messages.create));
 
         /* Test creation of a new local repository */
         final String testRepoName = "test a new repo name";
-        bot.text().setText(testRepoName);
-        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.textWithLabel(Messages.name).setText(testRepoName);
+        bot.textWithLabel("Artifact ID").setText(ProjectMetadata.toArtifactId(testRepoName));
+        bot.button(Messages.create).click();
 
         ICondition condition = new ConditionBuilder()
                 .withTest(() -> Objects.equals(testRepoName,
@@ -77,7 +79,7 @@ public class TestSeveralLocalRepositories {
         /* now test that can't use the same name */
         openNewLocalRepoDialog();
         bot.text().setText(testRepoName);
-        assertNotEnabled(bot.button(IDialogConstants.OK_LABEL));
+        assertNotEnabled(bot.button(Messages.create));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
 
@@ -95,7 +97,7 @@ public class TestSeveralLocalRepositories {
                 .create();
         bot.waitUntil(menuAvailable, 120000);
         bot.menu("File").menu("New project...").click();
-        bot.waitUntil(shellIsActive(Messages.createNewLocalRepo));
+        bot.waitUntil(shellIsActive(org.bonitasoft.studio.application.i18n.Messages.newProjectWizardTitle));
     }
 
 }

@@ -18,6 +18,7 @@ import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.application.ui.provider.ApplicationFileStoreLabelProvider;
@@ -61,9 +62,7 @@ public class ExportApplicationHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        exportApplicationWizard(Display.getDefault().getActiveShell(), repositoryAccessor);
+        exportApplicationWizard(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
 

@@ -38,14 +38,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ImportBosArchiveControlSupplierTest {
+public class ImportBosArchivePageTest {
 
     @Rule
     public RealmWithDisplay displayRule = new RealmWithDisplay();
 
     @Test
     public void should_update_archive_model_correctly() throws Exception {
-        final ImportBosArchiveControlSupplier supplier = new ImportBosArchiveControlSupplier(
+        final ImportBosArchivePage supplier = new ImportBosArchivePage(
                 getRepositoryAccessor(), new SwitchRepositoryStrategy(getRepositoryAccessor(), "repoName"), null, null);
         final Composite parent = displayRule.createComposite();
         final IWizardContainer container = displayRule.wizardWithContainer().getContainer();
@@ -53,7 +53,7 @@ public class ImportBosArchiveControlSupplierTest {
         supplier.createControl(parent, container, new DataBindingContext());
 
         final String path = URLDecoder
-                .decode(ImportBosArchiveControlSupplierTest.class.getResource("/customer_support_2.0.bos")
+                .decode(ImportBosArchivePageTest.class.getResource("/customer_support_2.0.bos")
                         .getPath(), "UTF-8");
         supplier.setTextWidgetText(path);
 
@@ -150,7 +150,7 @@ public class ImportBosArchiveControlSupplierTest {
 
     private File loadFile(String filePath) throws UnsupportedEncodingException {
         return new File(URLDecoder
-                .decode(ImportBosArchiveControlSupplierTest.class.getResource(filePath).getFile(), "UTF-8"));
+                .decode(ImportBosArchivePageTest.class.getResource(filePath).getFile(), "UTF-8"));
     }
 
 }

@@ -23,7 +23,9 @@ import java.util.Set;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -33,32 +35,31 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
-    private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
-    private static final String DEFAULT_GROUP_ID = "com.company";
     private IProject project;
     private final IWorkspace workspace;
-    private final String projectName;
+    private final ProjectMetadata metadata;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
 
-    public CreateBonitaProjectOperation(final IWorkspace workspace, final String projectName) {
+    public CreateBonitaProjectOperation(final IWorkspace workspace, final ProjectMetadata metadata) {
         this.workspace = workspace;
-        this.projectName = projectName;
+        this.metadata = metadata;
     }
 
     @Override
     public void run(final IProgressMonitor monitor) throws CoreException {
-        project = workspace.getRoot().getProject(projectName);
+        project = workspace.getRoot().getProject(metadata.getName());
         if (project.exists()) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
-                    String.format("%s project already exists.", projectName)));
+                    String.format("%s project already exists.", metadata.getName())));
         }
-        project.create(monitor);
-        project.open(monitor);
-        MavenProjectModelBuilder mavenProjectBuilder = defaultMavenProjectBuilder(project.getName());
+        project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
+        project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
+        MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
         createDefaultPomFile(project, mavenProjectBuilder, monitor);
         project.setDescription(
                 new ProjectDescriptionBuilder()
@@ -67,16 +68,17 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                         .havingNatures(natures)
                         .havingBuilders(builders)
                         .build(),
-                monitor);
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
-    public static MavenProjectModelBuilder defaultMavenProjectBuilder(String displayName) {
+    public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
         MavenProjectModelBuilder mavenProjectBuilder = new MavenProjectModelBuilder();
-        mavenProjectBuilder.setDisplayName(displayName);
-        mavenProjectBuilder.setArtifactId(toArtifactId(mavenProjectBuilder.getDisplayName()));
-        mavenProjectBuilder.setGroupId(DEFAULT_GROUP_ID);
+        mavenProjectBuilder.setDisplayName(metadata.getName());
+        mavenProjectBuilder.setArtifactId(metadata.getArtifactId());
+        mavenProjectBuilder.setGroupId(metadata.getGroupId());
         mavenProjectBuilder.setBonitaVersion(ProductVersion.mavenVersion());
-        mavenProjectBuilder.setVersion(DEFAULT_VERSION);
+        mavenProjectBuilder.setVersion(metadata.getVersion());
+        mavenProjectBuilder.setDescription(metadata.getDescription());
         return mavenProjectBuilder;
     }
 
@@ -90,10 +92,10 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
             mavenProjectBuilder.setGroupId(model.getGroupId());
             mavenProjectBuilder.setArtifactId(model.getArtifactId());
             mavenProjectBuilder.setVersion(model.getVersion());
-            if (model.getName() != null && model.getName().isBlank()) {
+            if (model.getName() != null && !model.getName().isBlank()) {
                 mavenProjectBuilder.setDisplayName(model.getName());
             }
-            if (model.getDescription() != null && model.getDescription().isBlank()) {
+            if (model.getDescription() != null && !model.getDescription().isBlank()) {
                 mavenProjectBuilder.setDescription(model.getDescription());
             }
             String backupFileName = "pom.xml.old";
@@ -126,14 +128,6 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
             String index = split[split.length - 1];
             return "pom.xml.old." + (Integer.valueOf(index) + 1);
         }
-    }
-
-    private static String toArtifactId(String displayName) {
-        String artifactId = displayName.toLowerCase().replace(" ", "-");
-        if (!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
-            return "my-project";
-        }
-        return artifactId;
     }
 
     public CreateBonitaProjectOperation addBuilder(final String builderId) {

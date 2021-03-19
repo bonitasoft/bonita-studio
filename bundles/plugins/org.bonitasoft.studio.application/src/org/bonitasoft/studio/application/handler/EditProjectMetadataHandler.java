@@ -14,80 +14,37 @@
  */
 package org.bonitasoft.studio.application.handler;
 
-import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.inject.Named;
-
-import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.ui.control.EditProjectMetadataPage;
+import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
+import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.ui.wizard.WizardBuilder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.swt.widgets.Shell;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 
-public class EditProjectMetadataHandler {
+public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
 
-    protected MavenProjectHelper helper = new MavenProjectHelper();
-
-    @Execute
-    public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell, RepositoryAccessor repositoryAccessor) {
-        try {
-            AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
-            EditProjectMetadataPage page = new EditProjectMetadataPage(helper.getMavenModel(currentRepository.getProject()));
-
-            WizardBuilder.<Model> newWizard()
-                    .withTitle(Messages.editProjectMetadata)
-                    .needProgress()
-                    .havingPage(newPage()
-                            .withTitle(Messages.editProjectMetadata)
-                            .withDescription(Messages.editProjectMetadataDescription)
-                            .withControl(page))
-                    .onFinish(container -> performFinish(container, page, currentRepository))
-                    .open(activeShell, IDialogConstants.FINISH_LABEL);
-
-        } catch (CoreException e) {
-            throw new RuntimeException(e);
-        }
+    protected String getWizardDescription() {
+        return Messages.editProjectMetadataDescription;
     }
 
-    private Optional<Model> performFinish(IWizardContainer container, EditProjectMetadataPage page,
-            AbstractRepository currentRepository) {
-        try {
-            Model model = helper.getMavenModel(currentRepository.getProject());
-            boolean nameChanged = !Objects.equals(model.getName(), page.getName());
-            model.setName(page.getName());
-            model.setDescription(page.getDescription());
-            model.setGroupId(page.getGroupId());
-            model.setArtifactId(page.getArtifactId());
-            model.setVersion(page.getVersion());
-            container.run(true, false, monitor -> {
-                try {
-                    monitor.beginTask(Messages.updatingProjectMetadata, IProgressMonitor.UNKNOWN);
-                    helper.saveModel(currentRepository.getProject(), model);
-                    if (nameChanged) {
-                        currentRepository.rename(model.getName(), monitor);
-                    }
-                    monitor.done();
-                } catch (CoreException e) {
-                    throw new InvocationTargetException(e);
-                }
-            });
-            return Optional.of(model);
-        } catch (CoreException | InvocationTargetException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    protected String getWizardTitle() {
+        return Messages.editProjectMetadata;
+    }
+
+    protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
+            ProjectMetadataPage page, RepositoryAccessor repositoryAccessor) {
+        return new SetProjectMetadataOperation(page.getMetadata(), repositoryAccessor, mavenProjectHelper);
+    }
+
+    @Override
+    protected boolean isNewProject() {
+        return false;
+    }
+
+    @Override
+    protected ProjectMetadata initialMetadata(AbstractRepository currentRepository) {
+        return ProjectMetadata.read(currentRepository.getProject());
     }
 
 }

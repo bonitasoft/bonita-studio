@@ -225,6 +225,9 @@ public class ExtractAsSubprocessTest {
     private void importProcess() throws IOException {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(ExtractAsSubprocessTest.class.getResource("BoundaryProcess_1_0.bos"))
+                .existingRepository()
+                .next()
+                .next()
                 .finish();
 
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc", true).getResource()));

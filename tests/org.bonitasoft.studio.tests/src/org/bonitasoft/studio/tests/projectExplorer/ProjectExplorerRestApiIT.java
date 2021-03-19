@@ -11,6 +11,7 @@ package org.bonitasoft.studio.tests.projectExplorer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.RestApiProjectExplorerBot;
@@ -32,8 +33,7 @@ public class ProjectExplorerRestApiIT {
     @Before
     public void init() throws Exception {
         restAPIExplorerBot = new RestApiProjectExplorerBot(bot);
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         BOSEngineManager.getInstance().start();
     }
 

@@ -57,7 +57,7 @@ public class IntroContentProvider implements IIntroXHTMLContentProvider {
                 "org.bonitasoft.studio.importer.bos.command", Messages.importLabel));
 
         CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("new-project-action",
-                "org.bonitasoft.studio.repository.ex.createLocal",
+                "org.bonitasoft.studio.application.newproject.command",
                 Messages.newProject));
         CONTENT_PROVIDERS.add(new ExecuteCommandContentProvider("clone-action",
                 "org.bonitasoft.studio.team.git.command.clone", Messages.clone));

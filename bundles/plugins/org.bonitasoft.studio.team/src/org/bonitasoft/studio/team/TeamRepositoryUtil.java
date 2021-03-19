@@ -87,12 +87,6 @@ public class TeamRepositoryUtil {
         switchToRepository(newWorkspaceFolder, true, false, monitor);
     }
 
-    public static synchronized void createNewLocalRepository(
-            final String repositoryName,
-            final IProgressMonitor monitor) {
-        switchToRepository(repositoryName, false, true, monitor);
-    }
-
     public static synchronized void switchToRepository(
             final String repositoryName,
             final boolean startUpdateJob,

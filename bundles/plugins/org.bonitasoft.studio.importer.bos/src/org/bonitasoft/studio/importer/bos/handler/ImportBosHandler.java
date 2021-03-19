@@ -22,8 +22,9 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.BosImportStatusDialogHandler;
-import org.bonitasoft.studio.importer.bos.wizard.DependenciesPreviewControlSupplier;
-import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchiveControlSupplier;
+import org.bonitasoft.studio.importer.bos.wizard.BosArchiveContentPage;
+import org.bonitasoft.studio.importer.bos.wizard.ExtensionsPreviewPage;
+import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchivePage;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
@@ -60,14 +61,15 @@ public class ImportBosHandler {
         switchRepositoryStrategy
                 .addTargetProjectChangeListener(newTargetProject -> updateRemoteRepositories(newTargetProject,
                         mavenRepositories, mavenRepositoryRegistry, repositoryAccessor));
-        ImportBosArchiveControlSupplier bosArchiveControlSupplier = newImportBosArchiveControlSupplier(
-                repositoryAccessor,
+        ImportBosArchivePage importBosArchivePage = new ImportBosArchivePage(repositoryAccessor,
+                switchRepositoryStrategy,
                 exceptionDialogHandler,
                 file);
-        DependenciesPreviewControlSupplier dependenciesPreviewControlSupplier = new DependenciesPreviewControlSupplier(
+        BosArchiveContentPage bosArchiveContentPage = new BosArchiveContentPage(importBosArchivePage);
+        ExtensionsPreviewPage dependenciesPreviewControlSupplier = new ExtensionsPreviewPage(
                 dependenciesLookup,
                 mavenRepositories,
-                bosArchiveControlSupplier,
+                importBosArchivePage,
                 exceptionDialogHandler);
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
@@ -76,20 +78,29 @@ public class ImportBosHandler {
                         .withTitle(Messages.importBosArchiveTitle)
                         .withDescription(
                                 NLS.bind(Messages.importFileDescription, bonitaStudioModuleName))
-                        .withControl(bosArchiveControlSupplier),
+                        .withControl(importBosArchivePage)
+                        .withNextPageButtonLabel(Messages.detailsPageButtonLabel),
                         newPage()
-                                .withTitle(Messages.dependenciesPreviewTitle)
-                                .withDescription(Messages.dependenciesPreviewDescription)
-                                .withControl(dependenciesPreviewControlSupplier))
-                .onFinish(container -> onFinishOperation(bosArchiveControlSupplier, repositoryAccessor, container))
-                .withSize(SWT.DEFAULT, 700)
+                                .withTitle(Messages.bosArchiveContentTitle)
+                                .withDescription(Messages.bosArchiveContentDescription)
+                                .withControl(bosArchiveContentPage)
+                                .withNextPageButtonLabel(Messages.extensionPageLabel),
+                        newPage()
+                                .withTitle(Messages.extensionsPreviewTitle)
+                                .withDescription(Messages.extensionsPreviewDescription)
+                                .withControl(dependenciesPreviewControlSupplier)
+                                .withBackPageButtonLabel(Messages.detailsPageButtonLabel))
+                .canFinishProvider(wizardDialog -> Objects.equals(wizardDialog.getCurrentPage().getTitle(),
+                        Messages.extensionsPreviewTitle))
+                .onFinish(container -> onFinishOperation(importBosArchivePage, repositoryAccessor, container))
+                .withSize(SWT.DEFAULT, 800)
                 .open(activeShell, Messages.importButtonLabel);
 
         try {
             archiveModel
                     .ifPresent(model -> importArchive(activeShell,
                             model,
-                            bosArchiveControlSupplier,
+                            importBosArchivePage,
                             dependenciesPreviewControlSupplier,
                             dependenciesLookup,
                             repositoryAccessor));
@@ -107,7 +118,7 @@ public class ImportBosHandler {
             try {
                 mavenRepositoryRegistry.updateRegistry().run(AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (InvocationTargetException | InterruptedException e) {
-               BonitaStudioLog.error(e);
+                BonitaStudioLog.error(e);
             }
             mavenRepositories.addAll(mavenRepositoryRegistry.getGlobalRepositories());
             AbstractRepository repository = repositoryAccessor.getRepository(targetRepository);
@@ -117,27 +128,35 @@ public class ImportBosHandler {
         }
     }
 
-    protected Optional<ImportArchiveModel> onFinishOperation(ImportBosArchiveControlSupplier bosArchiveControlSupplier,
+    protected Optional<ImportArchiveModel> onFinishOperation(ImportBosArchivePage bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor, IWizardContainer container) {
         if (switchRepositoryStrategy.isSwitchRepository()) {
-            try {
-                container.run(true, false, this::switchToRepository);
-            } catch (final InvocationTargetException | InterruptedException e) {
-                throw new RuntimeException(Messages.failSwitchRepository, e);
-            }
-            if (switchRepositoryStrategy.isRebuildModel()) {
+            if (switchRepositoryStrategy.isCreateNewProject()) {
+                try {
+                    container.run(true, false,
+                            monitor -> repositoryAccessor
+                                    .createNewRepository(bosArchiveControlSupplier.getProjectMetadata(), monitor));
+                } catch (InvocationTargetException | InterruptedException e) {
+                    throw new RuntimeException(Messages.failSwitchRepository, e);
+                }
                 try {
                     container.run(true, false,
                             monitor -> reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor));
                 } catch (InvocationTargetException | InterruptedException e) {
                     throw new RuntimeException(Messages.errorReadArchive, e);
                 }
+            } else {
+                try {
+                    container.run(true, false, this::switchToRepository);
+                } catch (final InvocationTargetException | InterruptedException e) {
+                    throw new RuntimeException(Messages.failSwitchRepository, e);
+                }
             }
         }
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
     }
 
-    private void reparseArchive(ImportBosArchiveControlSupplier bosArchiveControlSupplier,
+    private void reparseArchive(ImportBosArchivePage bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor, IProgressMonitor monitor) {
         try {
             final ImportArchiveModel archiveModel = bosArchiveControlSupplier.getArchiveModel().getBosArchive()
@@ -164,8 +183,8 @@ public class ImportBosHandler {
     }
 
     protected void importArchive(Shell activeShell, ImportArchiveModel model,
-            ImportBosArchiveControlSupplier bosArchiveControlSupplier,
-            DependenciesPreviewControlSupplier dependenciesPreviewControlSupplier,
+            ImportBosArchivePage bosArchiveControlSupplier,
+            ExtensionsPreviewPage dependenciesPreviewControlSupplier,
             IObservableList<DependencyLookup> dependenciesLookup,
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
@@ -215,15 +234,6 @@ public class ImportBosHandler {
             operation.openFilesToOpen();
             PlatformUtil.openIntroIfNoOtherEditorOpen();
         }
-    }
-
-    protected ImportBosArchiveControlSupplier newImportBosArchiveControlSupplier(RepositoryAccessor repositoryAccessor,
-            ExceptionDialogHandler exceptionDialogHandler,
-            String file) {
-        return new ImportBosArchiveControlSupplier(repositoryAccessor,
-                switchRepositoryStrategy,
-                exceptionDialogHandler,
-                file);
     }
 
 }

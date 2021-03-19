@@ -317,8 +317,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
 
     protected ILaunchConfiguration configureLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy)
             throws CoreException {
-        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        final RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
 
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,

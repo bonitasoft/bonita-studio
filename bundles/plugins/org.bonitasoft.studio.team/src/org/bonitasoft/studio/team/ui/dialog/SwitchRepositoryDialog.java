@@ -9,15 +9,15 @@
 package org.bonitasoft.studio.team.ui.dialog;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.provider.RepositoryLabelProvider;
 import org.bonitasoft.studio.team.i18n.Messages;
-import org.bonitasoft.studio.team.ui.handler.CreateNewLocalRepoHandler;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -49,6 +49,7 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class SwitchRepositoryDialog extends Dialog {
 
+    private static final String NEW_PROJECT_COMMAND_ID = "org.bonitasoft.studio.application.newproject.command";
     private IRepository selectedRepository;
     private TableViewer repositoryList;
     private final boolean force;
@@ -88,19 +89,11 @@ public class SwitchRepositoryDialog extends Dialog {
         createNewLocalRepo.setText(Messages.createNewLocalRepo);
         createNewLocalRepo.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                try {
-                    new CreateNewLocalRepoHandler().execute(null);
-                } catch (final ExecutionException e1) {
-                    BonitaStudioLog.error(e1);
-                }
                 SwitchRepositoryDialog.this.setReturnCode(IDialogConstants.CANCEL_ID);
                 SwitchRepositoryDialog.this.close();
+                new CommandExecutor().executeCommand(NEW_PROJECT_COMMAND_ID, Collections.emptyMap());
             }
         });
 

@@ -60,12 +60,14 @@ public class ImportBosArchiveIT {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-
-        botImport.importArchive();
+        botImport.next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
+        botImport.existingRepository()
+             .next();
+        
         final SWTBotTreeItem diagramNodeItem = botImport.tree().getTreeItem("diagrams")
                 .getNode("ConnectorInFormsForTests-1.0.proc");
         assertThat(diagramNodeItem.cell(1)).isEqualTo(Messages.overwriteAction);
@@ -76,10 +78,13 @@ public class ImportBosArchiveIT {
         botImport.keepAll();
         assertThat(diagramNodeItem.cell(1)).isEqualTo(Messages.keepAction);
 
+        botImport.back();
         botImport.newProject("new repo");
 
         botImport.existingRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName, true);
 
+        botImport.next();
+        
         final SWTBotTreeItem diagramNode = botImport.tree().getTreeItem("diagrams")
                 .getNode("ConnectorInFormsForTests-1.0.proc");
         assertThat(diagramNode.cell(1)).isEqualTo(Messages.overwriteAction);
@@ -90,12 +95,12 @@ public class ImportBosArchiveIT {
         botImport.keepAll();
         assertThat(diagramNode.cell(1)).isEqualTo(Messages.keepAction);
 
-        botImport.importArchive(); // import with keepExisting -> next step should be conflicting too. 
+        botImport.next().importArchive(); // import with keepExisting -> next step should be conflicting too. 
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.importArchive(); // import with overwrite -> next step shouldn't be conflicting.
+        botImport.next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
     }
 
     @Test
@@ -103,21 +108,17 @@ public class ImportBosArchiveIT {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-        botImport.importArchive();
+        botImport.next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.newProject("repository 2");
-
-        botImport.importArchive();
+        botImport.newProject("repository 2").next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.existingRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName, false);
-
-        botImport.cancel();
+        botImport.existingRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName, false).cancel();
     }
 
     @Test

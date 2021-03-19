@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.la.application.core.ImportApplicationAction;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
@@ -63,9 +64,7 @@ public class ImportApplicationhandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
-        importApplicationDescriptorWizard(Display.getDefault().getActiveShell(), repositoryAccessor);
+        importApplicationDescriptorWizard(Display.getDefault().getActiveShell(), RepositoryManager.getInstance().getAccessor());
         return null;
     }
 

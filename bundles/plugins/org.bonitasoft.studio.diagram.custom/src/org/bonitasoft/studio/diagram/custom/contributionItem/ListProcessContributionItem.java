@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -39,8 +40,7 @@ public abstract class ListProcessContributionItem extends CompoundContributionIt
 
     public ListProcessContributionItem() {
         fileStoreFinder = new FileStoreFinder();
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         iCommandService = PlatformUI.getWorkbench().getService(ICommandService.class);
     }
 

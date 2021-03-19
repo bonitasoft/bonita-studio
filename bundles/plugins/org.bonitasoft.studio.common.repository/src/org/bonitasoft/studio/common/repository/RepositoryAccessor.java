@@ -14,17 +14,26 @@
  */
 package org.bonitasoft.studio.common.repository;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * @author Romain Bioteau
@@ -44,8 +53,9 @@ public class RepositoryAccessor {
     }
 
     @PostConstruct
-    public RepositoryAccessor init() {
+    RepositoryAccessor init() {
         repositoryManagerInstance = RepositoryManager.getInstance();
+        repositoryManagerInstance.setRepositoryAccessor(this);
         return this;
     }
 
@@ -60,7 +70,7 @@ public class RepositoryAccessor {
     public IRepository start(final IProgressMonitor monitor) {
         AbstractRepository repository = getCurrentRepository();
         if (!repository.exists()) {
-            repository.create(monitor);
+            repository.create(ProjectMetadata.defaultMetadata(), monitor);
         }
         return repository.open(monitor);
     }
@@ -87,6 +97,48 @@ public class RepositoryAccessor {
 
     public void addBonitaProjectListener(IBonitaProjectListener listener) {
         repositoryManagerInstance.addBonitaProjectListener(listener);
+    }
+
+    public IRepository createNewRepository(ProjectMetadata metadata,
+            IProgressMonitor monitor) {
+        monitor.beginTask(Messages.creatingNewProject, IProgressMonitor.UNKNOWN);
+        BonitaStudioLog.info(String.format("Creating new project %s...", metadata.getName()), CommonRepositoryPlugin.PLUGIN_ID);
+        getCurrentRepository().close();
+        try {
+            WorkspaceModifyOperation workspaceModifyOperation = new WorkspaceModifyOperation() {
+
+                @Override
+                protected void execute(final IProgressMonitor monitor)
+                        throws CoreException, InvocationTargetException, InterruptedException {
+                    AbstractRepository currentRepository = getCurrentRepository();
+                    if (currentRepository != null && currentRepository.getName().equals(metadata.getName())) {
+                        return;
+                    } else if (currentRepository != null) {
+                        currentRepository.close();
+                    }
+                    currentRepository =  RepositoryManager.getInstance().getRepository(metadata.getName(), false);
+                    if (currentRepository == null) {
+                        currentRepository = RepositoryManager.getInstance().createRepository(metadata.getName(), false);
+                    }
+                    currentRepository.create(metadata, AbstractRepository.NULL_PROGRESS_MONITOR);
+                    currentRepository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
+                    RepositoryManager.getInstance().setCurrentRepository(currentRepository);
+                    final AbstractRepository currentRepo = RepositoryManager.getInstance().getCurrentRepository();
+                    BonitaStudioLog.info(String.format("%s project created.", currentRepo.getName()),
+                            CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            };
+            workspaceModifyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            Display.getDefault().asyncExec(
+                    () -> {
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
+                        PlatformUtil.openIntroIfNoOtherEditorOpen();
+                    });
+            return getCurrentRepository();
+        } catch (final InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        } 
     }
 
 }

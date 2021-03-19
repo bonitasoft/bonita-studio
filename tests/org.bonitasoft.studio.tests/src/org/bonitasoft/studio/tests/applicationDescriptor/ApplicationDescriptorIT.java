@@ -23,6 +23,7 @@ import org.bonitasoft.engine.business.application.xml.ApplicationNodeContainer;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.application.core.BonitaPagesRegistry;
@@ -55,8 +56,7 @@ public class ApplicationDescriptorIT {
 
     @BeforeClass
     public static void init() throws Exception {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         engineManager = BOSEngineManager.getInstance();
         session = engineManager.loginDefaultTenant(new NullProgressMonitor());
         LivingApplicationPlugin.getDefault().getPreferenceStore()

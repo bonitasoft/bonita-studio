@@ -34,8 +34,7 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
     private WebPageNameResourceChangeListener webPageNameResourceChangeListener;
 
     public CustomProcessDiagramEditor() {
-        repositoryAccessor = new RepositoryAccessor();
-        repositoryAccessor.init();
+        repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         webPageNameResourceChangeListener = new WebPageNameResourceChangeListener(repositoryAccessor);
     }
 
