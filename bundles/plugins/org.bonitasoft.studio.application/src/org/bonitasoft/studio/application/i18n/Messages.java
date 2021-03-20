@@ -169,7 +169,6 @@ public class Messages extends NLS {
     public static String details;
     public static String removeExtensionConfirmationTitle;
     public static String removeExtensionConfirmation;
-    public static String removeExtensionsConfirmation;
     public static String extensionLoadingErrorTitle;
     public static String extensionLoadingError;
     public static String importExtensionTitle;
@@ -199,11 +198,15 @@ public class Messages extends NLS {
     public static String databaseDriver;
     public static String engineRestartWarning;
     public static String enhanceProject;
-    public static String updateExtensionTooltip;
-    public static String updateExtension;
+    public static String upgradeBonitaExtensionTooltip;
+    public static String upgradeBonitaExtension;
     public static String removeExtension;
     public static String updateExtensionConfirmationTitle;
     public static String updateExtensionConfirmation;
+    public static String dependencyAlreadyExistsInSameVersion;
+    public static String dependencyAlreadyExistsInDifferentVersion;
+    public static String upgradeExtension;
+    public static String upgradeExtensionTooltip;
 
     public static String newProjectWizardDescription;
     public static String newProjectWizardTitle;

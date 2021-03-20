@@ -7,7 +7,13 @@
     <elements xsi:type="commands:Command" xmi:id="_4djs4AYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.command" commandName="%newFolder"/>
     <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace"/>
     <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
-    <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension"/>
+    <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension">
+      <parameters xmi:id="_fsjMYIf4EeuMD4DgJLHr5Q" elementId="groupId" name="groupId"/>
+      <parameters xmi:id="_j47tQIf4EeuMD4DgJLHr5Q" elementId="artifactId" name="artifactId"/>
+      <parameters xmi:id="_ZYhswIf8EeuMD4DgJLHr5Q" elementId="type" name="type"/>
+      <parameters xmi:id="_bUiGcIf8EeuMD4DgJLHr5Q" elementId="classifier" name="classifier"/>
+      <parameters xmi:id="_UWTBYIieEeuMD4DgJLHr5Q" elementId="isLocal" name="isLocal"/>
+    </elements>
     <elements xsi:type="commands:Command" xmi:id="_hz1wgIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.command" commandName="%editProjectMetadata"/>
     <elements xsi:type="commands:Command" xmi:id="_-TWXoIcpEeu7ZtnjXqJ_Tg" elementId="org.bonitasoft.studio.application.newproject.command" commandName="%newProject"/>
   </fragments>

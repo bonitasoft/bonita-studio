@@ -82,11 +82,13 @@ Composite#groovyViewer > * > * > * > * > * > * > * {
     background-color: #454545;
 }
 
-Label#errorTextColor {
+Label#errorTextColor,
+CLabel#errorTextColor {
     color: #de5e5e;
 }
 
-Label#infoTextColor {
+Label#infoTextColor,
+CLabel#infoTextColor {
     color: #99b4e0;
 }
 
