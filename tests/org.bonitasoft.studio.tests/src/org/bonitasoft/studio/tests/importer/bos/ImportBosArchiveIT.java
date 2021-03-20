@@ -60,7 +60,7 @@ public class ImportBosArchiveIT {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-        botImport.next().next().importArchive();
+        botImport.existingRepository().next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
@@ -100,7 +100,7 @@ public class ImportBosArchiveIT {
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
+        botImport.existingRepository().next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ImportBosArchiveIT {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-        botImport.next().next().importArchive();
+        botImport.existingRepository().next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
