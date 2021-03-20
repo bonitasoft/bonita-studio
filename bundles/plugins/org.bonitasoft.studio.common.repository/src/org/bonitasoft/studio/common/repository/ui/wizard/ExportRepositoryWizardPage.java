@@ -41,7 +41,7 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.ui.viewer.CheckboxRepositoryTreeViewer;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -52,7 +52,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -359,8 +359,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
             }
         });
 
-        dbc.bindValue(SWTObservables.observeText(destinationCombo),
-                PojoProperties.value(ExportRepositoryWizardPage.class, "detinationPath").observe(this),
+        dbc.bindValue(WidgetProperties.text().observe(destinationCombo),
+                PojoProperties.value("detinationPath", String.class).observe(this),
                 pathStrategy, null);
 
         // destination browse button

@@ -94,7 +94,6 @@ Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.session,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.workbench.renderers.swt,
- org.eclipse.wst.xml.core.internal,
  org.osgi.service.event;version="1.3.0"
 Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.actions,

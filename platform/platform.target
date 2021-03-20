@@ -118,9 +118,9 @@
             <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="3.9.0.v202009301404-e2006-RELEASE"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="3.9.0.v202009301404-e2006-RELEASE"/>
         </location>
-	    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-		    <repository location="https://raw.githubusercontent.com/rbioteau/xerces_update_site/main"/>
-		    <unit id="org.apache.xerces" version="2.12.1.v20201221-1309"/>
-	    </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">    			
+            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
+            <unit id="org.apache.xerces" version="2.12.1.v20210115-0812"/>
+        </location>
     </locations>
 </target>

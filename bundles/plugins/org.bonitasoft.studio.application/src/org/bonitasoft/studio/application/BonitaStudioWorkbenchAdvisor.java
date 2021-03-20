@@ -94,8 +94,6 @@ import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
@@ -499,10 +497,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void initXMLandHTMLValidationPreferences() {
-        IEclipsePreferences xmlNode = DefaultScope.INSTANCE
-                .getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName());
-        xmlNode.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, -1);
-
         IEclipsePreferences htmlNode = DefaultScope.INSTANCE
                 .getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
         htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
