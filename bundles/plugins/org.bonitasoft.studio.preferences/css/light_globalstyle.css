@@ -61,11 +61,13 @@ CTabFolder {
     background-color: #e9e9e9;
 }
 
-Label#errorTextColor {
+Label#errorTextColor,
+CLabel#errorTextColor {
     color: #de5e5e;
 }
 
-Label#infoTextColor {
+Label#infoTextColor,
+CLabel#infoTextColor {
     color: #345fa3;
 }
 

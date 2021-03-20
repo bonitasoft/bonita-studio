@@ -22,6 +22,7 @@ import java.util.Optional;
 import javax.inject.Named;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMode;
@@ -30,7 +31,9 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.DependencyGetOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
+import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -49,44 +52,65 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ImportExtensionHandler {
 
+    private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
+
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
             RepositoryAccessor repositoryAccessor,
-            MavenRepositoryRegistry mavenRepositoryRegistry) {
-        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
-        ImportExtensionPage importExtensionPage = new ImportExtensionPage(mavenRepositoryRegistry);
-
-        WizardBuilder.<Boolean> newWizard()
-                .withTitle(Messages.importExtensionTitle)
-                .needProgress()
-                .havingPage(newPage()
-                        .withTitle(Messages.importExtensionTitle)
-                        .withDescription(Messages.importExtension)
-                        .withControl(importExtensionPage))
-                .onFinish(container -> performFinish(container,
-                        importExtensionPage,
-                        mavenRepositoryRegistry,
-                        currentRepository.getLocalDependencyStore(),
-                        currentRepository.getProject()))
-                .open(activeShell, org.bonitasoft.studio.ui.i18n.Messages.importLabel);
+            MavenRepositoryRegistry mavenRepositoryRegistry,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("groupId") String groupId,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("artifactId") String artifactId,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("type") String type,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("classifier") String classifier,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("isLocal") String isLocal) {
+        try {
+            AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
+            Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
+            boolean localExtension = Boolean.parseBoolean(isLocal);
+            ImportExtensionPage importExtensionPage = new ImportExtensionPage(mavenRepositoryRegistry, mavenModel,
+                    Optional.ofNullable(groupId),
+                    Optional.ofNullable(artifactId),
+                    Optional.ofNullable(type),
+                    Optional.ofNullable(classifier),
+                    Optional.ofNullable(localExtension));
+            WizardBuilder.<Boolean> newWizard()
+                    .withTitle(Messages.importExtensionTitle)
+                    .needProgress()
+                    .havingPage(newPage()
+                            .withTitle(Messages.importExtensionTitle)
+                            .withDescription(Messages.importExtension)
+                            .withControl(importExtensionPage))
+                    .onFinish(container -> performFinish(container,
+                            importExtensionPage,
+                            mavenRepositoryRegistry,
+                            currentRepository.getLocalDependencyStore(),
+                            currentRepository.getProject(),
+                            mavenModel))
+                    .open(activeShell, org.bonitasoft.studio.ui.i18n.Messages.importLabel);
+        } catch (CoreException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Optional<Boolean> performFinish(IWizardContainer container,
             ImportExtensionPage importExtensionPage,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             LocalDependenciesStore localDependenciesStore,
-            IProject project) {
+            IProject project,
+            Model mavenModel) {
         if (importExtensionPage.getImportMode() == ImportMode.MANUAL) {
             return manualImport(container,
                     importExtensionPage.getDependency(),
-                    mavenRepositoryRegistry);
+                    mavenRepositoryRegistry,
+                    mavenModel);
         } else if (importExtensionPage.getDependencyLookup() != null) {
             return fileImport(container,
                     importExtensionPage.getDependency(),
                     importExtensionPage.getDependencyLookup(),
                     mavenRepositoryRegistry,
                     localDependenciesStore,
-                    project);
+                    project,
+                    mavenModel);
         }
         return Optional.empty();
     }
@@ -96,42 +120,44 @@ public class ImportExtensionHandler {
             DependencyLookup dependencyLookup,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             LocalDependenciesStore localDependenciesStore,
-            IProject project) {
+            IProject project,
+            Model mavenModel) {
         if (dependencyLookup.getStatus() == Status.FOUND) {
-            return manualImport(container, dependency, mavenRepositoryRegistry);
-        } else {
-            dependencyLookup.setArtifactId(dependency.getArtifactId());
-            dependencyLookup.setGroupId(dependency.getGroupId());
-            dependencyLookup.setVersion(dependency.getVersion());
-            dependencyLookup.setType(dependency.getType());
-            dependencyLookup.setClassifier(dependency.getClassifier());
-            try {
-                container.run(true, false, monitor -> {
-                    monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
-                    try {
-                        localDependenciesStore.install(dependencyLookup);
-                    } catch (CoreException e) {
-                        throw new InvocationTargetException(e);
-                    }
-                    addDependency(dependency, monitor);
-                    try {
-                        MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, monitor);
-                    } catch (CoreException e) {
-                        throw new InvocationTargetException(e);
-                    }
-                    monitor.done();
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(e);
-                return Optional.empty();
-            }
-            return Optional.of(true);
+            return manualImport(container, dependency, mavenRepositoryRegistry, mavenModel);
         }
+        dependencyLookup.setArtifactId(dependency.getArtifactId());
+        dependencyLookup.setGroupId(dependency.getGroupId());
+        dependencyLookup.setVersion(dependency.getVersion());
+        dependencyLookup.setType(dependency.getType());
+        dependencyLookup.setClassifier(dependency.getClassifier());
+        try {
+            container.run(true, false, monitor -> {
+                try {
+                    monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
+                    Optional<Dependency> existingDependency = mavenProjectHelper.findDependencyInAnyVersion(mavenModel,
+                            dependency);
+                    if (existingDependency.isPresent()) {
+                        localDependenciesStore.remove(existingDependency.get());
+                    }
+                    localDependenciesStore.install(dependencyLookup);
+                    addDependency(mavenModel, dependency, monitor);
+                    MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(project, monitor);
+                    monitor.done();
+                } catch (CoreException e) {
+                    throw new InvocationTargetException(e);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return Optional.empty();
+        }
+        return Optional.of(true);
     }
 
     private Optional<Boolean> manualImport(IWizardContainer container,
             Dependency dependency,
-            MavenRepositoryRegistry mavenRepositoryRegistry) {
+            MavenRepositoryRegistry mavenRepositoryRegistry,
+            Model mavenModel) {
         try {
             GAV gav = new GAV(dependency);
             DependencyGetOperation dependencyGetOperation = new DependencyGetOperation(
@@ -147,7 +173,7 @@ public class ImportExtensionHandler {
             if (lookupResult != null) {
                 container.run(true, false, monitor -> {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
-                    addDependency(dependency, monitor);
+                    addDependency(mavenModel, dependency, monitor);
                     monitor.done();
                 });
             } else {
@@ -163,13 +189,19 @@ public class ImportExtensionHandler {
         }
     }
 
-    private void addDependency(Dependency dep, IProgressMonitor monitor) throws InvocationTargetException {
+    private void addDependency(Model mavenModel, Dependency dep, IProgressMonitor monitor) throws InvocationTargetException {
         try {
-            AddDependencyOperation operation = new AddDependencyOperation(dep);
+            var operation = isUpdate(mavenModel, dep)
+                    ? new UpdateDependencyVersionOperation(dep)
+                    : new AddDependencyOperation(dep);
             operation.run(monitor);
         } catch (CoreException e) {
             throw new InvocationTargetException(e);
         }
+    }
+
+    protected boolean isUpdate(Model mavenModel, Dependency dep) {
+        return mavenProjectHelper.findDependencyInAnyVersion(mavenModel, dep).isPresent();
     }
 
 }

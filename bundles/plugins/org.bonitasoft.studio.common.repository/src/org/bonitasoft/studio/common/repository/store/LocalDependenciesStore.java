@@ -64,7 +64,7 @@ public class LocalDependenciesStore {
                         String.format("Cannot install %s dependency. Failed to create store folders.",
                                 dependencyFile.getName())));
             }
-            Files.copy(dependencyFile.toPath(), 
+            Files.copy(dependencyFile.toPath(),
                     targetFolder.resolve(dependencyFileName(dependency)),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -88,7 +88,7 @@ public class LocalDependenciesStore {
     }
 
     private String dependencyFileName(Dependency dependency) {
-        if(dependency.getClassifier() != null) {
+        if (dependency.getClassifier() != null) {
             return String.format("%s-%s-%s.%s", dependency.getArtifactId(),
                     dependency.getVersion(),
                     dependency.getClassifier(),
@@ -101,29 +101,35 @@ public class LocalDependenciesStore {
 
     public void remove(Dependency dependency) throws CoreException {
         Path dependencyPath = dependencyPath(dependency).resolve(dependencyFileName(dependency));
-        if(dependencyPath.toFile().exists()) {
+        if (dependencyPath.toFile().exists()) {
             try {
                 Files.delete(dependencyPath);
             } catch (IOException e) {
-                throw new CoreException(new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + dependencyPath, e));
+                throw new CoreException(
+                        new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + dependencyPath, e));
             }
             Path parent = dependencyPath.getParent();
             while (parent.toFile().exists() && isEmptyFolder(parent)) {
                 try {
                     Files.delete(parent);
                 } catch (IOException e) {
-                    throw new CoreException(new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + parent, e));
+                    throw new CoreException(
+                            new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + parent, e));
                 }
                 parent = parent.getParent();
             }
         }
-        
+
         project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
+    public boolean isLocalDependency(Dependency dependency) {
+        return dependencyPath(dependency).resolve(dependencyFileName(dependency)).toFile().exists();
     }
 
     private boolean isEmptyFolder(Path folder) {
         var children = folder.toFile().listFiles();
-        return children == null ||  children.length == 0;
+        return children == null || children.length == 0;
     }
 
 }

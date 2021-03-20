@@ -207,7 +207,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
                 }
 
-                new OtherExtensionsComposite(parent, otherDependencies, subtitleFont, this::removeExtensions, ctx);
+                new OtherExtensionsComposite(parent, otherDependencies, subtitleFont, this::removeExtensions, ctx,
+                        repositoryAccessor);
             }
 
             if (cardComposite.getChildren().length == 0) {

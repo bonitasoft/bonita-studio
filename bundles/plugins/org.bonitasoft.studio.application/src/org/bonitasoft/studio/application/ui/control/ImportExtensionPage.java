@@ -22,15 +22,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.FileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.FileDependencyLookupOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
@@ -38,14 +41,19 @@ import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -54,9 +62,14 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.SWT;
@@ -73,6 +86,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 public class ImportExtensionPage implements ControlSupplier {
 
@@ -96,11 +110,41 @@ public class ImportExtensionPage implements ControlSupplier {
     private IObservableValue<DependencyLookup> dependencyLookupObservable;
     private IObservableValue<String> filePathObserveValue;
     private DependencyLookup dependencyLookup;
+    private Model mavenModel;
+    private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
+    private IObservableValue<Optional<Dependency>> sameExistingDependency;
+    private IObservableValue<String> versionObservable;
+    private Label dependencyAlreadyExistsLabel;
+    private Label dependencyAlreadyExistsIcon;
+    private IThemeEngine engine;
+    private IObservableValue<IStatus> dependencyAlreadyExistsStatus = new WritableValue<>(ValidationStatus.ok(),
+            IStatus.class);
+    private Optional<String> extensionToUpdateGroupId;
+    private Optional<String> extensionToUpdateArtifactId;
+    private Optional<String> extensionToUpdateType;
+    private Optional<Boolean> isLocal;
+    private Composite mainComposite;
 
-    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry) {
+    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry, Model mavenModel,
+            Optional<String> extensionToUpdateGroupId,
+            Optional<String> extensionToUpdateArtifactId,
+            Optional<String> extensionToUpdateType,
+            Optional<String> extensionToUpdateClassifier,
+            Optional<Boolean> isLocal) {
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
+        this.mavenModel = mavenModel;
+        this.extensionToUpdateGroupId = extensionToUpdateGroupId;
+        this.extensionToUpdateArtifactId = extensionToUpdateArtifactId;
+        this.extensionToUpdateType = extensionToUpdateType;
+        this.isLocal = isLocal;
+        this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.dependency = new Dependency();
         this.dependency.setType("jar");
+
+        extensionToUpdateGroupId.ifPresent(dependency::setGroupId);
+        extensionToUpdateArtifactId.ifPresent(dependency::setArtifactId);
+        extensionToUpdateType.ifPresent(dependency::setType);
+        extensionToUpdateClassifier.ifPresent(dependency::setClassifier);
     }
 
     @Override
@@ -110,7 +154,7 @@ public class ImportExtensionPage implements ControlSupplier {
         this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
         this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
 
-        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults()
                 .margins(10, 10)
                 .extendedMargins(0, 0, 0, 30)
@@ -122,7 +166,12 @@ public class ImportExtensionPage implements ControlSupplier {
         createStackComposite(mainComposite, ctx);
 
         createMavenCoordinatesGroup(mainComposite, ctx);
-        importModeObservable.setValue(ImportMode.MANUAL);
+
+        if (isLocal.isPresent()) {
+            importModeObservable.setValue(isLocal.get() ? ImportMode.FILE : ImportMode.MANUAL);
+        } else {
+            importModeObservable.setValue(ImportMode.MANUAL);
+        }
         importModeObservable.addValueChangeListener(e -> {
             if (e.diff.getNewValue() == ImportMode.MANUAL) {
                 editableDependencyObservable.setValue(true);
@@ -254,7 +303,12 @@ public class ImportExtensionPage implements ControlSupplier {
                         dependencyLookup.setType("zip");
                     }
                     dependencyLookupObservable.setValue(dependencyLookup);
-                    dependencyObservable.setValue(dependencyLookup.toMavenDependency());
+                    Dependency parsedDependency = dependencyLookup.toMavenDependency();
+                    if (extensionToUpdateGroupId.isEmpty()) {
+                        dependencyObservable.setValue(parsedDependency);
+                    } else { // Update mode -> Only version can be updated
+                        versionObservable.setValue(parsedDependency.getVersion());
+                    }
                     Image image = Pics
                             .getImageDescriptor(
                                     dependencyLookup.getStatus() == Status.FOUND ? PicsConstants.checkmark
@@ -291,26 +345,39 @@ public class ImportExtensionPage implements ControlSupplier {
         };
 
         // We do not want to translate the maven property names, it would lead to too many confusions.
+        IObservableValue<String> groupIdObservable = PojoProperties.value("groupId", String.class)
+                .observeDetail(dependencyObservable);
         TextWidget groupIdText = createText(dependencyGroup,
                 "Group ID",
-                PojoProperties.value("groupId", String.class).observeDetail(dependencyObservable),
+                groupIdObservable,
                 ctx,
                 true,
                 List.of(new MavenIdValidator("Group ID")));
         groupIdText.setFocus();
-        ctx.bindValue(groupIdText.observeEnable(), editableDependencyObservable);
+        ctx.bindValue(new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> !extensionToUpdateGroupId.isPresent() && editableDependencyObservable.getValue())
+                .build(), groupIdText.observeEnable(),
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
 
+        IObservableValue<String> artifactIdObservable = PojoProperties.value("artifactId", String.class)
+                .observeDetail(dependencyObservable);
         TextWidget artifactIdText = createText(dependencyGroup,
                 "Artifact ID",
-                PojoProperties.value("artifactId", String.class).observeDetail(dependencyObservable),
+                artifactIdObservable,
                 ctx,
                 true,
                 List.of(new MavenIdValidator("Artifact ID")));
-        ctx.bindValue(artifactIdText.observeEnable(), editableDependencyObservable);
+        ctx.bindValue(new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> !extensionToUpdateArtifactId.isPresent() && editableDependencyObservable.getValue())
+                .build(), artifactIdText.observeEnable(),
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
 
+        versionObservable = PojoProperties.value("version", String.class).observeDetail(dependencyObservable);
         TextWidget versionText = createText(dependencyGroup,
                 "Version",
-                PojoProperties.value("version", String.class).observeDetail(dependencyObservable),
+                versionObservable,
                 ctx,
                 true,
                 List.of(new EmptyInputValidator("Version")));
@@ -321,21 +388,117 @@ public class ImportExtensionPage implements ControlSupplier {
                 .extendedMargins(0, 0, 0, 15).create());
         subPropertiesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+        IObservableValue<String> typeObservable = PojoProperties.value("type", String.class)
+                .observeDetail(dependencyObservable);
         ComboWidget typeCombo = createCombo(subPropertiesComposite, "Type",
-                PojoProperties.value("type", String.class).observeDetail(dependencyObservable),
-                ctx);
-        ctx.bindValue(typeCombo.observeEnable(), editableDependencyObservable);
+                typeObservable, ctx);
+        ctx.bindValue(new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> !extensionToUpdateType.isPresent() && editableDependencyObservable.getValue())
+                .build(), typeCombo.observeEnable(),
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
 
+        IObservableValue<String> classifierObservable = PojoProperties.value("classifier", String.class)
+                .observeDetail(dependencyObservable);
         TextWidget classifierText = createText(subPropertiesComposite, "Classifier",
-                PojoProperties.value("classifier", String.class).observeDetail(dependencyObservable),
+                classifierObservable,
                 ctx,
                 false,
                 List.of());
-        ctx.bindValue(classifierText.observeEnable(), editableDependencyObservable);
+        ctx.bindValue(new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> !extensionToUpdateGroupId.isPresent() && editableDependencyObservable.getValue())
+                .build(), classifierText.observeEnable(),
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
+
         ctx.bindValue(WidgetProperties.visible().observe(dependencyGroup),
                 visibleDependencyObservable,
                 neverUpdateValueStrategy().create(),
                 null);
+
+        sameExistingDependency = new WritableValue<>(Optional.empty(), Optional.class);
+        ctx.bindValue(new ComputedValueBuilder<Optional<Dependency>>()
+                .withSupplier(() -> mavenProjectHelper.findDependencyInAnyVersion(mavenModel,
+                        groupIdObservable.getValue(),
+                        artifactIdObservable.getValue(),
+                        typeObservable.getValue(),
+                        classifierObservable.getValue()))
+                .build(),
+                sameExistingDependency,
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
+
+        createDependencyAlreadyExistsComposite(dependencyGroup, ctx);
+    }
+
+    private void createDependencyAlreadyExistsComposite(Composite parent, DataBindingContext ctx) {
+        var composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        dependencyAlreadyExistsIcon = new Label(composite, SWT.WRAP);
+        dependencyAlreadyExistsIcon.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).indent(0, 3).create());
+
+        dependencyAlreadyExistsLabel = new Label(composite, SWT.WRAP);
+        dependencyAlreadyExistsLabel.setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).grab(true, true).create());
+
+        ctx.addValidationStatusProvider(new ValidationStatusProvider() {
+
+            @Override
+            public IObservableValue<IStatus> getValidationStatus() {
+                return dependencyAlreadyExistsStatus;
+            }
+
+            @Override
+            public IObservableList<IObservable> getTargets() {
+                return null;
+            }
+
+            @Override
+            public IObservableList<IObservable> getModels() {
+                return null;
+            }
+        });
+
+        ctx.bindValue(new ComputedValueBuilder<IStatus>()
+                .withSupplier(this::computeDependencyAlreadyExistsStatus)
+                .build(), dependencyAlreadyExistsStatus,
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
+
+        ctx.bindValue(new ComputedValueBuilder<Boolean>()
+                .withSupplier(
+                        () -> sameExistingDependency.getValue() != null && sameExistingDependency.getValue().isPresent())
+                .build(), WidgetProperties.visible().observe(composite),
+                updateValueStrategy().create(),
+                neverUpdateValueStrategy().create());
+    }
+
+    private IStatus computeDependencyAlreadyExistsStatus() {
+        if (sameExistingDependency.getValue() != null && sameExistingDependency.getValue().isPresent()) {
+            String existingVersion = sameExistingDependency.getValue().get().getVersion();
+            if (Objects.equals(existingVersion, versionObservable.getValue())) {
+                updateDependencyAlreadyExistsLabel(String.format(Messages.dependencyAlreadyExistsInSameVersion, existingVersion),
+                        BonitaThemeConstants.ERROR_TEXT_COLOR, JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR));
+                return ValidationStatus.error(Messages.dependencyAlreadyExistsInSameVersion);
+            }
+            updateDependencyAlreadyExistsLabel(
+                    String.format(Messages.dependencyAlreadyExistsInDifferentVersion, existingVersion),
+                    BonitaThemeConstants.INFO_TEXT_COLOR, JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
+            return ValidationStatus.ok();
+        }
+        updateDependencyAlreadyExistsLabel("", BonitaThemeConstants.INFO_TEXT_COLOR,
+                JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
+        return ValidationStatus.ok();
+    }
+
+    private void updateDependencyAlreadyExistsLabel(String message, String cssStyle, Image icon) {
+        dependencyAlreadyExistsLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, cssStyle);
+        engine.applyStyles(dependencyAlreadyExistsLabel, false);
+        dependencyAlreadyExistsLabel.setText(message);
+        dependencyAlreadyExistsIcon.setImage(icon);
+        mainComposite.layout();
     }
 
     private TextWidget createText(Composite parent,
@@ -344,7 +507,7 @@ public class ImportExtensionPage implements ControlSupplier {
             DataBindingContext ctx,
             boolean mandatory,
             List<IValidator> validators) {
-       return new TextWidget.Builder()
+        return new TextWidget.Builder()
                 .withLabel(label + (mandatory ? " *" : ""))
                 .labelAbove()
                 .grabHorizontalSpace()

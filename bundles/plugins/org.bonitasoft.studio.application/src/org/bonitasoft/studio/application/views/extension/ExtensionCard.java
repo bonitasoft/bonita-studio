@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.views.extension;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -64,6 +65,7 @@ public class ExtensionCard extends Composite {
     private Cursor cursorArrow;
     private IThemeEngine engine;
     private CommandExecutor commandExecutor;
+    private boolean localExtension;
 
     public ExtensionCard(Composite parent, RepositoryAccessor repositoryAccessor, DataBindingContext ctx, Dependency dep,
             BonitaArtifactDependency bonitaDep, Font subtitleFont, Font gavFont,
@@ -80,6 +82,7 @@ public class ExtensionCard extends Composite {
         this.cursorArrow = getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.commandExecutor = new CommandExecutor();
+        this.localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore().isLocalDependency(dep);
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -119,15 +122,24 @@ public class ExtensionCard extends Composite {
                 .span(action != null ? 1 : 2, 1).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        if (isUpdatable()) { // Only ext from marketplace FOR NOW -> TODO
+        if (isABonitaExtensionUpdatable()) {
             new DynamicButtonWidget.Builder()
-                    .withText(Messages.updateExtension)
-                    .withTooltipText(Messages.updateExtensionTooltip)
+                    .withText(Messages.upgradeBonitaExtension)
+                    .withTooltipText(Messages.upgradeBonitaExtensionTooltip)
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
                     .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .withTextColors(BonitaThemeConstants.SUCCESS_TEXT_COLOR, BonitaThemeConstants.SUCCESS_HOVER_TEXT_COLOR)
-                    .onClick(e -> updateExtension())
+                    .onClick(e -> upgradeBonitaExtension())
+                    .createIn(toolbarComposite);
+        } else if (!bonitaDep.isFromMarketplace()) {
+            new DynamicButtonWidget.Builder()
+                    .withText(Messages.upgradeExtension)
+                    .withTooltipText(Messages.upgradeExtensionTooltip)
+                    .withImage(Pics.getImage(PicsConstants.updateDependency))
+                    .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> upgradeExtension())
                     .createIn(toolbarComposite);
         }
 
@@ -147,7 +159,7 @@ public class ExtensionCard extends Composite {
                 .createIn(toolbarComposite);
     }
 
-    private void updateExtension() {
+    private void upgradeBonitaExtension() {
         String latestVersion = bonitaDep.getLatestCompatibleVersion()
                 .map(BonitaArtifactDependencyVersion::getVersion)
                 .orElseThrow(() -> new IllegalArgumentException("No update available"));
@@ -168,6 +180,16 @@ public class ExtensionCard extends Composite {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void upgradeExtension() {
+        var parameters = new HashMap<String, Object>();
+        parameters.put("groupId", dep.getGroupId());
+        parameters.put("artifactId", dep.getArtifactId());
+        parameters.put("type", dep.getType());
+        parameters.put("classifier", dep.getClassifier());
+        parameters.put("isLocal", String.valueOf(localExtension));
+        commandExecutor.executeCommand(ProjectExtensionEditorPart.IMPORT_EXTENSION_COMMAND, parameters);
     }
 
     private void createDescriptionLabel(Composite parent) {
@@ -233,7 +255,11 @@ public class ExtensionCard extends Composite {
         });
     }
 
-    private boolean isUpdatable() {
+    /**
+     * Return true if the extension comes from the marketplace and has a new compatible version available (i.e a compatible
+     * version higher than the current one).
+     */
+    private boolean isABonitaExtensionUpdatable() {
         if (bonitaDep.isFromMarketplace()) {
             return bonitaDep.getLatestCompatibleVersion()
                     .map(latest -> {

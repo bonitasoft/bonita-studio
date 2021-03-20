@@ -52,7 +52,7 @@ public class MavenProjectHelper {
         if (!pomFile.exists()) {
             return null;
         }
-        try(InputStream is = pomFile.getContents()) {
+        try (InputStream is = pomFile.getContents()) {
             return pomReader.read(is);
         } catch (IOException | XmlPullParserException e) {
             throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, null, e));
@@ -92,7 +92,7 @@ public class MavenProjectHelper {
                 .filter(dep -> Objects.equals(dep.getArtifactId(), artifactId))
                 .findFirst();
     }
-    
+
     public Optional<Dependency> findDependency(Model model, Dependency dependency) {
         return model.getDependencies()
                 .stream()
@@ -102,6 +102,41 @@ public class MavenProjectHelper {
                 .filter(dep -> Objects.equals(dep.getType(), dependency.getType()))
                 .filter(dep -> Objects.equals(dep.getClassifier(), dependency.getClassifier()))
                 .findFirst();
+    }
+
+    /**
+     * Look for a dependency in the maven model that has the same groupdId, artifactId, type and classifier than the
+     * dependency in parameter.
+     * Version can be different.
+     */
+    public Optional<Dependency> findDependencyInAnyVersion(Model mavenModel, Dependency dep) {
+        return findDependencyInAnyVersion(mavenModel, dep.getGroupId(), dep.getArtifactId(), dep.getType(),
+                dep.getClassifier());
+    }
+
+    /**
+     * Look for a dependency in the maven model that has the same groupdId, artifactId, type and classifier than the
+     * dependency in parameter.
+     * Version can be different.
+     */
+    public Optional<Dependency> findDependencyInAnyVersion(Model mavenModel, String groupId, String artifactId, String type,
+            String classifier) {
+        return mavenModel.getDependencies().stream()
+                .filter(aDep -> Objects.equals(aDep.getGroupId(), groupId))
+                .filter(aDep -> Objects.equals(aDep.getArtifactId(), artifactId))
+                .filter(aDep -> sameOptionalString(aDep.getType(), type))
+                .filter(aDep -> sameOptionalString(aDep.getClassifier(), classifier))
+                .findFirst();
+    }
+
+    private boolean sameOptionalString(String a, String b) {
+        if(a != null && a.isBlank()) {
+            a = null;
+        }
+        if(b != null && b.isBlank()) {
+            b = null;
+        }
+        return Objects.equals(a, b);
     }
 
 }
