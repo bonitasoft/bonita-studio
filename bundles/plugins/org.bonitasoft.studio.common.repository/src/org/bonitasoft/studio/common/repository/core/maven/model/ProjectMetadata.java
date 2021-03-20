@@ -237,6 +237,7 @@ public class ProjectMetadata {
                         "(?<=[^A-Z])(?=[A-Z])",
                         "(?<=[A-Za-z])(?=[^A-Za-z])"),
                 " ")
+                .replaceAll("_", " ")
                 .replaceAll("-", " ")
                 .replaceAll("  ", " ");
               

@@ -54,8 +54,7 @@ public class ImportBosHandler {
 
         IObservableList<DependencyLookup> dependenciesLookup = new WritableList<>();
         IObservableList<IRepository> mavenRepositories = new WritableList<>();
-        switchRepositoryStrategy = new SwitchRepositoryStrategy(repositoryAccessor,
-                projectName == null ? repositoryAccessor.getCurrentRepository().getName() : projectName);
+        switchRepositoryStrategy = new SwitchRepositoryStrategy(repositoryAccessor);
         String targetProject = switchRepositoryStrategy.getTargetRepository();
         updateRemoteRepositories(targetProject, mavenRepositories, mavenRepositoryRegistry, repositoryAccessor);
         switchRepositoryStrategy

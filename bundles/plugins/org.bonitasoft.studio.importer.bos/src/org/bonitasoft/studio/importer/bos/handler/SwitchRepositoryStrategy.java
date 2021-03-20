@@ -17,13 +17,11 @@ import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 public class SwitchRepositoryStrategy {
 
     private String targetRepository;
-    private boolean rebuildModel;
     private final RepositoryAccessor repositoryAccessor;
     private List<TargetProjectChangeListener> targetProjectChangeListerners = new ArrayList<>();
     private boolean createNewProject;
 
-    public SwitchRepositoryStrategy(RepositoryAccessor repositoryAccessor, String targetRepository) {
-        this.targetRepository = targetRepository;
+    public SwitchRepositoryStrategy(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
     }
 

@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.importer.bos.handler.SwitchRepositoryStrategy;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
@@ -118,14 +119,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         this.filePath = filePath;
         this.switchRepositoryStrategy = switchRepositoryStrategy;
         projectMetadata = ProjectMetadata.defaultMetadata();
-        if (switchRepositoryStrategy.isSwitchRepository()) {
-            String targetRepository = switchRepositoryStrategy.getTargetRepository();
-            projectMetadata.setName(targetRepository);
-            projectMetadata.setArtifactId(ProjectMetadata.toArtifactId(targetRepository));
-        } else {
-            projectMetadata.setName("");
-            projectMetadata.setArtifactId("");
-        }
         projectMetadataObservable = PojoProperties.value("projectMetadata", ProjectMetadata.class)
                 .observe(this);
         existingRepoObservable = PojoProperties.<ImportBosArchivePage, String> value("existingTargetRepo")
@@ -437,9 +430,9 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     public void updateTargetRepository(String targetProjectName) {
-        final boolean repoChanged = !switchRepositoryStrategy.getTargetRepository().equals(targetProjectName);
+        final boolean repoChanged = !Objects.equals(switchRepositoryStrategy.getTargetRepository(), targetProjectName);
         switchRepositoryStrategy.setTargetRepository(targetProjectName);
-        if (!targetProjectName.isEmpty() && archiveModel != null && repoChanged) {
+        if (targetProjectName != null && !targetProjectName.isEmpty() && archiveModel != null && repoChanged) {
             refreshArchiveModel(targetProjectName);
         }
     }
@@ -460,14 +453,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     private Composite doCreateFileLocationBrowser(Composite parent, DataBindingContext dbc) {
-        //        Composite fileBrowserComposite = new Composite(parent, SWT.NONE);
-        //        fileBrowserComposite
-        //                .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        //        fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults()
-        //                .grab(true, false)
-        //                .hint(700, SWT.DEFAULT)
-        //                .create());
-
         filePathObserveValue = PojoProperties.value("filePath", String.class).observe(this);
         filePathObserveValue.addValueChangeListener(this::parseArchive);
         fileLocationText = new TextWidget.Builder()
@@ -570,22 +555,23 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                     Messages.errorOccuredWhileParsingBosArchive, e);
         }
         ImportArchiveModel importArchiveModel = operation.getImportArchiveModel();
+        BosArchive bosArchive = importArchiveModel.getBosArchive();
+        fileLocationText
+        .setMessage(String.format("%s %s (%s)",
+                Messages.bosArchiveName,
+                selectedFile.getName(),
+                bosArchive.getBonitaVersion()));
+        Model mavenProject = bosArchive.getMavenProject();
+        if (mavenProject != null) {
+            projectMetadataObservable.setValue(ProjectMetadata.read(mavenProject));
+        } else {
+            projectMetadataObservable.setValue(ProjectMetadata.fromBosFileName(selectedFile.getName()));
+        }
         String newTargetProjectName = projectMetadataObservable.getValue().getName();
         if ((RepositoryMode) repositoryModeObservable.getValue() == RepositoryMode.NEW
                 && !newTargetProjectName.isEmpty()) {
             switchRepositoryStrategy.setTargetRepository(newTargetProjectName);
             importArchiveModel.resetStatus();
-        }
-        fileLocationText
-                .setMessage(String.format("%s %s (%s)",
-                        Messages.bosArchiveName,
-                        selectedFile.getName(),
-                        importArchiveModel.getBosArchive().getBonitaVersion()));
-        Model mavenProject = importArchiveModel.getBosArchive().getMavenProject();
-        if (mavenProject != null) {
-            projectMetadataObservable.setValue(ProjectMetadata.read(mavenProject));
-        } else {
-            projectMetadataObservable.setValue(ProjectMetadata.fromBosFileName(selectedFile.getName()));
         }
         return importArchiveModel;
     }
