@@ -28,7 +28,6 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,7 +45,7 @@ public class ImportBosArchivePageTest {
     @Test
     public void should_update_archive_model_correctly() throws Exception {
         final ImportBosArchivePage supplier = new ImportBosArchivePage(
-                getRepositoryAccessor(), new SwitchRepositoryStrategy(getRepositoryAccessor(), "repoName"), null, null);
+                getRepositoryAccessor(), new SwitchRepositoryStrategy(getRepositoryAccessor()), null, null);
         final Composite parent = displayRule.createComposite();
         final IWizardContainer container = displayRule.wizardWithContainer().getContainer();
 
