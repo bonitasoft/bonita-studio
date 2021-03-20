@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.bonitasoft.studio.model.process.Contract;
@@ -28,8 +30,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-
-import com.google.common.collect.Lists;
 
 public class CustomContractInputItemProvider
         extends ContractInputItemProvider {
@@ -103,7 +103,7 @@ public class CustomContractInputItemProvider
                      */
                     @Override
                     protected Collection<?> getComboBoxObjects(Object object) {
-                        final Collection<?> comboBoxObjects = Lists.newArrayList(ContractInputType.BOOLEAN,
+                        final Collection<?> comboBoxObjects = new ArrayList<>(Arrays.asList(ContractInputType.BOOLEAN,
                                 ContractInputType.COMPLEX,
                                 ContractInputType.LOCALDATE,
                                 ContractInputType.LOCALDATETIME,
@@ -113,7 +113,7 @@ public class CustomContractInputItemProvider
                                 ContractInputType.INTEGER,
                                 ContractInputType.LONG,
                                 ContractInputType.TEXT,
-                                ContractInputType.DATE);
+                                ContractInputType.DATE));
                         if (getContractContainer((EObject) object) instanceof Task) {
                             comboBoxObjects.remove(ContractInputType.LONG);
                         }
