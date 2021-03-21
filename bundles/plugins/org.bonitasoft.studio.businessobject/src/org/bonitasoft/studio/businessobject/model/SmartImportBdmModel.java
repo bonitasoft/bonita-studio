@@ -17,6 +17,7 @@ package org.bonitasoft.studio.businessobject.model;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.FileUtils;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -70,7 +70,7 @@ public class SmartImportBdmModel extends SmartImportableModel {
     @Override
     public void buildSmartImportModel(File fileToImport) {
         try {
-            modelToMerge = converter.unmarshall(FileUtils.readFileToByteArray(fileToImport));
+            modelToMerge = converter.unmarshall(Files.readAllBytes(fileToImport.toPath()));
             createPackageModels(retrieveCurrentModel(), modelToMerge);
         } catch (JAXBException | IOException | SAXException e) {
             new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);

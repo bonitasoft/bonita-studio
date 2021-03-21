@@ -16,13 +16,13 @@ package org.bonitasoft.studio.businessobject.editor.editor;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.IOUtils;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.converter.BusinessDataModelConverter;
@@ -318,11 +318,10 @@ public class BusinessDataModelEditorContribution extends AbstractEditorContribut
             BDMArtifactDescriptor artifactDescriptor = loadBdmArtifactDescriptor();
             workingCopyObservable.getRealm().asyncExec(() -> {
                 try {
-                    String stringContent = IOUtils.toString(input.getAdapter(IFile.class).getContents(),
-                            StandardCharsets.UTF_8.name());
+                    String stringContent = Files.readString(input.getAdapter(IFile.class).getLocation().toFile().toPath(), StandardCharsets.UTF_8);
                     workingCopyObservable
                             .setValue(converter.toEmfModel(parser.unmarshall(stringContent.getBytes()), artifactDescriptor));
-                } catch (JAXBException | IOException | SAXException | CoreException e) {
+                } catch (JAXBException | IOException | SAXException e) {
                     throw new RuntimeException("An error ocurred while updating Business Data Model working copy.", e);
                 }
             });

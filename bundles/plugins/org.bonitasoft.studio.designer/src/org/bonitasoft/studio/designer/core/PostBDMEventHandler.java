@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-import org.restlet.ext.jackson.JacksonRepresentation;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -51,7 +51,7 @@ public class PostBDMEventHandler implements EventHandler {
                     InetAddress.getByName(null).getHostAddress(),
                     InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)
                             .get(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, "-1")))
-                                    .post(new JacksonRepresentation<Object>(content));
+                                    .post(new JsonRepresentation(content));
             BonitaStudioLog.info("BDM has been publish into Data Repository service", UIDesignerPlugin.PLUGIN_ID);
         } catch (ResourceException | UnknownHostException e) {
             BonitaStudioLog.error("An error occured while publishing the BDM into Data Repository service", e);

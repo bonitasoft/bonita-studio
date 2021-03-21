@@ -16,13 +16,13 @@ package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.FileUtils;
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
@@ -59,7 +59,7 @@ public class SmartImportBdmValidator implements IValidator<File> {
     @Override
     public IStatus validate(File value) {
         try {
-            BusinessObjectModel modelToImport = converter.unmarshall(FileUtils.readFileToByteArray(value));
+            BusinessObjectModel modelToImport = converter.unmarshall(Files.readAllBytes(value.toPath()));
             return validateCompatibility(currentModel, modelToImport);
         } catch (JAXBException | IOException | SAXException e) {
             return ValidationStatus.error(Messages.archiveContentInvalid, e);

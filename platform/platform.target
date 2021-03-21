@@ -60,16 +60,7 @@
             <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/>
             <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/>
-            <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.core.jackson-core" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-csv" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-smile" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-xml" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.dataformat.jackson-dataformat-yaml" version="2.4.4"/>
-            <unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.4.4"/>
             <unit id="org.restlet.ext.html.feature.group" version="2.3.0.v20141217-1730"/>
-            <unit id="org.restlet.ext.jackson.feature.group" version="2.3.0.v20141217-1730"/>
             <unit id="org.restlet.ext.jaxb.feature.group" version="2.3.0.v20141217-1730"/>
             <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
             <unit id="org.restlet.feature.group" version="2.3.0.v20141217-1730"/>
@@ -121,6 +112,10 @@
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">    			
             <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
             <unit id="org.apache.xerces" version="2.12.1.v20210115-0812"/>
+            <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.12.1.v20210128-1726"/>
+            <unit id="com.fasterxml.jackson.core.jackson-core" version="2.12.1.v20210128-1726"/>
+            <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.12.1.v20210128-1726"/>
+            <unit id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations" version="2.12.1.v20210128-1726"/>
         </location>
     </locations>
 </target>
