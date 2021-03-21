@@ -20,12 +20,12 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Optional;
 
 import javax.inject.Named;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.FileUtils;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.operation.SmartImportBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -155,7 +155,7 @@ public class SmartImportBdmHandler extends AbstractHandler {
             File fileToImport = ZipUtil.unzip(new File(page.getFilePath()))
                     .resolve(BusinessObjectModelFileStore.BOM_FILENAME)
                     .toFile();
-            fileStore.save(repositoryStore.getConverter().unmarshall(FileUtils.readFileToByteArray(fileToImport)));
+            fileStore.save(repositoryStore.getConverter().unmarshall(Files.readAllBytes(fileToImport.toPath())));
             return ValidationStatus.ok();
         } catch (IOException | JAXBException | SAXException e) {
             BonitaStudioLog.error(e);

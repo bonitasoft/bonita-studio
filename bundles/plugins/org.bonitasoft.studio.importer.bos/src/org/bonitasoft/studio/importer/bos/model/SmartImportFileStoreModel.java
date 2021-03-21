@@ -16,12 +16,12 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.FileUtils;
 import org.bonitasoft.studio.common.model.ConflictStatus;
 import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -72,7 +72,7 @@ public class SmartImportFileStoreModel extends ImportFileStoreModel {
     private File toFile(ZipFile zipFile) throws IOException {
         File file = File.createTempFile(getFileName(), null);
         file.deleteOnExit();
-        FileUtils.copyInputStreamToFile(zipFile.getInputStream(zipFile.getEntry(getPath())), file);
+        Files.copy(zipFile.getInputStream(zipFile.getEntry(getPath())), file.toPath());
         return file;
     }
 

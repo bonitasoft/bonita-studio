@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 
-import org.apache.commons.io.IOUtils;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
@@ -89,7 +89,7 @@ public class ImportLegacyBDMIT {
         StatusAssert.assertThat(operation.getStatus()).hasSeverity(IStatus.INFO);
 
         IFile iFile = defStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true).getResource();
-        String bomFileContent = IOUtils.toString(iFile.getContents(), Charset.defaultCharset());
+        String bomFileContent = Files.readString(iFile.getLocation().toFile().toPath(), Charset.defaultCharset());
         assertThat(bomFileContent).contains("xmlns=\"http://documentation.bonitasoft.com/bdm-xml-schema/1.0\"");
     }
 

@@ -57,8 +57,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
+import org.restlet.ext.json.JsonRepresentation;
 
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
@@ -99,8 +98,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
             Contract tmpContract = EcoreUtil.copy(contract); // will contains unwanted contractInput for readOnly attributes 
             openReadOnlyAttributeDialog(tmpContract, businessDataStore);
             TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
-            Representation body = new JacksonRepresentation<>(new ToWebContract(treeResult).apply(tmpContract));
-            responseObject = createArtifact(url, body);
+            responseObject = createArtifact(url, new JsonRepresentation(new ToWebContract(treeResult).apply(tmpContract)));
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
