@@ -15,14 +15,18 @@
 package org.bonitasoft.studio.application.operation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -37,45 +41,66 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     private boolean createNewProject = false;
     private RepositoryAccessor repositoryAccessor;
     private ProjectMetadata meatadata;
+    private List<Dependency> dependencies = new ArrayList<>();
 
-    public SetProjectMetadataOperation(ProjectMetadata meatadata, 
+    public SetProjectMetadataOperation(ProjectMetadata meatadata,
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper) {
         this.meatadata = meatadata;
         this.repositoryAccessor = repositoryAccessor;
         this.mavenProjectHelper = mavenProjectHelper;
     }
-    
+
     public SetProjectMetadataOperation createNewProject() {
         this.createNewProject = true;
+        return this;
+    }
+    
+    public SetProjectMetadataOperation additionalDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
         return this;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.updatingProjectMetadata, IProgressMonitor.UNKNOWN);
-        AbstractRepository repository = repositoryAccessor.getCurrentRepository();
-            try {
-                if (createNewProject) {
-                    repositoryAccessor.createNewRepository(meatadata, monitor);
-                } else { 
-                    IProject project = repository.getProject();
-                    Model model = mavenProjectHelper.getMavenModel(project);
-                    boolean nameChanged = !Objects.equals(model.getName(), meatadata.getName());
-                    model.setName(meatadata.getName());
-                    model.setDescription(meatadata.getDescription());
-                    model.setGroupId(meatadata.getGroupId());
-                    model.setArtifactId(meatadata.getArtifactId());
-                    model.setVersion(meatadata.getVersion());
-                    mavenProjectHelper.saveModel(project, model);
-                    if (nameChanged) {
-                        repository.rename(model.getName(), monitor);
-                    }
-                }
-            } catch (CoreException e) {
-                status = e.getStatus();
+        try {
+            if (createNewProject) {
+                createNewProject(monitor);
+            } else {
+                editProject(monitor);
             }
-       
+        } catch (CoreException e) {
+            status = e.getStatus();
+        }
+
+    }
+
+    private void editProject(IProgressMonitor monitor)
+            throws CoreException, InvocationTargetException, InterruptedException {
+        AbstractRepository repository = repositoryAccessor.getCurrentRepository();
+        IProject project = repository.getProject();
+        Model model = mavenProjectHelper.getMavenModel(project);
+        boolean nameChanged = !Objects.equals(model.getName(), meatadata.getName());
+        model.setName(meatadata.getName());
+        model.setDescription(meatadata.getDescription());
+        model.setGroupId(meatadata.getGroupId());
+        model.setArtifactId(meatadata.getArtifactId());
+        model.setVersion(meatadata.getVersion());
+        mavenProjectHelper.saveModel(project, model);
+        if (nameChanged) {
+            repository.rename(model.getName(), monitor);
+        }
+    }
+
+    private void createNewProject(IProgressMonitor monitor) throws CoreException {
+        IRepository newRepository = repositoryAccessor.createNewRepository(meatadata, monitor);
+        if(!dependencies.isEmpty()) {
+            IProject project = newRepository.getProject();
+            Model model = mavenProjectHelper.getMavenModel(project);
+            dependencies.stream().forEach(model.getDependencies()::add);
+            mavenProjectHelper.saveModel(project, model);
+        }
     }
 
     public IStatus getStatus() {

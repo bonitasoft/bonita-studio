@@ -56,7 +56,7 @@ public class OpenMarketplaceHandler {
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
             RepositoryAccessor repositoryAccessor) {
-        BonitaMarketplacePage bonitaMarketplacePage = createBonitaMarketPlacePage();
+        BonitaMarketplacePage bonitaMarketplacePage = createBonitaMarketPlacePage(repositoryAccessor);
 
         WizardBuilder.<Boolean> newWizard()
                 .withTitle(getWizardTitle())
@@ -86,8 +86,8 @@ public class OpenMarketplaceHandler {
         return Messages.projectExtensionsTitle;
     }
 
-    protected BonitaMarketplacePage createBonitaMarketPlacePage() {
-        return new BonitaMarketplacePage();
+    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor) {
+        return new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject());
     }
 
     private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage,

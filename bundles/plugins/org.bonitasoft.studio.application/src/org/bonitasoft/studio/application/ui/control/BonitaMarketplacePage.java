@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,8 +31,6 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
@@ -50,12 +49,12 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -84,7 +83,6 @@ public class BonitaMarketplacePage implements ControlSupplier {
             DATABASE_DRIVER_TYPE, BonitaMarketplace.DATABASE_DRIVER_TYPE);
 
     private MavenProjectHelper helper = new MavenProjectHelper();
-    private RepositoryAccessor repositoryAccessor;
     private List<Image> iconsToDispose = new ArrayList<>();
     private TextWidget searchWidget;
     private Composite dependenciesComposite;
@@ -103,12 +101,19 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private String[] extensionTypes;
 
-    public BonitaMarketplacePage(String... extensionTypes) {
+    private IProject project;
+
+    public BonitaMarketplacePage(IProject project, String... extensionTypes) {
+        this.project = project;
         this.extensionTypes = extensionTypes;
     }
+    
+    public BonitaMarketplacePage(String... extensionTypes) {
+        this(null, extensionTypes);
+    }
 
-    public BonitaMarketplacePage() {
-        this(ALL_TYPE, CONNECTOR_TYPE, ACTOR_FILTER_TYPE);
+    public BonitaMarketplacePage(IProject project) {
+        this(project, ALL_TYPE, CONNECTOR_TYPE, ACTOR_FILTER_TYPE);
     }
 
     @Override
@@ -131,7 +136,6 @@ public class BonitaMarketplacePage implements ControlSupplier {
         dependenciesComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
         dependenciesComposite.setBackgroundMode(SWT.INHERIT_FORCE);
-
         sc.setContent(dependenciesComposite);
         sc.setExpandVertical(true);
         sc.setExpandHorizontal(true);
@@ -147,40 +151,39 @@ public class BonitaMarketplacePage implements ControlSupplier {
      */
     @Override
     public void pageChanged(PageChangedEvent event) {
-        Display.getDefault().asyncExec(() -> {
-            try {
-                wizardContainer.getShell().setDefaultButton(null);
-                wizardContainer.run(true, false, monitor -> {
-                    initVariables(monitor);
+        Object selectedPage = event.getSelectedPage();
+        if (selectedPage instanceof IWizardPage
+                && Objects.equals(((IWizardPage) selectedPage).getControl(), mainComposite)
+                && dependencies == null) {
+            Display.getDefault().asyncExec(() -> {
+                try {
+                    wizardContainer.getShell().setDefaultButton(null);
+                    wizardContainer.run(true, false, monitor -> {
+                        initVariables(monitor);
 
-                    int totalWork = newDependencies.size() + dependenciesUpdatable.size();
-                    monitor.beginTask(Messages.fetchingExtensions, totalWork);
-                    dependenciesUpdatable.stream().filter(hasSelectedType()).forEach(dep -> {
-                        Display.getDefault().syncExec(() -> {
-                            createDependencyControl(dependenciesComposite, dep);
+                        int totalWork = newDependencies.size() + dependenciesUpdatable.size();
+                        monitor.beginTask(Messages.fetchingExtensions, totalWork);
+                        dependenciesUpdatable.stream().filter(hasSelectedType()).forEach(dep -> {
+                            Display.getDefault().syncExec(() -> {
+                                createDependencyControl(dependenciesComposite, dep);
+                            });
+                            monitor.worked(1);
                         });
-                        monitor.worked(1);
-                    });
-                    newDependencies.stream().filter(hasSelectedType()).forEach(dep -> {
-                        Display.getDefault().syncExec(() -> {
-                            createDependencyControl(dependenciesComposite, dep);
+                        newDependencies.stream().filter(hasSelectedType()).forEach(dep -> {
+                            Display.getDefault().syncExec(() -> {
+                                createDependencyControl(dependenciesComposite, dep);
+                            });
+                            monitor.worked(1);
                         });
-                        monitor.worked(1);
+                        // TODO what if all provided dependencies are already installed? 
+                        Display.getDefault().asyncExec(() -> layoutDependenciesComposite());
+                        monitor.done();
                     });
-                    // TODO what if all provided dependencies are already installed? 
-                    Display.getDefault().asyncExec(() -> {
-                        dependenciesComposite.layout();
-                        sc.setContent(dependenciesComposite);
-                        Point size = dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                        sc.setMinHeight(size.y);
-                        sc.layout();
-                    });
-                    monitor.done();
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                } catch (InvocationTargetException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 
     private Predicate<? super BonitaArtifactDependency> hasSelectedType() {
@@ -190,7 +193,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private void initVariables(IProgressMonitor monitor) {
         try {
             dependencies = BonitaMarketplace.getInstance(monitor).getDependencies();
-            knownDependencies = helper.getMavenModel(getProject()).getDependencies();
+            knownDependencies = project != null ? helper.getMavenModel(project).getDependencies()
+                    : Collections.emptyList();
             splitDependencies();
         } catch (CoreException e) {
             throw new RuntimeException(e);
@@ -274,8 +278,13 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 throw new RuntimeException(e);
             }
         }
+        layoutDependenciesComposite();
+    }
+
+    private void layoutDependenciesComposite() {
         dependenciesComposite.layout();
-        sc.setMinHeight(dependenciesComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        int shellWidth = dependenciesComposite.getShell().getSize().x;
+        sc.setMinHeight(dependenciesComposite.computeSize(shellWidth, SWT.DEFAULT).y);
         sc.layout();
     }
 
@@ -374,7 +383,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         version.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 
         Label description = createLabel(contentComposite, SWT.WRAP);
-        description.setLayoutData(GridDataFactory.fillDefaults().hint(620, SWT.DEFAULT).create());
+        description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         description.setText(dep.getDescription());
 
         if (updatable) {
@@ -472,19 +481,13 @@ public class BonitaMarketplacePage implements ControlSupplier {
         return existingV.compareTo(newV) >= 0;
     }
 
-    private void addDependency(BonitaArtifactDependency dep, boolean isSelected, Collection collection) {
+    private void addDependency(BonitaArtifactDependency dep, boolean isSelected,
+            Collection<BonitaArtifactDependency> collection) {
         if (isSelected) {
             collection.add(dep);
         } else {
             collection.remove(dep);
         }
-    }
-
-    private IProject getProject() {
-        if (repositoryAccessor == null) {
-            repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        }
-        return repositoryAccessor.getCurrentRepository().getProject();
     }
 
     public List<BonitaArtifactDependency> getDependenciesToAdd() {

@@ -17,12 +17,16 @@ package org.bonitasoft.studio.application.handler;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Named;
 
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
 import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -30,6 +34,7 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.bonitasoft.studio.ui.wizard.WizardPageBuilder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -44,20 +49,42 @@ public abstract class AbstractProjectMetadataHandler {
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
+
         AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
         ProjectMetadata metadata = initialMetadata(currentRepository);
-        ProjectMetadataPage page = new ProjectMetadataPage(metadata, isNewProject());
 
-        WizardBuilder.<IStatus> newWizard()
+        List<WizardPageBuilder> pages = createPages(repositoryAccessor, metadata);
+
+        createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
+                .open(activeShell, getFinishLabel());
+        
+        new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.extensions.command", Collections.emptyMap());
+    }
+
+    protected WizardBuilder<IStatus> createWizard(RepositoryAccessor repositoryAccessor,
+            MavenProjectHelper mavenProjectHelper, ExceptionDialogHandler exceptionDialogHandler,
+            ProjectMetadata metadata, List<WizardPageBuilder> pages) {
+        return WizardBuilder.<IStatus> newWizard()
                 .withTitle(getWizardTitle())
                 .needProgress()
-                .havingPage(newPage()
-                        .withTitle(getWizardTitle())
-                        .withDescription(getWizardDescription())
-                        .withControl(page))
-                .onFinish(container -> performFinish(container, page, repositoryAccessor, mavenProjectHelper,
-                        exceptionDialogHandler))
-                .open(activeShell, getFinishLabel());
+                .havingPage(pages.toArray(WizardPageBuilder[]::new))
+                .onFinish(container -> performFinish(container, metadata, repositoryAccessor, mavenProjectHelper,
+                        exceptionDialogHandler));
+    }
+
+    protected List<WizardPageBuilder> createPages(RepositoryAccessor repositoryAccessor, ProjectMetadata metadata) {
+        List<WizardPageBuilder> pages = new ArrayList<>();
+        ProjectMetadataPage projectMetadataPage = new ProjectMetadataPage(metadata, isNewProject());
+        pages.add(createProjectMetadataPage(projectMetadataPage));
+        return pages;
+
+    }
+
+    protected WizardPageBuilder createProjectMetadataPage(ProjectMetadataPage projectMetadataPage) {
+        return newPage()
+                .withTitle(getWizardTitle())
+                .withDescription(getWizardDescription())
+                .withControl(projectMetadataPage);
     }
 
     public String getFinishLabel() {
@@ -73,11 +100,11 @@ public abstract class AbstractProjectMetadataHandler {
     protected abstract String getWizardTitle();
 
     private Optional<IStatus> performFinish(IWizardContainer container,
-            ProjectMetadataPage page,
+            ProjectMetadata metadata,
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler exceptionDialogHandler) {
-        SetProjectMetadataOperation operation = createOperation(mavenProjectHelper, page, repositoryAccessor);
+        SetProjectMetadataOperation operation = createOperation(mavenProjectHelper, metadata, repositoryAccessor);
         try {
             container.run(true, false, operation);
         } catch (InvocationTargetException | InterruptedException e) {
@@ -90,6 +117,6 @@ public abstract class AbstractProjectMetadataHandler {
     }
 
     protected abstract SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
-            ProjectMetadataPage page, RepositoryAccessor repositoryAccessor);
+            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor);
 
 }

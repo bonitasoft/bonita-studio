@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.handler;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.SetProjectMetadataOperation;
-import org.bonitasoft.studio.application.ui.control.ProjectMetadataPage;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -33,8 +32,8 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     }
 
     protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
-            ProjectMetadataPage page, RepositoryAccessor repositoryAccessor) {
-        return new SetProjectMetadataOperation(page.getMetadata(), repositoryAccessor, mavenProjectHelper);
+            ProjectMetadata metadata, RepositoryAccessor repositoryAccessor) {
+        return new SetProjectMetadataOperation(metadata, repositoryAccessor, mavenProjectHelper);
     }
 
     @Override
