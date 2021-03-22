@@ -41,78 +41,80 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class AssignableActorsPropertySection extends AbstractActorsPropertySection implements ISelectionChangedListener{
+public class AssignableActorsPropertySection extends AbstractActorsPropertySection implements ISelectionChangedListener {
 
-	private Button useLaneActorButton;
-	private Button taskActorButton;
-	private Composite radioComposite;
-	private Label actorDefinedInLaneLabel;
+    private Button useLaneActorButton;
+    private Button taskActorButton;
+    private Composite radioComposite;
+    private Label actorDefinedInLaneLabel;
 
-	@Override
-	protected void updateDatabinding() {
-		super.updateDatabinding();
-		actorDefinedInLaneLabel.setText("");
-		final Assignable assignable = (Assignable) getEObject() ;
-		if(assignable != null){
+    @Override
+    protected void updateDatabinding() {
+        super.updateDatabinding();
+        actorDefinedInLaneLabel.setText("");
+        final Assignable assignable = (Assignable) getEObject();
+        if (assignable != null) {
 
-			EObject current = assignable ;
-			while (current != null && !(current instanceof Lane)) {
-				current = current.eContainer() ;
-			}
+            EObject current = assignable;
+            while (current != null && !(current instanceof Lane)) {
+                current = current.eContainer();
+            }
 
-			useLaneActorButton.setEnabled(current instanceof Lane) ;
-			final IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE) ;
-			emfDatabindingContext.bindValue(SWTObservables.observeSelection(taskActorButton), value) ;
-            emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value, new UpdateValueStrategy(),
+            useLaneActorButton.setEnabled(current instanceof Lane);
+            final IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable,
+                    ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE);
+            emfDatabindingContext.bindValue(SWTObservables.observeSelection(taskActorButton), value);
+            emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value,
+                    new UpdateValueStrategy(),
                     new UpdateValueStrategy().setConverter(new BooleanInverserConverter()));
-            final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy().setConverter(new BooleanInverserConverter());
-			emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()), SWTObservables.observeSelection(useLaneActorButton),new UpdateValueStrategy(),updateValueStrategy);
+            final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy()
+                    .setConverter(new BooleanInverserConverter());
+            emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()),
+                    SWTObservables.observeSelection(useLaneActorButton), new UpdateValueStrategy(), updateValueStrategy);
 
-			databindactorDefinedInLaneLabel(assignable);
+            databindactorDefinedInLaneLabel(assignable);
 
-		}
-	}
+        }
+    }
 
-	private void databindactorDefinedInLaneLabel(final Assignable assignable) {
-		final Lane parentLane = ModelHelper.getParentLane(assignable);
-		if(parentLane != null){
+    private void databindactorDefinedInLaneLabel(final Assignable assignable) {
+        final Lane parentLane = ModelHelper.getParentLane(assignable);
+        if (parentLane != null) {
 
-			final IObservableValue observeActorDefinedInLane =
-					EMFEditObservables.observeValue(getEditingDomain(),
-							parentLane,
-							ProcessPackage.Literals.ASSIGNABLE__ACTOR);
-			emfDatabindingContext.bindValue(
-					SWTObservables.observeText(actorDefinedInLaneLabel),
-					observeActorDefinedInLane,
-					new UpdateValueStrategy(),
-					new UpdateValueStrategy().setConverter(new Converter(Object.class, String.class) {
+            final IObservableValue observeActorDefinedInLane = EMFEditObservables.observeValue(getEditingDomain(),
+                    parentLane,
+                    ProcessPackage.Literals.ASSIGNABLE__ACTOR);
+            emfDatabindingContext.bindValue(
+                    SWTObservables.observeText(actorDefinedInLaneLabel),
+                    observeActorDefinedInLane,
+                    new UpdateValueStrategy(),
+                    new UpdateValueStrategy().setConverter(new Converter(Object.class, String.class) {
 
-						@Override
-						public String convert(final Object fromObject) {
-							if(fromObject != null){
-								return "("+((Actor)fromObject).getName()+")";
-							} else {
-								return Messages.noActorDefinedAtLaneLevel;
-							}
-						}
-					}));
-			actorDefinedInLaneLabel.pack(true);
-		}
-	}
+                        @Override
+                        public String convert(final Object fromObject) {
+                            if (fromObject != null) {
+                                return "(" + ((Actor) fromObject).getName() + ")";
+                            } else {
+                                return Messages.noActorDefinedAtLaneLevel;
+                            }
+                        }
+                    }));
+            actorDefinedInLaneLabel.pack(true);
+        }
+    }
 
-	@Override
-	protected void createRadioComposite(final TabbedPropertySheetWidgetFactory widgetFactory,final Composite mainComposite) {
-		radioComposite = widgetFactory.createComposite(mainComposite, SWT.NONE) ;
-		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).create()) ;
-		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create()) ;
+    @Override
+    protected void createRadioComposite(final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite mainComposite) {
+        radioComposite = widgetFactory.createComposite(mainComposite, SWT.NONE);
+        radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create());
 
-
-		taskActorButton = widgetFactory.createButton(radioComposite, Messages.useTaskActors, SWT.RADIO) ;
-		useLaneActorButton = widgetFactory.createButton(radioComposite, Messages.useActorsDefinedInLane, SWT.RADIO) ;
-		actorDefinedInLaneLabel = widgetFactory.createLabel(radioComposite, "");
-		actorDefinedInLaneLabel.setFont(BonitaStudioFontRegistry.getCommentsFont());
-	}
+        taskActorButton = widgetFactory.createButton(radioComposite, Messages.useTaskActors, SWT.RADIO);
+        useLaneActorButton = widgetFactory.createButton(radioComposite, Messages.useActorsDefinedInLane, SWT.RADIO);
+        actorDefinedInLaneLabel = widgetFactory.createLabel(radioComposite, "");
+        actorDefinedInLaneLabel.setFont(BonitaStudioFontRegistry.getCommentsFont());
+    }
 
 }

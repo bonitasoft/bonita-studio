@@ -44,7 +44,7 @@ public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
     }
 
     @Override
-    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor) {
+    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor, String... types) {
         return new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), BonitaMarketplacePage.DATABASE_DRIVER_TYPE);
     }
 

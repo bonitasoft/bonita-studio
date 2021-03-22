@@ -72,8 +72,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     public static final int ICON_SIZE = 64;
 
-    public static final String CONNECTOR_TYPE = Messages.connectorType;
-    public static final String ACTOR_FILTER_TYPE = Messages.actorFilterType;
+    public static final String CONNECTOR_TYPE = org.bonitasoft.studio.connectors.i18n.Messages.connectorType;
+    public static final String ACTOR_FILTER_TYPE = org.bonitasoft.studio.identity.i18n.Messages.actorFilterType;
     public static final String ALL_TYPE = Messages.all;
     public static final String DATABASE_DRIVER_TYPE = Messages.databaseDriver;
 

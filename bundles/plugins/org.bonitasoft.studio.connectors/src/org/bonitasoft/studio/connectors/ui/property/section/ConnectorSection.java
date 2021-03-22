@@ -16,10 +16,12 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -35,6 +37,9 @@ import org.bonitasoft.studio.connectors.ui.wizard.MoveConnectorWizard;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
@@ -52,6 +57,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -77,6 +83,8 @@ import org.eclipse.swt.widgets.Listener;
 public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         implements IDoubleClickListener, ISelectionChangedListener {
 
+    public static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
+
     private Button removeConnectorButton;
     private Button updateConnectorButton;
     private Button upConnectorButton;
@@ -84,26 +92,41 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
     private Composite mainComposite;
     private TableViewer tableViewer;
     private Button moveButton;
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     @Override
     protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1)
-                .margins(20, 15).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(20, 5).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
-        final Composite viewerComposite = getWidgetFactory().createComposite(
+        Composite viewerComposite = getWidgetFactory().createComposite(
                 mainComposite);
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, true).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).create());
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 2).create());
+        createToolbar(viewerComposite);
         createConnectorComposite(viewerComposite);
     }
 
+    private void createToolbar(Composite parent) {
+        var parameters = new HashMap<String, Object>();
+        parameters.put("types", Messages.connectorType);
+
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.openMarketplace)
+                .withTooltipText(Messages.openMarketplaceTooltip)
+                .withImage(Pics.getImage(PicsConstants.openMarketplace))
+                .withHotImage(Pics.getImage(PicsConstants.openMarketplaceHot))
+                .withLayoutData(
+                        GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).span(2, 1).create())
+                .withToolkit(getWidgetFactory())
+                .onClick(e -> commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters))
+                .createIn(parent);
+    }
+
     private void createConnectorComposite(final Composite parent) {
-        final Composite buttonsComposite = getWidgetFactory()
-                .createComposite(parent);
+        Composite buttonsComposite = getWidgetFactory().createComposite(parent);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults()
@@ -116,6 +139,11 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         downConnectorButton = createDownConnectorButton(buttonsComposite);
         moveButton = createMoveConnectorButton(buttonsComposite);
 
+        createViewerComposite(parent);
+
+    }
+
+    private void createViewerComposite(final Composite parent) {
         tableViewer = new TableViewer(parent, GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.MULTI
                 | SWT.NO_FOCUS));
         getWidgetFactory().adapt(tableViewer.getTable(), false, false);
@@ -139,7 +167,6 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                 getConnectorFeature()));
         tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
         tableViewer.addFilter(getViewerFilter());
-
     }
 
     private void updateButtons() {
@@ -184,7 +211,6 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
             }
         }
     }
-
 
     private Button createRemoveConnectorButton(final Composite buttonComposite) {
         final Button removeButton = getWidgetFactory().createButton(
@@ -337,7 +363,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
     }
 
     protected Set<EStructuralFeature> getConnectorFeatureToCheckUniqueID() {
-        final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
+        final Set<EStructuralFeature> res = new HashSet<>();
         res.add(ProcessPackage.Literals.CONNECTABLE_ELEMENT__CONNECTORS);
         return res;
     }

@@ -147,8 +147,6 @@ public class Messages extends NLS {
     public static String find;
     public static String type;
     public static String all;
-    public static String connectorType;
-    public static String actorFilterType;
     public static String extensionSelectedForAdd;
     public static String addDependenciesError;
     public static String noResultFound;

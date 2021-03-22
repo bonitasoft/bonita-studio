@@ -212,10 +212,14 @@ public class Messages extends NLS {
     public static String testValideInformationSuccess;
     public static String testValideInformationExplanation;
     public static String testValideInformationTitle;
-    
+
     public static String configureDatabaseDriverTitle;
     public static String configureDatabaseDriverDesc;
     public static String configureDatabaseDrivers;
+
+    public static String openMarketplace;
+    public static String openMarketplaceTooltip;
+    public static String connectorType;
 
     public static String getValue(final String event) {
         try {
