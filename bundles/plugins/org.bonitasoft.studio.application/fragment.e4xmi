@@ -5,7 +5,9 @@
     <elements xsi:type="commands:Command" xmi:id="_FixQMORFEemD3fo8ojg-gQ" elementId="org.bonitasoft.studio.application.command.releaseNote" commandName="%releaseNote"/>
     <elements xsi:type="commands:Command" xmi:id="_1hVzYAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFile.command" commandName="%newFile"/>
     <elements xsi:type="commands:Command" xmi:id="_4djs4AYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.command" commandName="%newFolder"/>
-    <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace"/>
+    <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace">
+      <parameters xmi:id="_RXxrgIrzEeuz4LM5CxiSwg" elementId="types" name="types"/>
+    </elements>
     <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
     <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension">
       <parameters xmi:id="_fsjMYIf4EeuMD4DgJLHr5Q" elementId="groupId" name="groupId"/>

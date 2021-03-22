@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * Web style button:
@@ -60,6 +61,7 @@ public class DynamicButtonWidget {
         private Optional<Font> font = Optional.empty();
         private Optional<String> defaultTextColorCssId = Optional.empty();
         private Optional<String> hoverTextColorCssId = Optional.empty();
+        private Optional<FormToolkit> toolkit = Optional.empty();
 
         public Builder withText(String text) {
             this.text = Optional.ofNullable(text);
@@ -112,9 +114,14 @@ public class DynamicButtonWidget {
             return this;
         }
 
+        public Builder withToolkit(FormToolkit toolkit) {
+            this.toolkit = Optional.ofNullable(toolkit);
+            return this;
+        }
+
         public DynamicButtonWidget createIn(Composite parent) {
             return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
-                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId);
+                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit);
         }
 
     }
@@ -129,6 +136,7 @@ public class DynamicButtonWidget {
     private Optional<String> cssClass;
     private Optional<Object> layoutData;
     private Optional<Font> font;
+    private Optional<FormToolkit> toolkit;
 
     private IThemeEngine engine;
     private ToolItem toolItem;
@@ -148,7 +156,8 @@ public class DynamicButtonWidget {
             Optional<Object> layoutData,
             Optional<Font> font,
             Optional<String> defaultTextColorCssId,
-            Optional<String> hoverTextColorCssId) {
+            Optional<String> hoverTextColorCssId,
+            Optional<FormToolkit> toolkit) {
         this.parent = parent;
         this.text = text;
         this.tooltipText = tooltipText;
@@ -161,6 +170,7 @@ public class DynamicButtonWidget {
         this.font = font;
         this.defaultTextColorCssId = defaultTextColorCssId;
         this.hoverTextColorCssId = hoverTextColorCssId;
+        this.toolkit = toolkit;
 
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
@@ -170,7 +180,7 @@ public class DynamicButtonWidget {
     }
 
     private void createControl() {
-        Composite container = new Composite(parent, SWT.NONE);
+        Composite container = toolkit.isPresent() ? toolkit.get().createComposite(parent) : new Composite(parent, SWT.NONE);
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
@@ -189,12 +199,15 @@ public class DynamicButtonWidget {
         onClickListener.ifPresent(onClick -> toolItem.addListener(SWT.Selection, onClick::accept));
 
         if (text.isPresent()) {
-            Label label = new Label(container, SWT.WRAP);
+            Label label = toolkit.isPresent()
+                    ? toolkit.get().createLabel(container, text.get(), SWT.WRAP)
+                    : new Label(container, SWT.WRAP);
             label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
                     .grab(maxTextWidth.isEmpty(), false)
                     .hint(maxTextWidth.orElse(SWT.DEFAULT), SWT.DEFAULT)
                     .create());
             label.setText(text.get());
+            tooltipText.ifPresent(label::setToolTipText);
             font.ifPresent(label::setFont);
             label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
                     defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));

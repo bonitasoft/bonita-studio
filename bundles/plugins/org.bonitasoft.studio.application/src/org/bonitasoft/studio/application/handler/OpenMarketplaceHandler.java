@@ -21,17 +21,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
-import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -55,9 +52,12 @@ public class OpenMarketplaceHandler {
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
-            RepositoryAccessor repositoryAccessor) {
-        BonitaMarketplacePage bonitaMarketplacePage = createBonitaMarketPlacePage(repositoryAccessor);
-
+            RepositoryAccessor repositoryAccessor,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("types") String types) {
+        String[] extensionTypes = types != null
+                ? types.split(":")
+                : new String[] {};
+        BonitaMarketplacePage bonitaMarketplacePage = createBonitaMarketPlacePage(repositoryAccessor, extensionTypes);
         WizardBuilder.<Boolean> newWizard()
                 .withTitle(getWizardTitle())
                 .needProgress()
@@ -86,8 +86,10 @@ public class OpenMarketplaceHandler {
         return Messages.projectExtensionsTitle;
     }
 
-    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor) {
-        return new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject());
+    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor, String... types) {
+        return types.length == 0
+                ? new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject())
+                : new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), types);
     }
 
     private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage,
@@ -131,7 +133,6 @@ public class OpenMarketplaceHandler {
             throw new InvocationTargetException(e);
         }
     }
-
 
     private void addDependency(List<BonitaArtifactDependency> deps, IProgressMonitor monitor)
             throws InvocationTargetException {

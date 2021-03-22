@@ -320,4 +320,7 @@ public class Messages extends NLS {
     public static String open;
     public static String openExistingOrganization;
     public static String openExistingOrganizationDescription;
+    public static String actorFilterType;
+    public static String openMarketplace;
+    public static String openMarketplaceTooltip;
 }
