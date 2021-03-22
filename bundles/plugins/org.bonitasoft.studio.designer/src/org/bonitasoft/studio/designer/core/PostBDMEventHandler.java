@@ -44,7 +44,7 @@ public class PostBDMEventHandler implements EventHandler {
 
     private void execute(final Event event) {
         final String fileContent = (String) event.getProperty(FILE_CONTENT);
-        Map<String, String> content = new HashMap<>();
+        Map<String, Object> content = new HashMap<>();
         content.put("bdmXml", fileContent);
         try {
             new ClientResource(String.format("http://%s:%s/bdm",
