@@ -78,6 +78,16 @@ import com.sun.xml.messaging.saaj.soap.ver1_2.Message1_2Impl;
 
 public class WSDLParsingTool {
 
+    /**
+     * A constant representing the identity of the SOAP 1.1 over HTTP binding.
+     */
+    public static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
+
+    /**
+     * A constant representing the identity of the SOAP 1.2 over HTTP binding.
+     */
+    public static final String SOAP12HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
+    
 	private final Definition definition;
 	private org.eclipse.wst.wsdl.Definition eclipseDefinition;
 
@@ -194,9 +204,9 @@ public class WSDLParsingTool {
 		final Port wsdlPort = getPort(serviceQName, portName);
 		for (final Object item : wsdlPort.getBinding().getExtensibilityElements()) {
 			if (item instanceof SOAP12Binding) {
-				return javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING;
+				return SOAP12HTTP_BINDING;
 			} else if (item instanceof SOAPBinding) {
-				return javax.xml.ws.soap.SOAPBinding.SOAP11HTTP_BINDING;
+				return SOAP11HTTP_BINDING;
 			}
 		}
 		return null;
