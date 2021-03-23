@@ -15,9 +15,6 @@
 package org.bonitasoft.studio.identity.actors.repository;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,107 +31,47 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 
-/**
- * @author Romain Bioteau
- */
 public class ActorFilterImplRepositoryStore extends AbstractConnectorImplRepositoryStore<ActorFilterImplFileStore> {
 
-    private static final String STORE_NAME = "filters-impl";
-
-    private static final Set<String> extensions = new HashSet<String>();
-
     public static final String IMPL_EXT = "impl";
-    static {
-        extensions.add(IMPL_EXT);
-    }
+    
+    private static final String STORE_NAME = "filters-impl";
+    private static final Set<String> extensions = Set.of(IMPL_EXT);
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-     */
     @Override
     public ActorFilterImplFileStore createRepositoryFileStore(String fileName) {
         return new ActorFilterImplFileStore(fileName, this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
     @Override
     public String getName() {
         return STORE_NAME;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
     @Override
     public String getDisplayName() {
         return Messages.filterImplRepositoryName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
     @Override
     public Image getIcon() {
         return Pics.getImage("actor_filter-implem-new.png", IdentityPlugin.getDefault());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
     @Override
     public Set<String> getCompatibleExtensions() {
         return extensions;
     }
 
     @Override
-    public ActorFilterImplFileStore getChild(String fileName, boolean force) {
-        ActorFilterImplFileStore file = super.getChild(fileName, force);
-        if (file == null) {
-            URL url = IdentityPlugin.getDefault().getBundle().getResource(STORE_NAME + "/" + fileName);
-            if (url != null) {
-                return new URLActorFilterImplFileStore(url, this);
-            } else {
-                return null;
-            }
-        } else {
-            return file;
-        }
-
-    }
-
-    @Override
     public List<ActorFilterImplFileStore> getChildren() {
         List<ActorFilterImplFileStore> result = super.getChildren();
-        Enumeration<URL> connectorImplementations = IdentityPlugin.getDefault().getBundle().findEntries(STORE_NAME,
-                "*.impl", false);
-        if (connectorImplementations != null) {
-            while (connectorImplementations.hasMoreElements()) {
-                URL url = connectorImplementations.nextElement();
-                String[] segments = url.getFile().split("/");
-                String fileName = segments[segments.length - 1];
-                if (fileName.lastIndexOf(".") != -1) {
-                    String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                    if (extensions.contains(extension)) {
-                        result.add(new URLActorFilterImplFileStore(url, this));
-                    }
-                }
-            }
-        }
-
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
         if (projectDependenciesStore != null) {
             projectDependenciesStore.getActorFilterImplementations().stream()
                     .map(t -> new DependencyActorFilterImplFileStore(t, this))
                     .forEach(result::add);
         }
-
         return result;
     }
 

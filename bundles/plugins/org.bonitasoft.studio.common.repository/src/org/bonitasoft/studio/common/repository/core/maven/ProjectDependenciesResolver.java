@@ -64,7 +64,7 @@ public class ProjectDependenciesResolver {
             return Optional.empty();
         }
         return mavenProject.getArtifacts().stream()
-                .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()))
+                .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
                 .filter(artifact -> artifact.getFile() != null && artifact.getFile().exists())
                 .filter(artifact -> Objects.equals(fileName, artifact.getFile().getName()))
                 .findFirst();
@@ -78,7 +78,7 @@ public class ProjectDependenciesResolver {
         }
         IMavenProjectFacade mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
         DependencyNode node = MavenPlugin.getMavenModelManager()
-                .readDependencyTree(mavenProjectFacade, mavenProject, Artifact.SCOPE_COMPILE, monitor);
+                .readDependencyTree(mavenProjectFacade, mavenProject, Artifact.SCOPE_COMPILE_PLUS_RUNTIME, monitor);
         ArtifactVisitor artifactVisitor = new ArtifactVisitor(artifact);
         node.accept(artifactVisitor);
         DependencyNode artifactNode = artifactVisitor.getDependencyNode();
@@ -148,7 +148,8 @@ public class ProjectDependenciesResolver {
             if (a != null) {
                 Artifact artifact = project.getArtifactMap()
                         .get(a.getGroupId() + ":" + node.getArtifact().getArtifactId());
-                if (artifact != null && "compile".equals(artifact.getScope())) {
+                if (artifact != null && 
+                        (Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))) {
                     result.add(artifact);
                 }
             }
