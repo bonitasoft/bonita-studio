@@ -62,7 +62,7 @@ public class ProjectMetadataPage implements ControlSupplier {
         IObservableValue<String> nameObservable = PojoProperties.value("name", String.class)
                 .observeDetail(metadataObservale);
         new TextWidget.Builder()
-                .withLabel(Messages.name)
+                .withLabel(Messages.name +" *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -76,7 +76,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel(Messages.version)
+                .withLabel(Messages.version+" *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -87,7 +87,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel("Group ID")
+                .withLabel("Group ID *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -98,7 +98,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel("Artifact ID")
+                .withLabel("Artifact ID *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()

@@ -168,9 +168,9 @@ public class ExtensionCard extends Composite {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     try {
-                        new UpdateDependencyVersionOperation(bonitaDep.getGroupId(), bonitaDep.getArtifactId(),
+                        new UpdateDependencyVersionOperation(bonitaDep.getGroupId(), 
+                                bonitaDep.getArtifactId(),
                                 latestVersion)
-                                        .disableAnalyze()
                                         .run(monitor);
                     } catch (CoreException e) {
                         throw new InvocationTargetException(e);
