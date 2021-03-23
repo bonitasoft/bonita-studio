@@ -59,13 +59,13 @@ public class TestSeveralLocalRepositories {
         openNewLocalRepoDialog();
 
         /* Test can't finish for empty name */
-        bot.textWithLabel(Messages.name).setText("");
+        bot.textWithLabel(Messages.name+ " *").setText("");
         assertNotEnabled(bot.button(Messages.create));
 
         /* Test creation of a new local repository */
         final String testRepoName = "test a new repo name";
-        bot.textWithLabel(Messages.name).setText(testRepoName);
-        bot.textWithLabel("Artifact ID").setText(ProjectMetadata.toArtifactId(testRepoName));
+        bot.textWithLabel(Messages.name+ " *").setText(testRepoName);
+        bot.textWithLabel("Artifact ID *").setText(ProjectMetadata.toArtifactId(testRepoName));
         bot.button(Messages.create).click();
 
         ICondition condition = new ConditionBuilder()
@@ -78,7 +78,7 @@ public class TestSeveralLocalRepositories {
 
         /* now test that can't use the same name */
         openNewLocalRepoDialog();
-        bot.text().setText(testRepoName);
+        bot.textWithLabel(Messages.name+ " *").setText(testRepoName);
         assertNotEnabled(bot.button(Messages.create));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }

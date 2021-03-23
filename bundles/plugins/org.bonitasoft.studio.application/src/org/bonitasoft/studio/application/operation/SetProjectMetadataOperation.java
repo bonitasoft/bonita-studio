@@ -24,6 +24,7 @@ import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -100,6 +101,10 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);
             mavenProjectHelper.saveModel(project, model);
+            ProjectDependenciesStore projectDependenciesStore = newRepository.getProjectDependenciesStore();
+            if (projectDependenciesStore != null) {
+                projectDependenciesStore.analyze(monitor);
+            }
         }
     }
 

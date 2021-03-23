@@ -211,8 +211,8 @@ public class Messages extends NLS {
     public static String create;
     public static String addExtensionPageTitle;
     public static String addExtensionPageDescription;
-
     public static String extensions;
+    public static String modify;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

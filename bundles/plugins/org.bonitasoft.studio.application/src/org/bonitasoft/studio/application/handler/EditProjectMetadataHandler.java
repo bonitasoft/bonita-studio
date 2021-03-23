@@ -30,6 +30,11 @@ public class EditProjectMetadataHandler extends AbstractProjectMetadataHandler {
     protected String getWizardTitle() {
         return Messages.editProjectMetadata;
     }
+    
+    @Override
+    public String getFinishLabel() {
+        return Messages.modify;
+    }
 
     protected SetProjectMetadataOperation createOperation(MavenProjectHelper mavenProjectHelper,
             ProjectMetadata metadata, RepositoryAccessor repositoryAccessor) {
