@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
@@ -61,7 +62,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.osgi.framework.Version;
 
 /**
  * !!! HELLO !!!
@@ -475,9 +475,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
     }
 
     private boolean existingVersionEqualsOrGreater(String existingVersion, String newVersion) {
-        Version existingV = new Version(existingVersion);
-        Version newV = new Version(newVersion);
-
+        ComparableVersion existingV = new ComparableVersion(existingVersion);
+        ComparableVersion newV = new ComparableVersion(newVersion);
         return existingV.compareTo(newV) >= 0;
     }
 

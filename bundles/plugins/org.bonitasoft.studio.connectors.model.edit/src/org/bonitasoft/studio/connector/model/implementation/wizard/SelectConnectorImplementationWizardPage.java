@@ -14,65 +14,47 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-public class SelectConnectorImplementationWizardPage extends WizardPage
-        implements ISelectionChangedListener, IDoubleClickListener {
+public class SelectConnectorImplementationWizardPage extends WizardPage implements  IDoubleClickListener {
 
     private TableViewer table;
     protected Connector connector;
     private EMFDataBindingContext context;
     private WizardPageSupport pageSupport;
     private ConnectorImplementation selectedImplementation;
-    private Button removeButton;
     private final IContentProvider contentProvider;
     private final LabelProvider labelProvider;
-    private final IRepositoryStore<? extends IRepositoryFileStore> implStore;
-    private final SourceRepositoryStore<? extends AbstractFileStore> sourceStore;
 
     public SelectConnectorImplementationWizardPage(String pageTitle, String pageDescription,
-            IContentProvider contentProvider, LabelProvider labelProvider,
-            IRepositoryStore<? extends IRepositoryFileStore> iRepositoryStore,
-            SourceRepositoryStore<? extends AbstractFileStore> sourceRepositoryStore) {
+            IContentProvider contentProvider, LabelProvider labelProvider) {
         super(SelectConnectorImplementationWizardPage.class.getName());
         setTitle(pageTitle);
         setDescription(pageDescription);
         this.contentProvider = contentProvider;
         this.labelProvider = labelProvider;
-        this.implStore = iRepositoryStore;
-        this.sourceStore = sourceRepositoryStore;
     }
 
     @Override
@@ -83,7 +65,6 @@ public class SelectConnectorImplementationWizardPage extends WizardPage
         table.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
         table.setContentProvider(contentProvider);
         table.setLabelProvider(labelProvider);
-        table.addSelectionChangedListener(this);
         table.addDoubleClickListener(this);
 
         table.setInput(new Object());
@@ -100,26 +81,10 @@ public class SelectConnectorImplementationWizardPage extends WizardPage
         UpdateValueStrategy selectionStrategy = new UpdateValueStrategy();
         selectionStrategy.setBeforeSetValidator(selectionValidator);
 
-        context.bindValue(ViewersObservables.observeSingleSelection(table),
-                PojoProperties.value(SelectConnectorImplementationWizardPage.class, "selectedImplementation").observe(this),
+        context.bindValue(ViewerProperties.singleSelection().observe(table),
+                PojoProperties.value("selectedImplementation", ConnectorImplementation.class).observe(this),
                 selectionStrategy, null);
 
-        removeButton = new Button(composite, SWT.PUSH);
-        removeButton.setText(Messages.remove);
-        removeButton.setLayoutData(GridDataFactory.swtDefaults().hint(85, SWT.DEFAULT).create());
-        removeButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (selectedImplementation != null) {
-                    String fileName = URI.decode(selectedImplementation.eResource().getURI().lastSegment());
-                    IRepositoryFileStore file = implStore.getChild(fileName, true);
-                    file.delete();
-                    refresh();
-                }
-            }
-        });
-        removeButton.setEnabled(false);
 
         pageSupport = WizardPageSupport.create(this, context);
         setControl(composite);
@@ -147,13 +112,6 @@ public class SelectConnectorImplementationWizardPage extends WizardPage
         return ((IStructuredSelection) table.getSelection()).getFirstElement() instanceof ConnectorImplementation;
     }
 
-    @Override
-    public void selectionChanged(SelectionChangedEvent event) {
-        Object selection = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (removeButton != null && selection instanceof ConnectorImplementation) {
-            removeButton.setEnabled(true);
-        }
-    }
 
     @Override
     public void doubleClick(DoubleClickEvent event) {
