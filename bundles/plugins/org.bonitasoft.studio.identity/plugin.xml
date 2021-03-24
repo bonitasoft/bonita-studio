@@ -68,11 +68,6 @@
                icon="icons/actor_filter.png"
                id="org.bonitasoft.studio.menu.filter">
             <command
-                  commandId="org.bonitasoft.studio.actors.newFilterDef"
-                  icon="icons/actor_filter-def-new.png"
-                  style="push">
-            </command>
-            <command
                   commandId="org.bonitasoft.studio.actors.editFilterDef"
                   icon="icons/actor_filter-def-edit.png"
                   style="push">
@@ -81,11 +76,6 @@
                   name="org.bonitasoft.studio.actors.separator"
                   visible="true">
             </separator>
-            <command
-                  commandId="org.bonitasoft.studio.actors.newFilterImpl"
-                  icon="icons/actor_filter-implem-new.png"
-                  style="push">
-            </command>
             <command
                   commandId="org.bonitasoft.studio.actors.editFilterImpl"
                   icon="icons/actor_filter-implem-edit.png"
@@ -100,11 +90,6 @@
                   icon="icons/actor_filter-export.png"
                   style="push">
             </command>
-            <command
-                  commandId="org.bonitasoft.studio.actors.filter.import"
-                  icon="icons/actor_filter-import.png"
-                  style="push">
-            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -115,62 +100,6 @@
                id="org.bonitasoft.studio.organization.manage.popup.menu"
                label="%newOrganizationLabel"
                mnemonic="O"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <or>
-                        <iterate>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IProject">
-                           </instanceof>
-                           <test
-                                 property="org.bonitasoft.studio.application.isBonitaProject">
-                           </test>
-                        </iterate>
-                     </or>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.actor">
-         <command
-               commandId="org.bonitasoft.studio.actors.newFilterDef"
-               label="%newFilterDefMenu"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <or>
-                        <iterate>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IProject">
-                           </instanceof>
-                           <test
-                                 property="org.bonitasoft.studio.application.isBonitaProject">
-                           </test>
-                        </iterate>
-                     </or>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.actors.newFilterImpl"
-               label="%newFilterImplMenu"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -452,63 +381,6 @@
                   <iterate>
                      <test
                            property="org.bonitasoft.studio.organization.isOrganizationFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.NewFilterDefinitionHandler"
-            commandId="org.bonitasoft.studio.application.newWithWizard">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterDefFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.NewFilterImplementationHandler"
-            commandId="org.bonitasoft.studio.application.newWithWizard">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.identity.actors.ui.handler.ImportActorFilterHandler"
-            commandId="org.bonitasoft.studio.application.import">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.actors.isActorFilterImplFolder">
                      </test>
                   </iterate>
                </and>

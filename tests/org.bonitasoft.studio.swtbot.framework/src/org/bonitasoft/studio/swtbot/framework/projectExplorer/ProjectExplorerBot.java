@@ -21,7 +21,9 @@ import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withId
 import java.util.Objects;
 import java.util.Optional;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.bdm.BotBdmEditor;
@@ -39,6 +41,13 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 public class ProjectExplorerBot extends BotBase {
+
+    private static final String NEW_CONNECTOR_DEF_COMMAND = "org.bonitasoft.studio.connectors.newDefinition";
+    private static final String NEW_CONNECTOR_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
+    private static final String NEW_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.newFilterDef";
+    private static final String NEW_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.newFilterImpl";
+
+    private CommandExecutor commandExecutor = new CommandExecutor();
 
     protected String projectName;
 
@@ -86,32 +95,31 @@ public class ProjectExplorerBot extends BotBase {
     }
 
     public ConnectorDefinitionWizardBot newConnectorDefinition() {
-        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
-        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Connector definition...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_DEF_COMMAND, null));
+        bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
         return new ConnectorDefinitionWizardBot(bot,
                 org.bonitasoft.studio.connectors.i18n.Messages.newConnectorDefinition);
     }
 
     public ConnectorImplementationWizardBot newConnectorImplementation() {
-        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
-        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Connector implementation...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_CONNECTOR_IMPL_COMMAND, null));
+        bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
         return new ConnectorImplementationWizardBot(bot,
                 org.bonitasoft.studio.connectors.i18n.Messages.newConnectorImplementation);
     }
 
     public ConnectorDefinitionWizardBot newActorFilterDefinition() {
-        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
-        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Actor filter definition...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_DEF_COMMAND, null));
         return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
     }
 
     public ConnectorImplementationWizardBot newActorFilterImplementation() {
-        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
-        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("Actor filter implementation...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_IMPL_COMMAND, null));
+        bot.waitUntil(Conditions.shellIsActive(Messages.newFilterImplementation), 10000);
         return new ConnectorImplementationWizardBot(bot,
                 org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
     }
@@ -197,12 +205,12 @@ public class ProjectExplorerBot extends BotBase {
     public void waitUntilActiveEditorTitleIs(String title, Optional<String> extension) {
         String expectedTitle = extension.map(ext -> title + ext).orElse(title);
         bot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
                 return Objects.equals(ProjectExplorerBot.this.bot.activeEditor().getTitle(), expectedTitle);
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return String.format("The active editor title should be  %s instead of %s", expectedTitle,

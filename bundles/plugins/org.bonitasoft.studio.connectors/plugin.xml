@@ -124,11 +124,6 @@
                id="org.bonitasoft.studio.menu.connector"
                label="%connectMenu_Label">
             <command
-                  commandId="org.bonitasoft.studio.connectors.newDefinition"
-                  icon="icons/connector_def-new.png"
-                  style="push">
-            </command>
-            <command
                   commandId="org.bonitasoft.studio.connectors.editDefinition"
                   icon="icons/connector_def-edit.png"
                   style="push">
@@ -137,11 +132,6 @@
                   name="org.bonitasoft.studio.connectors.connectoSeparator1"
                   visible="true">
             </separator>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.newImplementation"
-                  icon="icons/connector_implem-new.png"
-                  style="push">
-            </command>
             <command
                   commandId="org.bonitasoft.studio.connectors.editImplementation"
                   icon="icons/connector_implem-edit.png"
@@ -165,11 +155,6 @@
                   icon="icons/export_connector.png"
                   style="push">
             </command>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.importConnector"
-                  icon="icons/import_connector.png"
-                  style="push">
-            </command>
             <separator
                   name="org.bonitasoft.studio.connectors.connectorSeparator5"
                   visible="true">
@@ -186,58 +171,6 @@
                </reference>
             </visibleWhen>
          </menu>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.connector">
-         <command
-               commandId="org.bonitasoft.studio.connectors.newDefinition"
-               label="%newConnectorDefMenu"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.connectors.newImplementation"
-               label="%newConnectorImplementationMenu"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
       </menuContribution>
    </extension>
    <extension
@@ -305,63 +238,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
-      <handler
-            class="org.bonitasoft.studio.connectors.handler.NewConnectorDefinitionHandler"
-            commandId="org.bonitasoft.studio.application.newWithWizard">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.connectors.isConnectorDefFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.connectors.handler.NewConnectorImplementationHandler"
-            commandId="org.bonitasoft.studio.application.newWithWizard">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.connectors.handler.ImportConnectorHandler"
-            commandId="org.bonitasoft.studio.application.import">
-         <activeWhen>
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <test
-                           property="org.bonitasoft.studio.connectors.isConnectorImplFolder">
-                     </test>
-                  </iterate>
-               </and>
-            </with>
-         </activeWhen>
-      </handler>
       <handler
             class="org.bonitasoft.studio.connectors.handler.ExportConnectorHandler"
             commandId="org.bonitasoft.studio.application.export">

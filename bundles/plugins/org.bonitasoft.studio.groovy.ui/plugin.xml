@@ -23,46 +23,10 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.actors.newFilterImpl">
-         <separator
-               name="org.bonitasoft.studio.groovy.ui.separator"
-               visible="true">
-         </separator>
-         <command
-               commandId="org.bonitasoft.studio.groovy.ui.newScript"
-               label="%newGroovy"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <and>
-                     <count
-                           value="1">
-                     </count>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </and>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
          <menu
                icon="icons/groovy_file.gif"
                label="%groovyScript">
-            <command
-                  commandId="org.bonitasoft.studio.groovy.ui.new.command"
-                  style="push">
-            </command>
             <command
                   commandId="org.bonitasoft.studio.groovy.ui.open.command"
                   style="push">

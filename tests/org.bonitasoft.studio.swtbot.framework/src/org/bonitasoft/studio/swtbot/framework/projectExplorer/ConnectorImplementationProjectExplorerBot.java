@@ -25,13 +25,6 @@ public class ConnectorImplementationProjectExplorerBot extends ProjectExplorerBo
         super(bot);
     }
 
-    @Override
-    public ConnectorImplementationWizardBot newConnectorImplementation() {
-        clickOnContextualMenu(getConnectorImplFolderTreeItem(), "New...");
-        return new ConnectorImplementationWizardBot(bot,
-                org.bonitasoft.studio.connectors.i18n.Messages.newConnectorImplementation);
-    }
-
     public ConnectorImplementationWizardBot openConnectorImplementation(String connectorImpl, String version) {
         clickOnContextualMenu(getConnectorImplTreeItem(connectorImpl, version), "Open");
         return new ConnectorImplementationWizardBot(bot,

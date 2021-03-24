@@ -402,22 +402,6 @@
                   visible="true">
             </separator>
             <separator
-                  name="org.bonitasoft.studio.application.placeholder.restapi"
-                  visible="true">
-            </separator>
-            <separator
-                  name="org.bonitasoft.studio.application.placeholder.theme"
-                  visible="true">
-            </separator>
-            <separator
-                  name="org.bonitasoft.studio.application.placeholder.connector"
-                  visible="true">
-            </separator>
-            <separator
-                  name="org.bonitasoft.studio.application.placeholder.actor"
-                  visible="true">
-            </separator>
-            <separator
                   name="additions"
                   visible="true">
             </separator>

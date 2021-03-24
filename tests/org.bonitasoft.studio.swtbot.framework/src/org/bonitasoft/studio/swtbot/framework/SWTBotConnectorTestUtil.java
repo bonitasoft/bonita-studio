@@ -17,6 +17,7 @@ package org.bonitasoft.studio.swtbot.framework;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -33,8 +34,13 @@ import org.junit.Assert;
  */
 public class SWTBotConnectorTestUtil {
 
+    private static final String NEW_DEF_COMMAND = "org.bonitasoft.studio.connectors.newDefinition";
+    private static final String NEW_IMPL_COMMAND = "org.bonitasoft.studio.connectors.newImplementation";
+    private static final String IMPORT_COMMAND = "org.bonitasoft.studio.connectors.importConnector";
+
     private static SWTBotTreeItem categoryItem;
     private static List<String> nodes;
+    private static CommandExecutor commandExecutor = new CommandExecutor();
 
     /**
      * use it to access to the wizard "New definition..." (menu
@@ -44,7 +50,7 @@ public class SWTBotConnectorTestUtil {
      */
     public static void activateConnectorDefinitionShell(SWTBot bot) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Connectors").menu("New definition...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector definition"), 10000);
     }
 
@@ -56,7 +62,7 @@ public class SWTBotConnectorTestUtil {
      */
     public static void activateConnectorImplementationShell(SWTBot bot) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Connectors").menu("New implementation...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_IMPL_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("New connector implementation"), 10000);
     }
 
@@ -161,7 +167,7 @@ public class SWTBotConnectorTestUtil {
      */
     public static void activateConnectorImportShell(SWTBot bot) {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")), 10000);
-        bot.menu("Development").menu("Connectors").menu("Import connector...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(IMPORT_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive("Import connector archive"), 10000);
     }
 
