@@ -25,13 +25,6 @@ public class ActorFilterImplementationProjectExplorerBot extends ProjectExplorer
         super(bot);
     }
 
-    @Override
-    public ConnectorImplementationWizardBot newActorFilterImplementation() {
-        clickOnContextualMenu(getActorFilterImplFolderTreeItem(), "New...");
-        return new ConnectorImplementationWizardBot(bot,
-                org.bonitasoft.studio.identity.i18n.Messages.newFilterImplementation);
-    }
-
     public ConnectorImplementationWizardBot openActorFilterImplementation(String connectorImpl, String version) {
         clickOnContextualMenu(getActorFilterImplTreeItem(connectorImpl, version), "Open");
         return new ConnectorImplementationWizardBot(bot,

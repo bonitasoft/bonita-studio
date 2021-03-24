@@ -16,6 +16,7 @@ package org.bonitasoft.studio.tests.actors;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,6 +36,11 @@ import org.junit.Assert;
 
 public class SWTBotActorFilterUtil {
 
+    private static final String NEW_FILTER_DEF_COMMAND = "org.bonitasoft.studio.actors.newFilterDef";
+    private static final String NEW_FILTER_IMPL_COMMAND = "org.bonitasoft.studio.actors.newFilterImpl";
+
+    private static CommandExecutor commandExecutor = new CommandExecutor();
+
     /**
      * use it to access to the Actor filter wizard "New actor filter definition"
      * (menu Development>Actor filters>New implementation)
@@ -44,8 +50,7 @@ public class SWTBotActorFilterUtil {
     public static void activateActorFilterDefinitionShell(final SWTBot bot) {
         final Matcher<MenuItem> matcher = withMnemonic("Development");
         bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
-        bot.menu("Development").menu("Actor filters").menu("New definition...")
-                .click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_DEF_COMMAND, null));
         bot.waitUntil(Conditions.shellIsActive(Messages.newFilterDefinition), 10000);
     }
 
@@ -59,8 +64,7 @@ public class SWTBotActorFilterUtil {
     public static void activateActorFilterImplementationShell(final SWTBot bot) {
         final Matcher<MenuItem> matcher = withMnemonic("Development");
         bot.waitUntil(Conditions.waitForMenu(bot.activeShell(), matcher), 40000);
-        bot.menu("Development").menu("Actor filters")
-                .menu("New implementation...").click();
+        bot.getDisplay().asyncExec(() -> commandExecutor.executeCommand(NEW_FILTER_IMPL_COMMAND, null));
         bot.waitUntil(Conditions
                 .shellIsActive(Messages.newFilterImplementation), 10000);
     }

@@ -165,20 +165,6 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                     listener.add("org.bonitasoft.studio.designer.command.create.layout", Messages.layout);
                     listener.add("org.bonitasoft.studio.designer.command.create.widget", Messages.customWidget);
                     listener.add("org.bonitasoft.studio.application.ex.command.createFragment", Messages.fragment);
-                    listener.addSeparator();
-                    if (listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension)) {
-                        listener.addSeparator();
-                    }
-                    if (listener.add("org.bonitasoft.studio.theme.newCommand", Messages.theme)) {
-                        listener.addSeparator();
-                    }
-                    listener.add("org.bonitasoft.studio.connectors.newDefinition", Messages.connectorDef);
-                    listener.add("org.bonitasoft.studio.connectors.newImplementation", Messages.connectorImpl);
-                    listener.addSeparator();
-                    listener.add("org.bonitasoft.studio.actors.newFilterDef", Messages.actorFilterDef);
-                    listener.add("org.bonitasoft.studio.actors.newFilterImpl", Messages.actorFilterImpl);
-                    listener.addSeparator();
-                    listener.add("org.bonitasoft.studio.groovy.ui.newScript", Messages.newGroovy);
                     listener.widgetSelected(e);
                 }
             }

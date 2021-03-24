@@ -25,13 +25,6 @@ public class ConnectorDefinitionProjectExplorerBot extends ProjectExplorerBot {
         super(bot);
     }
 
-    @Override
-    public ConnectorDefinitionWizardBot newConnectorDefinition() {
-        clickOnContextualMenu(getConnectorDefFolderTreeItem(), "New...");
-        return new ConnectorDefinitionWizardBot(bot,
-                org.bonitasoft.studio.connector.model.i18n.Messages.newConnectorDefinition);
-    }
-
     public ConnectorDefinitionWizardBot openConnectorDefinition(String connectorDef, String version) {
         clickOnContextualMenu(getConnectorDefTreeItem(connectorDef, version), "Open");
         return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.connectors.i18n.Messages.editConnectorDefinition);

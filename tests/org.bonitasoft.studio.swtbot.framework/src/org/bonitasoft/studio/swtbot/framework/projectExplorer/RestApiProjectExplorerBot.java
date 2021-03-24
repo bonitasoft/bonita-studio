@@ -10,7 +10,6 @@ package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.conditions.BonitaBPMConditions;
-import org.bonitasoft.studio.swtbot.framework.restApi.RestAPIExtensionCreationWizardBot;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -21,20 +20,6 @@ public class RestApiProjectExplorerBot extends ProjectExplorerBot {
 
     public RestApiProjectExplorerBot(SWTGefBot bot) {
         super(bot);
-    }
-
-    public RestAPIExtensionCreationWizardBot createRestApiFromProjectFolder() {
-        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
-        bot.waitUntil(contextMenuAvailable(projectTreeItem, "New"));
-        projectTreeItem.contextMenu().menu("New").menu("REST API Extension...").click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.newRestApiExtensionTitle));
-        return new RestAPIExtensionCreationWizardBot(bot);
-    }
-
-    public RestAPIExtensionCreationWizardBot createRestApi() {
-        clickOnContextualMenu(getRestApiFolderTreeItem(), "New...");
-        bot.waitUntil(Conditions.shellIsActive(Messages.newRestApiExtensionTitle));
-        return new RestAPIExtensionCreationWizardBot(bot);
     }
 
     public void buildRestApi(String restApi) {

@@ -25,13 +25,6 @@ public class ActorFilterDefinitionProjectExplorerBot extends ProjectExplorerBot 
         super(bot);
     }
 
-    @Override
-    public ConnectorDefinitionWizardBot newConnectorDefinition() {
-        clickOnContextualMenu(getActorFilterDefFolderTreeItem(), "New...");
-        return new ConnectorDefinitionWizardBot(bot,
-                org.bonitasoft.studio.identity.i18n.Messages.newFilterDefinition);
-    }
-
     public ConnectorDefinitionWizardBot openActorFilterDefinition(String actorFilterDef, String version) {
         clickOnContextualMenu(getActorFilterDefTreeItem(actorFilterDef, version), "Open");
         return new ConnectorDefinitionWizardBot(bot, org.bonitasoft.studio.identity.i18n.Messages.editFilterDefinition);

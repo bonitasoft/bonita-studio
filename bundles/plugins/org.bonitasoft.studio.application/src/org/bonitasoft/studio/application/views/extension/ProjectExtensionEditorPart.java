@@ -302,7 +302,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 versionStyle.font = versionFont;
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
-              
                 if (descriptionContent != null && !descriptionContent.isBlank()
                         && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
                     if (description == null || description.isDisposed()) {
@@ -323,9 +322,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
             createExtensionCards(cardComposite);
-            if(!layoutMainCompsite) {
+            if (!layoutMainCompsite) {
                 cardComposite.layout();
-            }else {
+            } else {
                 mainComposite.layout();
             }
             scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
