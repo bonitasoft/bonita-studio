@@ -21,10 +21,10 @@ import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
+import org.bonitasoft.studio.common.repository.extension.IEngineAction;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.operation.PublishOrganizationOperation;
@@ -46,17 +46,13 @@ public class PublishActiveOrganizationAction implements IEngineAction {
         activeOrganizationProvider = new ActiveOrganizationProvider();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.extension.IEngineAction#run(org.bonitasoft.engine.session.APISession)
-     */
     @Override
-    public void run(final APISession session) throws Exception {
+    public void run(final APISession session, IRepository repository) throws Exception {
         if (noOrganizationDeployed(session)
                 || BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                         .getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
             final String artifactId = activeOrganizationProvider.getActiveOrganization();
-            final OrganizationRepositoryStore store = RepositoryManager.getInstance()
+            final OrganizationRepositoryStore store = repository
                     .getRepositoryStore(OrganizationRepositoryStore.class);
             OrganizationFileStore organizationFileStore = store
                     .getChild(artifactId + "." + OrganizationRepositoryStore.ORGANIZATION_EXT, true);
@@ -65,10 +61,12 @@ public class PublishActiveOrganizationAction implements IEngineAction {
             }
             if (organizationFileStore == null) {
                 // No organization to deploy
-                BonitaNotificator.openNotification(Messages.noOrganizationFoundTitle, Messages.noOrganizationFoundMsg);
+                BonitaNotificator.openNotification(Messages.noOrganizationFoundTitle,
+                        Messages.noOrganizationFoundMsg);
                 return;
             }
-            final PublishOrganizationOperation op = new UpdateOrganizationOperation(organizationFileStore.getContent());
+            final PublishOrganizationOperation op = new UpdateOrganizationOperation(
+                    organizationFileStore.getContent());
             op.setSession(session);
             op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
@@ -83,7 +81,7 @@ public class PublishActiveOrganizationAction implements IEngineAction {
     }
 
     @Override
-    public boolean shouldRun() {
-        return true;
+    public boolean shouldRun(IRepository repository) {
+        return repository.isLoaded();
     }
 }

@@ -33,6 +33,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.businessobject.maven.InstallBDMDependenciesEventHandler;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -144,6 +145,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         Assert.isNotNull(archive);
         Assert.isNotNull(currentRepository);
 
+        InstallBDMDependenciesEventHandler.disableProjectUpateJob();
         ImportBosArchiveStatusBuilder statusBuilder = createStatusBuilder();
         monitor.beginTask(Messages.retrivingDataToImport, IProgressMonitor.UNKNOWN);
         status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
@@ -203,6 +205,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
             repositoryStore.resetComputedProcesses();
         }
+        InstallBDMDependenciesEventHandler.enableProjectUpateJob();
 
     }
 

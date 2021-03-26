@@ -17,8 +17,10 @@ package org.bonitasoft.studio.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 
@@ -29,8 +31,9 @@ public class BOSEngineManagerTest {
         final BOSEngineManager engineManager = spy(new BOSEngineManager(new NullProgressMonitor()));
         doReturn(false).when(engineManager).tomcatServerIsRunning();
         doThrow(Exception.class).when(engineManager).getLoginAPI();
-
-        final boolean isRunning = engineManager.postEngineStart();
+        IRepository repository = mock(IRepository.class);
+        
+        final boolean isRunning = engineManager.postEngineStart(repository);
 
         assertThat(isRunning).isFalse();
     }

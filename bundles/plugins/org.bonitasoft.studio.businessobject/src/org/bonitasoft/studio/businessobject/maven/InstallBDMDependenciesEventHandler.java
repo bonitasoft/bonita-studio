@@ -46,7 +46,8 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     private static final String JAR_TYPE = "jar";
     private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
     private static final String UPDATE_PROJECTS_COMMAND = "org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command";
-
+    private static boolean enableProjectUpdateJob = true;
+    
     @Override
     public void handleEvent(final Event event) {
         execute(event);
@@ -82,8 +83,23 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
                 tmpFile.delete();
             }
         }
+        
+        if(shouldRunProjectUpateJob()) {
         updateProjectMavenConfiguration();
         updateMavenProjects();
+        }
+    }
+    
+    private boolean shouldRunProjectUpateJob() {
+        return enableProjectUpdateJob;
+    }
+
+    public static void enableProjectUpateJob() {
+        enableProjectUpdateJob = true;
+    }
+
+    public static void disableProjectUpateJob() {
+        enableProjectUpdateJob = false;
     }
 
     protected void updateProjectMavenConfiguration() {

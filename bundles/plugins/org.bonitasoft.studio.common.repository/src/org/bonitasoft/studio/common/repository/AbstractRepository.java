@@ -268,9 +268,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 .analyze(subMonitor);
 
         enableBuild();
-        for (IBonitaProjectListener listener : projectListeners) {
-            listener.projectOpened(this,subMonitor);
+        for (IBonitaProjectListener listener : getProjectListeners()) {
+            listener.projectOpened(this,monitor);
         }
+
         if (migrationEnabled()) {
             try {
                 RepositoryManager.getInstance().setCurrentRepository(this);
@@ -322,7 +323,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         }
         isLoaded = false;
         removeResourceListeners();
-        for (IBonitaProjectListener listener : projectListeners) {
+        for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectClosed(this, NULL_PROGRESS_MONITOR);
         }
     }
@@ -880,7 +881,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 @Override
                 protected void execute(IProgressMonitor monitor)
                         throws CoreException, InvocationTargetException, InterruptedException {
-                    projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
+                    getProjectListeners().stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
                     disableBuild();
                     getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
                     RepositoryManager.getInstance().setRepository(newName, monitor);
@@ -901,6 +902,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     @Override
     public List<ProcessModelTransformation> getProcessModelTransformations() {
         return PROCESS_MODEL_TRANSFORMATIONS;
+    }
+    
+    private List<IBonitaProjectListener> getProjectListeners(){
+        return Collections.unmodifiableList(projectListeners);
     }
 
     @Override
