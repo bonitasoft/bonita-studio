@@ -17,19 +17,20 @@ package org.bonitasoft.studio.businessobject.core.operation;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
-import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.extension.IEngineAction;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 public class DeployBDMOnStartup implements IEngineAction {
 
     @Override
-    public void run(APISession session) throws Exception {
-        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = RepositoryManager.getInstance()
+    public void run(APISession session, IRepository repository) throws Exception {
+        final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> store = repository
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, true);
+        final BusinessObjectModelFileStore fileStore = store.getChild(BusinessObjectModelFileStore.BOM_FILENAME,
+                true);
         if (fileStore != null) {
             new GenerateBDMOperation(fileStore);
             new DeployBDMOperation(fileStore)
@@ -39,9 +40,9 @@ public class DeployBDMOnStartup implements IEngineAction {
     }
 
     @Override
-    public boolean shouldRun() {
+    public boolean shouldRun(IRepository repository) {
         Bundle bundle = Platform.getBundle("org.bonitasoft.studio.bdm.access.control");
-        return bundle == null || bundle.getState() != Bundle.ACTIVE;
+        return repository.isLoaded() && (bundle == null || bundle.getState() != Bundle.ACTIVE);
     }
 
 }

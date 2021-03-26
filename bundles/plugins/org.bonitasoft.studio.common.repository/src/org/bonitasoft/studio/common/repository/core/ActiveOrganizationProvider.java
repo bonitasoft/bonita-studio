@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
@@ -30,7 +29,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.service.prefs.BackingStoreException;
 
 @Creatable
 public class ActiveOrganizationProvider {
@@ -64,38 +62,15 @@ public class ActiveOrganizationProvider {
 
     public void saveDefaultUser(final String userName) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_USER, userName);
-        flushPreferences();
     }
 
     public void saveDefaultPassword(final String password) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password);
-        try {
-            getPreferenceNode().flush();
-        } catch (final BackingStoreException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     public void saveActiveOrganization(final String organizationName) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION, organizationName);
-        flushPreferences();
         PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED, organizationName);
-    }
-
-    private void flushPreferences() {
-        new WorkspaceJob("Save preferences...") {
-
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                try {
-                    getPreferenceNode().flush();
-                } catch (BackingStoreException e) {
-                    throw new CoreException(
-                            new Status(IStatus.ERROR, ActiveOrganizationProvider.class, e.getLocalizedMessage(), e));
-                }
-                return Status.OK_STATUS;
-            }
-        }.schedule();
     }
 
     public boolean shouldPublishOrganization() {

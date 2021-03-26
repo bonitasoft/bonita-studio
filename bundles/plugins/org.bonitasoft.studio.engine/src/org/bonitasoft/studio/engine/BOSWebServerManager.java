@@ -537,7 +537,7 @@ public class BOSWebServerManager implements IBonitaProjectListener {
         }
         IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
         if (!isLazyModeEnabled(preferenceStore)) {
-            final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer);
+            final StartEngineJob job = new StartEngineJob(Messages.startingEngineServer, repository);
             job.setPriority(Job.LONG);
             job.setUser(false);
             job.schedule();

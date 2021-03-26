@@ -45,10 +45,11 @@ import org.bonitasoft.engine.session.PlatformSession;
 import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.extension.IEngineAction;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
@@ -141,7 +142,7 @@ public class BOSEngineManager {
             boolean notifying = notifyStartServer();
             monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
             BOSWebServerManager.getInstance().startServer(repository, monitor);
-            isRunning = postEngineStart();
+            isRunning = postEngineStart(repository);
             if (notifying) {
                 notifyServerStarted();
             }
@@ -173,7 +174,7 @@ public class BOSEngineManager {
         start(RepositoryManager.getInstance().getCurrentRepository());
     }
 
-    protected boolean postEngineStart() {
+    protected boolean postEngineStart(IRepository repository) {
         //RESUME ENGINE IF PAUSED AT STARTUP
         try {
             final APISession apiSession = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
@@ -181,7 +182,7 @@ public class BOSEngineManager {
             if (tenantManagementAPI.isPaused()) {
                 tenantManagementAPI.resume();
             }
-            executePostStartupContributions();
+            executePostStartupContributions(repository);
         } catch (final Exception e) {
             return handlePostEngineStartException(e);
         }
@@ -250,7 +251,7 @@ public class BOSEngineManager {
         return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
     }
 
-    protected void executePostStartupContributions() throws Exception {
+    protected void executePostStartupContributions(IRepository repository) throws Exception {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
         IEngineAction contrib = null;
@@ -260,10 +261,10 @@ public class BOSEngineManager {
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
-            if (contrib != null && contrib.shouldRun()) {
+            if (contrib != null && contrib.shouldRun(repository)) {
                 final APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
                 try {
-                    contrib.run(session);
+                    contrib.run(session,repository);
                 } finally {
                     if (session != null) {
                         logoutDefaultTenant(session);
