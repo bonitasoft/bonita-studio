@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
@@ -25,7 +24,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.service.prefs.BackingStoreException;
 
 @Creatable
 public class ActiveOrganizationProvider {
@@ -59,30 +57,15 @@ public class ActiveOrganizationProvider {
 
     public void saveDefaultUser(final String userName) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_USER, userName);
-        try {
-            getPreferenceNode().flush();
-        } catch (final BackingStoreException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     public void saveDefaultPassword(final String password) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_PASSWORD, password);
-        try {
-            getPreferenceNode().flush();
-        } catch (final BackingStoreException e) {
-            BonitaStudioLog.error(e);
-        }
     }
 
     public void saveActiveOrganization(final String organizationName) {
         getPreferenceNode().put(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION, organizationName);
-        try {
-            getPreferenceNode().flush();
-            PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED, organizationName);
-        } catch (final BackingStoreException e) {
-            BonitaStudioLog.error(e);
-        }
+        PlatformUI.getWorkbench().getService(IEventBroker.class).send(ACTIVE_ORGANIZATION_CHANGED, organizationName);
     }
 
     public boolean shouldPublishOrganization() {

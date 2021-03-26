@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2021 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,16 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.extension;
+package org.bonitasoft.studio.common.repository.extension;
 
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 
-/**
- * @author Romain Bioteau
- */
 public interface IEngineAction {
 
-    public void run(APISession session) throws Exception;
+    void run(APISession session, IRepository repository) throws Exception;
 
-    public boolean shouldRun();
+    boolean shouldRun(IRepository repository);
+
 }

@@ -47,6 +47,7 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     private static final String BDM_DAO = "bdm-dao";
     private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
     private static final String UPDATE_PROJECTS_COMMAND = "org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command";
+    private static boolean enableProjectUpdateJob = true;
     private final RepositoryAccessor repositoryAccessor;
 
     @Inject
@@ -90,7 +91,21 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
                 tmpFile.delete();
             }
         }
-        updateMavenProjects();
+        if(shouldRunProjectUpateJob()) {
+            updateMavenProjects();
+        }
+    }
+    
+    private boolean shouldRunProjectUpateJob() {
+        return enableProjectUpdateJob;
+    }
+
+    public static void enableProjectUpateJob() {
+        enableProjectUpdateJob = true;
+    }
+
+    public static void disableProjectUpateJob() {
+        enableProjectUpdateJob = false;
     }
 
     private File daoPomFile(String groupId, String version) throws IOException {
