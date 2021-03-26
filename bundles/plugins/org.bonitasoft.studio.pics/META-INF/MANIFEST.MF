@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Pictures and Icons
 Bundle-SymbolicName: org.bonitasoft.studio.pics;singleton:=true
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W13
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.core.runtime,
