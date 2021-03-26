@@ -274,7 +274,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
-        projectListeners.stream().forEach(l -> l.projectOpened(this, monitor));
+        for (IBonitaProjectListener listener : getProjectListeners()) {
+            listener.projectOpened(this,monitor);
+        }
+
         if (migrationEnabled()) {
             try {
                 RepositoryManager.getInstance().setCurrentRepository(this);
@@ -328,7 +331,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         }
         isLoaded = false;
         removeResourceListeners();
-        projectListeners.stream().forEach(l -> l.projectClosed(this, NULL_PROGRESS_MONITOR));
+
+        for (IBonitaProjectListener listener : getProjectListeners()) {
+            listener.projectClosed(this, NULL_PROGRESS_MONITOR);
+        }
     }
 
     private void enableOpenIntroListener() {
@@ -843,10 +849,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         return new DatabaseHandler(getProject());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepository#isShared(java.lang.String)
-     */
     @Override
     public boolean isShared(String providerId) {
         return false;
@@ -882,7 +884,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
                         protected void execute(IProgressMonitor monitor)
                                 throws CoreException, InvocationTargetException, InterruptedException {
                             closeAllEditors();
-                            projectListeners.stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
+                            getProjectListeners().stream().forEach(l -> l.projectClosed(AbstractRepository.this, monitor));
                             disableBuild();
                             getProject().move(org.eclipse.core.runtime.Path.fromOSString(newName), true, monitor);
                             RepositoryManager.getInstance().setRepository(newName, monitor);
@@ -913,6 +915,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
         if (!projectListeners.contains(listener)) {
             projectListeners.add(listener);
         }
+    }
+    
+    private List<IBonitaProjectListener> getProjectListeners(){
+        return Collections.unmodifiableList(projectListeners);
     }
 
     public void buildXtext() {
