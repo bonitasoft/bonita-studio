@@ -159,7 +159,7 @@ public class TabbedPropertyList
             selected = false;
             this.index = index;
 
-            addPaintListener(e -> paint(e));
+			addPaintListener(this::paint);
             addMouseListener(new MouseAdapter() {
 
                 @Override
@@ -436,7 +436,7 @@ public class TabbedPropertyList
          */
         public TopNavigationElement(Composite parent) {
             super(parent, SWT.NO_FOCUS);
-            addPaintListener(e -> paint(e));
+			addPaintListener(this::paint);
             addMouseListener(new MouseAdapter() {
 
                 @Override
@@ -519,7 +519,7 @@ public class TabbedPropertyList
          */
         public BottomNavigationElement(Composite parent) {
             super(parent, SWT.NO_FOCUS);
-            addPaintListener(e -> paint(e));
+			addPaintListener(this::paint);
             addMouseListener(new MouseAdapter() {
 
                 @Override

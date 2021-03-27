@@ -79,13 +79,6 @@
                     <argLine>${javaOPTS} ${additionalArgs}</argLine>
                     <appArgLine>-nl en -clean</appArgLine>
                     <osgiDataDirectory>${target.test.dir}</osgiDataDirectory>
-                    <bundleStartLevel>
-                        <bundle>
-                            <id>org.eclipse.equinox.ds</id>
-                            <level>1</level>
-                            <autoStart>true</autoStart>
-                        </bundle>
-                    </bundleStartLevel>
                 </configuration>
             </plugin>
         </plugins>

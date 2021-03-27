@@ -13,8 +13,10 @@ import static org.assertj.core.api.Assertions.fail;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetypeConfiguration;
 import org.bonitasoft.studio.rest.api.extension.core.maven.CreateRestAPIExtensionProjectOperation;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
@@ -46,7 +48,7 @@ public class CreateRestAPIExtensionProjectIT {
     @Test
     public void should_create_a_rest_api_extension_project_in_workspace() throws Exception {
         RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration = RestAPIExtensionArchetypeConfiguration.defaultArchetypeConfiguration();
-        defaultArchetypeConfiguration.setBonitaVersion("7.11.2");
+        defaultArchetypeConfiguration.setBonitaVersion(ProductVersion.mavenVersion());
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(
                 RepositoryManager.getInstance().getRepositoryStore(RestAPIExtensionRepositoryStore.class),
                 MavenPlugin.getProjectConfigurationManager(),
@@ -71,7 +73,7 @@ public class CreateRestAPIExtensionProjectIT {
 
         assertThat(newProject.getName()).isEqualTo("resourceNameRestAPI");
         assertThat(newProject.getFile("pom.xml").exists()).isTrue();
-        final Model mavenModel = MavenPlugin.getMavenModelManager().readMavenModel(newProject.getFile("pom.xml"));
+        final Model mavenModel = new MavenProjectHelper().getMavenModel(newProject);
         assertThat(mavenModel.getArtifactId()).isEqualTo("resourceNameRestAPI");
         assertThat(mavenModel.getGroupId()).isEqualTo("com.company.rest.api");
         assertThat(mavenModel.getVersion()).isEqualTo("1.0.0-SNAPSHOT");

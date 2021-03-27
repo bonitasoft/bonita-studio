@@ -231,10 +231,6 @@
 							<artifactId>org.apache.ant</artifactId>
 							<type>eclipse-plugin</type>
 						</dependency>
-						<dependency>
-							<artifactId>org.eclipse.equinox.ds</artifactId>
-							<type>eclipse-plugin</type>
-						</dependency>
 					</dependencies>
 				</configuration>
 				<executions>

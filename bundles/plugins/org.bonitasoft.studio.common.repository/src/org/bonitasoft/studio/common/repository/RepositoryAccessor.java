@@ -68,11 +68,12 @@ public class RepositoryAccessor {
     }
 
     public IRepository start(final IProgressMonitor monitor) {
+        monitor.beginTask(Messages.loadingCurrentProject, IProgressMonitor.UNKNOWN);
         AbstractRepository repository = getCurrentRepository();
         if (!repository.exists()) {
-            repository.create(ProjectMetadata.defaultMetadata(), monitor);
+            repository.create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
         }
-        return repository.open(monitor);
+        return repository.open(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     public IWorkspace getWorkspace() {

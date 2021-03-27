@@ -54,7 +54,6 @@ Require-Bundle: org.eclipse.ui,
  com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.4.4",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.4.4",
  com.fasterxml.jackson.core.jackson-databind;bundle-version="2.4.4",
- stax2-api;bundle-version="3.1.4",
  org.eclipse.debug.core,
  org.eclipse.core.externaltools,
  org.eclipse.debug.ui,
@@ -75,3 +74,4 @@ Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.bpm.bar.form.model,
  org.bonitasoft.engine.form,
  org.bonitasoft.engine.session
+Automatic-Module-Name: org.bonitasoft.studio.designer

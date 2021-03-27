@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.assertions.StatusAssert;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
@@ -51,7 +52,7 @@ public class ExportRestAPIExtensionProjectIT {
         final RestAPIExtensionArchetypeConfiguration configuration = RestAPIExtensionArchetypeConfiguration
                 .defaultArchetypeConfiguration();
         configuration.setGroupId("org.bonitasoft.test");
-        configuration.setBonitaVersion("7.11.2");
+        configuration.setBonitaVersion(ProductVersion.mavenVersion());
         configuration.setLanguage(RestAPIExtensionArchetypeConfiguration.GROOVY_LANGUAGE);
         configuration.setPageName(pageName);
         final CreateRestAPIExtensionProjectOperation operation = new CreateRestAPIExtensionProjectOperation(

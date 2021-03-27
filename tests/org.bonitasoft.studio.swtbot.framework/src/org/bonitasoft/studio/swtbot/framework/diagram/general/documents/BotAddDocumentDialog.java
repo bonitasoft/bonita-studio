@@ -194,8 +194,8 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      *
      * @return
      */
-    public boolean isErrorMessageUrl() {
-        return isErrorMessage(Messages.error_documentURLEmpty);
+    public boolean hasErrorMessageUrl() {
+        return hasErrorMessage(Messages.error_documentURLEmpty);
     }
 
     /**
@@ -203,8 +203,8 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      *
      * @return
      */
-    public boolean isErrorMessageFile() {
-        return isErrorMessage(Messages.error_documentDefaultIDEmpty);
+    public boolean hasErrorMessageFile() {
+        return hasErrorMessage(Messages.error_documentDefaultIDEmpty);
     }
 
     /**
@@ -214,7 +214,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      */
     public boolean isErrorMessageNameEmpty() {
         //FIXME: hard coded value.
-        return isErrorMessage("Name is mandatory");
+        return hasErrorMessage("Name is mandatory");
     }
 
     /**
@@ -223,7 +223,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @return
      */
     public boolean isErrorMessageAlreadyExist(final String docName) {
-        return isErrorMessage(NLS.bind(org.bonitasoft.studio.common.Messages.unicityErrorMessage, docName));
+        return hasErrorMessage(NLS.bind(org.bonitasoft.studio.common.Messages.unicityErrorMessage, docName));
     }
 
     /**

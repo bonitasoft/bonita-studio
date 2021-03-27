@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-
 import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
@@ -36,9 +34,8 @@ import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
-import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
@@ -92,6 +89,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
@@ -145,9 +143,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private static final String FIRST_STARTUP = "firstStartup";
 
     private IProgressMonitor monitor;
-
-    @Inject
-    private RepositoryAccessor repositoryAccessor;
 
     @Override
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
@@ -421,15 +416,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableGroovyDSL();
         initXMLandHTMLValidationPreferences();
         setSystemProperties();
-        
-        
+
         new InstallLocalRepositoryContribution().execute();
-        
+
         //Avoid deadlock and thread timeout at startup
         new GroovyConsoleLineTracker();
-        repositoryAccessor.start(monitor);
-
-        executeContributions();
     }
 
     protected void setSystemProperties() {
@@ -515,21 +506,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
         groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
         groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
-    }
-
-    private void executeContributions() {
-        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements(
-                        "org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
-        IPostInitRepositoryJobContribution contrib = null;
-        for (final IConfigurationElement elem : elements) {
-            try {
-                contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            contrib.execute();
-        }
     }
 
     /**
@@ -620,6 +596,16 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+        Display.getDefault().syncExec(() -> {
+            try {
+                progressService.run(true, false,
+                        monitor -> RepositoryManager.getInstance().getAccessor().start(monitor));
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }

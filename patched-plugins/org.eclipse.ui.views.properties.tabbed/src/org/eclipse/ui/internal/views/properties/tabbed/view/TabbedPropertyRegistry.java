@@ -311,13 +311,11 @@ public class TabbedPropertyRegistry {
 	 * Given a property tab descriptor remove all its section descriptors that
 	 * do not apply to the given input object.
 	 */
+	@SuppressWarnings("unchecked")
 	protected ITabDescriptor adaptDescriptorFor(ITabDescriptor target,
 			IWorkbenchPart part, ISelection selection) {
 		List<ISectionDescriptor> filteredSectionDescriptors = new ArrayList<>();
-		@SuppressWarnings("unchecked")
-		List<ISectionDescriptor> descriptors = target.getSectionDescriptors();
-		for (Iterator<ISectionDescriptor> iter = descriptors.iterator(); iter.hasNext();) {
-			ISectionDescriptor descriptor = iter.next();
+		for (ISectionDescriptor descriptor : (List<ISectionDescriptor>) target.getSectionDescriptors()) {
 			if (descriptor.appliesTo(part, selection)) {
 				filteredSectionDescriptors.add(descriptor);
 			}
@@ -405,7 +403,7 @@ public class TabbedPropertyRegistry {
 	 * Sorts the tab descriptors in the given list according to category.
 	 */
 	protected List<TabDescriptor> sortTabDescriptorsByCategory(List<TabDescriptor> descriptors) {
-		Collections.sort(descriptors, (one, two) -> {
+		descriptors.sort((one, two) -> {
 			String categoryOne = one.getCategory();
 			String categoryTwo = two.getCategory();
 			int categoryOnePosition = getIndex(propertyCategories.toArray(), categoryOne);

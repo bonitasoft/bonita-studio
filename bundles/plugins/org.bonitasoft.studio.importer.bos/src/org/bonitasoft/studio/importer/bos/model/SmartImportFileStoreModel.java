@@ -17,6 +17,7 @@ package org.bonitasoft.studio.importer.bos.model;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -72,7 +73,7 @@ public class SmartImportFileStoreModel extends ImportFileStoreModel {
     private File toFile(ZipFile zipFile) throws IOException {
         File file = File.createTempFile(getFileName(), null);
         file.deleteOnExit();
-        Files.copy(zipFile.getInputStream(zipFile.getEntry(getPath())), file.toPath());
+        Files.copy(zipFile.getInputStream(zipFile.getEntry(getPath())), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         return file;
     }
 

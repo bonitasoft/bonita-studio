@@ -73,9 +73,9 @@ public class BotDialog extends BotBase {
      * @param pMessage
      * @return
      */
-    protected boolean isErrorMessage(final String pMessage) {
+    protected boolean hasErrorMessage(final String pMessage) {
         try {
-            bot.text(" " + pMessage);
+            bot.label(" " + pMessage);
             return true;
         } catch (final WidgetNotFoundException e) {
             BonitaStudioLog.warning(pMessage + " error message not found.", this.getClass().getName());
@@ -85,7 +85,7 @@ public class BotDialog extends BotBase {
 
     protected boolean hasTextVisible(final String aText) {
         try {
-            bot.text(aText);
+            bot.label(aText);
             return true;
         } catch (final WidgetNotFoundException e) {
             BonitaStudioLog.warning(aText + " not found.", this.getClass().getName());

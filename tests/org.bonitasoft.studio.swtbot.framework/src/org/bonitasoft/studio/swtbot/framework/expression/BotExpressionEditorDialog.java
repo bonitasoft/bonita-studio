@@ -8,8 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.expression;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -32,14 +35,22 @@ public class BotExpressionEditorDialog extends BotDialog {
     }
 
     public BotScriptExpressionEditor selectScriptTab() {
-        bot.tabItem("Script").activate();
+        if(Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS())) {
+            bot.cTabItem("Script").activate();
+        }else {
+            bot.tabItem("Script").activate();
+        }
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
         return new BotScriptExpressionEditor(bot, this);
     }
 
     public boolean isTypeAvailable(String type) {
         try {
-            bot.tabItem(type);
+            if(Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS())) {
+                bot.cTabItem(type);
+            }else {
+                bot.tabItem(type);
+            }
             return true;
         } catch (WidgetNotFoundException e) {
             return false;

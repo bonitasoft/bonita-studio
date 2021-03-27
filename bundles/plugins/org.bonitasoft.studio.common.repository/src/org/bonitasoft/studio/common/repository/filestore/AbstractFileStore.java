@@ -54,10 +54,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
@@ -298,7 +298,7 @@ public abstract class AbstractFileStore<T>
                         0,
                         Messages.continueLabel,
                         IDialogConstants.CANCEL_LABEL);
-                if (dialog.open() == Dialog.OK) {
+                if (dialog.open() == Window.OK) {
                     try {
                         getParentStore().migrate(this, AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (CoreException | MigrationException e) {

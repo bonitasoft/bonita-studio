@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.egit.core.op.ListRemoteOperation;
 import org.eclipse.egit.core.securestorage.UserPasswordCredentials;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.Activator;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.CommonUtils;
@@ -44,6 +45,7 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -55,6 +57,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -78,6 +81,8 @@ public class CustomSourceBranchPage extends WizardPage {
 
     private Button unselectB;
 
+    private TagOpt tagOption = TagOpt.AUTO_FOLLOW;
+
     private CachedCheckboxTreeViewer refsViewer;
 
     private UserPasswordCredentials credentials;
@@ -95,6 +100,10 @@ public class CustomSourceBranchPage extends WizardPage {
         Ref[] checkedRefs = new Ref[checkedElements.length];
         System.arraycopy(checkedElements, 0, checkedRefs, 0, checkedElements.length);
         return Arrays.asList(checkedRefs);
+    }
+
+    public TagOpt getTagOption() {
+        return tagOption;
     }
 
     public List<Ref> getAvailableBranches() {
@@ -224,11 +233,38 @@ public class CustomSourceBranchPage extends WizardPage {
                 checkPage();
             }
         });
+        createTagOptionGroup(panel);
         bPanel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
         Dialog.applyDialogFont(panel);
         setControl(panel);
         checkPage();
+    }
+
+    private void createTagOptionGroup(Composite parent) {
+        final Group tagsGroup = new Group(parent, SWT.NULL);
+        tagsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        tagsGroup.setText(UIText.TagOptions_groupName);
+        tagsGroup.setLayout(new GridLayout());
+        createTagOptionButton(tagsGroup, TagOpt.AUTO_FOLLOW,
+                UIText.TagOptions_autoFollow);
+        createTagOptionButton(tagsGroup, TagOpt.FETCH_TAGS,
+                UIText.TagOptions_fetchTags);
+        createTagOptionButton(tagsGroup, TagOpt.NO_TAGS,
+                UIText.TagOptions_noTags);
+    }
+
+    private void createTagOptionButton(Group tagsGroup, final TagOpt option,
+            String text) {
+        Button button = new Button(tagsGroup, SWT.RADIO);
+        button.setText(text);
+        button.setSelection(option == tagOption);
+        button.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                tagOption = option;
+            }
+        });
     }
 
     public void setSelection(@NonNull RepositorySelection selection) {
@@ -320,9 +356,8 @@ public class CustomSourceBranchPage extends WizardPage {
         final ListRemoteOperation listRemoteOp;
         final URIish uri = newRepoSelection.getURI();
         try {
-            int timeout = Activator.getDefault().getPreferenceStore().getInt(
-                    UIPreferences.REMOTE_CONNECTION_TIMEOUT);
-            listRemoteOp = new ListRemoteOperation(uri, timeout);
+            listRemoteOp = new ListRemoteOperation(uri,
+                    GitSettings.getRemoteConnectionTimeout());
             if (credentials != null)
                 listRemoteOp
                         .setCredentialsProvider(new EGitCredentialsProvider(

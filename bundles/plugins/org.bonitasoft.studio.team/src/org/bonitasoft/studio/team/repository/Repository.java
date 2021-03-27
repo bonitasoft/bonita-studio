@@ -145,7 +145,6 @@ public class Repository extends AbstractRepository {
         //Initialize SVN extensions
         if (PlatformUI.isWorkbenchRunning() && !PlatformUtil.isHeadless()) {
             CoreExtensionsManager.instance().getAccessibleClients();
-            new TeamPreferenceInitializer().initializeDefaultPreferences();
         }
         return super.create(metadata, monitor);
     }
