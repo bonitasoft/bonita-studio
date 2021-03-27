@@ -25,10 +25,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -58,13 +63,13 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Bundle;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-import com.google.common.base.Joiner;
-
 public class UIDesignerServerManager implements IBonitaProjectListener {
 
+    private static final String UI_DESIGNER_JAR = "ui-designer-backend-webapp.jar";
     private static final String UID_SERVER_PORT = "server.port";
     private static final String UID_LOGGING_FILE = "logging.file.name";
     private static UIDesignerServerManager INSTANCE;
@@ -107,6 +112,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                         .orElse(false)) {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
+            Instant start = Instant.now();
             try {
                 if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
                     WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
@@ -132,7 +138,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        Joiner.on(" ").join(buildCommand(repository)));
+                        buildCommand(repository).stream().collect(Collectors.joining(" ")));
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
@@ -141,12 +147,13 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 if (waitForUID(pageDesignerURLBuilder)) {
                     started = true;
                     BonitaStudioLog.info(
-                            String.format("UI Designer has been started on http://localhost:%s/bonita", port),
+                            String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
+                                    Duration.between(start, Instant.now()).getSeconds()),
                             UIDesignerPlugin.PLUGIN_ID);
                 }
             } catch (final CoreException | IOException e) {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
-            } 
+            }
         }
     }
 
@@ -236,7 +243,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                         InetAddress.getByName(null).getHostAddress(),
                         DataRepositoryServerManager.getInstance().getPort())),
                 aSystemProperty(UID_SERVER_PORT, String.valueOf(port)),
-                aSystemProperty(UID_LOGGING_FILE,String.format("\"%s\"", getLogFile().getAbsolutePath())),
+                aSystemProperty(UID_LOGGING_FILE, String.format("\"%s\"", getLogFile().getAbsolutePath())),
                 "-jar",
                 "\"" + locateUIDjar() + "\"");
     }
@@ -255,14 +262,22 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     }
 
     protected String locateUIDjar() throws IOException {
-        final URL url = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID).getResource("webapp");
-        File webappFolder = new File(URLDecoder.decode(FileLocator.toFileURL(url).getFile(), "UTF-8"));
-        File execJar = new File(webappFolder, "ui-designer-backend-webapp.jar");
-        if (!execJar.exists()) {
-            throw new FileNotFoundException(
-                    String.format("Cannot find ui designer jar file in %s folder.", webappFolder.getAbsolutePath()));
+        Bundle uiDesignerBundle = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID);
+        IPath stateLocation = Platform.getStateLocation(uiDesignerBundle);
+        Path uiDesignerJar = stateLocation.toFile().toPath().resolve(UI_DESIGNER_JAR);
+
+        if (!uiDesignerJar.toFile().exists()) {
+            final URL url = Platform.getBundle(UIDesignerPlugin.PLUGIN_ID).getResource("webapp");
+            File webappFolder = new File(URLDecoder.decode(FileLocator.toFileURL(url).getFile(), "UTF-8"));
+            File execJar = new File(webappFolder, UI_DESIGNER_JAR);
+            if (!execJar.exists()) {
+                throw new FileNotFoundException(
+                        String.format("Cannot find ui designer jar file in %s folder.",
+                                webappFolder.getAbsolutePath()));
+            }
+            Files.copy(execJar.toPath(), uiDesignerJar);
         }
-        return execJar.getCanonicalFile().getAbsolutePath();
+        return uiDesignerJar.toFile().getCanonicalFile().getAbsolutePath();
     }
 
     protected ILaunchManager getLaunchManager() {

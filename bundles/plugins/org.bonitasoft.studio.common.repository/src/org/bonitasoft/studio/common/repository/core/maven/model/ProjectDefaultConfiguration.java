@@ -30,11 +30,12 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
     private static final String SLF4J_VERSION = "1.7.30";
-    private static final String GROOVY_VERSION = "2.4.21";
+    private static final String GROOVY_VERSION = "3.0.7";
 
     private static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(
             new BonitaCommonDependency(),
-            new MavenDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}"),
+            new MavenDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}", "pom"),
+            new MavenDependency("org.codehaus.groovy", "groovy-dateutil", "${groovy.version}"),
             new MavenDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
 
     private Properties properties = new Properties();

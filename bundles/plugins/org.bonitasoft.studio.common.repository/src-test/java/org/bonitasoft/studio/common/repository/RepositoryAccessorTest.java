@@ -69,7 +69,7 @@ public class RepositoryAccessorTest {
 
         //Then
         verify(repositoryManager).getCurrentRepository();
-        verify(repository).open(monitor);
+        verify(repository).open(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     @Test
@@ -83,6 +83,6 @@ public class RepositoryAccessorTest {
 
         //Then
         verify(repositoryManager).getCurrentRepository();
-        verify(repository).create(ProjectMetadata.defaultMetadata(), monitor);
+        verify(repository).create(ProjectMetadata.defaultMetadata(), AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 }

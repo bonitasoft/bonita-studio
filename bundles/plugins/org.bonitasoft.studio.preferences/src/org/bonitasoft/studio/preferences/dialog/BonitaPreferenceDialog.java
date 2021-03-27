@@ -29,6 +29,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.preferences.i18n.Messages;
+import org.eclipse.core.text.StringMatcher;
 import org.eclipse.e4.ui.css.swt.resources.SWTResourcesRegistry;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -61,7 +62,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceDialog;
-import org.eclipse.ui.internal.misc.StringMatcher;
 import org.eclipse.ui.internal.preferences.WorkbenchPreferenceExtensionNode;
 import org.eclipse.ui.themes.ColorUtil;
 

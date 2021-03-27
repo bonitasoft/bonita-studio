@@ -121,6 +121,7 @@ public final class Messages extends NLS {
 
     public static String creatingNewProject;
     public static String invalidFormat;
+    public static String loadingCurrentProject;
 
     private Messages() {
         // Do not instantiate

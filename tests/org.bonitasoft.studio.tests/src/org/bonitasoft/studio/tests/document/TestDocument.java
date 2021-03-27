@@ -69,17 +69,22 @@ public class TestDocument {
         botAddDocumentDialog.finish();
 
         //Edit
-        botAddDocumentDialog = botDocumentsPropertySection.editDocument("doc1");
-        botAddDocumentDialog.setName("doc1Edited");
-        botAddDocumentDialog.chooseExternalInitialContent();
-        final boolean isErrorMessageForURLAppeared = botAddDocumentDialog.isErrorMessageUrl();
-        botAddDocumentDialog.setURLWithExpressionEditor("http://url-test");
-        BotAddDocumentDialog documentDialogBot = botAddDocumentDialog;
+        BotAddDocumentDialog documentDialogBot = botDocumentsPropertySection.editDocument("doc1");
+        documentDialogBot.setName("doc1Edited");
+        documentDialogBot.chooseExternalInitialContent();
         bot.waitUntil(new AssertionCondition() {
             
             @Override
             protected void makeAssert() throws Exception {
-                Assertions.assertThat(documentDialogBot.isErrorMessageUrl()).isFalse();
+                Assertions.assertThat(documentDialogBot.hasErrorMessageUrl()).isTrue();
+            }
+        });
+        botAddDocumentDialog.setURLWithExpressionEditor("http://url-test");
+        bot.waitUntil(new AssertionCondition() {
+            
+            @Override
+            protected void makeAssert() throws Exception {
+                Assertions.assertThat(documentDialogBot.hasErrorMessageUrl()).isFalse();
             }
         });
       
@@ -90,8 +95,6 @@ public class TestDocument {
         final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection
                 .removeDocument("doc1Edited");
         botRemoveDocumentDialog.ok();
-
-        Assertions.assertThat(isErrorMessageForURLAppeared).isTrue();
     }
 
     @Test
@@ -148,9 +151,9 @@ public class TestDocument {
         final boolean errorMessageNameEmpty = botAddDocumentDialog.isErrorMessageNameEmpty();
         botAddDocumentDialog.setName("doc2");
         botAddDocumentDialog.chooseExternalInitialContent();
-        final boolean isErrorMessageForURLAppeared = botAddDocumentDialog.isErrorMessageUrl();
+        final boolean isErrorMessageForURLAppeared = botAddDocumentDialog.hasErrorMessageUrl();
         botAddDocumentDialog.chooseInternalInitialContent();
-        final boolean isErrorMessageFileAppeared = botAddDocumentDialog.isErrorMessageFile();
+        final boolean isErrorMessageFileAppeared = botAddDocumentDialog.hasErrorMessageFile();
 
         botAddDocumentDialog.cancel();
 
@@ -176,7 +179,7 @@ public class TestDocument {
 
         // Name
         botAddDocumentDialog.setName("document1");
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageFile());
 
         // None
         botAddDocumentDialog.chooseNoneInitialContent();
@@ -185,7 +188,7 @@ public class TestDocument {
 
         // External Content
         botAddDocumentDialog.chooseExternalInitialContent();
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageUrl());
         botAddDocumentDialog.setURL("http://internet.com/logo.jpg");
         bot.sleep(200); // wait the 500ms delay
         assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
@@ -193,7 +196,7 @@ public class TestDocument {
 
         // Internal Content
         botAddDocumentDialog.chooseInternalInitialContent();
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageFile());
         botAddDocumentDialog.setFile("toto.txt");
         assertThat(botAddDocumentDialog.hasNoValidationError()).isTrue();
         assertThat(botAddDocumentDialog.canFinish()).isTrue();
@@ -275,7 +278,7 @@ public class TestDocument {
 
         // INTERNAL
         botAddDocumentDialog.chooseInternalInitialContent();
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageFile());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
@@ -283,12 +286,12 @@ public class TestDocument {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageFile());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         // EXTERNAL
         botAddDocumentDialog.chooseExternalInitialContent();;
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageUrl());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
@@ -296,7 +299,7 @@ public class TestDocument {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
-        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.hasErrorMessageUrl());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         // NONE

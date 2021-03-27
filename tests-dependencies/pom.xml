@@ -20,7 +20,6 @@
     <modules>
         <module>assertj-core</module>
         <module>org.mockito</module>
-        <module>org.eclipse.swtbot.finder.nebula.tableCombo</module>
         <module>tests-dependencies-feature</module>
     </modules>
 

@@ -28,7 +28,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
  * @author Romain Bioteau
  *Utility object to copy an InputStream
  */
-public class CopyInputStream{
+public class CopyInputStream implements AutoCloseable{
 
     private final InputStream _is;
 	private Path file;

@@ -46,13 +46,14 @@ public class RecentFilesContentProvider implements DOMContentProvider {
 
     @Override
     public void createContent(Document dom, Element parent) {
+        Element ul = dom.createElement("ul");
+        parent.appendChild(ul);
+        
+        
         if (!RepositoryManager.getInstance().hasActiveRepository()
                 || !RepositoryManager.getInstance().getCurrentRepository().isLoaded()) {
             return;
         }
-
-        Element ul = dom.createElement("ul");
-        parent.appendChild(ul);
 
         EditorHistory history = ((Workbench) PlatformUI.getWorkbench()).getEditorHistory();
         EditorHistoryItem[] historyItems = history.getItems();

@@ -15,8 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.ListRemoteOperation;
 import org.eclipse.egit.core.securestorage.UserPasswordCredentials;
-import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.internal.credentials.EGitCredentialsProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jgit.lib.Constants;
@@ -46,8 +45,7 @@ public class RetrieveHEADRefOperation implements IRunnableWithProgress {
         try {
             final Repository db = FileRepositoryBuilder
                     .create(new File("/tmp")); //$NON-NLS-1$
-            int timeout = Activator.getDefault().getPreferenceStore().getInt(
-                    UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+            int timeout = GitSettings.getRemoteConnectionTimeout();
             ListRemoteOperation listRemoteOp = new ListRemoteOperation(db, uri, timeout);
             if (credentials != null) {
                 listRemoteOp

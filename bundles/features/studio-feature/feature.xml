@@ -110,10 +110,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.codehaus.groovy24.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.codehaus.groovy.jdt.patch"
          version="0.0.0"/>
 
@@ -190,14 +186,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.nebula.widgets.richtext.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.nebula.widgets.tablecombo.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.egit"
          version="0.0.0"/>
 
@@ -218,14 +206,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.nebula.widgets.tablecombo.css.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.nebula.widgets.tablecombo.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.babel.nls_datatools_pt_BR"
          version="0.0.0"/>
 
@@ -243,14 +223,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.babel.nls_technology.egit_pt_BR"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.egit"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.egit.gitflow.feature"
          version="0.0.0"/>
 
    <includes
@@ -290,55 +262,7 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.jgit.lfs"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.jgit.ssh.apache"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.ssh.jsch"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.jgit_es"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.jgit_fr"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.jgit_ja"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_technology.jgit_pt_BR"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.gpg.bc"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.http.apache"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.lfs"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.ssh.apache"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.jgit.ssh.jsch"
          version="0.0.0"/>
 
    <includes
@@ -365,19 +289,16 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          id="org.eclipse.wst.json_ui.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.codehaus.groovy30.feature"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.rcp" version="4.10.0.v20181206-0815" match="greaterOrEqual"/>
       <import feature="platform-specific-feature" version="7.13.0" match="equivalent"/>
       <import feature="org.eclipse.wst.web_ui.feature" version="3.11.0.v201811192212" match="greaterOrEqual"/>
       <import feature="org.eclipse.gmf" version="1.12.0.201806010809" match="greaterOrEqual"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.equinox.ds"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio"
@@ -996,13 +917,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xerces"
-         download-size="0"
-         install-size="0"
-         version="2.12.1.v20210115-0812"
          unpack="false"/>
 
 </feature>

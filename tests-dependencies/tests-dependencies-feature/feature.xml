@@ -17,35 +17,8 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.eclipse.swtbot"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse.gef"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.forms"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse.test.junit"
-         version="0.0.0"/>
-
    <plugin
          id="org.mockito"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.finder.nebula.tableCombo"
          download-size="0"
          install-size="0"
          version="0.0.0"

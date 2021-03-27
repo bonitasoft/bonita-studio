@@ -24,7 +24,9 @@ import org.eclipse.egit.core.GitProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -40,9 +42,14 @@ public class CloneGitProject extends AbstractHandler {
     public void execute() {
         Shell activeShell = Display.getDefault().getActiveShell();
         CustomGitCloneWizard wizard = new CustomGitCloneWizard();
-        WizardDialog dlg = new WizardDialog(activeShell, wizard);
+        WizardDialog dlg = new WizardDialog(activeShell, wizard) {
+            @Override
+            protected Point getInitialSize() {
+                return new Point(800, 800);
+            }
+        };
         dlg.setHelpAvailable(true);
-        if (dlg.open() == Dialog.OK && RepositoryManager.getInstance().getCurrentRepository().isShared(GitProvider.ID)) { // To prevent npe if the authentification failed
+        if (dlg.open() == Window.OK && RepositoryManager.getInstance().getCurrentRepository().isShared(GitProvider.ID)) { // To prevent npe if the authentification failed
             if(new MessageDialog(activeShell,  Messages.repositoryClonedTitle, null,  !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg,
                             wizard.getRepositoryName())
                             : migrationAfterCloneMessage(wizard), MessageDialog.INFORMATION, 0, org.bonitasoft.studio.importer.i18n.Messages.deploy, IDialogConstants.CLOSE_LABEL).open() == 0) {

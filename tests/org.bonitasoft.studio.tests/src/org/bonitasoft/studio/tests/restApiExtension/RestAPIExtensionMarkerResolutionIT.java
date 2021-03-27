@@ -23,12 +23,10 @@ import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionRepositoryStore;
 import org.bonitasoft.studio.rest.api.extension.core.validation.RestAPIDependencyVersionToUpdateFinder;
-import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.ui.ide.IDE;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,58 +69,35 @@ public class RestAPIExtensionMarkerResolutionIT {
         checkProjectMarkers(restAPIExtensionFileStore.getProject());
     }
 
-    private AssertionCondition doesNotcontainStatusMessage(IResource resource, String message) {
-        return new AssertionCondition() {
-
-            @Override
-            protected void makeAssert() throws Exception {
-                IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ONE);
-                assertThat(Stream.of(markers).map(m -> {
-                    try {
-                        return m.getAttribute(IMarker.MESSAGE);
-                    } catch (CoreException e) {
-                        return null;
-                    }
-                })).doesNotContain(message);
-            }
-        };
-    }
-
     private IMarker findMarkerWithMessage(IResource resource, String message) throws CoreException {
         IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ONE);
-        IMarker marker = Stream.of(markers).filter(m -> {
+        return Stream.of(markers).filter(m -> {
             try {
                 return Objects.equals(message, m.getAttribute(IMarker.MESSAGE));
             } catch (CoreException e) {
                 return false;
             }
         }).findFirst().orElse(null);
-        assertThat(marker).isNotNull();
-        assertThat(IDE.getMarkerHelpRegistry().hasResolutions(marker)).isTrue();
-        return marker;
     }
 
     private void checkProjectMarkers(IResource project) throws CoreException {
-        checkMarker(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
+        checkMarkerDoesNotExists(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ALL_ARTIFACT_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ALL_MIN_VERSION, project);
-        checkMarker(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
+        checkMarkerDoesNotExists(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ECLIPSE_BATCH_ARTIFACT_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ECLIPSE_BATCH_MIN_VERSION, project);
-        checkMarker(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
+        checkMarkerDoesNotExists(RestAPIDependencyVersionToUpdateFinder.GROOVY_GROUP_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ECLIPSE_COMPILER_ARTIFACT_ID,
                 RestAPIDependencyVersionToUpdateFinder.GROOVY_ECLIPSE_COMPILER_MIN_VERSION, project);
     }
 
-    private void checkMarker(String groupId, String artifactId,
+    private void checkMarkerDoesNotExists(String groupId, String artifactId,
             String minVersion, IResource project) throws CoreException {
         String artifactName = String.format("%s:%s", groupId, artifactId);
         String rawMessage = String.format(Messages.updateVersionForJava11Compliance, artifactName, minVersion);
         IMarker marker = findMarkerWithMessage(project, rawMessage);
-        //Apply quickfix
-        IDE.getMarkerHelpRegistry().getResolutions(marker)[0].run(marker);
-        //Check marker is no more present
-        doesNotcontainStatusMessage(project, rawMessage);
+        assertThat(marker).isNull();
     }
 
 }

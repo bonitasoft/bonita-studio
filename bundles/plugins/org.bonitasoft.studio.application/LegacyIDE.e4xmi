@@ -6,7 +6,7 @@
       <children xsi:type="menu:ToolControl" xmi:id="_YoyTgPmrEeKmbqF_-KBA6g" elementId="BonitaCoolbar" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.coolbar.CoolbarToolControl"/>
     </trimBars>
   </children>
-  <handlers xmi:id="_UW9TY_r3Ed6gmo7caOxU9g" elementId="_UW9TY_r3Ed6gmo7caOxU9g" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.ExitHandler" command="e4.exit"/>
+  <handlers xmi:id="_UW9TY_r3Ed6gmo7caOxU9g" elementId="_UW9TY_r3Ed6gmo7caOxU9g" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.ExitHandler" command="e4.exit"/>
   <handlers xmi:id="_BESTZfr3Ed6gmo7caOxU04" elementId="_BESTZfr3Ed6gmo7caOxU04" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.internal.workbench.swt.handlers.ShowViewHandler" command="e4.show.view"/>
   <handlers xmi:id="_eTBRgAFSEd-Z8rQksLwRYw" elementId="org.eclipse.e4.ui.saveHandler" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.SaveHandler" command="_jR5mUAFSEd-Z8rQksLwRYw"/>
   <handlers xmi:id="_eTBRgAFSEd-Z8rQksLwRYx" elementId="org.eclipse.e4.ui.saveAllHandler" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.handlers.SaveAllHandler" command="_jR5mUAFSEd-Z8rQksLwRYx"/>

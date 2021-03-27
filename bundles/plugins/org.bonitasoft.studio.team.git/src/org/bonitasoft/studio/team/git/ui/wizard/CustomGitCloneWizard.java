@@ -38,8 +38,8 @@ import org.eclipse.egit.core.op.ConfigureGerritAfterCloneTask;
 import org.eclipse.egit.core.op.ConfigurePushAfterCloneTask;
 import org.eclipse.egit.core.op.SetRepositoryConfigPropertyTask;
 import org.eclipse.egit.core.securestorage.UserPasswordCredentials;
+import org.eclipse.egit.core.settings.GitSettings;
 import org.eclipse.egit.ui.Activator;
-import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.SecureStoreUtils;
 import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.egit.ui.internal.clone.GitCloneWizard;
@@ -244,13 +244,12 @@ public class CustomGitCloneWizard extends GitCloneWizard {
                     UIText.GitCloneWizard_errorCannotCreate, workdir.getPath());
             ErrorDialog.openError(getShell(), getWindowTitle(),
                     UIText.GitCloneWizard_failed, new Status(IStatus.ERROR,
-                            Activator.getPluginId(), 0, errorMessage, null));
+                            Activator.PLUGIN_ID, 0, errorMessage, null));
             // let's give user a chance to fix this minor problem
             return null;
         }
 
-        int timeout = Activator.getDefault().getPreferenceStore()
-                .getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+        int timeout = GitSettings.getRemoteConnectionTimeout();
         final CloneOperation op = new CloneOperation(uri, allSelected,
                 allSelected ? null : selectedBranches, workdir, ref != null ? ref.getName() : null,
                 remoteName, timeout);

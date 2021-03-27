@@ -47,7 +47,7 @@ public class TeamPreferenceInitializer extends AbstractPreferenceInitializer {
         TeamUIPlugin.getPlugin().getPreferenceStore().setValue(IPreferenceIds.SYNCHRONIZING_COMPLETE_PERSPECTIVE,  MessageDialogWithToggle.NEVER);
         
         IPreferenceStore gitPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-                Activator.getPluginId());
+                Activator.PLUGIN_ID);
         gitPreferenceStore.setDefault(GitCorePreferences.core_autoShareProjects, false);
         WorkbenchPlugin.getDefault().getDecoratorManager()
                 .setEnabled("org.eclipse.team.svn.ui.decorator.SVNLightweightDecorator", true);

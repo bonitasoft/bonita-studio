@@ -472,10 +472,6 @@
    <extension
          point="org.eclipse.ui.commandImages">
       <image
-            commandId="org.bonitasoft.studio.organization.manage"
-            icon="icons/organization.png">
-      </image>
-      <image
             commandId="org.bonitasoft.studio.identity.organization.create.command"
             icon="icons/organization.png">
       </image>
