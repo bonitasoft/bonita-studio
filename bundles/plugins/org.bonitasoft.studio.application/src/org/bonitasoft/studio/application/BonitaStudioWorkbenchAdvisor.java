@@ -440,6 +440,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
+        RepositoryManager.getInstance().getAccessor().start(monitor);
+        
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         synchroniseTheme(engine);
@@ -596,16 +598,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        Display.getDefault().syncExec(() -> {
-            try {
-                progressService.run(true, false,
-                        monitor -> RepositoryManager.getInstance().getAccessor().start(monitor));
-            } catch (InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
-        });
-
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
