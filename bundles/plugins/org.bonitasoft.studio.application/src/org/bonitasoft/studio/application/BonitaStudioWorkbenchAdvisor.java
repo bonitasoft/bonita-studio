@@ -46,7 +46,6 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
 import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
 import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
-import org.codehaus.groovy.eclipse.launchers.GroovyConsoleLineTracker;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -89,7 +88,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
@@ -395,10 +393,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         return "org.bonitasoft.studio.preferences.preferences.UIPreferencePage";
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.ui.application.WorkbenchAdvisor#preStartup()
-     */
     @Override
     public void preStartup() {
         try {
@@ -418,9 +412,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         setSystemProperties();
 
         new InstallLocalRepositoryContribution().execute();
-
-        //Avoid deadlock and thread timeout at startup
-        new GroovyConsoleLineTracker();
     }
 
     protected void setSystemProperties() {
@@ -440,8 +431,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
-        RepositoryManager.getInstance().getAccessor().start(monitor);
-        
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         synchroniseTheme(engine);
@@ -598,6 +587,18 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
+        Display.getDefault().syncExec(() -> {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                    RepositoryManager.getInstance().getAccessor().start(monitor);
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+        
+
+        
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
