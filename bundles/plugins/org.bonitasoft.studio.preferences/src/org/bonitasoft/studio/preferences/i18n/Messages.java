@@ -76,4 +76,6 @@ public class Messages extends NLS {
     public static String theme;
     public static String notifyBdmDeploymentRequiredMessage;
     public static String updateThemeAndRestartQuestion;
+    public static String BonitaPreferenceDialog_Development;
+    public static String extensions;
 }

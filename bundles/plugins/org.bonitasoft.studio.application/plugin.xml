@@ -1610,5 +1610,14 @@
             name="%projectExtensionView">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.application.preference.ExtensionsPreferencePage"
+            id="org.bonitasoft.studio.preferences.extension"
+            name="Extensions">
+      </page>
+   </extension>
 
 </plugin>
