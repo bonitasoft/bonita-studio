@@ -67,7 +67,7 @@ import org.eclipse.ui.themes.ColorUtil;
 
 public class BonitaPreferenceDialog extends Dialog {
 
-    private static final int SHELL_HEIGHT = 530;
+    private static final int SHELL_HEIGHT = 600;
     private static final int SHELL_WIDTH = 800;
     private static final int MARGIN_RIGHT = 80;
     private static final int MARGIN_LEFT = 25;
@@ -85,6 +85,7 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
     public static final String CONSTRAINTS_PAGE_ID = "org.eclipse.emf.validation.constraintsPrefs";
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
+    public static final String EXTENSIONS_PAGE_ID = "org.bonitasoft.studio.preferences.extension"; //$NON-NLS-1$
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
     private static final String COLOR = "color";
     private static final String DARKER = "darker";
@@ -113,7 +114,8 @@ public class BonitaPreferenceDialog extends Dialog {
             PROXY_PAGE_ID,
             CONSTRAINTS_PAGE_ID,
             ADVANCED_PAGE_ID,
-            ECLIPSE_PAGE_ID };
+            ECLIPSE_PAGE_ID,
+            EXTENSIONS_PAGE_ID };
     private SWTResourcesRegistry swtResourcesRegistry;
 
     public BonitaPreferenceDialog(final Shell parentShell) {
@@ -399,6 +401,8 @@ public class BonitaPreferenceDialog extends Dialog {
         createSeparator(menuComposite);
         createDeploymentCategoryLine(menuComposite);
         createSeparator(menuComposite);
+        createDevelopmentCategoryLine(menuComposite);
+        createSeparator(menuComposite);
         createWebCategoryLine(menuComposite);
         createSeparator(menuComposite);
         createOtherCategoryLine(menuComposite);
@@ -488,6 +492,17 @@ public class BonitaPreferenceDialog extends Dialog {
         } else {
             new Label(deploymentRow, SWT.WRAP | SWT.CENTER);
         }
+    }
+
+    private void createDevelopmentCategoryLine(Composite menuComposite) {
+        Composite developmentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Development, 1);
+
+        ToolItem tltmExtension = createTool(developmentRow, null,
+                Pics.getImage(PicsConstants.preferenceExtension), Pics.getImage(PicsConstants.preferenceExtension),
+                EXTENSIONS_PAGE_ID);
+        itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
+        Label lblExtension = createItemLabel(developmentRow, null,
+                Messages.extensions);
     }
 
     protected void createWebCategoryLine(final Composite menuComposite) {

@@ -194,6 +194,8 @@ public class PicsConstants {
     public static String preferenceLegacy6x = "preferences/legacy6x.png";
     public static String preferenceLegacy6xDisabled = "preferences/legacy6x_disabled.png";
 
+    public static String preferenceExtension = "preferences/extension.png";
+
     public static String formArrowLeft = "forms/arrowLeft.png";
 
     public static String formArrowRight = "forms/arrowRight.png";

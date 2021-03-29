@@ -214,6 +214,24 @@ public class Messages extends NLS {
     public static String extensions;
     public static String modify;
 
+    public static String repositories;
+    public static String repositoriesDescription;
+    public static String servers;
+    public static String proxies;
+    public static String mirrors;
+    public static String id;
+    public static String url;
+    public static String releases;
+    public static String snapshots;
+    public static String enabled;
+    public static String updatePolicy;
+    public static String checksumPolicy;
+    public static String add;
+    public static String addRepositoryTooltip;
+    public static String deleteRepositoryTooltip;
+    public static String mavenProfile;
+    public static String mavenProfileHint;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

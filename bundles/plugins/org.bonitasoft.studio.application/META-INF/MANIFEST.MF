@@ -107,3 +107,6 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.views,
  org.bonitasoft.studio.application.views.process,
  org.bonitasoft.studio.application.views.provider
+Bundle-ClassPath: .,
+ lib/jdom.jar,
+ lib/maven3-model-jdom-support.jar
