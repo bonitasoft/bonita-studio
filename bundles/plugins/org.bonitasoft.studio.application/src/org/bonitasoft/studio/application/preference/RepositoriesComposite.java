@@ -39,7 +39,6 @@ import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -298,15 +297,7 @@ public class RepositoriesComposite extends Composite {
     }
 
     private void refreshViewer() {
-        getDisplay().asyncExec(() -> {
-            viewer.refresh();
-
-            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-            // TODO Hopefully this could be removed on the futur
-            if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                viewer.getControl().redraw();
-            }
-        });
+        getDisplay().asyncExec(() -> viewer.refresh());
     }
 
     protected void createViewer(Composite parent) {

@@ -36,7 +36,6 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -122,15 +121,6 @@ public class IndexEditionControl extends Composite {
         createIndexedAttributesTableViewer(viewersComposite);
 
         indexedFieldsObservable.addChangeListener(e -> availableAttributesTableViewer.refresh());
-
-        selectedIndexObservable.addValueChangeListener(e -> {
-            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-            // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
-            if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                availableAttributesTableViewer.getControl().redraw();
-                indexedAttributesTableViewer.getControl().redraw();
-            }
-        });
     }
 
     private void bindIndexedFieldObservableLists(DataBindingContext ctx, IObservableList<Field> actualsFieldsObservable) {

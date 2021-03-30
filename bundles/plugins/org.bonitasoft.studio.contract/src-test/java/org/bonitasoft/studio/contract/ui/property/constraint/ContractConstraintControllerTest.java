@@ -68,7 +68,6 @@ public class ContractConstraintControllerTest {
         contract = ProcessFactory.eINSTANCE.createContract();
         when(viewer.getInput())
                 .thenReturn(EMFObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
-        doReturn(false).when(controller).isMacos();
     }
 
     @Test

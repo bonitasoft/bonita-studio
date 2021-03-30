@@ -36,7 +36,6 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -111,11 +110,6 @@ public class BosArchiveContentPage implements ControlSupplier {
                     importActionSelector.setArchiveModel(archiveModel);
                     viewer.setInput(archiveModel);
                     updateTree();
-                    // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-                    // TODO Hopefully this could be removed on the futur
-                    if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                        viewer.getControl().redraw();
-                    }
                 }
             });
         }
@@ -158,7 +152,7 @@ public class BosArchiveContentPage implements ControlSupplier {
     }
 
     private Converter<ConflictStatus, String> createArchiveStatusConverter() {
-        return new Converter<ConflictStatus, String>(ConflictStatus.class, String.class) {
+        return new Converter<>(ConflictStatus.class, String.class) {
 
             @Override
             public String convert(ConflictStatus status) {

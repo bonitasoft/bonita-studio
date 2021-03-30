@@ -62,7 +62,6 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -188,7 +187,7 @@ public class BusinessObjectList {
     }
 
     protected void enableButtons() {
-        ComputedValue<Boolean> selectionNotNull = new ComputedValue<Boolean>(Boolean.TYPE) {
+        ComputedValue<Boolean> selectionNotNull = new ComputedValue<>(Boolean.TYPE) {
 
             @Override
             protected Boolean calculate() {
@@ -387,16 +386,7 @@ public class BusinessObjectList {
         ToolItem expandItem = new ToolItem(toolBar, SWT.PUSH);
         expandItem.setImage(Pics.getImage(PicsConstants.expandAll));
         expandItem.setToolTipText(Messages.expandAll);
-        expandItem.addListener(SWT.Selection, e -> {
-            viewer.expandAll();
-
-            /**
-             * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
-             */
-            if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                viewer.getControl().redraw();
-            }
-        });
+        expandItem.addListener(SWT.Selection, e -> viewer.expandAll());
 
         ToolItem collapseItem = new ToolItem(toolBar, SWT.PUSH);
         collapseItem.setImage(Pics.getImage(PicsConstants.collapseAll));
@@ -439,8 +429,8 @@ public class BusinessObjectList {
         input.getValue().getPackages().add(newPackage);
         BusinessObject newBusinessObject = addBusinessObject(formPage, newPackage);
         viewer.getControl().getDisplay().asyncExec(() -> {
-            if (viewer != null 
-                    && viewer.getControl() != null 
+            if (viewer != null
+                    && viewer.getControl() != null
                     && !viewer.getControl().isDisposed()) {
                 viewer.expandToLevel(newBusinessObject, 1);
                 viewer.editElement(newPackage, 0);
@@ -455,8 +445,8 @@ public class BusinessObjectList {
                 : (Package) ((BusinessObject) selectionObservable.getValue()).eContainer();
         BusinessObject newBusinessObject = addBusinessObject(formPage, pakage);
         viewer.getControl().getDisplay().asyncExec(() -> {
-            if (viewer != null 
-                    && viewer.getControl() != null 
+            if (viewer != null
+                    && viewer.getControl() != null
                     && !viewer.getControl().isDisposed()) {
                 viewer.editElement(newBusinessObject, 0);
             }

@@ -46,7 +46,6 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
@@ -148,12 +147,6 @@ public class AttributeEditionControl extends Composite {
                         .filter(field -> !field.getName().toLowerCase().contains(search))
                         .forEach(fieldToFilter::add);
                 viewer.refresh();
-
-                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-                // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
-                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                    viewer.getControl().redraw();
-                }
             });
         });
     }
@@ -212,12 +205,6 @@ public class AttributeEditionControl extends Composite {
         viewer.setContentProvider(new ObservableListContentProvider());
         viewer.setInput(fieldsObservable);
         selectedFieldObservable = ViewerProperties.singleSelection(Field.class).observe(viewer);
-
-        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            selectedBoObservable.addValueChangeListener(e -> viewer.getTable().redraw());
-        }
 
         addDragAndDropSupport();
     }

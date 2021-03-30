@@ -17,8 +17,6 @@ package org.bonitasoft.studio.identity.organization.editor.control.user;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.util.Objects;
-
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.identity.organization.editor.formpage.user.UserFormPage;
@@ -36,7 +34,6 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -51,7 +48,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class InformationSection {
@@ -95,9 +91,7 @@ public class InformationSection {
 
     private void createInformationsTabFolder(Composite informationParent) {
         informationsTabFolder = new NativeTabFolderWidget.Builder().createIn(informationParent);
-        informationsTabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
-        informationsTabFolder
-                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        informationsTabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         professionnalTab = new NativeTabItemWidget.Builder()
                 .withText(Messages.professionalData)
@@ -125,7 +119,7 @@ public class InformationSection {
         formPage.getToolkit().adapt(sc);
 
         Composite personalInfoComposite = formPage.getToolkit().createComposite(sc);
-        personalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10)
+        personalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 0)
                 .spacing(10, LayoutConstants.getSpacing().y).numColumns(2).create());
         personalInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -149,8 +143,8 @@ public class InformationSection {
         formPage.getToolkit().adapt(sc);
 
         Composite professionalInfoComposite = formPage.getToolkit().createComposite(sc);
-        professionalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10)
-                .spacing(10, LayoutConstants.getSpacing().y).numColumns(2).equalWidth(true).create());
+        professionalInfoComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 5, 0)
+                .spacing(10, LayoutConstants.getSpacing().y).numColumns(2).create());
         professionalInfoComposite
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -162,7 +156,8 @@ public class InformationSection {
         sc.setContent(professionalInfoComposite);
         sc.setExpandVertical(true);
         sc.setExpandHorizontal(true);
-        sc.setMinHeight(professionalInfoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        sc
+                .setMinHeight(professionalInfoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
         return sc;
     }
@@ -174,7 +169,7 @@ public class InformationSection {
         contactSection.setText(Messages.contact);
 
         Composite contactComposite = formPage.getToolkit().createComposite(contactSection);
-        contactComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
+        contactComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 10).numColumns(2).create());
         contactComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         createEmailField(contactComposite, contactDataObservable);
@@ -191,7 +186,7 @@ public class InformationSection {
         locationSection.setText(Messages.location);
 
         Composite locationComposite = formPage.getToolkit().createComposite(locationSection);
-        locationComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
+        locationComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 0, 10, 10).numColumns(2).create());
         locationComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
         createBuildingInfoField(locationComposite, contactDataObservable);
@@ -319,12 +314,6 @@ public class InformationSection {
 
         customInfoViewer.setContentProvider(new ObservableListContentProvider());
         customInfoViewer.setInput(customUserInfoValues);
-
-        // TODO necessary since macos Bigsure, should be remove in the futur
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            selectedUserObservable
-                    .addValueChangeListener(e -> Display.getDefault().asyncExec(() -> customInfoViewer.getTable().redraw()));
-        }
     }
 
     private void createValueColumn() {

@@ -14,14 +14,11 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.labelProvider;
 
-import java.util.Objects;
-
 import org.bonitasoft.studio.businessobject.ui.DateTypeLabels;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -30,10 +27,8 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 
 /**
  * @author Romain Bioteau
@@ -87,30 +82,6 @@ public class ContractInputTypeCellLabelProvider extends StyledCellLabelProvider 
                 return DateTypeLabels.DATE_TIME_WITH_TIMEZONE;
             default:
                 return type.name();
-        }
-    }
-
-    @Override
-    protected void erase(Event event, Object element) {
-        super.erase(event, element);
-
-        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            if ((event.detail & SWT.SELECTED) != 0) {
-                Rectangle bounds = event.getBounds();
-                Color oldBg = event.gc.getBackground();
-                if (isDarkTheme
-                        && !Objects.equals(viewer.getControl(), viewer.getControl().getDisplay().getFocusControl())) {
-                    // Selected line background is white on dark theme is the table doesn't have the focus (only for Owner drawn cells ofc). 
-                    // We force it to a gray so it stays consistant with the theme (and became usable btw). 
-                    // Should be fixed on swt.cocoa.macosx soon (please). 
-                    event.gc.setBackground(darkModeSelectLineUnfocused);
-                }
-                event.gc.fillRectangle(bounds);
-                event.gc.setBackground(oldBg);
-                event.detail &= ~SWT.SELECTED;
-            }
         }
     }
 
