@@ -51,7 +51,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
@@ -197,12 +196,6 @@ public class UserList {
                         .filter(user -> !matchesSearchValue(user, search))
                         .forEach(usersToFilter::add);
                 viewer.refresh(); // apply filter
-
-                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-                // TODO Hopefully this could be removed on the futur (current date: 08/01/2021)
-                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                    viewer.getControl().redraw();
-                }
             });
         });
     }
@@ -256,12 +249,6 @@ public class UserList {
                     .removeIf(m -> Objects.equals(m.getUserName(), selectedUser.getUserName()));
             input.remove(selectedUser);
             formPage.updateDefaultUserViewerInput();
-
-            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-            // TODO Hopefully this could be removed on the futur (current date: 08/01/2021)
-            if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                viewer.getControl().redraw();
-            }
         }
     }
 
@@ -287,12 +274,6 @@ public class UserList {
                 .add(((UserFormPage) formPage).createDefaultMembership(user.getUserName()));
         input.add(user);
         formPage.updateDefaultUserViewerInput();
-
-        // Necessary since the MacOS Big Sur update -> Seems that table aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/02/2021)
-        if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-            viewer.getControl().redraw();
-        }
         selectionObservable.setValue(user);
     }
 

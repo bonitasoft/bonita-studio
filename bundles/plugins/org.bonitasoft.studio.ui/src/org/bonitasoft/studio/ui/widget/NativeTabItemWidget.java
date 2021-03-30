@@ -105,7 +105,7 @@ public class NativeTabItemWidget {
     }
 
     private boolean useCTabItem() {
-        return Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS());
+        return Objects.equals(Platform.OS_WIN32, Platform.getOS());
     }
 
     public void setControl(Control control) {

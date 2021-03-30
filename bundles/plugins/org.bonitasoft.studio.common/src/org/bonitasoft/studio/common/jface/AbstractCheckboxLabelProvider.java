@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.jface;
 import java.util.Objects;
 
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -114,30 +113,6 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         final Image image = getImage(element);
         if (image != null) {
             event.height = image.getBounds().height;
-        }
-    }
-
-    @Override
-    protected void erase(Event event, Object element) {
-        super.erase(event, element);
-
-        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            if ((event.detail & SWT.SELECTED) != 0) {
-                Rectangle bounds = event.getBounds();
-                Color oldBg = event.gc.getBackground();
-                if (isDarkTheme
-                        && !Objects.equals(viewer.getControl(), viewer.getControl().getDisplay().getFocusControl())) {
-                    // Selected line background is white on dark theme is the table doesn't have the focus (only for Owner drawn cells ofc). 
-                    // We force it to a gray so it stays consistant with the theme (and became usable btw). 
-                    // Should be fixed on swt.cocoa.macosx soon (please). 
-                    event.gc.setBackground(darkModeSelectLineUnfocused);
-                }
-                event.gc.fillRectangle(bounds);
-                event.gc.setBackground(oldBg);
-                event.detail &= ~SWT.SELECTED;
-            }
         }
     }
 

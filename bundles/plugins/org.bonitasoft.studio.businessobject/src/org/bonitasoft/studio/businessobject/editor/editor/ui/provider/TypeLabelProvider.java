@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor.ui.provider;
 
-import java.util.Objects;
-
 import org.bonitasoft.studio.businessobject.editor.editor.ui.styler.DeprecatedTypeStyler;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObject;
 import org.bonitasoft.studio.businessobject.editor.model.BusinessObjectModel;
@@ -28,7 +26,6 @@ import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.ui.ColorConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -37,12 +34,9 @@ import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 
 public class TypeLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -134,31 +128,6 @@ public class TypeLabelProvider extends StyledCellLabelProvider implements ILabel
     @Override
     public String getText(Object element) {
         return getStyledString(element).getString();
-    }
-
-    @Override
-    protected void erase(Event event, Object element) {
-        super.erase(event, element);
-
-        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            if ((event.detail & SWT.SELECTED) != 0) {
-                Rectangle bounds = event.getBounds();
-                Color oldBg = event.gc.getBackground();
-                if (isDarkTheme
-                        && !Objects.equals(viewer.getControl(),
-                                viewer.getControl().getDisplay().getFocusControl())) {
-                    // Selected line background is white on dark theme if the table doesn't have the focus (only for Owner drawn cells ofc). 
-                    // We force it to a gray so it stays consistant with the theme (and became usable btw). 
-                    // Should be fixed on swt.cocoa.macosx soon (please). 
-                    event.gc.setBackground(darkModeSelectLineUnfocused);
-                }
-                event.gc.fillRectangle(bounds);
-                event.gc.setBackground(oldBg);
-                event.detail &= ~SWT.SELECTED;
-            }
-        }
     }
 
     @Override

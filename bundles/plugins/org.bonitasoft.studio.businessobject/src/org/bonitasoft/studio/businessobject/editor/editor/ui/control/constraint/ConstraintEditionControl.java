@@ -47,7 +47,6 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -296,12 +295,6 @@ public class ConstraintEditionControl {
                         .filter(constraint -> !constraint.getName().toLowerCase().contains(search))
                         .forEach(constraintsToFilter::add);
                 constraintViewer.refresh();
-
-                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-                // TODO Hopefully this could be removed on the futur (current date: 23/11/2020)
-                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                    constraintViewer.getControl().redraw();
-                }
             });
         });
     }

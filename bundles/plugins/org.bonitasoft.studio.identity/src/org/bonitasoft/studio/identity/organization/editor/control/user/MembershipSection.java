@@ -34,7 +34,6 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -139,13 +138,6 @@ public class MembershipSection {
         viewer.setContentProvider(new ObservableListContentProvider());
         viewer.setInput(input);
         selectedUserObservable.addValueChangeListener(e -> Display.getDefault().asyncExec(() -> viewer.refresh()));
-
-        // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-        // TODO Hopefully this could be removed on the futur (current date: 19/11/2020)
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            selectedUserObservable
-                    .addValueChangeListener(e -> Display.getDefault().asyncExec(() -> viewer.getTable().redraw()));
-        }
     }
 
     private void createRoleColumn() {

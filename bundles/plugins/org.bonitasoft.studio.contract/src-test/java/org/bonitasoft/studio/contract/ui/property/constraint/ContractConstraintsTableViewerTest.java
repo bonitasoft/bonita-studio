@@ -16,7 +16,6 @@ package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.process.builders.ContractBuilder.aContract;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -72,7 +71,6 @@ public class ContractConstraintsTableViewerTest {
         viewer = new ContractConstraintsTableViewer(parent, new FormToolkit(parent.getDisplay()));
         ContractConstraintController inputController = spy(
                 new ContractConstraintController(new WritableValue(aContract().build(), Contract.class)));
-        doReturn(false).when(inputController).isMacos();
         viewer.initialize(inputController, messageManager, new EMFDataBindingContext());
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();

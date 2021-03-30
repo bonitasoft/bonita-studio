@@ -32,7 +32,6 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,7 +40,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 
 /**
  * @author Romain Bioteau
@@ -78,7 +76,7 @@ public class ContractConstraintController implements IViewerController {
     }
 
     private Function<ContractConstraint, String> toConstraintName() {
-        return new Function<ContractConstraint, String>() {
+        return new Function<>() {
 
             @Override
             public String apply(final ContractConstraint input) {
@@ -112,17 +110,7 @@ public class ContractConstraintController implements IViewerController {
             //refresh button enablement
             viewer.setSelection(new StructuredSelection());
             viewer.setSelection(new StructuredSelection(selectedConstraint));
-
-            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-            // TODO Hopefully this could be removed on the futur (current date: 20/11/2020)
-            if (isMacos()) {
-                viewer.getControl().redraw();
-            }
         }
-    }
-
-    protected boolean isMacos() {
-        return Objects.equal(Platform.getOS(), Platform.OS_MACOSX);
     }
 
     @Override
@@ -137,12 +125,6 @@ public class ContractConstraintController implements IViewerController {
             //refresh button enablement
             viewer.setSelection(new StructuredSelection());
             viewer.setSelection(new StructuredSelection(selectedConstraint));
-
-            // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-            // TODO Hopefully this could be removed on the futur (current date: 20/11/2020)
-            if (isMacos()) {
-                viewer.getControl().redraw();
-            }
         }
     }
 

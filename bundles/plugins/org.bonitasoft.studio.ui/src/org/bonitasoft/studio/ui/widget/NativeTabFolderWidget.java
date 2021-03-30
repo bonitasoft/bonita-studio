@@ -68,7 +68,7 @@ public class NativeTabFolderWidget {
     }
 
     private boolean useCTabFolder() {
-        return Objects.equals(Platform.OS_MACOSX, Platform.getOS()) || Objects.equals(Platform.OS_WIN32, Platform.getOS());
+        return Objects.equals(Platform.OS_WIN32, Platform.getOS());
     }
 
     public Composite getTabFolder() {

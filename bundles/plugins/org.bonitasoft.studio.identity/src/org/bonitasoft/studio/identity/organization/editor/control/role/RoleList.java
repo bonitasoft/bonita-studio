@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,7 +48,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -191,12 +189,6 @@ public class RoleList {
                         .filter(role -> !matchesSearchValue(role, search))
                         .forEach(rolesToFilter::add);
                 viewer.refresh(); // apply filter
-
-                // Necessary since the MacOS Big Sur update -> Seems that table with StyledCellLabelProvider aren't redraw automatically 
-                // TODO Hopefully this could be removed on the futur (current date: 08/01/2021)
-                if (Objects.equals(Platform.getOS(), Platform.OS_MACOSX)) {
-                    viewer.getControl().redraw();
-                }
             });
         });
     }
