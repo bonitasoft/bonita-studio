@@ -43,6 +43,7 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -99,6 +100,10 @@ public class RepositoriesComposite extends Composite {
 
         createRepositoryListComposite(this);
         createRepositoryDetailsComposite(this);
+
+        ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> selectionObservable.getValue() != null)
+                .build());
     }
 
     private void createProfileCombo(RepositoriesComposite parent) {
@@ -280,8 +285,11 @@ public class RepositoriesComposite extends Composite {
     }
 
     private void removeRepository() {
-        repositoriesObservable.remove(selectionObservable.getValue());
-        refreshViewer();
+        if (MessageDialog.openQuestion(getShell(), Messages.removeRepositoryConfirmationTitle,
+                String.format(Messages.removeRepositoryConfirmation, selectionObservable.getValue().getName()))) {
+            repositoriesObservable.remove(selectionObservable.getValue());
+            refreshViewer();
+        }
     }
 
     private void addRepository() {

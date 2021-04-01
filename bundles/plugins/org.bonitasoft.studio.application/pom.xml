@@ -16,6 +16,21 @@
     <properties>
         <lib.dir>lib</lib.dir>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>2.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.commonjava.maven</groupId>
+            <artifactId>maven3-model-jdom-support</artifactId>
+            <version>1.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -24,7 +39,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>dependency-jdom</id>
+                        <id>copy-maven3-model-jdom-support</id>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>copy</goal>
@@ -36,29 +51,6 @@
                                     <artifactId>jdom</artifactId>
                                     <version>2.0.2</version>
                                 </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${lib.dir}</outputDirectory>
-                            <stripVersion>true</stripVersion>
-                            <stripClassifier>true</stripClassifier>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                            <overWriteReleases>true</overWriteReleases>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>mavedn3-model-jdom-support</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
                                 <artifactItem>
                                     <groupId>org.commonjava.maven</groupId>
                                     <artifactId>maven3-model-jdom-support</artifactId>
