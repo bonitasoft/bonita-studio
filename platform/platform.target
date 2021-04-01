@@ -115,37 +115,29 @@
             <repository location="http://hallvard.github.io/plantuml"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.egit_pt_BR.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.jgit_es.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.16.0.v20200711020001"/>
-            <unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.16.0.v20200711020001"/>
-            <repository location="https://download.eclipse.org/technology/babel/update-site/R0.18.0/2020-06/"/>
+            <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.egit_es.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.egit_fr.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.egit_ja.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.egit_pt_BR.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.jgit_es.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.jgit_fr.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.19.0.v20210327020002"/>
+            <unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.19.0.v20210327020002"/>
+            <repository location="https://download.eclipse.org/technology/babel/update-site/R0.18.3/2021-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.7.0"/>
         <repository location="https://dl.bintray.com/de-jcup/jenkinseditor/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dist.springsource.org/snapshot/GRECLIPSE/e4.19"/>
-            <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="0.0.0"/>
-            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
-	        <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
+            <repository location="https://dist.springsource.org/release/GRECLIPSE/4.1.0/e4.19"/>
+            <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
+            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
+	        <unit id="org.codehaus.groovy30.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">    			
             <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
