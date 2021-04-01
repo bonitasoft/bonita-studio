@@ -18,7 +18,7 @@
 		<ui.designer.version>1.12.44</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
 		<engine.version>${project.version}</engine.version>
-		<filters.version>${project.version}</filters.version>
+		<filters.version>7.11.5</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
