@@ -39,6 +39,7 @@ public interface BonitaThemeConstants {
     public static final String TEXT_READ_ONLY = "readOnly";
     public static final String SEARCH_WIDGET = "searchWidget";
     public static final String ERROR_TEXT_COLOR = "errorTextColor";
+    public static final String WARNING_TEXT_COLOR = "warningTextColor";
     public static final String INFO_TEXT_COLOR = "infoTextColor";
     public static final String SUCCESS_TEXT_COLOR = "successTextColor";
     public static final String SUCCESS_HOVER_TEXT_COLOR = "successHoverTextColor";

@@ -87,6 +87,11 @@ CLabel#errorTextColor {
     color: #de5e5e;
 }
 
+Label#warningTextColor,
+CLabel#warningTextColor {
+    color: #d1de62;
+}
+
 Label#infoTextColor,
 CLabel#infoTextColor {
     color: #99b4e0;

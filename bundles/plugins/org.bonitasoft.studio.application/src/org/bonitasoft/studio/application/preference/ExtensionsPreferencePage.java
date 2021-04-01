@@ -78,7 +78,6 @@ public class ExtensionsPreferencePage extends PreferencePage implements
 
         NativeTabFolderWidget tabFolder = new NativeTabFolderWidget.Builder().createIn(mainComposite);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
 
         createRepositoriesTabItem(tabFolder);
         createServersTabItem(tabFolder);
@@ -101,16 +100,8 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     private void createServersTabItem(NativeTabFolderWidget parent) {
         serversTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.servers)
-                .withControl(createServersComposite(parent.getTabFolder()))
+                .withControl(new ServersComposite(parent.getTabFolder(), settings))
                 .createIn(parent);
-    }
-
-    private Control createServersComposite(Composite parent) {
-        var serversComposite = new Composite(parent, SWT.NONE);
-        serversComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        serversComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-
-        return serversComposite;
     }
 
     private void createProxiesTabItem(NativeTabFolderWidget parent) {

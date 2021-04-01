@@ -231,6 +231,31 @@ public class Messages extends NLS {
     public static String deleteRepositoryTooltip;
     public static String mavenProfile;
     public static String mavenProfileHint;
+    public static String encryptionMasterPassword;
+    public static String updateMasterPasswordWarning;
+    public static String encryptionLink;
+    public static String addServerTooltip;
+    public static String deleteServerTooltip;
+    public static String serversLink;
+    public static String removeServerConfirmationTitle;
+    public static String removeServerConfirmation;
+    public static String removeRepositoryConfirmationTitle;
+    public static String removeRepositoryConfirmation;
+    public static String serverId;
+    public static String serverIdHint;
+    public static String userPasswordAuthentication;
+    public static String sshAuthentication;
+    public static String username;
+    public static String password;
+    public static String authentication;
+    public static String showPassword;
+    public static String encryptPassword;
+    public static String encryptButtonTooltip;
+    public static String privateKey;
+    public static String passphrase;
+    public static String showPassphrase;
+    public static String clearPasswordTooltip;
+    public static String clearPassword;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
