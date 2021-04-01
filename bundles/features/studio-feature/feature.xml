@@ -94,18 +94,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.babel.nls_datatools_es"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_datatools_fr"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_datatools_ja"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.datatools.sqldevtools.sqlbuilder.feature"
          version="0.0.0"/>
 
@@ -142,27 +130,11 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.babel.nls_webtools_es"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_webtools_fr"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_webtools_ja"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.emf.compare.ide.ui"
          version="0.0.0"/>
 
    <includes
          id="org.eclipse.babel.nls_eclipse_pt_BR"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_webtools_pt_BR"
          version="0.0.0"/>
 
    <includes
@@ -203,10 +175,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <includes
          id="org.eclipse.nebula.widgets.richtext.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_datatools_pt_BR"
          version="0.0.0"/>
 
    <includes
