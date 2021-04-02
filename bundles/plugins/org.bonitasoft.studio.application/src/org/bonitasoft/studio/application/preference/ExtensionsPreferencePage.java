@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.preference;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -22,11 +23,16 @@ import java.util.Arrays;
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.io.DefaultSettingsReader;
+import org.apache.maven.settings.io.SettingsParseException;
 import org.apache.maven.settings.io.jdom.SettingsJDOMWriter;
+import org.apache.maven.settings.io.xpp3.SettingsXpp3Writer;
+import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.codehaus.plexus.util.WriterFactory;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
@@ -64,9 +70,26 @@ public class ExtensionsPreferencePage extends PreferencePage implements
             userSettingsFile = mavenConfiguration.getUserSettingsFile() != null
                     ? new File(mavenConfiguration.getUserSettingsFile())
                     : SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
-            settings = defaultSettingsReader.read(userSettingsFile, null);
+            if (!userSettingsFile.exists()) {
+                try {
+                    userSettingsFile.createNewFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(
+                            String.format("An error occured while creating '%s'.", userSettingsFile.toString()),
+                            e);
+                }
+            } else {
+                settings = defaultSettingsReader.read(userSettingsFile, null);
+            }
+        } catch (EOFException | SettingsParseException e) {
+            settings = new Settings();
+            BonitaStudioLog.warning(String.format(
+                    "File '%s' is empty / unreadable -> An empty configuration will be created in memory, and saved if the user apply changes.",
+                    userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            settings = new Settings();
+            MessageDialog.openError(getShell(), Messages.error, e.getMessage());
+            BonitaStudioLog.error(e);
         }
     }
 
@@ -141,7 +164,14 @@ public class ExtensionsPreferencePage extends PreferencePage implements
             builder.setIgnoringBoundaryWhitespace(false);
             builder.setIgnoringElementContentWhitespace(false);
 
-            Document doc = builder.build(userSettingsFile);
+            Document doc = null;
+            try {
+                doc = builder.build(userSettingsFile);
+            } catch (JDOMException e) {
+                BonitaStudioLog.warning(String.format(
+                        "File '%s' is empty / unreadable -> Content will be overwritten by in memory configuration.",
+                        userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
+            }
             String encoding = settings.getModelEncoding();
             if (encoding == null) {
                 encoding = "UTF-8";
@@ -150,10 +180,16 @@ public class ExtensionsPreferencePage extends PreferencePage implements
             Format format = Format.getRawFormat().setEncoding(encoding).setTextMode(TextMode.PRESERVE);
 
             try (Writer writer = WriterFactory.newWriter(userSettingsFile, encoding)) {
-                settingsJDOMWriter.write(settings, doc, writer, format);
+                if (doc != null) {
+                    settingsJDOMWriter.write(settings, doc, writer, format);
+                } else {
+                    new SettingsXpp3Writer().write(writer, settings);
+                }
             }
-        } catch (IOException | JDOMException e) {
-            throw new RuntimeException(e);
+
+        } catch (IOException e) {
+            MessageDialog.openError(getShell(), Messages.error, e.getMessage());
+            BonitaStudioLog.error(e);
         }
         return true;
     }
