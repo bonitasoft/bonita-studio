@@ -256,6 +256,7 @@ public class Messages extends NLS {
     public static String showPassphrase;
     public static String clearPasswordTooltip;
     public static String clearPassword;
+    public static String error;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
