@@ -25,12 +25,11 @@ public class MavenArtifactParser {
     public Artifact parse(Path artifactPath) {
         final String filename = artifactPath.getFileName().toString();
         final String type = filename.endsWith(".jar") ? "jar" : "pom";
-        final Artifact artifact = artifactFactory.createArtifactWithClassifier(resolveGroupId(artifactPath),
+        return artifactFactory.createArtifactWithClassifier(resolveGroupId(artifactPath),
                 resolveArtifactId(artifactPath),
                 resolveArtifactVersion(artifactPath),
                 type,
                 resolveClassifier(filename));
-        return artifact;
     }
 
     private String resolveGroupId(final Path artifactPath) {

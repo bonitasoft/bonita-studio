@@ -58,8 +58,10 @@ public class FetchRemoteBosArchiveOperation implements IRunnableWithStatus {
             double completeFileSize = httpConnection.getContentLength();
             Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
             Path tempFile = tempDir.resolve(getFilename(httpConnection));
-            if (tempFile.toFile().exists()) {
-                tempFile.toFile().delete();
+            if (tempFile.toFile().exists() && !tempFile.toFile().delete()) {
+                tempDir = tempDir.resolve(String.valueOf(System.currentTimeMillis()));
+                tempDir.toFile().mkdir();
+                tempFile = tempDir.resolve(getFilename(httpConnection));
             }
             tempFile = Files.createFile(tempFile);
             try (ReadableByteChannel readableByteChannel = Channels.newChannel(httpConnection.getURL().openStream());

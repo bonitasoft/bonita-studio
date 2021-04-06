@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
-import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -37,16 +36,11 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
             if (newMavenLocalRepositoryContributor != null) {
                 newMavenLocalRepositoryContributor.execute();
             }
-        } catch (IOException | CoreException | ArtifactInstallationException e) {
+        } catch (IOException | CoreException e) {
             if (!PlatformUtil.isHeadless()) {
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
+                Display.getDefault().asyncExec(() ->
                         new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.dependenciesInstallation,
-                                Messages.dependenciesInstallationMsg, e).open();
-                    }
-                });
+                                Messages.dependenciesInstallationMsg, e).open());
             }
             BonitaStudioLog.error(e);
         }
@@ -58,7 +52,7 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
         if (rootFolder == null) {
             return null;
         }
-        final ArtifactRepository internalRepository = maven.createArtifactRepository("studio-internal-repository",
+        final ArtifactRepository internalRepository = maven.createArtifactRepository("local",
                 rootFolder.toURI().toURL().toString());
         return new MavenLocalRepositoryContributor(internalRepository, maven.getLocalRepository(),
                 new DependencyCatalog(rootFolder,

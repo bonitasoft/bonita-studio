@@ -20,14 +20,12 @@ import java.time.Duration;
 import java.time.Instant;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.PerformanceStats;
 
 public class MavenLocalRepositoryContributor {
 
@@ -48,7 +46,7 @@ public class MavenLocalRepositoryContributor {
         this.internalRepository = internalRepository;
     }
 
-    public void execute() throws IOException, CoreException, ArtifactInstallationException {
+    public void execute() throws IOException, CoreException {
         BonitaStudioLog.info("Configuring local m2 repository...", CommonRepositoryPlugin.PLUGIN_ID);
         Instant start = Instant.now();
         for (final Artifact artifact :  catalog.parseDependencies()) {
