@@ -14,11 +14,7 @@
  */
 package org.bonitasoft.studio.application.preference;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +27,7 @@ import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
@@ -146,7 +143,7 @@ public class ServersComposite extends Composite {
         var link = new Link(serversComposite, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         link.setText(Messages.serversLink);
-        link.addListener(SWT.Selection, e -> openLink("https://maven.apache.org/settings.html#Servers"));
+        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/settings.html#Servers"));
 
         createServerListComposite(serversComposite);
         createServerDetailsComposite(serversComposite);
@@ -509,14 +506,6 @@ public class ServersComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
-    }
-
-    private void openLink(String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 }

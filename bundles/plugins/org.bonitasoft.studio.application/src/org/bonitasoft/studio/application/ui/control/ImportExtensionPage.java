@@ -18,9 +18,6 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUp
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,6 +39,7 @@ import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
@@ -73,8 +71,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -213,7 +209,7 @@ public class ImportExtensionPage implements ControlSupplier {
         manualCoordinateLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
                 .hint(650, SWT.DEFAULT).create());
         manualCoordinateLink.setText(Messages.importRemoteDependencyTip);
-        manualCoordinateLink.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+        manualCoordinateLink.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
     }
 
     private void createFromArchiveComposite(Composite parent, DataBindingContext ctx) {
@@ -597,24 +593,6 @@ public class ImportExtensionPage implements ControlSupplier {
 
     public ImportMode getImportMode() {
         return importModeObservable.getValue();
-    }
-
-    class OpenBrowserListener extends SelectionAdapter {
-
-        private String url;
-
-        OpenBrowserListener(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void widgetSelected(SelectionEvent e) {
-            try {
-                java.awt.Desktop.getDesktop().browse(new URI(url));
-            } catch (final IOException | URISyntaxException ex) {
-                BonitaStudioLog.error(ex);
-            }
-        }
     }
 
 }

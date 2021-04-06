@@ -269,6 +269,14 @@ public class Messages extends NLS {
     public static String intValueExpected;
     public static String nonProxyHost;
     public static String nonProxyHostsTootltip;
+    public static String mirrorsLink;
+    public static String addMirrorTooltip;
+    public static String deleteMirrorTooltip;
+    public static String removeMirrorConfirmationTitle;
+    public static String removeMirrorConfirmation;
+    public static String mirrorOf;
+    public static String mirrorUrlTooltip;
+    public static String mirrorOfTooltip;
     public static String activate;
     public static String activateProxyTooltip;
 
