@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
 
 public class EmptyInputValidator implements IValidator<String> {
 
@@ -31,7 +32,7 @@ public class EmptyInputValidator implements IValidator<String> {
 
     @Override
     public IStatus validate(final String input) {
-        return input == null || isNullOrEmpty(input.toString()) ? ValidationStatus.error(Messages.bind(Messages.emptyField, inputName)) : ValidationStatus.ok();
+        return input == null || isNullOrEmpty(input) ? ValidationStatus.error(NLS.bind(Messages.emptyField, inputName)) : ValidationStatus.ok();
     }
 
 }

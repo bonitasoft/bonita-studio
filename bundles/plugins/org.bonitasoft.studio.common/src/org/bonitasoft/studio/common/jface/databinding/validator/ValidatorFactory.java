@@ -34,7 +34,7 @@ public class ValidatorFactory {
         return new InputLengthValidator(inputName, minLength, maxLength);
     }
 
-    public static IValidator mandatoryValidator(final String inputName) {
+    public static IValidator<String> mandatoryValidator(final String inputName) {
         return new EmptyInputValidator(inputName);
     }
 

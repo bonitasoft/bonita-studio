@@ -23,13 +23,14 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
  */
 public class GroovyReferenceValidator implements IValidator<String> {
 
-    public static final String[] KEYWORDS = new String[] { BonitaConstants.API_ACCESSOR, BonitaConstants.ENGINE_EXECUTION_CONTEXT,
+    private static final String[] KEYWORDS = new String[] { BonitaConstants.API_ACCESSOR, BonitaConstants.ENGINE_EXECUTION_CONTEXT,
             BonitaConstants.ACTIVITY_INSTANCE_ID,
             BonitaConstants.PROCESS_DEFINITION_ID, BonitaConstants.ROOT_PROCESS_INSTANCE_ID, BonitaConstants.PARENT_PROCESS_INSTANCE_ID };
     private final String fieldName;
@@ -61,24 +62,24 @@ public class GroovyReferenceValidator implements IValidator<String> {
             }
         }
         if (forceLowerCaseFirst && !value.isEmpty()) {
-            final char firstChar = value.toString().charAt(0);
+            final char firstChar = value.charAt(0);
             if (Character.isUpperCase(firstChar)) {
-                return ValidationStatus.error(Messages.bind(Messages.nameMustStartWithLowerCase, value.toString()));
+                return ValidationStatus.error(NLS.bind(Messages.nameMustStartWithLowerCase, value));
             }
         }
         if (!value.isEmpty()) {
-            if (value.toString().contains(" ")) {
-                return ValidationStatus.error(Messages.bind(Messages.nameCantHaveAWhitespace, value.toString()));
-            } else if (Character.isDigit(value.toString().charAt(0))) {
-                return ValidationStatus.error(Messages.bind(Messages.nameMustStartWithLowerCase, value.toString()));
+            if (value.contains(" ")) {
+                return ValidationStatus.error(NLS.bind(Messages.nameCantHaveAWhitespace, value));
+            } else if (Character.isDigit(value.charAt(0))) {
+                return ValidationStatus.error(NLS.bind(Messages.nameMustStartWithLowerCase, value));
             }
         }
 
-        if (value.toString() != null && !value.toString().isEmpty() && Arrays.asList(KEYWORDS).contains(value.toString())) {
+        if (value.toString() != null && !value.toString().isEmpty() && Arrays.asList(KEYWORDS).contains(value)) {
             return ValidationStatus.error(Messages.reservedKeyword);
         }
 
-        final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_11, JavaCore.VERSION_11);
+        final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value, JavaCore.VERSION_11, JavaCore.VERSION_11);
         if (!javaConventionNameStatus.isOK()) {
             return ValidationStatus.error(javaConventionNameStatus.getMessage());
         }
