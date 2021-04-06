@@ -65,6 +65,7 @@ public class MasterPasswordComposite extends Composite {
                         .create())
                 .withModelToTargetStrategy(updateValueStrategy().create())
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(this);
     }
 

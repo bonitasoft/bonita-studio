@@ -31,17 +31,16 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
-import org.bonitasoft.studio.ui.widget.NativeTextWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -50,6 +49,7 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -70,9 +70,8 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ProxiesComposite extends Composite {
 
     private static final char CLEAR_CHAR = '\0';
-    private String DEFAULT_PROXY_NAME = "proxyId";
+    private static final String DEFAULT_PROXY_NAME = "proxyId";
 
-    private Settings settings;
     private DataBindingContext ctx;
     private MavenPasswordManager passwordManager;
 
@@ -90,18 +89,19 @@ public class ProxiesComposite extends Composite {
     private TextWidget passwordField;
 
     private char hiddenEchoChar;
+    private ToolItem activateItem;
 
     public ProxiesComposite(Composite parent, Settings settings, IObservableValue<String> masterPwdObservable) {
         super(parent, SWT.NONE);
 
-        this.settings = settings;
         this.proxiesObservable = PojoProperties.list(Settings.class, "proxies", Proxy.class).observe(settings);
         this.ctx = new DataBindingContext();
         this.passwordManager = new MavenPasswordManager();
         this.masterPwdObservable = masterPwdObservable;
 
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 10).create());
+        setLayout(
+                GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 10).create());
 
         new MasterPasswordComposite(this, passwordManager, masterPwdObservable, ctx);
 
@@ -112,6 +112,10 @@ public class ProxiesComposite extends Composite {
 
         ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectionObservable.getValue() != null)
+                .build());
+        
+        ctx.bindValue(WidgetProperties.enabled().observe(activateItem), new ComputedValueBuilder<Boolean>()
+                .withSupplier(() -> selectionObservable.getValue() != null && !selectionObservable.getValue().isActive())
                 .build());
     }
 
@@ -144,22 +148,6 @@ public class ProxiesComposite extends Composite {
                 .useNativeRender()
                 .createIn(composite);
 
-        var activeButton = new ButtonWidget.Builder()
-                .withLabel(Messages.active)
-                .withStyle(SWT.CHECK)
-                .createIn(composite);
-
-        IObservableValue<Boolean> activeObservable = PojoProperties.value("active", Boolean.class)
-                .observeDetail(selectionObservable);
-        ctx.bindValue(WidgetProperties.buttonSelection().observe(activeButton.getButton()), activeObservable);
-        activeButton.getButton().addListener(SWT.Selection, e -> {
-            if (activeObservable.getValue()) {
-                proxiesObservable.stream()
-                        .filter(proxy -> !Objects.equals(proxy, selectionObservable.getValue()))
-                        .forEach(proxy -> proxy.setActive(false));
-            }
-        });
-
         createProtocolHostPortComposite(composite);
 
         new TextWidget.Builder()
@@ -167,6 +155,7 @@ public class ProxiesComposite extends Composite {
                 .labelAbove()
                 .withTootltip(Messages.nonProxyHostsTootltip)
                 .fill()
+                .horizontalSpan(2)
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("nonProxyHosts", String.class).observeDetail(selectionObservable))
                 .inContext(ctx)
@@ -189,7 +178,7 @@ public class ProxiesComposite extends Composite {
         authenticationGroup.setText(Messages.authentication);
 
         var usernamePwdComposite = new Composite(authenticationGroup, SWT.NONE);
-        usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2).create());
         usernamePwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
@@ -211,30 +200,33 @@ public class ProxiesComposite extends Composite {
         createPasswordField(pwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
 
-        var encryptButtonComposite = new Composite(usernamePwdComposite, SWT.NONE);
-        encryptButtonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        encryptButtonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        var encryptTooltip = new Label(encryptButtonComposite, SWT.WRAP);
-        encryptTooltip.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-        encryptTooltip.setText(Messages.encryptButtonTooltip);
-        encryptTooltip.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.WARNING_TEXT_COLOR);
-
         var encryptButton = new ButtonWidget.Builder()
                 .withLabel(Messages.encryptPassword)
-                .fill()
-                .alignRight()
+                .horizontalSpan(2)
                 .onClick(e -> encryptPassword())
-                .createIn(encryptButtonComposite);
+                .createIn(usernamePwdComposite);
 
-        ctx.bindValue(encryptButton.observeEnabled(), new ComputedValueBuilder<Boolean>()
+        ControlDecoration masterPasswordWarningDecorator = new ControlDecoration(encryptButton, SWT.RIGHT);
+        masterPasswordWarningDecorator.setDescriptionText(Messages.encryptButtonTooltip);
+        masterPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
+        masterPasswordWarningDecorator.setMarginWidth(3);
+
+        ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
-                .build());
-
-        ctx.bindValue(WidgetProperties.visible().observe(encryptTooltip), new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> masterPwdObservable.getValue() == null || masterPwdObservable.getValue().isEmpty())
-                .build());
-
+                .build();
+        masterPasswordObservable.addValueChangeListener(v -> {
+            if (Boolean.TRUE.equals(v.diff.getNewValue())) {
+                masterPasswordWarningDecorator.hide();
+            } else {
+                masterPasswordWarningDecorator.show();
+            }
+        });
+        ctx.bindValue(encryptButton.observeEnabled(), masterPasswordObservable);
+        if (Boolean.TRUE.equals(masterPasswordObservable.getValue())) {
+            masterPasswordWarningDecorator.hide();
+        } else {
+            masterPasswordWarningDecorator.show();
+        }
     }
 
     private void encryptPassword() {
@@ -244,7 +236,7 @@ public class ProxiesComposite extends Composite {
 
     private void createPasswordField(Composite parent, int style) {
         currentPasswordStyle = style;
-        passwordField = new NativeTextWidget.Builder()
+        passwordField = new TextWidget.Builder()
                 .withLabel(Messages.password)
                 .labelAbove()
                 .withStyle(style)
@@ -254,6 +246,7 @@ public class ProxiesComposite extends Composite {
                 .grabHorizontalSpace()
                 .bindTo(passwordObservable)
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(parent);
     }
 
@@ -267,7 +260,7 @@ public class ProxiesComposite extends Composite {
             Text text = passwordField.getTextControl();
             Optional<ToolItem> button = passwordField.getButtonWithImage();
             if (button.isPresent()) {
-                text.setEchoChar(isHidden ? CLEAR_CHAR : hiddenEchoChar);
+                text.setEchoChar(Objects.equals(text.getEchoChar(), hiddenEchoChar) ? CLEAR_CHAR : hiddenEchoChar);
             }
         }
     }
@@ -281,7 +274,7 @@ public class ProxiesComposite extends Composite {
                 .withLabel(Messages.protocol)
                 .labelAbove()
                 .fill()
-                .widthHint(50)
+                .widthHint(80)
                 .bindTo(PojoProperties.value("protocol", String.class).observeDetail(selectionObservable))
                 .inContext(ctx)
                 .useNativeRender()
@@ -311,7 +304,7 @@ public class ProxiesComposite extends Composite {
                 .withLabel(Messages.port)
                 .labelAbove()
                 .fill()
-                .widthHint(150)
+                .widthHint(100)
                 .bindTo(PojoProperties.value("port", Integer.class).observeDetail(selectionObservable))
                 .withModelToTargetStrategy(updateValueStrategy()
                         .withConverter(ConverterBuilder.<Integer, String> newConverter()
@@ -336,7 +329,7 @@ public class ProxiesComposite extends Composite {
     private void createProxyListComposite(Composite parent) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(200, SWT.DEFAULT).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(220, SWT.DEFAULT).create());
 
         createToolbar(composite);
         createViewer(composite);
@@ -360,6 +353,22 @@ public class ProxiesComposite extends Composite {
         deleteItem.setToolTipText(Messages.deleteProxyTooltip);
         deleteItem.setText(Messages.delete);
         deleteItem.addListener(SWT.Selection, e -> removeProxy());
+
+        new ToolItem(toolBar, SWT.SEPARATOR);
+
+        activateItem = new ToolItem(toolBar, SWT.PUSH);
+        activateItem.setImage(Pics.getImageDescriptor(PicsConstants.checkmark).createImage());
+        activateItem.setText(Messages.activate);
+        activateItem.setToolTipText(Messages.activateProxyTooltip);
+        activateItem.addListener(SWT.Selection, e -> activateProxy());
+    }
+
+    private void activateProxy() {
+        selectionObservable.getValue().setActive(true);
+        proxiesObservable.stream()
+                .filter(proxy -> !Objects.equals(proxy, selectionObservable.getValue()))
+                .forEach(proxy -> proxy.setActive(false));
+        refreshViewer();
     }
 
     private void removeProxy() {
@@ -377,21 +386,26 @@ public class ProxiesComposite extends Composite {
         proxy.setId(name);
         proxy.setActive(proxiesObservable.stream().noneMatch(Proxy::isActive));
         proxiesObservable.add(proxy);
+        selectionObservable.setValue(proxy);
         refreshViewer();
     }
 
     protected void createViewer(Composite parent) {
-        viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        viewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        ColumnViewerToolTipSupport.enableFor(viewer);
+        viewer.setUseHashlookup(true);
+        createProxyColumn(viewer);
+
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
         viewer.getTable().setLayout(layout);
-        viewer.setUseHashlookup(true);
-        createProxyColumn(viewer);
+
         viewer.setContentProvider(new ObservableListContentProvider<Proxy>());
         viewer.setInput(proxiesObservable);
+
+        ColumnViewerToolTipSupport.enableFor(viewer);
+
         selectionObservable = ViewerProperties.singleSelection(Proxy.class).observe(viewer);
     }
 
@@ -399,6 +413,9 @@ public class ProxiesComposite extends Composite {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.setLabelProvider(new LabelProviderBuilder<Proxy>()
                 .withTextProvider(Proxy::getId)
+                .withImageProvider(
+                        p -> p.isActive() ? Pics.getImageDescriptor(PicsConstants.checkmark).createImage() : null)
+                .withTooltipProvider(p -> p.isActive() ? Messages.active : null)
                 .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
     }

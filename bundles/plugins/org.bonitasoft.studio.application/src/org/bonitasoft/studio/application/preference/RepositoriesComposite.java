@@ -304,6 +304,7 @@ public class RepositoriesComposite extends Composite {
         repository.setReleases(new RepositoryPolicy());
         repository.setSnapshots(new RepositoryPolicy());
         repositoriesObservable.add(repository);
+        selectionObservable.setValue(repository);
         refreshViewer();
     }
 
