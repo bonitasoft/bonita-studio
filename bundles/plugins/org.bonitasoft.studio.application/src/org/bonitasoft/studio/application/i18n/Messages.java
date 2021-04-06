@@ -257,6 +257,18 @@ public class Messages extends NLS {
     public static String clearPasswordTooltip;
     public static String clearPassword;
     public static String error;
+    public static String proxiesLink;
+    public static String addProxyTooltip;
+    public static String deleteProxyTooltip;
+    public static String removeProxyConfirmationTitle;
+    public static String removeProxyConfirmation;
+    public static String active;
+    public static String protocol;
+    public static String host;
+    public static String port;
+    public static String intValueExpected;
+    public static String nonProxyHost;
+    public static String nonProxyHostsTootltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
