@@ -358,7 +358,7 @@ public class TextWidget extends EditableControlWidget {
             button = Optional.of(b);
         } else if (imageButton.isPresent()) {
             ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
-            toolBar.setLayoutData(GridDataFactory.fillDefaults().create());
+            toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
             toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
             ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
             imageButton.ifPresent(bWithImage::setImage);

@@ -31,18 +31,17 @@ import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
-import org.bonitasoft.studio.ui.widget.NativeTextWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.runtime.Platform;
@@ -97,7 +96,7 @@ public class ServersComposite extends Composite {
 
     private IObservableList<Server> serversObservable;
     private IViewerObservableValue<Server> selectionObservable;
-    private SelectObservableValue authenticationModeObservable;
+    private SelectObservableValue<AuthenticationMode> authenticationModeObservable;
     private IObservableValue<String> masterPwdObservable;
     private IObservableValue<String> passwordObservable;
     private IObservableValue<String> privateKeyObservable;
@@ -226,30 +225,38 @@ public class ServersComposite extends Composite {
 
         createPassphraseField(passphraseComposite, SWT.PASSWORD);
 
-        var clearPwdComposite = new Composite(sshComposite, SWT.NONE);
-        clearPwdComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        clearPwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        var clearPwdTooltip = new Label(clearPwdComposite, SWT.WRAP);
-        clearPwdTooltip.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-        clearPwdTooltip.setText(Messages.clearPasswordTooltip);
-        clearPwdTooltip.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.WARNING_TEXT_COLOR);
-
-        new ButtonWidget.Builder()
+        ButtonWidget clearPasswordButton = new ButtonWidget.Builder()
                 .withLabel(Messages.clearPassword)
-                .fill()
-                .alignRight()
                 .onClick(e -> passwordObservable.setValue(null))
-                .createIn(clearPwdComposite);
+                .createIn(sshComposite);
+        
+        ControlDecoration clearPasswordWarningDecorator = new ControlDecoration(clearPasswordButton, SWT.RIGHT);
+        clearPasswordWarningDecorator.setDescriptionText(Messages.clearPasswordTooltip);
+        clearPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
+        clearPasswordWarningDecorator.setMarginWidth(3);
 
-        ctx.bindValue(WidgetProperties.visible().observe(clearPwdComposite), new ComputedValueBuilder<Boolean>()
+        ComputedValue<Boolean> passwordSetObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> !Strings.isNullOrEmpty(passwordObservable.getValue()))
-                .build());
+                .build();
+        passwordSetObservable.addValueChangeListener(v -> {
+            if (Boolean.TRUE.equals(v.diff.getNewValue())) {
+                clearPasswordWarningDecorator.show();
+            } else {
+                clearPasswordWarningDecorator.hide();
+            }
+        });
+        if (Boolean.TRUE.equals(passwordSetObservable.getValue())) {
+            clearPasswordWarningDecorator.show();
+        } else {
+            clearPasswordWarningDecorator.hide();
+        }
+        ctx.bindValue(WidgetProperties.visible().observe(clearPasswordButton), passwordSetObservable);
+        
     }
 
     private void createPassphraseField(Composite parent, int style) {
         currentPassphraseStyle = style;
-        passphraseField = new NativeTextWidget.Builder()
+        passphraseField = new TextWidget.Builder()
                 .withLabel(Messages.passphrase)
                 .labelAbove()
                 .withStyle(style)
@@ -259,6 +266,7 @@ public class ServersComposite extends Composite {
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("passphrase", String.class).observeDetail(selectionObservable))
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(parent);
     }
 
@@ -272,7 +280,7 @@ public class ServersComposite extends Composite {
             Text text = passphraseField.getTextControl();
             Optional<ToolItem> button = passphraseField.getButtonWithImage();
             if (button.isPresent()) {
-                text.setEchoChar(isHidden ? CLEAR_CHAR : hiddenEchoChar);
+                text.setEchoChar(Objects.equals(text.getEchoChar(), hiddenEchoChar) ? CLEAR_CHAR : hiddenEchoChar);
             }
         }
     }
@@ -301,29 +309,32 @@ public class ServersComposite extends Composite {
         createPasswordField(pwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
 
-        var encryptButtonComposite = new Composite(usernamePwdComposite, SWT.NONE);
-        encryptButtonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        encryptButtonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        var encryptTooltip = new Label(encryptButtonComposite, SWT.WRAP);
-        encryptTooltip.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-        encryptTooltip.setText(Messages.encryptButtonTooltip);
-        encryptTooltip.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.WARNING_TEXT_COLOR);
-
         var encryptButton = new ButtonWidget.Builder()
                 .withLabel(Messages.encryptPassword)
-                .fill()
-                .alignRight()
                 .onClick(e -> encryptPassword())
-                .createIn(encryptButtonComposite);
+                .createIn(usernamePwdComposite);
+        
+        ControlDecoration masterPasswordWarningDecorator = new ControlDecoration(encryptButton, SWT.RIGHT);
+        masterPasswordWarningDecorator.setDescriptionText(Messages.encryptButtonTooltip);
+        masterPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
+        masterPasswordWarningDecorator.setMarginWidth(3);
 
-        ctx.bindValue(encryptButton.observeEnabled(), new ComputedValueBuilder<Boolean>()
+        ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
-                .build());
-
-        ctx.bindValue(WidgetProperties.visible().observe(encryptTooltip), new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> masterPwdObservable.getValue() == null || masterPwdObservable.getValue().isEmpty())
-                .build());
+                .build();
+        masterPasswordObservable.addValueChangeListener(v -> {
+            if (Boolean.TRUE.equals(v.diff.getNewValue())) {
+                masterPasswordWarningDecorator.hide();
+            } else {
+                masterPasswordWarningDecorator.show();
+            }
+        });
+        ctx.bindValue(encryptButton.observeEnabled(), masterPasswordObservable);
+        if (Boolean.TRUE.equals(masterPasswordObservable.getValue())) {
+            masterPasswordWarningDecorator.hide();
+        } else {
+            masterPasswordWarningDecorator.show();
+        }
     }
 
     private void encryptPassword() {
@@ -333,7 +344,7 @@ public class ServersComposite extends Composite {
 
     private void createPasswordField(Composite parent, int style) {
         currentPasswordStyle = style;
-        passwordField = new NativeTextWidget.Builder()
+        passwordField = new TextWidget.Builder()
                 .withLabel(Messages.password)
                 .labelAbove()
                 .withStyle(style)
@@ -343,6 +354,7 @@ public class ServersComposite extends Composite {
                 .grabHorizontalSpace()
                 .bindTo(passwordObservable)
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(parent);
     }
 
@@ -356,7 +368,7 @@ public class ServersComposite extends Composite {
             Text text = passwordField.getTextControl();
             Optional<ToolItem> button = passwordField.getButtonWithImage();
             if (button.isPresent()) {
-                text.setEchoChar(isHidden ? CLEAR_CHAR : hiddenEchoChar);
+                text.setEchoChar(Objects.equals(text.getEchoChar(), hiddenEchoChar) ? CLEAR_CHAR : hiddenEchoChar);
             }
         }
     }
@@ -450,22 +462,27 @@ public class ServersComposite extends Composite {
     }
 
     protected void createViewer(Composite parent) {
-        viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        viewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         ColumnViewerToolTipSupport.enableFor(viewer);
+
+        viewer.setUseHashlookup(true);
+        createServerColumn(viewer);
+        
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
         viewer.getTable().setLayout(layout);
-        viewer.setUseHashlookup(true);
-        createServerColumn(viewer);
+
+        
         viewer.setContentProvider(new ObservableListContentProvider<Server>());
         viewer.setInput(serversObservable);
+        
         selectionObservable = ViewerProperties.singleSelection(Server.class).observe(viewer);
     }
 
     private void createServerColumn(TableViewer viewer) {
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+        TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL);
         column.setLabelProvider(new LabelProviderBuilder<Server>()
                 .withTextProvider(Server::getId)
                 .shouldRefreshAllLabels(viewer)
@@ -486,6 +503,7 @@ public class ServersComposite extends Composite {
                 serversObservable.stream().map(Server::getId).collect(Collectors.toList()));
         server.setId(name);
         serversObservable.add(server);
+        selectionObservable.setValue(server);
         refreshViewer();
     }
 

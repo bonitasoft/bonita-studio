@@ -269,6 +269,8 @@ public class Messages extends NLS {
     public static String intValueExpected;
     public static String nonProxyHost;
     public static String nonProxyHostsTootltip;
+    public static String activate;
+    public static String activateProxyTooltip;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
