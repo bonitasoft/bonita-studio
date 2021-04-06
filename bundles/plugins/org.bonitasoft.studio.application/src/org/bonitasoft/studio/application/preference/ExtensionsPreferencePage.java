@@ -141,16 +141,8 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     private void createMirrorsTabItem(NativeTabFolderWidget parent) {
         mirrorsTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.mirrors)
-                .withControl(createMirrorsComposite(parent.getTabFolder()))
+                .withControl(new MirrorsComposite(parent.getTabFolder(), settings))
                 .createIn(parent);
-    }
-
-    private Control createMirrorsComposite(Composite parent) {
-        var mirrorsComposite = new Composite(parent, SWT.NONE);
-        mirrorsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        mirrorsComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-
-        return mirrorsComposite;
     }
 
     @Override

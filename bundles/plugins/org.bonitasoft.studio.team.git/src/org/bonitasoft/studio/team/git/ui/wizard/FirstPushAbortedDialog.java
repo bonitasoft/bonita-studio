@@ -8,20 +8,15 @@
  *******************************************************************************/
 package org.bonitasoft.studio.team.git.ui.wizard;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.team.git.i18n.Messages;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.widget.BulletPointWidget;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Link;
@@ -29,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class FirstPushAbortedDialog extends MessageDialog {
 
-    private static final String DOCUMENTATION_GIT_URI = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=672&bos_redirect_product=bos&bos_redirect_major_version=%s";
+    private static final String DOCUMENTATION_GIT_URL = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=672&bos_redirect_product=bos&bos_redirect_major_version=%s";
 
     public FirstPushAbortedDialog(Shell parentShell) {
         super(parentShell, Messages.shareRepositoryProgressTitle, null, null, 0,
@@ -52,18 +47,7 @@ public class FirstPushAbortedDialog extends MessageDialog {
         Link link = new Link(composite, SWT.WRAP);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(0, 10).create());
         link.setText(Messages.warningRepoNotPushedMsg);
-        link.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e) {
-                try {
-                    java.awt.Desktop.getDesktop()
-                            .browse(new URI(String.format(DOCUMENTATION_GIT_URI, ProductVersion.majorVersion())));
-                } catch (final IOException | URISyntaxException e1) {
-                    BonitaStudioLog.error(e1);
-                }
-            }
-        });
+        link.addListener(SWT.Selection, new OpenSystemBrowserListener(String.format(DOCUMENTATION_GIT_URL, ProductVersion.majorVersion())));
         return composite;
     }
 

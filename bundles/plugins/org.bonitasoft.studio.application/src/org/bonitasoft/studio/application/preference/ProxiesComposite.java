@@ -16,10 +16,6 @@ package org.bonitasoft.studio.application.preference;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +27,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
@@ -127,7 +124,7 @@ public class ProxiesComposite extends Composite {
         var link = new Link(proxiesComposite, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         link.setText(Messages.proxiesLink);
-        link.addListener(SWT.Selection, e -> openLink("https://maven.apache.org/settings.html#proxies"));
+        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/settings.html#proxies"));
 
         createProxyListComposite(proxiesComposite);
         createProxyDetailsComposite(proxiesComposite);
@@ -422,14 +419,6 @@ public class ProxiesComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
-    }
-
-    private void openLink(String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 }

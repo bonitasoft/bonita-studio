@@ -17,12 +17,8 @@ package org.bonitasoft.studio.application.preference;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -44,7 +40,7 @@ public class MasterPasswordComposite extends Composite {
         var link = new Link(this, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         link.setText(Messages.encryptionLink);
-        link.addListener(SWT.Selection, e -> openLink("https://maven.apache.org/guides/mini/guide-encryption.html"));
+        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/guides/mini/guide-encryption.html"));
 
         passwordManager.getCurrentMasterPassword().ifPresent(masterPwdObservable::setValue);
 
@@ -67,14 +63,6 @@ public class MasterPasswordComposite extends Composite {
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(this);
-    }
-
-    private void openLink(String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 }

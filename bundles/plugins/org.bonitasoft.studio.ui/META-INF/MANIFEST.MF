@@ -7,6 +7,7 @@ Bundle-Activator: org.bonitasoft.studio.ui.UIPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.ui,
+ org.bonitasoft.studio.ui.browser,
  org.bonitasoft.studio.ui.contribution,
  org.bonitasoft.studio.ui.converter,
  org.bonitasoft.studio.ui.databinding,

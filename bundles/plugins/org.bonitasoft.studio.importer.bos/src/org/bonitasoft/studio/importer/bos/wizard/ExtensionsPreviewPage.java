@@ -14,10 +14,7 @@
  */
 package org.bonitasoft.studio.importer.bos.wizard;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -46,6 +43,7 @@ import org.bonitasoft.studio.importer.bos.operation.ArchiveLocalDependencyInputS
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.viewer.EditingSupportBuilder;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
@@ -77,8 +75,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -248,7 +244,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
 
         Link description = new Link(client, SWT.NONE);
         description.setText(Messages.configuredRemoteRepositories);
-        description.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_DOC_URL));
+        description.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_DOC_URL));
         TableViewer repositoriesViewer = new TableViewer(client);
         repositoriesViewer.getControl().setLayoutData(GridDataFactory
                 .fillDefaults()
@@ -401,7 +397,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 .grab(true, true)
                 .create());
         unresolvedDependenciesInfoLabel.setText(Messages.unresolvedLocalDependenciesMessage);
-        unresolvedDependenciesInfoLabel.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+        unresolvedDependenciesInfoLabel.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
 
         return infoComposite;
     }
@@ -424,15 +420,13 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 .grab(true, true)
                 .create());
         unresolvedDependenciesInfoLabel.setText(Messages.unresolvedDependenciesMessage);
-        unresolvedDependenciesInfoLabel.addSelectionListener(new OpenBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+        unresolvedDependenciesInfoLabel.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
 
         return infoComposite;
     }
 
     private String resolutionTooltip(DependencyLookup dep) {
-        String tooltip = dep.getStatus() == DependencyLookup.Status.FOUND
-                ? String.format(Messages.resolvedFromRepository, dep.getRepository())
-                : Messages.cannotBeResolvedAgainstProvidedRepository;
+        String tooltip = null;
         switch (dep.getStatus()) {
             case FOUND:
                 tooltip = String.format(Messages.resolvedFromRepository, dep.getRepository());
@@ -473,24 +467,6 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                     IDecoration.TOP_RIGHT).createImage();
         }
         return descriptor.createImage();
-    }
-
-    class OpenBrowserListener extends SelectionAdapter {
-
-        private String url;
-
-        OpenBrowserListener(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void widgetSelected(SelectionEvent e) {
-            try {
-                java.awt.Desktop.getDesktop().browse(new URI(url));
-            } catch (final IOException | URISyntaxException ex) {
-                BonitaStudioLog.error(ex);
-            }
-        }
     }
 
 }
