@@ -67,7 +67,7 @@ import org.eclipse.ui.themes.ColorUtil;
 
 public class BonitaPreferenceDialog extends Dialog {
 
-    private static final int SHELL_HEIGHT = 600;
+    private static final int SHELL_HEIGHT = 700;
     private static final int SHELL_WIDTH = 800;
     private static final int MARGIN_RIGHT = 80;
     private static final int MARGIN_LEFT = 25;

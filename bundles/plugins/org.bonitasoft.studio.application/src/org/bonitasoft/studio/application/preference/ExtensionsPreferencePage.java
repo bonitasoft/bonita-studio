@@ -32,6 +32,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.codehaus.plexus.util.WriterFactory;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -62,6 +64,8 @@ public class ExtensionsPreferencePage extends PreferencePage implements
 
     private DefaultSettingsReader defaultSettingsReader = new DefaultSettingsReader();
     private SettingsJDOMWriter settingsJDOMWriter = new SettingsJDOMWriter();
+
+    private IObservableValue<String> masterPwdObservable = new WritableValue<>();
 
     @Override
     public void init(IWorkbench workbench) {
@@ -123,23 +127,15 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     private void createServersTabItem(NativeTabFolderWidget parent) {
         serversTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.servers)
-                .withControl(new ServersComposite(parent.getTabFolder(), settings))
+                .withControl(new ServersComposite(parent.getTabFolder(), settings, masterPwdObservable))
                 .createIn(parent);
     }
 
     private void createProxiesTabItem(NativeTabFolderWidget parent) {
         proxiesTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.proxies)
-                .withControl(createProxiesComposite(parent.getTabFolder()))
+                .withControl(new ProxiesComposite(parent.getTabFolder(), settings, masterPwdObservable))
                 .createIn(parent);
-    }
-
-    private Control createProxiesComposite(Composite parent) {
-        var proxiesComposite = new Composite(parent, SWT.NONE);
-        proxiesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        proxiesComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-
-        return proxiesComposite;
     }
 
     private void createMirrorsTabItem(NativeTabFolderWidget parent) {

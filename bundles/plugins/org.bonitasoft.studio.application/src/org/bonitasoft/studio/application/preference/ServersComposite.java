@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.application.preference;
 
-import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
-
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +45,6 @@ import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -109,18 +106,20 @@ public class ServersComposite extends Composite {
     private int currentPasswordStyle;
     private int currentPassphraseStyle;
 
-    public ServersComposite(Composite parent, Settings settings) {
+    public ServersComposite(Composite parent, Settings settings, IObservableValue<String> masterPwdObservable) {
         super(parent, SWT.NONE);
 
         this.settings = settings;
         this.serversObservable = PojoProperties.list(Settings.class, "servers", Server.class).observe(settings);
         this.ctx = new DataBindingContext();
         this.passwordManager = new MavenPasswordManager();
+        this.masterPwdObservable = masterPwdObservable;
 
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 10).create());
 
-        createEncryptionComposite(this);
+        new MasterPasswordComposite(this, passwordManager, masterPwdObservable, ctx);
+
         var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         createServersComposite(this);
@@ -163,7 +162,8 @@ public class ServersComposite extends Composite {
 
         var authenticationGroup = new Group(composite, SWT.NONE);
         authenticationGroup.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
-        authenticationGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        authenticationGroup
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, true).create());
         authenticationGroup.setText(Messages.authentication);
 
         createRadioButtons(authenticationGroup);
@@ -210,13 +210,14 @@ public class ServersComposite extends Composite {
         sshComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         privateKeyObservable = PojoProperties.value("privateKey", String.class).observeDetail(selectionObservable);
-        new NativeTextWidget.Builder()
+        new TextWidget.Builder()
                 .withLabel(Messages.privateKey)
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(privateKeyObservable)
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(sshComposite);
 
         var passphraseComposite = new Composite(sshComposite, SWT.NONE);
@@ -281,13 +282,14 @@ public class ServersComposite extends Composite {
         usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         usernamePwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        new NativeTextWidget.Builder()
+        new TextWidget.Builder()
                 .withLabel(Messages.username)
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("username", String.class).observeDetail(selectionObservable))
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(usernamePwdComposite);
 
         var pwdComposite = new Composite(usernamePwdComposite, SWT.NONE);
@@ -489,38 +491,6 @@ public class ServersComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
-    }
-
-    private void createEncryptionComposite(Composite parent) {
-        var encryptionComposite = new Composite(parent, SWT.NONE);
-        encryptionComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        encryptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        var link = new Link(encryptionComposite, SWT.NONE);
-        link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        link.setText(Messages.encryptionLink);
-        link.addListener(SWT.Selection, e -> openLink("https://maven.apache.org/guides/mini/guide-encryption.html"));
-
-        masterPwdObservable = new WritableValue<>();
-        passwordManager.getCurrentMasterPassword().ifPresent(masterPwdObservable::setValue);
-
-        new TextWidget.Builder()
-                .withLabel(Messages.encryptionMasterPassword)
-                .labelAbove()
-                .withTootltip(Messages.updateMasterPasswordWarning)
-                .fill()
-                .grabHorizontalSpace()
-                .transactionalEdit((oldValue, newValue) -> passwordManager.updateMasterPassword(newValue))
-                .bindTo(masterPwdObservable)
-                .withTargetToModelStrategy(convertUpdateValueStrategy()
-                        .withConverter(ConverterBuilder.<String, String> newConverter()
-                                .fromType(String.class)
-                                .toType(String.class)
-                                .withConvertFunction(passwordManager::encryptMasterPassword)
-                                .create())
-                        .create())
-                .inContext(ctx)
-                .createIn(encryptionComposite);
     }
 
     private void openLink(String url) {

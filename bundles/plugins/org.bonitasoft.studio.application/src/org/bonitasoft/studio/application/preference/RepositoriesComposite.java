@@ -33,7 +33,7 @@ import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
-import org.bonitasoft.studio.ui.widget.NativeTextWidget;
+import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -162,7 +162,7 @@ public class RepositoriesComposite extends Composite {
                 GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2).equalWidth(true).spacing(15, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        new NativeTextWidget.Builder()
+        new TextWidget.Builder()
                 .withLabel(Messages.id)
                 .labelAbove()
                 .fill()
@@ -170,9 +170,10 @@ public class RepositoriesComposite extends Composite {
                 .bindTo(PojoProperties.value("id", String.class).observeDetail(selectionObservable))
                 .withValidator(new EmptyInputValidator(Messages.id))
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(composite);
 
-        new NativeTextWidget.Builder()
+        new TextWidget.Builder()
                 .withLabel(Messages.name)
                 .labelAbove()
                 .fill()
@@ -180,9 +181,10 @@ public class RepositoriesComposite extends Composite {
                 .bindTo(PojoProperties.value("name", String.class).observeDetail(selectionObservable))
                 .withValidator(new EmptyInputValidator(Messages.name))
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(composite);
 
-        new NativeTextWidget.Builder()
+        new TextWidget.Builder()
                 .withLabel(Messages.url)
                 .labelAbove()
                 .fill()
@@ -191,6 +193,7 @@ public class RepositoriesComposite extends Composite {
                 .bindTo(PojoProperties.value("url", String.class).observeDetail(selectionObservable))
                 .withValidator(new EmptyInputValidator(Messages.url))
                 .inContext(ctx)
+                .useNativeRender()
                 .createIn(composite);
 
         IObservableValue<RepositoryPolicy> releases = PojoProperties.value("releases", RepositoryPolicy.class)
@@ -210,7 +213,7 @@ public class RepositoriesComposite extends Composite {
             IObservableValue<RepositoryPolicy> repositoryPolicy) {
         var group = new Group(parent, SWT.NONE);
         group.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-        group.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.CENTER).create());
+        group.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.BEGINNING).create());
         group.setText(title);
 
         var enabledButton = new ButtonWidget.Builder()
