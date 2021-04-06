@@ -315,7 +315,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         descriptionLabel.setText(Messages.description);
 
         final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
-        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).create());
+        descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(600, 70).create());
 
         ctx.bindValue(WidgetProperties.text(SWT.Modify).observe(descriptionText),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
