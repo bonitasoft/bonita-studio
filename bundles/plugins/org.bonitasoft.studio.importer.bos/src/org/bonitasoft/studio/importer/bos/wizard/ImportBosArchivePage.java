@@ -356,7 +356,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     private IValidator<String> wrap(IValidator<String> validator) {
-        return new ValidatorWrapper<String>(validator, () -> repositoryModeObservable.getValue() == RepositoryMode.NEW);
+        return new ValidatorWrapper<>(validator, () -> repositoryModeObservable.getValue() == RepositoryMode.NEW);
     }
 
     private Supplier<Boolean> newProjectSupplier() {
@@ -557,18 +557,19 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         ImportArchiveModel importArchiveModel = operation.getImportArchiveModel();
         BosArchive bosArchive = importArchiveModel.getBosArchive();
         fileLocationText
-        .setMessage(String.format("%s %s (%s)",
-                Messages.bosArchiveName,
-                selectedFile.getName(),
-                bosArchive.getBonitaVersion()));
+                .setMessage(String.format("%s %s (%s)",
+                        Messages.bosArchiveName,
+                        selectedFile.getName(),
+                        bosArchive.getBonitaVersion()));
         Model mavenProject = bosArchive.getMavenProject();
         if (mavenProject != null) {
             projectMetadataObservable.setValue(ProjectMetadata.read(mavenProject));
         } else {
             projectMetadataObservable.setValue(ProjectMetadata.fromBosFileName(selectedFile.getName()));
         }
+        newProjectNameText.getValueBinding().validateTargetToModel();
         String newTargetProjectName = projectMetadataObservable.getValue().getName();
-        if ((RepositoryMode) repositoryModeObservable.getValue() == RepositoryMode.NEW
+        if (repositoryModeObservable.getValue() == RepositoryMode.NEW
                 && !newTargetProjectName.isEmpty()) {
             switchRepositoryStrategy.setTargetRepository(newTargetProjectName);
             importArchiveModel.resetStatus();
