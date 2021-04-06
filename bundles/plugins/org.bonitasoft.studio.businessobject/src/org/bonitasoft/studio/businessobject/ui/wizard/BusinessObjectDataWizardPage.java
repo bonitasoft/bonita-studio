@@ -15,12 +15,12 @@
 package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.groovyReferenceValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.maxLengthValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 
 import java.util.ArrayList;
@@ -33,15 +33,15 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.bonitasoft.studio.ui.databinding.ValidatorEvent;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -53,10 +53,9 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -64,6 +63,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -83,19 +83,17 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     private final DataAware container;
 
-    private IObservableValue multipleObservableValue;
+    private IObservableValue<Boolean> multipleObservableValue;
 
-    private IObservableValue classNameObservable;
+    private IObservableValue<String> classNameObservable;
 
-    private IObservableValue defaultValueReturnTypeObservable;
+    private IObservableValue<String> defaultValueReturnTypeObservable;
 
-    private IObservableValue defaultValueContentObservable;
+    private IObservableValue<String> defaultValueContentObservable;
 
     private final HintImageProvider imageProvider;
 
-    private IObservableValue defaultReturnTypeObservable;
-
-    private RepositoryAccessor repositoryAccessor;
+    private IObservableValue<String> defaultReturnTypeObservable;
 
     protected BusinessObjectDataWizardPage(final DataAware container, final BusinessObjectData businessObjectData,
             final BusinessObjectModelRepositoryStore<BusinessObjectModelFileStore> businessObjectDefinitionStore,
@@ -107,17 +105,8 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         this.existingNames = existingNames;
         this.businessObjectData = businessObjectData;
         this.imageProvider = imageProvider;
-        this.repositoryAccessor = repositoryAccessor();
     }
 
-    private RepositoryAccessor repositoryAccessor() {
-        return RepositoryManager.getInstance().getAccessor();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(final Composite parent) {
         final EMFDataBindingContext ctx = new EMFDataBindingContext();
@@ -141,7 +130,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
             @Override
             protected IStatus validate() {
-                final boolean isMultiple = Boolean.valueOf((Boolean) multipleObservableValue.getValue());
+                final boolean isMultiple = Boolean.TRUE.equals(multipleObservableValue.getValue());
                 final String className = (String) classNameObservable.getValue();
                 if (!isNullOrEmpty(className) && !isNullOrEmpty((String) defaultValueContentObservable.getValue())) {
                     return isMultiple ? returnTypeIs(List.class.getName()) : returnTypeIs(className);
@@ -154,7 +143,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
     private IStatus returnTypeIs(final String expectedReturnType) {
         final String actualReturnType = (String) defaultValueReturnTypeObservable.getValue();
         return expectedReturnType.equals(actualReturnType) ? ValidationStatus.ok() : ValidationStatus
-                .error(Messages.bind(Messages.defaultValueReturnTypeValidationMessage, actualReturnType,
+                .error(NLS.bind(Messages.defaultValueReturnTypeValidationMessage, actualReturnType,
                         expectedReturnType));
     }
 
@@ -179,9 +168,9 @@ public class BusinessObjectDataWizardPage extends WizardPage {
                 Messages.defaultValueBusinessDataTooltip);
 
         defaultValueExpressionViewer.setInput(container);
-        ctx.bindValue(ViewersObservables.observeSingleSelection(defaultValueExpressionViewer),
+        ctx.bindValue(ViewerProperties.singleSelection(Expression.class).observe(defaultValueExpressionViewer),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.DATA__DEFAULT_VALUE));
-        defaultReturnTypeObservable = PojoObservables.observeValue(defaultValueExpressionViewer, "defaultReturnType");
+        defaultReturnTypeObservable = PojoProperties.value("defaultReturnType", String.class).observe(defaultValueExpressionViewer);
         ctx.bindValue(defaultReturnTypeObservable, classNameObservable, neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(listConverter()).create());
         ctx.bindValue(defaultReturnTypeObservable, multipleObservableValue, neverUpdateValueStrategy().create(),
@@ -190,11 +179,11 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
     }
 
-    private IConverter listConverter() {
-        return new Converter(String.class, String.class) {
+    private IConverter<String,String> listConverter() {
+        return new Converter<>(String.class, String.class) {
 
             @Override
-            public Object convert(final Object fromObject) {
+            public String convert(final String fromObject) {
                 if (businessObjectData.isMultiple()) {
                     return List.class.getName();
                 }
@@ -203,12 +192,12 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         };
     }
 
-    private IConverter multipleConverter() {
-        return new Converter(Boolean.class, String.class) {
+    private IConverter<Boolean, String> multipleConverter() {
+        return new Converter<>(Boolean.class, String.class) {
 
             @Override
-            public Object convert(final Object fromObject) {
-                if (fromObject != null && (boolean) fromObject) {
+            public String convert(final Boolean fromObject) {
+                if (Boolean.TRUE.equals(fromObject)) {
                     return List.class.getName();
                 }
                 return classNameObservable.getValue();
@@ -224,7 +213,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         multipleCheckbox.setText(Messages.multipleBusinessData);
 
         multipleObservableValue = EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.DATA__MULTIPLE);
-        ctx.bindValue(SWTObservables.observeSelection(multipleCheckbox),
+        ctx.bindValue(WidgetProperties.buttonSelection().observe(multipleCheckbox),
                 multipleObservableValue);
     }
 
@@ -240,24 +229,25 @@ public class BusinessObjectDataWizardPage extends WizardPage {
 
         final ComboViewer businessObjectComboViewer = new ComboViewer(comboComposite, SWT.READ_ONLY | SWT.BORDER);
         businessObjectComboViewer.getControl().setLayoutData(fillDefaults().grab(true, false).create());
-        businessObjectComboViewer.setContentProvider(new ObservableListContentProvider());
+        businessObjectComboViewer.setContentProvider(new ObservableListContentProvider<BusinessObject>());
         businessObjectComboViewer.setLabelProvider(businessObjectLabelProvider());
 
-        final IObservableList<BusinessObject> businessObjectsObservableList = new WritableList(getAllBusinessObjects(),
+        final IObservableList<BusinessObject> businessObjectsObservableList = new WritableList<>(getAllBusinessObjects(),
                 BusinessObject.class);
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables
-                .observeSingleSelection(businessObjectComboViewer);
+        final IObservableValue<BusinessObject> observeSingleSelection = ViewerProperties.singleSelection(BusinessObject.class).observe(businessObjectComboViewer);
         businessObjectComboViewer.setInput(businessObjectsObservableList);
 
         classNameObservable = EMFObservables.observeValue(businessObjectData,
                 ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME);
         ctx.bindValue(observeSingleSelection,
                 classNameObservable,
-                updateValueStrategy().withConverter(businessObjectToFQN())
-                        .withValidator(mandatoryValidator(Messages.businessObject))
+                updateValueStrategy()
+                        .withConverter(businessObjectToFQN())
+                        .withValidator(mandatoryValidator(Messages.businessObject), ValidatorEvent.AFTER_CONVERT)
                         .create(),
-                updateValueStrategy().withConverter(fqnToBusinessObject())
+                updateValueStrategy()
+                        .withConverter(fqnToBusinessObject())
                         .create());
 
         defaultValueReturnTypeObservable = EMFObservables.observeValue(businessObjectData.getDefaultValue(),
@@ -282,31 +272,29 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         };
     }
 
-    private Converter fqnToBusinessObject() {
-        return new Converter(String.class, BusinessObject.class) {
+    private Converter<String, BusinessObject> fqnToBusinessObject() {
+        return new Converter<>(String.class, BusinessObject.class) {
 
             @Override
-            public Object convert(final Object fromObject) {
-                if (fromObject instanceof String) {
-                    final String qualifiedName = fromObject.toString();
-                    final Optional<BusinessObjectModelFileStore> childByQualifiedName = businessObjectModelStore
-                            .getChildByQualifiedName(qualifiedName);
-                    if (childByQualifiedName.isPresent()) {
-                        return childByQualifiedName.get().getBusinessObject(qualifiedName);
-                    }
+            public BusinessObject convert(String qualifiedName) {
+                if (qualifiedName instanceof String) {
+                   return businessObjectModelStore
+                            .getChildByQualifiedName(qualifiedName)
+                            .map(fStore -> fStore.getBusinessObject(qualifiedName))
+                            .orElse(null);
                 }
                 return null;
             }
         };
     }
 
-    private Converter businessObjectToFQN() {
-        return new Converter(BusinessObject.class, String.class) {
+    private Converter<BusinessObject,String> businessObjectToFQN() {
+        return new Converter<>(BusinessObject.class, String.class) {
 
             @Override
-            public Object convert(final Object fromObject) {
+            public String convert(final BusinessObject fromObject) {
                 if (fromObject instanceof BusinessObject) {
-                    return ((BusinessObject) fromObject).getQualifiedName();
+                    return fromObject.getQualifiedName();
                 }
                 return null;
             }
@@ -329,7 +317,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).create());
 
-        ctx.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
+        ctx.bindValue(WidgetProperties.text(SWT.Modify).observe(descriptionText),
                 EMFObservables.observeValue(businessObjectData, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
                 updateValueStrategy().withValidator(maxLengthValidator(Messages.description, 255)).create(), null);
         return descriptionText;
@@ -344,7 +332,7 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         final Text nameText = new Text(mainComposite, SWT.BORDER);
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        ctx.bindValue(SWTObservables.observeText(nameText, SWT.Modify),
+        ctx.bindValue(WidgetProperties.text(SWT.Modify).observe(nameText),
                 EMFObservables.observeValue(businessObjectData,
                         ProcessPackage.Literals.ELEMENT__NAME),
                 updateValueStrategy().withValidator(multiValidator()
@@ -356,17 +344,13 @@ public class BusinessObjectDataWizardPage extends WizardPage {
         return nameText;
     }
 
-    private IValidator uniqueDataNameValidator() {
-        return new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                if (existingNames.contains(value.toString())) {
+    private IValidator<String> uniqueDataNameValidator() {
+        return value -> {
+                if (existingNames.contains(value)) {
                     return ValidationStatus.error(Messages.dataWithSameNameAlreadyExists);
                 }
                 return ValidationStatus.ok();
-            }
-        };
+            };
     }
 
     protected Composite createMainComposite(final Composite parent) {
