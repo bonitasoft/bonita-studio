@@ -32,7 +32,7 @@ public class ValidatorWrapper<T> implements IValidator<T> {
 
     @Override
     public IStatus validate(T value) {
-        if (applyValidator.get()) {
+        if (Boolean.TRUE.equals(applyValidator.get())) {
             return validatorDelegate.validate(value);
         }
         return ValidationStatus.ok();
