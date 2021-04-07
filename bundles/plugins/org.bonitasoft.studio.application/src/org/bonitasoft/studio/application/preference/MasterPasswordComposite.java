@@ -18,6 +18,7 @@ import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convert
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -36,15 +37,17 @@ public class MasterPasswordComposite extends Composite {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
 
         var link = new Link(this, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         link.setText(Messages.encryptionLink);
-        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/guides/mini/guide-encryption.html"));
+        link.addListener(SWT.Selection,
+                new OpenSystemBrowserListener("https://maven.apache.org/guides/mini/guide-encryption.html"));
 
         passwordManager.getCurrentMasterPassword().ifPresent(masterPwdObservable::setValue);
 
-        new TextWidget.Builder()
+        var textWidget = new TextWidget.Builder()
                 .withLabel(Messages.encryptionMasterPassword)
                 .labelAbove()
                 .withTootltip(Messages.updateMasterPasswordWarning)
@@ -63,6 +66,8 @@ public class MasterPasswordComposite extends Composite {
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(this);
+        textWidget.getControl().getParent().setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
     }
 
 }

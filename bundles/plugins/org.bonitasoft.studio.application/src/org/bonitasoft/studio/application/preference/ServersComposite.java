@@ -80,7 +80,7 @@ public class ServersComposite extends Composite {
         USERNAME_PWD, SSH
     }
 
-    private Settings settings;
+    private IObservableValue<Settings> settingsObservable;
     private DataBindingContext ctx;
     private MavenPasswordManager passwordManager;
 
@@ -102,11 +102,12 @@ public class ServersComposite extends Composite {
     private int currentPasswordStyle;
     private int currentPassphraseStyle;
 
-    public ServersComposite(Composite parent, Settings settings, IObservableValue<String> masterPwdObservable) {
+    public ServersComposite(Composite parent, IObservableValue<Settings> settings,
+            IObservableValue<String> masterPwdObservable) {
         super(parent, SWT.NONE);
 
-        this.settings = settings;
-        this.serversObservable = PojoProperties.list(Settings.class, "servers", Server.class).observe(settings);
+        this.settingsObservable = settings;
+        this.serversObservable = PojoProperties.list(Settings.class, "servers", Server.class).observeDetail(settings);
         this.ctx = new DataBindingContext();
         this.passwordManager = new MavenPasswordManager();
         this.masterPwdObservable = masterPwdObservable;
@@ -226,7 +227,7 @@ public class ServersComposite extends Composite {
                 .withLabel(Messages.clearPassword)
                 .onClick(e -> passwordObservable.setValue(null))
                 .createIn(sshComposite);
-        
+
         ControlDecoration clearPasswordWarningDecorator = new ControlDecoration(clearPasswordButton, SWT.RIGHT);
         clearPasswordWarningDecorator.setDescriptionText(Messages.clearPasswordTooltip);
         clearPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
@@ -248,7 +249,7 @@ public class ServersComposite extends Composite {
             clearPasswordWarningDecorator.hide();
         }
         ctx.bindValue(WidgetProperties.visible().observe(clearPasswordButton), passwordSetObservable);
-        
+
     }
 
     private void createPassphraseField(Composite parent, int style) {
@@ -310,7 +311,7 @@ public class ServersComposite extends Composite {
                 .withLabel(Messages.encryptPassword)
                 .onClick(e -> encryptPassword())
                 .createIn(usernamePwdComposite);
-        
+
         ControlDecoration masterPasswordWarningDecorator = new ControlDecoration(encryptButton, SWT.RIGHT);
         masterPasswordWarningDecorator.setDescriptionText(Messages.encryptButtonTooltip);
         masterPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
@@ -418,8 +419,8 @@ public class ServersComposite extends Composite {
 
         var serverIdCombo = new ComboViewer(serverIdComposite, SWT.READ_ONLY | SWT.BORDER);
         serverIdCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        serverIdCombo.setContentProvider(new ServerIdContentProvider());
-        serverIdCombo.setInput(settings);
+        serverIdCombo.setContentProvider(new ServerIdContentProvider(settingsObservable));
+        serverIdCombo.setInput(settingsObservable);
         IObservableValue<Object> serverComboSelectionObservable = ViewerProperties.singleSelection()
                 .observe(serverIdCombo);
         ctx.bindValue(serverComboSelectionObservable,
@@ -466,15 +467,14 @@ public class ServersComposite extends Composite {
 
         viewer.setUseHashlookup(true);
         createServerColumn(viewer);
-        
+
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
         viewer.getTable().setLayout(layout);
 
-        
         viewer.setContentProvider(new ObservableListContentProvider<Server>());
         viewer.setInput(serversObservable);
-        
+
         selectionObservable = ViewerProperties.singleSelection(Server.class).observe(viewer);
     }
 
@@ -506,6 +506,10 @@ public class ServersComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
+    }
+
+    public void refresh() {
+        refreshViewer();
     }
 
 }

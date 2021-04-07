@@ -71,17 +71,19 @@ public class RepositoriesComposite extends Composite {
     private TableViewer viewer;
     private IObservableValue<Profile> selectedProfileObservable = new WritableValue<>();
     private IObservableList<Repository> repositoriesObservable;
+    private IObservableList<Profile> profilesObservable;
     private IViewerObservableValue<Repository> selectionObservable;
     private DataBindingContext ctx;
     private ToolItem deleteItem;
 
-    private Settings settings;
+    private IObservableValue<Settings> settingsObservable;
 
-    public RepositoriesComposite(Composite parent, Settings settings) {
+    public RepositoriesComposite(Composite parent, IObservableValue<Settings> settings) {
         super(parent, SWT.NONE);
 
-        this.settings = settings;
+        this.settingsObservable = settings;
         updateRepositories();
+        this.profilesObservable = PojoProperties.list("profiles", Profile.class).observeDetail(settingsObservable);
         this.repositoriesObservable = PojoProperties.list(Profile.class, "repositories", Repository.class)
                 .observeDetail(selectedProfileObservable);
         this.ctx = new DataBindingContext();
@@ -104,6 +106,11 @@ public class RepositoriesComposite extends Composite {
         ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectionObservable.getValue() != null)
                 .build());
+
+        settingsObservable.addValueChangeListener(e -> {
+            updateRepositories();
+            selectedProfileObservable.setValue(retrieveBonitaProfile());
+        });
     }
 
     private void createProfileCombo(RepositoriesComposite parent) {
@@ -128,8 +135,8 @@ public class RepositoriesComposite extends Composite {
 
         var profileCombo = new ComboViewer(profileComposite, SWT.READ_ONLY | SWT.BORDER);
         profileCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        profileCombo.setContentProvider(new ArrayContentProvider());
-        profileCombo.setInput(settings.getProfiles());
+        profileCombo.setContentProvider(new ObservableListContentProvider<Profile>());
+        profileCombo.setInput(profilesObservable);
         profileCombo.setLabelProvider(
                 new LabelProviderBuilder<Profile>().withTextProvider(Profile::getId).createLabelProvider());
         ctx.bindValue(ViewerProperties.singleSelection().observe(profileCombo), selectedProfileObservable);
@@ -139,7 +146,7 @@ public class RepositoriesComposite extends Composite {
     }
 
     private Profile retrieveBonitaProfile() {
-        return settings.getProfiles().stream()
+        return settingsObservable.getValue().getProfiles().stream()
                 .filter(profile -> {
                     return Objects.equals(profile.getId(), BONITA_PROFILE_ID);
                 })
@@ -152,7 +159,7 @@ public class RepositoriesComposite extends Composite {
         Activation activation = new Activation();
         activation.setActiveByDefault(true);
         profile.setActivation(activation);
-        settings.getProfiles().add(profile);
+        profilesObservable.add(profile);
         return profile;
     }
 
@@ -301,8 +308,11 @@ public class RepositoriesComposite extends Composite {
                 repositoriesObservable.stream().map(Repository::getId).collect(Collectors.toList()));
         repository.setId(name);
         repository.setName(name);
-        repository.setReleases(new RepositoryPolicy());
-        repository.setSnapshots(new RepositoryPolicy());
+        RepositoryPolicy repositoryPolicy = new RepositoryPolicy();
+        repositoryPolicy.setChecksumPolicy("warn");
+        repositoryPolicy.setUpdatePolicy("daily");
+        repository.setReleases(repositoryPolicy);
+        repository.setSnapshots(repositoryPolicy.clone());
         repositoriesObservable.add(repository);
         selectionObservable.setValue(repository);
         refreshViewer();
@@ -336,7 +346,7 @@ public class RepositoriesComposite extends Composite {
     }
 
     private void updateRepositories() {
-        settings.getProfiles().forEach(profile -> {
+        settingsObservable.getValue().getProfiles().forEach(profile -> {
             List<Repository> repoList = new ArrayList<>();
             profile.getRepositories().stream().map(repo -> {
                 CustomRepository newRepo = new CustomRepository();

@@ -34,6 +34,7 @@ import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,7 +56,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
         IWorkbenchPreferencePage {
 
     private File userSettingsFile;
-    private Settings settings;
+    private IObservableValue<Settings> settingsObservable = new WritableValue<>();
 
     private NativeTabItemWidget repositoriesTabItem;
     private NativeTabItemWidget serversTabItem;
@@ -66,6 +67,10 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     private SettingsJDOMWriter settingsJDOMWriter = new SettingsJDOMWriter();
 
     private IObservableValue<String> masterPwdObservable = new WritableValue<>();
+    private RepositoriesComposite repositoriesComposite;
+    private ServersComposite serversComposite;
+    private ProxiesComposite proxiesComposite;
+    private MirrorsComposite mirrorsComposite;
 
     @Override
     public void init(IWorkbench workbench) {
@@ -83,15 +88,15 @@ public class ExtensionsPreferencePage extends PreferencePage implements
                             e);
                 }
             } else {
-                settings = defaultSettingsReader.read(userSettingsFile, null);
+                settingsObservable.setValue(defaultSettingsReader.read(userSettingsFile, null));
             }
         } catch (EOFException | SettingsParseException e) {
-            settings = new Settings();
+            settingsObservable.setValue(new Settings());
             BonitaStudioLog.warning(String.format(
                     "File '%s' is empty / unreadable -> An empty configuration will be created in memory, and saved if the user apply changes.",
                     userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
         } catch (IOException e) {
-            settings = new Settings();
+            settingsObservable.setValue(new Settings());
             MessageDialog.openError(getShell(), Messages.error, e.getMessage());
             BonitaStudioLog.error(e);
         }
@@ -118,30 +123,34 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     }
 
     private void createRepositoriesTabItem(NativeTabFolderWidget parent) {
+        repositoriesComposite = new RepositoriesComposite(parent.getTabFolder(), settingsObservable);
         repositoriesTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.repositories)
-                .withControl(new RepositoriesComposite(parent.getTabFolder(), settings))
+                .withControl(repositoriesComposite)
                 .createIn(parent);
     }
 
     private void createServersTabItem(NativeTabFolderWidget parent) {
+        serversComposite = new ServersComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
         serversTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.servers)
-                .withControl(new ServersComposite(parent.getTabFolder(), settings, masterPwdObservable))
+                .withControl(serversComposite)
                 .createIn(parent);
     }
 
     private void createProxiesTabItem(NativeTabFolderWidget parent) {
+        proxiesComposite = new ProxiesComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
         proxiesTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.proxies)
-                .withControl(new ProxiesComposite(parent.getTabFolder(), settings, masterPwdObservable))
+                .withControl(proxiesComposite)
                 .createIn(parent);
     }
 
     private void createMirrorsTabItem(NativeTabFolderWidget parent) {
+        mirrorsComposite = new MirrorsComposite(parent.getTabFolder(), settingsObservable);
         mirrorsTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.mirrors)
-                .withControl(new MirrorsComposite(parent.getTabFolder(), settings))
+                .withControl(mirrorsComposite)
                 .createIn(parent);
     }
 
@@ -160,7 +169,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
                         "File '%s' is empty / unreadable -> Content will be overwritten by in memory configuration.",
                         userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
             }
-            String encoding = settings.getModelEncoding();
+            String encoding = settingsObservable.getValue().getModelEncoding();
             if (encoding == null) {
                 encoding = "UTF-8";
             }
@@ -169,17 +178,38 @@ public class ExtensionsPreferencePage extends PreferencePage implements
 
             try (Writer writer = WriterFactory.newWriter(userSettingsFile, encoding)) {
                 if (doc != null) {
-                    settingsJDOMWriter.write(settings, doc, writer, format);
+                    settingsJDOMWriter.write(settingsObservable.getValue(), doc, writer, format);
                 } else {
-                    new SettingsXpp3Writer().write(writer, settings);
+                    new SettingsXpp3Writer().write(writer, settingsObservable.getValue());
                 }
+                MavenPlugin.getMaven().reloadSettings();
             }
 
-        } catch (IOException e) {
+        } catch (IOException | CoreException e) {
             MessageDialog.openError(getShell(), Messages.error, e.getMessage());
             BonitaStudioLog.error(e);
         }
         return true;
+    }
+
+    @Override
+    protected void performDefaults() {
+        if (MessageDialog.openConfirm(getShell(), Messages.restoreDefaultConfirmationTitle,
+                Messages.restoreDefaultConfirmation)) {
+            try {
+                settingsObservable.setValue(defaultSettingsReader.read(userSettingsFile, null));
+            } catch (EOFException | SettingsParseException e) {
+                settingsObservable.setValue(new Settings());
+                BonitaStudioLog.warning(String.format(
+                        "File '%s' is empty / unreadable -> An empty configuration will be created in memory, and saved if the user apply changes.",
+                        userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
+            } catch (IOException e) {
+                settingsObservable.setValue(new Settings());
+                MessageDialog.openError(getShell(), Messages.error, e.getMessage());
+                BonitaStudioLog.error(e);
+            }
+            super.performDefaults();
+        }
     }
 
 }

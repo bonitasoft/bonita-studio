@@ -88,10 +88,12 @@ public class ProxiesComposite extends Composite {
     private char hiddenEchoChar;
     private ToolItem activateItem;
 
-    public ProxiesComposite(Composite parent, Settings settings, IObservableValue<String> masterPwdObservable) {
+    public ProxiesComposite(Composite parent, IObservableValue<Settings> settingsObservable,
+            IObservableValue<String> masterPwdObservable) {
         super(parent, SWT.NONE);
 
-        this.proxiesObservable = PojoProperties.list(Settings.class, "proxies", Proxy.class).observe(settings);
+        this.proxiesObservable = PojoProperties.list(Settings.class, "proxies", Proxy.class)
+                .observeDetail(settingsObservable);
         this.ctx = new DataBindingContext();
         this.passwordManager = new MavenPasswordManager();
         this.masterPwdObservable = masterPwdObservable;
@@ -110,7 +112,7 @@ public class ProxiesComposite extends Composite {
         ctx.bindValue(WidgetProperties.enabled().observe(deleteItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectionObservable.getValue() != null)
                 .build());
-        
+
         ctx.bindValue(WidgetProperties.enabled().observe(activateItem), new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> selectionObservable.getValue() != null && !selectionObservable.getValue().isActive())
                 .build());
@@ -419,6 +421,10 @@ public class ProxiesComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
+    }
+
+    public void refresh() {
+        refreshViewer();
     }
 
 }

@@ -29,6 +29,7 @@ import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -60,10 +61,11 @@ public class MirrorsComposite extends Composite {
 
     private IViewerObservableValue<Mirror> selectionObservable;
 
-    public MirrorsComposite(Composite parent, Settings settings) {
+    public MirrorsComposite(Composite parent, IObservableValue<Settings> settingsObservable) {
         super(parent, SWT.NONE);
 
-        this.mirrorsObservable = PojoProperties.list(Settings.class, "mirrors", Mirror.class).observe(settings);
+        this.mirrorsObservable = PojoProperties.list(Settings.class, "mirrors", Mirror.class)
+                .observeDetail(settingsObservable);
         this.ctx = new DataBindingContext();
 
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -84,7 +86,8 @@ public class MirrorsComposite extends Composite {
         var link = new Link(mirrorsComposite, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         link.setText(Messages.mirrorsLink);
-        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/guides/mini/guide-mirror-settings.html"));
+        link.addListener(SWT.Selection,
+                new OpenSystemBrowserListener("https://maven.apache.org/guides/mini/guide-mirror-settings.html"));
 
         createMirrorListComposite(mirrorsComposite);
         createMirrorDetailsComposite(mirrorsComposite);
@@ -214,6 +217,10 @@ public class MirrorsComposite extends Composite {
 
     private void refreshViewer() {
         getDisplay().asyncExec(() -> viewer.refresh());
+    }
+
+    public void refresh() {
+        refreshViewer();
     }
 
 }
