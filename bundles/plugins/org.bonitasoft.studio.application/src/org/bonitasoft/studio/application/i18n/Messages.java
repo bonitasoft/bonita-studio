@@ -279,6 +279,8 @@ public class Messages extends NLS {
     public static String mirrorOfTooltip;
     public static String activate;
     public static String activateProxyTooltip;
+    public static String restoreDefaultConfirmationTitle;
+    public static String restoreDefaultConfirmation;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

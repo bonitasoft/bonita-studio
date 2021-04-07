@@ -22,25 +22,34 @@ import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Settings;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 public class ServerIdContentProvider implements IStructuredContentProvider {
 
+    private IObservableList<Profile> profilesObservable;
+    private IObservableList<Mirror> mirrorsObservable;
+
+    public ServerIdContentProvider(IObservableValue<Settings> settingsObservable) {
+        profilesObservable = PojoProperties.list(Settings.class, "profiles", Profile.class)
+                .observeDetail(settingsObservable);
+        mirrorsObservable = PojoProperties.list(Settings.class, "mirrors", Mirror.class)
+                .observeDetail(settingsObservable);
+    }
+
     @Override
     public Object[] getElements(Object inputElement) {
-        if (inputElement instanceof Settings) {
-            Settings settings = (Settings) inputElement;
-            List<String> ids = settings.getProfiles().stream()
-                    .map(Profile::getRepositories)
-                    .flatMap(Collection::stream)
-                    .map(Repository::getId)
-                    .collect(Collectors.toList());
-            settings.getMirrors().stream()
-                    .map(Mirror::getId)
-                    .forEach(ids::add);
-            return ids.toArray();
-        }
-        return null;
+        List<String> ids = profilesObservable.stream()
+                .map(Profile::getRepositories)
+                .flatMap(Collection::stream)
+                .map(Repository::getId)
+                .collect(Collectors.toList());
+        mirrorsObservable.stream()
+                .map(Mirror::getId)
+                .forEach(ids::add);
+        return ids.toArray();
     }
 
 }
