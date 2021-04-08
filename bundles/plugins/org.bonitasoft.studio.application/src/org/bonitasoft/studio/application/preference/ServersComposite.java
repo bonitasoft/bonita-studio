@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.application.preference;
 
+import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.updateValueStrategy;
+
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,6 +38,7 @@ import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
 import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
@@ -101,6 +104,7 @@ public class ServersComposite extends Composite {
     private char hiddenEchoChar;
     private int currentPasswordStyle;
     private int currentPassphraseStyle;
+    private ToolItem encryptPwdItem;
 
     public ServersComposite(Composite parent, IObservableValue<Settings> settings,
             IObservableValue<String> masterPwdObservable) {
@@ -298,41 +302,35 @@ public class ServersComposite extends Composite {
                 .useNativeRender()
                 .createIn(usernamePwdComposite);
 
-        var pwdComposite = new Composite(usernamePwdComposite, SWT.NONE);
-        pwdComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        pwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
         passwordObservable = PojoProperties.value("password", String.class).observeDetail(selectionObservable);
 
-        createPasswordField(pwdComposite, SWT.PASSWORD);
+        passwordField = createPasswordField(usernamePwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
 
-        var encryptButton = new ButtonWidget.Builder()
-                .withLabel(Messages.encryptPassword)
-                .onClick(e -> encryptPassword())
-                .createIn(usernamePwdComposite);
-
-        ControlDecoration masterPasswordWarningDecorator = new ControlDecoration(encryptButton, SWT.RIGHT);
-        masterPasswordWarningDecorator.setDescriptionText(Messages.encryptButtonTooltip);
-        masterPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
-        masterPasswordWarningDecorator.setMarginWidth(3);
+        passwordField.getToolBar().ifPresent(toolbar -> {
+            encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
+            encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
+            encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
+        });
 
         ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
                 .build();
-        masterPasswordObservable.addValueChangeListener(v -> {
-            if (Boolean.TRUE.equals(v.diff.getNewValue())) {
-                masterPasswordWarningDecorator.hide();
-            } else {
-                masterPasswordWarningDecorator.show();
-            }
-        });
-        ctx.bindValue(encryptButton.observeEnabled(), masterPasswordObservable);
-        if (Boolean.TRUE.equals(masterPasswordObservable.getValue())) {
-            masterPasswordWarningDecorator.hide();
-        } else {
-            masterPasswordWarningDecorator.show();
-        }
+        ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
+        ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
+                masterPasswordObservable,
+                new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
+                updateValueStrategy()
+                        .withConverter(ConverterBuilder.<Boolean, String> newConverter()
+                                .fromType(Boolean.class)
+                                .toType(String.class)
+                                .withConvertFunction(masterPwdSet -> {
+                                    if (Boolean.FALSE.equals(masterPwdSet)) {
+                                        return Messages.encryptButtonTooltip;
+                                    }
+                                    return Messages.encryptPassword;
+                                }).create())
+                        .create());
     }
 
     private void encryptPassword() {
@@ -340,7 +338,7 @@ public class ServersComposite extends Composite {
         passwordField.setText(passwordManager.encryptPassword(currentPassword));
     }
 
-    private void createPasswordField(Composite parent, int style) {
+    private TextWidget createPasswordField(Composite parent, int style) {
         currentPasswordStyle = style;
         passwordField = new TextWidget.Builder()
                 .withLabel(Messages.password)
@@ -354,6 +352,7 @@ public class ServersComposite extends Composite {
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(parent);
+        return passwordField;
     }
 
     private void showPassword(Composite parent) {

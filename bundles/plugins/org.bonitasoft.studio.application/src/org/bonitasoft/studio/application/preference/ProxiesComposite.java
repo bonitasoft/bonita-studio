@@ -32,9 +32,9 @@ import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.viewer.LabelProviderBuilder;
-import org.bonitasoft.studio.ui.widget.ButtonWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
@@ -46,7 +46,6 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -87,6 +86,7 @@ public class ProxiesComposite extends Composite {
 
     private char hiddenEchoChar;
     private ToolItem activateItem;
+    private ToolItem encryptPwdItem;
 
     public ProxiesComposite(Composite parent, IObservableValue<Settings> settingsObservable,
             IObservableValue<String> masterPwdObservable) {
@@ -114,7 +114,8 @@ public class ProxiesComposite extends Composite {
                 .build());
 
         ctx.bindValue(WidgetProperties.enabled().observe(activateItem), new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> selectionObservable.getValue() != null && !selectionObservable.getValue().isActive())
+                .withSupplier(
+                        () -> selectionObservable.getValue() != null && !selectionObservable.getValue().isActive())
                 .build());
     }
 
@@ -126,7 +127,8 @@ public class ProxiesComposite extends Composite {
         var link = new Link(proxiesComposite, SWT.NONE);
         link.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         link.setText(Messages.proxiesLink);
-        link.addListener(SWT.Selection, new OpenSystemBrowserListener("https://maven.apache.org/settings.html#proxies"));
+        link.addListener(SWT.Selection,
+                new OpenSystemBrowserListener("https://maven.apache.org/settings.html#proxies"));
 
         createProxyListComposite(proxiesComposite);
         createProxyDetailsComposite(proxiesComposite);
@@ -177,7 +179,7 @@ public class ProxiesComposite extends Composite {
         authenticationGroup.setText(Messages.authentication);
 
         var usernamePwdComposite = new Composite(authenticationGroup, SWT.NONE);
-        usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2).create());
+        usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(3).create());
         usernamePwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
@@ -190,42 +192,35 @@ public class ProxiesComposite extends Composite {
                 .useNativeRender()
                 .createIn(usernamePwdComposite);
 
-        var pwdComposite = new Composite(usernamePwdComposite, SWT.NONE);
-        pwdComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        pwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
         passwordObservable = PojoProperties.value("password", String.class).observeDetail(selectionObservable);
 
-        createPasswordField(pwdComposite, SWT.PASSWORD);
+        passwordField = createPasswordField(usernamePwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
 
-        var encryptButton = new ButtonWidget.Builder()
-                .withLabel(Messages.encryptPassword)
-                .horizontalSpan(2)
-                .onClick(e -> encryptPassword())
-                .createIn(usernamePwdComposite);
-
-        ControlDecoration masterPasswordWarningDecorator = new ControlDecoration(encryptButton, SWT.RIGHT);
-        masterPasswordWarningDecorator.setDescriptionText(Messages.encryptButtonTooltip);
-        masterPasswordWarningDecorator.setImage(Pics.getImageDescriptor(PicsConstants.warning).createImage());
-        masterPasswordWarningDecorator.setMarginWidth(3);
+        passwordField.getToolBar().ifPresent(toolbar -> {
+            encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
+            encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
+            encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
+        });
 
         ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
                 .build();
-        masterPasswordObservable.addValueChangeListener(v -> {
-            if (Boolean.TRUE.equals(v.diff.getNewValue())) {
-                masterPasswordWarningDecorator.hide();
-            } else {
-                masterPasswordWarningDecorator.show();
-            }
-        });
-        ctx.bindValue(encryptButton.observeEnabled(), masterPasswordObservable);
-        if (Boolean.TRUE.equals(masterPasswordObservable.getValue())) {
-            masterPasswordWarningDecorator.hide();
-        } else {
-            masterPasswordWarningDecorator.show();
-        }
+        ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
+        ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
+                masterPasswordObservable,
+                new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
+                updateValueStrategy()
+                        .withConverter(ConverterBuilder.<Boolean, String> newConverter()
+                                .fromType(Boolean.class)
+                                .toType(String.class)
+                                .withConvertFunction(masterPwdSet -> {
+                                    if (Boolean.FALSE.equals(masterPwdSet)) {
+                                        return Messages.encryptButtonTooltip;
+                                    }
+                                    return Messages.encryptPassword;
+                                }).create())
+                        .create());
     }
 
     private void encryptPassword() {
@@ -233,7 +228,7 @@ public class ProxiesComposite extends Composite {
         passwordField.setText(passwordManager.encryptPassword(currentPassword));
     }
 
-    private void createPasswordField(Composite parent, int style) {
+    private TextWidget createPasswordField(Composite parent, int style) {
         currentPasswordStyle = style;
         passwordField = new TextWidget.Builder()
                 .withLabel(Messages.password)
@@ -247,6 +242,7 @@ public class ProxiesComposite extends Composite {
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(parent);
+        return passwordField;
     }
 
     private void showPassword(Composite parent) {
@@ -328,7 +324,7 @@ public class ProxiesComposite extends Composite {
     private void createProxyListComposite(Composite parent) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(220, SWT.DEFAULT).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
         createToolbar(composite);
         createViewer(composite);
