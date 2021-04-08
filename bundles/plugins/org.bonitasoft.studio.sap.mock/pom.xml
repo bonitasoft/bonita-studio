@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.bonitasoft.studio.bundles</groupId>
         <artifactId>plugins</artifactId>
-        <version>7.12.3-SNAPSHOT</version>
+        <version>7.12.4-SNAPSHOT</version>
     </parent>
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.sap.mock</artifactId>
