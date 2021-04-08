@@ -163,12 +163,16 @@ public class TextWidget extends EditableControlWidget {
             }
             final TextWidget control = (useNativeRender || GTKStyleHandler.isGTK3())
                     ? new NativeTextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
-                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
-                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
+                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
+                            imageButton,
+                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider,
+                            editableStrategy,
                             Optional.ofNullable(ctx), style)
                     : new TextWidget(container, id, labelAbove, horizontalLabelAlignment, verticalLabelAlignment,
-                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton, imageButton,
-                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider, editableStrategy,
+                            labelWidth, readOnly, label, message, useCompositeMessageDecorator, labelButton,
+                            imageButton,
+                            tooltipButton, transactionalEdit, onEdit, canEdit, toolkit, proposalProvider,
+                            editableStrategy,
                             Optional.ofNullable(ctx), style);
             control.init();
             control.setLayoutData(layoutData != null ? layoutData : gridData);
@@ -204,6 +208,7 @@ public class TextWidget extends EditableControlWidget {
     private Optional<String> tooltipButton;
     private IThemeEngine themeEngine;
     protected int style;
+    private ToolBar toolBar;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -357,7 +362,7 @@ public class TextWidget extends EditableControlWidget {
             GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment()).applyTo(b);
             button = Optional.of(b);
         } else if (imageButton.isPresent()) {
-            ToolBar toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS);
+            toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS | SWT.RIGHT );
             toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
             toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
             ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
@@ -365,6 +370,10 @@ public class TextWidget extends EditableControlWidget {
             tooltipButton.ifPresent(bWithImage::setToolTipText);
             buttonWithImage = Optional.of(bWithImage);
         }
+    }
+
+    public Optional<ToolBar> getToolBar() {
+        return Optional.ofNullable(toolBar);
     }
 
     private Optional<KeyStroke> retrieveEclipseContentAssistKeyStroke() {
