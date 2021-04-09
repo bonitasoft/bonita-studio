@@ -306,12 +306,7 @@ public class ServersComposite extends Composite {
 
         passwordField = createPasswordField(usernamePwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
-
-        passwordField.getToolBar().ifPresent(toolbar -> {
-            encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
-            encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
-            encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
-        });
+        createPasswordEncryptButton();
 
         ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
                 .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
@@ -331,6 +326,14 @@ public class ServersComposite extends Composite {
                                     return Messages.encryptPassword;
                                 }).create())
                         .create());
+    }
+
+    private void createPasswordEncryptButton() {
+        passwordField.getToolBar().ifPresent(toolbar -> {
+            encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
+            encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
+            encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
+        });
     }
 
     private void encryptPassword() {
@@ -360,6 +363,7 @@ public class ServersComposite extends Composite {
         if (Platform.OS_MACOSX.equals(Platform.getOS())) {
             passwordField.dispose();
             createPasswordField(parent, isHidden ? SWT.NONE : SWT.PASSWORD);
+            createPasswordEncryptButton();
             parent.layout();
         } else {
             Text text = passwordField.getTextControl();
