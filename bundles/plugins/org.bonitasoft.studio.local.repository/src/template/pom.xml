@@ -8,7 +8,7 @@
 	<artifactId>bonita-projet-template</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<properties>
-		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+		<maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<bonita-project-maven-plugin.version>0.0.1-SNAPSHOT</bonita-project-maven-plugin.version>
 		<slf4j-api.version>1.7.30</slf4j-api.version>
