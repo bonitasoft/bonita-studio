@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
@@ -65,8 +66,13 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class ProxiesComposite extends Composite {
 
+    public static final String PROXIES_VIEWER_ID = "prociesViewer";
+    public static final String ADD_PROXY_BUTTON_ID = "addProxy";
+    public static final String REMOVE_PROXY_BUTTON_ID = "removeProxy";
+    public static final String ENCRYPT_PWD_BUTTON_ID = "encryptPassword";
+    public static final String DEFAULT_PROXY_NAME = "proxyId";
+
     private static final char CLEAR_CHAR = '\0';
-    private static final String DEFAULT_PROXY_NAME = "proxyId";
 
     private DataBindingContext ctx;
     private MavenPasswordManager passwordManager;
@@ -139,15 +145,17 @@ public class ProxiesComposite extends Composite {
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
+        IObservableValue<String> idObservable = PojoProperties.value("id", String.class).observeDetail(selectionObservable);
         new TextWidget.Builder()
                 .withLabel(Messages.id)
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .bindTo(PojoProperties.value("id", String.class).observeDetail(selectionObservable))
+                .bindTo(idObservable)
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
+        idObservable.addValueChangeListener(e -> refreshViewer());
 
         createProtocolHostPortComposite(composite);
 
@@ -222,6 +230,7 @@ public class ProxiesComposite extends Composite {
     private void createPasswordEncryptButton() {
         passwordField.getToolBar().ifPresent(toolbar -> {
             encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
+            encryptPwdItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ENCRYPT_PWD_BUTTON_ID);
             encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
             encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
         });
@@ -347,12 +356,14 @@ public class ProxiesComposite extends Composite {
         addItem.setText(Messages.add);
         addItem.setToolTipText(Messages.addProxyTooltip);
         addItem.addListener(SWT.Selection, e -> addProxy());
+        addItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_PROXY_BUTTON_ID);
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setToolTipText(Messages.deleteProxyTooltip);
         deleteItem.setText(Messages.delete);
         deleteItem.addListener(SWT.Selection, e -> removeProxy());
+        deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_PROXY_BUTTON_ID);
 
         new ToolItem(toolBar, SWT.SEPARATOR);
 
@@ -393,6 +404,7 @@ public class ProxiesComposite extends Composite {
     protected void createViewer(Composite parent) {
         viewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, PROXIES_VIEWER_ID);
 
         viewer.setUseHashlookup(true);
         createProxyColumn(viewer);

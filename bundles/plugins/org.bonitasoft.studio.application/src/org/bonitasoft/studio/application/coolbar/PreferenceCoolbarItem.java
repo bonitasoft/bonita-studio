@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.coolbar;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -35,6 +36,8 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class PreferenceCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
+    public static final String PREFERENCE_COOLBAR_ITEM_ID = "preferenceCoolbarItem";
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.action.IContributionItem#getId()
@@ -48,6 +51,7 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.PreferencesButtonLabel);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, PREFERENCE_COOLBAR_ITEM_ID);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_48));
             item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preferences_disabled_48));
@@ -71,7 +75,7 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
     }
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.eclipse.ui.window.preferences");
     }
 
