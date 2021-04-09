@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
@@ -51,7 +52,10 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class MirrorsComposite extends Composite {
 
-    private static final String DEFAULT_MIRROR_NAME = "mirrorName";
+    public static final String MIRRORS_VIEWER_ID = "mirrorsViewer";
+    public static final String ADD_MIRROR_BUTTON_ID = "addMirror";
+    public static final String REMOVE_MIRROR_BUTTON_ID = "removeMirror";
+    public static final String DEFAULT_MIRROR_NAME = "mirrorName";
 
     private IObservableList<Mirror> mirrorsObservable;
     private DataBindingContext ctx;
@@ -108,15 +112,18 @@ public class MirrorsComposite extends Composite {
                 .useNativeRender()
                 .createIn(composite);
 
+        IObservableValue<String> nameObservable = PojoProperties.value("name", String.class)
+                .observeDetail(selectionObservable);
         new TextWidget.Builder()
                 .withLabel(Messages.name)
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .bindTo(PojoProperties.value("name", String.class).observeDetail(selectionObservable))
+                .bindTo(nameObservable)
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
+        nameObservable.addValueChangeListener(e -> refreshViewer());
 
         new TextWidget.Builder()
                 .withLabel(Messages.url)
@@ -166,12 +173,14 @@ public class MirrorsComposite extends Composite {
         addItem.setText(Messages.add);
         addItem.setToolTipText(Messages.addMirrorTooltip);
         addItem.addListener(SWT.Selection, e -> addMirror());
+        addItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_MIRROR_BUTTON_ID);
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setToolTipText(Messages.deleteMirrorTooltip);
         deleteItem.setText(Messages.delete);
         deleteItem.addListener(SWT.Selection, e -> removeMirror());
+        deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_MIRROR_BUTTON_ID);
     }
 
     private void removeMirror() {
@@ -195,6 +204,7 @@ public class MirrorsComposite extends Composite {
     protected void createViewer(Composite parent) {
         viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, MIRRORS_VIEWER_ID);
 
         ColumnViewerToolTipSupport.enableFor(viewer);
         TableLayout layout = new TableLayout();

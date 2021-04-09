@@ -26,6 +26,7 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -65,8 +66,13 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class RepositoriesComposite extends Composite {
 
-    private static final String BONITA_PROFILE_ID = "Bonita";
-    private static final String DEFAULT_REPOSITORY_NAME = "myRepository";
+    public static final String PROFILE_COMBO_ID = "profileCombo";
+    public static final String REPOSITORIES_VIEWER_ID = "repositoriesViewer";
+    public static final String ADD_REPOSITORY_BUTTON_ID = "addRepository";
+    public static final String REMOVE_REPOSITORY_BUTTON_ID = "removeRepository";
+
+    public static final String BONITA_PROFILE_ID = "Bonita";
+    public static final String DEFAULT_REPOSITORY_NAME = "myRepository";
 
     private TableViewer viewer;
     private IObservableValue<Profile> selectedProfileObservable = new WritableValue<>();
@@ -139,6 +145,7 @@ public class RepositoriesComposite extends Composite {
         profileCombo.setInput(profilesObservable);
         profileCombo.setLabelProvider(
                 new LabelProviderBuilder<Profile>().withTextProvider(Profile::getId).createLabelProvider());
+        profileCombo.getCombo().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, PROFILE_COMBO_ID);
         ctx.bindValue(ViewerProperties.singleSelection().observe(profileCombo), selectedProfileObservable);
 
         selectedProfileObservable.setValue(bonitaProfile);
@@ -180,16 +187,19 @@ public class RepositoriesComposite extends Composite {
                 .useNativeRender()
                 .createIn(composite);
 
+        IObservableValue<String> nameObservable = PojoProperties.value("name", String.class)
+                .observeDetail(selectionObservable);
         new TextWidget.Builder()
                 .withLabel(Messages.name)
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .bindTo(PojoProperties.value("name", String.class).observeDetail(selectionObservable))
+                .bindTo(nameObservable)
                 .withValidator(new EmptyInputValidator(Messages.name))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
+        nameObservable.addValueChangeListener(e -> refreshViewer());
 
         new TextWidget.Builder()
                 .withLabel(Messages.url)
@@ -285,12 +295,14 @@ public class RepositoriesComposite extends Composite {
         addItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addItem.setText(Messages.add);
         addItem.setToolTipText(Messages.addRepositoryTooltip);
+        addItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_REPOSITORY_BUTTON_ID);
         addItem.addListener(SWT.Selection, e -> addRepository());
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setText(Messages.delete);
         deleteItem.setToolTipText(Messages.deleteRepositoryTooltip);
+        deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_REPOSITORY_BUTTON_ID);
         deleteItem.addListener(SWT.Selection, e -> removeRepository());
     }
 
@@ -325,6 +337,7 @@ public class RepositoriesComposite extends Composite {
     protected void createViewer(Composite parent) {
         viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REPOSITORIES_VIEWER_ID);
 
         ColumnViewerToolTipSupport.enableFor(viewer);
         TableLayout layout = new TableLayout();
