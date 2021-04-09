@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.swtbot.framework.la.BotApplicationEditor;
 import org.bonitasoft.studio.swtbot.framework.la.DeleteApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.OpenApplicationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.la.SelectApplicationToDeployWizardBot;
+import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.swtbot.framework.team.BotTeamMenu;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -228,5 +230,12 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.menu("Development").menu("Application Descriptors").menu("New...").click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
         return new BotApplicationEditor(bot, bot.activeEditor());
+    }
+
+    public BotPreferencesDialog openPreferences() {
+        bot.waitUntil(Conditions
+                .widgetIsEnabled(bot.toolbarButtonWithId(PreferenceCoolbarItem.PREFERENCE_COOLBAR_ITEM_ID)));
+        bot.toolbarButtonWithId(PreferenceCoolbarItem.PREFERENCE_COOLBAR_ITEM_ID).click();
+        return new BotPreferencesDialog(bot);
     }
 }
