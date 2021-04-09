@@ -25,7 +25,7 @@ public interface DefaultPluginVersions {
     static final String CODEHAUS_PLUGIN_GROUP_ID = "org.codehaus.mojo";
 
     static final String MAVEN_INSTALL_PLUGIN = "maven-install-plugin";
-    static final String MAVEN_INSTALL_PLUGIN_VERSION = "2.5.2";
+    static final String MAVEN_INSTALL_PLUGIN_VERSION = "3.0.0-M1";
 
     static final String BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
     static final String BONITA_PROJECT_MAVEN_PLUGIN_DEFAULT_VERSION = "0.0.1-SNAPSHOT";
