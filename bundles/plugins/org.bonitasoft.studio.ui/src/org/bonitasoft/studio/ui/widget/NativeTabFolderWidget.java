@@ -67,7 +67,7 @@ public class NativeTabFolderWidget {
         return new TabFolder(parent, SWT.TOP);
     }
 
-    private boolean useCTabFolder() {
+    public static boolean useCTabFolder() {
         return Objects.equals(Platform.OS_WIN32, Platform.getOS());
     }
 

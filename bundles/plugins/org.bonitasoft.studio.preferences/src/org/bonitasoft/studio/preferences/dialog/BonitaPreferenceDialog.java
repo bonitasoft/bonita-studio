@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
@@ -501,6 +502,8 @@ public class BonitaPreferenceDialog extends Dialog {
                 Pics.getImage(PicsConstants.preferenceExtension), Pics.getImage(PicsConstants.preferenceExtension),
                 EXTENSIONS_PAGE_ID);
         itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
+        tltmExtension.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, EXTENSIONS_PAGE_ID);
+
         Label lblExtension = createItemLabel(developmentRow, null,
                 Messages.extensions);
     }

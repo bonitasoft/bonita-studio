@@ -25,6 +25,7 @@ import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.preference.provider.ServerIdContentProvider;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.pics.Pics;
@@ -75,7 +76,12 @@ import com.google.common.base.Strings;
 
 public class ServersComposite extends Composite {
 
-    private static final String DEFAULT_SERVER_NAME = "serverId";
+    public static final String SERVERS_VIEWER_ID = "serversViewer";
+    public static final String ADD_SERVER_BUTTON_ID = "addServer";
+    public static final String REMOVE_SERVER_BUTTON_ID = "removeServer";
+    public static final String ENCRYPT_PWD_BUTTON_ID = "encryptPassword";
+    public static final String DEFAULT_SERVER_NAME = "serverId";
+
     private static final char CLEAR_CHAR = '\0';
     private static final String USER_HOME = System.getProperty("user.home");
 
@@ -88,6 +94,7 @@ public class ServersComposite extends Composite {
     private MavenPasswordManager passwordManager;
 
     private ToolItem deleteItem;
+    private ToolItem encryptPwdItem;
     private TableViewer viewer;
     private Composite usernamePwdComposite;
     private Composite sshComposite;
@@ -104,7 +111,6 @@ public class ServersComposite extends Composite {
     private char hiddenEchoChar;
     private int currentPasswordStyle;
     private int currentPassphraseStyle;
-    private ToolItem encryptPwdItem;
 
     public ServersComposite(Composite parent, IObservableValue<Settings> settings,
             IObservableValue<String> masterPwdObservable) {
@@ -331,6 +337,7 @@ public class ServersComposite extends Composite {
     private void createPasswordEncryptButton() {
         passwordField.getToolBar().ifPresent(toolbar -> {
             encryptPwdItem = new ToolItem(toolbar, SWT.PUSH);
+            encryptPwdItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ENCRYPT_PWD_BUTTON_ID);
             encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
             encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
         });
@@ -453,18 +460,21 @@ public class ServersComposite extends Composite {
         addItem.setImage(Pics.getImage(PicsConstants.add_simple));
         addItem.setText(Messages.add);
         addItem.setToolTipText(Messages.addServerTooltip);
+        addItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_SERVER_BUTTON_ID);
         addItem.addListener(SWT.Selection, e -> addServer());
 
         deleteItem = new ToolItem(toolBar, SWT.PUSH);
         deleteItem.setImage(Pics.getImage(PicsConstants.delete));
         deleteItem.setToolTipText(Messages.deleteServerTooltip);
         deleteItem.setText(Messages.delete);
+        deleteItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, REMOVE_SERVER_BUTTON_ID);
         deleteItem.addListener(SWT.Selection, e -> removeServer());
     }
 
     protected void createViewer(Composite parent) {
         viewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SERVERS_VIEWER_ID);
 
         ColumnViewerToolTipSupport.enableFor(viewer);
 
