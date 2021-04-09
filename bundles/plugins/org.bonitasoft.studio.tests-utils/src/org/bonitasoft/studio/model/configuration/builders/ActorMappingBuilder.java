@@ -61,7 +61,8 @@ public class ActorMappingBuilder implements Buildable<ActorMapping> {
         return this;
     }
     
-    public ActorMappingBuilder havingMemberships(final Buildable<MembershipType>... memberships) {
+    @SafeVarargs
+    public final ActorMappingBuilder havingMemberships(final Buildable<MembershipType>... memberships) {
         for (final Buildable<? extends MembershipType> membership : memberships) {
             actorMapping.getMemberships().getMembership().add(membership.build());
         }

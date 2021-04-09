@@ -16,16 +16,21 @@ package org.bonitasoft.studio.application.views.extension;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.UpdateExtensionOperationDecorator;
+import org.bonitasoft.studio.application.operation.definition.DefinitionUpdateOperationFactory;
+import org.bonitasoft.studio.application.operation.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
@@ -33,8 +38,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -44,45 +49,46 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 public class ExtensionCard extends Composite {
 
     private RepositoryAccessor repositoryAccessor;
-    private DataBindingContext ctx;
     private Dependency dep;
     private BonitaArtifactDependency bonitaDep;
     private Font subtitleFont;
     private Font gavFont;
     private Consumer<Dependency> removeExtensionsOperation;
-    private Cursor cursorHand;
-    private Cursor cursorArrow;
     private IThemeEngine engine;
     private CommandExecutor commandExecutor;
     private boolean localExtension;
+    private DefinitionUpdateOperationFactory definitionUpdateOperationFactory;
 
-    public ExtensionCard(Composite parent, RepositoryAccessor repositoryAccessor, DataBindingContext ctx, Dependency dep,
-            BonitaArtifactDependency bonitaDep, Font subtitleFont, Font gavFont,
+    public ExtensionCard(Composite parent,
+            RepositoryAccessor repositoryAccessor,
+            Dependency dep,
+            BonitaArtifactDependency bonitaDep,
+            Font subtitleFont,
+            Font gavFont,
             Consumer<Dependency> removeExtensionsOperation) {
         super(parent, SWT.BORDER);
         this.repositoryAccessor = repositoryAccessor;
-        this.ctx = ctx;
         this.dep = dep;
         this.bonitaDep = bonitaDep;
         this.subtitleFont = subtitleFont;
         this.gavFont = gavFont;
         this.removeExtensionsOperation = removeExtensionsOperation;
-        this.cursorHand = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
-        this.cursorArrow = getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.commandExecutor = new CommandExecutor();
-        this.localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore().isLocalDependency(dep);
+        this.localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore()
+                .isLocalDependency(dep);
+        this.definitionUpdateOperationFactory = new DefinitionUpdateOperationFactory(repositoryAccessor);
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -129,8 +135,9 @@ public class ExtensionCard extends Composite {
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
                     .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                    .withTextColors(BonitaThemeConstants.SUCCESS_TEXT_COLOR, BonitaThemeConstants.SUCCESS_HOVER_TEXT_COLOR)
-                    .onClick(e -> upgradeBonitaExtension())
+                    .withTextColors(BonitaThemeConstants.SUCCESS_TEXT_COLOR,
+                            BonitaThemeConstants.SUCCESS_HOVER_TEXT_COLOR)
+                    .onClick(e -> updateBonitaExtension())
                     .createIn(toolbarComposite);
         } else if (!bonitaDep.isFromMarketplace()) {
             new DynamicButtonWidget.Builder()
@@ -139,7 +146,7 @@ public class ExtensionCard extends Composite {
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
                     .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                    .onClick(e -> upgradeExtension())
+                    .onClick(e -> updateExtension())
                     .createIn(toolbarComposite);
         }
 
@@ -159,33 +166,42 @@ public class ExtensionCard extends Composite {
                 .createIn(toolbarComposite);
     }
 
-    private void upgradeBonitaExtension() {
+    private void updateBonitaExtension() {
         String latestVersion = bonitaDep.getLatestCompatibleVersion()
                 .map(BonitaArtifactDependencyVersion::getVersion)
                 .orElseThrow(() -> new IllegalArgumentException("No update available"));
         if (MessageDialog.openQuestion(getShell(), Messages.updateExtensionConfirmationTitle,
-                String.format(Messages.updateExtensionConfirmation, bonitaDep.getName(), dep.getVersion(), latestVersion))) {
+                String.format(Messages.updateExtensionConfirmation, bonitaDep.getName(), dep.getVersion(),
+                        latestVersion))) {
+            var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory, 
+                    List.of(new DependencyUpdate(dep, latestVersion)),
+                    repositoryAccessor.getCurrentRepository());
+            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+            updateExtensionDecorator.preUpdate(progressService);
             try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                progressService.run(true, false, monitor -> {
+                    monitor.beginTask(Messages.upgradeExtension, IProgressMonitor.UNKNOWN);
                     try {
-                        new UpdateDependencyVersionOperation(bonitaDep.getGroupId(), 
+                        new UpdateDependencyVersionOperation(bonitaDep.getGroupId(),
                                 bonitaDep.getArtifactId(),
                                 latestVersion)
-                                        .run(monitor);
+                                        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
                     } catch (CoreException e) {
                         throw new InvocationTargetException(e);
                     }
                 });
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new RuntimeException(e);
-            }
+            } 
+            updateExtensionDecorator.postUpdate(Display.getDefault().getActiveShell(), progressService);
         }
     }
 
-    private void upgradeExtension() {
+    private void updateExtension() {
         var parameters = new HashMap<String, Object>();
         parameters.put("groupId", dep.getGroupId());
         parameters.put("artifactId", dep.getArtifactId());
+        parameters.put("version", dep.getVersion());
         parameters.put("type", dep.getType());
         parameters.put("classifier", dep.getClassifier());
         parameters.put("isLocal", String.valueOf(localExtension));
@@ -210,9 +226,9 @@ public class ExtensionCard extends Composite {
     }
 
     private void createTypeLabel(Composite parent) {
-        var type = new Label(parent, SWT.WRAP);
-        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).create());
-        type.setText(bonitaDep.getArtifactType().getName());
+        var type = new Label(parent, SWT.NONE);
+        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
+        type.setText(bonitaDep.getArtifactType().getName() + " ");
         type.setFont(gavFont);
         type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }

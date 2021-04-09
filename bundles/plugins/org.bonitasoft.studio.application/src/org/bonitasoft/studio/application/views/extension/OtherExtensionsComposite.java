@@ -95,11 +95,11 @@ public class OtherExtensionsComposite extends Composite {
 
         viewer.setUseHashlookup(true);
 
-        createColumn(viewer, "Group ID", dep -> dep.getGroupId());
-        createColumn(viewer, "Artifact ID", dep -> dep.getArtifactId());
-        createColumn(viewer, "Version", dep -> dep.getVersion());
-        createColumn(viewer, "Type", dep -> dep.getType());
-        createColumn(viewer, "Classifier", dep -> dep.getClassifier());
+        createColumn(viewer, "Group ID", Dependency::getGroupId);
+        createColumn(viewer, "Artifact ID", Dependency::getArtifactId);
+        createColumn(viewer, "Version", Dependency::getVersion);
+        createColumn(viewer, "Type", Dependency::getType);
+        createColumn(viewer, "Classifier", Dependency::getClassifier);
 
         var layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(3, true));
@@ -170,6 +170,7 @@ public class OtherExtensionsComposite extends Composite {
         var parameters = new HashMap<String, Object>();
         parameters.put("groupId", selectionObservable.getValue().getGroupId());
         parameters.put("artifactId", selectionObservable.getValue().getArtifactId());
+        parameters.put("version", selectionObservable.getValue().getVersion());
         parameters.put("type", selectionObservable.getValue().getType());
         parameters.put("classifier", selectionObservable.getValue().getClassifier());
         parameters.put("isLocal", String.valueOf(localExtension));

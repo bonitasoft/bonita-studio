@@ -115,32 +115,26 @@ public class ImportExtensionPage implements ControlSupplier {
     private IThemeEngine engine;
     private IObservableValue<IStatus> dependencyAlreadyExistsStatus = new WritableValue<>(ValidationStatus.ok(),
             IStatus.class);
-    private Optional<String> extensionToUpdateGroupId;
-    private Optional<String> extensionToUpdateArtifactId;
-    private Optional<String> extensionToUpdateType;
+    private Optional<Dependency> extensionToUpdate;
     private Optional<Boolean> isLocal;
     private Composite mainComposite;
 
-    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry, Model mavenModel,
-            Optional<String> extensionToUpdateGroupId,
-            Optional<String> extensionToUpdateArtifactId,
-            Optional<String> extensionToUpdateType,
-            Optional<String> extensionToUpdateClassifier,
+    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry, 
+            Model mavenModel,
+            Optional<Dependency> extensionToUpdate,
             Optional<Boolean> isLocal) {
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
         this.mavenModel = mavenModel;
-        this.extensionToUpdateGroupId = extensionToUpdateGroupId;
-        this.extensionToUpdateArtifactId = extensionToUpdateArtifactId;
-        this.extensionToUpdateType = extensionToUpdateType;
+        this.extensionToUpdate = extensionToUpdate;
         this.isLocal = isLocal;
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.dependency = new Dependency();
         this.dependency.setType("jar");
 
-        extensionToUpdateGroupId.ifPresent(dependency::setGroupId);
-        extensionToUpdateArtifactId.ifPresent(dependency::setArtifactId);
-        extensionToUpdateType.ifPresent(dependency::setType);
-        extensionToUpdateClassifier.ifPresent(dependency::setClassifier);
+        extensionToUpdate.ifPresent(dep -> {
+            dependency = dep.clone();
+            dependency.setVersion(null);
+        });
     }
 
     @Override
@@ -300,7 +294,7 @@ public class ImportExtensionPage implements ControlSupplier {
                     }
                     dependencyLookupObservable.setValue(dependencyLookup);
                     Dependency parsedDependency = dependencyLookup.toMavenDependency();
-                    if (extensionToUpdateGroupId.isEmpty()) {
+                    if (extensionToUpdate.isEmpty()) {
                         dependencyObservable.setValue(parsedDependency);
                     } else { // Update mode -> Only version can be updated
                         versionObservable.setValue(parsedDependency.getVersion());
@@ -351,7 +345,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 List.of(new MavenIdValidator("Group ID")));
         groupIdText.setFocus();
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdateGroupId.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
                 .build(), groupIdText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -365,7 +359,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 true,
                 List.of(new MavenIdValidator("Artifact ID")));
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdateArtifactId.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
                 .build(), artifactIdText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -389,7 +383,7 @@ public class ImportExtensionPage implements ControlSupplier {
         ComboWidget typeCombo = createCombo(subPropertiesComposite, "Type",
                 typeObservable, ctx);
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdateType.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
                 .build(), typeCombo.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -402,7 +396,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 false,
                 List.of());
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdateGroupId.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
                 .build(), classifierText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());

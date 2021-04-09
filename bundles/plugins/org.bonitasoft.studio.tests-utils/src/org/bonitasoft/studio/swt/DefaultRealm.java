@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.swt;
 
 import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.DisplayRealm;
 import org.eclipse.swt.widgets.Display;
 
 
@@ -34,8 +34,7 @@ public class DefaultRealm extends Realm {
     private final Realm previousRealm;
 
     public DefaultRealm(final Display display) {
-        final Realm displayRealm = SWTObservables.getRealm(display);
-        previousRealm = super.setDefault(displayRealm);
+        previousRealm = Realm.setDefault(DisplayRealm.getRealm(display));
     }
 
     /**

@@ -105,7 +105,8 @@ public class ExpressionBuilder {
         return this;
     }
 
-    public ExpressionBuilder havingReferencedElements(final Buildable<? extends Element>... referencedElementBuildable) {
+    @SafeVarargs
+    public final ExpressionBuilder havingReferencedElements(final Buildable<? extends Element>... referencedElementBuildable) {
         for (final Buildable<? extends Element> referencedElement : referencedElementBuildable) {
             expression.getReferencedElements().add(referencedElement.build());
         }
@@ -116,15 +117,6 @@ public class ExpressionBuilder {
         if (connectors != null) {
             for (final Connector connector : connectors) {
                 expression.getConnectors().add(connector);
-            }
-        }
-        return this;
-    }
-
-    public ExpressionBuilder havingConnectors(final Buildable<Connector>... connectors) {
-        if (connectors != null) {
-            for (final Buildable<Connector> connector : connectors) {
-                expression.getConnectors().add(connector.build());
             }
         }
         return this;

@@ -187,7 +187,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 if (bonitaDependency
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
-                    new ExtensionCard(parent, repositoryAccessor, ctx, dep, bonitaDependency.get(), subtitleFont, gavFont,
+                    new ExtensionCard(parent, repositoryAccessor, dep, bonitaDependency.get(), subtitleFont, gavFont,
                             this::removeExtensions);
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
@@ -195,7 +195,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        new ExtensionCard(parent, repositoryAccessor, ctx, dep, bonitaDep, subtitleFont, gavFont,
+                        new ExtensionCard(parent, repositoryAccessor, dep, bonitaDep, subtitleFont, gavFont,
                                 this::removeExtensions);
                     }
                 }
@@ -278,7 +278,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         DatabaseConnectorPropertiesRepositoryStore databaseConnectorConfStore = repositoryAccessor
                 .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         Stream.of(deps).map(d -> String.format("%s-%s.jar", d.getArtifactId(), d.getVersion()))
-                .forEach(jar -> databaseConnectorConfStore.jarRemoved(jar));
+                .forEach(databaseConnectorConfStore::jarRemoved);
     }
 
     private void refreshContent() {

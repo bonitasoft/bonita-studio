@@ -88,7 +88,7 @@ public class LocalDependenciesStore {
     }
 
     private String dependencyFileName(Dependency dependency) {
-        if (dependency.getClassifier() != null) {
+        if (dependency.getClassifier() != null && !dependency.getClassifier().isBlank()) {
             return String.format("%s-%s-%s.%s", dependency.getArtifactId(),
                     dependency.getVersion(),
                     dependency.getClassifier(),

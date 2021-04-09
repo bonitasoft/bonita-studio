@@ -19,14 +19,20 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.UpdateExtensionOperationDecorator;
+import org.bonitasoft.studio.application.operation.definition.DefinitionUpdateOperationFactory;
+import org.bonitasoft.studio.application.operation.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -34,6 +40,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenModelOperation;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
@@ -49,10 +56,21 @@ public class OpenMarketplaceHandler {
     private static final String ADD_DRIVER_COMMAND_ID = "org.bonitasoft.studio.connectors.database.driver.add.command";
     private static final Object BONITA_CONNECTOR_GROUP_ID = "org.bonitasoft.connectors";
     private static final Object BONITA_CONNECTOR_DATABASE_ARTIFACT_ID = "bonita-connector-database";
+    private DefinitionUpdateOperationFactory definitionUpdateOperationFactory;
+    private MavenProjectHelper mavenProjectHelper;
+    private RepositoryAccessor repositoryAccessor;
+
+    @Inject
+    public OpenMarketplaceHandler(DefinitionUpdateOperationFactory definitionUpdateOperationFactory,
+            MavenProjectHelper mavenProjectHelper,
+            RepositoryAccessor repositoryAccessor) {
+        this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
+        this.mavenProjectHelper = mavenProjectHelper;
+        this.repositoryAccessor = repositoryAccessor;
+    }
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
-            RepositoryAccessor repositoryAccessor,
             @org.eclipse.e4.core.di.annotations.Optional @Named("types") String types) {
         String[] extensionTypes = types != null
                 ? types.split(":")
@@ -65,7 +83,7 @@ public class OpenMarketplaceHandler {
                         .withTitle(getWizardTitle())
                         .withDescription(getPageDescription())
                         .withControl(bonitaMarketplacePage))
-                .onFinish(container -> performFinish(container, bonitaMarketplacePage, repositoryAccessor))
+                .onFinish(container -> performFinish(container, bonitaMarketplacePage))
                 .withSize(800, 800)
                 .withFixedInitialSize()
                 .open(activeShell, Messages.install);
@@ -86,20 +104,28 @@ public class OpenMarketplaceHandler {
         return Messages.projectExtensionsTitle;
     }
 
-    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor, String... types) {
+    protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor,
+            String... types) {
         return types.length == 0
                 ? new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject())
                 : new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), types);
     }
 
-    private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage,
-            RepositoryAccessor repositoryAccessor) {
+    private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage) {
+        List<DependencyUpdate> dependenciesUpdates = extendProjectPage.getDependenciesToUpdate().stream()
+                .map(bad -> new DependencyUpdate(findCurrentDependency(bad), bad.getBestVersion()))
+                .collect(Collectors.toList());
+        var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory, 
+                dependenciesUpdates, 
+                repositoryAccessor.getCurrentRepository());
+        updateExtensionDecorator.preUpdate(container);
         try {
             container.run(true, false, monitor -> installDependencies(extendProjectPage, repositoryAccessor, monitor));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getMessage());
-        }
+        } 
+        updateExtensionDecorator.postUpdate(container.getShell(), container);
         return Optional.of(true);
     }
 
@@ -109,7 +135,11 @@ public class OpenMarketplaceHandler {
         monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
         updateDependency(extendProjectPage.getDependenciesToUpdate(), monitor);
         addDependency(extendProjectPage.getDependenciesToAdd(), monitor);
-        MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(repositoryAccessor);
+        if(extendProjectPage.getDependenciesToUpdate().isEmpty()) {
+            MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(repositoryAccessor);
+        }else {
+            repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+        }
     }
 
     private boolean databaseConnectorAdded(List<BonitaArtifactDependency> dependenciesToAdd) {
@@ -131,6 +161,20 @@ public class OpenMarketplaceHandler {
                             .run(monitor);
         } catch (CoreException e) {
             throw new InvocationTargetException(e);
+        }
+    }
+
+    private Dependency findCurrentDependency(BonitaArtifactDependency bad) {
+        try {
+            return mavenProjectHelper.getMavenModel(repositoryAccessor.getCurrentRepository().getProject())
+                    .getDependencies().stream()
+                    .filter(dep -> dep.getGroupId().equals(bad.getGroupId())
+                            && dep.getArtifactId().equals(bad.getArtifactId()))
+                    .findFirst()
+                    .orElseThrow();
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            throw new NoSuchElementException(e.getMessage());
         }
     }
 

@@ -271,4 +271,8 @@ public class ExtendedConnectorDefinition implements ConnectorDefinition, Localiz
             icon.dispose();
         }
     }
+    
+   public ConnectorDefinition getConnectorDefinition(){
+        return definition;
+    }
 }

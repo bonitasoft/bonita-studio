@@ -281,6 +281,14 @@ public class Messages extends NLS {
     public static String activateProxyTooltip;
     public static String restoreDefaultConfirmationTitle;
     public static String restoreDefaultConfirmation;
+    public static String updatingConfiguration;
+    public static String preparingDefinitionUpdate;
+    public static String updatePreview;
+    public static String definitionUpateTitle;
+    public static String definitionUpateMessage;
+    public static String abortingUpdate;
+    public static String definitionUpdateWithBreakingChanges;
+    public static String definitionRemovedDescription;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

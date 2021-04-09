@@ -75,7 +75,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.restlet,
  org.json,
  org.eclipse.m2e.core,
- org.bonitasoft.studio.connectors;bundle-version="7.13.0"
+ org.bonitasoft.studio.connectors;bundle-version="7.13.0",
+ org.bonitasoft.studio.connectors.model.edit
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.2.0",

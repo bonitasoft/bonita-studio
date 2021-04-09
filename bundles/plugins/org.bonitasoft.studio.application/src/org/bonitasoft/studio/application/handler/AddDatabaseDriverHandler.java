@@ -20,15 +20,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.definition.DefinitionUpdateOperationFactory;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
+
+    @Inject
+    public AddDatabaseDriverHandler(DefinitionUpdateOperationFactory definitionUpdateOperationFactory,
+            MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor) {
+        super(definitionUpdateOperationFactory, mavenProjectHelper, repositoryAccessor);
+    }
 
     private static final Map<String, String> DEPENDENCY_TO_CONNECTOR_DEF = new HashMap<>();
     static {
