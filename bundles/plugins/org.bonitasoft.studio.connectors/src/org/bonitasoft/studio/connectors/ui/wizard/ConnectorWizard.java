@@ -43,17 +43,13 @@ import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvid
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.definition.Page;
-import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
-import org.bonitasoft.studio.connector.model.definition.TextArea;
-import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
+import org.bonitasoft.studio.connector.model.definition.migration.DefaultValueExpressionFactory;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -78,7 +74,6 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
@@ -146,6 +141,8 @@ public class ConnectorWizard extends ExtensibleWizard implements
     private final AvailableExpressionTypeFilter expressionTypeFilter = new ConnectorAvailableExpressionTypeFilter();
 
     private EMFModelUpdater<Connector> modelUpdater = new EMFModelUpdater<>();
+
+    private DefaultValueExpressionFactory defaultValueExpressionFactory = new DefaultValueExpressionFactory();
 
     public ConnectorWizard(final EObject modelContainer,
             final EStructuralFeature connectorContainmentFeature,
@@ -499,51 +496,10 @@ public class ConnectorWizard extends ExtensibleWizard implements
                 final ConnectorParameter param = ConnectorConfigurationFactory.eINSTANCE
                         .createConnectorParameter();
                 param.setKey(input.getName());
-                param.setExpression(createExpression(definition, input));
+                param.setExpression(defaultValueExpressionFactory.create(input, definition));
                 configuration.getParameters().add(param);
             }
         }
-    }
-
-    protected AbstractExpression createExpression(
-            final ConnectorDefinition definition, final Input input) {
-        final String inputClassName = input.getType();
-        WidgetComponent widget = null;
-        final List<WidgetComponent> widgets = ModelHelper.getAllItemsOfType(
-                definition,
-                ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT);
-        for (final WidgetComponent w : widgets) {
-            if (w.getInputName().equals(input.getName())) {
-                widget = w;
-                break;
-            }
-        }
-        if (widget instanceof Array) {
-            final TableExpression expression = ExpressionFactory.eINSTANCE
-                    .createTableExpression();
-            return expression;
-        } else if (widget instanceof org.bonitasoft.studio.connector.model.definition.List) {
-            final ListExpression expression = ExpressionFactory.eINSTANCE
-                    .createListExpression();
-            return expression;
-        } else if (widget != null) {
-            final Expression expression = ExpressionFactory.eINSTANCE
-                    .createExpression();
-            expression.setReturnType(inputClassName);
-            expression.setReturnTypeFixed(true);
-            expression.setType(ExpressionConstants.CONSTANT_TYPE);
-            expression.setName(input.getDefaultValue());
-            expression.setContent(input.getDefaultValue());
-            if (widget instanceof ScriptEditor) {
-                expression.setType(ExpressionConstants.SCRIPT_TYPE);
-                expression.setInterpreter(((ScriptEditor) widget)
-                        .getInterpreter());
-            } else if (widget instanceof TextArea) {
-                expression.setType(ExpressionConstants.PATTERN_TYPE);
-            }
-            return expression;
-        }
-        return null;
     }
 
     private ConnectorParameter getConnectorParameter(

@@ -146,6 +146,15 @@ public class Messages extends NLS {
     public static String missingDependency;
     public static String connectorScriptingShellForbidden;
     public static String jarSapConnector;
+    public static String mandatoryInputChangeDescription;
+    public static String inputTypeChangeDescription;
+    public static String inputWidgetChangeDescription;
+    public static String newInputChangeDescription;
+    public static String newOutputChangeDescription;
+    public static String outputTypeChangeDescription;
+    public static String removedInputChangeDescription;
+    public static String removedOutputChangeDescription;
+    public static String definitionUpdateChangeDescription;
 
     /**
      * @param event

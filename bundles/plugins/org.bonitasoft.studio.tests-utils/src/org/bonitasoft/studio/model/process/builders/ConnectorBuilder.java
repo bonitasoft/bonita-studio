@@ -50,8 +50,9 @@ public class ConnectorBuilder extends ElementBuilder<Connector, ConnectorBuilder
         return getThis();
     }
 
-    public ConnectorBuilder havingOutput(final Buildable<Operation>... outputOperation) {
-        for (final Buildable<Operation> output : outputOperation) {
+    @SafeVarargs
+    public final ConnectorBuilder havingOutput(final Buildable<? extends Operation>... outputOperation) {
+        for (final Buildable<? extends Operation> output : outputOperation) {
             getBuiltInstance().getOutputs().add(output.build());
         }
         return getThis();

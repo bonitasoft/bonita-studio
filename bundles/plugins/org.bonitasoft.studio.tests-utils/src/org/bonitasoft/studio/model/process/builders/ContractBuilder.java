@@ -36,7 +36,8 @@ public class ContractBuilder implements Buildable<Contract> {
         this.contract = contract;
     }
 
-    public ContractBuilder havingInput(final Buildable<ContractInput>... contractInput) {
+    @SafeVarargs
+    public final ContractBuilder havingInput(final Buildable<ContractInput>... contractInput) {
         for (final Buildable<ContractInput> cb : contractInput) {
             contract.getInputs().add(cb.build());
         }
@@ -50,7 +51,8 @@ public class ContractBuilder implements Buildable<Contract> {
         return this;
     }
 
-    public ContractBuilder havingConstraint(final Buildable<ContractConstraint>... contractConstraints) {
+    @SafeVarargs
+    public final ContractBuilder havingConstraint(final Buildable<ContractConstraint>... contractConstraints) {
         for (final Buildable<ContractConstraint> cc : contractConstraints) {
             contract.getConstraints().add(cc.build());
         }

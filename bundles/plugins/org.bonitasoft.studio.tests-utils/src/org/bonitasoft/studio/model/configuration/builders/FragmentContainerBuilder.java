@@ -36,14 +36,16 @@ public class FragmentContainerBuilder implements Buildable<FragmentContainer> {
         return new FragmentContainerBuilder(container);
     }
 
-    public FragmentContainerBuilder havingChildren(final Buildable<? extends FragmentContainer>... children) {
-        for (final Buildable<? extends FragmentContainer> child : children) {
-            fragmentContainer.getChildren().add(child.build());
+    @SafeVarargs
+    public final FragmentContainerBuilder havingChildren(final Buildable<? extends FragmentContainer>... containers) {
+        for (final Buildable<? extends FragmentContainer> container : containers) {
+            fragmentContainer.getChildren().add(container.build());
         }
         return this;
     }
 
-    public FragmentContainerBuilder havingFragments(final Buildable<? extends Fragment>... fragments) {
+    @SafeVarargs
+    public final FragmentContainerBuilder havingFragments(final Buildable<? extends Fragment>... fragments) {
         for (final Buildable<? extends Fragment> fragment : fragments) {
             fragmentContainer.getFragments().add(fragment.build());
         }

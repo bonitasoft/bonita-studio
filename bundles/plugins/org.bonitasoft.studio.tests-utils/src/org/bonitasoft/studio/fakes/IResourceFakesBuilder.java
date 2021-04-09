@@ -43,7 +43,7 @@ public class IResourceFakesBuilder<T extends IResource> {
         return new IResourceFakesBuilder<>(mock);
     }
 
-    private final IResource resourceFake;
+    private final T resourceFake;
 
     private IResourceFakesBuilder(final T resourceFake) {
         this.resourceFake = resourceFake;
@@ -60,22 +60,10 @@ public class IResourceFakesBuilder<T extends IResource> {
     }
 
     public T build() {
-        return (T) resourceFake;
+        return resourceFake;
     }
 
-    public IResourceFakesBuilder<IFile> withContent(InputStream resourceAsStream) {
-        if (!(resourceFake instanceof IFile)) {
-            throw new IllegalAccessError("Only IFile can have a content..");
-        }
-        try {
-            doReturn(resourceAsStream).when((IFile) resourceFake).getContents();
-        } catch (final CoreException e) {
-            return (IResourceFakesBuilder<IFile>) this;
-        }
-        return (IResourceFakesBuilder<IFile>) this;
-    }
-    
-    public IResourceFakesBuilder<IFile> withContentSupplier(Supplier<InputStream> inputStreamSupplier) {
+    public IResourceFakesBuilder<T> withContentSupplier(Supplier<InputStream> inputStreamSupplier) {
         if (!(resourceFake instanceof IFile)) {
             throw new IllegalAccessError("Only IFile can have a content..");
         }
@@ -88,9 +76,9 @@ public class IResourceFakesBuilder<T extends IResource> {
                 }
             });
         } catch (final CoreException e) {
-            return (IResourceFakesBuilder<IFile>) this;
+            return this;
         }
-        return (IResourceFakesBuilder<IFile>) this;
+        return  this;
     }
 
 }

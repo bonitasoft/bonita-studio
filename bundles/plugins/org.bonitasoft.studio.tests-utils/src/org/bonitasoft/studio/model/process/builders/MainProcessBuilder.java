@@ -71,7 +71,8 @@ public class MainProcessBuilder extends ElementBuilder<MainProcess, MainProcessB
         return getThis();
     }
 
-    public MainProcessBuilder havingDatatypes(final Buildable<? extends DataType>... dataTypeBuildables) {
+    @SafeVarargs
+    public final MainProcessBuilder havingDatatypes(final Buildable<? extends DataType>... dataTypeBuildables) {
         for (final Buildable<? extends DataType> dt : dataTypeBuildables) {
             getBuiltInstance().getDatatypes().add(dt.build());
         }

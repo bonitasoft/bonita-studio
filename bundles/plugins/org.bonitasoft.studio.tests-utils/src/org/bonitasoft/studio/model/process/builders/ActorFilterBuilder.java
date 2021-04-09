@@ -49,7 +49,8 @@ public class ActorFilterBuilder extends ElementBuilder<ActorFilter, ActorFilterB
         return this;
     }
 
-    public ActorFilterBuilder havingOutput(final Buildable<Operation>... outputOperation) {
+    @SafeVarargs
+    public final ActorFilterBuilder havingOutput(final Buildable<Operation>... outputOperation) {
         for (final Buildable<Operation> output : outputOperation) {
             getBuiltInstance().getOutputs().add(output.build());
         }
