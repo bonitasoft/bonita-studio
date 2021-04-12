@@ -19,7 +19,7 @@
 		<engine.version>${project.version}</engine.version>
 		<filters.version>${project.version}</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
-		<tomcat.version>8.5.40</tomcat.version>
+		<tomcat.version>10.0.5</tomcat.version>
 		<image-overlay-plugin.version>1.0.9</image-overlay-plugin.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
