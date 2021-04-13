@@ -313,25 +313,6 @@ public class ServersComposite extends Composite {
         passwordField = createPasswordField(usernamePwdComposite, SWT.PASSWORD);
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
         createPasswordEncryptButton();
-
-        ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
-                .build();
-        ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
-        ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
-                masterPasswordObservable,
-                new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
-                updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Boolean, String> newConverter()
-                                .fromType(Boolean.class)
-                                .toType(String.class)
-                                .withConvertFunction(masterPwdSet -> {
-                                    if (Boolean.FALSE.equals(masterPwdSet)) {
-                                        return Messages.encryptButtonTooltip;
-                                    }
-                                    return Messages.encryptPassword;
-                                }).create())
-                        .create());
     }
 
     private void createPasswordEncryptButton() {
@@ -340,6 +321,25 @@ public class ServersComposite extends Composite {
             encryptPwdItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ENCRYPT_PWD_BUTTON_ID);
             encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
             encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
+
+            ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
+                    .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
+                    .build();
+            ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
+            ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
+                    masterPasswordObservable,
+                    new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
+                    updateValueStrategy()
+                            .withConverter(ConverterBuilder.<Boolean, String> newConverter()
+                                    .fromType(Boolean.class)
+                                    .toType(String.class)
+                                    .withConvertFunction(masterPwdSet -> {
+                                        if (Boolean.FALSE.equals(masterPwdSet)) {
+                                            return Messages.encryptButtonTooltip;
+                                        }
+                                        return Messages.encryptPassword;
+                                    }).create())
+                            .create());
         });
     }
 

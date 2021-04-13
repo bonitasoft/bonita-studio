@@ -183,11 +183,12 @@ public class ProxiesComposite extends Composite {
         var authenticationGroup = new Group(parent, SWT.NONE);
         authenticationGroup.setLayout(GridLayoutFactory.fillDefaults().create());
         authenticationGroup
-                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, true).create());
         authenticationGroup.setText(Messages.authentication);
 
         var usernamePwdComposite = new Composite(authenticationGroup, SWT.NONE);
-        usernamePwdComposite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(3).create());
+        usernamePwdComposite
+                .setLayout(GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(2).equalWidth(true).create());
         usernamePwdComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
@@ -206,25 +207,6 @@ public class ProxiesComposite extends Composite {
         hiddenEchoChar = passwordField.getTextControl().getEchoChar();
 
         createPasswordEncryptButton();
-
-        ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
-                .build();
-        ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
-        ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
-                masterPasswordObservable,
-                new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
-                updateValueStrategy()
-                        .withConverter(ConverterBuilder.<Boolean, String> newConverter()
-                                .fromType(Boolean.class)
-                                .toType(String.class)
-                                .withConvertFunction(masterPwdSet -> {
-                                    if (Boolean.FALSE.equals(masterPwdSet)) {
-                                        return Messages.encryptButtonTooltip;
-                                    }
-                                    return Messages.encryptPassword;
-                                }).create())
-                        .create());
     }
 
     private void createPasswordEncryptButton() {
@@ -233,6 +215,25 @@ public class ProxiesComposite extends Composite {
             encryptPwdItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ENCRYPT_PWD_BUTTON_ID);
             encryptPwdItem.addListener(SWT.Selection, e -> encryptPassword());
             encryptPwdItem.setImage(Pics.getImage(PicsConstants.key));
+
+            ComputedValue<Boolean> masterPasswordObservable = new ComputedValueBuilder<Boolean>()
+                    .withSupplier(() -> masterPwdObservable.getValue() != null && !masterPwdObservable.getValue().isEmpty())
+                    .build();
+            ctx.bindValue(WidgetProperties.enabled().observe(encryptPwdItem), masterPasswordObservable);
+            ctx.bindValue(WidgetProperties.tooltipText().observe(encryptPwdItem),
+                    masterPasswordObservable,
+                    new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_NEVER),
+                    updateValueStrategy()
+                            .withConverter(ConverterBuilder.<Boolean, String> newConverter()
+                                    .fromType(Boolean.class)
+                                    .toType(String.class)
+                                    .withConvertFunction(masterPwdSet -> {
+                                        if (Boolean.FALSE.equals(masterPwdSet)) {
+                                            return Messages.encryptButtonTooltip;
+                                        }
+                                        return Messages.encryptPassword;
+                                    }).create())
+                            .create());
         });
     }
 
