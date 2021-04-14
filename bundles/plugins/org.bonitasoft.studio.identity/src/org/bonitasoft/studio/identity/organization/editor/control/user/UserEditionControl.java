@@ -157,11 +157,15 @@ public class UserEditionControl {
                 .withPlaceholder(Messages.lastNameHint)
                 .bindTo(lastNameObservable)
                 .inContext(ctx)
+                .withDelay(500)
                 .adapt(formPage.getToolkit())
                 .fill()
                 .grabHorizontalSpace()
                 .createIn(parent);
-        lastNameObservable.addValueChangeListener(e -> formPage.refreshSelectedUser());
+        lastNameObservable.addValueChangeListener(e -> {
+            formPage.refreshSelectedUser();
+            formPage.refreshOverviewUserList();
+        });
     }
 
     private void createFirstNameField(Composite parent) {
@@ -173,11 +177,15 @@ public class UserEditionControl {
                 .withPlaceholder(Messages.firstNameHint)
                 .bindTo(firstNameObservable)
                 .inContext(ctx)
+                .withDelay(500)
                 .adapt(formPage.getToolkit())
                 .fill()
                 .grabHorizontalSpace()
                 .createIn(parent);
-        firstNameObservable.addValueChangeListener(e -> formPage.refreshSelectedUser());
+        firstNameObservable.addValueChangeListener(e -> {
+            formPage.refreshSelectedUser();
+            formPage.refreshOverviewUserList();
+        });
     }
 
     private void createMembershipSection(Composite parent) {
@@ -299,7 +307,10 @@ public class UserEditionControl {
                 selectedUserObservable, OrganizationPackage.Literals.USER__USER_NAME);
         UserNameValidator nameValidator = new UserNameValidator(formPage.observeWorkingCopy(), selectedUserObservable);
         new TextWidget.Builder()
-                .transactionalEdit((oldValue, newValue) -> refactorMemberships(oldValue, newValue))
+                .transactionalEdit((oldValue, newValue) -> {
+                    refactorMemberships(oldValue, newValue);
+                    formPage.refreshOverviewUserList();
+                })
                 .withLabel(Messages.userName)
                 .labelAbove()
                 .fill()

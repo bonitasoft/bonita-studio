@@ -400,6 +400,7 @@ public class PicsConstants {
     public static String copyToClipboard = "copy_clipboard.png";
 
     public static String edit_simple = "edit_simple.png";
+    public static String edit_simple_hot = "edit_simple_hot.png";
 
     public static String add_simple = "add_simple.png";
 

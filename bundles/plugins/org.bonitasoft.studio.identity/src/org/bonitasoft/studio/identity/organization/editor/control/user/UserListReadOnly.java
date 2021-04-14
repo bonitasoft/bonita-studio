@@ -15,6 +15,9 @@
 package org.bonitasoft.studio.identity.organization.editor.control.user;
 
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.swt.widgets.Composite;
 
@@ -22,6 +25,15 @@ public class UserListReadOnly extends UserList {
 
     public UserListReadOnly(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
         super(parent, formPage, ctx);
+
+        var buttonWidget = new DynamicButtonWidget.Builder()
+                .withImage(Pics.getImage(PicsConstants.edit_simple))
+                .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
+                .withToolkit(formPage.getToolkit())
+                .onClick(e -> formPage.getEditor().setActivePage("users"))
+                .createIn(section);
+
+        section.setTextClient(buttonWidget.getContainer());
     }
 
     @Override

@@ -145,6 +145,8 @@ public class DynamicButtonWidget {
     private Optional<String> defaultTextColorCssId;
     private Optional<String> hoverTextColorCssId;
 
+    private Composite container;
+
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
             Optional<String> tooltipText,
@@ -180,7 +182,7 @@ public class DynamicButtonWidget {
     }
 
     private void createControl() {
-        Composite container = toolkit.isPresent() ? toolkit.get().createComposite(parent) : new Composite(parent, SWT.NONE);
+        container = toolkit.isPresent() ? toolkit.get().createComposite(parent) : new Composite(parent, SWT.NONE);
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
@@ -293,6 +295,10 @@ public class DynamicButtonWidget {
 
     public IObservableValue<Boolean> observeEnable() {
         return WidgetProperties.enabled().observe(toolItem);
+    }
+
+    public Composite getContainer() {
+        return container;
     }
 
 }

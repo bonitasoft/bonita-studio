@@ -257,4 +257,12 @@ public class OverviewEditionControl {
         groupList.refreshGroupList();
     }
 
+    public void refreshUserList() {
+        userList.refreshUserList();
+    }
+
+    public void refreshRoleList() {
+        roleList.refreshRoleList();
+    }
+
 }

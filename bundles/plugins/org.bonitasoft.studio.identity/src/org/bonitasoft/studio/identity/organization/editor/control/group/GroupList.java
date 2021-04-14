@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
@@ -53,7 +54,6 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -101,7 +101,7 @@ public class GroupList {
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
-    private Section section;
+    protected Section section;
     private TreeViewer viewer;
     private IObservableValue<Group> selectionObservable;
     private IObservableList<Group> input;
@@ -185,7 +185,6 @@ public class GroupList {
         viewer.setContentProvider(contentProvider);
         viewer.setInput(input);
         addDNDSupport();
-        viewer.getTree().addMouseMoveListener(this::updateCursor);
         selectionObservable = ViewerProperties.singleSelection(Group.class).observe(viewer);
         selectionObservable.addValueChangeListener(new IValueChangeListener() {
 
@@ -273,9 +272,11 @@ public class GroupList {
                         event.data = selectionObservable.getValue();
                     }
                 });
+
+        viewer.getTree().addMouseMoveListener(this::updateCursor);
     }
 
-    private void updateCursor(MouseEvent e) {
+    protected void updateCursor(MouseEvent e) {
         if (viewer.getCell(new Point(e.x, e.y)) != null) {
             viewer.getTree().setCursor(cursorHand);
         } else {
@@ -309,7 +310,7 @@ public class GroupList {
         TreeViewerColumn column = new TreeViewerColumn(viewer, SWT.NONE);
         Image groupsImage = Pics.getImage(PicsConstants.organization_group);
         column.setLabelProvider(new LabelProviderBuilder<Group>()
-                .withTextProvider(Group::getDisplayName)
+                .withTextProvider(grp -> Strings.isNullOrEmpty(grp.getDisplayName()) ? grp.getName() : grp.getDisplayName())
                 .withImageProvider(grp -> groupsImage)
                 .withStatusProvider(groupStatusProvider(new GroupListValidator(formPage)))
                 .shouldRefreshAllLabels(viewer)
@@ -390,13 +391,6 @@ public class GroupList {
         expandItem.setToolTipText(Messages.expandAll);
         expandItem.addListener(SWT.Selection, e -> {
             viewer.expandAll();
-
-            /**
-             * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
-             */
-            if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                viewer.getControl().redraw();
-            }
         });
 
         ToolItem collapseItem = new ToolItem(toolBar, SWT.PUSH);
@@ -441,13 +435,6 @@ public class GroupList {
             viewer.refresh();
             refactorMemberships(null, selectedGroup);
             formPage.refreshOverviewGroupList();
-
-            /**
-             * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
-             */
-            if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-                viewer.getControl().redraw();
-            }
         }
     }
 
@@ -478,12 +465,6 @@ public class GroupList {
         refreshGroupList();
         formPage.refreshOverviewGroupList();
         selectionObservable.setValue(newGroup);
-        /**
-         * TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=567132 -> fixed in 4.18 (2020-12)
-         */
-        if (Objects.equals(Platform.OS_MACOSX, Platform.getOS())) {
-            viewer.getControl().redraw();
-        }
     }
 
     private String generateNewGroupName() {

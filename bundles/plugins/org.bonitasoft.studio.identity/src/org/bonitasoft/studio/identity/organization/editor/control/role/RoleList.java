@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.identity.i18n.Messages;
@@ -81,7 +82,7 @@ public class RoleList {
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
-    private Section section;
+    protected Section section;
     private TableViewer viewer;
     private IObservableValue<Role> selectionObservable;
     private IObservableList<Role> input;
@@ -153,7 +154,8 @@ public class RoleList {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         Image rolesImage = Pics.getImage(PicsConstants.organization_role);
         column.setLabelProvider(new LabelProviderBuilder<Role>()
-                .withTextProvider(Role::getDisplayName)
+                .withTextProvider(
+                        role -> Strings.isNullOrEmpty(role.getDisplayName()) ? role.getName() : role.getDisplayName())
                 .withImageProvider(grp -> rolesImage)
                 .withStatusProvider(groupStatusProvider(new RoleListValidator(formPage.observeWorkingCopy())))
                 .shouldRefreshAllLabels(viewer)

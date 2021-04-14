@@ -73,6 +73,20 @@ public class OverviewFormPage extends AbstractOrganizationFormPage {
     }
 
     @Override
+    public void refreshOverviewUserList() {
+        if (overviewFormPart != null) {
+            overviewFormPart.refreshUserList();
+        }
+    }
+
+    @Override
+    public void refreshOverviewRoleList() {
+        if (overviewFormPart != null) {
+            overviewFormPart.refreshRoleList();
+        }
+    }
+
+    @Override
     public void updateDefaultUserViewerInput() {
         overviewFormPart.updateDefaultUserViewerInput();
     }
