@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.omg.org/spec/BPMN/20100524/MODEL"
+            class="org.omg.spec.bpmn.model.ModelPackage"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="model"
+            class="org.omg.spec.bpmn.model.util.ModelResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.omg.org/spec/DD/20100524/DC"
+            class="org.omg.spec.dd.dc.DcPackage"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="dc"
+            class="org.omg.spec.dd.dc.util.DcResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.omg.org/spec/BPMN/20100524/DI"
+            class="org.omg.spec.bpmn.di.DiPackage"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="di"
+            class="org.omg.spec.bpmn.di.util.DiResourceFactoryImpl"/>
+      <parser
+            class="org.omg.spec.bpmn.di.util.DiResourceFactoryImpl"
+            type="bpmn">
+      </parser>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.omg.org/spec/DD/20100524/DI"
+            class="org.omg.spec.dd.di.DiPackage"/>
+   </extension>
+
+
+</plugin>

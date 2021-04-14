@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.ui.views.properties.tabbed
+Bundle-SymbolicName: org.eclipse.ui.views.properties.tabbed;singleton:
+ =true
+Require-Bundle: org.eclipse.ui.forms;bundle-version="[3.3.0,4.0.0)";visibility:=reexport,
+ org.eclipse.ui.views;bundle-version="[3.2.0,4.0.0)";visibility:=reexport,
+ org.eclipse.ui;bundle-version="[3.3.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.e4.ui.css.core;bundle-version="0.12.100",
+ org.eclipse.e4.ui.css.swt,
+ org.eclipse.ui.workbench,
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.core.di;bundle-version="1.7.100",
+ org.eclipse.e4.ui.workbench;bundle-version="1.8.0",
+ org.eclipse.jface;bundle-version="[3.18.0,4.0.0)"
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-Vendor: Bonitasoft S.A.
+Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-inte
+ rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.css;x-inte
+ rnal:=true,org.eclipse.ui.internal.views.properties.tabbed.l10n;x-int
+ ernal:=true,org.eclipse.ui.internal.views.properties.tabbed.view;x-in
+ ternal:=true,org.eclipse.ui.views.properties.tabbed
+Bundle-Name: %Plugin.name
+Bundle-Version: 3.9.100.v20201223-1348
+Bundle-Localization: plugin
