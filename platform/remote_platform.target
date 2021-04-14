@@ -112,7 +112,7 @@
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
-            <repository location="http://hallvard.github.io/plantuml"/>
+            <repository location="http://update-site.bonitasoft.com/p2/4.16/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.19.0.v20210327020002"/>
