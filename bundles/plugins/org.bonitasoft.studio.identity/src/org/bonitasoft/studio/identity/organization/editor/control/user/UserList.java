@@ -84,7 +84,7 @@ public class UserList {
 
     private AbstractOrganizationFormPage formPage;
     private DataBindingContext ctx;
-    private Section section;
+    protected Section section;
     private TableViewer viewer;
     private IObservableValue<User> selectionObservable;
     private IObservableList<User> input;

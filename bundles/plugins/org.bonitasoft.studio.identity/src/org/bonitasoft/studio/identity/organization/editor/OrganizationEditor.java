@@ -160,7 +160,15 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
     }
 
     public void refreshOverviewGroupList() {
-        overviewFormPage.refreshList();
+        overviewFormPage.refreshOverviewGroupList();
+    }
+
+    public void refreshOverviewUserList() {
+        overviewFormPage.refreshOverviewUserList();
+    }
+
+    public void refreshOverviewRoleList() {
+        overviewFormPage.refreshOverviewRoleList();
     }
 
 }

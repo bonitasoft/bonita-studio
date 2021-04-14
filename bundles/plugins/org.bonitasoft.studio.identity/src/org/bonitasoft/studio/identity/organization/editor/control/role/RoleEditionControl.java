@@ -72,7 +72,11 @@ public class RoleEditionControl {
                 selectedRoleObservable, OrganizationPackage.Literals.ROLE__NAME);
         RoleNameValidator nameValidator = new RoleNameValidator(formPage.observeWorkingCopy(), selectedRoleObservable);
         new TextWidget.Builder()
-                .transactionalEdit((oldname, newName) -> formPage.refactorMemberships(membershipList, oldname, newName))
+                .transactionalEdit((oldname, newName) -> {
+                    formPage.refactorMemberships(membershipList, oldname, newName);
+                    formPage.refreshSelectedRole();
+                    formPage.refreshOverviewRoleList();
+                })
                 .withLabel(Messages.name)
                 .labelAbove()
                 .widthHint(300)
@@ -99,7 +103,10 @@ public class RoleEditionControl {
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
-        displayNameObservable.addValueChangeListener(e -> formPage.refreshSelectedRole());
+        displayNameObservable.addValueChangeListener(e -> {
+            formPage.refreshSelectedRole();
+            formPage.refreshOverviewRoleList();
+        });
     }
 
     private void createDescriptionField(Composite parent) {

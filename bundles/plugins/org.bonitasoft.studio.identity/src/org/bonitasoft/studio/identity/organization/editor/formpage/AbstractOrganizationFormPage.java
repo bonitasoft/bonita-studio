@@ -17,10 +17,10 @@ package org.bonitasoft.studio.identity.organization.editor.formpage;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.contribution.DeployContributionItem;
 import org.bonitasoft.studio.identity.organization.editor.contribution.ExportContributionItem;
-import org.bonitasoft.studio.identity.organization.editor.contribution.ImportContributionItem;
 import org.bonitasoft.studio.identity.organization.model.organization.Membership;
 import org.bonitasoft.studio.identity.organization.model.organization.Memberships;
 import org.bonitasoft.studio.identity.organization.model.organization.Organization;
@@ -76,7 +76,6 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     protected void createHeaderContent(ToolBar toolBar) {
         toolBarManager.add(new DeployContributionItem(this));
         toolBarManager.add(new ExportContributionItem(this));
-        toolBarManager.add(new ImportContributionItem(this));
         toolBarManager.update(true);
     }
 
@@ -155,7 +154,7 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     }
 
     public String toUserDisplayName(User user) {
-        if (user.getFirstName() != null && user.getLastName() != null) {
+        if (!Strings.isNullOrEmpty(user.getFirstName()) && !Strings.isNullOrEmpty(user.getLastName())) {
             return String.format("%s %s", user.getFirstName(), user.getLastName());
         }
         return user.getUserName();
@@ -177,6 +176,14 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
 
     public void refreshOverviewGroupList() {
         editor.refreshOverviewGroupList();
+    }
+
+    public void refreshOverviewUserList() {
+        editor.refreshOverviewUserList();
+    }
+
+    public void refreshOverviewRoleList() {
+        editor.refreshOverviewRoleList();
     }
 
 }

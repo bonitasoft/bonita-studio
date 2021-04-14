@@ -48,9 +48,12 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -209,6 +212,8 @@ public class TextWidget extends EditableControlWidget {
     private IThemeEngine themeEngine;
     protected int style;
     private ToolBar toolBar;
+    private Cursor cursorArrow;
+    private Cursor cursorHand;
 
     protected TextWidget(Composite container, String id, boolean topLabel, int horizontalLabelAlignment,
             int verticalLabelAlignment, int labelWidth, boolean readOnly, String label, String message,
@@ -231,6 +236,8 @@ public class TextWidget extends EditableControlWidget {
         if (PlatformUI.isWorkbenchRunning()) {
             this.themeEngine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         }
+        cursorHand = container.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        cursorArrow = container.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
     }
 
     @Override
@@ -349,6 +356,19 @@ public class TextWidget extends EditableControlWidget {
                     }
                 }
             });
+
+            toolBar.addMouseTrackListener(new MouseTrackAdapter() {
+
+                @Override
+                public void mouseExit(MouseEvent e) {
+                    toolBar.setCursor(cursorArrow);
+                }
+
+                @Override
+                public void mouseEnter(MouseEvent e) {
+                    toolBar.setCursor(cursorHand);
+                }
+            });
         }
         createButton();
         return textContainer;
@@ -362,13 +382,26 @@ public class TextWidget extends EditableControlWidget {
             GridDataFactory.fillDefaults().align(SWT.FILL, verticalAlignment()).applyTo(b);
             button = Optional.of(b);
         } else if (imageButton.isPresent()) {
-            toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS | SWT.RIGHT );
+            toolBar = new ToolBar(this, SWT.INHERIT_DEFAULT | SWT.NO_FOCUS | SWT.RIGHT);
             toolBar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
             toolkit.ifPresent(toolkit -> toolkit.adapt(toolBar, true, true));
             ToolItem bWithImage = new ToolItem(toolBar, SWT.FLAT);
             imageButton.ifPresent(bWithImage::setImage);
             tooltipButton.ifPresent(bWithImage::setToolTipText);
             buttonWithImage = Optional.of(bWithImage);
+
+            toolBar.addMouseTrackListener(new MouseTrackAdapter() {
+
+                @Override
+                public void mouseExit(MouseEvent e) {
+                    toolBar.setCursor(cursorArrow);
+                }
+
+                @Override
+                public void mouseEnter(MouseEvent e) {
+                    toolBar.setCursor(cursorHand);
+                }
+            });
         }
     }
 
@@ -415,6 +448,7 @@ public class TextWidget extends EditableControlWidget {
         editButton.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON);
         editButton.setImage(Pics.getImageDescriptor(PicsConstants.edit_simple).createImage());
+        editButton.setHotImage(Pics.getImageDescriptor(PicsConstants.edit_simple_hot).createImage());
         editButton.addListener(SWT.Dispose, event -> editButton.getImage().dispose());
         editButton.setToolTipText(Messages.edit);
         editButton.addListener(SWT.Selection, editListener(toolBar));

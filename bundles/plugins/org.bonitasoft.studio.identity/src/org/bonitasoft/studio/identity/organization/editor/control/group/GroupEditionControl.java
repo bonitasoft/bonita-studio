@@ -143,7 +143,10 @@ public class GroupEditionControl {
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
-        displayNameObservable.addValueChangeListener(e -> formPage.refreshSelectedGroup());
+        displayNameObservable.addValueChangeListener(e -> {
+            formPage.refreshSelectedGroup();
+            formPage.refreshOverviewGroupList();
+        });
     }
 
     private void createNameField(Composite parent) {
@@ -161,6 +164,10 @@ public class GroupEditionControl {
                 .inContext(ctx)
                 .adapt(formPage.getToolkit())
                 .createIn(parent);
+        nameObservable.addValueChangeListener(e -> {
+            formPage.refreshSelectedGroup();
+            formPage.refreshOverviewGroupList();
+        });
     }
 
     public IObservableValue<String> observeSectionTitle() {
