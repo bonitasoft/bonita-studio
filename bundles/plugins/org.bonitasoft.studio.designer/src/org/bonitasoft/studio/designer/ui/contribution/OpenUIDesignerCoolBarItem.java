@@ -21,6 +21,7 @@ import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.designer.ui.handler.OpenUIDesignerHandler;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -47,7 +48,11 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.openUIDesigner);
-        configureItemImage(item, iconSize < 0 ? "ui_designer_48x48.png" : "ui_designer_24x24.png");
+        if (iconSize < 0) {
+            item.setImage(Pics.getImage(PicsConstants.uid48));
+        } else {
+            item.setImage(Pics.getImage(PicsConstants.uid24));
+        }
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -93,10 +98,6 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
 
     protected IEclipsePreferences getEclipsePreferences() {
         return InstanceScope.INSTANCE.getNode(UIDesignerPlugin.PLUGIN_ID);
-    }
-
-    private void configureItemImage(final ToolItem item, final String imageFileName) {
-        item.setImage(Pics.getImage(imageFileName, UIDesignerPlugin.getDefault()));
     }
 
     /*

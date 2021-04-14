@@ -447,7 +447,10 @@ public class PicsConstants {
 
     public static String updateDependency = "projectExtensions/update.png";
     public static String updateDependencyHot = "projectExtensions/update_hot.png";
-    
+
     public static String key = "key.png";
-    
+
+    public static String uid24 = "coolbar/24/uid.png";
+    public static String uid48 = "coolbar/48/uid.png";
+
 }
