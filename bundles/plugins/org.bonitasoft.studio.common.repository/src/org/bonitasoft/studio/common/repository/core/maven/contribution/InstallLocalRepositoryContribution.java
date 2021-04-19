@@ -29,6 +29,8 @@ import org.eclipse.swt.widgets.Display;
 
 public class InstallLocalRepositoryContribution implements IPostStartupContribution {
 
+    private static final String LOCAL_REPOSITORY_ID = "local";
+
     @Override
     public void execute() {
         try {
@@ -52,9 +54,14 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
         if (rootFolder == null) {
             return null;
         }
-        final ArtifactRepository internalRepository = maven.createArtifactRepository("local",
+        ArtifactRepository internalRepository = maven.createArtifactRepository(LOCAL_REPOSITORY_ID,
                 rootFolder.toURI().toURL().toString());
-        return new MavenLocalRepositoryContributor(internalRepository, maven.getLocalRepository(),
+        if(!LOCAL_REPOSITORY_ID.equals(internalRepository.getId())){ // Check if the repository is mirrored 
+            internalRepository = internalRepository.getMirroredRepositories().stream().filter(repo -> LOCAL_REPOSITORY_ID.equals(repo.getId()))
+                    .findFirst()
+                    .orElseThrow();
+        }
+        return new MavenLocalRepositoryContributor(rootFolder, maven.getLocalRepository(),
                 new DependencyCatalog(rootFolder,
                         new MavenArtifactParser((DefaultArtifactFactory) maven
                                 .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class))),
