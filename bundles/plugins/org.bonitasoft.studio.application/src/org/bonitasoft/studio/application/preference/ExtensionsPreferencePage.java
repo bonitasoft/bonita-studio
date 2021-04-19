@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.settings.Settings;
@@ -80,13 +81,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
                     ? new File(mavenConfiguration.getUserSettingsFile())
                     : SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
             if (!userSettingsFile.exists()) {
-                try {
-                    userSettingsFile.createNewFile();
-                } catch (IOException e) {
-                    throw new RuntimeException(
-                            String.format("An error occured while creating '%s'.", userSettingsFile.toString()),
-                            e);
-                }
+                settingsObservable.setValue(new Settings());
             } else {
                 settingsObservable.setValue(defaultSettingsReader.read(userSettingsFile, null));
             }
@@ -161,6 +156,16 @@ public class ExtensionsPreferencePage extends PreferencePage implements
             builder.setIgnoringBoundaryWhitespace(false);
             builder.setIgnoringElementContentWhitespace(false);
 
+            if (!userSettingsFile.exists()) {
+                try {
+                    userSettingsFile.createNewFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(
+                            String.format("An error occured while creating '%s'.", userSettingsFile.toString()),
+                            e);
+                }
+            }
+
             Document doc = null;
             try {
                 doc = builder.build(userSettingsFile);
@@ -169,11 +174,10 @@ public class ExtensionsPreferencePage extends PreferencePage implements
                         "File '%s' is empty / unreadable -> Content will be overwritten by in memory configuration.",
                         userSettingsFile.toString()), ApplicationPlugin.PLUGIN_ID);
             }
-            String encoding = settingsObservable.getValue().getModelEncoding();
-            if (encoding == null) {
-                encoding = "UTF-8";
-            }
 
+            String encoding = Optional.ofNullable(settingsObservable.getValue())
+                    .map(Settings::getModelEncoding)
+                    .orElse("UTF-8");
             Format format = Format.getRawFormat().setEncoding(encoding).setTextMode(TextMode.PRESERVE);
 
             try (Writer writer = WriterFactory.newWriter(userSettingsFile, encoding)) {
