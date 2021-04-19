@@ -12,10 +12,6 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -34,16 +30,16 @@ public class MavenLocalRepositoryContributor {
     private final MavenInstallFileOperation installCommand;
     private final DependencyCatalog catalog;
     private final ArtifactRepository localRepository;
-    private final ArtifactRepository internalRepository;
+    private File internalRepositoryRootFolder;
 
-    public MavenLocalRepositoryContributor(final ArtifactRepository internalRepository,
+    public MavenLocalRepositoryContributor(final File internalRepositoryRootFolder,
             final ArtifactRepository localRepository,
             final DependencyCatalog catalog,
             final MavenInstallFileOperation installCommand) {
         this.localRepository = localRepository;
         this.catalog = catalog;
         this.installCommand = installCommand;
-        this.internalRepository = internalRepository;
+        this.internalRepositoryRootFolder = internalRepositoryRootFolder;
     }
 
     public void execute() throws IOException, CoreException {
@@ -72,23 +68,19 @@ public class MavenLocalRepositoryContributor {
         BonitaStudioLog.info(String.format("Required dependencies installed in Local m2 repository in %ss", Duration.between(start, Instant.now()).getSeconds()),CommonRepositoryPlugin.PLUGIN_ID);
     }
 
-    protected File toArtifactFile(final Artifact artifact) throws MalformedURLException, UnsupportedEncodingException {
-        return new File(repositoryRootFolder(), internalRepository.pathOf(artifact));
+    protected File toArtifactFile(final Artifact artifact) {
+        return new File(internalRepositoryRootFolder, localRepository.pathOf(artifact));
     }
 
-    protected File repositoryRootFolder() throws UnsupportedEncodingException, MalformedURLException {
-        return new File(URLDecoder.decode(new URL(internalRepository.getUrl()).getFile(), "UTF-8"));
-    }
 
-    protected File toPomFile(final Artifact artifact) throws MalformedURLException, UnsupportedEncodingException {
-        File file = new File(repositoryRootFolder(), internalRepository.pathOf(artifact));
+    protected File toPomFile(final Artifact artifact) {
+        File file = new File(internalRepositoryRootFolder, localRepository.pathOf(artifact));
         checkState(file.exists(),
                 String.format("No file found for artifact %s in studio internal repository", artifact));
         if (file.getName().endsWith(".pom")) {
             return file;
         }
-        file = new File(repositoryRootFolder(), internalRepository.pathOf(artifact).replace(".jar", ".pom"));
-        return file;
+        return new File(internalRepositoryRootFolder, localRepository.pathOf(artifact).replace(".jar", ".pom"));
     }
 
 }

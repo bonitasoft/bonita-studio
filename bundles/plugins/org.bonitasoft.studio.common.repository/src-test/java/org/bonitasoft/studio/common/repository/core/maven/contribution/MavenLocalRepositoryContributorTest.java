@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.notNull;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.apache.maven.artifact.Artifact;
@@ -57,11 +55,13 @@ public class MavenLocalRepositoryContributorTest {
     private File pomFile;
     @Mock
     private File artifactFile;
+    @Mock
+    private File rootFolder;
 
     @Before
     public void setUp() throws Exception {
         contributor = spy(
-                new MavenLocalRepositoryContributor(internalRepository, localRepository, catalog, installFileCommand));
+                new MavenLocalRepositoryContributor(rootFolder, localRepository, catalog, installFileCommand));
         doReturn(pomFile).when(contributor).toPomFile(notNull(Artifact.class));
         doReturn(artifactFile).when(contributor).toArtifactFile(notNull(Artifact.class));
     }
@@ -96,12 +96,4 @@ public class MavenLocalRepositoryContributorTest {
                 any(File.class), any(File.class));
     }
 
-    @Test
-    public void should_url_decode_repository_url_to_retrieve_root_folder() throws Exception {
-        when(internalRepository.getUrl()).thenReturn(new File("/path/with & special characters").toURI().toURL().toString());
-
-        final File repositoryRootFolder = contributor.repositoryRootFolder();
-
-        assertThat(repositoryRootFolder.toPath().endsWith(Paths.get("path", "with & special characters"))).isTrue();
-    }
 }
