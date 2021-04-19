@@ -1617,7 +1617,17 @@
             class="org.bonitasoft.studio.application.preference.ExtensionsPreferencePage"
             id="org.bonitasoft.studio.preferences.extension"
             name="Extensions">
+         <keywordReference
+               id="org.bonitasoft.studio.application.extension.keyword">
+         </keywordReference>
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.bonitasoft.studio.application.extension.keyword"
+            label="%extensionKeywords">
+      </keyword>
    </extension>
 
 </plugin>
