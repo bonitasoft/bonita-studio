@@ -19,6 +19,7 @@ import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.hamcrest.core.IsSame;
 
 /**
  * Expression editor dialog.
@@ -60,13 +61,13 @@ public class BotExpressionEditorDialog extends BotDialog {
     @Override
     public void cancel() {
         super.cancel();
-        activeShell.setFocus();
+        bot.waitUntil(Conditions.waitForShell(IsSame.sameInstance(activeShell.widget)));
     }
 
     @Override
     public void ok() {
         super.ok();
-        activeShell.setFocus();
+        bot.waitUntil(Conditions.waitForShell(IsSame.sameInstance(activeShell.widget)));
     }
 
 }

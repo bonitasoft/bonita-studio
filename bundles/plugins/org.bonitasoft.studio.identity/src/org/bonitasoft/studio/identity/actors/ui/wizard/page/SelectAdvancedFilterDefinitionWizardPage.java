@@ -16,17 +16,14 @@ package org.bonitasoft.studio.identity.actors.ui.wizard.page;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.model.process.Connector;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
 /**
@@ -53,11 +50,8 @@ public class SelectAdvancedFilterDefinitionWizardPage extends SelectAdvancedConn
     }
 
     @Override
-    protected IStatus validateSelection(Object value) {
-        if (value == null || value instanceof Category) {
-            return new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, Messages.selectAFilterDefWarning);
-        }
-        return Status.OK_STATUS;
+    protected IValidator<ConnectorDefinition> selectionValidator() {
+        return def -> def != null ? ValidationStatus.ok() : ValidationStatus.error(Messages.selectAFilterDefWarning);
 
     }
 

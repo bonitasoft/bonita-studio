@@ -138,7 +138,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createCloudValidationComposite(mainComposite);
-
+        
         explorer.getRightTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -322,6 +322,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
                 return false;
             }
         });
+        explorer.geLeftTreeViewer().addSelectionChangedListener(event -> explorer.getRightTableViewer().refresh());
 
         explorer.addRightTreeFilter(new ViewerFilter() {
 
@@ -339,25 +340,13 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         explorer.setLeftHeader(Messages.categoriesLabel);
         explorer.setRightHeader(getRightHeaderMessage());
         explorer.setInput(new Object());
-        explorer.geLeftTreeViewer().setExpandedElements(new Object[] { AbstractUniqueDefinitionContentProvider.ROOT });
-        onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                updateOnlyCustomCheckbox();
-            }
-        });
+        explorer.geLeftTreeViewer().setExpandedElements(AbstractUniqueDefinitionContentProvider.ROOT);
+        onlyCustomCheckbox.addListener(SWT.Selection, e -> updateOnlyCustomCheckbox());
         final Object[] rootElement = contentProvider.getElements(new Object());
         final List<Object> flattenTree = new ArrayList<>();
         getFlattenTree(flattenTree, rootElement, contentProvider);
         explorer.getRightTableViewer().setInput(flattenTree);
-        explorer.getRightTableViewer().addDoubleClickListener(new IDoubleClickListener() {
-
-            @Override
-            public void doubleClick(final DoubleClickEvent event) {
-                getContainer().showPage(getNextPage());
-            }
-        });
+        explorer.getRightTableViewer().addDoubleClickListener(event -> getContainer().showPage(getNextPage()));
         return explorer;
     }
 
@@ -376,7 +365,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
             explorer.removeRightTreeFilter(customConnectorFilter);
         }
         explorer.setInput(new Object());
-        explorer.geLeftTreeViewer().setExpandedElements(new Object[] { AbstractUniqueDefinitionContentProvider.ROOT });
+        explorer.geLeftTreeViewer().setExpandedElements(AbstractUniqueDefinitionContentProvider.ROOT);
     }
 
     private void getFlattenTree(final List<Object> flattenTree, final Object[] rootElement,
