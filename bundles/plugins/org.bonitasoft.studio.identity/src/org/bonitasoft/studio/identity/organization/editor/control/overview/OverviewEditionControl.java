@@ -259,6 +259,7 @@ public class OverviewEditionControl {
 
     public void refreshUserList() {
         userList.refreshUserList();
+        defaultUserComboViewer.refresh();
     }
 
     public void refreshRoleList() {
