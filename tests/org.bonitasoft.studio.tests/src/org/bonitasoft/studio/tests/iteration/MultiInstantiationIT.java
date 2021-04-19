@@ -334,24 +334,24 @@ public class MultiInstantiationIT implements SWTBotConstants {
         // set output results
         botDataBasedStackPanel.selectListOfAppenedResults("vip -- java.util.List");
 
-        // Check references of input collection, input data, outputdata and output result exist
-        assertNotNull("Error: Input Collection used in the MultiInstantiation is not referenced in the Model.",
-                multiInstantiable.getCollectionDataToMultiInstantiate());
-        assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.",
-                multiInstantiable.getIteratorExpression());
-
         bot.waitUntil(new AssertionCondition() {
 
             @Override
             protected void makeAssert() throws Exception {
+                // Check references of input collection, input data, outputdata and output result exist
+                assertNotNull("Error: Input Collection used in the MultiInstantiation is not referenced in the Model.",
+                        multiInstantiable.getCollectionDataToMultiInstantiate());
+                assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.",
+                        multiInstantiable.getIteratorExpression());
                 assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
+                
+                assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.",
+                        multiInstantiable.getOutputData());
+                assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
+                        multiInstantiable.getListDataContainingOutputResults());
             }
         });
-
-        assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.",
-                multiInstantiable.getOutputData());
-        assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
-                multiInstantiable.getListDataContainingOutputResults());
+      
 
         // remove vip collection and vipName Text
         drawDiagram.selectElement(proc.getName());
