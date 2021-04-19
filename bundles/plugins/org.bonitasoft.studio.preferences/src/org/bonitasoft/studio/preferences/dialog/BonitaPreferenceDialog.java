@@ -504,8 +504,10 @@ public class BonitaPreferenceDialog extends Dialog {
         itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
         tltmExtension.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, EXTENSIONS_PAGE_ID);
 
-        Label lblExtension = createItemLabel(developmentRow, null,
-                Messages.extensions);
+        Label lblExtension = createItemLabel(developmentRow, null, Messages.extensions);
+
+        itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
+        labelPerPreferenceNode.put(EXTENSIONS_PAGE_ID, lblExtension);
     }
 
     protected void createWebCategoryLine(final Composite menuComposite) {
