@@ -359,20 +359,22 @@ public class RepositoriesComposite extends Composite {
     }
 
     private void updateRepositories() {
-        settingsObservable.getValue().getProfiles().forEach(profile -> {
-            List<Repository> repoList = new ArrayList<>();
-            profile.getRepositories().stream().map(repo -> {
-                CustomRepository newRepo = new CustomRepository();
-                newRepo.setId(repo.getId());
-                newRepo.setName(repo.getName());
-                newRepo.setUrl(repo.getUrl());
-                newRepo.setLayout(repo.getLayout());
-                newRepo.setReleases(repo.getReleases());
-                newRepo.setSnapshots(repo.getSnapshots());
-                return newRepo;
-            }).forEach(repoList::add);
-            profile.setRepositories(repoList);
-        });
+        if (settingsObservable.getValue() != null) {
+            settingsObservable.getValue().getProfiles().forEach(profile -> {
+                List<Repository> repoList = new ArrayList<>();
+                profile.getRepositories().stream().map(repo -> {
+                    CustomRepository newRepo = new CustomRepository();
+                    newRepo.setId(repo.getId());
+                    newRepo.setName(repo.getName());
+                    newRepo.setUrl(repo.getUrl());
+                    newRepo.setLayout(repo.getLayout());
+                    newRepo.setReleases(repo.getReleases());
+                    newRepo.setSnapshots(repo.getSnapshots());
+                    return newRepo;
+                }).forEach(repoList::add);
+                profile.setRepositories(repoList);
+            });
+        }
     }
 
 }
