@@ -53,6 +53,11 @@ public class DefinitionMigrationDialog extends MessageDialog {
     }
 
     @Override
+    protected void setShellStyle(int newShellStyle) {
+        super.setShellStyle(SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL  | getDefaultOrientation());
+    }
+    
+    @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         if (IDialogConstants.ABORT_LABEL.equals(label)) {
             return super.createButton(parent, IDialogConstants.ABORT_ID, label, defaultButton);
@@ -66,6 +71,11 @@ public class DefinitionMigrationDialog extends MessageDialog {
             return proceedButton;
         }
         return super.createButton(parent, id, label, defaultButton);
+    }
+    
+    @Override
+    protected boolean canHandleShellCloseEvent() {
+        return false;
     }
 
     @Override
