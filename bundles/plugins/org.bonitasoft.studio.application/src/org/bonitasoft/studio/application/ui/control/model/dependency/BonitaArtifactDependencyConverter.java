@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +28,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.bonitasoft.plugin.analyze.report.model.Artifact;
 import org.bonitasoft.plugin.analyze.report.model.CustomPage;
 import org.bonitasoft.plugin.analyze.report.model.Definition;
-import org.bonitasoft.plugin.analyze.report.model.Form;
 import org.bonitasoft.plugin.analyze.report.model.Implementation;
-import org.bonitasoft.plugin.analyze.report.model.Page;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -93,23 +92,26 @@ public class BonitaArtifactDependencyConverter {
         var file = matchingArtifact instanceof Definition
                 ? ((Definition) matchingArtifact).getArtifact().getFile()
                 : ((Implementation) matchingArtifact).getArtifact().getFile();
-        try (JarFile jarFile = new JarFile(file)) {
-            jarFile.stream()
-                    .filter(entry -> entry.getName()
-                            .matches(String.format("META-INF/maven/%s/%s/pom.xml", dep.getGroupId(), dep.getArtifactId())))
-                    .map(entry -> {
-                        try (InputStream is = jarFile.getInputStream(entry)) {
-                            return pomReader.read(is);
-                        } catch (IOException | XmlPullParserException e) {
-                            BonitaStudioLog.error(e);
-                            return null;
-                        }
-                    }).findFirst().ifPresent(model -> {
-                        bonitaDep.setName(model.getName());
-                        bonitaDep.setDescription(model.getDescription());
-                    });
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
+        if (Paths.get(file).toFile().exists()) {
+            try (JarFile jarFile = new JarFile(file)) {
+                jarFile.stream()
+                        .filter(entry -> entry.getName()
+                                .matches(String.format("META-INF/maven/%s/%s/pom.xml", dep.getGroupId(),
+                                        dep.getArtifactId())))
+                        .map(entry -> {
+                            try (InputStream is = jarFile.getInputStream(entry)) {
+                                return pomReader.read(is);
+                            } catch (IOException | XmlPullParserException e) {
+                                BonitaStudioLog.error(e);
+                                return null;
+                            }
+                        }).findFirst().ifPresent(model -> {
+                            bonitaDep.setName(model.getName());
+                            bonitaDep.setDescription(model.getDescription());
+                        });
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         if (Strings.isNullOrEmpty(bonitaDep.getName())) {
             bonitaDep.setName(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
@@ -130,11 +132,6 @@ public class BonitaArtifactDependencyConverter {
             return ArtifactType.THEME;
         } else if (isRestAPI(dep)) {
             return ArtifactType.REST_API;
-            // TODO Forms and pages are not supported yet product side 
-            //        } else if (isForm(dep)) {
-            //            return ArtifactType.FORM;
-            //        } else if (isPage(dep)) {
-            //            return ArtifactType.PAGE;
         } else if (isActorFilter(dep)) {
             return ArtifactType.ACTOR_FILTER;
         }
@@ -143,13 +140,13 @@ public class BonitaArtifactDependencyConverter {
 
     private boolean isActorFilter(Dependency dep) {
         for (Definition actorDef : dependenciesStore.getActorFilterDefinitions()) {
-            if (matchs(actorDef.getArtifact(), dep)) {
+            if (matches(actorDef.getArtifact(), dep)) {
                 this.matchingArtifact = actorDef;
                 return true;
             }
         }
         for (Implementation actorImpl : dependenciesStore.getActorFilterImplementations()) {
-            if (matchs(actorImpl.getArtifact(), dep)) {
+            if (matches(actorImpl.getArtifact(), dep)) {
                 this.matchingArtifact = actorImpl;
                 return true;
             }
@@ -159,13 +156,13 @@ public class BonitaArtifactDependencyConverter {
 
     private boolean isConnector(Dependency dep) {
         for (Definition connectorDef : dependenciesStore.getConnectorDefinitions()) {
-            if (matchs(connectorDef.getArtifact(), dep)) {
+            if (matches(connectorDef.getArtifact(), dep)) {
                 this.matchingArtifact = connectorDef;
                 return true;
             }
         }
         for (Implementation connectorImpl : dependenciesStore.getConnectorImplementations()) {
-            if (matchs(connectorImpl.getArtifact(), dep)) {
+            if (matches(connectorImpl.getArtifact(), dep)) {
                 this.matchingArtifact = connectorImpl;
                 return true;
             }
@@ -175,7 +172,7 @@ public class BonitaArtifactDependencyConverter {
 
     private boolean isTheme(Dependency dep) {
         for (Theme theme : dependenciesStore.getThemes()) {
-            if (matchs(theme.getArtifact(), dep)) {
+            if (matches(theme.getArtifact(), dep)) {
                 this.matchingArtifact = theme;
                 return true;
             }
@@ -185,7 +182,7 @@ public class BonitaArtifactDependencyConverter {
 
     private boolean isRestAPI(Dependency dep) {
         for (RestAPIExtension restApi : dependenciesStore.getRestAPIExtensions()) {
-            if (matchs(restApi.getArtifact(), dep)) {
+            if (matches(restApi.getArtifact(), dep)) {
                 this.matchingArtifact = restApi;
                 return true;
             }
@@ -193,27 +190,7 @@ public class BonitaArtifactDependencyConverter {
         return false;
     }
 
-    private boolean isForm(Dependency dep) {
-        for (Form form : dependenciesStore.getForms()) {
-            if (matchs(form.getArtifact(), dep)) {
-                this.matchingArtifact = form;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isPage(Dependency dep) {
-        for (Page page : dependenciesStore.getPages()) {
-            if (matchs(page.getArtifact(), dep)) {
-                this.matchingArtifact = page;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean matchs(Artifact artifact, Dependency dep) {
+    private boolean matches(Artifact artifact, Dependency dep) {
         return Objects.equals(artifact.getGroupId(), dep.getGroupId())
                 && Objects.equals(artifact.getArtifactId(), dep.getArtifactId())
                 && Objects.equals(artifact.getVersion(), dep.getVersion());

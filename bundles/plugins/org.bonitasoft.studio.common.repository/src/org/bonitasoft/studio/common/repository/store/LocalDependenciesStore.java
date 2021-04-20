@@ -31,8 +31,10 @@ import org.eclipse.core.runtime.Status;
 
 public class LocalDependenciesStore {
 
-    private IProject project;
+    private static final String BACKUP_EXT = ".backup";
     public static final String NAME = ".store";
+
+    private IProject project;
 
     public LocalDependenciesStore(IProject project) {
         this.project = project;
@@ -64,9 +66,11 @@ public class LocalDependenciesStore {
                         String.format("Cannot install %s dependency. Failed to create store folders.",
                                 dependencyFile.getName())));
             }
-            Files.copy(dependencyFile.toPath(),
-                    targetFolder.resolve(dependencyFileName(dependency)),
-                    StandardCopyOption.REPLACE_EXISTING);
+            Path dependencyPath = targetFolder.resolve(dependencyFileName(dependency));
+            if (dependencyPath.toFile().exists()) {
+                backup(dependencyPath);
+            }
+            Files.copy(dependencyFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot install %s dependency.",
@@ -77,6 +81,15 @@ public class LocalDependenciesStore {
         }
         project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
         return dependencyLookup;
+    }
+
+    private void backup(Path dependencyPath) throws IOException {
+        File backup = toBackupFile(dependencyPath);
+        Files.move(dependencyPath, backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private File toBackupFile(Path dependencyPath) {
+        return new File(dependencyPath.getParent().toFile(), dependencyPath.getFileName() + BACKUP_EXT);
     }
 
     public Path dependencyPath(Dependency dependency) {
@@ -121,6 +134,35 @@ public class LocalDependenciesStore {
         }
 
         project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+
+    // Use the backup file if exists to revert install
+    public void revert(Dependency dependency) throws CoreException {
+        Path dependencyPath = dependencyPath(dependency).resolve(dependencyFileName(dependency));
+        try {
+            File backupFile = toBackupFile(dependencyPath);
+            if (backupFile.exists()) {
+                Files.move(backupFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
+                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+        } catch (IOException e) {
+            throw new CoreException(new Status(IStatus.ERROR, getClass(),
+                    String.format("Cannot retrieve backup for %s dependency.", dependencyPath), e));
+        }
+    }
+
+    public void deleteBackup(Dependency dependency) throws CoreException {
+        Path dependencyPath = dependencyPath(dependency).resolve(dependencyFileName(dependency));
+        try {
+            File backupFile = toBackupFile(dependencyPath);
+            if (backupFile.exists()) {
+                Files.delete(backupFile.toPath());
+                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+            }
+        } catch (IOException e) {
+            throw new CoreException(new Status(IStatus.ERROR, getClass(),
+                    String.format("Cannot delete backup of %s dependency.", dependencyPath), e));
+        }
     }
 
     public boolean isLocalDependency(Dependency dependency) {
