@@ -119,7 +119,7 @@ public class ImportExtensionPage implements ControlSupplier {
     private Optional<Boolean> isLocal;
     private Composite mainComposite;
 
-    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry, 
+    public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry,
             Model mavenModel,
             Optional<Dependency> extensionToUpdate,
             Optional<Boolean> isLocal) {
@@ -428,10 +428,12 @@ public class ImportExtensionPage implements ControlSupplier {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         dependencyAlreadyExistsIcon = new Label(composite, SWT.WRAP);
-        dependencyAlreadyExistsIcon.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).indent(0, 3).create());
+        dependencyAlreadyExistsIcon
+                .setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).indent(0, 3).create());
 
         dependencyAlreadyExistsLabel = new Label(composite, SWT.WRAP);
-        dependencyAlreadyExistsLabel.setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).grab(true, true).create());
+        dependencyAlreadyExistsLabel
+                .setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).grab(true, true).create());
 
         ctx.addValidationStatusProvider(new ValidationStatusProvider() {
 
@@ -469,9 +471,10 @@ public class ImportExtensionPage implements ControlSupplier {
         if (sameExistingDependency.getValue() != null && sameExistingDependency.getValue().isPresent()) {
             String existingVersion = sameExistingDependency.getValue().get().getVersion();
             if (Objects.equals(existingVersion, versionObservable.getValue())) {
-                updateDependencyAlreadyExistsLabel(String.format(Messages.dependencyAlreadyExistsInSameVersion, existingVersion),
-                        BonitaThemeConstants.ERROR_TEXT_COLOR, JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR));
-                return ValidationStatus.error(Messages.dependencyAlreadyExistsInSameVersion);
+                updateDependencyAlreadyExistsLabel(
+                        String.format(Messages.dependencyAlreadyExistsInSameVersion, existingVersion),
+                        BonitaThemeConstants.WARNING_TEXT_COLOR, JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
+                return ValidationStatus.warning(Messages.dependencyAlreadyExistsInSameVersion);
             }
             updateDependencyAlreadyExistsLabel(
                     String.format(Messages.dependencyAlreadyExistsInDifferentVersion, existingVersion),

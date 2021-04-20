@@ -22,7 +22,8 @@ public class ImportExtensionHandlerTest {
     ImportExtensionHandler handler = new ImportExtensionHandler(mock(RepositoryAccessor.class),
             mock(MavenRepositoryRegistry.class),
             mock(DefinitionUpdateOperationFactory.class),
-            new MavenProjectHelper());
+            new MavenProjectHelper(),
+            null);
 
     @Before
     public void init() {
