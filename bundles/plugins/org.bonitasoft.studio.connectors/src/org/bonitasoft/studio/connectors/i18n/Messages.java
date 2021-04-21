@@ -221,6 +221,11 @@ public class Messages extends NLS {
     public static String openMarketplaceTooltip;
     public static String connectorType;
 
+    public static String connectorDefinitionUpdateRequired;
+    public static String selectTargetDefinitionVersionTitle;
+    public static String selectTargetDefinitionVersionMessage;
+    public static String version;
+
     public static String getValue(final String event) {
         try {
             return (String) Messages.class.getField(event).get(null);

@@ -20,7 +20,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
@@ -30,7 +29,6 @@ import org.bonitasoft.studio.connector.model.implementation.IImplementationRepos
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -201,11 +199,9 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         super.showPage(page);
         if (page instanceof AbstractConnectorConfigurationWizardPage || page instanceof SelectNameAndDescWizardPage) {
             final IConnectorDefinitionContainer wizard = (IConnectorDefinitionContainer) getWizard();
-            final ConnectorDefinition defintion = wizard.getDefinition();
-            final IRepositoryFileStore def = ((IRepositoryStore<? extends IRepositoryFileStore>) definitionRepositoryStore).getChild(URI.decode(defintion
-                    .eResource().getURI().lastSegment()), true);
-            if (def != null) {
-                final String displayName = def.getDisplayName();
+            final ExtendedConnectorDefinition definition = wizard.getDefinition();
+            if (definition != null) {
+                final String displayName = definition.getConnectorDefinitionLabel();
                 if (!displayName.equals(getShell().getText())) {
                     getShell().setText(displayName);
                 }

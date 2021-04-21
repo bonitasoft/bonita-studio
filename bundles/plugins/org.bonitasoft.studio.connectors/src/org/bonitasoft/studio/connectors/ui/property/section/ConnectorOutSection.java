@@ -16,22 +16,30 @@
  */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 public class ConnectorOutSection extends ConnectorSection {
 
-	@Override
-	protected ConnectorWizard createAddConnectorWizard() {
-		final ConnectorWizard connectorWizard = createConnectorWizard(ConnectorEvent.ON_FINISH
-				.name());
-		return connectorWizard;
-	}
+    @Inject
+    public ConnectorOutSection(ConnectorConfigurationMigratorFactory migrationFactory,
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter) {
+        super(migrationFactory, configurationToDefinitionConverter);
+    }
 
-	@Override
-	protected ViewerFilter getViewerFilter() {
-		return new ConnectorEventFilter(ConnectorEvent.ON_FINISH.name());
-	}
+    @Override
+    protected ConnectorWizard createAddConnectorWizard() {
+        return createConnectorWizard(ConnectorEvent.ON_FINISH.name());
+    }
+
+    @Override
+    protected ViewerFilter getViewerFilter() {
+        return new ConnectorEventFilter(ConnectorEvent.ON_FINISH.name());
+    }
 
 }
