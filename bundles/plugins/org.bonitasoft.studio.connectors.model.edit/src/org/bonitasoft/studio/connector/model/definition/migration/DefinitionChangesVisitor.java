@@ -156,7 +156,8 @@ public class DefinitionChangesVisitor {
 
     private boolean isInputWidgetTypeChange(ReferenceChange referenceChange) {
         return (referenceChange.getKind() == DifferenceKind.ADD || referenceChange.getKind() == DifferenceKind.DELETE)
-                && referenceChange.getReference() == ConnectorDefinitionPackage.Literals.PAGE__WIDGET;
+                && referenceChange.getReference() == ConnectorDefinitionPackage.Literals.PAGE__WIDGET
+                && referenceChange.getValue() instanceof WidgetComponent;
     }
 
     private boolean isInputRefChange(ReferenceChange refChange) {

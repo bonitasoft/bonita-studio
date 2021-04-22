@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegis
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.wizard.IWizardPage;
 
-public class FilterWizard extends ConnectorWizard implements IConnectorDefinitionContainer {
+public class FilterWizard extends ConnectorWizard {
 
     public FilterWizard(EObject container, EStructuralFeature connectorContainmentFeature,
             Set<EStructuralFeature> featureToCheckForUniqueID) {
@@ -51,8 +51,8 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
     }
 
     public FilterWizard(ActorFilter filter, EStructuralFeature connectorContainmentFeature,
-            Set<EStructuralFeature> featureToCheckForUniqueID) {
-        super(filter, connectorContainmentFeature, featureToCheckForUniqueID);
+            Set<EStructuralFeature> featureToCheckForUniqueID, ConnectorConfigurationMigrator migrator) {
+        super(filter, connectorContainmentFeature, featureToCheckForUniqueID, migrator);
     }
 
     @Override
@@ -75,21 +75,16 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 
     @Override
     protected IDefinitionRepositoryStore getDefinitionStore() {
-        return (IDefinitionRepositoryStore) RepositoryManager.getInstance()
+        return RepositoryManager.getInstance()
                 .getRepositoryStore(ActorFilterDefRepositoryStore.class);
     }
 
     @Override
     public ExtendedConnectorDefinition getDefinition() {
         ConnectorDefinitionRegistry registry = getDefinitionStore().getResourceProvider().getConnectorDefinitionRegistry();
-        if (getOriginalConnector() != null) {
-            return registry.find(getOriginalConnector().getDefinitionId(),
-                    getOriginalConnector().getDefinitionVersion()).orElse(null);
-        } else {
-            if (connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
-                return registry.find(connectorWorkingCopy.getDefinitionId(),
-                        connectorWorkingCopy.getDefinitionVersion()).orElse(null);
-            }
+        if (connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
+            return registry.find(connectorWorkingCopy.getDefinitionId(),
+                    connectorWorkingCopy.getDefinitionVersion()).orElse(null);
         }
         return null;
     }
@@ -98,9 +93,9 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
     protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(Connector connectorWorkingCopy,
             DefinitionResourceProvider resourceProvider) {
         return new SelectAdvancedFilterDefinitionWizardPage(connectorWorkingCopy,
-                Collections.<ConnectorImplementation> emptyList(), 
+                Collections.<ConnectorImplementation> emptyList(),
                 resourceProvider.getConnectorDefinitionRegistry().getDefinitions(),
-                Messages.selectFilterDefinitionTitle, 
+                Messages.selectFilterDefinitionTitle,
                 Messages.selectFilterDefinitionDesc);
     }
 
