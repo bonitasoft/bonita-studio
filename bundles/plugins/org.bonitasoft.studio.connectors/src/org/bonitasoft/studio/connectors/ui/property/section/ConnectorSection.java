@@ -1,17 +1,17 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2.0 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+* Copyright (C) 2012 BonitaSoft S.A.
+* Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2.0 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.bonitasoft.studio.connectors.ui.property.section;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
@@ -19,15 +19,23 @@ import static org.bonitasoft.studio.common.Messages.bosProductName;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.StyledConnectorLabelProvider;
@@ -65,7 +73,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -89,14 +99,26 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
     private Button updateConnectorButton;
     private Button upConnectorButton;
     private Button downConnectorButton;
-    private Composite mainComposite;
     private TableViewer tableViewer;
     private Button moveButton;
     private CommandExecutor commandExecutor = new CommandExecutor();
 
+    private ConnectorConfigurationMigratorFactory migrationFactory;
+    private ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter;
+    private RepositoryAccessor repositoryAccessor;
+
+    @Inject
+    public ConnectorSection(ConnectorConfigurationMigratorFactory migrationFactory,
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
+        this.migrationFactory = migrationFactory;
+        this.configurationToDefinitionConverter = configurationToDefinitionConverter;
+        this.repositoryAccessor = repositoryAccessor;
+    }
+
     @Override
     protected void createContent(final Composite parent) {
-        mainComposite = getWidgetFactory().createComposite(parent);
+        var mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(20, 5).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
@@ -165,7 +187,8 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         });
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(
                 getConnectorFeature()));
-        tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
+        tableViewer.setLabelProvider(
+                new StyledConnectorLabelProvider(repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)));
         tableViewer.addFilter(getViewerFilter());
     }
 
@@ -201,7 +224,11 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                     final ConnectorDefinition def = connectorDefStore
                             .getDefinition(connector.getDefinitionId(),
                                     connector.getDefinitionVersion());
-                    updateConnectorButton.setEnabled(def != null);
+                    long nbOfDefinitions = connectorDefStore.getDefinitions().stream()
+                            .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))
+                            .count();
+                    updateConnectorButton.setEnabled(def != null || nbOfDefinitions > 0);
+                    updateConnectorButton.setText(def == null && nbOfDefinitions > 0 ? Messages.update : Messages.Edit);
                 } else {
                     updateConnectorButton.setEnabled(false);
                 }
@@ -308,7 +335,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     private Button createUpdateConnectorButton(final Composite parent) {
         final Button updateButton = getWidgetFactory().createButton(parent,
-                Messages.update, SWT.FLAT);
+                Messages.Edit, SWT.FLAT);
         updateButton.setLayoutData(GridDataFactory.fillDefaults()
                 .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         updateButton.addListener(SWT.Selection, new Listener() {
@@ -334,24 +361,54 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
             final ConnectorDefRepositoryStore connectorDefStore = RepositoryManager
                     .getInstance().getRepositoryStore(
                             ConnectorDefRepositoryStore.class);
-            final ConnectorDefinition def = connectorDefStore.getDefinition(
+            ConnectorDefinition def = connectorDefStore.getDefinition(
                     connector.getDefinitionId(),
                     connector.getDefinitionVersion());
-            if (def != null) {
+            ConnectorConfigurationMigrator migrator = null;
+            if (def == null) {
+                migrator = updateConnectorDefinition(connector, connectorDefStore);
+            }
+            if (def != null || migrator != null) {
                 final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
                         Display.getCurrent().getActiveShell(),
-                        createEditConnectorWizard(connector));
-                if (wizardDialog.open() == Dialog.OK) {
+                        createEditConnectorWizard(connector, migrator));
+                if (wizardDialog.open() == Window.OK) {
                     tableViewer.refresh();
                 }
             }
         }
     }
 
+    private ConnectorConfigurationMigrator updateConnectorDefinition(final Connector connector,
+            final ConnectorDefRepositoryStore connectorDefStore) {
+        List<ConnectorDefinition> otherDefinitions = connectorDefStore.getDefinitions().stream()
+                .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))
+                .collect(Collectors.toList());
+        ConnectorDefinition targetDefinition = null;
+        if (otherDefinitions.size() > 1) {
+            // Choose definitions
+            SelectDefinitionVersionDialog selectDefinitionVersionDialog = new SelectDefinitionVersionDialog(
+                    Display.getDefault().getActiveShell(), otherDefinitions);
+            if (selectDefinitionVersionDialog.open() == IDialogConstants.NEXT_ID) {
+                String targetVersion = selectDefinitionVersionDialog.getVersion();
+                targetDefinition = otherDefinitions.stream()
+                        .filter(def -> Objects.equals(def.getVersion(), targetVersion))
+                        .findFirst()
+                        .orElseThrow();
+            }
+        } else if (!otherDefinitions.isEmpty()) {
+            targetDefinition = otherDefinitions.get(0);
+        }
+        if (targetDefinition != null) {
+            return migrationFactory.create(configurationToDefinitionConverter.convert(connector), targetDefinition);
+        }
+        return null;
+    }
+
     protected ConnectorWizard createEditConnectorWizard(
-            final Connector connector) {
+            final Connector connector, ConnectorConfigurationMigrator migrator) {
         return new ConnectorWizard(connector, getConnectorFeature(),
-                getConnectorFeatureToCheckUniqueID());
+                getConnectorFeatureToCheckUniqueID(), migrator);
     }
 
     protected boolean getShowAutoGenerateForm() {
@@ -428,16 +485,6 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         return eObject;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#dispose()
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
-
     @Override
     public void doubleClick(final DoubleClickEvent event) {
         updateConnectorAction();
@@ -501,7 +548,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     @Override
     public String getSectionDescription() {
-        return Messages.bind(Messages.connectorSectionDescription,
+        return NLS.bind(Messages.connectorSectionDescription,
                 bosProductName);
     }
 

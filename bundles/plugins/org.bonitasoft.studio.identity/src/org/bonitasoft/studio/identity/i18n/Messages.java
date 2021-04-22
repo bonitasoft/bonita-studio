@@ -151,7 +151,6 @@ public class Messages extends NLS {
     public static String selectAFilterDefWarning;
     public static String selectFilterImplementationTitle;
     public static String selectFilterImplementationDesc;
-    public static String filterDefinitionNotFound;
     public static String deleteDialogTitle;
     public static String deleteDialogConfirmMessage;
     public static String filterConfRepositoryName;

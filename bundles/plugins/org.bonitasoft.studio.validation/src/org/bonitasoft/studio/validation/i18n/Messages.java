@@ -247,6 +247,9 @@ public class Messages extends NLS {
 
     public static String validate;
 
+    public static String Validation_ActorFilterDefUpdateRequired;
+    public static String Validation_ConnectorDefUpdateRequired;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

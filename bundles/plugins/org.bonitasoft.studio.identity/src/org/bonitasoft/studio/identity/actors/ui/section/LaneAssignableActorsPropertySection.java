@@ -16,23 +16,29 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.section;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
+import javax.inject.Inject;
+
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
- *
  */
-public class LaneAssignableActorsPropertySection extends AbstractActorsPropertySection implements ISelectionChangedListener{
+public class LaneAssignableActorsPropertySection extends AbstractActorsPropertySection {
 
+    @Inject
+    public LaneAssignableActorsPropertySection(ConnectorConfigurationMigratorFactory migrationFactory,
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
+        super(migrationFactory, configurationToDefinitionConverter, repositoryAccessor);
+    }
 
-	@Override
-	protected void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,Composite mainComposite) {
-		
-		
-	}
+    @Override
+    protected void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory, Composite mainComposite) {
 
-	
+    }
 
 }

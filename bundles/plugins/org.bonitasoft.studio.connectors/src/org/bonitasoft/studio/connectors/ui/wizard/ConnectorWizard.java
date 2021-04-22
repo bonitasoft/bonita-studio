@@ -49,6 +49,7 @@ import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionCont
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.DefaultValueExpressionFactory;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
@@ -159,17 +160,20 @@ public class ConnectorWizard extends ExtensibleWizard implements
         this.featureToCheckForUniqueID.add(connectorContainmentFeature);
         setWindowTitle(Messages.connectors);
         setNeedsProgressMonitor(false);
-
     }
 
     public ConnectorWizard(final Connector connector,
             final EStructuralFeature connectorContainmentFeature,
-            final Set<EStructuralFeature> featureToCheckForUniqueID) {
+            final Set<EStructuralFeature> featureToCheckForUniqueID,
+            ConnectorConfigurationMigrator migrator) {
         Assert.isNotNull(connector);
         modelContainer = connector.eContainer();
         originalConnector = connector;
         this.connectorContainmentFeature = connectorContainmentFeature;
         connectorWorkingCopy = modelUpdater.from(connector).getWorkingCopy();
+        if (migrator != null) {
+            migrator.migrate(connectorWorkingCopy.getConfiguration());
+        }
         editMode = true;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
         setNeedsProgressMonitor(false);
@@ -753,18 +757,12 @@ public class ConnectorWizard extends ExtensibleWizard implements
         final ConnectorDefinitionRegistry registry = getDefinitionStore()
                 .getResourceProvider()
                 .getConnectorDefinitionRegistry();
-        if (originalConnector != null) {
-            return registry.find(originalConnector.getDefinitionId(),
-                    originalConnector.getDefinitionVersion())
+        if (connectorWorkingCopy.getDefinitionId() != null
+                && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
+            return registry.find(
+                    connectorWorkingCopy.getDefinitionId(),
+                    connectorWorkingCopy.getDefinitionVersion())
                     .orElse(null);
-        } else {
-            if (connectorWorkingCopy.getDefinitionId() != null
-                    && !connectorWorkingCopy.getDefinitionId().isEmpty()) {
-                return registry.find(
-                        connectorWorkingCopy.getDefinitionId(),
-                        connectorWorkingCopy.getDefinitionVersion())
-                        .orElse(null);
-            }
         }
         return null;
     }

@@ -18,14 +18,24 @@ package org.bonitasoft.studio.identity.actors.ui.section;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
+import org.bonitasoft.studio.connectors.ui.property.section.SelectDefinitionVersionDialog;
+import org.bonitasoft.studio.connectors.ui.provider.StyledConnectorLabelProvider;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.ui.wizard.ActorFilterDefinitionWizardDialog;
 import org.bonitasoft.studio.identity.actors.ui.wizard.AddActorWizard;
@@ -35,6 +45,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Assignable;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -48,6 +59,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -58,8 +70,10 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -68,7 +82,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Section;
@@ -84,12 +97,25 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
     protected ComboViewer actorComboViewer;
     protected EMFDataBindingContext emfDatabindingContext;
-    protected Text filterText;
+    protected StyledText filterText;
     protected ToolItem removeConnectorButton;
     protected Button updateConnectorButton;
-    private StyledFilterLabelProvider filterLabelProvider;
+    private StyledConnectorLabelProvider filterLabelProvider;
     protected Button setButton;
     private CommandExecutor commandExecutor = new CommandExecutor();
+    private RepositoryAccessor repositoryAccessor;
+    private ConnectorConfigurationMigratorFactory migrationFactory;
+    private ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter;
+
+    @Inject
+    public AbstractActorsPropertySection(ConnectorConfigurationMigratorFactory migrationFactory,
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
+        this.migrationFactory = migrationFactory;
+        this.configurationToDefinitionConverter = configurationToDefinitionConverter;
+        this.repositoryAccessor = repositoryAccessor;
+
+    }
 
     @Override
     protected void createContent(Composite parent) {
@@ -103,7 +129,8 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
         createActorComposite(widgetFactory, mainComposite);
 
-        filterLabelProvider = new StyledFilterLabelProvider();
+        filterLabelProvider = new StyledConnectorLabelProvider(
+                repositoryAccessor.getRepositoryStore(ActorFilterDefRepositoryStore.class));
 
         createFilterSection(widgetFactory, mainComposite);
 
@@ -206,9 +233,9 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     protected void createFiltersViewer(Composite parent) {
         setButton = createSetButton(parent);
 
-        filterText = getWidgetFactory().createText(parent, "",
-                GTKStyleHandler.replaceSingleWithWrap(
-                        GTKStyleHandler.removeBorderFlag(SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.READ_ONLY)));
+        filterText = new StyledText(parent, SWT.BORDER | SWT.SINGLE | SWT.NO_FOCUS | SWT.READ_ONLY);
+        filterText.setEnabled(false);
+        getWidgetFactory().adapt(filterText, false, false);
         filterText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
         updateConnectorButton = createUpdateButton(parent);
@@ -220,7 +247,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     }
 
     protected ToolItem createRemoveButton(final Composite buttonsComposite) {
-        final ToolBar toolBar = new ToolBar(buttonsComposite, SWT.FLAT);
+        final ToolBar toolBar = new ToolBar(buttonsComposite, SWT.FLAT | SWT.NO_FOCUS);
         getWidgetFactory().adapt(toolBar);
         final ToolItem toolItem = new ToolItem(toolBar, SWT.FLAT);
         toolItem.setImage(Pics.getImage(PicsConstants.clear));
@@ -267,14 +294,18 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
                         .getRepositoryStore(ActorFilterDefRepositoryStore.class);
                 final ConnectorDefinition def = defStore.getDefinition(filter.getDefinitionId(),
                         filter.getDefinitionVersion());
-                if (def != null) {
+                ConnectorConfigurationMigrator migrator = null;
+                if (def == null) {
+                    migrator = updateFilterDefinition(filter, defStore);
+                }
+                if (def != null || migrator != null) {
                     final WizardDialog wizardDialog = new ActorFilterDefinitionWizardDialog(
                             Display.getCurrent().getActiveShell(),
-                            new FilterWizard(filter, getFilterFeature(), getFilterFeatureToCheckUniqueID()));
+                            new FilterWizard(filter, getFilterFeature(), getFilterFeatureToCheckUniqueID(), migrator));
                     if (wizardDialog.open() == Dialog.OK) {
                         final Assignable newAssignable = (Assignable) getEObject();
                         final ActorFilter newfilter = newAssignable.getFilters().get(0);
-                        filterText.setText(filterLabelProvider.getText(newfilter));
+                        updateFilterTextContent(newfilter);
                         updateButtons();
                     }
                 }
@@ -282,6 +313,38 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
         });
         return updateButton;
+    }
+
+    private void updateFilterTextContent(ActorFilter newfilter) {
+        StyledString styledString = filterLabelProvider.getStyledString(newfilter);
+        filterText.setText(styledString.getString());
+        filterText.setStyleRanges(styledString.getStyleRanges());
+    }
+
+    private ConnectorConfigurationMigrator updateFilterDefinition(Connector connector,
+            ActorFilterDefRepositoryStore defStore) {
+        List<ConnectorDefinition> otherDefinitions = defStore.getDefinitions().stream()
+                .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))
+                .collect(Collectors.toList());
+        ConnectorDefinition targetDefinition = null;
+        if (otherDefinitions.size() > 1) {
+            // Choose definitions
+            SelectDefinitionVersionDialog selectDefinitionVersionDialog = new SelectDefinitionVersionDialog(
+                    Display.getDefault().getActiveShell(), otherDefinitions);
+            if (selectDefinitionVersionDialog.open() == IDialogConstants.NEXT_ID) {
+                String targetVersion = selectDefinitionVersionDialog.getVersion();
+                targetDefinition = otherDefinitions.stream()
+                        .filter(def -> Objects.equals(def.getVersion(), targetVersion))
+                        .findFirst()
+                        .orElseThrow();
+            }
+        } else if (!otherDefinitions.isEmpty()) {
+            targetDefinition = otherDefinitions.get(0);
+        }
+        if (targetDefinition != null) {
+            return migrationFactory.create(configurationToDefinitionConverter.convert(connector), targetDefinition);
+        }
+        return null;
     }
 
     protected Set<EStructuralFeature> getFilterFeatureToCheckUniqueID() {
@@ -308,7 +371,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
                     }
                     if (!assignable.getFilters().isEmpty()) {
                         final ActorFilter filter = assignable.getFilters().get(0);
-                        filterText.setText(filterLabelProvider.getText(filter));
+                        updateFilterTextContent(filter);
                     }
                     updateButtons();
                 }
@@ -331,7 +394,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
             final Assignable assignable = (Assignable) getEObject();
             if (assignable != null && !assignable.getFilters().isEmpty()) {
                 final ActorFilter filter = assignable.getFilters().get(0);
-                filterText.setText(filterLabelProvider.getText(filter));
+                updateFilterTextContent(filter);
             } else {
                 filterText.setText("");
             }
@@ -371,21 +434,22 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
                 filter = assignable.getFilters().get(0);
             }
 
-            //       if(!setButton.isDisposed()){
-            //           setButton.setEnabled(filter == null) ;
-            //       }
-
             if (!removeConnectorButton.isDisposed()) {
                 removeConnectorButton.setEnabled(filter != null);
             }
 
             if (!updateConnectorButton.isDisposed()) {
                 if (filter != null) {
-                    final ActorFilterDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
-                            .getRepositoryStore(ActorFilterDefRepositoryStore.class);
-                    final ConnectorDefinition def = connectorDefStore.getDefinition(filter.getDefinitionId(),
-                            filter.getDefinitionVersion());
-                    updateConnectorButton.setEnabled(def != null);
+                    var defStore = repositoryAccessor.getRepositoryStore(ActorFilterDefRepositoryStore.class);
+                    var definitionId = filter.getDefinitionId();
+                    var def = defStore.getDefinition(definitionId, filter.getDefinitionVersion());
+                    var nbOfDefinitions = defStore.getDefinitions().stream()
+                            .filter(definition -> Objects.equals(definition.getId(), definitionId))
+                            .count();
+                    updateConnectorButton.setEnabled(def != null || nbOfDefinitions > 0);
+                    updateConnectorButton.setText(def == null && nbOfDefinitions > 0
+                            ? org.bonitasoft.studio.connectors.i18n.Messages.update
+                            : Messages.edit);
                 } else {
                     updateConnectorButton.setEnabled(false);
                 }

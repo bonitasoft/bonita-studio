@@ -16,9 +16,14 @@
  */
 package org.bonitasoft.studio.identity.actors.ui.section;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.databinding.converter.BooleanInverserConverter;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
+import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Assignable;
@@ -32,7 +37,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -42,7 +46,14 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Romain Bioteau
  */
-public class AssignableActorsPropertySection extends AbstractActorsPropertySection implements ISelectionChangedListener {
+public class AssignableActorsPropertySection extends AbstractActorsPropertySection {
+
+    @Inject
+    public AssignableActorsPropertySection(ConnectorConfigurationMigratorFactory migrationFactory,
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
+        super(migrationFactory, configurationToDefinitionConverter, repositoryAccessor);
+    }
 
     private Button useLaneActorButton;
     private Button taskActorButton;

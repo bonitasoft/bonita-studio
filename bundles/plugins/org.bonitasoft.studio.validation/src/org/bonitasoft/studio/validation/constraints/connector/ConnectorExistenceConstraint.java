@@ -1,5 +1,7 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
+import java.util.Objects;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -11,6 +13,7 @@ import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarker
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerConstraint {
 
@@ -45,16 +48,32 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
                     return context.createFailureStatus(
                             String.format(Messages.Validation_jasperConnectorRemoved, connector.getName()));
                 } else {
-                    return context.createFailureStatus(Messages.bind(Messages.Validation_noConnectorDefFound,
-                            connector.getName(), connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
+                    if (otherVersionAvailable(connector, connectorDefStore)) {
+                        return context.createFailureStatus(NLS.bind(Messages.Validation_ConnectorDefUpdateRequired,
+                                connector.getName(),
+                                connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
+                    }
+                    return context.createFailureStatus(NLS.bind(Messages.Validation_noConnectorDefFound,
+                            connector.getName(),
+                            connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
                 }
 
             } else {
-                return context.createFailureStatus(Messages.bind(Messages.Validation_noActorFilterDefFound,
+                if (otherVersionAvailable(connector, connectorDefStore)) {
+                    return context.createFailureStatus(NLS.bind(Messages.Validation_ActorFilterDefUpdateRequired,
+                            connector.getName(),
+                            connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
+                }
+                return context.createFailureStatus(NLS.bind(Messages.Validation_noActorFilterDefFound,
                         connector.getName(), connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
             }
 
         }
+    }
+
+    private boolean otherVersionAvailable(Connector connector, AbstractDefinitionRepositoryStore<?> connectorDefStore) {
+        return connectorDefStore.getDefinitions().stream()
+                .anyMatch(def -> Objects.equals(connector.getDefinitionId(), def.getId()));
     }
 
     @Override
