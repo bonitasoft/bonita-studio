@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
@@ -38,22 +39,23 @@ public class ConnectorInSectionTest {
     private ConnectorConfigurationMigratorFactory connectorConfigurationFactory;
     @Mock
     private ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter;
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
 
     @Test
     public void should_setConnectorEvent_when_creating_aConnetorWizard() {
         final ConnectorInSection section = new ConnectorInSection(connectorConfigurationFactory,
-                configurationToDefinitionConverter);
+                configurationToDefinitionConverter, repositoryAccessor);
 
         final ConnectorWizard wizard = section.createAddConnectorWizard();
         assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
                 ConnectorEvent.ON_ENTER.name());
-
     }
 
     @Test
     public void should_return_OnEnter_ConnectorEventFilter() {
         final ConnectorInSection section = new ConnectorInSection(connectorConfigurationFactory,
-                configurationToDefinitionConverter);
+                configurationToDefinitionConverter, repositoryAccessor);
 
         assertThat(section.getViewerFilter()).isInstanceOf(
                 ConnectorEventFilter.class);

@@ -67,7 +67,7 @@ public class Messages extends NLS {
     public static String newConnectorDefinition;
     public static String editConnectorDefinition;
     public static String outputMappingDesc;
-    public static String connectorDefinitionNotFound;
+    public static String definitionNotFound;
     public static String newConnectorImplementation;
     public static String editConnectorImplementation;
     public static String connectorImplementationTitle;
@@ -221,7 +221,7 @@ public class Messages extends NLS {
     public static String openMarketplaceTooltip;
     public static String connectorType;
 
-    public static String connectorDefinitionUpdateRequired;
+    public static String definitionUpdateRequired;
     public static String selectTargetDefinitionVersionTitle;
     public static String selectTargetDefinitionVersionMessage;
     public static String version;

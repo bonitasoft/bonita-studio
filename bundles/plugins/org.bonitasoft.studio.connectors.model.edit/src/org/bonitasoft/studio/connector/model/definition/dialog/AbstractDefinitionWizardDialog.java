@@ -202,7 +202,7 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             final ExtendedConnectorDefinition definition = wizard.getDefinition();
             if (definition != null) {
                 final String displayName = definition.getConnectorDefinitionLabel();
-                if (!displayName.equals(getShell().getText())) {
+                if (displayName != null && !displayName.equals(getShell().getText())) {
                     getShell().setText(displayName);
                 }
             }

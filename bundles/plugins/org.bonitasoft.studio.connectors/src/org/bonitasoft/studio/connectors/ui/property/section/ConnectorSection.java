@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -104,12 +105,15 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     private ConnectorConfigurationMigratorFactory migrationFactory;
     private ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter;
+    private RepositoryAccessor repositoryAccessor;
 
     @Inject
     public ConnectorSection(ConnectorConfigurationMigratorFactory migrationFactory,
-            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter) {
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
         this.migrationFactory = migrationFactory;
         this.configurationToDefinitionConverter = configurationToDefinitionConverter;
+        this.repositoryAccessor = repositoryAccessor;
     }
 
     @Override
@@ -183,7 +187,8 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         });
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(
                 getConnectorFeature()));
-        tableViewer.setLabelProvider(new StyledConnectorLabelProvider());
+        tableViewer.setLabelProvider(
+                new StyledConnectorLabelProvider(repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)));
         tableViewer.addFilter(getViewerFilter());
     }
 
@@ -374,7 +379,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         }
     }
 
-    public ConnectorConfigurationMigrator updateConnectorDefinition(final Connector connector,
+    private ConnectorConfigurationMigrator updateConnectorDefinition(final Connector connector,
             final ConnectorDefRepositoryStore connectorDefStore) {
         List<ConnectorDefinition> otherDefinitions = connectorDefStore.getDefinitions().stream()
                 .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))

@@ -17,12 +17,9 @@ package org.bonitasoft.studio.connectors.ui.provider;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.model.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.ui.ColorConstants;
@@ -32,6 +29,7 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Color;
@@ -44,18 +42,23 @@ import org.eclipse.swt.widgets.Display;
  */
 public class StyledConnectorLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
-    private final ConnectorDefRepositoryStore connectorDefStore;
-    private final DefinitionResourceProvider resourceProvider;
+    private IDefinitionRepositoryStore<?> definitionStore;
     private LocalResourceManager localResourceManager;
     private Color errorColor;
+    private Styler italicStyler;
 
-    public StyledConnectorLabelProvider() {
+    public StyledConnectorLabelProvider(IDefinitionRepositoryStore<?> definitionStore) {
         super();
-        connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        resourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore,
-                ConnectorPlugin.getDefault().getBundle());
+        this.definitionStore = definitionStore;
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         errorColor = localResourceManager.createColor(ColorConstants.ERROR_RGB);
+        italicStyler = new Styler() {
+
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.font = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+            }
+        };
     }
 
     @Override
@@ -67,30 +70,7 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
     public void update(ViewerCell cell) {
         if (cell.getElement() instanceof Connector) {
             Connector connector = (Connector) cell.getElement();
-            ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),
-                    connector.getDefinitionVersion());
-            if (def == null) {
-                def = connectorDefStore.getDefinition(connector.getDefinitionId(), connector.getDefinitionVersion());
-            }
-            StyledString styledString = new StyledString();
-
-            styledString.append(getText(connector), null);
-            styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
-            String connectorType = connector.getDefinitionId() + " (" + connector.getDefinitionVersion() + ")";
-            styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
-            EObject parent = connector.eContainer();
-            if (!(parent instanceof Expression && connector.getEvent() != null && !connector.getEvent().isEmpty())) {
-                styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
-                styledString.append(connector.getEvent(), StyledString.COUNTER_STYLER);
-            }
-            if (def == null) {
-                connectorDefStore.getDefinitions().stream()
-                        .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))
-                        .findFirst()
-                        .ifPresentOrElse(updatableConnectorStyle(styledString),
-                                definitionNotFountStyle(connector.getDefinitionId(), connector.getDefinitionVersion(),
-                                        styledString));
-            }
+            StyledString styledString = getStyledString(connector);
 
             cell.setText(styledString.getString());
             cell.setImage(getImage(connector));
@@ -104,11 +84,11 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
 
                 @Override
                 public void applyStyles(TextStyle textStyle) {
-                    textStyle.foreground = errorColor ;
+                    textStyle.foreground = errorColor;
                 }
             });
             styledString.append(" ");
-            styledString.append(Messages.connectorDefinitionUpdateRequired);
+            styledString.append(Messages.definitionUpdateRequired, italicStyler);
         };
     }
 
@@ -119,31 +99,55 @@ public class StyledConnectorLabelProvider extends StyledCellLabelProvider implem
                 @Override
                 public void applyStyles(TextStyle textStyle) {
                     textStyle.strikeout = true;
-                    textStyle.foreground = errorColor ;
+                    textStyle.foreground = errorColor;
                 }
             });
+
             styledString.append(" ");
-            styledString.append(NLS.bind(Messages.connectorDefinitionNotFound, definitionId + " (" + version + ")"));
+            styledString.append(NLS.bind(Messages.definitionNotFound, definitionId + " (" + version + ")"), italicStyler);
         };
     }
 
     @Override
     public Image getImage(Object element) {
         if (element instanceof Connector) {
-            ConnectorDefinition def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),
+            ConnectorDefinition def = definitionStore.getDefinition(((Connector) element).getDefinitionId(),
                     ((Connector) element).getDefinitionVersion());
-            return resourceProvider.getDefinitionIcon(def);
+            return definitionStore.getResourceProvider().getDefinitionIcon(def);
         }
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
     @Override
     public String getText(Object element) {
         return ((Connector) element).getName();
+    }
+
+    public StyledString getStyledString(Connector connector) {
+        ConnectorDefinition def = definitionStore.getDefinition(connector.getDefinitionId(),
+                connector.getDefinitionVersion());
+        if (def == null) {
+            def = definitionStore.getDefinition(connector.getDefinitionId(), connector.getDefinitionVersion());
+        }
+        StyledString styledString = new StyledString();
+
+        styledString.append(getText(connector), null);
+        styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
+        String connectorType = connector.getDefinitionId() + " (" + connector.getDefinitionVersion() + ")";
+        styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
+        EObject parent = connector.eContainer();
+        if (!(parent instanceof Expression) && connector.getEvent() != null && !connector.getEvent().isEmpty()) {
+            styledString.append(" -- ", StyledString.QUALIFIER_STYLER);
+            styledString.append(connector.getEvent(), StyledString.COUNTER_STYLER);
+        }
+        if (def == null) {
+            definitionStore.getDefinitions().stream()
+                    .filter(definition -> Objects.equals(definition.getId(), connector.getDefinitionId()))
+                    .findFirst()
+                    .ifPresentOrElse(updatableConnectorStyle(styledString),
+                            definitionNotFountStyle(connector.getDefinitionId(), connector.getDefinitionVersion(),
+                                    styledString));
+        }
+        return styledString;
     }
 }
