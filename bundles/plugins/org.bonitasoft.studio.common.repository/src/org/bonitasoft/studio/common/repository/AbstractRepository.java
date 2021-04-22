@@ -42,6 +42,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
+import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -269,7 +270,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
         enableBuild();
         for (IBonitaProjectListener listener : getProjectListeners()) {
-            listener.projectOpened(this,monitor);
+            listener.projectOpened(this, monitor);
         }
 
         if (migrationEnabled()) {
@@ -340,6 +341,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         this.enableOpenIntroListener = false;
     }
 
+    @Override
     public boolean closeAllEditors() {
         disableOpenIntroListener();
         final AtomicBoolean allEditorClosed = new AtomicBoolean(true);
@@ -759,6 +761,22 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         Assert.isNotNull(project);
         monitor.beginTask(String.format(Messages.migratingRepository, getName()), IProgressMonitor.UNKNOWN);
 
+        IFile groovyPrefs = getProject().getFile(".settings/org.eclipse.jdt.groovy.core.prefs");
+        if (groovyPrefs.exists()) {
+            groovyPrefs.delete(true, monitor);
+        }
+        IFile jdtPrefs = getProject().getFile(".settings/org.eclipse.jdt.core.prefs");
+        if (jdtPrefs.exists()) {
+            jdtPrefs.delete(true, monitor);
+        }
+        if (!project.getFile(IMavenConstants.POM_FILE_NAME).exists()) {
+            var metadata = ProjectMetadata.defaultMetadata();
+            metadata.setName(project.getName());
+            metadata.setArtifactId(ProjectMetadata.toArtifactId(project.getName()));
+            MavenProjectModelBuilder mavenProjectBuilder = CreateBonitaProjectOperation.newProjectBuilder(metadata);
+            CreateBonitaProjectOperation.createDefaultPomFile(project, mavenProjectBuilder);
+        }
+
         for (final IRepositoryStore<?> store : getAllStores()) {
             store.createRepositoryStore(this);
             store.migrate(monitor);
@@ -903,8 +921,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     public List<ProcessModelTransformation> getProcessModelTransformations() {
         return PROCESS_MODEL_TRANSFORMATIONS;
     }
-    
-    private List<IBonitaProjectListener> getProjectListeners(){
+
+    private List<IBonitaProjectListener> getProjectListeners() {
         return Collections.unmodifiableList(projectListeners);
     }
 
