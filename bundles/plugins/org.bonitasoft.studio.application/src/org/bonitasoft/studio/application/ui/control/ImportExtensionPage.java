@@ -47,6 +47,7 @@ import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -102,9 +103,7 @@ public class ImportExtensionPage implements ControlSupplier {
     private IWizardContainer wizardContainer;
     private IObservableValue<Dependency> dependencyObservable;
     private IObservableValue<Boolean> editableDependencyObservable;
-    private IObservableValue<Boolean> visibleDependencyObservable;
     private IObservableValue<DependencyLookup> dependencyLookupObservable;
-    private IObservableValue<String> filePathObserveValue;
     private DependencyLookup dependencyLookup;
     private Model mavenModel;
     private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
@@ -228,10 +227,10 @@ public class ImportExtensionPage implements ControlSupplier {
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        filePathObserveValue = PojoProperties
+        var filePathObserveValue = PojoProperties
                 .value("filePath", String.class)
                 .observe(this);
-        filePathObserveValue.addValueChangeListener(this::analyzeFile);
+        filePathObserveValue.addValueChangeListener(e -> analyzeFile(e, dbc));
         filePathText = new TextWidget.Builder()
                 .withLabel(Messages.file)
                 .grabHorizontalSpace()
@@ -273,7 +272,7 @@ public class ImportExtensionPage implements ControlSupplier {
         return fd.open();
     }
 
-    private void analyzeFile(ValueChangeEvent<? extends String> event) {
+    private void analyzeFile(ValueChangeEvent<? extends String> event, DataBindingContext dbc) {
         String path = event.diff.getNewValue();
         if (path != null) {
             File file = new File(path);
@@ -309,6 +308,7 @@ public class ImportExtensionPage implements ControlSupplier {
                             : Messages.cannotResolveDependencyInstalledLocally;
                     filePathText.setMessage(message, image);
                     editableDependencyObservable.setValue(dependencyLookup.getStatus() != Status.FOUND);
+                    dbc.getBindings().forEach(Binding::validateTargetToModel);
                 } catch (Exception e) {
                     BonitaStudioLog.error(e);
                 }
@@ -325,7 +325,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .create());
 
         editableDependencyObservable = new WritableValue<>(true, Boolean.class);
-        visibleDependencyObservable = new ComputedValue<>() {
+        var visibleDependencyObservable = new ComputedValue<Boolean>() {
 
             @Override
             protected Boolean calculate() {

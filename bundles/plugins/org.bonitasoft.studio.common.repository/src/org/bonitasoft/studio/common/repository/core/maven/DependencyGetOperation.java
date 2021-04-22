@@ -15,21 +15,27 @@
 package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.Maven;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.execution.BuildSuccess;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -41,7 +47,9 @@ import org.eclipse.m2e.core.embedder.IMavenExecutionContext;
 
 public class DependencyGetOperation implements IRunnableWithProgress {
 
+    private static final String INTERNAL_REPOSITORY = "internal-repository";
     static final String MAVEN_CENTRAL_URL = "https://repo.maven.apache.org/maven2";
+
 
     private DependencyLookup result;
     private List<String> repositories = new ArrayList<>();
@@ -50,6 +58,14 @@ public class DependencyGetOperation implements IRunnableWithProgress {
 
     public DependencyGetOperation(GAV gav) {
         this.gav = gav;
+    }
+
+    /**
+     * We use an internal repository to resolve remote dependencies in order to not mess with the user local repository
+     */
+    private static Path internalRepositoryPath() {
+        IPath stateLocation = CommonRepositoryPlugin.getDefault().getStateLocation();
+        return stateLocation.toFile().toPath().resolve(INTERNAL_REPOSITORY);
     }
 
     public DependencyGetOperation addRemoteRespository(String repositoryUrl) {
@@ -62,11 +78,11 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         });
         return this;
     }
-    
+
     public GAV getGav() {
         return gav;
     }
-    
+
     public List<String> getRemoteRepositories() {
         return repositories;
     }
@@ -78,7 +94,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         result = runGetDependency();
     }
 
-    private DependencyLookup runGetDependency() throws InvocationTargetException {
+    private DependencyLookup runGetDependency() {
         try {
             runDependencyPurgePlugin();
             for (String repository : repositories) {
@@ -100,9 +116,14 @@ public class DependencyGetOperation implements IRunnableWithProgress {
     private MavenExecutionResult runDependencyPurgePlugin() throws CoreException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
+        ArtifactRepository internalRepository = internalRepository();
+        if(internalRepository != null) {
+            request.setLocalRepository(internalRepository);
+        }
         request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:purge-local-repository"));
         Properties userProperties = new Properties();
-        userProperties.setProperty("manualInclude",  String.format("%s:%s:%s", gav.getGroupId(), gav.getArtifactId(), gav.getVersion()));
+        userProperties.setProperty("manualInclude",
+                String.format("%s:%s:%s", gav.getGroupId(), gav.getArtifactId(), gav.getVersion()));
         userProperties.setProperty("actTransitively", "false");
         request.setUserProperties(userProperties);
         return context.execute(new ICallable<MavenExecutionResult>() {
@@ -114,12 +135,34 @@ public class DependencyGetOperation implements IRunnableWithProgress {
             }
         }, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
-    
+
+    private ArtifactRepository internalRepository() {
+        try {
+            ArtifactRepository internalRepository = maven().createArtifactRepository(INTERNAL_REPOSITORY,
+                    internalRepositoryPath().toUri().toURL().toString());
+            if (!INTERNAL_REPOSITORY.equals(internalRepository.getId())) { // Check if the repository is mirrored 
+                internalRepository = internalRepository.getMirroredRepositories().stream()
+                        .filter(repo -> INTERNAL_REPOSITORY.equals(repo.getId()))
+                        .findFirst()
+                        .orElseThrow();
+            }
+            return internalRepository;
+        } catch (MalformedURLException | CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+
     private MavenExecutionResult runDependencyGetPlugin(String remoteRepo) throws CoreException {
-        final IMavenExecutionContext context = maven().createExecutionContext();
+        IMaven maven = maven();
+        final IMavenExecutionContext context = maven.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
+        ArtifactRepository internalRepository = internalRepository();
+        if(internalRepository != null) {
+            request.setLocalRepository(internalRepository);
+        }
         request.setUpdateSnapshots(true);
-        request.setGoals(List.of("dependency:get"));
+        request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get"));
         request.getRemoteRepositories().forEach(r -> {
             // Force remote update
             r.getReleases().setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS);
@@ -144,7 +187,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
             @Override
             public MavenExecutionResult call(final IMavenExecutionContext context, final IProgressMonitor innerMonitor)
                     throws CoreException {
-                return maven().lookup(Maven.class).execute(request);
+                return maven.lookup(Maven.class).execute(request);
             }
         }, AbstractRepository.NULL_PROGRESS_MONITOR);
     }
