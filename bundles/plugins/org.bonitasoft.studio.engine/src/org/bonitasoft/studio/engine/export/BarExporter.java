@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceCo
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.contribution.AdditionalResourcesBARResourcesProvider;
 import org.bonitasoft.studio.engine.export.builder.RCPEngineDefintionBuilderProvider;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
@@ -107,7 +109,11 @@ public class BarExporter {
                 .setActorMapping(getActorMapping(configuration));
 
         MultiStatus resourceConfigurationStatus = new MultiStatus(EnginePlugin.PLUGIN_ID, 0, null, null);
-        for (final BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
+
+        List<BARResourcesProvider> sortedProviders = getBARResourcesProvider().stream()
+                .sorted((r1, r2) -> r1 instanceof AdditionalResourcesBARResourcesProvider ? -1 : 1)
+                .collect(Collectors.toList());
+        for (final BARResourcesProvider resourceProvider : sortedProviders) {
             try {
                 resourceConfigurationStatus
                         .addAll(resourceProvider.addResourcesForConfiguration(builder, process, configuration));

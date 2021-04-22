@@ -284,6 +284,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     protected Set<DependencyLookup> doMigrateToMavenDependencies(IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException, CoreException {
+
         Set<String> usedDependencies = dependencyUsageAnalysis(monitor);
         Set<String> usedDefinitions = definitionUsageAnalysis(monitor);
         // Automatic dependency lookup
@@ -359,8 +360,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 
     public Optional<DependencyFileStore> findDependencyByName(String jarName) {
         return getChildren().stream()
-                .filter(dep-> Objects.equals(jarName, dep.getName()))
+                .filter(dep -> Objects.equals(jarName, dep.getName()))
                 .findFirst();
     }
-    
+
 }

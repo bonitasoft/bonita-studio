@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 
 public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
@@ -60,7 +59,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
         project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
         MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
-        createDefaultPomFile(project, mavenProjectBuilder, monitor);
+        createDefaultPomFile(project, mavenProjectBuilder);
         project.setDescription(
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
@@ -68,7 +67,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                         .havingNatures(natures)
                         .havingBuilders(builders)
                         .build(),
-                        AbstractRepository.NULL_PROGRESS_MONITOR);
+                AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
@@ -83,8 +82,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     }
 
     public static void createDefaultPomFile(IProject project,
-            MavenProjectModelBuilder mavenProjectBuilder,
-            IProgressMonitor monitor) throws CoreException {
+            MavenProjectModelBuilder mavenProjectBuilder) throws CoreException {
         MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
         IFile pomFile = project.getFile("pom.xml");
         if (pomFile.exists()) {
