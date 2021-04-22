@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 import javax.inject.Inject;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
@@ -28,8 +29,9 @@ public class ConnectorOutSection extends ConnectorSection {
 
     @Inject
     public ConnectorOutSection(ConnectorConfigurationMigratorFactory migrationFactory,
-            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter) {
-        super(migrationFactory, configurationToDefinitionConverter);
+            ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter,
+            RepositoryAccessor repositoryAccessor) {
+        super(migrationFactory, configurationToDefinitionConverter, repositoryAccessor);
     }
 
     @Override

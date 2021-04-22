@@ -19,11 +19,11 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationToConnectorDefinitionConverter;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
 import org.bonitasoft.studio.swt.rules.RealmWithDisplay;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,27 +39,23 @@ public class ConnectorOutSectionTest {
     private ConnectorConfigurationMigratorFactory connectorConfigurationFactory;
     @Mock
     private ConnectorConfigurationToConnectorDefinitionConverter configurationToDefinitionConverter;
-
-    @Before
-    public void setup() {
-
-    }
+    @Mock
+    private RepositoryAccessor repositoryAccessor;
 
     @Test
     public void should_setConnectorEvent_when_creating_aConnetorWizard() {
         final ConnectorOutSection section = new ConnectorOutSection(connectorConfigurationFactory,
-                configurationToDefinitionConverter);
+                configurationToDefinitionConverter, repositoryAccessor);
 
         final ConnectorWizard wizard = section.createAddConnectorWizard();
         assertThat(wizard.getWorkingCopyConnector().getEvent()).isEqualTo(
                 ConnectorEvent.ON_FINISH.name());
-
     }
 
     @Test
     public void should_return_OnFinish_ConnectorEventFilter() {
         final ConnectorOutSection section = new ConnectorOutSection(connectorConfigurationFactory,
-                configurationToDefinitionConverter);
+                configurationToDefinitionConverter, repositoryAccessor);
 
         assertThat(section.getViewerFilter()).isInstanceOf(
                 ConnectorEventFilter.class);
