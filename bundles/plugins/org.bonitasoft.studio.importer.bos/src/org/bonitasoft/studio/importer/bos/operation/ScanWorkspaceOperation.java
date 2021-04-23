@@ -104,7 +104,8 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
 
             /*
              * (non-Javadoc)
-             * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
+             * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object,
+             * java.nio.file.attribute.BasicFileAttributes)
              */
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -137,9 +138,8 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         final String[] scannedRepo = text.replace("$SCAN_PROGRESS_", "").split(":");
         final String repoName = scannedRepo[0];
         final String repoVersion = scannedRepo[1];
-        final String repoEdition = scannedRepo[2].trim();
-        final String connected = scannedRepo[3].trim();
-        final ImportRepositoryModel repositoryModel = new ImportRepositoryModel(repoName, repoVersion, repoEdition);
+        final String connected = scannedRepo[2].trim();
+        final ImportRepositoryModel repositoryModel = new ImportRepositoryModel(repoName, repoVersion);
         final MultiStatus repoStatus = new MultiStatus(BosArchiveImporterPlugin.PLUGIN_ID, 0, "", null);
         if ("Shared".equals(connected)) {
             repoStatus.add(ValidationStatus.error(String.format(Messages.projectConnectorToVCS, repoName)));
@@ -147,10 +147,6 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         if (!ProductVersion.canBeImported(repoVersion)) {
             repoStatus.add(ValidationStatus
                     .error(String.format(Messages.cannotImportWorkspaceWithVersion, repoName, repoVersion)));
-        }
-        final IStatus editionValid = isEditionValid(repoName, repoEdition);
-        if (!editionValid.isOK()) {
-            repoStatus.add(editionValid);
         }
 
         if (repoStatus.getChildren().length == 0) {
@@ -165,14 +161,6 @@ public class ScanWorkspaceOperation implements IRunnableWithProgress {
         final IProject project = repository.getProject().getWorkspace().getRoot().getProject(repositoryModel.getName());
         return project.exists() ? String.format(Messages.validRepositoryOverwritten, repositoryModel.getName())
                 : String.format(Messages.validRepository, repositoryModel.getName());
-    }
-
-    protected IStatus isEditionValid(final String repoName, final String repoEdition) {
-        if (!"Community".equals(repoEdition)) {
-            return ValidationStatus
-                    .error(String.format(Messages.cannotImportWorkspaceWithEdition, repoName, repoEdition));
-        }
-        return ValidationStatus.ok();
     }
 
     protected String applicationId() {

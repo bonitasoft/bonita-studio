@@ -15,38 +15,22 @@
 package org.bonitasoft.studio.importer.bos.operation;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
-import org.bonitasoft.studio.model.parameter.util.ParameterAdapterFactory;
-import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.command.BasicCommandStack;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.ui.PlatformUI;
@@ -83,9 +67,8 @@ public class ImportWorkspaceApplication implements IApplication {
                     .map(repositoryAccessor::getRepository)
                     .forEach(repository -> {
                         System.out.println(
-                                String.format("$SCAN_PROGRESS_%s:%s:%s:%s", repository.getName(),
-                                        repository.getVersion(),
-                                        findEdition(repository), connected(repository)));
+                                String.format("$SCAN_PROGRESS_%s:%s:%s", repository.getName(),
+                                        repository.getVersion(), connected(repository)));
                         export
                                 .map(value -> value.split("=")[1])
                                 .map(repositories -> repositories.split(":"))
@@ -120,40 +103,6 @@ public class ImportWorkspaceApplication implements IApplication {
                 repository.close();
             }
         }
-    }
-
-    private String findEdition(AbstractRepository repository) {
-        File repoDir = repository.getProject().getLocation().toFile();
-        File fragRepo = new File(repoDir, WebFragmentRepositoryStore.WEB_FRAGMENT_REPOSITORY_NAME);
-        if (fragRepo.listFiles(f -> !f.getName().startsWith(".") && f.isDirectory()).length > 0) {
-            return "Subscription";
-        }
-        File diagramRepo = new File(repoDir, "diagrams");
-        File[] diagrams = diagramRepo.listFiles(f -> !f.getName().startsWith(".") && f.isFile());
-        if (diagrams.length > 0
-                && isSPDiagram(diagrams[0])) {
-            return "Subscription";
-        }
-        return "Community";
-    }
-
-    private boolean isSPDiagram(File file) {
-        ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
-                ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
-        adapterFactory.addAdapterFactory(new ParameterAdapterFactory());
-        adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
-        adapterFactory
-                .addAdapterFactory(new ResourceItemProviderAdapterFactory());
-        adapterFactory
-                .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,
-                new BasicCommandStack(), new HashMap<Resource, Boolean>());
-        URI fileURI = URI.createFileURI(file.getAbsolutePath());
-        editingDomain.getResourceSet().getLoadOptions().put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-        Resource resource = editingDomain.getResourceSet().getResource(fileURI, true);
-        MainProcess process = (MainProcess) resource.getContents().get(0);
-        return process.getConfigId().toString().contains("sp");
     }
 
     private String connected(AbstractRepository repository) {
