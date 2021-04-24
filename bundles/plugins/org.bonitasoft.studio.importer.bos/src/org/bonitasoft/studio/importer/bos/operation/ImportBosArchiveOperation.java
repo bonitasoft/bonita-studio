@@ -59,11 +59,11 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.importer.bos.BosArchiveImporterPlugin;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
+import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.ArchiveInputStreamSupplier;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.model.ImportFileStoreModel;
-import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.bonitasoft.studio.importer.bos.model.ImportableUnit;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
@@ -317,10 +317,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private void doImport(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
         monitor.beginTask(Messages.importBosArchive,
-                (int) importArchiveModel.getStores().stream().flatMap(ImportStoreModel::importableUnits).count());
+                (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
                 .sorted(srcStoresFirst())
-                .flatMap(ImportStoreModel::importableUnits)
+                .flatMap(AbstractFolderModel::importableUnits)
                 .forEach(unit -> {
                     monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
                     importUnit(unit, importArchiveModel.getBosArchive(), monitor);
@@ -329,7 +329,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         migrateUID(monitor);
     }
 
-    private Comparator<? super ImportStoreModel> srcStoresFirst() {
+    private Comparator<? super AbstractFolderModel> srcStoresFirst() {
         return (f1, f2) -> {
             if (f1.getFolderName().startsWith("src")) {
                 return -1;

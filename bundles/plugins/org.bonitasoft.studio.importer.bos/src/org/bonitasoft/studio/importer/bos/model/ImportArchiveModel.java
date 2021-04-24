@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.Status;
 
 public class ImportArchiveModel {
 
-    private final List<ImportStoreModel> stores = new ArrayList<>();
+    private final List<AbstractFolderModel> stores = new ArrayList<>();
     private final BosArchive bosArchive;
     private IStatus validationStatus = Status.OK_STATUS;
 
@@ -30,7 +30,7 @@ public class ImportArchiveModel {
         return ValidationStatus.info(message.toString());
     }
 
-    public ImportStoreModel addStore(ImportStoreModel store) {
+    public AbstractFolderModel addStore(AbstractFolderModel store) {
         return stores.stream()
                 .filter(s -> Objects.equals(s.getPath(), store.getPath()))
                 .findFirst()
@@ -44,17 +44,17 @@ public class ImportArchiveModel {
         stores.remove(store);
     }
 
-    public List<ImportStoreModel> getStores() {
+    public List<AbstractFolderModel> getStores() {
         Collections.sort(stores, (f1, f2) -> f1.getFolderName().compareTo(f2.getFolderName()));
         return Collections.unmodifiableList(stores);
     }
 
     public boolean isConflicting() {
-        return stores.stream().anyMatch(ImportStoreModel::isConflicting);
+        return stores.stream().anyMatch(AbstractFolderModel::isConflicting);
     }
 
     public boolean sameContentAsTarget() {
-        return stores.stream().allMatch(ImportStoreModel::hasSameContent);
+        return stores.stream().allMatch(AbstractFolderModel::hasSameContent);
     }
 
     public ConflictStatus getStatus() {
@@ -74,7 +74,7 @@ public class ImportArchiveModel {
      * set all the conflict status to none
      */
     public void resetStatus() {
-        stores.stream().forEach(ImportStoreModel::resetStatus);
+        stores.stream().forEach(AbstractFolderModel::resetStatus);
     }
 
     public IStatus getValidationStatus() {

@@ -56,7 +56,7 @@ public class UpdateValueStrategyFactory {
         return this;
     }
 
-    public UpdateValueStrategy create() {
+    public <S,T> UpdateValueStrategy<S,T> create() {
         return updateValueStrategy;
     }
 }
