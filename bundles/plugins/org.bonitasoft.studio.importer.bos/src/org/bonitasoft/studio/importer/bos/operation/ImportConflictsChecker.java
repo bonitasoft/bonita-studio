@@ -28,6 +28,7 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFileModel;
 import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
+import org.bonitasoft.studio.importer.bos.model.SourceFolderStoreModel;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class ImportConflictsChecker {
@@ -73,6 +74,16 @@ public class ImportConflictsChecker {
                         compareFiles(bosArchive, files, importedStore.getFiles());
                     }
                 });
+        
+        if(importedStore instanceof SourceFolderStoreModel) {
+            final File file = currentRepository.getProject().getFolder("src").getLocation().toFile();
+            File[] files = file.listFiles();
+            if(files == null) {
+                files = new File[0];
+            }
+            compareFolders(bosArchive, files, importedStore.getFolders());
+            compareFiles(bosArchive, files, importedStore.getFiles());
+        }
     }
 
     // We can't use checksum to compare .properties file because there is always a comment with the creation date at the top of the .properties file -> always conflicting. 

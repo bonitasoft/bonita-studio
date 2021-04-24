@@ -106,9 +106,11 @@ public class BosArchive {
         segments.stream()
                 .filter(segment -> repository.getRepositoryStoreByName(segment).isPresent()
                         || isLegacyFormRepo(segment)
-                        || "README.adoc".equals(segment))
+                        || "README.adoc".equals(segment)
+                        || "src".equals(segment))
                 .forEach(segment -> handleSegment(archiveModel, segment, segments, repository, resourcesToOpen));
     }
+
 
     private boolean isLegacyFormRepo(String segment) {
         return AbstractRepository.LEGACY_REPOSITORIES.contains(segment);
@@ -125,19 +127,29 @@ public class BosArchive {
 
             parseFolder(archiveModel.addStore(store), segments.subList(2, segments.size()), parentSegments,
                     resourcesToOpen,
-                    true, archiveModel);
+                    true, archiveModel,repository);
             if (store.getChildren().length == 0) {
                 archiveModel.removeStore(store);
             }
+        } else if(segments.size() >= 2 && segments.get(1).equals("src")) { 
+            parseFolder(archiveModel.addStore(new SourceFolderStoreModel(Joiner.on('/').join(parentSegments))),
+                    segments.subList(2, segments.size()),
+                    parentSegments,
+                    resourcesToOpen,
+                    true, 
+                    archiveModel,
+                    repository);
         } else if (AbstractRepository.LEGACY_REPOSITORIES.contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
-        } else {
+        } else if(segments.size() == 2){ // Only root files should be added as RootFileModel
             archiveModel.addStore(new RootFileModel(segment, Joiner.on('/').join(parentSegments)));
         }
     }
 
     private void parseFolder(AbstractFolderModel store, List<String> segments, List<String> parentSegments,
-            Set<String> resourcesToOpen, boolean directStoreChild, ImportArchiveModel archiveModel) {
+            Set<String> resourcesToOpen, boolean directStoreChild, 
+            ImportArchiveModel archiveModel,
+            IRepository repository) {
         if (segments.size() == 1
                 && directStoreChild) { // File
             String filePath = Joiner.on('/').join(concat(parentSegments, segments));
@@ -170,8 +182,7 @@ public class BosArchive {
                 store.addFile(file);
             }
         } else if (segments.size() == 1 && !directStoreChild) {
-            final ImportFileModel file = new ImportFileModel(Joiner.on('/').join(concat(parentSegments, segments)),
-                    store);
+            final ImportFileModel file = createFileModel(store, segments, parentSegments, repository);
             if (shouldReadNameInJSON(store, file)) {
                 final String name = extractNameFromJSON(file);
                 file.setDisplayName(String.format("%s (%s)", name, file.getFileName()));
@@ -193,25 +204,40 @@ public class BosArchive {
                     Joiner.on('/').join(folderParentSegments), store);
             parseFolder(store.addFolder(folder), segments.subList(1, segments.size()),
                     Lists.newArrayList(folderParentSegments),
-                    resourcesToOpen, false, archiveModel);
+                    resourcesToOpen, false, archiveModel, repository);
         } else if (segments.size() > 1 && !directStoreChild) {
             final Iterable<String> folderParentSegments = concat(parentSegments, segments.subList(0, 1));
             final ImportFolderModel folder = new ImportFolderModel(
                     Joiner.on('/').join(concat(parentSegments, segments.subList(0, 1))), store);
             parseFolder(store.addFolder(folder), segments.subList(1, segments.size()),
                     Lists.newArrayList(folderParentSegments),
-                    resourcesToOpen, false, archiveModel);
+                    resourcesToOpen, false, archiveModel, repository);
         }
     }
 
-    private ImportFileStoreModel createImportModelFileStore(AbstractFolderModel parentStore, String fileName,
+    public ImportFileModel createFileModel(AbstractFolderModel parentStore, List<String> segments,
+            List<String> parentSegments, IRepository repository) {
+        String filePath = Joiner.on('/').join(concat(parentSegments, segments));
+        if(isResourceFile(filePath)) {
+            return new ImportResourceFileModel(filePath, parentStore, repository.getProject());
+        }
+        return new ImportFileModel(filePath,  parentStore);
+    }
+
+    private ImportFileStoreModel createImportModelFileStore(AbstractFolderModel parentStore,
+            String fileName,
             String filePath) {
         Optional<IRepositoryFileStore> fileStore = parentStore.getParentRepositoryStore()
                 .map(repositoryStore -> repositoryStore.getChild(fileName, true));
         if (fileStore.isPresent() && (fileStore.get() instanceof ISmartImportable)) {
             return new SmartImportFileStoreModel(this, filePath, parentStore, (ISmartImportable) fileStore.get());
-        }
+        } 
         return new ImportFileStoreModel(filePath, parentStore);
+    }
+
+    private boolean isResourceFile(String filePath) {
+        String[] segments = filePath.split("/");
+        return segments.length > 1 && segments[1].equals("src");
     }
 
     public IStatus validateFile(AbstractFileModel file, IRepositoryStore<IRepositoryFileStore> repositoryStore) {
@@ -287,7 +313,7 @@ public class BosArchive {
 
     private IStatus validateArchiveCompatibility() throws IOException {
         Model mavenProject = getMavenProject();
-        if(mavenProject != null && ProjectDefaultConfiguration.getBonitaVersion(mavenProject) != null) {
+        if (mavenProject != null && ProjectDefaultConfiguration.getBonitaVersion(mavenProject) != null) {
             bonitaVersion = ProjectDefaultConfiguration.getBonitaVersion(mavenProject);
         } else {
             final Properties manifest = readManifest();

@@ -322,6 +322,10 @@ public class ExportRepositoryWizardPage extends WizardPage {
             if (depStore.exists()) {
                 resources.add(depStore);
             }
+            IFolder resourcesFolder = project.getFolder("src/main/resources");
+            if(resourcesFolder.exists()) {
+                resources.add(resourcesFolder);
+            }
         }
         return resources;
     }

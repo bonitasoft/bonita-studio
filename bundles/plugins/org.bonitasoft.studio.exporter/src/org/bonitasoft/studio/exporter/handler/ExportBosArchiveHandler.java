@@ -89,20 +89,17 @@ public class ExportBosArchiveHandler {
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
-
-            if (selectedFiles != null) {
-                final ExportRepositoryWizard wizard = new ExportRepositoryWizard(
-                        RepositoryManager.getInstance().getCurrentRepository()
-                                .getAllExportableStores(),
-                        true, selectedFiles, 
-                        getDefaultName(repositoryAccessor),
-                        Messages.ExportButtonLabel);
-                final WizardDialog dialog = new WizardDialog(
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        wizard);
-                dialog.setTitle(Messages.ExportButtonLabel);
-                dialog.open();
-            }
+            final ExportRepositoryWizard wizard = new ExportRepositoryWizard(
+                    RepositoryManager.getInstance().getCurrentRepository()
+                            .getAllExportableStores(),
+                    true, selectedFiles,
+                    getDefaultName(repositoryAccessor),
+                    Messages.ExportButtonLabel);
+            final WizardDialog dialog = new WizardDialog(
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    wizard);
+            dialog.setTitle(Messages.ExportButtonLabel);
+            dialog.open();
         }
     }
 
@@ -162,11 +159,9 @@ public class ExportBosArchiveHandler {
             return null;
         }
         final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
-        if (isADiagram) {
+        if (editor instanceof DiagramEditor) {
             final EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-            final MainProcess mainProc = ModelHelper.getMainProcess(root);
-            return mainProc;
+            return ModelHelper.getMainProcess(root);
         }
 
         return null;

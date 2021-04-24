@@ -2,6 +2,7 @@ package org.bonitasoft.studio.importer.bos.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.model.ImportAction;
@@ -59,6 +60,11 @@ public class ImportFolderFileStoreModel extends AbstractFolderModel implements I
     @Override
     public String getName() {
         return getText();
+    }
+
+    @Override
+    public Stream<ImportableUnit> importableUnits() {
+        return Stream.empty();
     }
 
 }

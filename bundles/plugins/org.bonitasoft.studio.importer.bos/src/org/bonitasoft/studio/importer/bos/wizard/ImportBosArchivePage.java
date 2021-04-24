@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2017 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel � 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2021 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.importer.bos.wizard;
 
 import static org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory.convertUpdateValueStrategy;
@@ -17,10 +23,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -30,6 +38,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
 import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.importer.bos.handler.SwitchRepositoryStrategy;
@@ -42,8 +51,8 @@ import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.validator.ValidatorWrapper;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
@@ -69,8 +78,6 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -84,7 +91,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     private static final String BOS_EXTENSION = "*.bos";
 
-    private Composite repositorySection;
     protected String filePath;
 
     protected ImportArchiveModel archiveModel;
@@ -144,30 +150,26 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     @Override
     public void pageChanged(PageChangedEvent event) {
         IWizardPage selectedPage = (IWizardPage) event.getSelectedPage();
-        if (Messages.importBosArchiveTitle.equals(selectedPage.getTitle())) {
-            if (filePath != null) {
-                Display.getDefault().asyncExec(() -> {
-                    archiveModel = parsedModels.computeIfAbsent(filePath, key -> {
-                        File myFile = new File(key);
-                        if (!myFile.exists()) {
-                            try {
-                                myFile = fetchArchive(key);
-                            } catch (FetchRemoteBosArchiveException e) {
-                                fileLocationText.getValueBinding().getValidationStatus().setValue(ValidationStatus
-                                        .error(String.format(Messages.cannotImportRemoteArchive,
-                                                e.getLocalizedMessage())));
-                                return null;
-                            }
-                        }
-                        return parseArchive(myFile.getAbsolutePath());
-                    });
-                });
-            }
+        if (Messages.importBosArchiveTitle.equals(selectedPage.getTitle()) && filePath != null) {
+            Display.getDefault().asyncExec(() -> archiveModel = parsedModels.computeIfAbsent(filePath, key -> {
+                File myFile = new File(key);
+                if (!myFile.exists()) {
+                    try {
+                        myFile = fetchArchive(key);
+                    } catch (FetchRemoteBosArchiveException e) {
+                        fileLocationText.getValueBinding().getValidationStatus().setValue(ValidationStatus
+                                .error(String.format(Messages.cannotImportRemoteArchive,
+                                        e.getLocalizedMessage())));
+                        return null;
+                    }
+                }
+                return parseArchive(myFile.getAbsolutePath());
+            }));
         }
     }
 
     protected void doCreateSwitchRepositoryControl(Composite parent, DataBindingContext ctx) {
-        repositorySection = new Composite(parent, SWT.NONE);
+        var repositorySection = new Composite(parent, SWT.NONE);
         repositorySection.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.WIDGET_BACKGROUND_CLASS);
         repositorySection.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -197,8 +199,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
         ctx.bindValue(PojoProperties.value("topControl", Composite.class).observe(stackLayout),
                 repositoryModeObservable,
-                UpdateStrategyFactory.neverUpdateValueStrategy().create(),
-                UpdateStrategyFactory.updateValueStrategy()
+                neverUpdateValueStrategy().create(),
+                updateValueStrategy()
                         .withConverter(repoModeToCompositeConverter()).create());
     }
 
@@ -342,14 +344,10 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .horizontalSpan(2)
                 .useNativeRender()
                 .createIn(newRepositoryComposite);
-        textArea.getTextControl().addTraverseListener(new TraverseListener() {
-
-            @Override
-            public void keyTraversed(final TraverseEvent event) {
-                if (event.detail == SWT.TRAVERSE_TAB_NEXT
-                        || event.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-                    event.doit = true;
-                }
+        textArea.getTextControl().addTraverseListener(event -> {
+            if (event.detail == SWT.TRAVERSE_TAB_NEXT
+                    || event.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+                event.doit = true;
             }
         });
 
@@ -374,7 +372,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
         final Button existingRepositoryButton = new Button(radioGroup, SWT.RADIO);
         existingRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository);
-        existingRepositoryButton.setEnabled(repositoryAccessor.getAllRepositories().size() > 0);
+        existingRepositoryButton.setEnabled(!repositoryAccessor.getAllRepositories().isEmpty());
         existingRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
         repositoryModeObservable = new SelectObservableValue<>();
@@ -443,9 +441,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
             case NEW:
                 return newProjectNameText.getStatus().isOK()
                         ? name
-                        : name.isEmpty() && archiveModel != null
-                                ? ""
-                                : switchRepositoryStrategy.getTargetRepository();
+                        : switchRepositoryStrategy.getTargetRepository();
             case EXISTING:
             default:
                 return existingTargetRepo;
@@ -502,18 +498,18 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     }
 
     protected void parseArchive(ValueChangeEvent<? extends String> e) {
-        Optional.ofNullable(e.diff.getNewValue()).ifPresent(filePath -> {
-            File myFile = new File(filePath);
+        Optional.ofNullable(e.diff.getNewValue()).ifPresent(arhivePath -> {
+            File myFile = new File(arhivePath);
             if (!myFile.exists()) {
                 try {
-                    myFile = fetchArchive(filePath);
+                    myFile = fetchArchive(arhivePath);
                 } catch (FetchRemoteBosArchiveException ex) {
                     fileLocationText.getValueBinding().getValidationStatus().setValue(ValidationStatus
                             .error(String.format(Messages.cannotImportRemoteArchive, ex.getLocalizedMessage())));
                     return;
                 }
             }
-            archiveModel = parsedModels.computeIfAbsent(myFile.getAbsolutePath(), key -> parseArchive(key));
+            archiveModel = parsedModels.computeIfAbsent(myFile.getAbsolutePath(), this::parseArchive);
         });
     }
 
@@ -562,11 +558,15 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                         selectedFile.getName(),
                         bosArchive.getBonitaVersion()));
         Model mavenProject = bosArchive.getMavenProject();
-        if (mavenProject != null) {
-            projectMetadataObservable.setValue(ProjectMetadata.read(mavenProject));
-        } else {
-            projectMetadataObservable.setValue(ProjectMetadata.fromBosFileName(selectedFile.getName()));
+        ProjectMetadata metadata = mavenProject != null ? ProjectMetadata.read(mavenProject)
+                : ProjectMetadata.fromBosFileName(selectedFile.getName());
+        List<String> existingProjectName = repositoryAccessor.getAllRepositories().stream()
+                .map(IRepository::getName)
+                .collect(Collectors.toList());
+        if (existingProjectName.contains(metadata.getName())) {
+            metadata.setName(StringIncrementer.getNextIncrement(metadata.getName(), existingProjectName));
         }
+        projectMetadataObservable.setValue(metadata);
         newProjectNameText.getValueBinding().validateTargetToModel();
         String newTargetProjectName = projectMetadataObservable.getValue().getName();
         if (repositoryModeObservable.getValue() == RepositoryMode.NEW

@@ -79,5 +79,8 @@ public abstract class AbstractFolderModel extends AbstractImportModel {
         getFolders().stream().forEach(AbstractFolderModel::resetStatus);
         getFiles().stream().forEach(AbstractFileModel::resetStatus);
     }
+    
+    public abstract Stream<ImportableUnit> importableUnits();
+
 
 }

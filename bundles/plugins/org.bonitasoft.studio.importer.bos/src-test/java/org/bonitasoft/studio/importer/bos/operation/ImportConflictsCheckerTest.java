@@ -38,7 +38,6 @@ import org.bonitasoft.studio.importer.bos.model.AbstractFolderModel;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
 import org.bonitasoft.studio.importer.bos.model.BosArchiveTest;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
-import org.bonitasoft.studio.importer.bos.model.ImportStoreModel;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,9 +52,9 @@ public class ImportConflictsCheckerTest {
         final BosArchive bosArchive = newBosArchive(loadFile("/customer_support_2.0.bos"));
 
         final ImportArchiveModel archiveModel = conflictsChecker.checkConflicts(bosArchive, mock(IProgressMonitor.class));
-        final Optional<ImportStoreModel> libStore = archiveModel.getStores().stream()
+        final Optional<AbstractFolderModel> libStore = archiveModel.getStores().stream()
                 .filter(folder -> Objects.equals(folder.getFolderName(), "lib")).findFirst();
-        final Optional<ImportStoreModel> diagramsStore = archiveModel.getStores().stream()
+        final Optional<AbstractFolderModel> diagramsStore = archiveModel.getStores().stream()
                 .filter(folder -> Objects.equals(folder.getFolderName(), "diagrams")).findFirst();
 
         assertThat(isConflicting(libStore)).isFalse();
@@ -81,11 +80,11 @@ public class ImportConflictsCheckerTest {
         verify(importedPropertiesFile).setStatus(ConflictStatus.SAME_CONTENT);
     }
 
-    private boolean isConflicting(Optional<ImportStoreModel> store) throws Exception {
+    private boolean isConflicting(Optional<AbstractFolderModel> store) throws Exception {
         return store.orElseThrow(() -> new Exception("store not found")).isConflicting();
     }
 
-    private AbstractFileModel findFile(Optional<ImportStoreModel> store, String fileName) throws Exception {
+    private AbstractFileModel findFile(Optional<AbstractFolderModel> store, String fileName) throws Exception {
         return store.orElseThrow(() -> new Exception("store not found")).getFiles().stream()
                 .filter(file -> Objects.equals(file.getFileName(), fileName)).findFirst()
                 .orElseThrow(() -> new Exception(fileName + " diagram not found"));

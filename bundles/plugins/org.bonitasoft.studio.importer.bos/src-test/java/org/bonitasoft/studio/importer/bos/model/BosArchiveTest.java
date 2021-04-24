@@ -94,7 +94,7 @@ public class BosArchiveTest {
         assertThat(
                 importArchiveModel.getStores().stream().map(folder -> folder.getFolderName()).collect(Collectors.toList()))
                         .contains("diagrams", "lib", "application_resources");
-        final Optional<ImportStoreModel> diagramsStore = importArchiveModel.getStores().stream()
+        final Optional<AbstractFolderModel> diagramsStore = importArchiveModel.getStores().stream()
                 .filter(folder -> Objects.equals(folder.getFolderName(), "diagrams")).findFirst();
 
         assertThat(diagramsStore.orElseThrow(() -> new Exception("diagram store not found")).getFiles().stream()
@@ -106,7 +106,7 @@ public class BosArchiveTest {
                 .map(file -> file instanceof ImportFileStoreModel).collect(Collectors.toList()))
                         .contains(true, true);
 
-        final Optional<ImportStoreModel> appResources = importArchiveModel.getStores().stream()
+        final Optional<AbstractFolderModel> appResources = importArchiveModel.getStores().stream()
                 .filter(folder -> Objects.equals(folder.getFolderName(), "application_resources")).findFirst();
         assertThat(
                 appResources.orElseThrow(() -> new Exception("application_resources store not found")).getFolders().stream()
