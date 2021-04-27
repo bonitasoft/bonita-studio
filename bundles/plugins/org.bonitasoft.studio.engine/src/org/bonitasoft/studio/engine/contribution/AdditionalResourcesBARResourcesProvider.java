@@ -48,18 +48,21 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
         MultiStatus status = new MultiStatus(EnginePlugin.PLUGIN_ID, 0, null, null);
 
         var resourcesFolder = getProject().getFolder(RESOURCES_FOLDER);
-        var processFolder = resourcesFolder.getFolder(String.format("%s-%s", process.getName(), process.getVersion()));
-        if (processFolder.exists()) {
-            addFolderInBarResources(builder, processFolder.getLocation().toFile(), process, status);
-        }
-        processFolder = resourcesFolder.getFolder(process.getName());
-        if (processFolder.exists()) {
-            addFolderInBarResources(builder, processFolder.getLocation().toFile(), process, status);
-        }
+
         var commonFolder = resourcesFolder.getFolder(COMMON_FOLDER);
         if (commonFolder.exists()) {
             addFolderInBarResources(builder, commonFolder.getLocation().toFile(), process, status);
         }
+
+        var processFolder = resourcesFolder.getFolder(process.getName());
+        if (processFolder.exists()) {
+            addFolderInBarResources(builder, processFolder.getLocation().toFile(), process, status);
+        }
+        processFolder = resourcesFolder.getFolder(String.format("%s-%s", process.getName(), process.getVersion()));
+        if (processFolder.exists()) {
+            addFolderInBarResources(builder, processFolder.getLocation().toFile(), process, status);
+        }
+
         return status;
     }
 
