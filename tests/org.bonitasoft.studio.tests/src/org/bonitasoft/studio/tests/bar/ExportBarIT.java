@@ -107,13 +107,17 @@ public class ExportBarIT {
         Pool pool = ModelHelper.getParentPool(process);
 
         var commonResourcesToCopy = new File(FileLocator.toFileURL(ExportBarIT.class.getResource("/_common")).getFile());
-        var processResourcesToCopy = new File(FileLocator
+        var processResourcesToCopy = new File(
+                FileLocator.toFileURL(ExportBarIT.class.getResource(String.format("/%s", pool.getName()))).getFile());
+        var processVersionResourcesToCopy = new File(FileLocator
                 .toFileURL(ExportBarIT.class.getResource(String.format("/%s-%s", pool.getName(), pool.getVersion())))
                 .getFile());
         var resourcesFolder = repositoryAccessor.getCurrentRepository().getProject().getFolder("src/main/resources/_common");
         PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), commonResourcesToCopy,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
         PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), processResourcesToCopy,
+                AbstractRepository.NULL_PROGRESS_MONITOR);
+        PlatformUtil.copyResource(resourcesFolder.getLocation().toFile(), processVersionResourcesToCopy,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
         repositoryAccessor.getCurrentRepository().getProject().refreshLocal(IResource.DEPTH_INFINITE,
                 AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -141,7 +145,8 @@ public class ExportBarIT {
         assertThat(businessArchive.getResource("resources/customPages/custompage_instantiationForm.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_overviewPage.zip")).isNotEmpty();
         assertThat(businessArchive.getResource("resources/customPages/custompage_stepForm.zip")).isNotEmpty();
-        assertThat(businessArchive.getResource("resources/resource.txt")).isNotEmpty();
-        assertThat(businessArchive.getResource("resources/resource2.txt")).isNotEmpty();
+        assertThat(new String(businessArchive.getResource("resources/resource.txt"))).isEqualTo("processVersion");
+        assertThat(new String(businessArchive.getResource("resources/resource2.txt"))).isEqualTo("Salut");
+        assertThat(new String(businessArchive.getResource("resources/resource3.txt"))).isEqualTo("Hello");
     }
 }
