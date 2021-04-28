@@ -10,7 +10,7 @@
 	<properties>
 		<maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
-		<bonita-project-maven-plugin.version>0.0.1-SNAPSHOT</bonita-project-maven-plugin.version>
+		<bonita-project-maven-plugin.version>0.0.1</bonita-project-maven-plugin.version>
 		<slf4j-api.version>1.7.30</slf4j-api.version>
 		<build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
