@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -34,6 +35,7 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.SearchWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -43,6 +45,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -53,15 +56,19 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * !!! HELLO !!!
@@ -97,7 +104,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private IWizardContainer wizardContainer;
     private Composite mainComposite;
 
-    private Button findButton;
+    private IThemeEngine engine;
+    private Cursor cursorArrow;
+    private Cursor cursorHand;
 
     private String[] extensionTypes;
 
@@ -107,7 +116,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         this.project = project;
         this.extensionTypes = extensionTypes;
     }
-    
+
     public BonitaMarketplacePage(String... extensionTypes) {
         this(null, extensionTypes);
     }
@@ -119,6 +128,10 @@ public class BonitaMarketplacePage implements ControlSupplier {
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         this.wizardContainer = wizardContainer;
+
+        cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
+        engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
 
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15, 10).create());
@@ -158,29 +171,14 @@ public class BonitaMarketplacePage implements ControlSupplier {
             Display.getDefault().asyncExec(() -> {
                 try {
                     wizardContainer.getShell().setDefaultButton(null);
-                    wizardContainer.run(true, false, monitor -> {
-                        initVariables(monitor);
-
-                        int totalWork = newDependencies.size() + dependenciesUpdatable.size();
-                        monitor.beginTask(Messages.fetchingExtensions, totalWork);
-                        dependenciesUpdatable.stream().filter(hasSelectedType()).forEach(dep -> {
-                            Display.getDefault().syncExec(() -> {
-                                createDependencyControl(dependenciesComposite, dep);
-                            });
-                            monitor.worked(1);
-                        });
-                        newDependencies.stream().filter(hasSelectedType()).forEach(dep -> {
-                            Display.getDefault().syncExec(() -> {
-                                createDependencyControl(dependenciesComposite, dep);
-                            });
-                            monitor.worked(1);
-                        });
-                        // TODO what if all provided dependencies are already installed? 
-                        Display.getDefault().asyncExec(() -> layoutDependenciesComposite());
-                        monitor.done();
-                    });
+                    wizardContainer.run(true, false, this::initVariables);
+                    List<BonitaArtifactDependency> filteredDependencies = Stream
+                            .concat(dependenciesUpdatable.stream(), newDependencies.stream()).filter(hasSelectedType())
+                            .collect(Collectors.toList());
+                    filterDependenciesByType(filteredDependencies);
+                    displayFilteredDependencies(filteredDependencies);
                 } catch (InvocationTargetException | InterruptedException e) {
-                    throw new RuntimeException(e);
+                    new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
                 }
             });
         }
@@ -197,7 +195,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
                     : Collections.emptyList();
             splitDependencies();
         } catch (CoreException e) {
-            throw new RuntimeException(e);
+            new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
 
     }
@@ -221,7 +219,10 @@ public class BonitaMarketplacePage implements ControlSupplier {
             combo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
             combo.setItems(extensionTypes);
             typeObservableValue = WidgetProperties.text().observe(combo);
-            typeObservableValue.setValue(extensionTypes[0]);
+            String selectedType = Arrays.asList(extensionTypes).stream()
+                    .filter(type -> Objects.equals(org.bonitasoft.studio.connectors.i18n.Messages.connectorType, type))
+                    .findFirst().orElse(extensionTypes[0]);
+            typeObservableValue.setValue(selectedType);
         } else {
             typeObservableValue = new WritableValue<>(extensionTypes[0], String.class);
         }
@@ -232,19 +233,15 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 .grabHorizontalSpace()
                 .createIn(searchComposite);
 
-        findButton = new Button(searchComposite, SWT.PUSH);
+        var findButton = new Button(searchComposite, SWT.PUSH);
         findButton.setLayoutData(
                 GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, true).create());
         findButton.setText(Messages.find);
         findButton.addListener(SWT.Selection, e -> applySearch());
 
-        searchWidget.addTraverseListener(new TraverseListener() {
-
-            @Override
-            public void keyTraversed(final TraverseEvent event) {
-                if (event.detail == SWT.TRAVERSE_RETURN) {
-                    applySearch();
-                }
+        searchWidget.addTraverseListener(e -> {
+            if (e.detail == SWT.TRAVERSE_RETURN) {
+                applySearch();
             }
         });
     }
@@ -267,15 +264,13 @@ public class BonitaMarketplacePage implements ControlSupplier {
                 wizardContainer.run(true, false, monitor -> {
                     monitor.beginTask(Messages.filteringExtensions, filteredDependencies.size());
                     filteredDependencies.forEach(dep -> {
-                        Display.getDefault().syncExec(() -> {
-                            createDependencyControl(dependenciesComposite, dep);
-                        });
+                        Display.getDefault().syncExec(() -> createDependencyControl(dependenciesComposite, dep));
                         monitor.worked(1);
                     });
                     monitor.done();
                 });
             } catch (InvocationTargetException | InterruptedException e) {
-                throw new RuntimeException(e);
+                new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
         }
         layoutDependenciesComposite();
@@ -331,7 +326,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
         Image icon = dep.getIconImage();
 
         Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
@@ -341,11 +336,17 @@ public class BonitaMarketplacePage implements ControlSupplier {
             separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         }
 
-        Label iconLabel = createLabel(composite, SWT.WRAP);
+        Composite depComposite = new Composite(composite, SWT.NONE);
+        depComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        depComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        depComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
+
+        Label iconLabel = createLabel(depComposite, SWT.WRAP);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults().hint(ICON_SIZE, ICON_SIZE).create());
         iconLabel.setImage(icon);
 
-        Composite contentComposite = new Composite(composite, SWT.NONE);
+        Composite contentComposite = new Composite(depComposite, SWT.NONE);
         contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 10).create());
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         contentComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
@@ -372,9 +373,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
                         .orElse(""));
         boolean updatable = dependenciesUpdatable.contains(dep);
 
-        if (latestCompatibleVersion.isPresent()) {
-            createAddButton(dep, heading, updatable);
-        }
+        Button addButton = latestCompatibleVersion.isPresent()
+                ? createAddButton(dep, heading, updatable)
+                : null;
 
         Label version = createLabel(heading, SWT.WRAP);
         version.setLayoutData(
@@ -391,7 +392,67 @@ public class BonitaMarketplacePage implements ControlSupplier {
         } else if (!latestCompatibleVersion.isPresent()) {
             createIncompatibleComposite(contentComposite);
         }
-        // TODO check definitions versions
+
+        if (addButton != null) {
+            addSelectionListener(depComposite, addButton, dep, updatable);
+            addSelectionListener(contentComposite, addButton, dep, updatable);
+            addSelectionListener(heading, addButton, dep, updatable);
+            addSelectionListener(title, addButton, dep, updatable);
+            addSelectionListener(version, addButton, dep, updatable);
+            addSelectionListener(description, addButton, dep, updatable);
+            addSelectionListener(iconLabel, addButton, dep, updatable);
+        }
+
+        List<Control> hoverableControls = List
+                .of(depComposite, contentComposite, heading, title, version, description, iconLabel, addButton)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        addHoverListener(hoverableControls);
+    }
+
+    private void addHoverListener(List<Control> controls) {
+        controls.forEach(control -> control.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                controls.forEach(ctrl -> {
+                    if (!(ctrl instanceof Button)) {
+                        ctrl.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                                BonitaThemeConstants.WIZARD_HIGHLIGHT_BACKGROUND);
+                        engine.applyStyles(ctrl, false);
+                    }
+                    ctrl.setCursor(cursorArrow);
+                });
+            }
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                controls.forEach(ctrl -> {
+                    if (!(ctrl instanceof Button)) {
+                        ctrl.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                                BonitaThemeConstants.WIZARD_HOVER_BACKGROUND);
+                        engine.applyStyles(ctrl, false);
+                    }
+                    ctrl.setCursor(cursorHand);
+                });
+            }
+        }));
+    }
+
+    private void addSelectionListener(Control control, Button addButton, BonitaArtifactDependency dep,
+            boolean updatable) {
+        control.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                Rectangle bounds = control.getBounds();
+                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                    addButton.setSelection(!addButton.getSelection());
+                    addDependency(dep, addButton.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd);
+                }
+            }
+        });
     }
 
     private void createIncompatibleComposite(Composite parent) {
@@ -441,11 +502,12 @@ public class BonitaMarketplacePage implements ControlSupplier {
         depUpdatableLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.INFO_TEXT_COLOR);
     }
 
-    private void createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
+    private Button createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
         Button button = new Button(parent, SWT.CHECK);
         button.setLayoutData(GridDataFactory.fillDefaults().create());
         button.addListener(SWT.Selection,
                 e -> addDependency(dep, button.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd));
+        return button;
     }
 
     /**
@@ -453,7 +515,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
      * - If the version of the existing dependency is lower than the version of the new dependency, then the new
      * dependency is added to the "updatable dependencies list".
      * - Else it is ignored (we do not offer the possibility to downgrade a dependency).
-     * If a dependency is completly new, then is is added to the "new dependencies list".
+     * If a dependency is completely new, then is is added to the "new dependencies list".
      */
     private void splitDependencies() {
         for (BonitaArtifactDependency dep : dependencies) {
