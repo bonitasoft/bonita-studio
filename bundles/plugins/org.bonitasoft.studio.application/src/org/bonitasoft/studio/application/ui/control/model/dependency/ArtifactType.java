@@ -18,22 +18,24 @@ import org.bonitasoft.studio.common.repository.Messages;
 
 public enum ArtifactType {
 
-        CONNECTOR(Messages.connector), 
-        ACTOR_FILTER(Messages.actorFilter), 
-        THEME( Messages.theme), 
-        PAGE(Messages.page), 
-        FORM(Messages.form), 
-        REST_API(Messages.restApi), 
-        UNKNOWN(Messages.unknown);
+    CONNECTOR(Messages.connector, 0), ACTOR_FILTER(Messages.actorFilter, 1), REST_API(Messages.restApi, 2), THEME(
+            Messages.theme, 3), PAGE(Messages.page, 4), FORM(
+                    Messages.form, 5), UNKNOWN(Messages.unknown, 6);
 
-        private String name;
+    private String name;
+    private int priority;
 
-        ArtifactType(String name) {
-            this.name = name;
-        }
+    ArtifactType(String name, int priority) {
+        this.name = name;
+        this.priority = priority;
+    }
 
-        public String getName() {
-            return name;
-        }
+    public String getName() {
+        return name;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
 
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 import org.apache.maven.model.Dependency;
 import org.eclipse.swt.graphics.Image;
 
-public class BonitaArtifactDependency {
+public class BonitaArtifactDependency implements Comparable {
 
     private String name;
     private String description;
@@ -170,5 +170,19 @@ public class BonitaArtifactDependency {
                 .map(BonitaArtifactDependencyVersion::getVersion)
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("No compatible version found for %s:%s", getGroupId(), getArtifactId())));
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof BonitaArtifactDependency) {
+            BonitaArtifactDependency otherDep = (BonitaArtifactDependency) o;
+            int priorityComparaison = getArtifactType().getPriority()
+                    - otherDep.getArtifactType().getPriority();
+            if (priorityComparaison != 0) {
+                return priorityComparaison;
+            }
+            return getName().compareTo(otherDep.getName());
+        }
+        return 0;
     }
 }
