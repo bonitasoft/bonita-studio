@@ -124,6 +124,10 @@ CLabel#cardHighlightTitleColor {
     background-color: #f5f5f5;
 }
 
+.wizardHoverBackground {
+    background-color: #cfcfcf;
+}
+
 Shell Composite#labelComposite {
 	background-color: #ffffff;
 }

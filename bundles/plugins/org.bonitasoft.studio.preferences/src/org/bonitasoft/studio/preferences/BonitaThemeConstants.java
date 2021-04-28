@@ -30,6 +30,7 @@ public interface BonitaThemeConstants {
     public static final String TABLE_BACKGROUND_COLOR = "tableBackground";
     public static final String NOTIFICATION_COMPOSITE = "notificationComposite";
     public static final String WIZARD_HIGHLIGHT_BACKGROUND = "wizardHighlightBackground";
+    public static final String WIZARD_HOVER_BACKGROUND = "wizardHoverBackground";
     public static final String EXTENSION_VIEW_BACKGROUND = "extensionViewBackground";
     public static final String CARD_BACKGROUND = "cardBackground";
     public static final String CARD_SEPARATOR = "separator";
