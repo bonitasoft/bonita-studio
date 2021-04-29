@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.properties.sections.timer.cron;
 
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.databinding.conversion.NumberToStringConverter;
-import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.core.databinding.conversion.text.NumberToStringConverter;
+import org.eclipse.core.databinding.conversion.text.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -51,8 +53,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 
-import com.ibm.icu.text.DecimalFormat;
-import com.ibm.icu.text.NumberFormat;
 
 /**
  * @author Romain Bioteau
@@ -633,7 +633,7 @@ public class CronEditor extends Composite {
         final Combo hourCombo = new Combo(timeComposite, SWT.READ_ONLY | SWT.BORDER);
         hourCombo.setItems(HOURS_IN_DAY);
 
-        NumberFormat formatter = new DecimalFormat("#00");
+        Format formatter = new DecimalFormat("#00");
         UpdateValueStrategy hourStrategy = new UpdateValueStrategy();
         hourStrategy.setConverter(StringToNumberConverter.toInteger(true));
 
@@ -1014,7 +1014,7 @@ public class CronEditor extends Composite {
         hourStrategy.setConverter(StringToNumberConverter.toInteger(true));
         UpdateValueStrategy hourStrategy2 = new UpdateValueStrategy();
 
-        NumberFormat formatter = new DecimalFormat("#00");
+        Format formatter = new DecimalFormat("#00");
         hourStrategy2.setConverter(NumberToStringConverter.fromInteger(formatter, true));
         context.bindValue(SWTObservables.observeText(hourCombo),
                 PojoProperties.value("atHour").observe(cronExpression), hourStrategy, hourStrategy2);

@@ -40,7 +40,7 @@ import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.core.databinding.conversion.text.StringToNumberConverter;
 import org.eclipse.core.internal.databinding.validation.StringToDoubleValidator;
 import org.eclipse.core.internal.databinding.validation.StringToFloatValidator;
 import org.eclipse.core.internal.databinding.validation.StringToIntegerValidator;
@@ -200,17 +200,17 @@ public class TestGroovyScriptDialog extends Dialog {
         multiValidator.addValidator(mandatoryValidator(inputName));
         if (variable != null) {
             if (Long.class.getName().equals(variable.getType())) {
-                final StringToNumberConverter converter = StringToNumberConverter.toLong(true);
+                final StringToNumberConverter<Long> converter = StringToNumberConverter.toLong(true);
                 strategyFactory.withConverter(converter);
                 multiValidator.addValidator(new StringToLongValidator(converter));
             }
             if (Integer.class.getName().equals(variable.getType())) {
-                final StringToNumberConverter converter = StringToNumberConverter.toInteger(true);
+                final StringToNumberConverter<Integer> converter = StringToNumberConverter.toInteger(true);
                 strategyFactory.withConverter(converter);
                 multiValidator.addValidator(new StringToIntegerValidator(converter));
             }
             if (Float.class.getName().equals(variable.getType())) {
-                final StringToNumberConverter converter = StringToNumberConverter.toFloat(true);
+                final StringToNumberConverter<Float> converter = StringToNumberConverter.toFloat(true);
                 strategyFactory.withConverter(converter);
                 multiValidator.addValidator(new StringToFloatValidator(converter));
             }

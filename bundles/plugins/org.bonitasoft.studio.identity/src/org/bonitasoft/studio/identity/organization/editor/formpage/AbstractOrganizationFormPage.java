@@ -17,7 +17,7 @@ package org.bonitasoft.studio.identity.organization.editor.formpage;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.assertj.core.util.Strings;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.contribution.DeployContributionItem;
 import org.bonitasoft.studio.identity.organization.editor.contribution.ExportContributionItem;
@@ -154,7 +154,7 @@ public abstract class AbstractOrganizationFormPage extends AbstractFormPage<Orga
     }
 
     public String toUserDisplayName(User user) {
-        if (!Strings.isNullOrEmpty(user.getFirstName()) && !Strings.isNullOrEmpty(user.getLastName())) {
+        if (Strings.hasText(user.getFirstName()) && Strings.hasText(user.getLastName())) {
             return String.format("%s %s", user.getFirstName(), user.getLastName());
         }
         return user.getUserName();
