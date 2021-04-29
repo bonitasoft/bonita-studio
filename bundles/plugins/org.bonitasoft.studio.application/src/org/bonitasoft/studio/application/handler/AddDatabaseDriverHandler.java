@@ -23,7 +23,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.definition.DefinitionUpdateOperationFactory;
+import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
 
     @Inject
-    public AddDatabaseDriverHandler(DefinitionUpdateOperationFactory definitionUpdateOperationFactory,
+    public AddDatabaseDriverHandler(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
             MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor) {
         super(definitionUpdateOperationFactory, mavenProjectHelper, repositoryAccessor);
     }
