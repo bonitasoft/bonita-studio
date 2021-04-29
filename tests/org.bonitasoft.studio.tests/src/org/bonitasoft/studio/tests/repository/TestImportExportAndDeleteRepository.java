@@ -38,7 +38,7 @@ public class TestImportExportAndDeleteRepository {
                 .getRepositoryStore(GroovyRepositoryStore.class);
         final int nbOfGroovyArtifacts = store.getChildren().size();
         final InputStream stream = TestImportExportAndDeleteRepository.class
-                .getResourceAsStream("GroovyScriptForTestImportExportRepository.groovy");
+                .getResourceAsStream("/GroovyScriptForTestImportExportRepository.groovy");
         assertNotNull("Can't test groovy import because cannot retrieve the .groovy file", stream);
         final GroovyFileStore artifact = store.importInputStream("GroovyScriptForTestImportExportRepository.groovy",
                 stream);

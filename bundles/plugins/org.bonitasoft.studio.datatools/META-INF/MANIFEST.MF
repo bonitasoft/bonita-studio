@@ -26,7 +26,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.connectivity.ui;bundle-version="1.2.1",
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
- assertj-core;bundle-version="1.5.0";resolution:=optional
+ org.assertj;bundle-version="1.5.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.datatools,

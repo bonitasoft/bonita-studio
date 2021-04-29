@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -458,7 +457,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private boolean themeIsValid(String themeId) {
-        if (!Strings.isNullOrEmpty(themeId)) {
+        if (themeId != null && !themeId.isBlank()) {
             return Objects.equals(themeId, BonitaThemeConstants.LIGHT_THEME)
                     || Objects.equals(themeId, BonitaThemeConstants.DARK_THEME);
         }

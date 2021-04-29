@@ -36,7 +36,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.databinding.beans;bundle-version="1.2.100",
  org.eclipse.core.databinding.property;bundle-version="1.4.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
- assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.assertj;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.datatools.sqltools.sqlbuilder;bundle-version="1.0.7",
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.modelbase.sql.query

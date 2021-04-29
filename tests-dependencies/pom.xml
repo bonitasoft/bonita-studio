@@ -18,7 +18,6 @@
     </properties>
 
     <modules>
-        <module>assertj-core</module>
         <module>org.mockito</module>
         <module>tests-dependencies-feature</module>
     </modules>
