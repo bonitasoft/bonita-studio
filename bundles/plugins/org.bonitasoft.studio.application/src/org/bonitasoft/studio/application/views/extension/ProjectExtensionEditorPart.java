@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecoratorFactory;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
@@ -55,6 +56,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -117,6 +121,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private Font bigButtonFont;
 
+    private UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory;
+
     public ProjectExtensionEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
@@ -133,6 +139,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         if (!(input instanceof ProjectExtensionEditorInput)) {
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
+       
+        updateExtensionOperationDecoratorFactory = ContextInjectionFactory.make(UpdateExtensionOperationDecoratorFactory.class, EclipseContextFactory.create());
         allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
         setInput(input);
@@ -188,7 +196,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
                     new ExtensionCard(parent, repositoryAccessor, dep, bonitaDependency.get(), subtitleFont, gavFont,
-                            this::removeExtensions);
+                            this::removeExtensions, updateExtensionOperationDecoratorFactory);
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
@@ -196,7 +204,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                         otherDependencies.add(dep);
                     } else {
                         new ExtensionCard(parent, repositoryAccessor, dep, bonitaDep, subtitleFont, gavFont,
-                                this::removeExtensions);
+                                this::removeExtensions, updateExtensionOperationDecoratorFactory);
                     }
                 }
             });

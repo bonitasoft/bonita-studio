@@ -35,6 +35,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -67,7 +68,7 @@ public class MavenProjectHelper {
             throw new CoreException(
                     new Status(IStatus.ERROR, getClass(), "Failed to write maven model in pom.xml file.", e));
         }
-        pomFile.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
+        pomFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
 
     public List<ArtifactRepository> getProjectMavenRepositories(IProject project) throws CoreException {

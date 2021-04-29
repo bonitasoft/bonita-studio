@@ -284,11 +284,19 @@ public class Messages extends NLS {
     public static String updatingConfiguration;
     public static String preparingDefinitionUpdate;
     public static String updatePreview;
-    public static String definitionUpateTitle;
     public static String definitionUpateMessage;
+    public static String otherDependencyUpdateMessage;
+    public static String updateActionsMessage;
     public static String abortingUpdate;
     public static String definitionUpdateWithBreakingChanges;
     public static String definitionRemovedDescription;
+    public static String preparingProcessConfigurationUpdate;
+    public static String jarFileRemovedChangeDescription;
+    public static String jarFileUpdatedChangeDescription;
+    public static String jarFileAddedChangeDescription;
+    public static String configurationToUpdateFound;
+    public static String updateProcessesTitle;
+   
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

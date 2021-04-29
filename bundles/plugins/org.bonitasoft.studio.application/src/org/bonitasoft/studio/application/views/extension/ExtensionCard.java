@@ -22,9 +22,8 @@ import java.util.function.Consumer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.UpdateExtensionOperationDecorator;
-import org.bonitasoft.studio.application.operation.definition.DefinitionUpdateOperationFactory;
-import org.bonitasoft.studio.application.operation.definition.DependencyUpdate;
+import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecoratorFactory;
+import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
@@ -68,7 +67,7 @@ public class ExtensionCard extends Composite {
     private IThemeEngine engine;
     private CommandExecutor commandExecutor;
     private boolean localExtension;
-    private DefinitionUpdateOperationFactory definitionUpdateOperationFactory;
+    private UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory;
 
     public ExtensionCard(Composite parent,
             RepositoryAccessor repositoryAccessor,
@@ -76,7 +75,8 @@ public class ExtensionCard extends Composite {
             BonitaArtifactDependency bonitaDep,
             Font subtitleFont,
             Font gavFont,
-            Consumer<Dependency> removeExtensionsOperation) {
+            Consumer<Dependency> removeExtensionsOperation,
+            UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory) {
         super(parent, SWT.BORDER);
         this.repositoryAccessor = repositoryAccessor;
         this.dep = dep;
@@ -88,7 +88,7 @@ public class ExtensionCard extends Composite {
         this.commandExecutor = new CommandExecutor();
         this.localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore()
                 .isLocalDependency(dep);
-        this.definitionUpdateOperationFactory = new DefinitionUpdateOperationFactory(repositoryAccessor);
+        this.updateExtensionOperationDecoratorFactory = updateExtensionOperationDecoratorFactory;
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -173,12 +173,11 @@ public class ExtensionCard extends Composite {
         if (MessageDialog.openQuestion(getShell(), Messages.updateExtensionConfirmationTitle,
                 String.format(Messages.updateExtensionConfirmation, bonitaDep.getName(), dep.getVersion(),
                         latestVersion))) {
-            var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory, 
-                    List.of(new DependencyUpdate(dep, latestVersion)),
-                    repositoryAccessor.getCurrentRepository());
+            var updateExtensionDecorator = updateExtensionOperationDecoratorFactory.create(List.of(new DependencyUpdate(dep, latestVersion)));
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            updateExtensionDecorator.preUpdate(progressService);
+            
             try {
+                updateExtensionDecorator.preUpdate(progressService);
                 progressService.run(true, false, monitor -> {
                     monitor.beginTask(Messages.upgradeExtension, IProgressMonitor.UNKNOWN);
                     try {
@@ -190,10 +189,10 @@ public class ExtensionCard extends Composite {
                         throw new InvocationTargetException(e);
                     }
                 });
+                updateExtensionDecorator.postUpdate(Display.getDefault().getActiveShell(), progressService);
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new RuntimeException(e);
             } 
-            updateExtensionDecorator.postUpdate(Display.getDefault().getActiveShell(), progressService);
         }
     }
 

@@ -24,6 +24,7 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.core.resources.IProject;
@@ -31,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -66,7 +68,7 @@ public class BonitaProjectPlugin {
                 .getLaunchConfigurationType(MavenLaunchConstants.LAUNCH_CONFIGURATION_TYPE_ID);
         ILaunchConfigurationWorkingCopy wc = configureAnalyzePluginLaunchConfiguration(launchConfigurationType);
         final ILaunch launch = wc.launch(ILaunchManager.RUN_MODE,
-                AbstractRepository.NULL_PROGRESS_MONITOR,
+                new NullProgressMonitor(),
                 false);
         final IProcess process = launch.getProcesses()[0];
         waitForBuildProcessTermination(launch);
@@ -146,8 +148,8 @@ public class BonitaProjectPlugin {
     }
 
     private boolean isBonitaProjectPlugin(Plugin plugin) {
-        return ProjectDefaultConfiguration.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID.equals(plugin.getGroupId())
-                && ProjectDefaultConfiguration.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID.equals(plugin.getArtifactId());
+        return DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID.equals(plugin.getGroupId())
+                && DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID.equals(plugin.getArtifactId());
     }
 
 

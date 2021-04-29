@@ -29,9 +29,11 @@ import org.eclipse.aether.graph.DependencyVisitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
+@Creatable
 public class ProjectDependenciesResolver {
 
     public List<Artifact> getCompileDependencies(IProject project, IProgressMonitor monitor) throws CoreException {
@@ -41,7 +43,7 @@ public class ProjectDependenciesResolver {
         }
         List<Dependency> dependencies = mavenProject.getDependencies();
         return mavenProject.getArtifacts().stream()
-                .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()))
+                .filter(artifact -> Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
                 .filter(artifact -> isDirectDependency(dependencies, artifact))
                 .filter(artifact -> artifact.getFile() != null && artifact.getFile().exists())
                 .collect(Collectors.toList());
