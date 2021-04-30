@@ -22,8 +22,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 
-import winterwell.markdown.editors.MarkdownEditor;
-
 
 public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
 
@@ -48,7 +46,7 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
 
     @Override
     public boolean isRelevantFor(final IEditorPart part) {
-        return !(part instanceof MarkdownEditor) && (part instanceof TextEditor || part instanceof WebBrowserEditor)
+        return (part instanceof TextEditor || part instanceof WebBrowserEditor)
                 && !isInsideprojectWithREStApiExtensionNature(part);
     }
 
