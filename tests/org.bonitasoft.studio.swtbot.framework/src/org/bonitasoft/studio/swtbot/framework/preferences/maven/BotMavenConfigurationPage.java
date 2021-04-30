@@ -16,6 +16,7 @@ package org.bonitasoft.studio.swtbot.framework.preferences.maven;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -56,6 +57,11 @@ public class BotMavenConfigurationPage extends BotBase {
     public BotMavenConfigurationPage apply() {
         bot.button("Apply").click();
         return this;
+    }
+
+    public BotPreferencesDialog back() {
+        bot.button(org.bonitasoft.studio.preferences.i18n.Messages.BonitaPreferenceDialog_back).click();
+        return new BotPreferencesDialog(bot);
     }
 
 }

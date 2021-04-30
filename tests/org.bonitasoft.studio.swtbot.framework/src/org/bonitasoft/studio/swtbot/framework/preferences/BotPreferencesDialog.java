@@ -14,10 +14,11 @@
  */
 package org.bonitasoft.studio.swtbot.framework.preferences;
 
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.widgetIsEnabled;
+
 import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
 import org.bonitasoft.studio.swtbot.framework.preferences.maven.BotMavenConfigurationPage;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 public class BotPreferencesDialog extends BotDialog {
@@ -27,9 +28,13 @@ public class BotPreferencesDialog extends BotDialog {
     }
 
     public BotMavenConfigurationPage openMavenConfigurationPage() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID)));
+        bot.waitUntil(widgetIsEnabled(bot.toolbarButtonWithId(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID)));
         bot.toolbarButtonWithId(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID).click();
         return new BotMavenConfigurationPage(bot);
+    }
+
+    public void close() {
+        bot.activeShell().close();
     }
 
 }
