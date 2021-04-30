@@ -45,6 +45,7 @@ import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRe
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.resources.IResource;
@@ -58,7 +59,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -139,8 +139,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         if (!(input instanceof ProjectExtensionEditorInput)) {
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
-       
-        updateExtensionOperationDecoratorFactory = ContextInjectionFactory.make(UpdateExtensionOperationDecoratorFactory.class, EclipseContextFactory.create());
+
+        updateExtensionOperationDecoratorFactory = ContextInjectionFactory
+                .make(UpdateExtensionOperationDecoratorFactory.class, EclipseContextFactory.create());
         allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
         setInput(input);
@@ -226,7 +227,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 toolbarComposite.setVisible(true);
             }
         } catch (CoreException e) {
-            throw new RuntimeException(e);
+            new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
     }
 
@@ -310,33 +311,37 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 versionStyle.font = versionFont;
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
-                if (descriptionContent != null && !descriptionContent.isBlank()
-                        && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
-                    if (description == null || description.isDisposed()) {
-                        createDescriptionLabel(titleComposite);
-                    }
-                    description.setText(descriptionContent);
-                    layoutMainCompsite = true;
-                } else if (description != null && (descriptionContent == null || descriptionContent.isBlank())) {
-                    description.dispose();
-                    description = null;
-                    layoutMainCompsite = true;
-                } else {
-                    titleComposite.getParent().layout();
-                }
+                layoutMainCompsite = refreshDescription(descriptionContent);
             } catch (CoreException e) {
-                throw new RuntimeException(e);
+                new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
 
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
             createExtensionCards(cardComposite);
-            if (!layoutMainCompsite) {
-                cardComposite.layout();
-            } else {
+            if (layoutMainCompsite) {
                 mainComposite.layout();
             }
+            cardComposite.layout();
             scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         });
+    }
+
+    private boolean refreshDescription(String descriptionContent) {
+        if (descriptionContent != null && !descriptionContent.isBlank()
+                && (description == null || !Objects.equals(description.getText(), descriptionContent))) {
+            if (description == null || description.isDisposed()) {
+                createDescriptionLabel(titleComposite);
+            }
+            description.setText(descriptionContent);
+            return true;
+        } else if (description != null && (descriptionContent == null || descriptionContent.isBlank())) {
+            description.dispose();
+            description = null;
+            return true;
+        } else {
+            titleComposite.getParent().layout();
+            return false;
+        }
     }
 
     private boolean sameDependency(Dependency dep, BonitaArtifactDependency bonitaDep) {
@@ -506,6 +511,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     @Override
     public void setFocus() {
+        // do nothing
     }
 
     @Override
