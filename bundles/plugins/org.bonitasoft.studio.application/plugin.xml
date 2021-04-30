@@ -1499,11 +1499,6 @@
             name="Text Perspective">
       </perspective>
       <perspective
-            class="org.bonitasoft.studio.application.perspective.MarkdownEditorPerspectiveFactory"
-            id="org.bonitasoft.studio.perspective.markdownEditor"
-            name="Markdown Editor Perspective">
-      </perspective>
-      <perspective
             class="org.bonitasoft.studio.application.views.extension.ProjectExtensionPerspective"
             fixed="true"
             id="org.bonitasoft.studio.application.extension.perspective"

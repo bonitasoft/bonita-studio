@@ -103,14 +103,6 @@
             <unit id="de.jcup.yamleditor.feature.group" version="1.6.2"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://nodeclipse.github.io/updates/markdown/"/>
-            <unit id="markdown.editor.feature.feature.group" version="1.2.0.201501260515"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="http://dl.bintray.com/satyagraha/generic/2.0.1/"/>
-            <unit id="code.satyagraha.gfm.viewer.feature.feature.group" version="2.0.1"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
             <repository location="http://update-site.bonitasoft.com/p2/4.16/"/>
         </location>
@@ -128,10 +120,6 @@
             <unit id="org.eclipse.babel.nls_technology.jgit_ja.feature.group" version="4.19.0.v20210327020002"/>
             <unit id="org.eclipse.babel.nls_technology.jgit_pt_BR.feature.group" version="4.19.0.v20210327020002"/>
             <repository location="https://download.eclipse.org/technology/babel/update-site/R0.18.3/2021-03/"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.7.0"/>
-        <repository location="https://dl.bintray.com/de-jcup/jenkinseditor/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="https://dist.springsource.org/release/GRECLIPSE/4.1.0/e4.19"/>
