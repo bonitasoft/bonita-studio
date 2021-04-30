@@ -27,6 +27,7 @@ import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.io.DefaultSettingsReader;
 import org.bonitasoft.studio.application.preference.RepositoriesComposite;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.swtbot.framework.preferences.maven.BotMavenConfigurationPage;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -91,7 +92,8 @@ public class MavenConfigurationIT {
     @Test
     public void should_configure_maven_settings() throws Exception {
         BotApplicationWorkbenchWindow workBenchBot = new BotApplicationWorkbenchWindow(bot);
-        BotMavenConfigurationPage configurationPage = workBenchBot.openPreferences().openMavenConfigurationPage();
+        BotPreferencesDialog botPreferencesDialog = workBenchBot.openPreferences();
+        BotMavenConfigurationPage configurationPage = botPreferencesDialog.openMavenConfigurationPage();
 
         configurationPage.repositories()
                 .addRepository(REPOSITORY_NAME)
@@ -126,7 +128,10 @@ public class MavenConfigurationIT {
                 .setUrl(MIRROR_NAME, MIRROR_URL)
                 .setMirrorOf(MIRROR_NAME, MIRROR_Of);
 
-        configurationPage.apply();
+        configurationPage
+                .apply()
+                .back()
+                .close();
 
         Settings settings = defaultSettingsReader.read(testConfigurationFile, null);
         validateRepositories(settings);
