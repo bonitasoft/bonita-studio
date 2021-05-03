@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 public class LocalDependenciesStore {
@@ -67,9 +68,7 @@ public class LocalDependenciesStore {
                                 dependencyFile.getName())));
             }
             Path dependencyPath = targetFolder.resolve(dependencyFileName(dependency));
-            if (dependencyPath.toFile().exists()) {
-                backup(dependencyPath);
-            }
+            backup(dependency);
             Files.copy(dependencyFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -83,9 +82,13 @@ public class LocalDependenciesStore {
         return dependencyLookup;
     }
 
-    private void backup(Path dependencyPath) throws IOException {
-        File backup = toBackupFile(dependencyPath);
-        Files.move(dependencyPath, backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    public void backup(Dependency dependency) throws IOException {
+        Path targetFolder = dependencyPath(dependency);
+        Path dependencyPath = targetFolder.resolve(dependencyFileName(dependency));
+        if (dependencyPath.toFile().exists()) {
+            File backup = toBackupFile(dependencyPath);
+            Files.move(dependencyPath, backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     private File toBackupFile(Path dependencyPath) {
@@ -119,7 +122,8 @@ public class LocalDependenciesStore {
                 Files.delete(dependencyPath);
             } catch (IOException e) {
                 throw new CoreException(
-                        new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + dependencyPath, e));
+                        new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + dependencyPath,
+                                e));
             }
             Path parent = dependencyPath.getParent();
             while (parent.toFile().exists() && isEmptyFolder(parent)) {
@@ -143,7 +147,8 @@ public class LocalDependenciesStore {
             File backupFile = toBackupFile(dependencyPath);
             if (backupFile.exists()) {
                 Files.move(backupFile.toPath(), dependencyPath, StandardCopyOption.REPLACE_EXISTING);
-                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
+                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE,
+                        AbstractRepository.NULL_PROGRESS_MONITOR);
             }
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -157,8 +162,18 @@ public class LocalDependenciesStore {
             File backupFile = toBackupFile(dependencyPath);
             if (backupFile.exists()) {
                 Files.delete(backupFile.toPath());
-                project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, AbstractRepository.NULL_PROGRESS_MONITOR);
             }
+            Path parent = backupFile.toPath().getParent();
+            while (parent.toFile().exists() && isEmptyFolder(parent)) {
+                try {
+                    Files.delete(parent);
+                } catch (IOException e) {
+                    throw new CoreException(
+                            new Status(IStatus.ERROR, LocalDependenciesStore.class, "Failed to delete " + parent, e));
+                }
+                parent = parent.getParent();
+            }
+            project.getFolder(NAME).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         } catch (IOException e) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot delete backup of %s dependency.", dependencyPath), e));

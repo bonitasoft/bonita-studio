@@ -62,4 +62,9 @@ public class InputChange implements ChangePreview {
         return parent;
     }
 
+    @Override
+    public boolean showInPreviewDialog() {
+        return false;
+    }
+
 }

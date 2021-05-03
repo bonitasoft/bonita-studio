@@ -56,4 +56,9 @@ public class DefinitionRemovedChange implements ChangePreview {
         return null;
     }
 
+    @Override
+    public boolean showInPreviewDialog() {
+        return nbOfRemovedConfigurations > 0;
+    }
+
 }

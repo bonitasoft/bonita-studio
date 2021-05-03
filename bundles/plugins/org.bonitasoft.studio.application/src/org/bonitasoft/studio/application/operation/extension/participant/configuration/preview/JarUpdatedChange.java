@@ -14,23 +14,21 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration.preview;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.operation.extension.participant.configuration.DatabaseConnectorConfigurationChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.ChangePreview;
-import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.eclipse.emf.ecore.resource.Resource;
 
-public class JarUpdatedChange implements ChangePreview, Runnable, ProcessConfigurationChange {
+public class JarUpdatedChange
+        implements ChangePreview, ProcessConfigurationChange, DatabaseConnectorConfigurationChange {
 
     private Collection<Configuration> configurations;
     private Artifact artifact;
@@ -89,30 +87,8 @@ public class JarUpdatedChange implements ChangePreview, Runnable, ProcessConfigu
     }
 
     @Override
-    public void run() {
-        if (configurations != null) {
-            configurations.stream().forEach(this::updateConfiguration);
-        }
-    }
-
-    private void updateConfiguration(Configuration configuration) {
-        var modelUpdater = new EMFModelUpdater<Configuration>().from(configuration);
-        Configuration workingCopy = modelUpdater.getWorkingCopy();
-        apply(workingCopy);
-        getDetails().stream()
-                .filter(ProcessConfigurationChange.class::isInstance)
-                .map(ProcessConfigurationChange.class::cast)
-                .forEach(c -> c.apply(workingCopy));
-        Resource resource = configuration.eResource();
-        boolean saveResourceAfterUpdate = resource != null && !resource.isModified();
-        modelUpdater.update();
-        if (saveResourceAfterUpdate) {
-            try {
-                resource.save(Collections.emptyMap());
-            } catch (IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
+    public Collection<Configuration> getConfigurations() {
+        return configurations;
     }
 
     @Override
@@ -125,6 +101,32 @@ public class JarUpdatedChange implements ChangePreview, Runnable, ProcessConfigu
                     toUpdate.setKey(artifact.getFile().getName());
                     toUpdate.setValue(artifact.getFile().getName());
                 });
+        getDetails().stream()
+                .filter(ProcessConfigurationChange.class::isInstance)
+                .map(ProcessConfigurationChange.class::cast)
+                .forEach(c -> c.apply(configuration));
+    }
+
+    @Override
+    public void apply(DatabaseConnectorPropertiesRepositoryStore dbConfStore) {
+        var previousJarName = previousArtifact.getFile().getName();
+        var updatedJarName = artifact.getFile().getName();
+        dbConfStore.getChildren().stream()
+                .filter(conf -> conf.getJarList().contains(previousJarName))
+                .forEach(conf -> {
+                    var jarList = conf.getJarList();
+                    jarList.removeIf(previousJarName::equals);
+                    jarList.add(updatedJarName);
+                    conf.setJarList(jarList);
+                    if (previousJarName.equals(conf.getDefault())) {
+                        conf.setDefault(updatedJarName);
+                    }
+                });
+    }
+    
+    @Override
+    public boolean showInPreviewDialog() {
+        return configurations != null && !configurations.isEmpty();
     }
 
 }

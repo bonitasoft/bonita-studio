@@ -104,7 +104,8 @@ public class PreviewConfirmationDialog extends MessageDialog {
                 .withTextProvider(ChangePreview::getDescription)
                 .withImageProvider(PreviewConfirmationDialog::getImage)
                 .withTooltipProvider(
-                        change -> change.hasBreakingChanges() ? Messages.definitionUpdateWithBreakingChanges
+                        change -> change.hasBreakingChanges() ? 
+                                Messages.definitionUpdateWithBreakingChanges
                                 : null)
                 .createColumnLabelProvider());
         viewer.setInput(previewResult);
@@ -117,18 +118,21 @@ public class PreviewConfirmationDialog extends MessageDialog {
     private static Image getImage(ChangePreview change) {
         switch (change.getKind()) {
             case ADD:
-                return Pics.getImage(PicsConstants.add_simple);
+                return addProblemDecorator(change, Pics.getImage(PicsConstants.add_simple));
             case REMOVE:
-                return Pics.getImage(PicsConstants.redMinus);
+                return addProblemDecorator(change, Pics.getImage(PicsConstants.redMinus));
             default:
-                Image updateImage = Pics.getImage(PicsConstants.updateDependencyHot);
-                if (change.hasBreakingChanges()) {
-                    return new DecorationOverlayIcon(updateImage,
-                            UIPlugin.getImageDescriptor("icons/problem.gif"),
-                            IDecoration.BOTTOM_RIGHT).createImage();
-                }
-                return updateImage;
+                return addProblemDecorator(change, Pics.getImage(PicsConstants.updateDependencyHot));
         }
+    }
+
+    private static Image addProblemDecorator(ChangePreview change, Image image) {
+        if (change.hasBreakingChanges()) {
+            return new DecorationOverlayIcon(image,
+                    UIPlugin.getImageDescriptor("icons/problem.gif"),
+                    IDecoration.BOTTOM_RIGHT).createImage();
+        }
+        return image;
     }
 
     class ChangePreviewContentProvider implements ITreeContentProvider {
@@ -136,7 +140,9 @@ public class PreviewConfirmationDialog extends MessageDialog {
         @Override
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof PreviewResult) {
-                return ((PreviewResult) inputElement).getChanges().toArray();
+                return ((PreviewResult) inputElement).getChanges().stream()
+                        .filter(ChangePreview::showInPreviewDialog)
+                        .toArray();
             }
             return new Object[0];
         }

@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Activator;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -48,6 +49,7 @@ public class EMFModelUpdater<T extends EObject> {
     private CustomCopier copier = new CustomCopier();
     private List<EObjectFeature> synched = new ArrayList<>();
     private Set<String> manyFeaturesSynched = new HashSet<>();
+    private boolean keepUUIDConsistency;
 
     /**
      * Original (before edition) EMF object with UUID
@@ -56,7 +58,13 @@ public class EMFModelUpdater<T extends EObject> {
         this.source = source;
         this.workingCopy = (T) copier.copy(source);
         copier.copyReferences();
+        keepUUIDConsistency = shouldKeepUUIDConsistency(source);
         return this;
+    }
+
+    private boolean shouldKeepUUIDConsistency(T eObject) {
+        String uuid = getEObjectID(eObject);
+        return Strings.hasText(uuid) && !uuid.equals("/");
     }
 
     public T getWorkingCopy() {
@@ -66,22 +74,23 @@ public class EMFModelUpdater<T extends EObject> {
     /**
      * Applies the changes to the source object limiting UUID changes
      */
-    public T update() {
+    public void update() {
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(source);
         if (editingDomain != null) {
             editingDomain.getCommandStack().execute(createUpdateCommand(editingDomain));
         } else {
+            doUpdate(source, workingCopy);
+        }
+    }
+
+    private void doUpdate(EObject sourceObject, EObject updatedObject) {
             synched.clear();
             manyFeaturesSynched.clear();
-            deepEObjectUpdate(source, workingCopy);
-        }
-        return source;
+            deepEObjectUpdate(sourceObject, updatedObject);
     }
 
     public void editWorkingCopy(T value) {
-        synched.clear();
-        manyFeaturesSynched.clear();
-        deepEObjectUpdate(workingCopy, value);
+        doUpdate(workingCopy, value);
     }
 
     public RecordingCommand createUpdateCommand(TransactionalEditingDomain editingDomain) {
@@ -89,9 +98,7 @@ public class EMFModelUpdater<T extends EObject> {
 
             @Override
             protected void doExecute() {
-                synched.clear();
-                manyFeaturesSynched.clear();
-                deepEObjectUpdate(source, workingCopy);
+                doUpdate(source, workingCopy);
             }
         };
     }
@@ -126,6 +133,11 @@ public class EMFModelUpdater<T extends EObject> {
                     return true;
                 })
                 .forEach(feature -> {
+                    if (!keepUUIDConsistency) {
+                        EcoreUtil.replace(source, target);
+                        return;
+                    }
+
                     if (feature.isMany()) {
                         String uuid = getEObjectID(source);
                         String key = uuid + feature.getName();
@@ -227,14 +239,14 @@ public class EMFModelUpdater<T extends EObject> {
                 sourceList.add(targetList.indexOf(targetElement), EcoreUtil.copy((T) targetElement));
             }
         }
-        
+
         //Reorder list
-        for(EObject element : alreadyExistingEObjects) {
+        for (EObject element : alreadyExistingEObjects) {
             int sourceIndex = sourceList.indexOf(findEObject(sourceList, getEObjectID((EObject) element)));
             int targetIndex = targetList.indexOf(element);
-            if(sourceIndex != -1 && sourceIndex != targetIndex) {
-                if(sourceList instanceof EList) {
-                    ((EList)sourceList).move(targetIndex, sourceIndex);
+            if (sourceIndex != -1 && sourceIndex != targetIndex) {
+                if (sourceList instanceof EList) {
+                    ((EList) sourceList).move(targetIndex, sourceIndex);
                 }
             }
         }

@@ -24,14 +24,14 @@ public class PreviewResultImpl implements PreviewResult {
     private List<ChangePreview> changes = new ArrayList<>();
 
     @Override
-    public boolean hasChanges() {
-        return !changes.isEmpty();
+    public boolean shouldOpenPreviewDialog() {
+        return changes.stream().anyMatch(ChangePreview::showInPreviewDialog);
     }
 
     @Override
     public boolean canProceed() {
         // If no breaking changes found
-        return changes.stream().anyMatch(c -> !c.hasBreakingChanges());
+        return changes.stream().noneMatch(ChangePreview::hasBreakingChanges);
     }
 
     @Override

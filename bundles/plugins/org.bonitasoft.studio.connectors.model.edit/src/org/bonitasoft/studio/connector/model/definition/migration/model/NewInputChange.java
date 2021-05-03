@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.migration.model;
 
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.migration.DefaultValueExpressionFactory;
@@ -51,6 +52,12 @@ public class NewInputChange implements DefinitionInputChange {
     
     @Override
     public String toString() {
-        return String.format(Messages.newInputChangeDescription, newInput.getName());
+        StringBuilder sb = new StringBuilder(newInput.isMandatory() ? 
+                String.format(Messages.newMandatoryInputChangeDescription, newInput.getName())
+                : String.format(Messages.newInputChangeDescription, newInput.getName()));
+        if(Strings.hasText(newInput.getDefaultValue())) {
+            sb.append(String.format(" (%s: %s)", Messages.defaultValue, newInput.getDefaultValue()));
+        }
+        return sb.toString();
     }
 }

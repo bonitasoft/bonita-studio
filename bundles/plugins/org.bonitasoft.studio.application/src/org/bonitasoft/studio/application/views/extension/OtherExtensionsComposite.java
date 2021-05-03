@@ -56,27 +56,28 @@ public class OtherExtensionsComposite extends Composite {
     private DataBindingContext ctx;
     private DynamicButtonWidget deleteButton;
     private DynamicButtonWidget upgradeButton;
-    private CommandExecutor commandExecutor;
-    private RepositoryAccessor repositoryAccessor;
 
-    public OtherExtensionsComposite(Composite parent, List<Dependency> otherDependencies, Font subtitleFont,
-            Consumer<Dependency> removeExtensionsOperation, DataBindingContext ctx, RepositoryAccessor repositoryAccessor) {
+    public OtherExtensionsComposite(Composite parent,
+            List<Dependency> otherDependencies, 
+            Font subtitleFont,
+            RemoveExtensionListener removeListener,
+            UpdateExtensionListener updateListener,
+            DataBindingContext ctx) {
         super(parent, SWT.NONE);
         this.subtitleFont = subtitleFont;
-        this.removeExtensionsOperation = removeExtensionsOperation;
         this.ctx = ctx;
-        this.repositoryAccessor = repositoryAccessor;
-        this.commandExecutor = new CommandExecutor();
 
         setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createTitle(this);
-        createOtherExtensionViewer(this, otherDependencies);
+        createOtherExtensionViewer(this, otherDependencies, updateListener, removeListener);
     }
 
-    private void createOtherExtensionViewer(Composite parent, List<Dependency> otherDependencies) {
+    private void createOtherExtensionViewer(Composite parent, 
+            List<Dependency> otherDependencies, 
+            UpdateExtensionListener updateListener, RemoveExtensionListener removeListener) {
         var viewerComposite = new Composite(parent, SWT.NONE);
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0)
                 .spacing(LayoutConstants.getSpacing().x, 1).create());
@@ -84,7 +85,7 @@ public class OtherExtensionsComposite extends Composite {
         viewerComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
-        createToolbar(viewerComposite);
+        createToolbar(viewerComposite, updateListener, removeListener);
 
         var viewer = new TableViewer(viewerComposite,
                 SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -129,7 +130,9 @@ public class OtherExtensionsComposite extends Composite {
                 .createColumnLabelProvider());
     }
 
-    protected void createToolbar(Composite parent) {
+    protected void createToolbar(Composite parent, 
+            UpdateExtensionListener updateListener, 
+            RemoveExtensionListener removeListener) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
@@ -142,7 +145,7 @@ public class OtherExtensionsComposite extends Composite {
                 .withImage(Pics.getImage(PicsConstants.updateDependency))
                 .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> upgradeExtension())
+                .onClick(e -> updateListener.updateExtension(null, selectionObservable.getValue()))
                 .createIn(composite);
 
         deleteButton = new DynamicButtonWidget.Builder()
@@ -151,30 +154,8 @@ public class OtherExtensionsComposite extends Composite {
                 .withImage(Pics.getImage(PicsConstants.delete))
                 .withHotImage(Pics.getImage(PicsConstants.delete_hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> {
-                    Dependency dependencySelected = selectionObservable.getValue();
-                    String depText = String.format("%s:%s:%s", dependencySelected.getGroupId(),
-                            dependencySelected.getArtifactId(), dependencySelected.getVersion());
-                    if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
-                            Messages.removeExtensionConfirmationTitle,
-                            String.format(Messages.removeExtensionConfirmation, depText))) {
-                        removeExtensionsOperation.accept(dependencySelected);
-                    }
-                })
+                .onClick(e -> removeListener.removeExtension(selectionObservable.getValue()))
                 .createIn(composite);
-    }
-
-    private void upgradeExtension() {
-        boolean localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore()
-                .isLocalDependency(selectionObservable.getValue());
-        var parameters = new HashMap<String, Object>();
-        parameters.put("groupId", selectionObservable.getValue().getGroupId());
-        parameters.put("artifactId", selectionObservable.getValue().getArtifactId());
-        parameters.put("version", selectionObservable.getValue().getVersion());
-        parameters.put("type", selectionObservable.getValue().getType());
-        parameters.put("classifier", selectionObservable.getValue().getClassifier());
-        parameters.put("isLocal", String.valueOf(localExtension));
-        commandExecutor.executeCommand(ProjectExtensionEditorPart.IMPORT_EXTENSION_COMMAND, parameters);
     }
 
     private void createTitle(Composite parent) {

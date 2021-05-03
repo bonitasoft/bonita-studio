@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -107,27 +108,25 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Label description;
     private StyledText title;
     private LocalResourceManager localResourceManager;
-
     private Font titleFont;
     private Font subtitleFont;
     private Font gavFont;
     private Font versionFont;
     private Font emptyMessageFont;
-
     private Composite mainComposite;
     private Composite toolbarComposite;
-
     private Composite titleComposite;
-
     private Font bigButtonFont;
-
     private UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory;
+    private ExceptionDialogHandler errorHandler;
+    private UpdateExtensionListener upadateExtensionListener;
+
+    private RemoveExtensionListener removeExtensionListener;
 
     public ProjectExtensionEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         mavenHelper = new MavenProjectHelper();
-        commandExecutor = new CommandExecutor();
         ctx = new DataBindingContext();
         bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
                 repositoryAccessor.getCurrentRepository().getProjectDependenciesStore());
@@ -139,9 +138,18 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         if (!(input instanceof ProjectExtensionEditorInput)) {
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
-
+        var eclipseContext = EclipseContextFactory.create();
         updateExtensionOperationDecoratorFactory = ContextInjectionFactory
-                .make(UpdateExtensionOperationDecoratorFactory.class, EclipseContextFactory.create());
+                .make(UpdateExtensionOperationDecoratorFactory.class, eclipseContext);
+        errorHandler = ContextInjectionFactory
+                .make(ExceptionDialogHandler.class, eclipseContext);
+        commandExecutor = ContextInjectionFactory
+                .make(CommandExecutor.class, eclipseContext);
+        upadateExtensionListener = ContextInjectionFactory
+                .make(UpdateExtensionListener.class, eclipseContext);
+        removeExtensionListener = ContextInjectionFactory
+                .make(RemoveExtensionListener.class, eclipseContext);
+        
         allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
         setInput(input);
@@ -196,16 +204,18 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 if (bonitaDependency
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
-                    new ExtensionCard(parent, repositoryAccessor, dep, bonitaDependency.get(), subtitleFont, gavFont,
-                            this::removeExtensions, updateExtensionOperationDecoratorFactory);
+                    var extensionCard = new ExtensionCard(parent, dep, bonitaDependency.get(), subtitleFont, gavFont);
+                    extensionCard.addUpdateExtensionListener(upadateExtensionListener);
+                    extensionCard.addRemoveExtensionListener(removeExtensionListener);
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        new ExtensionCard(parent, repositoryAccessor, dep, bonitaDep, subtitleFont, gavFont,
-                                this::removeExtensions, updateExtensionOperationDecoratorFactory);
+                        var extensionCard = new ExtensionCard(parent, dep, bonitaDep, subtitleFont, gavFont);
+                        extensionCard.addUpdateExtensionListener(upadateExtensionListener);
+                        extensionCard.addRemoveExtensionListener(removeExtensionListener);
                     }
                 }
             });
@@ -215,9 +225,12 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
                     separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
                 }
-
-                new OtherExtensionsComposite(parent, otherDependencies, subtitleFont, this::removeExtensions, ctx,
-                        repositoryAccessor);
+                new OtherExtensionsComposite(parent, 
+                        otherDependencies,
+                        subtitleFont, 
+                        removeExtensionListener,
+                        upadateExtensionListener, 
+                        ctx);
             }
 
             if (cardComposite.getChildren().length == 0) {
@@ -227,7 +240,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 toolbarComposite.setVisible(true);
             }
         } catch (CoreException e) {
-            new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+            errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
     }
 
@@ -268,28 +281,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         createImportBigButton(buttonComposite);
     }
 
-    private void removeExtensions(Dependency... deps) {
-        RemoveDependencyOperation operation = new RemoveDependencyOperation(
-                Stream.of(deps).collect(Collectors.toList()));
-        new WorkspaceJob("Remove dependency") {
-
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                operation.run(monitor);
-                updateDatabaseDriverConfiguration(deps);
-                return Status.OK_STATUS;
-            }
-
-        }.schedule();
-    }
-
-    private void updateDatabaseDriverConfiguration(Dependency... deps) {
-        DatabaseConnectorPropertiesRepositoryStore databaseConnectorConfStore = repositoryAccessor
-                .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
-        Stream.of(deps).map(d -> String.format("%s-%s.jar", d.getArtifactId(), d.getVersion()))
-                .forEach(databaseConnectorConfStore::jarRemoved);
-    }
-
     private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
             if (title.isDisposed()) {
@@ -313,7 +304,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
                 layoutMainCompsite = refreshDescription(descriptionContent);
             } catch (CoreException e) {
-                new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+               errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
 
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);

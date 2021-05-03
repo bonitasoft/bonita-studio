@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
+import java.util.Collection;
+
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
@@ -23,6 +25,8 @@ import org.bonitasoft.studio.model.configuration.FragmentContainer;
 public interface ProcessConfigurationChange {
     
     void apply(Configuration configuration);
+    
+    Collection<Configuration> getConfigurations();
     
     default FragmentContainer getOtherJarFragmentContainer(Configuration configuration) {
         return configuration.getProcessDependencies().stream()

@@ -95,6 +95,7 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
 
         // Retrieve definitions provided by the current dependency
         Collection<Definition> connectorDefinitions = dependenciesUpdates.stream()
+                .filter(du -> du.getUpdatedDependency() != null)
                 .flatMap(update -> artifactDefinitionProvider.getDefinitions(update.getUpdatedDependency()).stream())
                 .collect(Collectors.toList());
 

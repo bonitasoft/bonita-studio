@@ -133,7 +133,7 @@ public class DatabaseConnectorPropertiesRepositoryStore
     }
 
     public void jarRemoved(String jar) {
-        getChildren().stream().forEach(fStore -> fStore.jarRemoved(jar) );
+        getChildren().stream().forEach(fStore -> fStore.jarRemoved(jar));
     }
 
 }
