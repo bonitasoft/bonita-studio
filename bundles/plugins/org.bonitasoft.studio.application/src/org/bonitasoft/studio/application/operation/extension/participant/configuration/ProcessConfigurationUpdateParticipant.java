@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
@@ -37,9 +38,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
@@ -52,14 +55,17 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
     private ProjectDependenciesResolver projectDependenciesResolver;
     private PreviewResult previewResult;
     private Map<Artifact, Set<Artifact>> currentArtifacts;
+    private ProcessConfigurationUpdater processConfigurationUpdater;
 
     public ProcessConfigurationUpdateParticipant(List<DependencyUpdate> dependenciesUpdates,
             ProcessConfigurationCollector configurationCollector,
             ProjectDependenciesResolver projectDependenciesResolver,
+            ProcessConfigurationUpdater processConfigurationUpdater,
             IRepository repository) {
         this.dependenciesUpdates = dependenciesUpdates;
         this.configurationCollector = configurationCollector;
         this.projectDependenciesResolver = projectDependenciesResolver;
+        this.processConfigurationUpdater = processConfigurationUpdater;
         this.repository = repository;
     }
 
@@ -78,6 +84,7 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
         previewResult = new PreviewResultImpl();
 
         var updatedArtifacts = dependenciesUpdates.stream()
+                .filter(update -> update.getUpdatedDependency() != null)
                 .map(update -> toArtifact(update.getUpdatedDependency()))
                 .collect(Collectors.toSet());
 
@@ -90,13 +97,30 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
                             updatedArtifact -> {
                                 var configurations = configurationCollector
                                         .findConfigurationsDependingOn(artifact.getFile().getName());
-                                if (!configurations.isEmpty()) {
-                                    previewResult
-                                            .addChange(createUpdateChanges(artifact, updatedArtifact, configurations));
-                                }
+                                previewResult
+                                        .addChange(createUpdateChanges(artifact, updatedArtifact, configurations));
                             });
+            if (updatedArtifacts.stream().noneMatch(a -> existsInSameVersion(new ArtifactKey(a), key)
+                    || existsInAnotherVersion(new ArtifactKey(a), key))) {
+                // Artifact has been removed
+                var configurations = configurationCollector
+                        .findConfigurationsDependingOn(artifact.getFile().getName());
+                previewResult.addChange(
+                        createRemovedChange(artifact, configurations));
+            }
         }
         return previewResult;
+    }
+
+    private JarRemovedChange createRemovedChange(Artifact artifact, Collection<Configuration> configurations) {
+        var change = new JarRemovedChange(artifact.getFile().getName(), configurations);
+        var artifactDependencyTree = currentArtifacts.get(artifact);
+        artifactDependencyTree.stream()
+                .map(Artifact::getFile)
+                .map(File::getName)
+                .map(jarName -> new JarRemovedChange(jarName, change))
+                .forEach(change::addChangeDetail);
+        return change;
     }
 
     private ChangePreview createUpdateChanges(Artifact artifact, Artifact updatedArtifact,
@@ -138,10 +162,15 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
         IMavenProjectFacade projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(repository.getProject());
         ArtifactKey artifactKey = new ArtifactKey(currentDependency.getGroupId(), currentDependency.getArtifactId(),
                 currentDependency.getVersion(), currentDependency.getClassifier());
-        return projectFacade.getMavenProject().getArtifacts().stream()
-                .filter(a -> Objects.equals(new ArtifactKey(a), artifactKey))
-                .findFirst()
-                .orElseThrow();
+        try {
+            return projectFacade.getMavenProject(new NullProgressMonitor()).getArtifacts().stream()
+                    .filter(a -> Objects.equals(new ArtifactKey(a), artifactKey))
+                    .findFirst()
+                    .orElseThrow();
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
     }
 
     private Set<Artifact> transitiveDependencies(Artifact artifact) {
@@ -167,9 +196,15 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
         }
 
         previewResult.getChanges().stream()
-                .filter(Runnable.class::isInstance)
-                .map(Runnable.class::cast)
-                .forEach(Runnable::run);
+                .filter(ProcessConfigurationChange.class::isInstance)
+                .map(ProcessConfigurationChange.class::cast)
+                .forEach(processConfigurationUpdater::update);
+
+        var dbConfStore = repository.getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+        previewResult.getChanges().stream()
+                .filter(DatabaseConnectorConfigurationChange.class::isInstance)
+                .map(DatabaseConnectorConfigurationChange.class::cast)
+                .forEach(change -> change.apply(dbConfStore));
     }
 
     private boolean sameGAC(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {

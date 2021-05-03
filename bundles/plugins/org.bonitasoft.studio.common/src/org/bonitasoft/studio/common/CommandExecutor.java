@@ -16,19 +16,23 @@ package org.bonitasoft.studio.common;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
+@Creatable
 public class CommandExecutor {
 
     private ECommandService eCommandService;
     private EHandlerService eHandlerService;
-
+    
     public Object executeCommand(String command, Map<String, Object> parameters) {
         if (Workbench.getInstance() != null) {
             initServices();

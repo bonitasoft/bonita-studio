@@ -5,35 +5,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.operation.extension.participant.definition;
+package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
-import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 
-public class DependencyUpdate {
+public interface DatabaseConnectorConfigurationChange {
 
-    private Dependency currentDependency;
-    private Dependency updatedDependency;
-
-    public DependencyUpdate(Dependency currentDependency, String newVersion) {
-        this.currentDependency = currentDependency;
-        if (newVersion != null) {
-            this.updatedDependency = currentDependency.clone();
-            this.updatedDependency.setVersion(newVersion);
-        }
-    }
-
-    public Dependency getCurrentDependency() {
-        return currentDependency;
-    }
-
-    public Dependency getUpdatedDependency() {
-        return updatedDependency;
-    }
+    void apply(DatabaseConnectorPropertiesRepositoryStore dbConfStore);
+    
 }

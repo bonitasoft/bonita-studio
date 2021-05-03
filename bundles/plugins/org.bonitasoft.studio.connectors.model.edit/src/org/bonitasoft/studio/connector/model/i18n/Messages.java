@@ -155,6 +155,7 @@ public class Messages extends NLS {
     public static String removedInputChangeDescription;
     public static String removedOutputChangeDescription;
     public static String definitionUpdateChangeDescription;
+    public static String newMandatoryInputChangeDescription;
 
     /**
      * @param event

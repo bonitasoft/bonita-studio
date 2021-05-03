@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public interface PreviewResult {
 
-    boolean hasChanges();
+    boolean shouldOpenPreviewDialog();
 
     boolean canProceed();
 

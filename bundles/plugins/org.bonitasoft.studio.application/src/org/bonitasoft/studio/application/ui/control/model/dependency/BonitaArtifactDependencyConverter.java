@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarFile;
@@ -31,6 +31,7 @@ import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -38,7 +39,6 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.swt.graphics.Image;
 
-import com.google.common.base.Strings;
 
 public class BonitaArtifactDependencyConverter {
 
@@ -51,7 +51,7 @@ public class BonitaArtifactDependencyConverter {
         this.dependenciesStore = dependenciesStore;
         this.pomReader = new MavenXpp3Reader();
 
-        defaultIconsMap = new HashMap<>();
+        defaultIconsMap = new EnumMap<>(ArtifactType.class);
         defaultIconsMap.put(ArtifactType.CONNECTOR, Pics.getImage(PicsConstants.connectorDefaultIcon));
         defaultIconsMap.put(ArtifactType.ACTOR_FILTER, Pics.getImage(PicsConstants.actorfilterDefaultIcon));
         defaultIconsMap.put(ArtifactType.THEME, Pics.getImage(PicsConstants.themeDefaultIcon));
@@ -80,8 +80,8 @@ public class BonitaArtifactDependencyConverter {
                 break;
             case CONNECTOR:
             case ACTOR_FILTER:
-                fillConnector(dep, bonitaDep);
             default:
+                fillConnector(dep, bonitaDep);
                 break;
         }
         bonitaDep.setIconImage(defaultIconsMap.get(type));

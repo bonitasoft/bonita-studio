@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationCollector;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdateParticipant;
+import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ArtifactDefinitionProvider;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorDefinitionProviderFactory;
@@ -51,16 +52,19 @@ public class ExtensionUpdateParticipantFactory {
     private ConnectorConfigurationMigratorFactory migratorFactory;
     private ProjectDependenciesResolver projectDependencyResolver;
     private ProcessConfigurationCollector processConfigurationCollector;
+    private ProcessConfigurationUpdater processConfigurationUpdater;
 
     @Inject
     public ExtensionUpdateParticipantFactory(RepositoryAccessor repositoryAccessor, 
             ConnectorConfigurationMigratorFactory migratorFactory,
             ProjectDependenciesResolver projectDependencyResolver,
-            ProcessConfigurationCollector processConfigurationCollector) {
+            ProcessConfigurationCollector processConfigurationCollector,
+            ProcessConfigurationUpdater processConfigurationUpdater) {
         this.repositoryAccessor = repositoryAccessor;
         this.migratorFactory = migratorFactory;
         this.projectDependencyResolver = projectDependencyResolver;
         this.processConfigurationCollector = processConfigurationCollector;
+        this.processConfigurationUpdater = processConfigurationUpdater;
     }
 
     public DefinitionUpdateParticipant createDefinitionUpdateParticipant(List<DependencyUpdate> dependenciesUpdates) {
@@ -78,6 +82,7 @@ public class ExtensionUpdateParticipantFactory {
         return new ProcessConfigurationUpdateParticipant(dependenciesUpdates,
                 processConfigurationCollector,
                 projectDependencyResolver,
+                processConfigurationUpdater,
                 repositoryAccessor.getCurrentRepository());
     }
 

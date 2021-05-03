@@ -18,7 +18,6 @@ import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -62,7 +61,6 @@ public class ImportExtensionHandler {
     private RepositoryAccessor repositoryAccessor;
     private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
-    private Optional<Dependency> existingDependencyToRemove = Optional.empty();
     private ExceptionDialogHandler errorDialogHandler;
 
     @Inject
@@ -157,31 +155,7 @@ public class ImportExtensionHandler {
             updateExtensionDecorator.preUpdate(container);
             Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel);
             if (result.isPresent()) {
-                boolean performUpdate = updateExtensionDecorator.postUpdate(container.getShell(), container);
-                LocalDependenciesStore localDependencyStore = repositoryAccessor.getCurrentRepository()
-                        .getLocalDependencyStore();
-
-                existingDependencyToRemove.ifPresent(dep -> {
-                    try {
-                        if (performUpdate) {
-                            localDependencyStore.deleteBackup(dep);
-                            if (!Objects.equals(importExtensionPage.getDependency().getVersion(), dep.getVersion())) {
-                                // Nothing to remove if version is the same (updating a snapshot)
-                                localDependencyStore.remove(dep);
-                            }
-                        } else {
-                            localDependencyStore.revert(dep);
-                            container.run(true, false,
-                                    repositoryAccessor.getCurrentRepository().getProjectDependenciesStore()::analyze);
-                        }
-                    } catch (CoreException e) {
-                        errorDialogHandler.openErrorDialog(container.getShell(), e.getStatus().getMessage(),
-                                e.getCause());
-                    } catch (InvocationTargetException | InterruptedException e) {
-                        errorDialogHandler.openErrorDialog(container.getShell(), e.getMessage(), e);
-                    }
-                });
-
+                updateExtensionDecorator.postUpdate(container.getShell(), container);
                 container.run(true, false, monitor -> {
                     try {
                         MavenPlugin.getProjectConfigurationManager()
@@ -236,8 +210,6 @@ public class ImportExtensionHandler {
             container.run(true, false, monitor -> {
                 try {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
-                    existingDependencyToRemove = mavenProjectHelper.findDependencyInAnyVersion(mavenModel,
-                            dependency);
                     localDependenciesStore.install(dependencyLookup);
                     addDependency(mavenModel, dependency, monitor);
                     monitor.done();

@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration.preview;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -47,6 +48,11 @@ public class JarAddedChange implements ChangePreview, ProcessConfigurationChange
     public List<ChangePreview> getDetails() {
         return List.of();
     }
+    
+    @Override
+    public Collection<Configuration> getConfigurations() {
+        return List.of();
+    }
 
     @Override
     public Kind getKind() {
@@ -76,6 +82,11 @@ public class JarAddedChange implements ChangePreview, ProcessConfigurationChange
         fragment.setType(FragmentTypes.JAR);
         fragment.setValue(artifact.getFile().getName());
         otherJarFragmentContainer.getFragments().add(fragment);
+    }
+
+    @Override
+    public boolean showInPreviewDialog() {
+        return false;
     }
 
 }

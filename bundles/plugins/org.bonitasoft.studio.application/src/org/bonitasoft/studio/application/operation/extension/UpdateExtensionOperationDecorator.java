@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.operation.extension;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
@@ -26,8 +27,10 @@ import org.bonitasoft.studio.application.operation.extension.participant.preview
 import org.bonitasoft.studio.application.operation.extension.participant.preview.Previewable;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,26 +72,27 @@ public class UpdateExtensionOperationDecorator {
             throws InvocationTargetException, InterruptedException {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
+        var localDependencyStore = currentRepository.getLocalDependencyStore();
         try {
             for (var p : participants) {
                 context.run(true, false, p::runPreview);
             }
-            
             var previewResult = new PreviewResultImpl();
             participants.stream()
                     .map(Previewable::getPreviewResult)
                     .flatMap(r -> r.getChanges().stream())
                     .forEach(previewResult::addChange);
-            if (previewResult.hasChanges()) {
+            if (previewResult.shouldOpenPreviewDialog()) {
                 int buttonId = previewResult.open(shell);
                 if (buttonId == IDialogConstants.PROCEED_ID) {
-                    for (var p : participants) {
-                        context.run(true, false, p::run);
-                    }
+                    applyChanges(context, localDependencyStore);
                 } else if (buttonId == IDialogConstants.ABORT_ID) {
-                    context.run(true, false, this::abortDependenciesUpdate);
+                    context.run(true, false, monitor -> abortDependenciesUpdate(localDependencyStore, monitor));
+                    context.run(true, false, currentRepository.getProjectDependenciesStore()::analyze);
                     return false;
                 }
+            } else {
+                applyChanges(context, localDependencyStore);
             }
         } finally {
             diagramRepositoryStore.resetComputedProcesses();
@@ -96,24 +100,92 @@ public class UpdateExtensionOperationDecorator {
         return true;
     }
 
-    private void abortDependenciesUpdate(IProgressMonitor monitor) throws InvocationTargetException {
+    private void applyChanges(IRunnableContext context, LocalDependenciesStore localDependencyStore)
+            throws InvocationTargetException, InterruptedException {
+        for (var p : participants) {
+            context.run(true, false, p::run);
+        }
+        updateLocalStore(localDependencyStore);
+    }
+
+    private void updateLocalStore(LocalDependenciesStore localDependencyStore) {
+        dependenciesUpdates.stream()
+                .forEach(du -> {
+                    try {
+                        localDependencyStore.deleteBackup(du.getCurrentDependency());
+                        if (du.getUpdatedDependency() != null) {
+                            if (!Objects.equals(du.getCurrentDependency().getVersion(),
+                                    du.getUpdatedDependency().getVersion())) {
+                                // Nothing to remove if version is the same (updating a snapshot)
+                                localDependencyStore.remove(du.getCurrentDependency());
+                            }
+                        }
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+
+                });
+    }
+
+    private void abortDependenciesUpdate(LocalDependenciesStore localDependencyStore, IProgressMonitor monitor)
+            throws InvocationTargetException {
         monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
-        List<Dependency> originalDependencies = dependenciesUpdates
+        revertUpdatedDependencies();
+        revertRemovedDependencies();
+        revertLocalStore(localDependencyStore);
+    }
+
+    private void revertRemovedDependencies() throws InvocationTargetException {
+        List<Dependency> removedDependencies = dependenciesUpdates
                 .stream()
+                .filter(d -> d.getUpdatedDependency() == null)
                 .map(DependencyUpdate::getCurrentDependency)
                 .collect(Collectors.toList());
-        try {
-            new UpdateDependencyVersionOperation(originalDependencies)
-                    .run(AbstractRepository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e) {
-            throw new InvocationTargetException(e);
+        if (!removedDependencies.isEmpty()) {
+            try {
+                new AddDependencyOperation(removedDependencies)
+                        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
         }
+    }
+
+    private void revertUpdatedDependencies() throws InvocationTargetException {
+        List<Dependency> originalDependencies = dependenciesUpdates
+                .stream()
+                .filter(d -> d.getUpdatedDependency() != null)
+                .map(DependencyUpdate::getCurrentDependency)
+                .collect(Collectors.toList());
+        if (!originalDependencies.isEmpty()) {
+            try {
+                new UpdateDependencyVersionOperation(originalDependencies)
+                        .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+            } catch (CoreException e) {
+                throw new InvocationTargetException(e);
+            }
+        }
+    }
+
+    private void revertLocalStore(LocalDependenciesStore localDependencyStore) {
+        // Restore jar in local store if any
+        dependenciesUpdates.stream()
+                .map(DependencyUpdate::getCurrentDependency)
+                .forEach(dep -> {
+                    try {
+                        localDependencyStore.revert(dep);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
+        //remove installed local dependencies if any
         dependenciesUpdates
                 .stream()
                 .map(DependencyUpdate::getUpdatedDependency)
+                .filter(Objects::nonNull)
                 .forEach(dep -> {
                     try {
-                        currentRepository.getLocalDependencyStore().remove(dep);
+                        localDependencyStore.remove(dep);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                     }

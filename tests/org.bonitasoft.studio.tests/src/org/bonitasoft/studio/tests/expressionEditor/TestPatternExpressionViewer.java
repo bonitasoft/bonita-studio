@@ -38,6 +38,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyledText;
@@ -65,7 +66,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
     private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
     private static final String DB_CATEGORY_ID = "database";
     private static final String GENERIC_DB_CATEGORY_ID = "generic";
-    private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+" + DATA_NAME_2
+    private static final String GROOVY_SQL_QUERY = "\"SELECT \"+" + DATA_NAME_1 + "+\" from MyTable WHERE \"+"
+            + DATA_NAME_2
             + "+\"='\"+" + DATA_NAME_3
             + "+\"'\"";
 
@@ -73,7 +75,7 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
 
     @Rule
     public SWTGefBotRule rule = new SWTGefBotRule(bot);
-    
+
     @Before
     public void setUp() throws Exception {
         new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-database", "2.0.3")
@@ -106,7 +108,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         boolean found = false;
         for (final Connector c : connectors) {
             if (c.getName().equals("groovyDBConnector")) {
-                final List<Expression> expressions = ModelHelper.getAllItemsOfType(c, ExpressionPackage.Literals.EXPRESSION);
+                final List<Expression> expressions = ModelHelper.getAllItemsOfType(c,
+                        ExpressionPackage.Literals.EXPRESSION);
                 for (final Expression exp : expressions) {
                     if (exp.getType().equals(ExpressionConstants.SCRIPT_TYPE)) {
                         found = true;
@@ -129,7 +132,8 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
         boolean found = false;
         for (final Connector c : connectors) {
             if (c.getName().equals("patternDBConnector")) {
-                final List<Expression> expressions = ModelHelper.getAllItemsOfType(c, ExpressionPackage.Literals.EXPRESSION);
+                final List<Expression> expressions = ModelHelper.getAllItemsOfType(c,
+                        ExpressionPackage.Literals.EXPRESSION);
                 for (final Expression exp : expressions) {
                     if (exp.getType().equals(ExpressionConstants.PATTERN_TYPE)) {
                         found = true;
@@ -236,17 +240,21 @@ public class TestPatternExpressionViewer implements SWTBotConstants {
             final String scriptName, final String groovyScript) {
         SWTBotShell activeShell = bot.activeShell();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON, buttonIndex).click();
-        bot.tabItem("Script").activate();
+        if (Platform.getOS().equals(Platform.OS_WIN32)) {
+            bot.cTabItem("Script").activate();
+        } else {
+            bot.tabItem("Script").activate();
+        }
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(StyledText.class)));
         bot.textWithLabel("Name").setText(scriptName);
         bot.styledText().setText(groovyScript);
+        bot.sleep(100);
         assertFalse("return type combobox should be disabled", bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be" + inputtype, bot.comboBoxWithLabel("Return type").getText(), inputtype);
         bot.button(IDialogConstants.OK_LABEL).click();
         activeShell.setFocus();
         bot.waitUntil(Conditions.shellIsActive(activeShell.getText()));
-        assertEquals("wrong value for " + inputName, bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText(),
-                scriptName);
+        assertEquals("wrong value for " + inputName, scriptName, bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 0).getText());
     }
 
     private void createData(final String dataName) {

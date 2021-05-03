@@ -31,5 +31,7 @@ public interface ChangePreview {
     boolean hasBreakingChanges();
 
     ChangePreview getParent();
+
+    boolean showInPreviewDialog();
     
 }

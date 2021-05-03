@@ -73,4 +73,9 @@ public class DefinitionVersionUpdateChange implements ChangePreview {
         return null;
     }
 
+    @Override
+    public boolean showInPreviewDialog() {
+        return nbOfConfigurationsToUpdate > 0;
+    }
+
 }
