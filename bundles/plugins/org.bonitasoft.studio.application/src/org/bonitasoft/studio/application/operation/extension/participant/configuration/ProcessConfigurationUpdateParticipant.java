@@ -43,6 +43,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
@@ -56,6 +57,7 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
     private PreviewResult previewResult;
     private Map<Artifact, Set<Artifact>> currentArtifacts;
     private ProcessConfigurationUpdater processConfigurationUpdater;
+    private Set<Resource> modifiedResources;
 
     public ProcessConfigurationUpdateParticipant(List<DependencyUpdate> dependenciesUpdates,
             ProcessConfigurationCollector configurationCollector,
@@ -195,10 +197,11 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
             previewResult = runPreview(AbstractRepository.NULL_PROGRESS_MONITOR);
         }
 
-        previewResult.getChanges().stream()
+        modifiedResources = previewResult.getChanges().stream()
                 .filter(ProcessConfigurationChange.class::isInstance)
                 .map(ProcessConfigurationChange.class::cast)
-                .forEach(processConfigurationUpdater::update);
+                .flatMap( change -> processConfigurationUpdater.update(change).stream())
+                .collect(Collectors.toSet());
 
         var dbConfStore = repository.getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
         previewResult.getChanges().stream()
@@ -207,6 +210,12 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
                 .forEach(change -> change.apply(dbConfStore));
     }
 
+    @Override
+    public Collection<Resource> getModifiedResources() {
+        return modifiedResources;
+    }
+    
+    
     private boolean sameGAC(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {
         return currentArtifact.getGroupId().equals(updatedArtifact.getGroupId())
                 && currentArtifact.getArtifactId().equals(updatedArtifact.getArtifactId())

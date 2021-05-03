@@ -30,8 +30,8 @@ public class PreviewResultImpl implements PreviewResult {
 
     @Override
     public boolean canProceed() {
-        // If no breaking changes found
-        return changes.stream().noneMatch(ChangePreview::hasBreakingChanges);
+        // If at least one change is not a breaking changes
+        return changes.stream().anyMatch(c -> !c.hasBreakingChanges());
     }
 
     @Override

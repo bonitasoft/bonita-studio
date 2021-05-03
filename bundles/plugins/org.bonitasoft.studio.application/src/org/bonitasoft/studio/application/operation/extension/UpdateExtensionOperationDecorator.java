@@ -14,10 +14,14 @@
  */
 package org.bonitasoft.studio.application.operation.extension;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
@@ -34,6 +38,8 @@ import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.swt.widgets.Shell;
@@ -61,10 +67,14 @@ public class UpdateExtensionOperationDecorator {
                     .createProcessConfigurationUpdateParticipant(dependenciesUpdates));
             DiagramRepositoryStore diagramRepositoryStore = currentRepository
                     .getRepositoryStore(DiagramRepositoryStore.class);
-            context.run(true, false, diagramRepositoryStore::computeProcesses);
-            for (UpdateExtensionOperationParticipant participant : participants) {
-                context.run(true, false, participant::preUpdate);
-            }
+            diagramRepositoryStore.resetComputedProcesses();
+            context.run(true, false, monitor -> {
+                monitor.beginTask(Messages.preparingUpdate, IProgressMonitor.UNKNOWN);
+                diagramRepositoryStore.computeProcesses(new NullProgressMonitor());
+                for (UpdateExtensionOperationParticipant participant : participants) {
+                   participant.preUpdate(new NullProgressMonitor());
+                }
+            });
         }
     }
 
@@ -74,9 +84,12 @@ public class UpdateExtensionOperationDecorator {
                 .getRepositoryStore(DiagramRepositoryStore.class);
         var localDependencyStore = currentRepository.getLocalDependencyStore();
         try {
-            for (var p : participants) {
-                context.run(true, false, p::runPreview);
-            }
+            context.run(true, false, monitor -> {
+                monitor.beginTask(Messages.computingPreview, IProgressMonitor.UNKNOWN);
+                for (var p : participants) {
+                    p.runPreview(new NullProgressMonitor());
+                }
+            });
             var previewResult = new PreviewResultImpl();
             participants.stream()
                     .map(Previewable::getPreviewResult)
@@ -87,8 +100,11 @@ public class UpdateExtensionOperationDecorator {
                 if (buttonId == IDialogConstants.PROCEED_ID) {
                     applyChanges(context, localDependencyStore);
                 } else if (buttonId == IDialogConstants.ABORT_ID) {
-                    context.run(true, false, monitor -> abortDependenciesUpdate(localDependencyStore, monitor));
-                    context.run(true, false, currentRepository.getProjectDependenciesStore()::analyze);
+                    context.run(true, false, monitor -> {
+                        monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
+                        abortDependenciesUpdate(localDependencyStore, monitor);
+                        currentRepository.getProjectDependenciesStore().analyze(monitor);
+                    });
                     return false;
                 }
             } else {
@@ -102,10 +118,24 @@ public class UpdateExtensionOperationDecorator {
 
     private void applyChanges(IRunnableContext context, LocalDependenciesStore localDependencyStore)
             throws InvocationTargetException, InterruptedException {
-        for (var p : participants) {
-            context.run(true, false, p::run);
-        }
-        updateLocalStore(localDependencyStore);
+        context.run(true, false, monitor -> {
+            monitor.beginTask(Messages.applyingChanges, IProgressMonitor.UNKNOWN);
+            Set<Resource> modifiedResources = new HashSet<>();
+            for (var p : participants) {
+                p.run(new NullProgressMonitor());
+                if(p.getModifiedResources() != null) {
+                    modifiedResources.addAll(p.getModifiedResources());
+                }
+            }
+            for(var resource : modifiedResources) {
+                try {
+                    resource.save(Collections.emptyMap());
+                } catch (IOException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+            updateLocalStore(localDependencyStore);
+        });
     }
 
     private void updateLocalStore(LocalDependenciesStore localDependencyStore) {
@@ -129,7 +159,6 @@ public class UpdateExtensionOperationDecorator {
 
     private void abortDependenciesUpdate(LocalDependenciesStore localDependencyStore, IProgressMonitor monitor)
             throws InvocationTargetException {
-        monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
         revertUpdatedDependencies();
         revertRemovedDependencies();
         revertLocalStore(localDependencyStore);

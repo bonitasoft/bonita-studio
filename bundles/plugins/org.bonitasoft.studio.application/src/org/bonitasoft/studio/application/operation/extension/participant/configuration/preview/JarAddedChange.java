@@ -86,7 +86,7 @@ public class JarAddedChange implements ChangePreview, ProcessConfigurationChange
 
     @Override
     public boolean showInPreviewDialog() {
-        return false;
+        return getParent() instanceof JarUpdatedChange;
     }
 
 }
