@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
-import java.io.IOException;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,21 +26,18 @@ import org.eclipse.emf.ecore.resource.Resource;
 @Creatable
 public class ProcessConfigurationUpdater {
 
-    public void update(ProcessConfigurationChange change) {
+    public Collection<Resource> update(ProcessConfigurationChange change) {
+        Set<Resource> modifiedResources = new HashSet<>();
         for (var configuration : change.getConfigurations()) {
             var modelUpdater = new EMFModelUpdater<Configuration>().from(configuration);
             change.apply(modelUpdater.getWorkingCopy());
             Resource resource = configuration.eResource();
-            boolean saveResourceAfterUpdate = resource != null && !resource.isModified();
             modelUpdater.update();
-            if (saveResourceAfterUpdate) {
-                try {
-                    resource.save(Collections.emptyMap());
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e);
-                }
+            if(resource != null) {
+                modifiedResources.add(resource);
             }
         }
+        return modifiedResources;
     }
 
 }

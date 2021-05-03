@@ -16,12 +16,17 @@
  */
 package org.bonitasoft.studio.application.operation.extension;
 
+import java.util.Collection;
+
 import org.bonitasoft.studio.application.operation.extension.participant.preview.Previewable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public interface UpdateExtensionOperationParticipant extends IRunnableWithProgress, Previewable {
     
     void preUpdate(IProgressMonitor monitor);
+    
+    Collection<Resource> getModifiedResources();
 
 }

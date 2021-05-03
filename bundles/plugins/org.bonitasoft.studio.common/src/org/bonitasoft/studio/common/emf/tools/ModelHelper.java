@@ -123,7 +123,7 @@ public class ModelHelper {
     }
 
     public static List<AbstractProcess> getAllProcesses(final Element eObject) {
-        final List<AbstractProcess> res = new ArrayList<AbstractProcess>();
+        final List<AbstractProcess> res = new ArrayList<>();
         final MainProcess mainProcess = getMainProcess(eObject);
         if (mainProcess != null) {
             findAllProcesses(mainProcess, res);
@@ -1202,7 +1202,7 @@ public class ModelHelper {
     }
 
     public static <T extends EObject> List<T> getAllElementOfTypeIn(final EObject container, final Class<T> type) {
-        final List<T> res = new ArrayList<T>();
+        final List<T> res = new ArrayList<>();
         addAllItemsOfContainer(container, res, type);
         return res;
     }

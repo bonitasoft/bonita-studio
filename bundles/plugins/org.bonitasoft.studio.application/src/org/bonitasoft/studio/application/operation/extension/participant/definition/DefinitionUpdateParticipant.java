@@ -19,7 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.plugin.analyze.report.model.Definition;
@@ -52,6 +54,7 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
     private ConnectorConfigurationCollector configurationCollector;
     private DefinitionUpdatePreviewResult previewResult;
     private List<DependencyUpdate> dependenciesUpdates;
+    private Set<Resource> modifiedResources;
 
     public DefinitionUpdateParticipant(ArtifactDefinitionProvider artifactDefinitionProvider,
             List<DependencyUpdate> dependenciesUpdates,
@@ -126,6 +129,11 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
     public PreviewResult getPreviewResult() {
         return previewResult;
     }
+    
+    @Override
+    public Collection<Resource> getModifiedResources() {
+        return modifiedResources;
+    }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -136,67 +144,59 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
         }
 
         // Apply migration to configuration
-        connectorConfigurations.stream()
+        modifiedResources = connectorConfigurations.stream()
                 .filter(conf -> previewResult.hasMigrator(conf.getDefinitionId()))
                 .filter(conf -> !previewResult.getMigrator(conf.getDefinitionId()).hasBreakingChanges(conf))
-                .forEach(conf -> applyMigrationAndSaveResource(conf, monitor));
+                .map(conf -> applyMigration(conf, monitor))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        connectorConfigurations.stream()
+        modifiedResources.addAll(connectorConfigurations.stream()
                 .filter(conf -> previewResult.hasBeenRemoved(conf.getDefinitionId(), conf.getVersion()))
-                .forEach(conf -> removeConfiguration(conf, monitor));
+                .map(conf -> removeConfiguration(conf, monitor))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
     }
 
-    private void removeConfiguration(ConnectorConfiguration conf, IProgressMonitor monitor) {
+    private Resource removeConfiguration(ConnectorConfiguration conf, IProgressMonitor monitor) {
         Resource resource = conf.eResource();
         if (resource != null) {
             if (conf.eContainer() instanceof Connector) {
                 Connector connector = (Connector) conf.eContainer();
-                boolean isModified = resource.isModified();
                 TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(conf);
                 if (editingDomain != null) {
                     editingDomain.getCommandStack().execute(DeleteCommand.create(editingDomain, connector));
                 } else {
                     EcoreUtil.delete(connector);
                 }
-                if (!isModified) {
-                    try {
-                        resource.save(Collections.emptyMap());
-                    } catch (IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
+                monitor.worked(1);
+                return resource;
             } else {
                 try {
                     resource.delete(Collections.emptyMap());
                 } catch (IOException e) {
                     BonitaStudioLog.error(e);
                 }
+                monitor.worked(1);
             }
-            monitor.worked(1);
         }
+        return null;
     }
 
-    private void applyMigrationAndSaveResource(ConnectorConfiguration conf, IProgressMonitor monitor) {
+    private Resource applyMigration(ConnectorConfiguration conf, IProgressMonitor monitor) {
         var migrator = previewResult.getMigrator(conf.getDefinitionId());
         EObject source = conf.eContainer() instanceof Connector ? conf.eContainer() : conf;
         var modelUpdater = new EMFModelUpdater<>().from(source);
         EObject workingCopy = modelUpdater.getWorkingCopy();
-        if(workingCopy instanceof Connector) {
+        if (workingCopy instanceof Connector) {
             migrator.migrate(((Connector) workingCopy).getConfiguration());
-        }else {
+        } else {
             migrator.migrate((ConnectorConfiguration) workingCopy);
         }
         var resource = conf.eResource();
-        boolean saveResourceAfterUpdate = resource != null && !resource.isModified();
         modelUpdater.update();
-        if (saveResourceAfterUpdate) {
-            try {
-                resource.save(Collections.emptyMap());
-            } catch (IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
         monitor.worked(1);
+        return resource;
     }
 
 }
