@@ -34,6 +34,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -43,10 +44,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 public class ConnectorZoomControl extends Composite {
 
@@ -57,6 +63,9 @@ public class ConnectorZoomControl extends Composite {
     private BonitaArtifactDependency bonitaDep;
     private Dependency dep;
     private ProjectDependenciesStore projectDependenciesStore;
+    protected IThemeEngine engine;
+    protected Cursor cursorArrow;
+    protected Cursor cursorHand;
 
     public ConnectorZoomControl(Composite parent,
             ZoomListener zoomListener,
@@ -71,6 +80,9 @@ public class ConnectorZoomControl extends Composite {
         this.defRepositoryStore = repoManager.getRepositoryStore(ConnectorDefRepositoryStore.class);
         this.localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         this.projectDependenciesStore = repoManager.getCurrentRepository().getProjectDependenciesStore();
+        this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+        this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
         setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
@@ -101,6 +113,33 @@ public class ConnectorZoomControl extends Composite {
         titleLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        titleLabel.addListener(SWT.MouseUp, e -> {
+            if (zoomListener != null) {
+                Rectangle bounds = titleLabel.getBounds();
+                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                    zoomListener.deZoom(e);
+                }
+            }
+        });
+
+        titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                        BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR);
+                engine.applyStyles(titleLabel, false);
+                titleLabel.setCursor(cursorHand);
+            }
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+                engine.applyStyles(titleLabel, false);
+                titleLabel.setCursor(cursorArrow);
+            }
+        });
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.back)
