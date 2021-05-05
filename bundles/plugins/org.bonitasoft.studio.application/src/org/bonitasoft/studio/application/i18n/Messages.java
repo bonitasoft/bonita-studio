@@ -296,6 +296,10 @@ public class Messages extends NLS {
     public static String jarFileAddedChangeDescription;
     public static String configurationToUpdateFound;
     public static String updateProcessesTitle;
+    public static String back;
+    public static String connectors;
+    public static String connectorsHint;
+    public static String implementations;
     public static String preparingUpdate;
     public static String computingPreview;
     public static String applyingChanges;

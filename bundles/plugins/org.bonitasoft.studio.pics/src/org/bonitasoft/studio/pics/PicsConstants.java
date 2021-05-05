@@ -454,4 +454,7 @@ public class PicsConstants {
     public static String uid24 = "coolbar/24/uid.png";
     public static String uid48 = "coolbar/48/uid.png";
 
+    public static String back = "projectExtensions/back.png";
+    public static String backHot = "projectExtensions/back_hot.png";
+
 }
