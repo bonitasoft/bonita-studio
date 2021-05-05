@@ -19,17 +19,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecoratorFactory;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.application.views.extension.card.ExtensionCard;
+import org.bonitasoft.studio.application.views.extension.card.ExtensionCardFactory;
+import org.bonitasoft.studio.application.views.extension.card.zoom.IZoomable;
+import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -38,10 +39,8 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
-import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -52,14 +51,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -81,6 +76,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -90,6 +86,15 @@ import org.eclipse.ui.part.EditorPart;
 public class ProjectExtensionEditorPart extends EditorPart implements IResourceChangeListener {
 
     public static final String ID = "org.bonitasoft.studio.application.extension.editor";
+
+    public static final String BOLD_20_FONT_ID = "bold20_bonita";
+    public static final String BOLD_8_FONT_ID = "bold8_bonita";
+    public static final String BOLD_4_FONT_ID = "bold4_bonita";
+    public static final String BOLD_0_FONT_ID = "bold0_bonita";
+    public static final String ITALIC_2_FONT_ID = "italic2_bonita";
+    public static final String ITALIC_0_FONT_ID = "italic0_bonita";
+    public static final String NORMAL_10_FONT_ID = "normal10_bonita";
+    public static final String NORMAL_4_FONT_ID = "normal4_bonita";
 
     public static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
     public static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
@@ -108,16 +113,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     private Label description;
     private StyledText title;
     private LocalResourceManager localResourceManager;
-    private Font titleFont;
-    private Font subtitleFont;
-    private Font gavFont;
-    private Font versionFont;
-    private Font emptyMessageFont;
     private Composite mainComposite;
     private Composite toolbarComposite;
     private Composite titleComposite;
-    private Font bigButtonFont;
-    private UpdateExtensionOperationDecoratorFactory updateExtensionOperationDecoratorFactory;
     private ExceptionDialogHandler errorHandler;
     private UpdateExtensionListener upadateExtensionListener;
 
@@ -139,8 +137,6 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
         var eclipseContext = EclipseContextFactory.create();
-        updateExtensionOperationDecoratorFactory = ContextInjectionFactory
-                .make(UpdateExtensionOperationDecoratorFactory.class, eclipseContext);
         errorHandler = ContextInjectionFactory
                 .make(ExceptionDialogHandler.class, eclipseContext);
         commandExecutor = ContextInjectionFactory
@@ -149,7 +145,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .make(UpdateExtensionListener.class, eclipseContext);
         removeExtensionListener = ContextInjectionFactory
                 .make(RemoveExtensionListener.class, eclipseContext);
-        
+
         allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
         setInput(input);
@@ -204,18 +200,14 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 if (bonitaDependency
                         .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
                         .isPresent()) {
-                    var extensionCard = new ExtensionCard(parent, dep, bonitaDependency.get(), subtitleFont, gavFont);
-                    extensionCard.addUpdateExtensionListener(upadateExtensionListener);
-                    extensionCard.addRemoveExtensionListener(removeExtensionListener);
+                    createCard(parent, dep, bonitaDependency.get());
                 } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                     BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                             .toBonitaArtifactDependency(dep);
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        var extensionCard = new ExtensionCard(parent, dep, bonitaDep, subtitleFont, gavFont);
-                        extensionCard.addUpdateExtensionListener(upadateExtensionListener);
-                        extensionCard.addRemoveExtensionListener(removeExtensionListener);
+                        createCard(parent, dep, bonitaDependency.get());
                     }
                 }
             });
@@ -225,11 +217,11 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
                     separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
                 }
-                new OtherExtensionsComposite(parent, 
+                new OtherExtensionsComposite(parent,
                         otherDependencies,
-                        subtitleFont, 
+                        JFaceResources.getFont(BOLD_8_FONT_ID),
                         removeExtensionListener,
-                        upadateExtensionListener, 
+                        upadateExtensionListener,
                         ctx);
             }
 
@@ -241,6 +233,30 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
             }
         } catch (CoreException e) {
             errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+        }
+    }
+
+    private void createCard(Composite parent, Dependency dep, BonitaArtifactDependency bonitaDep) {
+        ExtensionCard card = ExtensionCardFactory.createExtensionCard(parent, dep, bonitaDep);
+        card.addUpdateExtensionListener(upadateExtensionListener);
+        card.addRemoveExtensionListener(removeExtensionListener);
+        if (card instanceof IZoomable) {
+            ((IZoomable) card).addZoomListener(new ZoomListener() {
+
+                @Override
+                public void zoom(Event e) {
+                    Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
+                    ((IZoomable) card).createZoomedControl(cardComposite);
+                    cardComposite.layout();
+                    scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+                }
+
+                @Override
+                public void deZoom(Event e) {
+                    refreshContent();
+                }
+
+            });
         }
     }
 
@@ -269,7 +285,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         Label label = new Label(composite, SWT.WRAP | SWT.CENTER);
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
         label.setText(Messages.enhanceProject);
-        label.setFont(emptyMessageFont);
+        label.setFont(JFaceResources.getFont(NORMAL_10_FONT_ID));
         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
@@ -296,15 +312,15 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 title.setText(String.format("%s %s", name, version));
 
                 StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(), title.getBackground());
-                titleStyle.font = titleFont;
+                titleStyle.font = JFaceResources.getFontRegistry().get(BOLD_20_FONT_ID);
                 StyleRange versionStyle = new StyleRange(name.length() + 1, version.length(), title.getForeground(),
                         title.getBackground());
-                versionStyle.font = versionFont;
+                versionStyle.font = JFaceResources.getFont(ITALIC_0_FONT_ID);
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
                 layoutMainCompsite = refreshDescription(descriptionContent);
             } catch (CoreException e) {
-               errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+                errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
 
             Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
@@ -394,7 +410,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         Label editLabel = new Label(parent, SWT.NONE);
         editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         editLabel.setImage(Pics.getImage(PicsConstants.editProject));
-        editLabel.setFont(titleFont);
+        editLabel.setFont(JFaceResources.getFont(BOLD_20_FONT_ID));
         editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         editLabel.addMouseListener(new MouseAdapter() {
@@ -444,7 +460,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .withImage(Pics.getImage(PicsConstants.import64))
                 .withHotImage(Pics.getImage(PicsConstants.import64Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(bigButtonFont)
+                .withFont(JFaceResources.getFont(NORMAL_4_FONT_ID))
                 .onClick(e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND, null))
                 .createIn(parent);
     }
@@ -469,24 +485,28 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .withImage(Pics.getImage(PicsConstants.openMarketplace64))
                 .withHotImage(Pics.getImage(PicsConstants.openMarketplace64Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(bigButtonFont)
+                .withFont(JFaceResources.getFont(NORMAL_4_FONT_ID))
                 .onClick(e -> commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, null))
                 .createIn(parent);
     }
 
     private void initFonts(Font defaultFont) {
-        titleFont = createFont(defaultFont, 20, SWT.BOLD);
-        subtitleFont = createFont(defaultFont, 8, SWT.BOLD);
-        gavFont = createFont(defaultFont, 0, SWT.ITALIC);
-        versionFont = createFont(defaultFont, 2, SWT.ITALIC);
-        emptyMessageFont = createFont(defaultFont, 10, SWT.NORMAL);
-        bigButtonFont = createFont(defaultFont, 4, SWT.NORMAL);
+        createFont(BOLD_20_FONT_ID, defaultFont, 20, SWT.BOLD);
+        createFont(BOLD_8_FONT_ID, defaultFont, 8, SWT.BOLD);
+        createFont(BOLD_4_FONT_ID, defaultFont, 4, SWT.BOLD);
+        createFont(BOLD_0_FONT_ID, defaultFont, 0, SWT.BOLD);
+        createFont(ITALIC_0_FONT_ID, defaultFont, 0, SWT.ITALIC);
+        createFont(ITALIC_2_FONT_ID, defaultFont, 2, SWT.ITALIC);
+        createFont(NORMAL_10_FONT_ID, defaultFont, 10, SWT.NORMAL);
+        createFont(NORMAL_4_FONT_ID, defaultFont, 4, SWT.NORMAL);
     }
 
-    private Font createFont(Font initialFont, int increaseHeight, int style) {
-        FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style)
-                .increaseHeight(increaseHeight);
-        return localResourceManager.createFont(descriptor);
+    private void createFont(String id, Font initialFont, int increaseHeight, int style) {
+        if (!JFaceResources.getFontRegistry().hasValueFor(id) || JFaceResources.getFontRegistry().get(id).isDisposed()) {
+            FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style)
+                    .increaseHeight(increaseHeight);
+            JFaceResources.getFontRegistry().put(id, localResourceManager.createFont(descriptor).getFontData());
+        }
     }
 
     private void initVariables(Composite parent) {

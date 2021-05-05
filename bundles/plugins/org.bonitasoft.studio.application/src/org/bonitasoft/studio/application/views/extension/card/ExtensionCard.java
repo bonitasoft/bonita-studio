@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.extension;
+package org.bonitasoft.studio.application.views.extension.card;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +22,9 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.extension.RemoveExtensionListener;
+import org.bonitasoft.studio.application.views.extension.UpdateExtensionListener;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.pics.Pics;
@@ -32,11 +35,10 @@ import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
@@ -44,25 +46,25 @@ import org.eclipse.ui.PlatformUI;
 
 public class ExtensionCard extends Composite {
 
-    private Dependency dep;
-    private BonitaArtifactDependency bonitaDep;
-    private Font subtitleFont;
-    private Font gavFont;
-    private IThemeEngine engine;
     private Collection<RemoveExtensionListener> removeListeners = new ArrayList<>();
     private Collection<UpdateExtensionListener> updateListeners = new ArrayList<>();
 
+    protected Dependency dep;
+    protected BonitaArtifactDependency bonitaDep;
+    protected IThemeEngine engine;
+    protected Cursor cursorArrow;
+    protected Cursor cursorHand;
+    protected CLabel titleLabel;
+
     public ExtensionCard(Composite parent,
             Dependency dep,
-            BonitaArtifactDependency bonitaDep,
-            Font subtitleFont,
-            Font gavFont) {
+            BonitaArtifactDependency bonitaDep) {
         super(parent, SWT.BORDER);
         this.dep = dep;
         this.bonitaDep = bonitaDep;
-        this.subtitleFont = subtitleFont;
-        this.gavFont = gavFont;
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
+        this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -70,11 +72,11 @@ public class ExtensionCard extends Composite {
 
         createContent();
     }
-    
+
     public void addRemoveExtensionListener(RemoveExtensionListener removeListener) {
         removeListeners.add(removeListener);
     }
-    
+
     public void addUpdateExtensionListener(UpdateExtensionListener updateListener) {
         updateListeners.add(updateListener);
     }
@@ -142,15 +144,14 @@ public class ExtensionCard extends Composite {
                 .createIn(toolbarComposite);
     }
 
-
-    private void createDescriptionLabel(Composite parent) {
+    protected void createDescriptionLabel(Composite parent) {
         var description = new Label(parent, SWT.WRAP);
         description.setLayoutData(
                 GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 50).create());
         description.setText(bonitaDep.getDescription() != null ? bonitaDep.getDescription() : "");
     }
 
-    private void createIcon(Composite parent) {
+    protected void createIcon(Composite parent) {
         var iconLabel = new Label(parent, SWT.NONE);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.END, SWT.FILL)
@@ -160,50 +161,33 @@ public class ExtensionCard extends Composite {
         iconLabel.setImage(bonitaDep.getIconImage());
     }
 
-    private void createTypeLabel(Composite parent) {
+    protected void createTypeLabel(Composite parent) {
         var type = new Label(parent, SWT.NONE);
         type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
         type.setText(bonitaDep.getArtifactType().getName() + " ");
-        type.setFont(gavFont);
+        type.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
         type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 
-    private void createTitleComposite(Composite parent) {
+    protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite.setLayout(
                 GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        var titleLabel = new CLabel(titleComposite, SWT.NONE);
+        titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(bonitaDep.getName());
 
-        titleLabel.setFont(subtitleFont);
+        titleLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
         var gav = new CLabel(titleComposite, SWT.WRAP);
         gav.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
-        gav.setFont(gavFont);
+        gav.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
-
-        // TODO will probably be removed if we do not have the time to create the click behavior on the cards :'(.
-        titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                        BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR);
-                engine.applyStyles(titleLabel, false);
-            }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-                engine.applyStyles(titleLabel, false);
-            }
-        });
     }
 
     /**
