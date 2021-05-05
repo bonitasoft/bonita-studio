@@ -25,13 +25,11 @@ public class ImportRepositoryModel {
 
     private final String name;
     private final String version;
-    private final String edition;
     private IStatus status;
 
-    public ImportRepositoryModel(String name, String version, String edition) {
+    public ImportRepositoryModel(String name, String version) {
         this.name = name;
         this.version = version;
-        this.edition = edition;
         this.status = new Status(IStatus.OK, BosArchiveImporterPlugin.PLUGIN_ID, name);
     }
 
@@ -41,10 +39,6 @@ public class ImportRepositoryModel {
 
     public String getVersion() {
         return version;
-    }
-
-    public String getEdition() {
-        return edition;
     }
 
     public IStatus getStatus() {
