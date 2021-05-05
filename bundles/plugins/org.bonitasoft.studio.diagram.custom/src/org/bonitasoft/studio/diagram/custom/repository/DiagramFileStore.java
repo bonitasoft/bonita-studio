@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -184,9 +184,11 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     }
 
     public DiagramEditor getOpenedEditor() {
-        return findOpenedEditor()
+        AtomicReference<DiagramEditor> openedEditorObservable = new AtomicReference<>();
+        Display.getDefault().syncExec(() -> openedEditorObservable.set(findOpenedEditor()
                 .map(DiagramEditor.class::cast)
-                .orElse(null);
+                .orElse(null)));
+        return openedEditorObservable.get();
     }
 
     @Override
@@ -199,7 +201,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         final DiagramEditor editor = getOpenedEditor();
         if (editor != null && editor.getDiagramEditPart() != null) {
             diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-            if(diagram.eIsProxy()) {
+            if (diagram.eIsProxy()) {
                 diagram = null;
             }
         }
@@ -210,14 +212,9 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
                 return Collections.emptyList();
             }
         }
-        final List<AbstractProcess> allProcesses = ModelHelper.getAllProcesses(diagram);
-        final List<AbstractProcess> processes = new ArrayList<>();
-        for (final AbstractProcess abstractProcess : allProcesses) {
-            if (abstractProcess instanceof Pool) {
-                processes.add(abstractProcess);
-            }
-        }
-        return processes;
+        return ModelHelper.getAllProcesses(diagram).stream()
+                .filter(Pool.class::isInstance)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -269,7 +266,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         }
         return part;
     }
-    
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.filestore.EMFFileStore#doClose()
@@ -348,7 +345,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     private Function<AbstractProcess, String> toUUID() {
         return ModelHelper::getEObjectID;
     }
-
 
     public boolean isOpened() {
         return getOpenedEditor() != null;
