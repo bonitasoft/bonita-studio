@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -68,17 +69,17 @@ public class OffscreenEditPartFactory {
     }
 
     public void dispose() {
-        for(var ep : editParts) {
+        for (DiagramEditPart ep : editParts) {
             Diagram diagramView = ep.getDiagramView();
-           if(!isEditorOpened(diagramView.eResource())){
-               TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramView);
-               if(editingDomain != null) {
-                   DiagramEventBroker.stopListening(editingDomain);
-               }
-           }
+            if (!isEditorOpened(diagramView.eResource())) {
+                TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramView);
+                if (editingDomain != null) {
+                    DiagramEventBroker.stopListening(editingDomain);
+                }
+            }
         }
         editParts.clear();
-        for (var s : shells) {
+        for (Shell s : shells) {
             if (inUIThread()) {
                 s.dispose();
             } else {
@@ -91,7 +92,8 @@ public class OffscreenEditPartFactory {
     private boolean isEditorOpened(Resource eResource) {
         DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        var fStore = diagramRepositoryStore.getChild(WorkspaceSynchronizer.getFile(eResource).getName(), false);
+        DiagramFileStore fStore = diagramRepositoryStore.getChild(WorkspaceSynchronizer.getFile(eResource).getName(),
+                false);
         return fStore != null && fStore.getOpenedEditor() != null;
     }
 }
