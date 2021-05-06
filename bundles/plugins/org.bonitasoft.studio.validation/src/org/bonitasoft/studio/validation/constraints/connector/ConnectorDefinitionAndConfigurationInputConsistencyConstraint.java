@@ -20,6 +20,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
         extends AbstractLiveValidationMarkerConstraint {
@@ -47,8 +48,10 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
             return context.createSuccessStatus();
         }
 
-        ConnectorDefinition def = connectorDefStore.getDefinition(configuration.getDefinitionId(),
-                configuration.getVersion());
+        ConnectorDefinition def = connectorDefStore.getResourceProvider()
+                .getConnectorDefinitionRegistry()
+                .find(configuration.getDefinitionId(),  configuration.getVersion())
+                .orElse(null);
         if (def != null) {
             AbstractDefFileStore fStore = getDefFileStore(connectorDefStore, def);
             if (!fStore.isReadOnly()) {
@@ -56,13 +59,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
                 if (!inputStatus.isOK()) {
                     if (isConnector) {
                         return context.createFailureStatus(
-                                Messages.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,
+                                NLS.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,
                                         new Object[] { connector.getName(),
                                                 connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
                                                 inputStatus.getMessage() }));
                     } else {
                         return context.createFailureStatus(
-                                Messages.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,
+                                NLS.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,
                                         new Object[] { connector.getName(),
                                                 connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
                                                 inputStatus.getMessage() }));

@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
@@ -69,11 +71,13 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance()
                 .newValidator(EvaluationMode.BATCH);
         validator.setIncludeLiveConstraints(true);
+        SubMonitor subMonitor = SubMonitor.convert(monitor,Messages.validating, listOfProcessesToValidate.size());
         listOfProcessesToValidate.stream().forEach( process -> {
-            if(!monitor.isCanceled()) {
-                BonitaStudioLog.info(String.format("Validating %s (%s)...",process.getName(),process.getVersion()), ValidationCommonPlugin.PLUGIN_ID);
-                monitor.setTaskName(NLS.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
-                ProcessValidationStatus processValidationStatus = new ProcessValidationStatus(process,validator.validate(process, monitor));
+            if(!subMonitor.isCanceled()) {
+                BonitaStudioLog.info(String.format("Validating %s (%s)...", process.getName(),process.getVersion()), ValidationCommonPlugin.PLUGIN_ID);
+                subMonitor.setTaskName(String.format(Messages.validatingWithProgess, status.getChildren().length + 1, listOfProcessesToValidate.size()));
+                subMonitor.subTask(NLS.bind(Messages.validatingProcess, process.getName(), process.getVersion()));
+                ProcessValidationStatus processValidationStatus = new ProcessValidationStatus(process,validator.validate(process, new NullProgressMonitor()));
                 status.add(processValidationStatus);
                 if(forceMarkerUpdate || processValidationStatus.getSeverity() == IStatus.ERROR) {
                     final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
@@ -83,12 +87,12 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
                                     new ValidationMarkerProvider()));
                     validationAction.addProcess(process);
                     try {
-                        validationAction.run(monitor);
+                        validationAction.run(new NullProgressMonitor());
                     } catch (InvocationTargetException | InterruptedException e) {
                        BonitaStudioLog.error(e);
                     }
                 }
-                
+                subMonitor.worked(1);
             }
         });
     }

@@ -31,5 +31,6 @@ public class Messages extends NLS {
     public static String validationFailedTitle;
     public static String validatingProcess;
     public static String validatingForm;
+    public static String validatingWithProgess;
 
 }

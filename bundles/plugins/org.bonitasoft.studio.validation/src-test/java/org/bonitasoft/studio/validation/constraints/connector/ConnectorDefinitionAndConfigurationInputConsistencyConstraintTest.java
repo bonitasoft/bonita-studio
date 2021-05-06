@@ -24,8 +24,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -58,13 +62,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
-    private static final ExpressionFactory expressionFactory = ExpressionFactory.eINSTANCE;
-
-    private static final ConnectorDefinitionFactory connectorDefFactory = ConnectorDefinitionFactory.eINSTANCE;
-
-    private static final ConnectorConfigurationFactory connectorConfigFactory = ConnectorConfigurationFactory.eINSTANCE;
-
-    private static final ProcessFactory processFactory = ProcessFactory.eINSTANCE;
 
     private ConnectorDefinitionAndConfigurationInputConsistencyConstraint constraintUnderTest;
 
@@ -77,7 +74,11 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
     @Mock
     private ActorFilterDefRepositoryStore actorFilterDefStore;
 
-    private AbstractDefFileStore abstractFileStore;
+    @Mock
+    private ConnectorDefinitionRegistry defRegistry;
+
+    @Mock
+    private DefinitionResourceProvider defResourceProvider;
 
     /**
      * @throws java.lang.Exception
@@ -89,7 +90,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
         doReturn(connectorDefStore).when(constraintUnderTest).getConnectorDefinitionRepositoryStore();
         doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
-        abstractFileStore = mock(AbstractDefFileStore.class);
+        
+        when(defResourceProvider.getConnectorDefinitionRegistry()).thenReturn(defRegistry);
+        when(connectorDefStore.getResourceProvider()).thenReturn(defResourceProvider);
+        when(actorFilterDefStore.getResourceProvider()).thenReturn(defResourceProvider);
+        
+        
+        var abstractFileStore = mock(AbstractDefFileStore.class);
         when(abstractFileStore.isReadOnly()).thenReturn(false);
         doReturn(abstractFileStore).when(constraintUnderTest).getDefFileStore(any(AbstractDefinitionRepositoryStore.class),
                 any(ConnectorDefinition.class));
@@ -104,13 +111,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckInputConsistency_ReturnOkStatus() throws Exception {
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
         config.getParameters().add(createConnectorParameter("input2"));
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -120,13 +127,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckInputConsistency_ReturnFailureStatusForRemovedInput() throws Exception {
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
         config.getParameters().add(createConnectorParameter("input2"));
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -136,13 +143,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckInputConsistency_ReturnFailureStatusForRenamedInput() throws Exception {
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
         config.getParameters().add(createConnectorParameter("input2"));
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -152,13 +159,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckInputConsistency_ReturnFailureStatusForNewMandatoryInput() throws Exception {
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
         config.getParameters().add(createConnectorParameter("input2"));
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -169,13 +176,13 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldCheckInputConsistency_ReturnSuccesStatusForNewOptionalInput() throws Exception {
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
         config.getParameters().add(createConnectorParameter("input2"));
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -185,14 +192,14 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
     }
 
     private ConnectorParameter createConnectorParameter(final String inputName) {
-        final ConnectorParameter connectorParameter = connectorConfigFactory.createConnectorParameter();
+        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
         connectorParameter.setKey(inputName);
         connectorParameter.setExpression(null);
         return connectorParameter;
     }
 
     private Input createInput(final String name, final String returnType) {
-        final Input input = connectorDefFactory.createInput();
+        final Input input = ConnectorDefinitionFactory.eINSTANCE.createInput();
         input.setName(name);
         input.setType(returnType);
         return input;
@@ -205,27 +212,27 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
     }
 
     private Output createOutput(final String name, final String returnType) {
-        final Output connectorOutput = connectorDefFactory.createOutput();
+        final Output connectorOutput = ConnectorDefinitionFactory.eINSTANCE.createOutput();
         connectorOutput.setName(name);
         connectorOutput.setType(returnType);
         return connectorOutput;
     }
 
     private Operation createOutputOperation(final String leftOperand, final String rightOperand) {
-        final Operation operation = expressionFactory.createOperation();
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         operation.setLeftOperand(createExpression(leftOperand));
         operation.setRightOperand(createConnectotOutputExpression(rightOperand));
         return operation;
     }
 
     private Expression createExpression(final String leftOperand) {
-        final Expression expression = expressionFactory.createExpression();
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
         expression.setContent(leftOperand);
         return expression;
     }
 
     private Expression createConnectotOutputExpression(final String content) {
-        final Expression expression = expressionFactory.createExpression();
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
         expression.setContent(content);
         final Output connectorOutput = createOutput(content, String.class.getName());
         expression.getReferencedElements().add(connectorOutput);
@@ -234,8 +241,8 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 
     @Test
     public void shouldPerformBatchValidation_ReturnSuccessStatusForConnector() throws Exception {
-        final Connector connector = processFactory.createConnector();
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final Connector connector = ProcessFactory.eINSTANCE.createConnector();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
@@ -244,20 +251,20 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connector.getOutputs().add(createOutputOperation("myData", "success"));
         when(context.getTarget()).thenReturn(connector);
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
         def.getInput().add(createInput("input2", Boolean.class.getName()));
         def.getOutput().add(createOutput("success", Boolean.class.getName()));
-        when(connectorDefStore.getDefinition("myDef", "1.0.0")).thenReturn(def);
+        when(defRegistry.find("myDef", "1.0.0")).thenReturn(Optional.of(new ExtendedConnectorDefinition(def, null, null)));
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isTrue();
     }
 
     @Test
     public void shouldPerformBatchValidation_ReturnFailureStatusForConnectorWithModifiedInput() throws Exception {
-        final Connector connector = processFactory.createConnector();
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final Connector connector = ProcessFactory.eINSTANCE.createConnector();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         config.getParameters().add(createConnectorParameter("input1"));
@@ -266,20 +273,20 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connector.getOutputs().add(createOutputOperation("myData", "success"));
         when(context.getTarget()).thenReturn(connector);
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
         def.getInput().add(createInput("input3", Boolean.class.getName()));
         def.getOutput().add(createOutput("success", Boolean.class.getName()));
-        when(connectorDefStore.getDefinition("myDef", "1.0.0")).thenReturn(def);
+        when(defRegistry.find("myDef", "1.0.0")).thenReturn(Optional.of(new ExtendedConnectorDefinition(def, null, null)));
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isFalse();
     }
 
     @Test
     public void shouldPerformBatchValidation_UseActorFilterDefStore() throws Exception {
-        final Connector connector = processFactory.createActorFilter();
-        final ConnectorConfiguration config = connectorConfigFactory.createConnectorConfiguration();
+        final Connector connector = ProcessFactory.eINSTANCE.createActorFilter();
+        final ConnectorConfiguration config = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         config.setDefinitionId("myDef");
         config.setVersion("1.0.0");
         when(context.getTarget()).thenReturn(connector);
@@ -293,7 +300,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName(), true));
@@ -311,7 +318,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -328,7 +335,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));
@@ -346,7 +353,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
         connectorParamKey.add("input2");
         connectorParamKey.add("input3");
 
-        final ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+        final ConnectorDefinition def = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
         def.setId("myDef");
         def.setVersion("1.0.0");
         def.getInput().add(createInput("input1", String.class.getName()));

@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
@@ -28,8 +31,9 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class OffscreenEditPartFactory {
 
-    private final List<Shell> toDispose = new ArrayList<Shell>();
+    private final List<Shell> shells = new ArrayList<>();
     private final org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory factory;
+    private List<DiagramEditPart> editParts = new ArrayList<>();
 
     public OffscreenEditPartFactory(final org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory factory) {
         this.factory = factory;
@@ -44,8 +48,8 @@ public class OffscreenEditPartFactory {
             } else {
                 runInUI(runnable);
             }
-
-            toDispose.add(runnable.getDisposable());
+            editParts.add(runnable.getDiagramEditPart());
+            shells.add(runnable.getDisposable());
             return runnable.getDiagramEditPart();
         }
         return null;
@@ -60,20 +64,20 @@ public class OffscreenEditPartFactory {
     }
 
     public void dispose() {
-        for (final Shell s : toDispose) {
+        for(var ep : editParts) {
+            TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(ep.getDiagramView());
+            if(editingDomain != null) {
+                DiagramEventBroker.stopListening(editingDomain);
+            }
+        }
+        editParts.clear();
+        for (var s : shells) {
             if (inUIThread()) {
                 s.dispose();
             } else {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        s.dispose();
-                    }
-                });
+                Display.getDefault().syncExec(s::dispose);
             }
-
         }
-        toDispose.clear();
+        shells.clear();
     }
 }

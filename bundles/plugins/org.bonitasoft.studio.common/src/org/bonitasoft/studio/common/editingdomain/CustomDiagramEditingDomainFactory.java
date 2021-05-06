@@ -36,12 +36,7 @@ public class CustomDiagramEditingDomainFactory extends DiagramEditingDomainFacto
     public static WorkspaceEditingDomainFactory getInstance() {
         return instance;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory#createEditingDomain(org.eclipse.emf.ecore.resource.ResourceSet,
-     * org.eclipse.core.commands.operations.IOperationHistory)
-     */
+    
     @Override
     public TransactionalEditingDomain createEditingDomain(final ResourceSet rset, final IOperationHistory history) {
         final WorkspaceCommandStackImpl stack = new CustomWorkspaceCommandStack(history);

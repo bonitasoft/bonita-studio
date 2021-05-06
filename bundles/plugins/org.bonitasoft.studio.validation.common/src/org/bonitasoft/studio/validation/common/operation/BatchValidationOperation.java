@@ -41,7 +41,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.validation.model.EvaluationMode;
-import org.eclipse.emf.validation.service.ConstraintRegistry;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -95,6 +94,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
             }
         }finally {
             offscreenEditPartFactory.dispose();
+            diagramsToDiagramEditPart.clear();
         }
     }
 
