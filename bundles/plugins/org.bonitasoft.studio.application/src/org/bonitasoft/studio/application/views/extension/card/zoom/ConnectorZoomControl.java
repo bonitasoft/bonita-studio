@@ -39,7 +39,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyleRange;
@@ -58,11 +57,9 @@ public class ConnectorZoomControl extends Composite {
 
     private ZoomListener zoomListener;
     private CLabel gav;
-    private ConnectorDefRepositoryStore defRepositoryStore;
-    private LocalResourceManager localResourceManager;
-    private BonitaArtifactDependency bonitaDep;
-    private Dependency dep;
-    private ProjectDependenciesStore projectDependenciesStore;
+    protected BonitaArtifactDependency bonitaDep;
+    protected Dependency dep;
+    protected ProjectDependenciesStore projectDependenciesStore;
     protected IThemeEngine engine;
     protected Cursor cursorArrow;
     protected Cursor cursorHand;
@@ -77,8 +74,6 @@ public class ConnectorZoomControl extends Composite {
         this.zoomListener = zoomListener;
         this.dep = dep;
         this.bonitaDep = bonitaDep;
-        this.defRepositoryStore = repoManager.getRepositoryStore(ConnectorDefRepositoryStore.class);
-        this.localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         this.projectDependenciesStore = repoManager.getCurrentRepository().getProjectDependenciesStore();
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
@@ -173,7 +168,7 @@ public class ConnectorZoomControl extends Composite {
 
         var sectionTitle = new Label(titleComposite, SWT.WRAP);
         sectionTitle.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        sectionTitle.setText(Messages.connectors);
+        sectionTitle.setText(getDetailsTitle());
         sectionTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         sectionTitle.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
         sectionTitle.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_4_FONT_ID));
@@ -188,7 +183,7 @@ public class ConnectorZoomControl extends Composite {
 
         var hint = new Label(titleComposite, SWT.WRAP);
         hint.setLayoutData(GridDataFactory.fillDefaults().indent(10, 0).create());
-        hint.setText(String.format(Messages.connectorsHint, bonitaDep.getName()));
+        hint.setText(getDetailsHint());
         hint.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var definitionsComposite = createComposite(composite, SWT.NONE);
@@ -200,6 +195,14 @@ public class ConnectorZoomControl extends Composite {
         var separator = new Label(definitionsComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         separator.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_SEPARATOR);
+    }
+
+    protected String getDetailsHint() {
+        return String.format(Messages.connectorsHint, bonitaDep.getName());
+    }
+
+    protected String getDetailsTitle() {
+        return Messages.connectors;
     }
 
     private void createConnectorDetails(Composite parent, ExtendedConnectorDefinition extendedDefinition) {
@@ -269,8 +272,10 @@ public class ConnectorZoomControl extends Composite {
         });
     }
 
-    private List<ExtendedConnectorDefinition> getDefinitions() {
-        ConnectorDefinitionRegistry registry = defRepositoryStore.getResourceProvider().getConnectorDefinitionRegistry();
+    protected List<ExtendedConnectorDefinition> getDefinitions() {
+        ConnectorDefinitionRegistry registry = RepositoryManager.getInstance()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class).getResourceProvider()
+                .getConnectorDefinitionRegistry();
         return projectDependenciesStore.getConnectorDefinitions().stream()
                 .filter(def -> Objects.equals(def.getArtifact().getGroupId(), dep.getGroupId()))
                 .filter(def -> Objects.equals(def.getArtifact().getArtifactId(), dep.getArtifactId()))
@@ -282,7 +287,7 @@ public class ConnectorZoomControl extends Composite {
                 .collect(Collectors.toList());
     }
 
-    private List<Implementation> getImplementations(ExtendedConnectorDefinition def) {
+    protected List<Implementation> getImplementations(ExtendedConnectorDefinition def) {
         return projectDependenciesStore.getConnectorImplementations().stream()
                 .filter(impl -> Objects.equals(impl.getDefinitionId(), def.getId()))
                 .filter(impl -> Objects.equals(impl.getDefinitionVersion(), def.getVersion()))

@@ -303,7 +303,8 @@ public class Messages extends NLS {
     public static String preparingUpdate;
     public static String computingPreview;
     public static String applyingChanges;
-   
+    public static String actorFilters;
+    public static String actorFiltersHint;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
