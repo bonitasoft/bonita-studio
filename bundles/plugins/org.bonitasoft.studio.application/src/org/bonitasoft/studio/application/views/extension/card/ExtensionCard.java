@@ -31,18 +31,15 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
-import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.PlatformUI;
 
 public class ExtensionCard extends Composite {
 
@@ -51,9 +48,6 @@ public class ExtensionCard extends Composite {
 
     protected Dependency dep;
     protected BonitaArtifactDependency bonitaDep;
-    protected IThemeEngine engine;
-    protected Cursor cursorArrow;
-    protected Cursor cursorHand;
     protected CLabel titleLabel;
 
     public ExtensionCard(Composite parent,
@@ -62,9 +56,6 @@ public class ExtensionCard extends Composite {
         super(parent, SWT.BORDER);
         this.dep = dep;
         this.bonitaDep = bonitaDep;
-        this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-        this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
-        this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());

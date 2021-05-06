@@ -19,11 +19,6 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.views.extension.card.zoom.ConnectorZoomControl;
 import org.bonitasoft.studio.application.views.extension.card.zoom.IZoomable;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
-import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -45,41 +40,17 @@ public class ConnectorExtensionCard extends ExtensionCard implements IZoomable {
     @Override
     protected void createTitleComposite(Composite parent) {
         super.createTitleComposite(parent);
-        addZoomBehavior();
-    }
-
-    private void addZoomBehavior() {
-        titleLabel.addListener(SWT.MouseUp, e -> {
-            if (zoomListener != null) {
-                Rectangle bounds = titleLabel.getBounds();
-                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
-                    zoomListener.zoom(e);
-                }
-            }
-        });
-
-        titleLabel.addMouseTrackListener(new MouseTrackAdapter() {
-
-            @Override
-            public void mouseEnter(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                        BonitaThemeConstants.CARD_HIGHLIGHT_TITLE_COLOR);
-                engine.applyStyles(titleLabel, false);
-                titleLabel.setCursor(cursorHand);
-            }
-
-            @Override
-            public void mouseExit(MouseEvent e) {
-                titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-                engine.applyStyles(titleLabel, false);
-                titleLabel.setCursor(cursorArrow);
-            }
-        });
+        addZoomBehavior(titleLabel);
     }
 
     @Override
     public void addZoomListener(ZoomListener listener) {
         this.zoomListener = listener;
+    }
+
+    @Override
+    public ZoomListener getZoomListener() {
+        return zoomListener;
     }
 
 }
