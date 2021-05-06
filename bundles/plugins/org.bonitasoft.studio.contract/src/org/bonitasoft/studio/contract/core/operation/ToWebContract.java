@@ -14,15 +14,14 @@
  */
 package org.bonitasoft.studio.contract.core.operation;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.function.Function;
 
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.contract.core.mapping.treeMaching.TreeResult;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -31,8 +30,6 @@ import org.bonitasoft.web.designer.model.contract.EditMode;
 import org.bonitasoft.web.designer.model.contract.LeafContractInput;
 import org.bonitasoft.web.designer.model.contract.NodeContractInput;
 
-import com.google.common.base.Function;
-import com.google.common.base.Strings;
 
 public class ToWebContract implements Function<Contract, org.bonitasoft.web.designer.model.contract.Contract> {
 
@@ -49,41 +46,39 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
     @Override
     public org.bonitasoft.web.designer.model.contract.Contract apply(final Contract fromContract) {
         final org.bonitasoft.web.designer.model.contract.Contract contract = new org.bonitasoft.web.designer.model.contract.Contract();
-        contract.getInput().addAll(newArrayList(transform(fromContract.getInputs(), toWebContractInput())));
+        fromContract.getInputs().stream()
+                .map(toWebContractInput())
+                .forEach(contract.getInput()::add);
         return contract;
     }
 
     private Function<ContractInput, org.bonitasoft.web.designer.model.contract.ContractInput> toWebContractInput() {
-        return new Function<ContractInput, org.bonitasoft.web.designer.model.contract.ContractInput>() {
-
-            @Override
-            public org.bonitasoft.web.designer.model.contract.ContractInput apply(final ContractInput input) {
-                switch (input.getType()) {
-                    case TEXT:
-                        return createLeafContractInput(input, String.class);
-                    case INTEGER:
-                        return createLeafContractInput(input, Integer.class);
-                    case LONG:
-                        return createLeafContractInput(input, Long.class);
-                    case DECIMAL:
-                        return createLeafContractInput(input, Double.class);
-                    case DATE:
-                        return createLeafContractInput(input, Date.class);
-                    case LOCALDATE:
-                        return createLeafContractInput(input, LocalDate.class);
-                    case LOCALDATETIME:
-                        return createLeafContractInput(input, LocalDateTime.class);
-                    case OFFSETDATETIME:
-                        return createLeafContractInput(input, OffsetDateTime.class);
-                    case BOOLEAN:
-                        return createLeafContractInput(input, Boolean.class);
-                    case FILE:
-                        return createDocumentLeafContractInput(input);
-                    case COMPLEX:
-                        return createNodeContractInput(input);
-                    default:
-                        throw new IllegalStateException(String.format("Unsupported input type: %s", input.getType()));
-                }
+        return input -> {
+            switch (input.getType()) {
+                case TEXT:
+                    return createLeafContractInput(input, String.class);
+                case INTEGER:
+                    return createLeafContractInput(input, Integer.class);
+                case LONG:
+                    return createLeafContractInput(input, Long.class);
+                case DECIMAL:
+                    return createLeafContractInput(input, Double.class);
+                case DATE:
+                    return createLeafContractInput(input, Date.class);
+                case LOCALDATE:
+                    return createLeafContractInput(input, LocalDate.class);
+                case LOCALDATETIME:
+                    return createLeafContractInput(input, LocalDateTime.class);
+                case OFFSETDATETIME:
+                    return createLeafContractInput(input, OffsetDateTime.class);
+                case BOOLEAN:
+                    return createLeafContractInput(input, Boolean.class);
+                case FILE:
+                    return createDocumentLeafContractInput(input);
+                case COMPLEX:
+                    return createNodeContractInput(input);
+                default:
+                    throw new IllegalStateException(String.format("Unsupported input type: %s", input.getType()));
             }
         };
     }
@@ -118,10 +113,13 @@ public class ToWebContract implements Function<Contract, org.bonitasoft.web.desi
         return contractInput;
     }
 
-    private org.bonitasoft.web.designer.model.contract.ContractInput createNodeContractInput(final ContractInput input) {
+    private org.bonitasoft.web.designer.model.contract.ContractInput createNodeContractInput(
+            final ContractInput input) {
         final org.bonitasoft.web.designer.model.contract.ContractInput nodeInput = copyInputProperties(input,
                 new NodeContractInput(input.getName()));
-        nodeInput.getInput().addAll(newArrayList(transform(input.getInputs(), toWebContractInput())));
+        input.getInputs().stream()
+                .map(toWebContractInput())
+                .forEach(nodeInput.getInput()::add);
         return nodeInput;
     }
 }
