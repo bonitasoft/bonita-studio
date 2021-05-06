@@ -119,7 +119,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
 
     protected EditingDomain createAdapterFactoryEditingDomain() {
         return new AdapterFactoryEditingDomain(adapterFactory,
-                new BasicCommandStack(), new HashMap<Resource, Boolean>());
+                new BasicCommandStack(), new HashMap<>());
     }
 
     @Override

@@ -45,8 +45,10 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraint exte
         if (configuration == null) {
             return context.createSuccessStatus();
         }
-        ConnectorDefinition def = connectorDefStore.getDefinition(configuration.getDefinitionId(),
-                configuration.getVersion());
+        ConnectorDefinition def = connectorDefStore.getResourceProvider()
+                .getConnectorDefinitionRegistry()
+                .find(configuration.getDefinitionId(), configuration.getVersion())
+                .orElse(null);
         if (def != null) {
             IStatus outputStatus = checkOutputConsistency(connector, def, context);
             if (!outputStatus.isOK()) {

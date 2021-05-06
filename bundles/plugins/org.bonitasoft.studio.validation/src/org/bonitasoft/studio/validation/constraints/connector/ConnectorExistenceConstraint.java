@@ -38,8 +38,10 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
             connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
                     .getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         }
-        ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),
-                connector.getDefinitionVersion());
+        ConnectorDefinition def = connectorDefStore.getResourceProvider()
+                .getConnectorDefinitionRegistry()
+                .find(connector.getDefinitionId(), connector.getDefinitionVersion())
+                .orElse(null);
         if (def != null) {
             return context.createSuccessStatus();
         } else {

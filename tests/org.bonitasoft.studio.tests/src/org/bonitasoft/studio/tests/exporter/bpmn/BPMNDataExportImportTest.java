@@ -42,6 +42,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
@@ -524,9 +525,10 @@ public class BPMNDataExportImportTest {
     private DocumentRoot exportToBPMNProcessWithStepData(final Data data, String dataType) throws IOException, ReadFileStoreException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
-        Resource emfResource = newDiagramFileStore.getEMFResource();
+        MainProcess mainProcess = newDiagramFileStore.getContent();
+        Resource emfResource = mainProcess.eResource();
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
-        final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
+        final AbstractProcess abstractProcess = ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class).get(0);
         abstractProcess.getElements().stream()
                 .filter(Lane.class::isInstance)
                 .map(Lane.class::cast)
@@ -536,7 +538,6 @@ public class BPMNDataExportImportTest {
                 .findFirst()
                 .ifPresent(task -> editingDomain.getCommandStack().execute(
                         AddCommand.create(editingDomain, task, ProcessPackage.Literals.DATA_AWARE__DATA, data)));
-        MainProcess mainProcess = newDiagramFileStore.getContent();
         mainProcess.getDatatypes().stream()
                 .filter(dt -> Objects.equals(NamingUtils.convertToId(NamingUtils.convertToId(dataType)), dt.getName()))
                 .findFirst()
@@ -552,10 +553,10 @@ public class BPMNDataExportImportTest {
     protected DocumentRoot exportToBPMNProcessWithData(final Data data, final String dataType) throws IOException, ReadFileStoreException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
-        Resource emfResource = newDiagramFileStore.getEMFResource();
-        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
         MainProcess mainProcess = newDiagramFileStore.getContent();
-        final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
+        Resource emfResource = mainProcess.eResource();
+        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
+        final AbstractProcess abstractProcess = ModelHelper.getAllElementOfTypeIn(mainProcess, Pool.class).get(0);
         editingDomain.getCommandStack()
                 .execute(AddCommand.create(editingDomain, abstractProcess, ProcessPackage.Literals.DATA_AWARE__DATA,
                         data));

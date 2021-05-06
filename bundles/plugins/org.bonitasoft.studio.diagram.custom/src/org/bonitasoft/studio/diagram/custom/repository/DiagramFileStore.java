@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
+import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -57,7 +58,6 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,7 +69,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -80,7 +79,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -242,17 +240,12 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
 
     @Override
     protected IWorkbenchPart doOpen() {
-        IEditorPart part = null;
-        final Resource emfResource = getEMFResource();
-        MainProcess content;
         try {
-            content = getContent();
+            doCheckModelVersion();
         } catch (ReadFileStoreException e) {
             return null;
         }
-        Assert.isLegal(emfResource != null && emfResource.isLoaded());
-        final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
-        part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram).trimFragment()));
+        var part = EditorService.getInstance().openEditor(new URIEditorInput(getResourceURI()));
         if (part instanceof DiagramEditor) {
             final DiagramEditor editor = (DiagramEditor) part;
             final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();

@@ -71,10 +71,10 @@ public abstract class EMFFileStore<T extends EObject> extends AbstractFileStore<
 
     @Override
     protected T doGetContent() throws ReadFileStoreException {
-        final Resource eResource = getEMFResource();
-        doLoad(eResource);
-        if (eResource != null && !eResource.getContents().isEmpty()) {
-            return (T) eResource.getContents().get(0);
+        final Resource emfResource = getEMFResource();
+        doLoad(emfResource);
+        if (emfResource != null && !emfResource.getContents().isEmpty()) {
+            return (T) emfResource.getContents().get(0);
         }
         return null;
     }

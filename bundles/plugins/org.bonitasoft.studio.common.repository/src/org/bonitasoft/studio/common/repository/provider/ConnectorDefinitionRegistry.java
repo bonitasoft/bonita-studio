@@ -37,7 +37,7 @@ public class ConnectorDefinitionRegistry {
     private Map<String, ExtendedConnectorDefinition> definitionRegistry = new HashMap<>();
     private Map<String, ExtendedCategory> categoryRegistry = new HashMap<>();
 
-    private static final Locale DEFAULT_LOCALE = new Locale(Platform.getNL());
+    private static final Locale DEFAULT_LOCALE = Platform.isRunning() ? new Locale(Platform.getNL()) : null;
 
     public synchronized ConnectorDefinitionRegistry build(IDefinitionRepositoryStore<? extends IRepositoryFileStore<?>> store) {
         clearRegistries();

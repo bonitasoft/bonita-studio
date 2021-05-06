@@ -21,6 +21,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
+import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -69,6 +74,13 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraintTest 
 
     @Mock
     private ActorFilterDefRepositoryStore actorFilterDefStore;
+    
+
+    @Mock
+    private ConnectorDefinitionRegistry defRegistry;
+
+    @Mock
+    private DefinitionResourceProvider defResourceProvider;
 
     /**
      * @throws java.lang.Exception
@@ -80,6 +92,10 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraintTest 
         when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
         doReturn(connectorDefStore).when(constraintUnderTest).getConnectorDefinitionRepositoryStore();
         doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
+        when(defResourceProvider.getConnectorDefinitionRegistry()).thenReturn(defRegistry);
+        when(connectorDefStore.getResourceProvider()).thenReturn(defResourceProvider);
+        when(actorFilterDefStore.getResourceProvider()).thenReturn(defResourceProvider);
+        
     }
 
     /**
@@ -190,7 +206,7 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraintTest 
         def.getInput().add(createInput("input1", String.class.getName()));
         def.getInput().add(createInput("input2", Boolean.class.getName()));
         def.getOutput().add(createOutput("success", Boolean.class.getName()));
-        when(connectorDefStore.getDefinition("myDef", "1.0.0")).thenReturn(def);
+        when(connectorDefStore.getResourceProvider().getConnectorDefinitionRegistry().find("myDef", "1.0.0")).thenReturn(Optional.of(new ExtendedConnectorDefinition(def, null, null)));
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isTrue();
     }
 
@@ -212,7 +228,7 @@ public class ConnectorDefinitionAndConfigurationOutputConsistencyConstraintTest 
         def.getInput().add(createInput("input1", String.class.getName()));
         def.getInput().add(createInput("input2", Boolean.class.getName()));
         def.getOutput().add(createOutput("newSuccess", Boolean.class.getName()));
-        when(connectorDefStore.getDefinition("myDef", "1.0.0")).thenReturn(def);
+        when(connectorDefStore.getResourceProvider().getConnectorDefinitionRegistry().find("myDef", "1.0.0")).thenReturn(Optional.of(new ExtendedConnectorDefinition(def, null, null)));
         assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isFalse();
     }
 
