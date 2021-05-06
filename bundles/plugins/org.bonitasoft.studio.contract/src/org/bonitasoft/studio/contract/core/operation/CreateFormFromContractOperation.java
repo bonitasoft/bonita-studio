@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.contract.core.operation;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.bonitasoft.studio.contract.core.mapping.treeMaching.ContractInputToFieldMatcher.findMatchingContractInputForField;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,6 +53,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.restlet.ext.json.JsonRepresentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class CreateFormFromContractOperation extends CreateUIDArtifactOperation {
 
     private static final String FORM_GENERATION_DOCUMENTATION_LINK = String.format(
@@ -63,11 +65,11 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     private Contract contract;
     private FormScope formScope;
     private boolean buildReadOnlyAttributes = false;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CreateFormFromContractOperation(PageDesignerURLFactory pageDesignerURLBuilder,
             Contract contract, FormScope formScope, RepositoryAccessor repositoryAccessor) {
         super(pageDesignerURLBuilder, repositoryAccessor);
-        checkArgument(contract != null);
         this.contract = contract;
         this.formScope = formScope;
     }
@@ -84,11 +86,16 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
                     businessDataStore);
             Contract tmpContract = EcoreUtil.copy(contract); // will contains unwanted contractInput for readOnly attributes 
             openReadOnlyAttributeDialog(tmpContract, businessDataStore);
-            TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
-            responseObject = createArtifact(url, new JsonRepresentation(new ToWebContract(treeResult).apply(tmpContract)));
-        } catch (MalformedURLException e) {
+            responseObject = createArtifact(url, new JsonRepresentation(toWebContract(contractToBusinessDataResolver, tmpContract)));
+        } catch (MalformedURLException | JsonProcessingException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
+    }
+
+    String toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver, Contract tmpContract) throws JsonProcessingException {
+        TreeResult treeResult = contractToBusinessDataResolver.resolve(tmpContract, buildReadOnlyAttributes);
+        var webContract = new ToWebContract(treeResult).apply(tmpContract);
+        return objectMapper.writeValueAsString(webContract);
     }
 
     private void openReadOnlyAttributeDialog(Contract contract, BusinessDataStore businessDataStore) {
