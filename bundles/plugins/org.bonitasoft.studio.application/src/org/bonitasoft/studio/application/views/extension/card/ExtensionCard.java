@@ -21,6 +21,7 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
 import org.bonitasoft.studio.application.views.extension.RemoveExtensionListener;
@@ -39,9 +40,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolBar;
 
 public class ExtensionCard extends Composite {
+
+    public static final String REST_API_EXTENSION_ACTION_ID = "org.bonitasoft.rest.api.extension";
 
     private Collection<RemoveExtensionListener> removeListeners = new ArrayList<>();
     private Collection<UpdateExtensionListener> updateListeners = new ArrayList<>();
@@ -86,15 +88,16 @@ public class ExtensionCard extends Composite {
     }
 
     private void createToolbar(Composite parent) {
-        var action = ExtensionActionRegistry.getInstance()
-                .getAction(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
+        var action = ArtifactType.REST_API.equals(bonitaDep.getArtifactType())
+                ? ExtensionActionRegistry.getInstance().getAction(REST_API_EXTENSION_ACTION_ID)
+                : ExtensionActionRegistry.getInstance()
+                        .getAction(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
         if (action != null) {
-            var leftToolbar = new ToolBar(parent,
-                    SWT.HORIZONTAL | SWT.WRAP | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
-            leftToolbar.setLayoutData(
-                    GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.FILL).create());
-            leftToolbar.setLayout(GridLayoutFactory.fillDefaults().create());
-            action.fill(leftToolbar);
+            var leftToolbarComposite = new Composite(parent, SWT.NONE);
+            leftToolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+            leftToolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
+            leftToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+            action.fill(leftToolbarComposite);
         }
 
         var toolbarComposite = new Composite(parent, SWT.NONE);
