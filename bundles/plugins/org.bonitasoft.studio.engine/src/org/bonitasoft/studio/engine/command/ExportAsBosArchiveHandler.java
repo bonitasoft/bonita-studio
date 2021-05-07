@@ -131,7 +131,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         } catch (IOException e1) {
             throw new ExecutionException(e1.getMessage());
         }
-        for (final AbstractProcess process : diagramFile.getProcesses()) {
+        for (final AbstractProcess process : diagramFile.getProcesses(true)) {
             try {
                 String processUUID = ModelHelper.getEObjectID(process);
                 IRepositoryFileStore file = processConfStore

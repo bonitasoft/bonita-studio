@@ -76,9 +76,9 @@ public class DeployDiagramHandler {
         }
 
         DiagramFileStore diagramFileStore = retrieveDiagram(repositoryAccessor, fileName);
-        List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses().stream()
+        List<AbstractProcess> processes = processUUID != null ? diagramFileStore.getProcesses(true).stream()
                 .filter(process -> Objects.equals(processUUID, ModelHelper.getEObjectID(process)))
-                .collect(Collectors.toList()) : diagramFileStore.getProcesses();
+                .collect(Collectors.toList()) : diagramFileStore.getProcesses(true);
         IStatus validationStatus = ValidationStatus.ok();
         if (validateDiagram == null || Boolean.valueOf(validateDiagram)) {
             validationStatus = validateDiagram(processes);

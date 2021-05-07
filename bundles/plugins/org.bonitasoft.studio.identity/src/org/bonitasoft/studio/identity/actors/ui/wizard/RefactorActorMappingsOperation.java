@@ -318,7 +318,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
             }
         }
         for (final DiagramFileStore fileStore : diagramStore.getChildren()) {
-            for (final AbstractProcess process : fileStore.getProcesses()) {
+            for (final AbstractProcess process : fileStore.getProcesses(true)) {
                 for (final Configuration c : process.getConfigurations()) {
                     if (c != null && c.getActorMappings() != null) {
                         configurations.add(c);

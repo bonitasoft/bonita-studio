@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -44,6 +45,7 @@ public class ProcessSelector {
 
     public static final String PROCESS = "process";
     private final ExecutionEvent event;
+    private Optional<AbstractProcess> processFromEvent;
 
     public ProcessSelector(final ExecutionEvent event) {
         this.event = event;
@@ -73,10 +75,20 @@ public class ProcessSelector {
     }
 
     private Optional<AbstractProcess> getProcessFromEvent() {
-        return Optional.ofNullable(event)
-                .map(e -> e.getParameters().get(PROCESS))
-                .filter(AbstractProcess.class::isInstance)
-                .map(AbstractProcess.class::cast);
+        if (processFromEvent == null) {
+            DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(DiagramRepositoryStore.class);
+            List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses()
+                    ? diagramStore.getComputedProcesses()
+                    : diagramStore.getAllProcesses();
+            processFromEvent = Optional.ofNullable(event)
+                    .map(e -> e.getParameters().get(PROCESS))
+                    .filter(AbstractProcess.class::isInstance)
+                    .map(AbstractProcess.class::cast)
+                    .map(p -> getProcessToRun(p, allProcesses));
+        }
+        return processFromEvent;
+
     }
 
     public Set<AbstractProcess> getExecutableProcesses() {
@@ -88,7 +100,8 @@ public class ProcessSelector {
         Optional<AbstractProcess> processFromEvent = getProcessFromEvent();
         DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
+        List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses()
+                : diagramStore.getAllProcesses();
         if (processFromEvent.isPresent()) {
             AbstractProcess selectedProcess = processFromEvent.get();
             final Set<AbstractProcess> calledProcesses = new HashSet<>();
@@ -120,6 +133,17 @@ public class ProcessSelector {
             }
         }
         return result;
+    }
+
+    private AbstractProcess getProcessToRun(AbstractProcess processFromEvent, List<AbstractProcess> allProcesses) {
+        if (processFromEvent.eIsProxy()) {
+            return allProcesses.stream()
+                    .filter(p -> Objects.equals(p.getName(), processFromEvent.getName())
+                            && Objects.equals(p.getVersion(), processFromEvent.getVersion()))
+                    .findFirst()
+                    .orElseThrow();
+        }
+        return processFromEvent;
     }
 
     private void findCalledProcesses(final AbstractProcess process, List<AbstractProcess> allProcesses,

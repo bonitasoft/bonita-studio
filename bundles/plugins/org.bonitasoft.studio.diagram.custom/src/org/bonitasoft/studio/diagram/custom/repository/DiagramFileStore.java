@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
-import org.bonitasoft.studio.common.editingdomain.CustomDiagramEditingDomainFactory;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -140,9 +139,12 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         if (editor != null) {
             final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
             if (diagramEditPart != null) {
-                final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
-                if (resolveSemanticElement != null && resolveSemanticElement.eResource() != null) {
-                    return resolveSemanticElement.eResource();
+                final EObject element = diagramEditPart.resolveSemanticElement();
+                if (element != null) {
+                    var resource = element.eResource();
+                    if (resource != null) {
+                        return resource;
+                    }
                 }
             }
         }
@@ -194,25 +196,21 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         return editor instanceof ProcessDiagramEditor;
     }
 
-    public List<AbstractProcess> getProcesses() {
-        MainProcess diagram = null;
-        final DiagramEditor editor = getOpenedEditor();
-        if (editor != null && editor.getDiagramEditPart() != null) {
-            diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-            if (diagram.eIsProxy()) {
-                diagram = null;
+    public List<AbstractProcess> getProcesses(boolean reloadResource) {
+        try {
+            if (reloadResource && getOpenedEditor() == null) {
+                Resource emfResource = getEMFResource();
+                if (emfResource.isLoaded()) {
+                    emfResource.unload();
+                }
             }
+            var diagram = getContent();
+            return ModelHelper.getAllProcesses(diagram).stream()
+                    .filter(Pool.class::isInstance)
+                    .collect(Collectors.toList());
+        } catch (ReadFileStoreException e) {
+            return Collections.emptyList();
         }
-        if (diagram == null) {
-            try {
-                diagram = getContent();
-            } catch (ReadFileStoreException e) {
-                return Collections.emptyList();
-            }
-        }
-        return ModelHelper.getAllProcesses(diagram).stream()
-                .filter(Pool.class::isInstance)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -327,7 +325,7 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
                 .getRepositoryStore(
                         ProcessConfigurationRepositoryStore.class);
 
-        for (final AbstractProcess process : getProcesses()) {
+        for (final AbstractProcess process : getProcesses(false)) {
             final String uuid = toUUID().apply(process);
             result.add(processConfigurationRepositoryStore
                     .getChild(String.format("%s.%s", uuid, ProcessConfigurationRepositoryStore.CONF_EXT), true));

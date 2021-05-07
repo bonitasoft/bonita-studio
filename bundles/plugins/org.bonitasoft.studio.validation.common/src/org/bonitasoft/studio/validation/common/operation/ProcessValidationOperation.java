@@ -95,6 +95,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
                 subMonitor.worked(1);
             }
         });
+        subMonitor.subTask("");
     }
 
 }

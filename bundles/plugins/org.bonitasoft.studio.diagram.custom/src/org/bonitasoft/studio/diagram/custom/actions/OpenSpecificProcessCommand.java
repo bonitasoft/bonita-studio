@@ -53,7 +53,7 @@ public class OpenSpecificProcessCommand extends AbstractHandler {
 			if (event.getParameter(PARAMETER_PROCESS_NAME) != null &&
 					event.getParameter(PARAMETER_PROCESS_VERSION) != null) {
 				for(IRepositoryFileStore file : diagramSotre.getChildren()){
-					for(AbstractProcess p : ((DiagramFileStore)file).getProcesses()){
+					for(AbstractProcess p : ((DiagramFileStore)file).getProcesses(true)){
 						if(p.getName().equals(event.getParameter(PARAMETER_PROCESS_NAME))
 								&& p.getVersion().equals(event.getParameter(PARAMETER_PROCESS_VERSION))){
 							file.open();

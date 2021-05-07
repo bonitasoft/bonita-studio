@@ -17,9 +17,13 @@ package org.bonitasoft.studio.validation.common.operation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -65,10 +69,13 @@ public class OffscreenEditPartFactory {
 
     public void dispose() {
         for(var ep : editParts) {
-            TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(ep.getDiagramView());
-            if(editingDomain != null) {
-                DiagramEventBroker.stopListening(editingDomain);
-            }
+            Diagram diagramView = ep.getDiagramView();
+           if(!isEditorOpened(diagramView.eResource())){
+               TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(diagramView);
+               if(editingDomain != null) {
+                   DiagramEventBroker.stopListening(editingDomain);
+               }
+           }
         }
         editParts.clear();
         for (var s : shells) {
@@ -79,5 +86,12 @@ public class OffscreenEditPartFactory {
             }
         }
         shells.clear();
+    }
+
+    private boolean isEditorOpened(Resource eResource) {
+        DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        var fStore = diagramRepositoryStore.getChild(WorkspaceSynchronizer.getFile(eResource).getName(), false);
+        return fStore != null && fStore.getOpenedEditor() != null;
     }
 }

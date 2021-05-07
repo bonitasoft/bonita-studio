@@ -94,7 +94,7 @@ public class RepositoryModelBuilder {
 
     public void createProcessArtifacts(RepositoryStore parent, DiagramFileStore fStore) {
         final List<Artifact> processes = parent.getArtifacts();
-        for (AbstractProcess procModel : fStore.getProcesses()) {
+        for (AbstractProcess procModel : fStore.getProcesses(false)) {
             ProcessArtifact defaultProcess = new ProcessArtifact(parent, procModel.getName());
             ProcessArtifact process = (ProcessArtifact) processes.stream().filter(defaultProcess::equals).findFirst()
                     .orElse(defaultProcess);

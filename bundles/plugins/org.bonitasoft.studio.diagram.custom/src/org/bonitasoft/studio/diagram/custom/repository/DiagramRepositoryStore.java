@@ -143,7 +143,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     public List<AbstractProcess> getAllProcesses() {
         final List<AbstractProcess> processes = new ArrayList<>();
         for (final DiagramFileStore file : getChildren()) {
-            processes.addAll(file.getProcesses());
+            processes.addAll(file.getProcesses(true));
         }
         return processes;
     }
@@ -485,6 +485,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     public List<AbstractProcess> computeProcesses(IProgressMonitor monitor) {
         monitor.beginTask(Messages.loadingAllProcesses, IProgressMonitor.UNKNOWN);
+        resetComputedProcesses();
         computedProcessesList = getAllProcesses();
         return computedProcessesList;
     }

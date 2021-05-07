@@ -103,7 +103,7 @@ public class ExportBarIT {
         final File targetBarFolder = tmpFolder.newFolder("targetBarFolder");
         final ExportBarOperation exportBarOperation = new ExportBarOperation();
         final DiagramFileStore diagram = (DiagramFileStore) importBosArchiveOperation.getFileStoresToOpen().get(0);
-        AbstractProcess process = diagram.getProcesses().get(0);
+        AbstractProcess process = diagram.getProcesses(true).get(0);
         Pool pool = ModelHelper.getParentPool(process);
 
         var commonResourcesToCopy = new File(FileLocator.toFileURL(ExportBarIT.class.getResource("/_common")).getFile());
