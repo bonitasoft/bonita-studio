@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SWTBot Framework
 Bundle-SymbolicName: org.bonitasoft.studio.swtbot.framework
-Bundle-Version: 7.13.0.qualifier
+Bundle-Version: 7.13.0.W19
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
