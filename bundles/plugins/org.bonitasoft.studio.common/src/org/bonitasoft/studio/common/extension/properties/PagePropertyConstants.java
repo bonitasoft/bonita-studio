@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.maven.builder;
+package org.bonitasoft.studio.common.extension.properties;
 
 public interface PagePropertyConstants {
 

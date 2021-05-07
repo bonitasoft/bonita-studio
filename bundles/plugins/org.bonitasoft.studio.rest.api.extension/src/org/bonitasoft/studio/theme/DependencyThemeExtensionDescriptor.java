@@ -15,16 +15,10 @@
 package org.bonitasoft.studio.theme;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.Properties;
-import java.util.zip.ZipFile;
 
 import org.bonitasoft.plugin.analyze.report.model.Theme;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
 
 public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor {
 
@@ -38,25 +32,7 @@ public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor
     @Override
     public Properties getPageProperties() {
         File file = new File(theme.getArtifact().getFile());
-        try {
-            return findZipEntry(file, entry -> entry.getName().equals("page.properties"))
-                    .map(entry -> {
-                        try (ZipFile zipFile = new ZipFile(file);
-                                Reader reader = new InputStreamReader(zipFile.getInputStream(entry),
-                                        StandardCharsets.UTF_8)) {
-                            Properties prop = new Properties();
-                            prop.load(reader);
-                            return prop;
-                        } catch (IOException e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .orElse(new Properties());
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
-            return new Properties();
-        }
+        return ExtensionPagePropertiesReader.getPageProperties(file);
     }
 
 }

@@ -18,9 +18,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.eclipse.core.databinding.validation.ValidationStatus;

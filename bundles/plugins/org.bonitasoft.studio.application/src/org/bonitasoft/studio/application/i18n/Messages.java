@@ -305,6 +305,15 @@ public class Messages extends NLS {
     public static String applyingChanges;
     public static String actorFilters;
     public static String actorFiltersHint;
+    public static String restApiExtensions;
+    public static String restApiDetailsHint;
+    public static String httpMethodMissing;
+    public static String pathMissing;
+    public static String permissionsMissing;
+    public static String permissions;
+    public static String path;
+    public static String copyToClipboard;
+    public static String editPermissionsMapping;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -123,6 +123,12 @@ CLabel#gavTextColor {
     color: #757575;
 }
 
+Label#typeTextColor,
+CLabel#typeTextColor,
+StyledText#typeTextColor {
+    color: #ad8b00;
+}
+
 Label#cardHighlightTitleColor,
 CLabel#cardHighlightTitleColor { 
 	color: #f2af11;

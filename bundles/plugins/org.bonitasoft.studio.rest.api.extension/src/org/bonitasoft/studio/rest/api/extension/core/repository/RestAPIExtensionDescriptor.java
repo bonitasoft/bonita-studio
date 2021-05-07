@@ -18,9 +18,9 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.maven.CustomPageMavenProjectDescriptor;
-import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;

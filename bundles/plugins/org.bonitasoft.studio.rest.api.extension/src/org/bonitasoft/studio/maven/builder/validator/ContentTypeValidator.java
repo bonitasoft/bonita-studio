@@ -17,7 +17,7 @@ package org.bonitasoft.studio.maven.builder.validator;
 import java.util.Objects;
 import java.util.Properties;
 
-import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
