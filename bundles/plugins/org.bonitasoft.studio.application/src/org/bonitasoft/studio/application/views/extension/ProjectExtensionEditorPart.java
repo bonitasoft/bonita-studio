@@ -207,7 +207,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                     if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
                         otherDependencies.add(dep);
                     } else {
-                        createCard(parent, dep, bonitaDependency.get());
+                        createCard(parent, dep, bonitaDep);
                     }
                 }
             });

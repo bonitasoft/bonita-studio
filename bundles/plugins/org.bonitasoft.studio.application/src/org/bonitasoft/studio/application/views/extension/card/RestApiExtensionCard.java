@@ -16,27 +16,41 @@ package org.bonitasoft.studio.application.views.extension.card;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.extension.card.zoom.IZoomable;
+import org.bonitasoft.studio.application.views.extension.card.zoom.RestApiZoomControl;
+import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
-public class ExtensionCardFactory {
+public class RestApiExtensionCard extends ExtensionCard implements IZoomable {
 
-    private ExtensionCardFactory() {
+    private ZoomListener zoomListener;
 
-    }
-
-    public static ExtensionCard createExtensionCard(Composite parent,
+    public RestApiExtensionCard(Composite parent,
             Dependency dep,
             BonitaArtifactDependency bonitaDep) {
-        switch (bonitaDep.getArtifactType()) {
-            case CONNECTOR:
-                return new ConnectorExtensionCard(parent, dep, bonitaDep);
-            case ACTOR_FILTER:
-                return new ActorFilterExtensionCard(parent, dep, bonitaDep);
-            case REST_API:
-                return new RestApiExtensionCard(parent, dep, bonitaDep);
-            default:
-                return new ExtensionCard(parent, dep, bonitaDep);
-        }
+        super(parent, dep, bonitaDep);
+    }
+
+    @Override
+    public Control createZoomedControl(Composite parent) {
+        return new RestApiZoomControl(parent, zoomListener, dep, bonitaDep);
+    }
+
+    @Override
+    protected void createTitleComposite(Composite parent) {
+        super.createTitleComposite(parent);
+        addZoomBehavior(titleLabel);
+    }
+
+    @Override
+    public void addZoomListener(ZoomListener listener) {
+        this.zoomListener = listener;
+    }
+
+    @Override
+    public ZoomListener getZoomListener() {
+        return zoomListener;
     }
 
 }

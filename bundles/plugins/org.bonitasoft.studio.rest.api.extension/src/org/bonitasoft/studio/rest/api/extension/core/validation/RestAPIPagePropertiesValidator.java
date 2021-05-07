@@ -19,9 +19,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
 import org.bonitasoft.studio.maven.builder.validator.Location;
 import org.bonitasoft.studio.maven.builder.validator.LocationResolver;
 import org.bonitasoft.studio.maven.builder.validator.StatusWithLocation;

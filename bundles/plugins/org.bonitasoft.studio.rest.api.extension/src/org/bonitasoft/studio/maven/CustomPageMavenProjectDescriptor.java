@@ -19,17 +19,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.function.Predicate;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
+import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.maven.builder.PagePropertyConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -159,19 +156,7 @@ public abstract class CustomPageMavenProjectDescriptor {
     }
 
     private Optional<String> staticProperty(String property) {
-        return Optional.ofNullable(getPageProperties().getProperty(property))
-                .filter(Objects::nonNull)
-                .filter(value -> !(value.trim().startsWith("${") && value.trim().endsWith("}")))
-                .filter(value -> !(value.trim().startsWith("custompage_${") && value.trim().endsWith("}")));
-    }
-
-    protected Optional<? extends ZipEntry> findZipEntry(File file, Predicate<? super ZipEntry> entryPredicate)
-            throws IOException {
-        try (ZipFile zipFile = new ZipFile(file)) {
-            return zipFile.stream()
-                    .filter(entryPredicate)
-                    .findFirst();
-        }
+        return ExtensionPagePropertiesReader.getProperty(getPageProperties(), property);
     }
 
 }
