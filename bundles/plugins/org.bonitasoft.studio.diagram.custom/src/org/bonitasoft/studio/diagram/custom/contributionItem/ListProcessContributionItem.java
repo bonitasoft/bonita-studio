@@ -51,7 +51,7 @@ public abstract class ListProcessContributionItem extends CompoundContributionIt
                 .filter(DiagramFileStore.class::isInstance)
                 .map(DiagramFileStore.class::cast);
         if (fileStore.isPresent()) {
-            return fileStore.get().getProcesses().stream()
+            return fileStore.get().getProcesses(true).stream()
                     .map(this::createContributionItem)
                     .collect(Collectors.toList()).toArray(new IContributionItem[0]);
         }

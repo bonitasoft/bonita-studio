@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.diagram.custom.parts;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -20,6 +19,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -40,32 +40,29 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        DiagramFileStore store = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
+        DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(input.getName(), true);
-        MainProcess mainProcess = null;
-        if (store != null) {
+        if (fileStore != null) {
             try {
-                if (store.getEMFResource().isLoaded()) {
-                    store.getEMFResource().unload();
+                if (fileStore.getEMFResource().isLoaded()) {
+                    fileStore.getEMFResource().unload();
                 }
-                mainProcess = store.getContent();
+                fileStore.getContent();
             } catch (ReadFileStoreException e) {
                 throw new PartInitException(
                         new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e.getCause()));
             }
         }
         super.init(site, input);
-        if (mainProcess != null) {
-            webPageNameResourceChangeListener.setMainProcess(mainProcess);
-            repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
-        }
+        repositoryAccessor.getWorkspace().addResourceChangeListener(webPageNameResourceChangeListener);
     }
 
     @Override
-    protected void setPartName(String partName) {
-        super.setPartName(partName);
-        if (partName != null) {
-            updateWebPageChangeListener(partName);
+    protected void initializeGraphicalViewerContents() {
+        super.initializeGraphicalViewerContents();
+        EObject mainProcess = getDiagramEditPart().resolveSemanticElement();
+        if (mainProcess instanceof MainProcess) {
+            webPageNameResourceChangeListener.setMainProcess((MainProcess) mainProcess);
         }
     }
 
@@ -78,18 +75,6 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         super.selectionChanged(part, selection);
     }
 
-    private void updateWebPageChangeListener(String processName) {
-        DiagramFileStore fileStore = RepositoryManager.getInstance()
-                .getRepositoryStore(DiagramRepositoryStore.class)
-                .getChild(processName, true);
-        if (fileStore != null && webPageNameResourceChangeListener != null) {
-            try {
-                webPageNameResourceChangeListener.setMainProcess(fileStore.getContent());
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), Activator.PLUGIN_ID);
-            }
-        }
-    }
 
     @Override
     public void dispose() {

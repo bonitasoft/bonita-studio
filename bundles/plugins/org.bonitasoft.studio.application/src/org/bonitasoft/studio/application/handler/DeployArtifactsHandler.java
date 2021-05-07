@@ -82,6 +82,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.util.URI;
@@ -277,7 +278,7 @@ public class DeployArtifactsHandler {
                     status.add(operation.getStatus());
                 }
                 if (status.getSeverity() != IStatus.ERROR) {
-                    addToMultiStatus(deploy(artifactsToDeploy, session, monitor), status);
+                    addToMultiStatus(deploy(artifactsToDeploy, session, SubMonitor.convert(monitor, artifactsToDeploy.size())), status);
                 }
             } finally {
                 monitor.done();

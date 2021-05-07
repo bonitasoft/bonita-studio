@@ -42,7 +42,7 @@ public class TestSubprocessEventExport {
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());
         initialPa = drs.getChild("MyDiagram3-1.0.proc", true);
-        for (final AbstractProcess process : initialPa.getProcesses()) {
+        for (final AbstractProcess process : initialPa.getProcesses(true)) {
             if (process.getName().equals("Pool3")) {
                 assertNotNull("Missing Event Subprocess @ Studio Engine Export",
                         ModelHelper.findElement(process, "SignalEventProc", true));

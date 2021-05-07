@@ -89,7 +89,7 @@ public class DiagramFileStoreTest {
     public void should_have_related_fileStores_for_process_config() throws Exception {
         //Given
         doReturn(repository).when(diagramFileStore).getRepository();
-        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses();
+        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses(false);
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(processConfFStore);
 
@@ -104,7 +104,7 @@ public class DiagramFileStoreTest {
     public void should_not_contains_null_refrences_in_related_fileStores() throws Exception {
         //Given
         doReturn(repository).when(diagramFileStore).getRepository();
-        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses();
+        doReturn(Collections.singletonList(aPoolInAResourceWithUUID("aProcessUUID"))).when(diagramFileStore).getProcesses(false);
         when(repository.getRepositoryStore(ProcessConfigurationRepositoryStore.class)).thenReturn(processConfStore);
         when(processConfStore.getChild("aProcessUUID.conf", true)).thenReturn(null);
 

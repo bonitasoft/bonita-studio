@@ -75,16 +75,17 @@ public class RunProcessCommand extends AbstractHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
         ProcessSelector processSelector = new ProcessSelector(event);
-       DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-       if(runSynchronously) {
-           diagramStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
-       }else {
-           try {
-               PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> diagramStore.computeProcesses(monitor));
-           } catch (InvocationTargetException | InterruptedException e) {
-               BonitaStudioLog.error(e);
-           }
-       }
+        DiagramRepositoryStore diagramStore = RepositoryManager.getInstance()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        if (runSynchronously) {
+            diagramStore.computeProcesses(AbstractRepository.NULL_PROGRESS_MONITOR);
+        } else {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, diagramStore::computeProcesses);
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
        final Set<AbstractProcess> executableProcesses = processSelector.getExecutableProcesses();
         if (executableProcesses.isEmpty()) {
             MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.noProcessToRunTitle,

@@ -91,7 +91,7 @@ public class BuildDiagramHandler {
             String processUUID) {
         return repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(fileName, true)
-                .getProcesses().stream().filter(pool -> {
+                .getProcesses(true).stream().filter(pool -> {
                     if (processUUID != null) {
                         return Objects.equals(processUUID, ModelHelper.getEObjectID(pool));
                     }

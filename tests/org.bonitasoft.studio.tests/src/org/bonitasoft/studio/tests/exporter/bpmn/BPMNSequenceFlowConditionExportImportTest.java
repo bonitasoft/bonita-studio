@@ -111,7 +111,7 @@ public class BPMNSequenceFlowConditionExportImportTest {
         final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.newDiagram();
         Resource emfResource = newDiagramFileStore.getEMFResource();
         TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(emfResource);
-        final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
+        final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses(false).get(0);
         final SequenceFlow sequenceFlow = (SequenceFlow) abstractProcess.getConnections().get(0);
         editingDomain.getCommandStack().execute(
                 SetCommand.create(editingDomain, sequenceFlow, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, condition));

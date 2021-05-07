@@ -169,7 +169,7 @@ public class BatchValidationHandler extends AbstractHandler {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         diagramRepositoryStore.getChildren().stream()
-                .forEach(fStore -> validateOperation.addProcesses(fStore.getProcesses()));
+                .forEach(fStore -> validateOperation.addProcesses(fStore.getProcesses(false)));
     }
 
     protected void computeDiagramsToValidate(final ExecutionEvent event,
@@ -198,7 +198,7 @@ public class BatchValidationHandler extends AbstractHandler {
                 throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
             }
             currentDiagramStore = fileStore;
-            validateOperation.addProcesses(fileStore.getProcesses());
+            validateOperation.addProcesses(fileStore.getProcesses(false));
             validateModelCompatibility.addFile(fileStore.getResource().getLocation().toFile());
         }
     }
