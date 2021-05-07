@@ -16,12 +16,12 @@
  */
 package org.bonitasoft.studio.common.repository.extension;
 
-import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.Composite;
 
 public interface ExtensionAction {
 
     String getExtensionId();
 
-    void fill(ToolBar toolbar);
-    
+    void fill(Composite parent);
+
 }

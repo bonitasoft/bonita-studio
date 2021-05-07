@@ -43,6 +43,7 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_JOq_EHZVEeW6kO-p0oSgKw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_xmqtoOpkEemi2fumwpsySA" elementId="org.bonitasoft.studio.rest.api.extension.businessArchive.validator.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.core.validation.FormsCustomPermissionsValidator"/>
+    <elements xsi:type="application:Addon" xmi:id="_pfZQkK82Eeu4pqAhqw6O6Q" elementId="org.bonitasoft.studio.rest.api.extension.card.action.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.extension.RestApiActionExtension"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_pna6oJdoEeWG2cYaYkPesQ" featurename="bindingTables" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:BindingTable" xmi:id="_0NI8IJdoEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.rest.api.extension.bindingtable" bindingContext="_xU4VkJdoEeWG2cYaYkPesQ">
