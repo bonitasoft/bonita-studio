@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.model.Depend
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 public class ProjectDependenciesLookupOperation implements IRunnableWithProgress {
@@ -65,7 +66,7 @@ public class ProjectDependenciesLookupOperation implements IRunnableWithProgress
         monitor.beginTask("", operations.size());
         for (DependencyGetOperation op : operations) {
             monitor.setTaskName(String.format(Messages.lookupDependencyFor, op.getGav().toString()));
-            op.run(monitor);
+            op.run(new NullProgressMonitor());
             DependencyLookup lookup = op.getResult();
             if (lookup == null) {
                 lookup = localDependencyInputStreamSupplier.find(op.getGav())

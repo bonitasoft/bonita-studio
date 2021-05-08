@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -27,6 +28,8 @@ import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactor
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 public class DiagramValidator implements BosImporterStatusProvider {
 
@@ -38,23 +41,32 @@ public class DiagramValidator implements BosImporterStatusProvider {
     public ImportBosArchiveStatusBuilder buildStatus(ImportBosArchiveOperation operation,
             ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
             throws ValidationException {
-        for (final IRepositoryFileStore diagramFileStore : operation.getImportedProcesses()) {
-            if(monitor.isCanceled()) {
+        var importedProcesses = operation.getImportedProcesses();
+        var nbDiagrams = importedProcesses.size();
+        SubMonitor subMonitor = SubMonitor.convert(monitor, nbDiagrams);
+        var current = 1;
+        BatchValidationOperation batchValidationOperation = new BatchValidationOperation(
+                new OffscreenEditPartFactory(
+                        org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
+                new ValidationMarkerProvider(),
+                new BatchValidatorFactory().create());
+        for (final IRepositoryFileStore<?> diagramFileStore : importedProcesses) {
+            if(subMonitor.isCanceled()) {
                 break;
             }
+            subMonitor.setTaskName(String.format(Messages.validatingDiagramWithProgess, current, nbDiagrams));
             try {
                 final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                subMonitor.subTask(String.format(Messages.validatingDiagram, process.getName(), process.getVersion()));
                 final RunProcessesValidationOperation validationAction = new RunProcessesValidationOperation(
-                        new BatchValidationOperation(
-                                new OffscreenEditPartFactory(
-                                        org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                                new ValidationMarkerProvider(),
-                                new BatchValidatorFactory().create()));
+                        batchValidationOperation);
                 validationAction.addProcess(process);
-                validationAction.run(monitor);
+                validationAction.run(new NullProgressMonitor());
                 if (validationAction.getStatus() != null && !validationAction.getStatus().isOK()) {
                     statusBuilder.addStatus(process, validationAction.getStatus());
                 }
+                current ++;
+                subMonitor.worked(1);
             } catch (final ReadFileStoreException | InvocationTargetException | InterruptedException e) {
                 throw new ValidationException(e, "Failed to validate diagram content");
             }

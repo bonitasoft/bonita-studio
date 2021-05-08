@@ -133,16 +133,13 @@ public class ImportBosHandler {
             if (switchRepositoryStrategy.isCreateNewProject()) {
                 try {
                     container.run(true, false,
-                            monitor -> repositoryAccessor
-                                    .createNewRepository(bosArchiveControlSupplier.getProjectMetadata(), monitor));
+                            monitor -> {
+                                repositoryAccessor
+                                        .createNewRepository(bosArchiveControlSupplier.getProjectMetadata(), monitor);
+                                reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor);
+                            });
                 } catch (InvocationTargetException | InterruptedException e) {
                     throw new RuntimeException(Messages.failSwitchRepository, e);
-                }
-                try {
-                    container.run(true, false,
-                            monitor -> reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor));
-                } catch (InvocationTargetException | InterruptedException e) {
-                    throw new RuntimeException(Messages.errorReadArchive, e);
                 }
             } else {
                 try {

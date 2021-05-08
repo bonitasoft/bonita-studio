@@ -73,15 +73,17 @@ public class BatchValidationHandler extends AbstractHandler {
         AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        try {
-            service.run(true, false, diagramRepositoryStore::computeProcesses);
-        } catch (InvocationTargetException | InterruptedException e) {
-            throw new ExecutionException("Error during processes loading.", e);
+        if (!diagramRepositoryStore.hasComputedProcesses()) {
+            try {
+                service.run(true, false, diagramRepositoryStore::computeProcesses);
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new ExecutionException("Error during processes loading.", e);
+            }
         }
         var dependencyConstraintsOnly = dependencyConstraintsOnly(parameters);
         ProcessValidationOperation validateOperation = new ProcessValidationOperation()
                 .forceMarkerUpdate();
-        if(dependencyConstraintsOnly) {
+        if (dependencyConstraintsOnly) {
             validateOperation.dependencyConstraintsOnly();
         }
         ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
@@ -103,7 +105,7 @@ public class BatchValidationHandler extends AbstractHandler {
                 if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
                     return;
                 }
-                if(!dependencyConstraintsOnly) {
+                if (!dependencyConstraintsOnly) {
                     new IndexingUIDOperation().run(monitor);
                 }
                 validateOperation.run(monitor);

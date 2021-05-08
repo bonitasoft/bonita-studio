@@ -47,7 +47,7 @@ public class BatchValidatorFactory {
     }
 
     public static IConstraintFilter dependencyConstraintsFilter() {
-        return (constraint, target) -> DEPENDENCY_CONSTRAINTS.contains(constraint.getId());
+        return (constraint, target) -> constraint.getId() != null && DEPENDENCY_CONSTRAINTS.contains(constraint.getId());
     }
 
 }
