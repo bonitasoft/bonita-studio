@@ -11,6 +11,8 @@ package org.bonitasoft.studio.common.repository.core.maven.contribution;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -55,7 +57,7 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
             return null;
         }
         ArtifactRepository internalRepository = maven.createArtifactRepository(LOCAL_REPOSITORY_ID,
-                rootFolder.toURI().toURL().toString());
+                URLDecoder.decode(rootFolder.toURI().toURL().toString(), StandardCharsets.UTF_8));
         if(!LOCAL_REPOSITORY_ID.equals(internalRepository.getId())){ // Check if the repository is mirrored 
             internalRepository = internalRepository.getMirroredRepositories().stream().filter(repo -> LOCAL_REPOSITORY_ID.equals(repo.getId()))
                     .findFirst()
