@@ -31,6 +31,7 @@ import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOper
 import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMode;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -62,18 +63,21 @@ public class ImportExtensionHandler {
     private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
     private ExceptionDialogHandler errorDialogHandler;
+    private CommandExecutor commandExecutor;
 
     @Inject
     public ImportExtensionHandler(RepositoryAccessor repositoryAccessor,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
             MavenProjectHelper mavenProjectHelper,
-            ExceptionDialogHandler errorDialogHandler) {
+            ExceptionDialogHandler errorDialogHandler,
+            CommandExecutor commandExecutor) {
         this.mavenProjectHelper = mavenProjectHelper;
         this.repositoryAccessor = repositoryAccessor;
         this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
         this.errorDialogHandler = errorDialogHandler;
+        this.commandExecutor = commandExecutor;
     }
 
     @Execute
@@ -150,7 +154,8 @@ public class ImportExtensionHandler {
 
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory,
                 dependenciesUpdate,
-                currentRepository);
+                currentRepository,
+                commandExecutor);
         try {
             updateExtensionDecorator.preUpdate(container);
             Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel);

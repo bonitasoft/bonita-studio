@@ -59,14 +59,17 @@ public class OpenMarketplaceHandler {
     private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private MavenProjectHelper mavenProjectHelper;
     private RepositoryAccessor repositoryAccessor;
+    private CommandExecutor commandExecutor;
 
     @Inject
     public OpenMarketplaceHandler(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
             MavenProjectHelper mavenProjectHelper,
-            RepositoryAccessor repositoryAccessor) {
+            RepositoryAccessor repositoryAccessor,
+            CommandExecutor commandExecutor) {
         this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
         this.mavenProjectHelper = mavenProjectHelper;
         this.repositoryAccessor = repositoryAccessor;
+        this.commandExecutor = commandExecutor;
     }
 
     @Execute
@@ -116,7 +119,8 @@ public class OpenMarketplaceHandler {
                 .collect(Collectors.toList());
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory,
                 dependenciesUpdates,
-                repositoryAccessor.getCurrentRepository());
+                repositoryAccessor.getCurrentRepository(),
+                commandExecutor);
         try {
             updateExtensionDecorator.preUpdate(container);
             container.run(true, false, monitor -> installDependencies(extendProjectPage, repositoryAccessor, monitor));

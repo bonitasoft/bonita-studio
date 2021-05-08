@@ -29,9 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
-import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -40,6 +38,7 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
     private final List<AbstractProcess> listOfProcessesToValidate = new ArrayList<>();
     private MultiStatus status = new MultiStatus(ValidationCommonPlugin.PLUGIN_ID ,-1, null, null);
     private boolean forceMarkerUpdate = false;
+    private boolean dependencyConstraintsOnly = false;
 
     public ProcessValidationOperation addProcess(final AbstractProcess process) {
         if(process.eResource() == null) {
@@ -55,6 +54,11 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         this.forceMarkerUpdate = true;
         return this;
     }
+    
+    public ProcessValidationOperation dependencyConstraintsOnly() {
+        this.dependencyConstraintsOnly = true;
+        return this;
+    }
 
     public ProcessValidationOperation addProcesses(final List<AbstractProcess> processes) {
         processes.stream().forEach(this::addProcess);
@@ -68,9 +72,8 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
     @Override
     protected void execute(IProgressMonitor monitor)
             throws CoreException, InvocationTargetException, InterruptedException {
-        final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance()
-                .newValidator(EvaluationMode.BATCH);
-        validator.setIncludeLiveConstraints(true);
+        BatchValidatorFactory validatorFactory = new BatchValidatorFactory();
+        final IBatchValidator validator = dependencyConstraintsOnly ? validatorFactory.create(BatchValidatorFactory.dependencyConstraintsFilter()) : validatorFactory.create();
         SubMonitor subMonitor = SubMonitor.convert(monitor,Messages.validating, listOfProcessesToValidate.size());
         listOfProcessesToValidate.stream().forEach( process -> {
             if(!subMonitor.isCanceled()) {
@@ -84,7 +87,8 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
                             new BatchValidationOperation(
                                     new OffscreenEditPartFactory(
                                             org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                                    new ValidationMarkerProvider()));
+                                    new ValidationMarkerProvider(),
+                                    validator));
                     validationAction.addProcess(process);
                     try {
                         validationAction.run(new NullProgressMonitor());
@@ -97,5 +101,6 @@ public class ProcessValidationOperation extends WorkspaceModifyOperation {
         });
         subMonitor.subTask("");
     }
+
 
 }

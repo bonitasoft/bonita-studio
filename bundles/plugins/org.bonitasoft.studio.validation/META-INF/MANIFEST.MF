@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.ui,
  org.bonitasoft.studio.groovy.ui;bundle-version="7.13.0",
  org.bonitasoft.studio.identity;bundle-version="7.13.0",
- org.bonitasoft.studio.properties
+ org.bonitasoft.studio.properties,
+ org.eclipse.m2e.maven.runtime;bundle-version="1.16.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11

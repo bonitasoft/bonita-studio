@@ -55,6 +55,8 @@ import org.eclipse.ui.progress.IProgressService;
 public class BatchValidationHandler extends AbstractHandler {
 
     private static final String CHECK_ALL_MODEL_VERSION_PARAM = "checkAllModelVersion";
+    private static final String DEPENDENCY_CONSTRAINTS_ONLY = "dependencyConstraintsOnly";
+
     private DiagramFileStore currentDiagramStore;
 
     /*
@@ -76,12 +78,17 @@ public class BatchValidationHandler extends AbstractHandler {
         } catch (InvocationTargetException | InterruptedException e) {
             throw new ExecutionException("Error during processes loading.", e);
         }
-        ProcessValidationOperation validateOperation = new ProcessValidationOperation().forceMarkerUpdate();
+        var dependencyConstraintsOnly = dependencyConstraintsOnly(parameters);
+        ProcessValidationOperation validateOperation = new ProcessValidationOperation()
+                .forceMarkerUpdate();
+        if(dependencyConstraintsOnly) {
+            validateOperation.dependencyConstraintsOnly();
+        }
         ModelFileCompatibilityValidator validateModelCompatibility = new ModelFileCompatibilityValidator(
                 currentRepository.getProject().getLocation().toFile(), currentRepository)
                         .addResourceMarkers();
         boolean checkAllModelVersion = checkAllModelVersion(parameters);
-        if (parameters != null && parameters.containsKey("diagrams")) {
+        if (parameters.containsKey("diagrams")) {
             computeDiagramsToValidate(event, validateOperation, validateModelCompatibility);
         }
         if (checkAllModelVersion) {
@@ -89,7 +96,6 @@ public class BatchValidationHandler extends AbstractHandler {
         }
 
         MultiStatus aggregatedStatus = new MultiStatus(ValidationPlugin.PLUGIN_ID, -1, null, null);
-
         try {
             service.run(true, true, monitor -> {
                 validateModelCompatibility.run(monitor);
@@ -97,7 +103,9 @@ public class BatchValidationHandler extends AbstractHandler {
                 if (!checkAllModelVersion && aggregatedStatus.getSeverity() == IStatus.ERROR) {
                     return;
                 }
-                new IndexingUIDOperation().run(monitor);
+                if(!dependencyConstraintsOnly) {
+                    new IndexingUIDOperation().run(monitor);
+                }
                 validateOperation.run(monitor);
                 aggregatedStatus.addAll(validateOperation.getStatus());
             });
@@ -105,7 +113,7 @@ public class BatchValidationHandler extends AbstractHandler {
             throw new ExecutionException("Error during Validation", e);
         } catch (final InterruptedException e) {
             //Validation cancelled
-        }finally {
+        } finally {
             diagramRepositoryStore.resetComputedProcesses();
         }
 
@@ -136,6 +144,11 @@ public class BatchValidationHandler extends AbstractHandler {
     private boolean checkAllModelVersion(final Map<?, ?> parameters) {
         return parameters.containsKey(CHECK_ALL_MODEL_VERSION_PARAM)
                 && Boolean.valueOf((String) parameters.get(CHECK_ALL_MODEL_VERSION_PARAM));
+    }
+
+    private boolean dependencyConstraintsOnly(final Map<?, ?> parameters) {
+        return parameters.containsKey(DEPENDENCY_CONSTRAINTS_ONLY)
+                && Boolean.valueOf((String) parameters.get(DEPENDENCY_CONSTRAINTS_ONLY));
     }
 
     private boolean shouldDisplayReportDialog(final Map<?, ?> parameters) {

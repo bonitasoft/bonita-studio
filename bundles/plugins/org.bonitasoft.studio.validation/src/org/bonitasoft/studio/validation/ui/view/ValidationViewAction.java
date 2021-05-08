@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.validation.ModelFileCompatibilityValidator;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.BatchValidatorFactory;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -47,6 +48,7 @@ public class ValidationViewAction extends Action {
 
     private TableViewer tableViewer;
     private IWorkbenchPage activePage;
+    private BatchValidatorFactory batchValidatorFactory = new BatchValidatorFactory();
 
     public void setTableViewer(final TableViewer tableViewer) {
         this.tableViewer = tableViewer;
@@ -71,7 +73,8 @@ public class ValidationViewAction extends Action {
         }
         final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory(
                 org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                new ValidationMarkerProvider());
+                new ValidationMarkerProvider(),
+                batchValidatorFactory.create());
         final IEditorPart ieditor = activePage.getActiveEditor();
         if (ieditor instanceof DiagramEditor) {
             final Resource resource = ((DiagramEditor) ieditor).getDiagramEditPart().resolveSemanticElement()

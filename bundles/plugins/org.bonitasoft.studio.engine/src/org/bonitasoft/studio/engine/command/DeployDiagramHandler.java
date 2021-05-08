@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.BatchValidatorFactory;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
@@ -160,7 +161,8 @@ public class DeployDiagramHandler {
                 new BatchValidationOperation(
                         new OffscreenEditPartFactory(
                                 org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                        new ValidationMarkerProvider()));
+                        new ValidationMarkerProvider(),
+                        new BatchValidatorFactory().create()));
         validationOperation.addProcesses(processes);
         try {
             new SkippableProgressMonitorJobsDialog(Display.getDefault().getActiveShell()).canBeSkipped().run(true,

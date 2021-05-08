@@ -84,9 +84,9 @@ public class EMFModelUpdater<T extends EObject> {
     }
 
     private void doUpdate(EObject sourceObject, EObject updatedObject) {
-            synched.clear();
-            manyFeaturesSynched.clear();
-            deepEObjectUpdate(sourceObject, updatedObject);
+        synched.clear();
+        manyFeaturesSynched.clear();
+        deepEObjectUpdate(sourceObject, updatedObject);
     }
 
     public void editWorkingCopy(T value) {

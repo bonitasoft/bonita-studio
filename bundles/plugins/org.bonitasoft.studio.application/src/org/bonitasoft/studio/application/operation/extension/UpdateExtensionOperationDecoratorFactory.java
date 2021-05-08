@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
@@ -27,16 +28,22 @@ public class UpdateExtensionOperationDecoratorFactory {
 
     private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private RepositoryAccessor repositoryAccessor;
+    private CommandExecutor commandExecutor;
 
     @Inject
     public UpdateExtensionOperationDecoratorFactory(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
-            RepositoryAccessor repositoryAccessor) {
+            RepositoryAccessor repositoryAccessor,
+            CommandExecutor commandExecutor) {
         this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
         this.repositoryAccessor = repositoryAccessor;
+        this.commandExecutor = commandExecutor;
     }
 
     public UpdateExtensionOperationDecorator create(List<DependencyUpdate> dependenciesUpdates) {
-        return new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory, dependenciesUpdates, repositoryAccessor.getCurrentRepository());
+        return new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory, 
+                dependenciesUpdates,
+                repositoryAccessor.getCurrentRepository(), 
+                commandExecutor);
     }
 
 }
