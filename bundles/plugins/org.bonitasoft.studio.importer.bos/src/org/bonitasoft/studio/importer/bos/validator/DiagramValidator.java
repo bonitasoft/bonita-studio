@@ -22,6 +22,7 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.ImportBosArchiveStatusBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.validation.common.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.common.operation.BatchValidatorFactory;
 import org.bonitasoft.studio.validation.common.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.common.operation.RunProcessesValidationOperation;
 import org.bonitasoft.studio.validation.common.operation.ValidationMarkerProvider;
@@ -47,7 +48,8 @@ public class DiagramValidator implements BosImporterStatusProvider {
                         new BatchValidationOperation(
                                 new OffscreenEditPartFactory(
                                         org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance()),
-                                new ValidationMarkerProvider()));
+                                new ValidationMarkerProvider(),
+                                new BatchValidatorFactory().create()));
                 validationAction.addProcess(process);
                 validationAction.run(monitor);
                 if (validationAction.getStatus() != null && !validationAction.getStatus().isOK()) {

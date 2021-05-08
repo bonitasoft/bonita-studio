@@ -155,6 +155,9 @@ public class BonitaProjectExplorer extends CommonNavigator {
             @Override
             public void drop(DropTargetEvent event) {
                 dragLeave(event);
+                if(!(event.data instanceof String[])) {
+                    return;
+                }
                 String[] fileArrayToImport = (String[]) event.data;
                 if (fileArrayToImport.length == 1 && fileArrayToImport[0].endsWith(".bos")) {
                     final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);

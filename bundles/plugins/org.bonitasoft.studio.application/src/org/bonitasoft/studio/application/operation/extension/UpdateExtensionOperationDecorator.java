@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.Previewable;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
@@ -46,17 +48,21 @@ import org.eclipse.swt.widgets.Shell;
 
 public class UpdateExtensionOperationDecorator {
 
+    private static final String BATCH_VALIDATION_COMMAND_ID = "org.bonitasoft.studio.validation.batchValidation";
     private List<DependencyUpdate> dependenciesUpdates;
     private IRepository currentRepository;
     private ExtensionUpdateParticipantFactory updateParticipantFactory;
     private List<UpdateExtensionOperationParticipant> participants = new ArrayList<>();
+    private CommandExecutor commandExecutor;
 
     public UpdateExtensionOperationDecorator(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
             List<DependencyUpdate> dependenciesUpdates,
-            IRepository currentRepository) {
+            IRepository currentRepository,
+            CommandExecutor commandExecutor) {
         this.updateParticipantFactory = definitionUpdateOperationFactory;
         this.dependenciesUpdates = dependenciesUpdates;
         this.currentRepository = currentRepository;
+        this.commandExecutor = commandExecutor;
     }
 
     public void preUpdate(IRunnableContext context) throws InvocationTargetException, InterruptedException {
@@ -72,7 +78,7 @@ public class UpdateExtensionOperationDecorator {
                 monitor.beginTask(Messages.preparingUpdate, IProgressMonitor.UNKNOWN);
                 diagramRepositoryStore.computeProcesses(new NullProgressMonitor());
                 for (UpdateExtensionOperationParticipant participant : participants) {
-                   participant.preUpdate(new NullProgressMonitor());
+                    participant.preUpdate(new NullProgressMonitor());
                 }
             });
         }
@@ -110,6 +116,11 @@ public class UpdateExtensionOperationDecorator {
             } else {
                 applyChanges(context, localDependencyStore);
             }
+            // Run a minimal process validation that only checks dependency consistency
+            commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
+                    "dependencyConstraintsOnly", "true",
+                    "checkAllModelVersion", "true",
+                    "showReport", "false"));
         } finally {
             diagramRepositoryStore.resetComputedProcesses();
         }
@@ -123,11 +134,11 @@ public class UpdateExtensionOperationDecorator {
             Set<Resource> modifiedResources = new HashSet<>();
             for (var p : participants) {
                 p.run(new NullProgressMonitor());
-                if(p.getModifiedResources() != null) {
+                if (p.getModifiedResources() != null) {
                     modifiedResources.addAll(p.getModifiedResources());
                 }
             }
-            for(var resource : modifiedResources) {
+            for (var resource : modifiedResources) {
                 try {
                     resource.save(Collections.emptyMap());
                 } catch (IOException e) {

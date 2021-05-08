@@ -40,9 +40,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.service.IBatchValidator;
-import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -64,11 +62,14 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     private final List<IFile> fileProcessed = new ArrayList<>(); //Avoid duplicate
     private final OffscreenEditPartFactory offscreenEditPartFactory;
     private final ValidationMarkerProvider validationMarkerProvider;
+    private IBatchValidator batchValidator;
 
     public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory,
-            final ValidationMarkerProvider validationMarkerProvider) {
+            final ValidationMarkerProvider validationMarkerProvider,
+            IBatchValidator batchValidator ) {
         this.offscreenEditPartFactory = offscreenEditPartFactory;
         this.validationMarkerProvider = validationMarkerProvider;
+        this.batchValidator = batchValidator;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                 return;
             }
             buildEditPart();
-            validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart);
+            validationMarkerProvider.clearMarkers(diagramsToDiagramEditPart, batchValidator.getConstraintFilters());
             for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
                 final DiagramEditPart diagramEp = entry.getValue();
                 final Diagram diagram = entry.getKey();
@@ -109,11 +110,8 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         final IFile target = view.eResource() != null ? WorkspaceSynchronizer.getFile(view.eResource()) : null;
         final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
         validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
-        final IBatchValidator validator = (IBatchValidator) ModelValidationService.getInstance().newValidator(
-                EvaluationMode.BATCH);
-        validator.setIncludeLiveConstraints(true);
         if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
-            final IStatus status = validator.validate(view.getElement(), monitor);
+            final IStatus status = batchValidator.validate(view.getElement(), monitor);
             validationMarkerProvider.createMarkers(target, status, diagramEditPart);
         }
     }

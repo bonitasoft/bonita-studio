@@ -2,7 +2,6 @@ package org.bonitasoft.studio.validation.common.operation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -132,7 +131,7 @@ public class RunProcessesValidationOperation implements IRunnableWithProgress {
     public static void showValidationPart() {
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         final IEditorPart part = activePage.getActiveEditor();
-        if (part != null && part instanceof DiagramEditor) {
+        if (part instanceof DiagramEditor) {
             final MainProcess proc = ModelHelper
                     .getMainProcess(((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement());
             final String partName = proc.getName() + " (" + proc.getVersion() + ")";

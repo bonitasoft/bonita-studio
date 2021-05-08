@@ -16,9 +16,13 @@ package org.bonitasoft.studio.diagram.custom.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -49,6 +53,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -63,17 +68,18 @@ public class DeleteHandler extends AbstractHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (part instanceof DiagramEditor) {
-            final IStructuredSelection currentSelection = (IStructuredSelection) ((DiagramEditor) part).getDiagramGraphicalViewer().getSelection();
+            final IStructuredSelection currentSelection = (IStructuredSelection) ((DiagramEditor) part)
+                    .getDiagramGraphicalViewer().getSelection();
             if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
                 lanes.clear();
-                boolean containsPool = false;
                 boolean isMessageFlow = false;
                 MessageFlow flow = null;
                 final List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>();
+                List<String> deletePoolUUIDs = new ArrayList<>();
                 for (final Object item : currentSelection.toArray()) {
                     final EObject semanticElement = ((IGraphicalEditPart) item).resolveSemanticElement();
                     if (semanticElement instanceof Pool) {
-                        containsPool = true;
+                        deletePoolUUIDs.add(ModelHelper.getEObjectID(semanticElement));
                     }
                     if (semanticElement instanceof Lane) {
                         lanes.add((Lane) semanticElement);
@@ -94,18 +100,27 @@ public class DeleteHandler extends AbstractHandler {
                     }
                 }
                 ((DiagramEditor) part).getDiagramGraphicalViewer().setSelection(new StructuredSelection(newSelection));
-                GlobalAction actionHandler = GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE);
-                if (containsPool) {
-                    if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
+                GlobalAction actionHandler = GlobalActionManager.getInstance().createActionHandler(part,
+                        GlobalActionId.DELETE);
+                if (!deletePoolUUIDs.isEmpty()) {
+                    if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            Messages.deleteDialogTitle,
                             Messages.deleteDialogMessage)) {
                         upadateLaneItems();
                         actionHandler.refresh();
                         actionHandler.run();
+                        ProcessConfigurationRepositoryStore pConfStore = RepositoryManager.getInstance()
+                                .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+                        deletePoolUUIDs.stream()
+                                .map(uuid -> pConfStore.getChild(uuid + ".conf", false))
+                                .filter(Objects::nonNull)
+                                .forEach(IRepositoryFileStore::delete);
                     }
                 } else {
                     if (isMessageFlow) {
-                        if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
-                                Messages.bind(Messages.deleteMessageFlow, flow.getName()))) {
+                        if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                Messages.deleteDialogTitle,
+                                NLS.bind(Messages.deleteMessageFlow, flow.getName()))) {
                             removeMessage(flow);
                             actionHandler.refresh();
                             actionHandler.run();
@@ -126,12 +141,12 @@ public class DeleteHandler extends AbstractHandler {
         for (final Lane l : lanes) {
             final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(l);
             for (final EObject task : ModelHelper.getAllItemsOfType(l, ProcessPackage.Literals.TASK)) {
-                cc.append(SetCommand.create(domain, task, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true));
+                cc.append(SetCommand.create(domain, task, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE,
+                        true));
             }
             domain.getCommandStack().execute(cc);
         }
     }
-
 
     public void removeMessage(final MessageFlow flow) {
         final MainProcess diagram = ModelHelper.getMainProcess(flow);
@@ -149,7 +164,8 @@ public class DeleteHandler extends AbstractHandler {
                 }
             }
         }
-        cc.append(SetCommand.create(domain, catchEvent, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, null));
+        cc.append(SetCommand.create(domain, catchEvent, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT,
+                null));
         domain.getCommandStack().execute(cc);
     }
 
@@ -161,7 +177,8 @@ public class DeleteHandler extends AbstractHandler {
     @Override
     public boolean isEnabled() {
         final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        final IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider().getSelection());
+        final IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider()
+                .getSelection());
         if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
             if ((currentSelection.getFirstElement() instanceof MainProcessEditPart)) {
                 return false;

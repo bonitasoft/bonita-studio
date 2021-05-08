@@ -15,25 +15,32 @@
 package org.bonitasoft.studio.validation.common.operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.Triple;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
+import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.validation.model.IConstraintStatus;
+import org.eclipse.emf.validation.service.IConstraintDescriptor;
+import org.eclipse.emf.validation.service.IConstraintFilter;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -63,8 +70,8 @@ public class ValidationMarkerProvider {
         return Diagnostic.OK_INSTANCE;
     }
 
-    public void createMarkers(final IFile
-            target, final IStatus validationStatus, final DiagramEditPart diagramEditPart) {
+    public void createMarkers(final IFile target, final IStatus validationStatus,
+            final DiagramEditPart diagramEditPart) {
         if (validationStatus.isOK()) {
             return;
         }
@@ -75,15 +82,16 @@ public class ValidationMarkerProvider {
                 collectTargetElements(rootStatus, new HashSet<EObject>(), allStatuses));
         final List<Triple<String, String, String>> createdMarkers = new ArrayList<Triple<String, String, String>>();
         for (final Iterator it = allStatuses.iterator(); it.hasNext();) {
-            final IConstraintStatus nextStatus =
-                    (IConstraintStatus) it.next();
+            final IConstraintStatus nextStatus = (IConstraintStatus) it.next();
             final String constraintId = nextStatus.getConstraint().getDescriptor().getId();
             final View view = ProcessDiagramEditorUtil.findView(
                     diagramEditPart, nextStatus.getTarget(), element2ViewMap);
-            final Triple<String, String, String> triple = new Triple<String, String, String>(constraintId, nextStatus.getMessage(), view.eResource()
-                    .getURIFragment(view));
+            final Triple<String, String, String> triple = new Triple<String, String, String>(constraintId,
+                    nextStatus.getMessage(), view.eResource()
+                            .getURIFragment(view));
             if (!createdMarkers.contains(triple)) {
-                addMarker(diagramEditPart, constraintId, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
+                addMarker(diagramEditPart, constraintId, diagramEditPart.getViewer(), target,
+                        view.eResource().getURIFragment(view),
                         EMFCoreUtil.getQualifiedName(nextStatus.getTarget(), true),
                         nextStatus.getMessage(), nextStatus.getSeverity());
                 createdMarkers.add(triple);
@@ -91,17 +99,16 @@ public class ValidationMarkerProvider {
         }
     }
 
-    public void createMarkers(final IFile
-            target, final Diagnostic emfValidationStatus, final DiagramEditPart diagramEditPart) {
+    public void createMarkers(final IFile target, final Diagnostic emfValidationStatus,
+            final DiagramEditPart diagramEditPart) {
         if (emfValidationStatus.getSeverity() == Diagnostic.OK) {
             return;
         }
         final Diagnostic rootStatus = emfValidationStatus;
         final List allDiagnostics = new ArrayList();
-        final ProcessDiagramEditorUtil.LazyElement2ViewMap element2ViewMap =
-                new ProcessDiagramEditorUtil.LazyElement2ViewMap(
-                        diagramEditPart.getDiagramView(),
-                        collectTargetElements(rootStatus, new HashSet<EObject>(), allDiagnostics));
+        final ProcessDiagramEditorUtil.LazyElement2ViewMap element2ViewMap = new ProcessDiagramEditorUtil.LazyElement2ViewMap(
+                diagramEditPart.getDiagramView(),
+                collectTargetElements(rootStatus, new HashSet<EObject>(), allDiagnostics));
         for (final Iterator it = emfValidationStatus.getChildren().iterator(); it.hasNext();) {
             final Diagnostic nextDiagnostic = (Diagnostic) it.next();
             final List data = nextDiagnostic.getData();
@@ -109,29 +116,32 @@ public class ValidationMarkerProvider {
                 final EObject element = (EObject) data.get(0);
                 final View view = ProcessDiagramEditorUtil.findView(
                         diagramEditPart, element, element2ViewMap);
-                addMarker(diagramEditPart, null, diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view),
+                addMarker(diagramEditPart, null, diagramEditPart.getViewer(), target,
+                        view.eResource().getURIFragment(view),
                         EMFCoreUtil.getQualifiedName(element, true),
                         nextDiagnostic.getMessage(), diagnosticToStatusSeverity(nextDiagnostic.getSeverity()));
             }
         }
     }
 
-    private static synchronized void addMarker(final DiagramEditPart diagramEP, final String constaintId, final EditPartViewer viewer, final IFile
-            target, final String elementId, final String location, final String message, final int statusSeverity) {
+    private static synchronized void addMarker(final DiagramEditPart diagramEP, final String constaintId,
+            final EditPartViewer viewer, final IFile target, final String elementId, final String location,
+            final String message, final int statusSeverity) {
         if (target == null) {
             return;
         }
         addProcessMarker(constaintId, viewer, target, elementId, location, message, statusSeverity);
     }
 
-    private static void addProcessMarker(final String constraintId, final EditPartViewer viewer, final IFile
-            target, final String elementId, final String location, final String message, final int statusSeverity) {
+    private static void addProcessMarker(final String constraintId, final EditPartViewer viewer, final IFile target,
+            final String elementId, final String location, final String message, final int statusSeverity) {
         if (target == null) {
             return;
         }
 
-        final IMarker marker = org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.addMarker(target, elementId, location,
-                message, statusSeverity);
+        final IMarker marker = org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider
+                .addMarker(target, elementId, location,
+                        message, statusSeverity);
         addConstraintId(constraintId, marker);
     }
 
@@ -142,7 +152,6 @@ public class ValidationMarkerProvider {
             BonitaStudioLog.error(e);
         }
     }
-
 
     private static int diagnosticToStatusSeverity(final int diagnosticSeverity) {
         if (diagnosticSeverity == Diagnostic.OK) {
@@ -191,7 +200,8 @@ public class ValidationMarkerProvider {
         return targetElementCollector;
     }
 
-    public void clearMarkers(final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart) {
+    public void clearMarkers(final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart,
+            Collection<IConstraintFilter> constraintFilters) {
         final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
         while (iterator.hasNext()) {
             final Entry<Diagram, DiagramEditPart> entry = iterator.next();
@@ -202,12 +212,49 @@ public class ValidationMarkerProvider {
                 if (resolvedSemanticElement instanceof MainProcess) {
                     final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
                     if (target != null) {
-                        org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
+                        deleteMarkers(target, constraintFilters);
                         break;
                     }
                 }
             }
         }
+    }
+
+    public static void deleteMarkers(IResource resource, Collection<IConstraintFilter> constraintFilters) {
+        try {
+            IMarker[] markers = resource.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, true,
+                    IResource.DEPTH_ZERO);
+            if (markers != null) {
+                Stream.of(markers)
+                        .filter(m -> constraintFilters.isEmpty() || constraintFilters.stream().anyMatch(f -> f.accept(createConstraintDescriptor(m), null)))
+                        .forEach(m -> {
+                            try {
+                                m.delete();
+                            } catch (CoreException e) {
+                                ProcessDiagramEditorPlugin.getInstance().logError("Failed to delete validation markers",
+                                        e);
+                            }
+                        });
+            }
+        } catch (CoreException e) {
+            ProcessDiagramEditorPlugin.getInstance().logError("Failed to delete validation markers", e);
+        }
+    }
+
+    private static IConstraintDescriptor createConstraintDescriptor(IMarker m) {
+        return new ConstraintDescriptorAdapter() {
+            
+            
+            @Override
+            public String getId() {
+                try {
+                    return (String) m.getAttribute(CONSTRAINT_ID);
+                } catch (CoreException e) {
+                   return null;
+                }
+            }
+
+        };
     }
 
 }

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
@@ -36,8 +37,8 @@ public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
 
     @Inject
     public AddDatabaseDriverHandler(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
-            MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor) {
-        super(definitionUpdateOperationFactory, mavenProjectHelper, repositoryAccessor);
+            MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor, CommandExecutor commandExecutor) {
+        super(definitionUpdateOperationFactory, mavenProjectHelper, repositoryAccessor, commandExecutor);
     }
 
     private static final Map<String, String> DEPENDENCY_TO_CONNECTOR_DEF = new HashMap<>();

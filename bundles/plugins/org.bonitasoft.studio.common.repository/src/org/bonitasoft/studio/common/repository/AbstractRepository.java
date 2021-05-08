@@ -619,8 +619,12 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public IRepositoryFileStore getFileStore(final IResource resource) {
-        if (resource == null) {
-            return null;
+        try {
+            if (resource == null || (resource instanceof IProject && ((IProject) resource).hasNature(BonitaProjectNature.NATURE_ID))) {
+                return null;
+            }
+        } catch (CoreException e) {
+            BonitaStudioLog.error(e);
         }
         for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             IFolder container = store.getResource();

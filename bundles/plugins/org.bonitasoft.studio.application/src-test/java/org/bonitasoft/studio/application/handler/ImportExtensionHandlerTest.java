@@ -23,6 +23,7 @@ public class ImportExtensionHandlerTest {
             mock(MavenRepositoryRegistry.class),
             mock(ExtensionUpdateParticipantFactory.class),
             new MavenProjectHelper(),
+            null,
             null);
 
     @Before

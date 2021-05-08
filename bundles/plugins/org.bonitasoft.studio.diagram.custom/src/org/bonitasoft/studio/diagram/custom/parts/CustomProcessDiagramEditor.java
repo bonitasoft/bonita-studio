@@ -20,6 +20,7 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -43,6 +44,10 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         DiagramFileStore fileStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class)
                 .getChild(input.getName(), true);
         if (fileStore != null) {
+            DiagramEditor openedEditor = fileStore.getOpenedEditor();
+            if(openedEditor != null) { // Close other editors already opened for this input
+                fileStore.close();
+            }
             try {
                 if (fileStore.getEMFResource().isLoaded()) {
                     fileStore.getEMFResource().unload();

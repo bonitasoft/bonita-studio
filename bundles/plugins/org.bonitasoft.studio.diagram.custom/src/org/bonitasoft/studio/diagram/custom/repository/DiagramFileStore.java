@@ -48,7 +48,6 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
@@ -63,7 +62,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -72,8 +70,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -81,10 +77,12 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocument
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
@@ -98,8 +96,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
     public static final String DEPLOY_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.deployDiagramCommand";
     public static final String RENAME_DIAGRAM_COMMAND = "org.bonitasoft.studio.application.command.rename";
     public static final String BUILD_DIAGRAM_COMMAND = "org.bonitasoft.studio.engine.command.buildDiagram";
-
-    private final NotificationListener poolListener = new PoolNotificationListener();
 
     private static final Pattern diagramNamePattern = Pattern.compile("(.*)-(.*)");
 
@@ -159,28 +155,6 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
             return resource;
         }
         return super.getEMFResource();
-    }
-
-    public void registerListeners(final EObject input, final TransactionalEditingDomain domain) {
-        DiagramEventBroker.getInstance(domain).addNotificationListener(input,
-                ProcessPackage.Literals.CONTAINER__ELEMENTS,
-                poolListener);
-        if (input instanceof MainProcess) {
-            for (final EObject element : ((MainProcess) input).getElements()) {
-                if (element instanceof Pool) {
-                    DiagramEventBroker.getInstance(domain).addNotificationListener(element,
-                            ProcessPackage.Literals.ELEMENT__NAME, poolListener);
-                    DiagramEventBroker.getInstance(domain).addNotificationListener(element,
-                            ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, poolListener);
-                }
-            }
-        }
-    }
-
-    public void unregisterListeners(final EObject input, final TransactionalEditingDomain domain) {
-        DiagramEventBroker.getInstance(domain).removeNotificationListener(input,
-                ProcessPackage.Literals.CONTAINER__ELEMENTS,
-                poolListener);
     }
 
     public DiagramEditor getOpenedEditor() {
@@ -243,15 +217,13 @@ public class DiagramFileStore extends EMFFileStore<MainProcess> implements IDepl
         } catch (ReadFileStoreException e) {
             return null;
         }
-        var part = EditorService.getInstance().openEditor(new URIEditorInput(getResourceURI()));
+        IEditorInput editorInput = new FileEditorInput(getResource());
+        var part = EditorService.getInstance().openEditor(editorInput);
         if (part instanceof DiagramEditor) {
             final DiagramEditor editor = (DiagramEditor) part;
-            final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-            mainProcess.eAdapters().add(new PoolNotificationListener());
             if (isReadOnly()) {
                 setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
             }
-            registerListeners(mainProcess, editor.getEditingDomain());
             setDefaultSelection(editor);
             return editor;
         }

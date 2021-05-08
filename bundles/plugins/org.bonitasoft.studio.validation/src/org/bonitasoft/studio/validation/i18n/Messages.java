@@ -249,6 +249,8 @@ public class Messages extends NLS {
 
     public static String Validation_ActorFilterDefUpdateRequired;
     public static String Validation_ConnectorDefUpdateRequired;
+    public static String dependencyNotFoundInClasspath;
+    public static String local;
 
     static {
         // initialize resource bundle
