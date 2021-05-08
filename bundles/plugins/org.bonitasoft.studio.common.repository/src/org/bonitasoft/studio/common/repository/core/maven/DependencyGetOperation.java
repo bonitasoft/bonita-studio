@@ -16,6 +16,8 @@ package org.bonitasoft.studio.common.repository.core.maven;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,7 +141,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
     private ArtifactRepository internalRepository() {
         try {
             ArtifactRepository internalRepository = maven().createArtifactRepository(INTERNAL_REPOSITORY,
-                    internalRepositoryPath().toUri().toURL().toString());
+                    URLDecoder.decode(internalRepositoryPath().toUri().toURL().toString(), StandardCharsets.UTF_8));
             if (!INTERNAL_REPOSITORY.equals(internalRepository.getId())) { // Check if the repository is mirrored 
                 internalRepository = internalRepository.getMirroredRepositories().stream()
                         .filter(repo -> INTERNAL_REPOSITORY.equals(repo.getId()))
