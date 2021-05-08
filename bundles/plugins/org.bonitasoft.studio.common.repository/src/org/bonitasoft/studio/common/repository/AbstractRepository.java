@@ -620,7 +620,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     @Override
     public IRepositoryFileStore getFileStore(final IResource resource) {
         try {
-            if (resource == null || (resource instanceof IProject && ((IProject) resource).hasNature(BonitaProjectNature.NATURE_ID))) {
+            if (resource == null 
+                    || (resource instanceof IProject && ((IProject) resource).isOpen() && ((IProject) resource).hasNature(BonitaProjectNature.NATURE_ID))
+                    || (resource instanceof IProject && !((IProject) resource).isOpen())) {
                 return null;
             }
         } catch (CoreException e) {

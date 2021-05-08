@@ -38,7 +38,7 @@ public class ProcessLocalConfigurationDependenciesConstraint extends AbstractPro
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class)
                 .getChild(ModelHelper.getEObjectID(pool) + ".conf", false);
         try {
-            return localConfigurationStore.getContent();
+            return localConfigurationStore != null ? localConfigurationStore.getContent() : null;
         } catch (ReadFileStoreException e) {
             return null;
         }

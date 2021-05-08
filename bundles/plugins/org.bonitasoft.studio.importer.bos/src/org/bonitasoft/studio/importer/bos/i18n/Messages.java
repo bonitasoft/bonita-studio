@@ -106,5 +106,7 @@ public class Messages extends NLS {
     public static String bosArchiveContentDescription;
     public static String detailsPageButtonLabel;
     public static String extensionPageLabel;
+    public static String validatingDiagram;
+    public static String validatingDiagramWithProgess;
 
 }
