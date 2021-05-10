@@ -22,6 +22,7 @@ import java.io.Reader;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
 import org.eclipse.core.runtime.content.XMLContentDescriber;
@@ -34,13 +35,6 @@ import com.google.common.io.CharStreams;
 
 public class ApplicationContentDescriber extends XMLContentDescriber implements ITextContentDescriber {
 
-    private static final String APPLICATION_NS = "http://documentation.bonitasoft.com/application-xml-schema/1.0";
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.content.XMLContentDescriber#describe(java.io.Reader,
-     * org.eclipse.core.runtime.content.IContentDescription)
-     */
     @Override
     public int describe(Reader input, IContentDescription description) throws IOException {
         if (super.describe(input, description) == VALID) {
@@ -49,11 +43,6 @@ public class ApplicationContentDescriber extends XMLContentDescriber implements 
         return INVALID;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.content.XMLContentDescriber#describe(java.io.InputStream,
-     * org.eclipse.core.runtime.content.IContentDescription)
-     */
     @Override
     public int describe(InputStream input, IContentDescription description) throws IOException {
         if (super.describe(input, description) == VALID) {
@@ -71,9 +60,9 @@ public class ApplicationContentDescriber extends XMLContentDescriber implements 
         try (InputStream is = new ByteArrayInputStream(stringContent.getBytes())) {
             final Document document = dbf.newDocumentBuilder().parse(is);
             final Element documentElement = document.getDocumentElement();
-            return APPLICATION_NS.equals(documentElement.getNamespaceURI()) ? VALID : INVALID;
+            return ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE.equals(documentElement.getNamespaceURI()) ? VALID : INVALID;
         } catch (SAXException | ParserConfigurationException e) {
-            return stringContent.contains(APPLICATION_NS) ? VALID : INVALID;
+            return stringContent.contains(ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE) ? VALID : INVALID;
         }
     }
 }

@@ -284,7 +284,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
         projectNameObservable.addValueChangeListener(event -> {
             String newProjectName = event.diff.getNewValue();
-            if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null) {
+            if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null && mode == RepositoryMode.NEW) {
                 updateTargetRepository(newProjectName);
             }
         });
