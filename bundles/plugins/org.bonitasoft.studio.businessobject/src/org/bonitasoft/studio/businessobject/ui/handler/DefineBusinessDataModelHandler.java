@@ -16,14 +16,14 @@ package org.bonitasoft.studio.businessobject.ui.handler;
 
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.attribute.AttributeEditionControl;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectList;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.formpage.model.BusinessDataModelFormPart;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.model.businessObject.BusinessObjectBuilder;
-import org.bonitasoft.studio.model.businessObject.FieldBuilder;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class DefineBusinessDataModelHandler {
@@ -53,9 +53,12 @@ public class DefineBusinessDataModelHandler {
     private BusinessObject createFirstBusinessObject() {
         String defaultName = String.format("%s.%s", BusinessDataModelFormPart.DEFAULT_PACKAGE_NAME,
                 BusinessObjectList.DEFAULT_BO_NAME);
-        return new BusinessObjectBuilder(defaultName)
-                .withField(FieldBuilder.aStringField(AttributeEditionControl.DEFAULT_FIELD_NAME).withLength(255).build())
-                .build();
+        var bo = new BusinessObject(defaultName);
+        SimpleField stringField = new SimpleField();
+        stringField.setType(FieldType.STRING);
+        stringField.setName(AttributeEditionControl.DEFAULT_FIELD_NAME);
+        bo.addField(stringField);
+        return bo;
     }
 
 }
