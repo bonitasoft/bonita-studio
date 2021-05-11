@@ -41,7 +41,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.validation.model.EvaluationMode;
-import org.eclipse.emf.validation.service.ConstraintRegistry;
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -65,6 +64,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     private final List<IFile> fileProcessed = new ArrayList<>(); //Avoid duplicate
     private final OffscreenEditPartFactory offscreenEditPartFactory;
     private final ValidationMarkerProvider validationMarkerProvider;
+    private IStatus status;
 
     public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory,
             final ValidationMarkerProvider validationMarkerProvider) {
@@ -93,8 +93,10 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                     monitor.worked(1);
                 }
             }
+            status = createStatus();
         }finally {
             offscreenEditPartFactory.dispose();
+            diagramsToDiagramEditPart.clear();
         }
     }
 
@@ -113,8 +115,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                 EvaluationMode.BATCH);
         validator.setIncludeLiveConstraints(true);
         if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
-            final IStatus status = validator.validate(view.getElement(), monitor);
-            validationMarkerProvider.createMarkers(target, status, diagramEditPart);
+            validationMarkerProvider.createMarkers(target, validator.validate(view.getElement(), monitor), diagramEditPart);
         }
     }
 
@@ -163,6 +164,10 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     }
 
     public IStatus getResult() {
+        return status;
+    }
+
+    private IStatus createStatus() {
         final MultiStatus result = new MultiStatus(ValidationCommonPlugin.PLUGIN_ID, IStatus.OK, "", null);
         fileProcessed.clear();
         for (final Diagram d : diagramsToDiagramEditPart.keySet()) {
@@ -180,7 +185,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         }
         return result;
     }
-
+    
     private void buildMultiStatus(final IFile target, final MultiStatus result) throws CoreException {
         String fileName = target.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
