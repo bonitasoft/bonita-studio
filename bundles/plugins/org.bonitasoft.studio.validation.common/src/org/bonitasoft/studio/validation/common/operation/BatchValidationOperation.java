@@ -63,6 +63,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     private final OffscreenEditPartFactory offscreenEditPartFactory;
     private final ValidationMarkerProvider validationMarkerProvider;
     private IBatchValidator batchValidator;
+    private IStatus status;
 
     public BatchValidationOperation(final OffscreenEditPartFactory offscreenEditPartFactory,
             final ValidationMarkerProvider validationMarkerProvider,
@@ -93,6 +94,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
                     monitor.worked(1);
                 }
             }
+            status = createStatus();
         }finally {
             offscreenEditPartFactory.dispose();
             diagramsToDiagramEditPart.clear();
@@ -111,8 +113,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         final Diagnostic diagnostic = validationMarkerProvider.runEMFValidator(view);
         validationMarkerProvider.createMarkers(target, diagnostic, diagramEditPart);
         if (view.isSetElement() && view.getElement() != null && view.getElement().eResource() != null) {
-            final IStatus status = batchValidator.validate(view.getElement(), monitor);
-            validationMarkerProvider.createMarkers(target, status, diagramEditPart);
+            validationMarkerProvider.createMarkers(target, batchValidator.validate(view.getElement(), monitor), diagramEditPart);
         }
     }
 
@@ -161,6 +162,10 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
     }
 
     public IStatus getResult() {
+        return status;
+    }
+
+    private IStatus createStatus() {
         final MultiStatus result = new MultiStatus(ValidationCommonPlugin.PLUGIN_ID, IStatus.OK, "", null);
         fileProcessed.clear();
         for (final Diagram d : diagramsToDiagramEditPart.keySet()) {
@@ -178,7 +183,7 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         }
         return result;
     }
-
+    
     private void buildMultiStatus(final IFile target, final MultiStatus result) throws CoreException {
         String fileName = target.getName();
         fileName = fileName.substring(0, fileName.lastIndexOf("."));
