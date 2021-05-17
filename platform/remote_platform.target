@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target includeMode="feature" name="remote_platform">
+<target includeMode="feature" name="platform">
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
         <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -66,10 +66,10 @@
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-3.2.1"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
-            <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/>
-            <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/>
-            <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/>
-            <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/>
+            <!--  <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/> -->
+             <!--  <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/> -->
+             <!--  <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/> -->
+            <!-- <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/> -->
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
@@ -95,20 +95,12 @@
             <repository location="http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/"/>
         </location>
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.2.0"/>
-            <repository location="https://dl.bintray.com/de-jcup/asciidoctoreditor/"/>
+            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.3.0"/>
+            <repository location="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.bintray.com/de-jcup/yamleditor"/>
-            <unit id="de.jcup.yamleditor.feature.group" version="1.6.2"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://nodeclipse.github.io/updates/markdown/"/>
-            <unit id="markdown.editor.feature.feature.group" version="1.2.0.201501260515"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="http://dl.bintray.com/satyagraha/generic/2.0.1/"/>
-            <unit id="code.satyagraha.gfm.viewer.feature.feature.group" version="2.0.1"/>
+            <repository location="https://de-jcup.github.io/update-site-eclipse-yaml-editor/update-site/"/>
+            <unit id="de.jcup.yamleditor.feature.group" version="1.7.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
@@ -130,10 +122,6 @@
             <repository location="https://download.eclipse.org/technology/babel/update-site/R0.18.3/2021-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.jenkinseditor.feature.feature.group" version="1.7.0"/>
-        <repository location="https://dl.bintray.com/de-jcup/jenkinseditor/"/>
-        </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="https://dist.springsource.org/release/GRECLIPSE/4.1.0/e4.19"/>
             <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
             <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
@@ -148,6 +136,7 @@
             <unit id="org.json" version="1.0.0.v201011060100"/>
             <unit id="javax.jws" version="2.0.0.v201005080400"/>
             <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
+            <unit id="org.assertj" version="3.14.0.v20200120-1926"/>
         </location>
     </locations>
 </target>
