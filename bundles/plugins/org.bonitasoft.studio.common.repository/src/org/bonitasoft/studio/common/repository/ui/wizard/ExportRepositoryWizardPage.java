@@ -44,6 +44,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -164,7 +165,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
         for (final ViewerFilter filter : filters) {
             treeViewer.addFilter(filter);
         }
-        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
+        treeViewer.getTree()
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
         treeViewer.bindTree(dbc, stores);
         treeViewer.setCheckedElements(defaultSelectedFiles.toArray());
 
@@ -206,11 +208,20 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private Set<IRepositoryFileStore> getSelectedFileStores() {
         final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<>();
-        for (final Object element : treeViewer.checkedElementsObservable()) {
-            if (element instanceof IRepositoryFileStore) {
-                checkedArtifacts.add((IRepositoryFileStore) element);
-                checkedArtifacts.addAll(((IRepositoryFileStore) element).getRelatedFileStore());
-            }
+        Set<IRepositoryFileStore> checkedElementsObservable = treeViewer.checkedElementsObservable().stream()
+                .filter(IRepositoryFileStore.class::isInstance)
+                .map(IRepositoryFileStore.class::cast)
+                .collect(Collectors.toSet());
+        try {
+            getContainer().run(true, false, monitor -> {
+                monitor.beginTask(Messages.prepareExport, IProgressMonitor.UNKNOWN);
+                for (final IRepositoryFileStore element : checkedElementsObservable) {
+                    checkedArtifacts.add(element);
+                    checkedArtifacts.addAll(element.getRelatedFileStore());
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
         return checkedArtifacts;
     }
@@ -256,7 +267,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
             }
             return !allExportCancel(status);
         } catch (InterruptedException | InvocationTargetException e) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed,
+                    e.getCause().getMessage());
             return false;
         }
     }
@@ -279,12 +291,14 @@ public class ExportRepositoryWizardPage extends WizardPage {
             getContainer().run(false, true, operation::run);
         } catch (InterruptedException | InvocationTargetException e) {
             BonitaStudioLog.error(e);
-            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed,
+                    e.getCause().getMessage());
             return false;
         }
 
         if (!operation.getStatus().isOK()) {
-            ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, null, operation.getStatus());
+            ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, null,
+                    operation.getStatus());
             return false;
         }
         return true;
@@ -314,11 +328,22 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private List<IResource> getSelectedResoureContainer() {
         List<IResource> resources = new ArrayList<>();
-        for (final Object element : treeViewer.checkedElementsObservable()) {
-            if (element instanceof IResourceContainer) {
-                resources.add(((IResourceContainer) element).getResource());
-                resources.addAll(((IResourceContainer) element).getRelatedResources());
-            }
+        Set<IResourceContainer> checkedElementsObservable = treeViewer.checkedElementsObservable().stream()
+                .filter(IResourceContainer.class::isInstance)
+                .map(IResourceContainer.class::cast)
+                .collect(Collectors.toSet());
+        try {
+            getContainer().run(true, false, monitor -> {
+                monitor.beginTask(Messages.prepareExport, IProgressMonitor.UNKNOWN);
+                for (final IResourceContainer element : checkedElementsObservable) {
+                    if (element instanceof IResourceContainer) {
+                        resources.add(element.getResource());
+                        resources.addAll(element.getRelatedResources());
+                    }
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
         return resources;
     }
