@@ -36,7 +36,8 @@ import org.eclipse.swt.widgets.Display;
 public class ValidateClonedRepository implements PostCloneTask {
 
     private String version;
-
+    private boolean migrationRequired = false;
+    
     @Override
     public void execute(Repository repository, IProgressMonitor monitor) throws CoreException {
         //Do some check about version and valid cloned content
@@ -94,10 +95,15 @@ public class ValidateClonedRepository implements PostCloneTask {
             throw new CoreException(
                     new Status(IStatus.CANCEL, TeamPlugin.PLUGIN_ID, Messages.cloneOperationCancelled));
         }
+        migrationRequired = true;
     }
 
     public String getVersion() {
         return version;
+    }
+
+    public boolean migrationRequired() {
+        return migrationRequired;
     }
 
 }
