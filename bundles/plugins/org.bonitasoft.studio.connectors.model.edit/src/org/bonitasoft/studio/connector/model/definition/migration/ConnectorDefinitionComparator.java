@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.connector.model.definition.migration;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -35,11 +33,6 @@ public class ConnectorDefinitionComparator {
     }
 
     public DefinitionChangesVisitor compare(ConnectorDefinition latest, ConnectorDefinition reference) {
-        if(!(Objects.equals(latest.getId(), reference.getId()) 
-                && !Objects.equals(latest.getVersion(), reference.getVersion()))) {
-            throw new IllegalArgumentException("Only definitions with same ids and different version should be compared !");
-        }
-        
         Comparison comparison = EMFCompare.builder()
                 .build()
                 .compare(new DefaultComparisonScope(latest, reference, null));

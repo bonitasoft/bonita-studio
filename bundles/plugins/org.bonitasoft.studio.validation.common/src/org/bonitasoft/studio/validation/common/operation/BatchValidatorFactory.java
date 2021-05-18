@@ -27,6 +27,8 @@ public class BatchValidatorFactory {
     
     private static final Set<String> DEPENDENCY_CONSTRAINTS = Set.of(
             "org.bonitasoft.studio.validation.constraints.connectorexistence",
+            "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigOutputConsistency",
+            "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency",
             "org.bonitasoft.studio.validation.constraints.process.configuration.dependencies",
             "org.bonitasoft.studio.validation.constraints.process.localconfiguration.dependencies"
             );

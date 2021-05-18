@@ -33,7 +33,8 @@ public abstract class AbstractProcessConfigurationDependenciesConstraint
 
     private ProjectDependenciesResolver dependenciesResolver = new ProjectDependenciesResolver();
 
-    protected IStatus validateConfigurationDependencies(IValidationContext ctx, Configuration configuration, String processName) {
+    protected IStatus validateConfigurationDependencies(IValidationContext ctx, Configuration configuration,
+            String processName) {
         if (configuration == null) {
             return ctx.createSuccessStatus();
         }
@@ -45,7 +46,7 @@ public abstract class AbstractProcessConfigurationDependenciesConstraint
                 .map(Fragment::getValue)
                 .filter(this::notInClasspath)
                 .map(jarName -> ctx.createFailureStatus(String.format(Messages.dependencyNotFoundInClasspath,
-                        processName, configurationName(configuration), jarName)))
+                        jarName, processName, configurationName(configuration))))
                 .forEach(multiStatus::add);
 
         return multiStatus.isOK() ? ctx.createSuccessStatus() : multiStatus;

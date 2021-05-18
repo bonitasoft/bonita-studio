@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder.aConnectorParameter;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.aConstantExpression;
-import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,16 +98,19 @@ public class ConnectorDefinitionComparatorTest {
     }
 
     @Test
-    public void should_not_create_changes_for_different_definition() throws Exception {
+    public void should_create_changes_even_when_definition_version_matches() throws Exception {
         // Given
         ConnectorDefinition reference = loadDefinition("/email-1.0.0.def");
         assertThat(reference).isNotNull();
         ConnectorDefinition latest = loadDefinition("/custom-email-1.0.0.def");
         assertThat(latest).isNotNull();
 
-        // Expect
-        assertThrows(IllegalArgumentException.class,
-                () -> comparator.compare(latest, reference));
+        // When
+        var diff = comparator.compare(latest, reference);
+        
+        // Then
+        assertThat(diff.getInputChanges()).isEmpty();
+        assertThat(diff.getOutputChanges()).isEmpty();
     }
 
     @Test

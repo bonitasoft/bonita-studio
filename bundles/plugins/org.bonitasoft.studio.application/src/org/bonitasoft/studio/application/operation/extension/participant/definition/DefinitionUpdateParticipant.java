@@ -115,13 +115,16 @@ public class DefinitionUpdateParticipant implements ExtensionUpdateParticipant {
                 // Create configuration migrators if new definitions are found after update
                 connectorDefinitions.stream()
                         .filter(newDef -> def.getId().equals(newDef.getDefinitionId()))
-                        .filter(newDef -> !def.getVersion().equals(newDef.getDefinitionVersion()))
                         .findFirst()
                         .map(newDef -> definitionProvider.find(newDef.getDefinitionId(), newDef.getDefinitionVersion()))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .ifPresent(newDef -> previewResult.addMigrator(newDef.getId(),
-                                migratorFactory.create(def, newDef)));
+                        .ifPresent(newDef -> {
+                            var migrator = migratorFactory.create(def, newDef);
+                            if (migrator.hasChanges()) {
+                                previewResult.addMigrator(newDef.getId(), migrator);
+                            }
+                        });
             }
         }
 

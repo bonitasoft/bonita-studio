@@ -26,6 +26,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
         extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency";
+    private static final Set<String> IGNORED_DEFINITIONS = Set.of("scripting-groovy-script");
 
     @Override
     protected IStatus performLiveValidation(IValidationContext context) {
@@ -35,52 +36,57 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
     @Override
     protected IStatus performBatchValidation(IValidationContext context) {
         Connector connector = (Connector) context.getTarget();
-        AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> connectorDefStore = null;
+        if(ignoreSpecificDefinition(connector.getDefinitionId())){
+            return context.createSuccessStatus();
+        }
+        AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> definitionStore = null;
         boolean isConnector = true;
         if (!(connector instanceof ActorFilter)) {
-            connectorDefStore = getConnectorDefinitionRepositoryStore();
+            definitionStore = getConnectorDefinitionRepositoryStore();
         } else {
             isConnector = false;
-            connectorDefStore = getActorFilterDefinitionStore();
+            definitionStore = getActorFilterDefinitionStore();
         }
         ConnectorConfiguration configuration = connector.getConfiguration();
         if (configuration == null) {
             return context.createSuccessStatus();
         }
 
-        ConnectorDefinition def = connectorDefStore.getResourceProvider()
+        ConnectorDefinition def = definitionStore.getResourceProvider()
                 .getConnectorDefinitionRegistry()
-                .find(configuration.getDefinitionId(),  configuration.getVersion())
+                .find(configuration.getDefinitionId(), configuration.getVersion())
                 .orElse(null);
         if (def != null) {
-            AbstractDefFileStore fStore = getDefFileStore(connectorDefStore, def);
-            if (!fStore.isReadOnly()) {
-                IStatus inputStatus = checkInputConsistency(configuration, def, context);
-                if (!inputStatus.isOK()) {
-                    if (isConnector) {
-                        return context.createFailureStatus(
-                                NLS.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,
-                                        new Object[] { connector.getName(),
-                                                connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
-                                                inputStatus.getMessage() }));
-                    } else {
-                        return context.createFailureStatus(
-                                NLS.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,
-                                        new Object[] { connector.getName(),
-                                                connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
-                                                inputStatus.getMessage() }));
-                    }
+            IStatus inputStatus = checkInputConsistency(configuration, def, context);
+            if (!inputStatus.isOK()) {
+                if (isConnector) {
+                    return context.createFailureStatus(
+                            NLS.bind(Messages.Validation_InconsistentConnectorDefAndConfigurationInput,
+                                    new Object[] { connector.getName(),
+                                            connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
+                                            inputStatus.getMessage() }));
+                } else {
+                    return context.createFailureStatus(
+                            NLS.bind(Messages.Validation_InconsistentActorDefAndConfigurationInput,
+                                    new Object[] { connector.getName(),
+                                            connector.getDefinitionId() + "--" + connector.getDefinitionVersion(),
+                                            inputStatus.getMessage() }));
                 }
             }
         }
         return context.createSuccessStatus();
     }
 
+    private boolean ignoreSpecificDefinition(String definitionId) {
+        return IGNORED_DEFINITIONS.contains(definitionId);
+    }
+
     protected AbstractDefFileStore getDefFileStore(
             AbstractDefinitionRepositoryStore<? extends AbstractDefFileStore> connectorDefStore,
             ConnectorDefinition def) {
-        AbstractDefFileStore fileStore = connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()), true);
-        if(fileStore == null) {
+        AbstractDefFileStore fileStore = connectorDefStore.getChild(URI.decode(def.eResource().getURI().lastSegment()),
+                true);
+        if (fileStore == null) {
             return connectorDefStore.find(def).orElse(null);
         }
         return fileStore;
