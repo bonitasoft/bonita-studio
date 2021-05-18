@@ -182,16 +182,18 @@ public class DynamicButtonWidget {
     }
 
     private void createControl() {
-        container = toolkit.isPresent() ? toolkit.get().createComposite(parent) : new Composite(parent, SWT.NONE);
+        container = toolkit.map(t-> t.createComposite(parent))
+                           .orElseGet(() -> new Composite(parent, SWT.NONE));
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
         container.setLayoutData(layoutData.orElse(GridDataFactory.swtDefaults().create()));
         cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
-
+    
         ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
         cssClass.ifPresent(css -> toolbar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
+        toolkit.ifPresent(t -> t.adapt(toolbar));
 
         toolItem = new ToolItem(toolbar, SWT.PUSH);
         image.ifPresent(img -> toolItem.setImage(img));
@@ -201,9 +203,8 @@ public class DynamicButtonWidget {
         onClickListener.ifPresent(onClick -> toolItem.addListener(SWT.Selection, onClick::accept));
 
         if (text.isPresent()) {
-            Label label = toolkit.isPresent()
-                    ? toolkit.get().createLabel(container, text.get(), SWT.WRAP)
-                    : new Label(container, SWT.WRAP);
+            Label label = toolkit.map(t -> t.createLabel(container, text.get(), SWT.WRAP))
+                    .orElseGet(() -> new Label(container, SWT.WRAP));
             label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
                     .grab(maxTextWidth.isEmpty(), false)
                     .hint(maxTextWidth.orElse(SWT.DEFAULT), SWT.DEFAULT)

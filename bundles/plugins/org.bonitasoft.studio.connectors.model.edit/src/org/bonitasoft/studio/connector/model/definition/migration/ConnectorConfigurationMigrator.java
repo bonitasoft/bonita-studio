@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.connector.model.definition.migration;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -69,6 +70,12 @@ public class ConnectorConfigurationMigrator {
                         .map(connector -> visitor.getOutputChanges().stream()
                                 .anyMatch(c -> c.isBreakingChange(connector)))
                         .orElse(false);
+    }
+
+    public boolean hasChanges() {
+        return !Objects.equals(targetDefinition.getVersion(), fromVersion) 
+                || !visitor.getInputChanges().isEmpty() 
+                || !visitor.getOutputChanges().isEmpty();
     }
 
 }
