@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Sapjco3 Connector Wizard Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.sapjco3;singleton:=true
-Bundle-Version: 7.12.4.qualifier
+Bundle-Version: 7.11.6.W21
 Bundle-Activator: org.bonitasoft.studio.connector.wizard.sapjco3.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.common;bundle-version="6.1.0",
  org.eclipse.core.resources;bundle-version="3.13.700",
  org.bonitasoft.studio.common.repository,
- org.bonitasoft.studio.sap.mock;bundle-version="7.12.0";resolution:=optional
+ org.bonitasoft.studio.sap.mock;bundle-version="7.11.6.W21";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BonitaSoft S.A.

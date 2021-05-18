@@ -6,14 +6,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>7.12.4-SNAPSHOT</version>
+	<version>7.11.6.W21</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
 		<tychoVersion>1.7.0</tychoVersion>
 		<tychoExtrasVersion>1.7.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<branding.version>2021.1-SNAPSHOT</branding.version>
+		<branding.version>7.11.6</branding.version>
 		<bundle.version>${project.version}</bundle.version>
 		<ui.designer.version>1.12.45</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>

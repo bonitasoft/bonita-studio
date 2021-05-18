@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SWTBot Framework
 Bundle-SymbolicName: org.bonitasoft.studio.swtbot.framework
-Bundle-Version: 7.12.4.qualifier
+Bundle-Version: 7.11.6.W21
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
@@ -38,8 +38,8 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.bonitasoft.studio.common;bundle-version="7.8.0",
  org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.application,
- org.bonitasoft.studio.team;bundle-version="7.12.0",
- org.bonitasoft.studio.team.git;bundle-version="7.12.0"
+ org.bonitasoft.studio.team;bundle-version="7.11.6.W21",
+ org.bonitasoft.studio.team.git;bundle-version="7.11.6.W21"
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.connector.model.i18n,

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: General and master tests for BonitaStudio
 Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
-Bundle-Version: 7.12.4.qualifier
+Bundle-Version: 7.11.6.W21
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -96,7 +96,7 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.eclipse.egit;bundle-version="5.6.0",
  org.eclipse.egit.core;bundle-version="5.6.0",
  org.eclipse.egit.ui;bundle-version="5.6.0",
- org.bonitasoft.studio.rest.api.extension;bundle-version="7.12.0"
+ org.bonitasoft.studio.rest.api.extension;bundle-version="7.11.6.W21"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.actors,
  org.bonitasoft.studio.tests.api,
