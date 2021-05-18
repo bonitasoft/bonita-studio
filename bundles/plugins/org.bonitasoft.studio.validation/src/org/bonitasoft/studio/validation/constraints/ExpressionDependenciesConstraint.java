@@ -35,7 +35,7 @@ public class ExpressionDependenciesConstraint extends AbstractLiveValidationMark
 
     private static Set<String> supportedTypes;
     static {
-        supportedTypes = new HashSet<String>();
+        supportedTypes = new HashSet<>();
         supportedTypes.add(ExpressionConstants.VARIABLE_TYPE);
         supportedTypes.add(ExpressionConstants.PARAMETER_TYPE);
     }

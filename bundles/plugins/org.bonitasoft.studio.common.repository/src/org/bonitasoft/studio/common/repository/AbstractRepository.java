@@ -34,6 +34,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import org.apache.maven.lifecycle.internal.GoalTask;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
@@ -64,6 +65,7 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.pics.Pics;
+import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -91,6 +93,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -158,6 +161,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     private ProjectDependenciesStore projectDependenciesStore;
 
     private IEventBroker eventBroker;
+
+    private GroovySnippetCompiler groovyCompiler;
 
     public AbstractRepository(final IWorkspace workspace,
             final IProject project,
@@ -936,6 +941,20 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     @Override
     public LocalDependenciesStore getLocalDependencyStore() {
         return new LocalDependenciesStore(getProject());
+    }
+
+    public GroovySnippetCompiler createGroovySnippetCompiler() {
+        if(groovyCompiler == null) {
+            groovyCompiler = new GroovySnippetCompiler((JavaProject) getJavaProject());
+        }
+        return groovyCompiler;
+    }
+    
+    public void clearGroovySnippetCompiler() {
+        if(groovyCompiler != null) {
+            groovyCompiler.cleanup();
+            groovyCompiler = null; 
+        }
     }
 
 }

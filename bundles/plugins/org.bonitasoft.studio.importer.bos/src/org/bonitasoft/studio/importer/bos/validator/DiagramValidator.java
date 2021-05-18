@@ -16,6 +16,7 @@ package org.bonitasoft.studio.importer.bos.validator;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -33,10 +34,6 @@ import org.eclipse.core.runtime.SubMonitor;
 
 public class DiagramValidator implements BosImporterStatusProvider {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.bos.validator.BosImporterValidator#validate(org.bonitasoft.studio.importer.bos.operation.IResourceImporter)
-     */
     @Override
     public ImportBosArchiveStatusBuilder buildStatus(ImportBosArchiveOperation operation,
             ImportBosArchiveStatusBuilder statusBuilder, IProgressMonitor monitor)
@@ -71,6 +68,7 @@ public class DiagramValidator implements BosImporterStatusProvider {
                 throw new ValidationException(e, "Failed to validate diagram content");
             }
         }
+        RepositoryManager.getInstance().getCurrentRepository().clearGroovySnippetCompiler();
         return statusBuilder;
     }
 }

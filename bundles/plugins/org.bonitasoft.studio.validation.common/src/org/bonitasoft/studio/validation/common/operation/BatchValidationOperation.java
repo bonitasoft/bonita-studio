@@ -105,7 +105,6 @@ public class BatchValidationOperation extends WorkspaceModifyOperation {
         for (final Diagram diagram : diagramsToDiagramEditPart.keySet()) {
             diagramsToDiagramEditPart.put(diagram, getDiagramEditPart(diagram));
         }
-
     }
 
     protected void validate(final DiagramEditPart diagramEditPart, final View view, final IProgressMonitor monitor) {

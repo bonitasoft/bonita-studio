@@ -115,6 +115,8 @@ public class RunProcessCommand extends AbstractHandler {
             throw new ExecutionException("Error occured during validation", e);
         } catch (final InterruptedException e) {
             //Continue
+        }finally {
+            RepositoryManager.getInstance().getCurrentRepository().clearGroovySnippetCompiler();
         }
         if (!validationOperation.displayConfirmationDialog()) {
             diagramStore.resetComputedProcesses();

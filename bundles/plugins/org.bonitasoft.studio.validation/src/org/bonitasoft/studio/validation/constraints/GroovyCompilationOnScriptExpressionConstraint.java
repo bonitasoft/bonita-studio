@@ -22,16 +22,12 @@ import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.i18n.Messages;
-import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
@@ -73,8 +69,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
         if (scriptText == null || scriptText.isEmpty()) {
             return context.createSuccessStatus();
         }
-        final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-        final GroovySnippetCompiler compiler = new GroovySnippetCompiler((JavaProject) javaProject);
+        var compiler = RepositoryManager.getInstance().getCurrentRepository().createGroovySnippetCompiler();
         final CompilationResult result = compiler.compileForErrors(scriptText, null);
         final CategorizedProblem[] problems = result.getErrors();
         if (problems != null && problems.length > 0) {
@@ -85,14 +80,10 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
             }
             if (sb.length() > 1) {
                 sb.delete(sb.length() - 2, sb.length());
-                return context.createFailureStatus(new Object[] { Messages.bind(Messages.groovyCompilationProblem, expression.getName(), sb.toString()) });
+                return context.createFailureStatus(NLS.bind(Messages.groovyCompilationProblem, expression.getName(), sb.toString()));
             }
         }
-        final ModuleNode moduleNode = compiler.compile(scriptText, null);
-        final BlockStatement statementBlock = moduleNode.getStatementBlock();
-        final ValidationCodeVisitorSupport validationCodeVisitorSupport = new ValidationCodeVisitorSupport(context, expression, moduleNode);
-        statementBlock.visit(validationCodeVisitorSupport);
-        return validationCodeVisitorSupport.getStatus();
+        return context.createSuccessStatus();
     }
 
     @Override
