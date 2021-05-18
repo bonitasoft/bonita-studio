@@ -18,12 +18,12 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -32,11 +32,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -59,14 +56,13 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
     }
 
     protected void createConnectorFailsControls(final Composite composite, final EMFDataBindingContext context) {
-        final Label connectorFailsLabel = new Label(composite, SWT.NONE);
-        connectorFailsLabel.setText(Messages.connectorCrashLabel);
-        connectorFailsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-
-        final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
-        connectorFailsCombo.add(Messages.connectorFails_crash);
-        connectorFailsCombo.add(Messages.connectorFails_ignore);
-        connectorFailsCombo.add(Messages.connectorFails_throwEvent);
+        var connectorFailsCombo = new ComboWidget.Builder()
+                .withLabel(Messages.connectorCrashLabel)
+                .labelAbove()
+                .withItems(Messages.connectorFails_crash, Messages.connectorFails_ignore, Messages.connectorFails_throwEvent)
+                .fill()
+                .grabHorizontalSpace()
+                .createIn(composite).getCombo();
 
         final UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy();
         ignoreEventStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
@@ -128,13 +124,8 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
                 throwEventStrategyTarget,
                 throwEventStrategyModel);
 
-        final Label namedErrorEvent = new Label(composite, SWT.NONE);
-        namedErrorEvent.setText(Messages.connectorFails_namedError);
-        namedErrorEvent.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-
-        final Text namedErrorText = new Text(composite, SWT.BORDER);
+        Text namedErrorText = createText(composite, Messages.connectorFails_namedError).getTextControl();
         namedErrorText.setTextLimit(255);
-        namedErrorText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final UpdateValueStrategy enableNamedErrorStrategyTarget = new UpdateValueStrategy();
         enableNamedErrorStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
