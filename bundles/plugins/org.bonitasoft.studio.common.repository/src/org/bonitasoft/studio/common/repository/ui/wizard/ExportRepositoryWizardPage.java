@@ -197,11 +197,20 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private Set<IRepositoryFileStore> getSelectedFileStores() {
         final Set<IRepositoryFileStore> checkedArtifacts = new HashSet<>();
-        for (final Object element : treeViewer.checkedElementsObservable()) {
-            if (element instanceof IRepositoryFileStore) {
-                checkedArtifacts.add((IRepositoryFileStore) element);
-                checkedArtifacts.addAll(((IRepositoryFileStore) element).getRelatedFileStore());
-            }
+        Set<IRepositoryFileStore> checkedElementsObservable = treeViewer.checkedElementsObservable().stream()
+                .filter(IRepositoryFileStore.class::isInstance)
+                .map(IRepositoryFileStore.class::cast)
+                .collect(Collectors.toSet());
+        try {
+            getContainer().run(true, false, monitor -> {
+                monitor.beginTask(Messages.prepareExport, IProgressMonitor.UNKNOWN);
+                for (final IRepositoryFileStore element : checkedElementsObservable) {
+                    checkedArtifacts.add(element);
+                    checkedArtifacts.addAll(element.getRelatedFileStore());
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
         return checkedArtifacts;
     }
@@ -270,7 +279,6 @@ public class ExportRepositoryWizardPage extends WizardPage {
         if (file.exists() && !FileActionDialog.overwriteQuestion(file.getAbsolutePath())) {
             return false;
         }
-
         boolean disablePopup = FileActionDialog.getDisablePopup();
         ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         try {
@@ -304,28 +312,39 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     private List<IResource> getSelectedResoureContainer() {
         List<IResource> resources = new ArrayList<>();
-        for (final Object element : treeViewer.checkedElementsObservable()) {
-            if (element instanceof IResourceContainer) {
-                resources.add(((IResourceContainer) element).getResource());
-                resources.addAll(((IResourceContainer) element).getRelatedResources());
-            }
-        }
-        if (isZip) {
-            AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-            IProject project = currentRepository.getProject();
-            IFile pomFile = project
-                    .getFile(IMavenConstants.POM_FILE_NAME);
-            if (pomFile.exists()) {
-                resources.add(pomFile);
-            }
-            IFolder depStore = project.getFolder(LocalDependenciesStore.NAME);
-            if (depStore.exists()) {
-                resources.add(depStore);
-            }
-            IFolder resourcesFolder = project.getFolder("src/main/resources");
-            if(resourcesFolder.exists()) {
-                resources.add(resourcesFolder);
-            }
+        Set<IResourceContainer> checkedElementsObservable = treeViewer.checkedElementsObservable().stream()
+                .filter(IResourceContainer.class::isInstance)
+                .map(IResourceContainer.class::cast)
+                .collect(Collectors.toSet());
+        try {
+            getContainer().run(true, false, monitor -> {
+                monitor.beginTask(Messages.prepareExport, IProgressMonitor.UNKNOWN);
+                for (final IResourceContainer element : checkedElementsObservable) {
+                    if (element instanceof IResourceContainer) {
+                        resources.add(element.getResource());
+                        resources.addAll(element.getRelatedResources());
+                    }
+                }
+                if (isZip) {
+                    AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                    IProject project = currentRepository.getProject();
+                    IFile pomFile = project
+                            .getFile(IMavenConstants.POM_FILE_NAME);
+                    if (pomFile.exists()) {
+                        resources.add(pomFile);
+                    }
+                    IFolder depStore = project.getFolder(LocalDependenciesStore.NAME);
+                    if (depStore.exists()) {
+                        resources.add(depStore);
+                    }
+                    IFolder resourcesFolder = project.getFolder("src/main/resources");
+                    if(resourcesFolder.exists()) {
+                        resources.add(resourcesFolder);
+                    }
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
         return resources;
     }

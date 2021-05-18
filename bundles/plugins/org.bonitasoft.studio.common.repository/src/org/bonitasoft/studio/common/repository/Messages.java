@@ -101,6 +101,7 @@ public final class Messages extends NLS {
     public static String migrationConfirmationTitle;
     public static String continueLabel;
     public static String updateAllModels;
+    public static String prepareExport;
 
     public static String convertingDependencies;
     public static String lookupDependencyFor;
