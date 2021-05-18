@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.la.application.ui.control.model.AddApplicationMode;
 import org.bonitasoft.studio.la.application.ui.editor.NavigationPageNode;
@@ -28,8 +29,6 @@ import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-
-import com.google.common.base.Strings;
 
 public class ApplicationDescriptorValidators {
 
@@ -82,7 +81,7 @@ public class ApplicationDescriptorValidators {
     }
 
     public static IValidator<String> customPageNameValidator() {
-        return pageName -> pageName.startsWith("custompage_")
+        return pageName -> Strings.isNullOrEmpty(pageName) || pageName.startsWith("custompage_")
                 ? ValidationStatus.ok()
                 : ValidationStatus.error(Messages.invalidPageNameFormat);
     }
@@ -150,7 +149,7 @@ public class ApplicationDescriptorValidators {
 
     public static IValidator<String> addApplicationDisplayNameValidator(AddApplicationMode mode,
             SelectObservableValue<AddApplicationMode> currentMode) {
-        return new IValidator<String>() {
+        return new IValidator<>() {
 
             IValidator<String> validator = appDisplayNameValidator();
 

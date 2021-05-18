@@ -17,6 +17,9 @@ package org.bonitasoft.studio.application.operation.extension.participant.previe
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.eclipse.swt.widgets.Shell;
 
 public class PreviewResultImpl implements PreviewResult {
@@ -39,12 +42,14 @@ public class PreviewResultImpl implements PreviewResult {
         return changes;
     }
 
+    @Override
     public void addChange(ChangePreview change) {
         changes.add(change);
     }
 
-    public int open(Shell shell) {
-       return new PreviewConfirmationDialog(shell, this).open();
+    @Override
+    public int open(Shell shell, PreviewMessageProvider messageProvider) {
+        return new PreviewConfirmationDialog(shell, this, messageProvider).open();
     }
 
 }

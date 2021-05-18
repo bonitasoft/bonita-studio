@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
@@ -21,7 +20,6 @@ public class ImportExtensionHandlerTest {
     Model mavenModel;
     ImportExtensionHandler handler = new ImportExtensionHandler(mock(RepositoryAccessor.class),
             mock(MavenRepositoryRegistry.class),
-            mock(ExtensionUpdateParticipantFactory.class),
             new MavenProjectHelper(),
             null,
             null);

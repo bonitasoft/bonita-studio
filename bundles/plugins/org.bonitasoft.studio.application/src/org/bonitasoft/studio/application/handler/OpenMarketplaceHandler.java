@@ -30,9 +30,7 @@ import javax.inject.Named;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecorator;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -42,6 +40,7 @@ import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation
 import org.bonitasoft.studio.common.repository.core.maven.MavenModelOperation;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,17 +55,14 @@ public class OpenMarketplaceHandler {
     private static final String ADD_DRIVER_COMMAND_ID = "org.bonitasoft.studio.connectors.database.driver.add.command";
     private static final Object BONITA_CONNECTOR_GROUP_ID = "org.bonitasoft.connectors";
     private static final Object BONITA_CONNECTOR_DATABASE_ARTIFACT_ID = "bonita-connector-database";
-    private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private MavenProjectHelper mavenProjectHelper;
     private RepositoryAccessor repositoryAccessor;
     private CommandExecutor commandExecutor;
 
     @Inject
-    public OpenMarketplaceHandler(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
-            MavenProjectHelper mavenProjectHelper,
+    public OpenMarketplaceHandler(MavenProjectHelper mavenProjectHelper,
             RepositoryAccessor repositoryAccessor,
             CommandExecutor commandExecutor) {
-        this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
         this.mavenProjectHelper = mavenProjectHelper;
         this.repositoryAccessor = repositoryAccessor;
         this.commandExecutor = commandExecutor;
@@ -117,10 +113,8 @@ public class OpenMarketplaceHandler {
         List<DependencyUpdate> dependenciesUpdates = extendProjectPage.getDependenciesToUpdate().stream()
                 .map(bad -> new DependencyUpdate(findCurrentDependency(bad), bad.getBestVersion()))
                 .collect(Collectors.toList());
-        var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory,
-                dependenciesUpdates,
-                repositoryAccessor.getCurrentRepository(),
-                commandExecutor);
+        var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdates,
+                repositoryAccessor.getCurrentRepository(), commandExecutor);
         try {
             updateExtensionDecorator.preUpdate(container);
             container.run(true, false, monitor -> installDependencies(extendProjectPage, repositoryAccessor, monitor));

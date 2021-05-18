@@ -26,9 +26,7 @@ import javax.inject.Named;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecorator;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMode;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -43,6 +41,7 @@ import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersio
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -60,7 +59,6 @@ public class ImportExtensionHandler {
 
     private MavenProjectHelper mavenProjectHelper;
     private RepositoryAccessor repositoryAccessor;
-    private ExtensionUpdateParticipantFactory definitionUpdateOperationFactory;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
     private ExceptionDialogHandler errorDialogHandler;
     private CommandExecutor commandExecutor;
@@ -68,13 +66,11 @@ public class ImportExtensionHandler {
     @Inject
     public ImportExtensionHandler(RepositoryAccessor repositoryAccessor,
             MavenRepositoryRegistry mavenRepositoryRegistry,
-            ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
             MavenProjectHelper mavenProjectHelper,
             ExceptionDialogHandler errorDialogHandler,
             CommandExecutor commandExecutor) {
         this.mavenProjectHelper = mavenProjectHelper;
         this.repositoryAccessor = repositoryAccessor;
-        this.definitionUpdateOperationFactory = definitionUpdateOperationFactory;
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
         this.errorDialogHandler = errorDialogHandler;
         this.commandExecutor = commandExecutor;
@@ -152,10 +148,8 @@ public class ImportExtensionHandler {
                 .map(List::of)
                 .orElseGet(List::of);
 
-        var updateExtensionDecorator = new UpdateExtensionOperationDecorator(definitionUpdateOperationFactory,
-                dependenciesUpdate,
-                currentRepository,
-                commandExecutor);
+        var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdate,
+                currentRepository, commandExecutor);
         try {
             updateExtensionDecorator.preUpdate(container);
             Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel);

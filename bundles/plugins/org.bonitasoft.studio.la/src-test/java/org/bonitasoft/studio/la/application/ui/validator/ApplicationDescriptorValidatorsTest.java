@@ -133,7 +133,7 @@ public class ApplicationDescriptorValidatorsTest {
         myPage.setOrphan(true);
 
         final IStatus status = ApplicationDescriptorValidators
-                .applicationPageColumnValidator(customPageProviderWithPage("custompage_MyPage"))
+                .applicationPageColumnValidator(customPageProviderWithPage())
                 .apply(myPage);
 
         StatusAssert.assertThat(status).isOK();
@@ -170,7 +170,7 @@ public class ApplicationDescriptorValidatorsTest {
         StatusAssert.assertThat(status).isOK();
     }
 
-    private CustomPageProvider customPageProviderWithPage(String string) {
+    private CustomPageProvider customPageProviderWithPage() {
         CustomPageProvider customPageProvider = spy(
                 new CustomPageProvider(mock(WebPageRepositoryStore.class), mock(ThemeRepositoryStore.class)));
         doReturn(Arrays.asList(new CustomPageDescriptor("custompage_MyPage", "MyPage", "")))

@@ -25,5 +25,6 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_WzzFoAiZEeu_QKLSykv4Pw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_Yzo2cAiZEeu_QKLSykv4Pw" elementId="org.bonitasoft.studio.la.dependency.resolver.addon" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.application.core.ApplicationDependencyResolver"/>
+    <elements xsi:type="application:Addon" xmi:id="_I8z8sLGHEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.la.extension.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.la/org.bonitasoft.studio.la.extension.ThemeUpdateParticipantFactory"/>
   </fragments>
 </fragment:ModelFragments>

@@ -138,6 +138,12 @@ public class Messages extends NLS {
     public static String up;
     public static String down;
     public static String deployFailed;
+    public static String preparingThemeUpdate;
+    public static String themeUpdatePreview;
+    public static String themeRemovedPreviewMessage;
+    public static String updatingApplications;
+    public static String updateApplicationTitle;
+    public static String applicationUpateMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

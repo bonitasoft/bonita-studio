@@ -15,10 +15,13 @@
 package org.bonitasoft.studio.theme;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.eclipse.swt.widgets.Display;
 
 public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor {
 
@@ -32,7 +35,12 @@ public class DependencyThemeExtensionDescriptor extends ThemeExtensionDescriptor
     @Override
     public Properties getPageProperties() {
         File file = new File(theme.getArtifact().getFile());
-        return ExtensionPagePropertiesReader.getPageProperties(file);
+        try {
+            return ExtensionPagePropertiesReader.getPageProperties(file).orElseThrow();
+        } catch (IOException e) {
+            new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+            return new Properties();
+        }
     }
 
 }

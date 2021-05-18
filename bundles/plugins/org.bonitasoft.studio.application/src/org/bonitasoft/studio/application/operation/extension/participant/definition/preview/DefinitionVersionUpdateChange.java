@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.application.operation.extension.participant.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.DefinitionChangesVisitor;

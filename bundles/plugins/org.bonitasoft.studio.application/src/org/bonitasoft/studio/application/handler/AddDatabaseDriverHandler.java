@@ -23,7 +23,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.ExtensionUpdateParticipantFactory;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -36,9 +35,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
 
     @Inject
-    public AddDatabaseDriverHandler(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
-            MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor, CommandExecutor commandExecutor) {
-        super(definitionUpdateOperationFactory, mavenProjectHelper, repositoryAccessor, commandExecutor);
+    public AddDatabaseDriverHandler(MavenProjectHelper mavenProjectHelper, RepositoryAccessor repositoryAccessor,
+            CommandExecutor commandExecutor) {
+        super(mavenProjectHelper, repositoryAccessor, commandExecutor);
     }
 
     private static final Map<String, String> DEPENDENCY_TO_CONNECTOR_DEF = new HashMap<>();
@@ -56,7 +55,8 @@ public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
 
     @Override
     protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor, String... types) {
-        return new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), BonitaMarketplacePage.DATABASE_DRIVER_TYPE);
+        return new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(),
+                BonitaMarketplacePage.DATABASE_DRIVER_TYPE);
     }
 
     @Override

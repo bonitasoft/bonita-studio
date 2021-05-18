@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.views.extension.card.zoom;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -92,16 +94,22 @@ public class RestApiZoomControl extends AbstractZoomControl {
         definitionsComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
         definitionsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        getRestApiExtension().ifPresent(extensionArtifact -> {
-            Properties properties = ExtensionPagePropertiesReader
-                    .getPageProperties(new File(extensionArtifact.getArtifact().getFile()));
-            ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.API_EXTENSIONS)
-                    .ifPresent(extensions -> {
-                        for (String extension : extensions.split(",")) {
-                            createRestAPIExtensionDetails(definitionsComposite, properties, extension);
-                        }
-                    });
-        });
+        Optional<RestAPIExtension> restApiExtension = getRestApiExtension();
+        if (restApiExtension.isPresent()) {
+            try {
+                Properties properties = ExtensionPagePropertiesReader
+                        .getPageProperties(new File(restApiExtension.get().getArtifact().getFile()))
+                        .orElseThrow();
+                ExtensionPagePropertiesReader.getProperty(properties, PagePropertyConstants.API_EXTENSIONS)
+                        .ifPresent(extensions -> {
+                            for (String extension : extensions.split(",")) {
+                                createRestAPIExtensionDetails(definitionsComposite, properties, extension);
+                            }
+                        });
+            } catch (IOException e) {
+                new ExceptionDialogHandler().openErrorDialog(getShell(), e.getMessage(), e);
+            }
+        }
     }
 
     private void createRestAPIExtensionDetails(Composite parent, Properties properties, String extension) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_H5K40KiaEemxstQeqTvXDA">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_H5K40KiaEemxstQeqTvXDA">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_KLgu4KiaEemxstQeqTvXDA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_yyuWEK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.command.deployArtifacts" commandName="%deployArtifacts" description="Deploy a subpart of the project"/>
     <elements xsi:type="commands:Command" xmi:id="_FixQMORFEemD3fo8ojg-gQ" elementId="org.bonitasoft.studio.application.command.releaseNote" commandName="%releaseNote"/>
@@ -30,5 +30,9 @@
     <elements xsi:type="commands:Handler" xmi:id="_Nnn2oHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.ImportExtensionHandler" command="_Dh48wHwsEeuY1OE6mEePfw"/>
     <elements xsi:type="commands:Handler" xmi:id="_sV7PMIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.EditProjectMetadataHandler" command="_hz1wgIGLEeuVgbtqm9bD3Q"/>
     <elements xsi:type="commands:Handler" xmi:id="_ERZDYIcqEeu7ZtnjXqJ_Tg" elementId="org.bonitasoft.studio.application.newproject.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewProjectHandler" command="_-TWXoIcpEeu7ZtnjXqJ_Tg"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7OSHQLFyEeuykI2WNDJFjw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_Cpy2kLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.definition.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.definition.DefinitionUpdateParticipantFactory"/>
+    <elements xsi:type="application:Addon" xmi:id="_hKL2wLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.configuration.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdateParticipantFactory"/>
   </fragments>
 </fragment:ModelFragments>
