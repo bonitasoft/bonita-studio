@@ -57,6 +57,7 @@ public class DefineBusinessDataModelHandler {
         SimpleField stringField = new SimpleField();
         stringField.setType(FieldType.STRING);
         stringField.setName(AttributeEditionControl.DEFAULT_FIELD_NAME);
+        stringField.setLength(255);
         bo.addField(stringField);
         return bo;
     }
