@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.designer.core.bos;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.containsPattern;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.filter;
@@ -27,9 +26,11 @@ import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAllItemsOfTy
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -79,7 +80,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
         this.repositoryAccessor = repositoryAccessor;
         this.customPageBarResourceFactory = customPageBarResourceFactory;
     }
-    
+
     @Override
     public boolean distinctByConfiguration() {
         return false;
@@ -134,22 +135,33 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
     private Function<String, WebWidgetFileStore> toWidgetFileStore(final Pattern widgetPattern) {
         return matchingEntry -> {
             final Matcher matcher = widgetPattern.matcher(matchingEntry);
-            if(matcher.matches()) {
-                return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1), true);
+            if (matcher.matches()) {
+                return repositoryAccessor.getRepositoryStore(WebWidgetRepositoryStore.class).getChild(matcher.group(1),
+                        true);
             }
             return null;
         };
     }
 
     private Set<WebFragmentFileStore> relatedFragments(final Set<String> zipEntries) {
-        return newHashSet(transform(filter(zipEntries, containsPattern(FRAGMENT_ENTRY_REGEXP)),
-                toFragmentFileStore(compile(FRAGMENT_ENTRY_REGEXP))));
+        return zipEntries.stream()
+                .filter(entry -> containsPattern(FRAGMENT_ENTRY_REGEXP).apply(entry))
+                .map(toFragmentFileStore(compile(FRAGMENT_ENTRY_REGEXP)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
-    private Function<String, WebFragmentFileStore> toFragmentFileStore(final Pattern fragmentPattern) {
+    private java.util.function.Function<String, WebFragmentFileStore> toFragmentFileStore(
+            final Pattern fragmentPattern) {
         return matchingEntry -> {
             final Matcher matcher = fragmentPattern.matcher(matchingEntry);
-            checkState(matcher.matches());
+            if (!matcher.matches()) {
+                BonitaStudioLog.warning(
+                        String.format("Invalid fragment file found: %s. Please remove this file from your project.",
+                                matchingEntry),
+                        UIDesignerPlugin.PLUGIN_ID);
+                return null;
+            }
             return repositoryAccessor.getRepositoryStore(WebFragmentRepositoryStore.class)
                     .getChild(matcher.group(1), true);
         };
