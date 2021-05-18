@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio.bundles</groupId>
+		<artifactId>plugins</artifactId>
+        <version>7.12.4-SNAPSHOT</version>
+	</parent>
+  <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
+  <artifactId>org.bonitasoft.studio.actors</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  
+  <properties>
+		<actorfilters.impl.target>${basedir}/filters-impl</actorfilters.impl.target>
+		<actorfilters.def.target>${basedir}/filters-def</actorfilters.def.target>
+		<actorfilters.deps.target>${basedir}/dependencies</actorfilters.deps.target>
+		<actorfilters.tmp.dir>${basedir}/actorfilters</actorfilters.tmp.dir>
+		
+		<initiator.version>1.0.0</initiator.version>
+		<initiator-manager.version>1.0.0</initiator-manager.version>
+		<custom-user-info.version>1.0.0</custom-user-info.version>
+		<single-user.version>1.0.0</single-user.version>
+		<user-manager.version>1.0.0</user-manager.version>
+		<same-task-user.version>1.0.0</same-task-user.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>retrieve-actorfilters</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-initiator</artifactId>
+									<version>${initiator.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-initiator-manager</artifactId>
+									<version>${initiator-manager.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-user-manager</artifactId>
+									<version>${user-manager.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-single-user</artifactId>
+									<version>${single-user.version}</version>
+									<type>zip</type>
+								</artifactItem>
+									<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-same-task-user</artifactId>
+									<version>${same-task-user.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.actorfilter</groupId>
+									<artifactId>bonita-actorfilter-custom-user-info</artifactId>
+									<version>${custom-user-info.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${actorfilters.tmp.dir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Clean generated resources</id>
+						<phase>clean</phase>
+						<configuration>
+							<target>
+								<delete dir="${actorfilters.impl.target}" failonerror="false" />
+								<mkdir dir="${actorfilters.impl.target}" />
+								<delete dir="${actorfilters.deps.target}" failonerror="false" />
+								<mkdir dir="${actorfilters.deps.target}" />
+								<delete dir="${actorfilters.def.target}" failonerror="false" />
+								<mkdir dir="${actorfilters.def.target}" />
+								<delete dir="${actorfilters.tmp.dir}" failonerror="false" />
+								<mkdir dir="${actorfilters.tmp.dir}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>Configure generated resources</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<unzip dest="${actorfilters.tmp.dir}">
+									<fileset dir="${actorfilters.tmp.dir}" includes="*.zip" />
+								</unzip>
+								<delete failonerror="false">
+									<fileset dir="${actorfilters.tmp.dir}" includes="*.zip" />
+								</delete>
+
+								<copy todir="${actorfilters.deps.target}">
+									<fileset dir="${actorfilters.tmp.dir}/classpath" includes="*.jar" />
+								</copy>
+								<delete dir="${actorfilters.tmp.dir}/classpath" failonerror="false" />
+
+								<copy todir="${actorfilters.def.target}">
+									<fileset dir="${actorfilters.tmp.dir}" excludes="*.impl" />
+								</copy>
+								<copy todir="${actorfilters.impl.target}">
+									<fileset dir="${actorfilters.tmp.dir}" includes="*.impl" />
+								</copy>
+								<delete dir="${actorfilters.tmp.dir}" failonerror="false" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

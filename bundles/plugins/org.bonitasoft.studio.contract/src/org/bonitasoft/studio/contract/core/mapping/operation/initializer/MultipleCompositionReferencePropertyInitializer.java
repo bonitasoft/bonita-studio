@@ -1,0 +1,61 @@
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
+
+import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
+import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
+
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
+
+import com.google.common.base.Joiner;
+
+public class MultipleCompositionReferencePropertyInitializer extends NewBusinessObjectListInitializer {
+
+    private final BusinessObject parentBusinessObject;
+
+    public MultipleCompositionReferencePropertyInitializer(final BusinessObject parentBusinessObject,
+            final InitializerContext context) {
+        super(context);
+        this.parentBusinessObject = parentBusinessObject;
+    }
+
+    @Override
+    public String getInitialValue() throws BusinessObjectInstantiationException {
+        final String initialValue = super.getInitialValue();
+        final StringBuilder scriptBuilder = new StringBuilder();
+        scriptBuilder.append("{");
+        scriptBuilder.append(System.lineSeparator());
+        scriptBuilder.append(initialValue);
+        scriptBuilder.append("}()");
+        return scriptBuilder.toString();
+    }
+
+    @Override
+    protected String inputListToIterate() {
+        return shouldUseParentIterator() ? buildListAccessorWithIteratorName() : super.inputListToIterate();
+    }
+
+    private String buildListAccessorWithIteratorName() {
+        return iteratorName(parentBusinessObject) + "."
+                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+    }
+
+    private boolean shouldUseParentIterator() {
+        return contractInput.eContainer() != null && parentBusinessObject != null
+                && withComplexMultipleInHierarchy().apply(contractInput);
+    }
+
+}

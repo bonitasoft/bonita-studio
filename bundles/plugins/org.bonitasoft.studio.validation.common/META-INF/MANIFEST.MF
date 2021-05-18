@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Validation Common Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.validation.common
+Bundle-Version: 7.12.4.qualifier
+Bundle-Activator: org.bonitasoft.studio.validation.common.ValidationCommonPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.gmf.runtime.notation,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.diagram,
+ com.google.guava;bundle-version="11.0.1",
+ org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.diagram.custom,
+ org.eclipse.emf.ecore,
+ org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.bonitasoft.studio.tests-utils;bundle-version="7.1.0";resolution:=optional,
+ org.eclipse.core.databinding,
+ org.junit;bundle-version="4.11.0";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.ide;bundle-version="3.10.1",
+ org.bonitasoft.studio.ui;bundle-version="7.10.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.validation.common,
+ org.bonitasoft.studio.validation.common.operation
+Bundle-Vendor: Bonitasoft S.A.
