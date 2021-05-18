@@ -18,7 +18,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.team.git.core.RetrieveHEADRefOperation;
@@ -338,8 +337,7 @@ public class CustomGitCloneWizard extends GitCloneWizard {
     }
 
     public boolean hasBeenMigrated() {
-        String version = validateRepoTask.getVersion();
-        return !ProductVersion.sameVersion(version) && ProductVersion.canBeMigrated(version);
+        return validateRepoTask.migrationRequired();
     }
 
     public String getOldVersion() {
