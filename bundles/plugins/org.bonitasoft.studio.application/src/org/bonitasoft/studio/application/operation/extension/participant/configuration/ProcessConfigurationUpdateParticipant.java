@@ -26,17 +26,18 @@ import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationParticipant;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarAddedChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarRemovedChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.preview.JarUpdatedChange;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
-import org.bonitasoft.studio.application.operation.extension.participant.preview.ChangePreview;
-import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResult;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -48,7 +49,7 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.ArtifactKey;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
-public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOperationParticipant {
+public class ProcessConfigurationUpdateParticipant implements ExtensionUpdateParticipant {
 
     private ProcessConfigurationCollector configurationCollector;
     private List<DependencyUpdate> dependenciesUpdates;
@@ -71,10 +72,12 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
         this.repository = repository;
     }
 
+    @Override
     public void preUpdate(IProgressMonitor monitor) {
         monitor.beginTask(Messages.preparingProcessConfigurationUpdate, IProgressMonitor.UNKNOWN);
 
         currentArtifacts = dependenciesUpdates.stream()
+                .filter(update -> isJarDependency(update.getCurrentDependency()))
                 .map(update -> toArtifact(update.getCurrentDependency()))
                 .collect(Collectors.toMap(a -> a, this::transitiveDependencies));
     }
@@ -87,6 +90,7 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
 
         var updatedArtifacts = dependenciesUpdates.stream()
                 .filter(update -> update.getUpdatedDependency() != null)
+                .filter(update -> isJarDependency(update.getUpdatedDependency()))
                 .map(update -> toArtifact(update.getUpdatedDependency()))
                 .collect(Collectors.toSet());
 
@@ -112,6 +116,10 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
             }
         }
         return previewResult;
+    }
+
+    private boolean isJarDependency(Dependency dependency) {
+        return Objects.equals(dependency.getType(), "jar");
     }
 
     private JarRemovedChange createRemovedChange(Artifact artifact, Collection<Configuration> configurations) {
@@ -200,7 +208,7 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
         modifiedResources = previewResult.getChanges().stream()
                 .filter(ProcessConfigurationChange.class::isInstance)
                 .map(ProcessConfigurationChange.class::cast)
-                .flatMap( change -> processConfigurationUpdater.update(change).stream())
+                .flatMap(change -> processConfigurationUpdater.update(change).stream())
                 .collect(Collectors.toSet());
 
         var dbConfStore = repository.getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
@@ -214,8 +222,7 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
     public Collection<Resource> getModifiedResources() {
         return modifiedResources;
     }
-    
-    
+
     private boolean sameGAC(ArtifactKey updatedArtifact, ArtifactKey currentArtifact) {
         return currentArtifact.getGroupId().equals(updatedArtifact.getGroupId())
                 && currentArtifact.getArtifactId().equals(updatedArtifact.getArtifactId())
@@ -235,6 +242,11 @@ public class ProcessConfigurationUpdateParticipant implements UpdateExtensionOpe
     @Override
     public PreviewResult getPreviewResult() {
         return previewResult;
+    }
+
+    @Override
+    public PreviewMessageProvider getPreviewMessageProvider() {
+        return new ProcessConfigurationPreviewMessageProvider();
     }
 
 }

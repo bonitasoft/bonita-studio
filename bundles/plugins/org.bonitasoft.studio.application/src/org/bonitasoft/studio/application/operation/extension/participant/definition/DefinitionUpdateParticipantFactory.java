@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2021 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2021 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,20 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.operation.extension;
+package org.bonitasoft.studio.application.operation.extension.participant.definition;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationCollector;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdateParticipant;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdater;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.ArtifactDefinitionProvider;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorConfigurationCollector;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.ConnectorDefinitionProviderFactory;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DefinitionUpdateParticipant;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.actorfilter.ActorFilterArtifactDefinitionProvider;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.actorfilter.ActorFilterConnectorDefinitionProviderFactory;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.actorfilter.ProjectActorFilterConfigurationCollector;
@@ -36,54 +29,44 @@ import org.bonitasoft.studio.application.operation.extension.participant.definit
 import org.bonitasoft.studio.application.operation.extension.participant.definition.delegate.ConnectorConfigurationCollectorDelegate;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.delegate.ConnectorDefinitionProviderFactoryDelegate;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipantFactory;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipantFactoryRegistry;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterConfRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
-import org.eclipse.e4.core.di.annotations.Creatable;
 
-@Creatable
-public class ExtensionUpdateParticipantFactory {
+public class DefinitionUpdateParticipantFactory implements ExtensionUpdateParticipantFactory {
 
     private RepositoryAccessor repositoryAccessor;
     private ConnectorConfigurationMigratorFactory migratorFactory;
-    private ProjectDependenciesResolver projectDependencyResolver;
-    private ProcessConfigurationCollector processConfigurationCollector;
-    private ProcessConfigurationUpdater processConfigurationUpdater;
 
     @Inject
-    public ExtensionUpdateParticipantFactory(RepositoryAccessor repositoryAccessor, 
-            ConnectorConfigurationMigratorFactory migratorFactory,
-            ProjectDependenciesResolver projectDependencyResolver,
-            ProcessConfigurationCollector processConfigurationCollector,
-            ProcessConfigurationUpdater processConfigurationUpdater) {
+    public DefinitionUpdateParticipantFactory(RepositoryAccessor repositoryAccessor,
+            ConnectorConfigurationMigratorFactory migratorFactory) {
         this.repositoryAccessor = repositoryAccessor;
         this.migratorFactory = migratorFactory;
-        this.projectDependencyResolver = projectDependencyResolver;
-        this.processConfigurationCollector = processConfigurationCollector;
-        this.processConfigurationUpdater = processConfigurationUpdater;
     }
 
-    public DefinitionUpdateParticipant createDefinitionUpdateParticipant(List<DependencyUpdate> dependenciesUpdates) {
+    @PostConstruct
+    public void register() {
+        ExtensionUpdateParticipantFactoryRegistry.getInstance().register(this);
+    }
+
+    @Override
+    public ExtensionUpdateParticipant create(List<DependencyUpdate> dependenciesUpdate) {
         ArtifactDefinitionProvider artifactDefinitionProvider = getArtifactDefinitionProvider();
         ConnectorDefinitionProviderFactory connectorDefinitionProviderFactory = getConnectorDefinitionProviderFactory();
         ConnectorConfigurationCollector connectorConfigurationCollector = getConnectorConfigurationCollector();
         return new DefinitionUpdateParticipant(artifactDefinitionProvider,
-                dependenciesUpdates,
+                dependenciesUpdate,
                 connectorDefinitionProviderFactory,
                 migratorFactory,
                 connectorConfigurationCollector);
-    }
-    
-    public ProcessConfigurationUpdateParticipant createProcessConfigurationUpdateParticipant(List<DependencyUpdate> dependenciesUpdates) {
-        return new ProcessConfigurationUpdateParticipant(dependenciesUpdates,
-                processConfigurationCollector,
-                projectDependencyResolver,
-                processConfigurationUpdater,
-                repositoryAccessor.getCurrentRepository());
     }
 
     private ConnectorConfigurationCollector getConnectorConfigurationCollector() {
@@ -106,5 +89,4 @@ public class ExtensionUpdateParticipantFactory {
                 new ConnectorArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository()),
                 new ActorFilterArtifactDefinitionProvider(repositoryAccessor.getCurrentRepository()));
     }
-
 }

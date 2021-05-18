@@ -34,26 +34,21 @@ public class ExtensionPagePropertiesReader {
 
     }
 
-    public static Properties getPageProperties(File zipFile) {
-        try {
-            return findZipEntry(zipFile, entry -> entry.getName().equals("page.properties"))
-                    .map(entry -> {
-                        try (ZipFile zip = new ZipFile(zipFile);
-                                Reader reader = new InputStreamReader(zip.getInputStream(entry),
-                                        StandardCharsets.UTF_8)) {
-                            Properties prop = new Properties();
-                            prop.load(reader);
-                            return prop;
-                        } catch (IOException e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .orElse(new Properties());
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
-            return new Properties();
-        }
+    public static Optional<Properties> getPageProperties(File zipFile) throws IOException {
+        return findZipEntry(zipFile, entry -> entry.getName().equals("page.properties"))
+                .map(entry -> {
+                    try (ZipFile zip = new ZipFile(zipFile);
+                            Reader reader = new InputStreamReader(zip.getInputStream(entry),
+                                    StandardCharsets.UTF_8)) {
+                        Properties prop = new Properties();
+                        prop.load(reader);
+                        return prop;
+                    } catch (IOException e) {
+                        BonitaStudioLog.error(e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull);
     }
 
     public static Optional<String> getProperty(Properties properties, String property) {

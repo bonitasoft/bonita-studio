@@ -26,12 +26,14 @@ import java.util.stream.Collectors;
 
 import org.bonitasoft.plugin.analyze.report.model.Definition;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationParticipant;
 import org.bonitasoft.studio.application.operation.extension.participant.definition.preview.DefinitionUpdatePreviewResult;
-import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResult;
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -44,7 +46,7 @@ import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
-public class DefinitionUpdateParticipant implements UpdateExtensionOperationParticipant {
+public class DefinitionUpdateParticipant implements ExtensionUpdateParticipant {
 
     private ArtifactDefinitionProvider artifactDefinitionProvider;
     private List<ConnectorConfiguration> connectorConfigurations;
@@ -91,6 +93,7 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
                 .collect(Collectors.toList());
     }
 
+    @Override
     public DefinitionUpdatePreviewResult runPreview(IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatePreview, IProgressMonitor.UNKNOWN);
 
@@ -129,7 +132,7 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
     public PreviewResult getPreviewResult() {
         return previewResult;
     }
-    
+
     @Override
     public Collection<Resource> getModifiedResources() {
         return modifiedResources;
@@ -171,14 +174,13 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
                 }
                 monitor.worked(1);
                 return resource;
-            } else {
-                try {
-                    resource.delete(Collections.emptyMap());
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-                monitor.worked(1);
             }
+            try {
+                resource.delete(Collections.emptyMap());
+            } catch (IOException e) {
+                BonitaStudioLog.error(e);
+            }
+            monitor.worked(1);
         }
         return null;
     }
@@ -197,6 +199,11 @@ public class DefinitionUpdateParticipant implements UpdateExtensionOperationPart
         modelUpdater.update();
         monitor.worked(1);
         return resource;
+    }
+
+    @Override
+    public PreviewMessageProvider getPreviewMessageProvider() {
+        return new ProcessDefinitionPreviewMessageProvider();
     }
 
 }

@@ -22,7 +22,7 @@ import java.util.Objects;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.DatabaseConnectorConfigurationChange;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationChange;
-import org.bonitasoft.studio.application.operation.extension.participant.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 

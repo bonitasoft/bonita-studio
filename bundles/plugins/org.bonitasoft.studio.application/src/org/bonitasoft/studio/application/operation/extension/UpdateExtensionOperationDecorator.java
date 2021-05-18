@@ -16,7 +16,6 @@ package org.bonitasoft.studio.application.operation.extension;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,14 +26,17 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.DependencyUpdate;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
-import org.bonitasoft.studio.application.operation.extension.participant.preview.Previewable;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.AddDependencyOperation;
 import org.bonitasoft.studio.common.repository.core.maven.UpdateDependencyVersionOperation;
+import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipant;
+import org.bonitasoft.studio.common.repository.extension.update.participant.ExtensionUpdateParticipantFactoryRegistry;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
+import org.bonitasoft.studio.common.repository.extension.update.preview.Previewable;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -51,15 +53,11 @@ public class UpdateExtensionOperationDecorator {
     private static final String BATCH_VALIDATION_COMMAND_ID = "org.bonitasoft.studio.validation.batchValidation";
     private List<DependencyUpdate> dependenciesUpdates;
     private IRepository currentRepository;
-    private ExtensionUpdateParticipantFactory updateParticipantFactory;
-    private List<UpdateExtensionOperationParticipant> participants = new ArrayList<>();
+    private List<ExtensionUpdateParticipant> participants = List.of();
     private CommandExecutor commandExecutor;
 
-    public UpdateExtensionOperationDecorator(ExtensionUpdateParticipantFactory definitionUpdateOperationFactory,
-            List<DependencyUpdate> dependenciesUpdates,
-            IRepository currentRepository,
-            CommandExecutor commandExecutor) {
-        this.updateParticipantFactory = definitionUpdateOperationFactory;
+    public UpdateExtensionOperationDecorator(List<DependencyUpdate> dependenciesUpdates,
+            IRepository currentRepository, CommandExecutor commandExecutor) {
         this.dependenciesUpdates = dependenciesUpdates;
         this.currentRepository = currentRepository;
         this.commandExecutor = commandExecutor;
@@ -67,17 +65,14 @@ public class UpdateExtensionOperationDecorator {
 
     public void preUpdate(IRunnableContext context) throws InvocationTargetException, InterruptedException {
         if (!dependenciesUpdates.isEmpty()) {
-            participants.add(updateParticipantFactory
-                    .createDefinitionUpdateParticipant(dependenciesUpdates));
-            participants.add(updateParticipantFactory
-                    .createProcessConfigurationUpdateParticipant(dependenciesUpdates));
+            participants = ExtensionUpdateParticipantFactoryRegistry.getInstance().createParticipants(dependenciesUpdates);
             DiagramRepositoryStore diagramRepositoryStore = currentRepository
                     .getRepositoryStore(DiagramRepositoryStore.class);
             diagramRepositoryStore.resetComputedProcesses();
             context.run(true, false, monitor -> {
                 monitor.beginTask(Messages.preparingUpdate, IProgressMonitor.UNKNOWN);
                 diagramRepositoryStore.computeProcesses(new NullProgressMonitor());
-                for (UpdateExtensionOperationParticipant participant : participants) {
+                for (ExtensionUpdateParticipant participant : participants) {
                     participant.preUpdate(new NullProgressMonitor());
                 }
             });
@@ -101,14 +96,19 @@ public class UpdateExtensionOperationDecorator {
                     .map(Previewable::getPreviewResult)
                     .flatMap(r -> r.getChanges().stream())
                     .forEach(previewResult::addChange);
-            if (previewResult.shouldOpenPreviewDialog()) {
-                int buttonId = previewResult.open(shell);
+            PreviewMessageProvider messageProvider = participants.stream()
+                    .filter(participant -> !participant.getPreviewResult().getChanges().isEmpty())
+                    .findFirst()
+                    .map(ExtensionUpdateParticipant::getPreviewMessageProvider)
+                    .orElse(null);
+            if (previewResult.shouldOpenPreviewDialog() && messageProvider != null) {
+                int buttonId = previewResult.open(shell, messageProvider);
                 if (buttonId == IDialogConstants.PROCEED_ID) {
                     applyChanges(context, localDependencyStore);
                 } else if (buttonId == IDialogConstants.ABORT_ID) {
                     context.run(true, false, monitor -> {
                         monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
-                        abortDependenciesUpdate(localDependencyStore, monitor);
+                        abortDependenciesUpdate(localDependencyStore);
                         currentRepository.getProjectDependenciesStore().analyze(monitor);
                     });
                     return false;
@@ -168,7 +168,7 @@ public class UpdateExtensionOperationDecorator {
                 });
     }
 
-    private void abortDependenciesUpdate(LocalDependenciesStore localDependencyStore, IProgressMonitor monitor)
+    private void abortDependenciesUpdate(LocalDependenciesStore localDependencyStore)
             throws InvocationTargetException {
         revertUpdatedDependencies();
         revertRemovedDependencies();

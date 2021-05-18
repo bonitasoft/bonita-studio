@@ -15,8 +15,9 @@
 package org.bonitasoft.studio.application.operation.extension.participant.preview;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.preview.DefinitionRemovedChange;
-import org.bonitasoft.studio.application.operation.extension.participant.definition.preview.DefinitionVersionUpdateChange;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewMessageProvider;
+import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.UIPlugin;
@@ -42,30 +43,22 @@ public class PreviewConfirmationDialog extends MessageDialog {
     private static final int PROCEED_BUTTON_INDEX = 2;
     private PreviewResult previewResult;
 
-    public PreviewConfirmationDialog(Shell parentShell, PreviewResult previewResult) {
-        super(parentShell, Messages.updateProcessesTitle,
+    public PreviewConfirmationDialog(Shell parentShell, PreviewResult previewResult,
+            PreviewMessageProvider messageProvider) {
+        super(parentShell, messageProvider.getTitle(),
                 null,
-                getDialogMessage(previewResult),
+                messageProvider.getMessage(),
                 MessageDialog.WARNING,
                 PROCEED_BUTTON_INDEX,
                 IDialogConstants.ABORT_LABEL, IDialogConstants.IGNORE_LABEL, IDialogConstants.PROCEED_LABEL);
         this.previewResult = previewResult;
     }
 
-    private static String getDialogMessage(PreviewResult previewResult) {
-        String header = isConnectorDefinitionUpdate(previewResult) ? Messages.definitionUpateMessage : Messages.otherDependencyUpdateMessage;
-        return header + "  " + Messages.updateActionsMessage;
-    }
-
-    private static boolean isConnectorDefinitionUpdate(PreviewResult previewResult) {
-        return previewResult.getChanges().stream().anyMatch(c -> c instanceof DefinitionVersionUpdateChange || c instanceof DefinitionRemovedChange);
-    }
-
     @Override
     protected void setShellStyle(int newShellStyle) {
-        super.setShellStyle(SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL  | getDefaultOrientation());
+        super.setShellStyle(SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | getDefaultOrientation());
     }
-    
+
     @Override
     protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
         if (IDialogConstants.ABORT_LABEL.equals(label)) {
@@ -81,7 +74,7 @@ public class PreviewConfirmationDialog extends MessageDialog {
         }
         return super.createButton(parent, id, label, defaultButton);
     }
-    
+
     @Override
     protected boolean canHandleShellCloseEvent() {
         return false;
@@ -104,8 +97,7 @@ public class PreviewConfirmationDialog extends MessageDialog {
                 .withTextProvider(ChangePreview::getDescription)
                 .withImageProvider(PreviewConfirmationDialog::getImage)
                 .withTooltipProvider(
-                        change -> change.hasBreakingChanges() ? 
-                                Messages.definitionUpdateWithBreakingChanges
+                        change -> change.hasBreakingChanges() ? Messages.definitionUpdateWithBreakingChanges
                                 : null)
                 .createColumnLabelProvider());
         viewer.setInput(previewResult);

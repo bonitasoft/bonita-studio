@@ -16,7 +16,7 @@ package org.bonitasoft.studio.application.operation.extension.participant.defini
 
 import java.util.List;
 
-import org.bonitasoft.studio.application.operation.extension.participant.preview.ChangePreview;
+import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connector.model.definition.migration.model.DefinitionInputChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.NewInputChange;
 import org.bonitasoft.studio.connector.model.definition.migration.model.RemovedInputChange;
