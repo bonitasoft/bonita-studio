@@ -107,18 +107,22 @@ public abstract class CustomPageProposalProvider implements IContentProposalProv
             return false;
         }
         if (shouldUpdateProposals(delta)) {
-            new WorkspaceJob("Update proposals") {
-
-                @Override
-                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                    setProposals(getCustomPageDescriptors(provider));
-                    return Status.OK_STATUS;
-                }
-            }.schedule();
+            computeProposals();
             updated = true;
             return false;
         }
         return true;
+    }
+
+    protected void computeProposals() {
+        new WorkspaceJob("Update proposals") {
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                setProposals(getCustomPageDescriptors(provider));
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     protected boolean shouldUpdateProposals(IResourceDelta delta) {

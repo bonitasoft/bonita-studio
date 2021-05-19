@@ -48,7 +48,7 @@ public class CustomPageProvider implements IResourceChangeListener {
         this.themeStore = themeStore;
     }
 
-    public List<CustomPageDescriptor> getLayouts() {
+    public synchronized List<CustomPageDescriptor> getLayouts() {
         if (layouts == null) {
             layouts = new ArrayList<>();
             layouts.add(CustomPageDescriptor.DEFAULT_LAYOUT);
@@ -65,7 +65,7 @@ public class CustomPageProvider implements IResourceChangeListener {
         return layouts;
     }
 
-    public List<CustomPageDescriptor> getApplicationPages() {
+    public synchronized List<CustomPageDescriptor> getApplicationPages() {
         if (pages == null) {
             pages = new ArrayList<>();
             webPageStore.getChildren()
@@ -141,7 +141,7 @@ public class CustomPageProvider implements IResourceChangeListener {
         return webPageStore;
     }
 
-    public Collection<CustomPageDescriptor> getThemes() {
+    public synchronized Collection<CustomPageDescriptor> getThemes() {
         if (themes == null) {
             themes = new ArrayList<>();
             themeStore.getChildren()
@@ -180,7 +180,7 @@ public class CustomPageProvider implements IResourceChangeListener {
                         }
                         if (resource != null && resource.getLocation() != null
                                 && themeStore.getResource().getLocation().isPrefixOf(resource.getLocation())) {
-                            themes = null;
+                            cleanThemes();
                             return false;
                         }
                         return true;
@@ -190,6 +190,10 @@ public class CustomPageProvider implements IResourceChangeListener {
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
+    }
+    
+    public void cleanThemes() {
+        this.themes = null;
     }
 
     public void dispose() {

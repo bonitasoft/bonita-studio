@@ -144,6 +144,7 @@ public class Messages extends NLS {
     public static String updatingApplications;
     public static String updateApplicationTitle;
     public static String applicationUpateMessage;
+    public static String themeUpdatePreviewMessage;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

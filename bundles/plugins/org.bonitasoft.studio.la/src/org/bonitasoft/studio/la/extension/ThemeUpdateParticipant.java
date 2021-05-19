@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bonitasoft.plugin.analyze.report.model.Artifact;
 import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.application.operation.extension.participant.preview.PreviewResultImpl;
 import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate;
@@ -40,7 +41,8 @@ public class ThemeUpdateParticipant implements ExtensionUpdateParticipant {
     private ApplicationCollector applicationCollector;
     private PreviewResultImpl previewResult;
 
-    public ThemeUpdateParticipant(List<DependencyUpdate> dependenciesUpdates, ThemeArtifactProvider themeArtifactProvider,
+    public ThemeUpdateParticipant(List<DependencyUpdate> dependenciesUpdates,
+            ThemeArtifactProvider themeArtifactProvider,
             ApplicationCollector applicationCollector) {
         this.dependenciesUpdates = dependenciesUpdates;
         this.themeArtifactProvider = themeArtifactProvider;
@@ -62,25 +64,56 @@ public class ThemeUpdateParticipant implements ExtensionUpdateParticipant {
 
         previewResult = new PreviewResultImpl();
 
-        List<String> newThemeIds = dependenciesUpdates.stream()
+        List<Theme> newThemes = dependenciesUpdates.stream()
                 .map(DependencyUpdate::getUpdatedDependency)
                 .filter(Objects::nonNull)
                 .map(themeArtifactProvider::findTheme)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(Theme::getName)
                 .collect(Collectors.toList());
 
         for (var currentTheme : currentThemes) {
-            if (!newThemeIds.contains(currentTheme.getName())) {
+            if (hasBeenRemoved(currentTheme, newThemes)) {
                 var appsToRefactor = applicationCollector.findApplications(currentTheme.getName());
                 if (!appsToRefactor.isEmpty()) {
                     previewResult.addChange(new ThemeRemovedChange(currentTheme, appsToRefactor));
                 }
+            } else {
+                newThemes.stream()
+                        .filter(t -> existsInSameVersion(t.getArtifact(), currentTheme.getArtifact()) || existsInAnotherVersion(t.getArtifact(), currentTheme.getArtifact()))
+                        .findFirst()
+                        .filter(t -> !Objects.equals(t.getName(), currentTheme.getName()))
+                        .ifPresent(theme -> {
+                            var appsToRefactor = applicationCollector.findApplications(currentTheme.getName());
+                            if (!appsToRefactor.isEmpty()) {
+                                previewResult.addChange(new ThemeUpdateChange(currentTheme, theme, appsToRefactor));
+                            }
+                        });
             }
         }
-
         return previewResult;
+    }
+
+    private boolean hasBeenRemoved(Theme currentTheme, List<Theme> newThemes) {
+        return newThemes.stream().map(Theme::getArtifact)
+                .noneMatch(a -> existsInSameVersion(a, currentTheme.getArtifact())
+                        || existsInAnotherVersion(a, currentTheme.getArtifact()));
+    }
+
+    private boolean existsInAnotherVersion(Artifact updatedArtifact, Artifact currentArtifact) {
+        return sameGAC(updatedArtifact, currentArtifact)
+                && !currentArtifact.getVersion().equals(updatedArtifact.getVersion());
+    }
+
+    private boolean existsInSameVersion(Artifact updatedArtifact, Artifact currentArtifact) {
+        return sameGAC(updatedArtifact, currentArtifact)
+                && currentArtifact.getVersion().equals(updatedArtifact.getVersion());
+    }
+
+    private boolean sameGAC(Artifact updatedArtifact, Artifact currentArtifact) {
+        return currentArtifact.getGroupId().equals(updatedArtifact.getGroupId())
+                && currentArtifact.getArtifactId().equals(updatedArtifact.getArtifactId())
+                && Objects.equals(currentArtifact.getClassifier(), updatedArtifact.getClassifier());
     }
 
     @Override
@@ -98,6 +131,7 @@ public class ThemeUpdateParticipant implements ExtensionUpdateParticipant {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+
     }
 
     @Override
