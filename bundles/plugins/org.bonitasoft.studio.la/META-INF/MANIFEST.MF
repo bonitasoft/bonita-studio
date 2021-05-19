@@ -38,7 +38,8 @@ Require-Bundle: org.bonitasoft.studio.common.repository;bundle-version="7.5.0",
  org.json,
  org.eclipse.e4.core.commands;bundle-version="0.12.900",
  org.bonitasoft.studio.rest.api.extension,
- org.apache.commons.io
+ org.apache.commons.io,
+ org.eclipse.osgi.services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.activation;version="1.1.0",
  javax.annotation;version="1.2.0",

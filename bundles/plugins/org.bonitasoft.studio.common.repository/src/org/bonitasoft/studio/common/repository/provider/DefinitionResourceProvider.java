@@ -125,7 +125,7 @@ public class DefinitionResourceProvider implements EventHandler {
         this.bundle = bundle;
         categoryImageRegistry = createImageRegistry();
         definitionImageRegistry = createImageRegistry();
-        eventBroker().subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);;
+        eventBroker().subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);
     }
 
     private IEventBroker eventBroker() {

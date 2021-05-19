@@ -208,16 +208,6 @@ public class UpdateExtensionOperationDecorator {
     }
 
     private void revertLocalStore(LocalDependenciesStore localDependencyStore) {
-        // Restore jar in local store if any
-        dependenciesUpdates.stream()
-                .map(DependencyUpdate::getCurrentDependency)
-                .forEach(dep -> {
-                    try {
-                        localDependencyStore.revert(dep);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                });
         //remove installed local dependencies if any
         dependenciesUpdates
                 .stream()
@@ -226,6 +216,17 @@ public class UpdateExtensionOperationDecorator {
                 .forEach(dep -> {
                     try {
                         localDependencyStore.remove(dep);
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
+        
+        //THEN Restore jar in local store if any
+        dependenciesUpdates.stream()
+                .map(DependencyUpdate::getCurrentDependency)
+                .forEach(dep -> {
+                    try {
+                        localDependencyStore.revert(dep);
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
                     }
