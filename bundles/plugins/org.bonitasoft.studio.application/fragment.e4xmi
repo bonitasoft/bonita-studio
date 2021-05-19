@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_H5K40KiaEemxstQeqTvXDA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_KLgu4KiaEemxstQeqTvXDA" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_yyuWEK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.command.deployArtifacts" commandName="%deployArtifacts" description="Deploy a subpart of the project"/>
+    <elements xsi:type="commands:Command" xmi:id="_FixQMORFEemD3fo8ojg-gQ" elementId="org.bonitasoft.studio.application.command.releaseNote" commandName="%releaseNote"/>
+    <elements xsi:type="commands:Command" xmi:id="_1hVzYAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFile.command" commandName="%newFile"/>
+    <elements xsi:type="commands:Command" xmi:id="_4djs4AYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.command" commandName="%newFolder"/>
+    <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace">
+      <parameters xmi:id="_RXxrgIrzEeuz4LM5CxiSwg" elementId="types" name="types"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
+    <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension">
+      <parameters xmi:id="_fsjMYIf4EeuMD4DgJLHr5Q" elementId="groupId" name="groupId"/>
+      <parameters xmi:id="_j47tQIf4EeuMD4DgJLHr5Q" elementId="artifactId" name="artifactId"/>
+      <parameters xmi:id="_ZYhswIf8EeuMD4DgJLHr5Q" elementId="type" name="type"/>
+      <parameters xmi:id="_bUiGcIf8EeuMD4DgJLHr5Q" elementId="classifier" name="classifier"/>
+      <parameters xmi:id="_UWTBYIieEeuMD4DgJLHr5Q" elementId="isLocal" name="isLocal"/>
+      <parameters xmi:id="_c31qoJIgEeuW_ZFfWjqHyA" elementId="version" name="version"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_hz1wgIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.command" commandName="%editProjectMetadata"/>
+    <elements xsi:type="commands:Command" xmi:id="_-TWXoIcpEeu7ZtnjXqJ_Tg" elementId="org.bonitasoft.studio.application.newproject.command" commandName="%newProject"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_NR20wKiaEemxstQeqTvXDA" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_6p_NQK0kEem8O8pWB8c8Fg" elementId="org.bonitasoft.studio.application.handler.deployArtifacts" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.DeployArtifactsHandler" command="_yyuWEK0kEem8O8pWB8c8Fg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_LoyzQORFEemD3fo8ojg-gQ" elementId="org.bonitasoft.studio.application.handler.releaseNote" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenReleaseNoteHandler" command="_FixQMORFEemD3fo8ojg-gQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_6Dw1sAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFile.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewFileHandler" command="_1hVzYAYDEeq5-uUHHFYRTg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_89teUAYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewFolderHandler" command="_4djs4AYDEeq5-uUHHFYRTg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_Nlng4GIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenMarketplaceHandler" command="_Cv2RMGIUEeuoz-OKLL5EHA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_YIwPgGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.OpenExtensionViewHandler" command="_RH3msGrHEeuYIIt6RJgX4w"/>
+    <elements xsi:type="commands:Handler" xmi:id="_Nnn2oHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.ImportExtensionHandler" command="_Dh48wHwsEeuY1OE6mEePfw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_sV7PMIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.EditProjectMetadataHandler" command="_hz1wgIGLEeuVgbtqm9bD3Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_ERZDYIcqEeu7ZtnjXqJ_Tg" elementId="org.bonitasoft.studio.application.newproject.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.NewProjectHandler" command="_-TWXoIcpEeu7ZtnjXqJ_Tg"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7OSHQLFyEeuykI2WNDJFjw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_Cpy2kLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.definition.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.definition.DefinitionUpdateParticipantFactory"/>
+    <elements xsi:type="application:Addon" xmi:id="_hKL2wLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.configuration.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdateParticipantFactory"/>
+  </fragments>
+</fragment:ModelFragments>
