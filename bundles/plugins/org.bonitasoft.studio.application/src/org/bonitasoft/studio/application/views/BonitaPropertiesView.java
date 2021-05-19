@@ -62,8 +62,14 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
                 initPage((IPageBookViewPage) page);
             }
             page.createControl(getPageBook());
-            page.selectionChanged(part,
-                    part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
+            if (part.getSite() != null
+                    && part.getSite().getPage() != null
+                    && part.getSite().getPage().getActiveEditor() != null
+                    && part.getSite().getPage().getActiveEditor().getSite() != null
+                    && part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider() != null) {
+                page.selectionChanged(part,
+                        part.getSite().getPage().getActiveEditor().getSite().getSelectionProvider().getSelection());
+            }
             return new PageRec(part, page);
         }
         return null;
