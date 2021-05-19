@@ -42,6 +42,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -68,7 +69,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.subTask(Messages.migratingUID);
+        monitor.beginTask(Messages.migratingUID, IProgressMonitor.UNKNOWN);
         PageDesignerURLFactory urlBuilder = pageDesignerURLBuilder == null
                 ? new PageDesignerURLFactory(getPreferenceStore()) : pageDesignerURLBuilder;
         WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance()
@@ -85,27 +86,34 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
     private void migrateUnusedWidgets(PageDesignerURLFactory urlBuilder, WebWidgetRepositoryStore widgetStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         List<WebWidgetFileStore> children = widgetStore.getChildren();
+        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
         for (WebWidgetFileStore fileStore : children) {
             if (fileStore.validate().matches(IStatus.WARNING)) {
-                status.add(migrateWidget(urlBuilder, fileStore, monitor));
+                status.add(migrateWidget(urlBuilder, fileStore, subMonitor));
             }
+            subMonitor.worked(1);
         }
+        subMonitor.done();
     }
 
     private void migrateUnusedFragments(PageDesignerURLFactory urlBuilder, WebFragmentRepositoryStore repositoryStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         List<WebFragmentFileStore> children = repositoryStore.getChildren();
+        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
         for (WebFragmentFileStore fileStore : children) {
             if (fileStore.validate().matches(IStatus.WARNING)) {
-                status.add(migrateFragment(urlBuilder, fileStore, monitor));
+                status.add(migrateFragment(urlBuilder, fileStore, subMonitor));
             }
+            subMonitor.worked(1);
         }
+        subMonitor.done();
     }
 
     private IStatus migrateFragment(PageDesignerURLFactory urlBuilder, WebFragmentFileStore fileStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         URI uri = null;
         String fragmentId = fileStore.getId();
+        monitor.subTask(String.format(Messages.migratingFragment, fragmentId));
         try {
             uri = urlBuilder.migrateFragment(fragmentId).toURI();
         } catch (MalformedURLException | URISyntaxException e1) {
@@ -131,6 +139,7 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
             IProgressMonitor monitor) throws InvocationTargetException {
         URI uri = null;
         String widgetId = fileStore.getId();
+        monitor.subTask(String.format(Messages.migratingCustomWidget, widgetId));
         try {
             uri = urlBuilder.migrateWidget(widgetId).toURI();
         } catch (MalformedURLException | URISyntaxException e1) {
@@ -155,18 +164,19 @@ public class MigrateUIDOperation implements IRunnableWithStatus {
     protected void migrate(IProgressMonitor monitor, PageDesignerURLFactory urlBuilder,
             WebPageRepositoryStore repositoryStore) throws InvocationTargetException {
         List<WebPageFileStore> children = repositoryStore.getChildren();
-        monitor.beginTask("", children.size());
+        SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.migratingUID, children.size());
         for (WebPageFileStore fileStore : children) {
-            status.add(migratePage(urlBuilder, fileStore, monitor));
-            monitor.worked(1);
+            status.add(migratePage(urlBuilder, fileStore, subMonitor));
+            subMonitor.worked(1);
         }
+        subMonitor.done();
     }
 
     protected IStatus migratePage(PageDesignerURLFactory urlBuilder, WebPageFileStore fileStore,
             IProgressMonitor monitor) throws InvocationTargetException {
         URI uri = null;
         String pageId = fileStore.getId();
-        monitor.setTaskName(String.format(Messages.migratingPage, pageId));
+        monitor.subTask(String.format(Messages.migratingPage, pageId));
         try {
             uri = urlBuilder.migratePage(pageId).toURI();
         } catch (MalformedURLException | URISyntaxException e1) {

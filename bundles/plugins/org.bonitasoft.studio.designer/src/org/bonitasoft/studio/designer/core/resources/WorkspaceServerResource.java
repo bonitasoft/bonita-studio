@@ -24,11 +24,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.extension.ILockedResourceStatus;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.restlet.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
@@ -43,6 +52,7 @@ public class WorkspaceServerResource extends ServerResource {
     public static final String ACTION_ATTRIBUTE = "action";
     protected static final String FILEPATH_ATTRIBUTE = "filePath";
     protected static final String GET_LOCK_STATUS = "lockStatus";
+    private static boolean enabled = true;
 
     private String action;
     private IRepository repository;
@@ -61,6 +71,29 @@ public class WorkspaceServerResource extends ServerResource {
             throw new IllegalArgumentException("action attribute is missing from request");
         }
         filePath = getAttribute(FILEPATH_ATTRIBUTE);
+    }
+
+    public static void disable() {
+        enabled = false;
+    }
+
+    public static void enable() {
+        new WorkspaceJob("Refreshing UID resources...") {
+            
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+                WebPageRepositoryStore pageRepositoryStore = currentRepository.getRepositoryStore(WebPageRepositoryStore.class);
+                pageRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                WebFragmentRepositoryStore fragmentRepositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(WebFragmentRepositoryStore.class);
+                fragmentRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                WebWidgetRepositoryStore widgetRepositoryStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(WebWidgetRepositoryStore.class);
+                widgetRepositoryStore.getResource().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                AbstractFileStore.refreshExplorerView();
+                return org.eclipse.core.runtime.Status.OK_STATUS;
+            }
+        }.schedule();
+        enabled = true;
     }
 
     protected LockStatusOperationFactory newLockStatusOperationFactory() {
@@ -89,9 +122,11 @@ public class WorkspaceServerResource extends ServerResource {
 
     @Post("text/plain")
     public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException {
-        checkArgument(!isNullOrEmpty(filePath), "filePath is null or empty");
-        final IRepositoryFileStore fileStore = toFileStore(filePath);
-        repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), fileStore);
+        if (enabled) {
+            checkArgument(!isNullOrEmpty(filePath), "filePath is null or empty");
+            final IRepositoryFileStore fileStore = toFileStore(filePath);
+            repositoryNotifier.dispatch(WorkspaceAPIEvent.valueOf(action), fileStore);
+        }
     }
 
     @Get

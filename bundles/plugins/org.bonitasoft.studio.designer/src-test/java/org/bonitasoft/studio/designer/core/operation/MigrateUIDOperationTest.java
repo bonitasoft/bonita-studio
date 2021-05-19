@@ -1,6 +1,8 @@
 package org.bonitasoft.studio.designer.core.operation;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -16,6 +18,7 @@ import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.restlet.representation.Representation;
@@ -87,9 +90,9 @@ public class MigrateUIDOperationTest {
         WebPageFileStore fStore3 = mock(WebPageFileStore.class);
         when(repositoryStore.getChildren()).thenReturn(Arrays.asList(fStore1, fStore2, fStore3));
         op.migrate(monitor, urlBuilder, repositoryStore);
-        verify(op).migratePage(urlBuilder, fStore1, monitor);
-        verify(op).migratePage(urlBuilder, fStore2, monitor);
-        verify(op).migratePage(urlBuilder, fStore3, monitor);
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
+        verify(op).migratePage(eq(urlBuilder), eq(fStore1), notNull(IProgressMonitor.class));
     }
 
 }

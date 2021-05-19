@@ -32,6 +32,7 @@ import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
+import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFolder;
@@ -163,6 +164,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
+                WorkspaceServerResource.disable();
                 MigrateUIDOperation migrateUIDOperation = new MigrateUIDOperation();
                 migrateUIDOperation.run(monitor);
                 if (Objects.equals(migrateUIDOperation.getStatus().getSeverity(), IStatus.ERROR)) {
@@ -170,6 +172,8 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                 }
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new MigrationException(e);
+            }finally {
+                WorkspaceServerResource.enable();
             }
         }
     }
