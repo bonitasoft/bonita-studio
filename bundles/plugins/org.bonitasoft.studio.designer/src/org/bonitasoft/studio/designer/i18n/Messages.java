@@ -86,6 +86,8 @@ public class Messages extends NLS {
     public static String UIDMigrationFailedMessage;
     public static String createFragmentFailed;
     public static String creatingNewFragment;
+    public static String migratingFragment;
+    public static String migratingCustomWidget;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

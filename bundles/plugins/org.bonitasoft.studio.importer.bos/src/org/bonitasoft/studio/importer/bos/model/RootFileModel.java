@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -59,9 +60,9 @@ public class RootFileModel extends ImportStoreModel {
                 IFile file = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile(getName());
                 try {
                     if (file.exists()) {
-                        file.setContents(data.getInputStream(), IResource.KEEP_HISTORY, monitor);
+                        file.setContents(data.getInputStream(), IResource.KEEP_HISTORY, new NullProgressMonitor());
                     } else {
-                        file.create(data.getInputStream(), false, monitor);
+                        file.create(data.getInputStream(), false, new NullProgressMonitor());
                     }
                 } catch (CoreException | IOException e) {
                     BonitaStudioLog.error(e);
