@@ -116,7 +116,7 @@
 									<type>zip</type>
 									<classifier>all</classifier>
 								</dependency>
-								
+
 								<!--LDAP CONNECTORS -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
