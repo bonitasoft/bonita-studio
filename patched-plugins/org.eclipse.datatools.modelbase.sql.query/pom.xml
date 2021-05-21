@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>patched-plugins</artifactId>
-    <version>7.13.0-SNAPSHOT</version>
+    <version>7.13.0.W21</version>
   </parent>
   <groupId>org.eclipse.datatools.plugins</groupId>
   <artifactId>org.eclipse.datatools.modelbase.sql.query</artifactId>
