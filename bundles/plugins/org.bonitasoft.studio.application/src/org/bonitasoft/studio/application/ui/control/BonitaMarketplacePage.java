@@ -33,6 +33,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -178,7 +179,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
                     filterDependenciesByType(filteredDependencies);
                     displayFilteredDependencies(filteredDependencies);
                 } catch (InvocationTargetException | InterruptedException e) {
-                    new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
+                    new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
+                            e);
                 }
             });
         }
@@ -314,7 +316,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private boolean matchSearch(BonitaArtifactDependency dep, String searchValue) {
         return dep.getName().toLowerCase().contains(searchValue.toLowerCase())
-                || dep.getDescription().toLowerCase().contains(searchValue.toLowerCase());
+                || (Strings.hasText(dep.getDescription()) && dep.getDescription().toLowerCase().contains(searchValue.toLowerCase()));
     }
 
     private void createNoResultFoundLabel(Composite parent) {
@@ -389,7 +391,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
         Label description = createLabel(contentComposite, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        description.setText(dep.getDescription());
+        if (Strings.hasText(dep.getDescription())) {
+            description.setText(dep.getDescription());
+        }
 
         if (updatable) {
             createUpdatableComposite(contentComposite);

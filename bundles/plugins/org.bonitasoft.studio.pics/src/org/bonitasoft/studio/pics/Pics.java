@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -109,7 +110,7 @@ public class Pics extends AbstractUIPlugin {
         return getImage(imageName, plugin);
     }
 
-    public static Image getImage(final String imageName, final AbstractUIPlugin plugin) {
+    public static Image getImage(final String imageName, final Plugin plugin) {
         if (plugin == null) {
             return null;
         }
@@ -121,7 +122,7 @@ public class Pics extends AbstractUIPlugin {
         return null;
     }
 
-    public static ImageDescriptor getImageDescriptor(final String imageName, final AbstractUIPlugin plugin) {
+    public static ImageDescriptor getImageDescriptor(final String imageName, final Plugin plugin) {
         if (plugin == null) {
             return ImageDescriptor.getMissingImageDescriptor();
         }

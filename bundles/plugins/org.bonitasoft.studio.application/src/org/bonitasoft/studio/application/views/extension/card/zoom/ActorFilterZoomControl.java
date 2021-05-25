@@ -23,11 +23,24 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.BonitaPropertiesView;
+import org.bonitasoft.studio.application.views.extension.card.zoom.usage.ActorFilterUsagesControlSupplier;
+import org.bonitasoft.studio.application.views.extension.card.zoom.usage.ConnectorUsagesControlSupplier;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
+import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.model.process.Element;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.IPage;
 
 public class ActorFilterZoomControl extends ConnectorZoomControl {
 
@@ -61,6 +74,31 @@ public class ActorFilterZoomControl extends ConnectorZoomControl {
     }
 
     @Override
+    protected void selectElement(DiagramEditor editor, Element element) {
+        IGraphicalEditPart findEditPart = GMFTools.findEditPart(editor.getDiagramEditPart(),
+                element);
+        if (findEditPart != null) {
+            Display.getDefault().syncExec(() -> editor.getDiagramGraphicalViewer().select(findEditPart));
+            IWorkbenchPage page = editor.getEditorSite().getPage();
+            String generalViewId = "org.bonitasoft.studio.views.properties.process.general";
+            BonitaPropertiesView executionView = (BonitaPropertiesView) page.findView(generalViewId);
+            if (executionView != null) {
+                try {
+                    page.showView(generalViewId);
+                    IPage currentPage = executionView.getCurrentPage();
+                    if (currentPage instanceof BonitaPropertiesBrowserPage) {
+                        ((BonitaPropertiesBrowserPage) currentPage).selectionChanged(editor,
+                                editor.getDiagramGraphicalViewer().getSelection());
+                        ((BonitaPropertiesBrowserPage) currentPage).setSelectedTab("tab.actors");
+                    }
+                } catch (PartInitException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+    }
+
+    @Override
     protected String getDetailsTitle() {
         return Messages.actorFilters;
     }
@@ -68,6 +106,11 @@ public class ActorFilterZoomControl extends ConnectorZoomControl {
     @Override
     protected String getDetailsHint() {
         return String.format(Messages.actorFiltersHint, bonitaDep.getName());
+    }
+
+    @Override
+    protected ConnectorUsagesControlSupplier getUsagesControlSupplier(ExtendedConnectorDefinition definition) {
+        return new ActorFilterUsagesControlSupplier(definition);
     }
 
 }
