@@ -31,9 +31,10 @@ public class BotMavenRepositoriesConfigurationPage extends BotMavenConfiguration
         return this;
     }
 
-    public BotMavenRepositoriesConfigurationPage addRepository(String name) {
+    public BotMavenRepositoriesConfigurationPage addRepository(String id) {
         bot.toolbarButtonWithId(RepositoriesComposite.ADD_REPOSITORY_BUTTON_ID).click();
-        setName(RepositoriesComposite.DEFAULT_REPOSITORY_NAME, name);
+        setId(RepositoriesComposite.DEFAULT_REPOSITORY_NAME, id);
+        setName(RepositoriesComposite.DEFAULT_REPOSITORY_NAME, id);
         return this;
     }
 
