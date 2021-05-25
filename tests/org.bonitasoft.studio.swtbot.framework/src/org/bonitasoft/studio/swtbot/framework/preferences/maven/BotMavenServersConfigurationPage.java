@@ -43,7 +43,7 @@ public class BotMavenServersConfigurationPage extends BotMavenConfigurationPage 
 
     public BotMavenServersConfigurationPage setId(String oldId, String newId) {
         getServersTable().select(oldId);
-        bot.comboBox().setSelection(newId);
+        bot.comboBox().setText(newId);
         return this;
     }
 

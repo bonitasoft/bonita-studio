@@ -96,11 +96,11 @@ public class MavenConfigurationIT {
         BotMavenConfigurationPage configurationPage = botPreferencesDialog.openMavenConfigurationPage();
 
         configurationPage.repositories()
-                .addRepository(REPOSITORY_NAME)
-                .setId(REPOSITORY_NAME, REPOSITORY_ID)
-                .setUrl(REPOSITORY_NAME, REPOSITORY_URL)
-                .setReleases(REPOSITORY_NAME, true, "always", "fail")
-                .setSnapshots(REPOSITORY_NAME, false, "never", "ignore");
+                .addRepository(REPOSITORY_ID)
+                .setName(REPOSITORY_ID, REPOSITORY_NAME)
+                .setUrl(REPOSITORY_ID, REPOSITORY_URL)
+                .setReleases(REPOSITORY_ID, true, "always", "fail")
+                .setSnapshots(REPOSITORY_ID, false, "never", "ignore");
 
         configurationPage.servers()
                 .createMasterPasswordIfEmpty()
