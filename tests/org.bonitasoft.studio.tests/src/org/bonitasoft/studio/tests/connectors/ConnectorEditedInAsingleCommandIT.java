@@ -36,7 +36,7 @@ public class ConnectorEditedInAsingleCommandIT {
 
     @Before
     public void setUp() throws Exception {
-        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2")
+        new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3")
                 .run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
@@ -49,7 +49,7 @@ public class ConnectorEditedInAsingleCommandIT {
                 .selectExecutionTab()
                 .selectConnectorsInTab();
         final BotAddConnectorDialog addConnector = selectConnectorsTab.addConnector();
-        addConnector.selectConnectorInCategory("Script", "Groovy 2.4");
+        addConnector.selectConnectorInCategory("Script", "Groovy");
         addConnector.next().setName("testSingleTransaction");
         new BotScriptExpressionEditor(bot, addConnector.next().editScript(0)).setName("scriptName")
                 .setScriptContent("dummy content").ok();
@@ -57,7 +57,7 @@ public class ConnectorEditedInAsingleCommandIT {
         botProcessDiagramPerspective.activeProcessDiagramEditor().getGmfEditor().save();
 
         final BotEditConnectorDialog botEditConnectorDialog = selectConnectorsTab.editConnector(0,
-                "Groovy 2.4 (1.0.1)");
+                "Groovy (1.0.1)");
         botEditConnectorDialog.setName("updatedName");
         botEditConnectorDialog.next().finish();
 

@@ -75,7 +75,7 @@ public class DeployWizardIT {
 
         BotDeployDialog botDeployDialog = botApplicationWorkbenchWindow.importBOSArchive()
                 .setArchive(DeployWizardIT.class.getResource("/DeployAll-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .importAndDeploy();

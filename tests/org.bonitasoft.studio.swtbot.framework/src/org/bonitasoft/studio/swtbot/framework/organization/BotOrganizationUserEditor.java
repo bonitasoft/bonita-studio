@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.swtbot.framework.organization;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WithId.withId;
+
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -43,14 +45,11 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class BotOrganizationUserEditor extends BotBase {
 
-    private BotOrganizationEditor botOrganizationEditor;
     private SWTBotMultiPageEditor editor;
 
-    public BotOrganizationUserEditor(SWTGefBot bot, SWTBotMultiPageEditor editor,
-            BotOrganizationEditor botOrganizationEditor) {
+    public BotOrganizationUserEditor(SWTGefBot bot, SWTBotMultiPageEditor editor) {
         super(bot);
         this.editor = editor;
-        this.botOrganizationEditor = botOrganizationEditor;
     }
 
     // Make sure that the correct user is selected and the correct data tab too
@@ -80,6 +79,7 @@ public class BotOrganizationUserEditor extends BotBase {
     // Make sure that the correct user is selected and the correct data tab too
     public BotOrganizationUserEditor setCustomInformation(String name, String value) {
         getCustomInfoUserTable().getTableItem(name).click(1);
+        bot.waitUntil(Conditions.waitForWidget(withId(InformationSection.CUSTOM_INFO_VALUE_TEXT_ID)));
         SWTBotText botText = bot.textWithId(InformationSection.CUSTOM_INFO_VALUE_TEXT_ID);
         botText.setText(value);
         botText.pressShortcut(Keystrokes.CR);
@@ -233,11 +233,9 @@ public class BotOrganizationUserEditor extends BotBase {
     }
 
     public BotOrganizationUserEditor expandCustomInfoSection() {
-        bot.getDisplay().syncExec(() -> {
-            bot.widgets(WidgetMatcherFactory.widgetOfType(Section.class)).stream()
-                    .filter(section -> Objects.equals(section.getText(), Messages.manageCustomInfo))
-                    .forEach(section -> section.setExpanded(true));
-        });
+        bot.getDisplay().syncExec(() -> bot.widgets(WidgetMatcherFactory.widgetOfType(Section.class)).stream()
+                .filter(section -> Objects.equals(section.getText(), Messages.manageCustomInfo))
+                .forEach(section -> section.setExpanded(true)));
         bot.waitUntil(new ConditionBuilder()
                 .withTest(() -> {
                     try {

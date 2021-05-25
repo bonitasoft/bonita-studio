@@ -14,10 +14,12 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +47,7 @@ import org.eclipse.m2e.core.project.IMavenProjectFacade;
 @Creatable
 public class MavenProjectHelper {
 
-    private MavenXpp3Reader pomReader = new MavenXpp3Reader();
+    private static final MavenXpp3Reader POM_READER = new MavenXpp3Reader();
     private MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
     public Model getMavenModel(IProject project) throws CoreException {
@@ -53,8 +55,12 @@ public class MavenProjectHelper {
         if (!pomFile.exists()) {
             return null;
         }
-        try (InputStream is = pomFile.getContents()) {
-            return pomReader.read(is);
+        return readModel(pomFile.getLocation().toFile());
+    }
+
+    public static Model readModel(File pomFile) throws CoreException {
+        try (InputStream is = Files.newInputStream(pomFile.toPath())) {
+            return POM_READER.read(is);
         } catch (IOException | XmlPullParserException e) {
             throw new CoreException(new Status(IStatus.ERROR, MavenModelOperation.class, null, e));
         }

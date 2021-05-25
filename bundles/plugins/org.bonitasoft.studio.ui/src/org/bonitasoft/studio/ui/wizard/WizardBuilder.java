@@ -177,7 +177,10 @@ public class WizardBuilder<T> {
         };
         dialog.addPageChangedListener(
                 event -> updateNextAndBackButtonLabel((IWizardPage) event.getSelectedPage(), dialog));
-        dialog.open();
+        int result = dialog.open();
+        if(IDialogConstants.CANCEL_ID == result) {
+            return Optional.empty();
+        }
         return finishResult;
     }
 

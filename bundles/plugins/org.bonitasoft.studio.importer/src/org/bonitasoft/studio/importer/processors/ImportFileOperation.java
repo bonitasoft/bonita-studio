@@ -48,7 +48,6 @@ public class ImportFileOperation implements IRunnableWithProgress {
     private IStatus status;
     private ToProcProcessor processor;
     private SkippableProgressMonitorJobsDialog progressDialog;
-    private String repository;
 
     public List<DiagramFileStore> getFileStoresToOpen() {
         return fileStoresToOpen;
@@ -76,11 +75,7 @@ public class ImportFileOperation implements IRunnableWithProgress {
             InterruptedException {
         monitor.beginTask(Messages.importProcessProgressDialog, IProgressMonitor.UNKNOWN);
         processor = importerFactory.createProcessor(fileToImport.getName());
-        if (repository != null) {
-            processor.setRepository(repository);
-        } else {
-            processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().getName());
-        }
+        processor.setRepository(RepositoryManager.getInstance().getCurrentRepository().getName());
         processor.setProgressDialog(progressDialog);
         try {
             processor.createDiagram(fileToImport.toURI().toURL(), monitor);
@@ -137,10 +132,6 @@ public class ImportFileOperation implements IRunnableWithProgress {
 
     public ImportStatusDialogHandler getImportStatusDialogHandler(final IStatus status) {
         return processor.getImportStatusDialogHandler(status);
-    }
-
-    public void setRepositroy(String repository) {
-        this.repository = repository;
     }
 
 }

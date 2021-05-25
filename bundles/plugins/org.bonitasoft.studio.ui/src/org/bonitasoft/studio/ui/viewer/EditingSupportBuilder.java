@@ -34,6 +34,7 @@ public class EditingSupportBuilder<T> {
     private Function<T, Object> valueProvider = Object::toString;
     private BiConsumer<T, Object> valueUpdater = (e, v) -> Function.identity();
     private String widgetId;
+    private boolean reuseCellEditor = true;
 
     public EditingSupportBuilder(ColumnViewer viewer) {
         this.viewer = viewer;
@@ -57,6 +58,11 @@ public class EditingSupportBuilder<T> {
 
     public EditingSupportBuilder<T> withCanEditProvider(Predicate<T> canEditFunction) {
         this.canEditFunction = canEditFunction;
+        return this;
+    }
+    
+    public EditingSupportBuilder<T> doNotReuseCellEditor() {
+        this.reuseCellEditor = false;
         return this;
     }
 
@@ -83,7 +89,7 @@ public class EditingSupportBuilder<T> {
 
             @Override
             protected CellEditor getCellEditor(Object element) {
-                if(editor == null) {
+                if(editor == null || !reuseCellEditor) {
                     editor = cellEditorFunction.apply((T) element);
                     Control control = editor.getControl();
                     if (control != null && control.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY) == null && widgetId != null) {

@@ -64,7 +64,7 @@ public class TestTimer implements SWTBotConstants {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestTimer.class.getResource("TestTimer_1_0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

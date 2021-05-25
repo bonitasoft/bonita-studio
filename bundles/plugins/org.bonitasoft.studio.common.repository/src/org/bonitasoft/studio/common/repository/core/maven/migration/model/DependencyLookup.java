@@ -45,6 +45,7 @@ public class DependencyLookup {
     private File tmpFile;
     private boolean isUsed;
     private InputStreamSupplier inputStreamSupplier;
+    private ConflictVersion conflictVersion;
 
     public DependencyLookup(String fileName,
             String sha1,
@@ -222,11 +223,11 @@ public class DependencyLookup {
     public void setVersion(String version) {
         gav.setVersion(version);
     }
-    
+
     public void setType(String type) {
         gav.setType(type);
     }
-    
+
     public void setClassifier(String classifier) {
         gav.setClassifier(classifier);
     }
@@ -255,9 +256,12 @@ public class DependencyLookup {
         Dependency dependency = new Dependency();
         dependency.setArtifactId(gav.getArtifactId());
         dependency.setVersion(gav.getVersion());
+        if(getConflictVersion() != null) {
+            dependency.setVersion(getConflictVersion().getSelectedVersion());
+        }
         dependency.setGroupId(gav.getGroupId());
         dependency.setClassifier(gav.getClassifier());
-        if(!"jar".equals(gav.getType())) {
+        if (!"jar".equals(gav.getType())) {
             dependency.setType(gav.getType());
         }
         dependency.setScope(gav.getScope());
@@ -274,6 +278,18 @@ public class DependencyLookup {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setConflict(ConflictVersion conflictVersion) {
+        this.conflictVersion = conflictVersion;
+    }
+
+    public ConflictVersion getConflictVersion() {
+        return conflictVersion;
+    }
+    
+    public boolean isConflicting() {
+        return getConflictVersion() != null && getConflictVersion().getStatus() == ConflictVersion.Status.CONFLICTING;
     }
 
 }

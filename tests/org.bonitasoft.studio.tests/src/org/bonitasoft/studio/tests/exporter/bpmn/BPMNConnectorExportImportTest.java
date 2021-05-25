@@ -217,7 +217,7 @@ public class BPMNConnectorExportImportTest {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         BPMNConnectorExportImportTest.class.getResource("diagramToTestConnectorBPMNImportExport-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

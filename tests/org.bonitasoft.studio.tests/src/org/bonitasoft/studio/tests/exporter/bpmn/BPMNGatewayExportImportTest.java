@@ -101,7 +101,7 @@ public class BPMNGatewayExportImportTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNGatewayExportImportTest.class.getResource("diagramToTestGateways-6.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

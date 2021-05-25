@@ -78,7 +78,7 @@ public class BPMNExportTests {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNExportTests.class.getResource("TestExportToBPMNDiagram_1_0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

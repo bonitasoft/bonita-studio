@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLookupOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -181,9 +182,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 dependenciesLookup.stream()
                         .forEach(dl -> dl.setSelected(true));
             }
-            
+
             dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
+                    .filter(dl -> dl.getConflictVersion() == null 
+                                        || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
                     .map(dl -> installLocalDependency(dl, localDependencyStore))
                     .map(DependencyLookup::toMavenDependency)
                     .forEach(dependencies::add);
@@ -285,6 +288,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             LocalDependenciesStore localDependencyStore) {
         try {
             localDependencyStore.install(dependencyLookup);
+            localDependencyStore.deleteBackup(dependencyLookup.toMavenDependency());
         } catch (CoreException e) {
             status.add(e.getStatus());
         }
@@ -297,8 +301,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         try {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
-                    .filter(dep -> mavenProjectHelper.findDependency(mavenModel, dep).isEmpty())
-                    .forEach(mavenModel::addDependency);
+                    .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper));
             mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
@@ -310,6 +313,23 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         } finally {
             monitor.done();
         }
+    }
+
+    private void updateProjectModel(Dependency dep, Model mavenModel, MavenProjectHelper mavenProjectHelper) {
+        // Only keep a unique version of the dependency
+        mavenProjectHelper.findDependencyInAnyVersion(mavenModel, dep)
+                .ifPresentOrElse(d -> {
+                    if (!Objects.equals(d.getVersion(), dep.getVersion())) {
+                        d.setVersion(dep.getVersion());
+                        status.add(ValidationStatus.info(String.format(Messages.dependencyUpdatedStatus,
+                                dep.getGroupId(), dep.getArtifactId(), dep.getVersion())));
+                    }
+                },
+                        () -> {
+                            mavenModel.addDependency(dep);
+                            status.add(ValidationStatus.info(String.format(Messages.dependencyAddedStatus,
+                                    dep.getGroupId(), dep.getArtifactId())));
+                        });
     }
 
     protected ImportBosArchiveStatusBuilder createStatusBuilder() {
@@ -358,7 +378,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                     .forEach(status::add);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-        }finally {
+        } finally {
             WorkspaceServerResource.enable();
         }
     }

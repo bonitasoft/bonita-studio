@@ -123,6 +123,9 @@ public final class Messages extends NLS {
     public static String creatingNewProject;
     public static String invalidFormat;
     public static String loadingCurrentProject;
+    public static String conflicting;
+    public static String ourVersion;
+    public static String theirVersion;
 
     private Messages() {
         // Do not instantiate

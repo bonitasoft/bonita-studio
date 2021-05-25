@@ -121,7 +121,7 @@ public class BPMNExportImportMessageDataTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNExportImportMessageDataTest.class.getResource("MessageDataTestValue-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

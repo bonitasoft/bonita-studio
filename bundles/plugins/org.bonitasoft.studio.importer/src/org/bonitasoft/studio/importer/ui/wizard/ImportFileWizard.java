@@ -56,12 +56,6 @@ public class ImportFileWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
-        final String repositoryName = getImportFileData().getRepositoryName();
-        if (repositoryName != null) {
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put(REPOSITORY_NAME_PARAMETER, repositoryName);
-            new CommandExecutor().executeCommand(SWITCH_TO_REPOSITORY_COMMAND, parameters);
-        }
         return true;
     }
 
@@ -73,7 +67,4 @@ public class ImportFileWizard extends Wizard {
         return importFileData.getImporterFactory();
     }
 
-    public String getRepository() {
-        return getImportFileData().getRepositoryName();
-    }
 }

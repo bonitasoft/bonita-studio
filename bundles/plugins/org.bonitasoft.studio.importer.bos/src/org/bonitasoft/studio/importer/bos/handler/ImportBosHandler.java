@@ -22,6 +22,7 @@ import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.status.BosImportStatusDialogHandler;
+import org.bonitasoft.studio.importer.bos.validator.DependencyLookupConflictHandler;
 import org.bonitasoft.studio.importer.bos.wizard.BosArchiveContentPage;
 import org.bonitasoft.studio.importer.bos.wizard.ExtensionsPreviewPage;
 import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchivePage;
@@ -49,17 +50,20 @@ public class ImportBosHandler {
             RepositoryAccessor repositoryAccessor,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             ExceptionDialogHandler exceptionDialogHandler,
+            SwitchRepositoryStrategy switchRepositoryStrategy,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName") String projectName) {
-
+        this.switchRepositoryStrategy = switchRepositoryStrategy;
         IObservableList<DependencyLookup> dependenciesLookup = new WritableList<>();
         IObservableList<IRepository> mavenRepositories = new WritableList<>();
-        switchRepositoryStrategy = new SwitchRepositoryStrategy(repositoryAccessor);
         String targetProject = switchRepositoryStrategy.getTargetRepository();
         updateRemoteRepositories(targetProject, mavenRepositories, mavenRepositoryRegistry, repositoryAccessor);
+        var dependencyConflictHandler = new DependencyLookupConflictHandler(repositoryAccessor, dependenciesLookup);
         switchRepositoryStrategy
                 .addTargetProjectChangeListener(newTargetProject -> updateRemoteRepositories(newTargetProject,
                         mavenRepositories, mavenRepositoryRegistry, repositoryAccessor));
+        switchRepositoryStrategy
+                .addTargetProjectChangeListener(dependencyConflictHandler::setTargetProject);
         ImportBosArchivePage importBosArchivePage = new ImportBosArchivePage(repositoryAccessor,
                 switchRepositoryStrategy,
                 exceptionDialogHandler,
@@ -69,6 +73,7 @@ public class ImportBosHandler {
                 dependenciesLookup,
                 mavenRepositories,
                 importBosArchivePage,
+                dependencyConflictHandler,
                 exceptionDialogHandler);
         final Optional<ImportArchiveModel> archiveModel = WizardBuilder.<ImportArchiveModel> newWizard()
                 .withTitle(Messages.importBosArchiveTitle)
@@ -129,24 +134,16 @@ public class ImportBosHandler {
 
     protected Optional<ImportArchiveModel> onFinishOperation(ImportBosArchivePage bosArchiveControlSupplier,
             RepositoryAccessor repositoryAccessor, IWizardContainer container) {
-        if (switchRepositoryStrategy.isSwitchRepository()) {
-            if (switchRepositoryStrategy.isCreateNewProject()) {
-                try {
-                    container.run(true, false,
-                            monitor -> {
-                                repositoryAccessor
-                                        .createNewRepository(bosArchiveControlSupplier.getProjectMetadata(), monitor);
-                                reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor);
-                            });
-                } catch (InvocationTargetException | InterruptedException e) {
-                    throw new RuntimeException(Messages.failSwitchRepository, e);
-                }
-            } else {
-                try {
-                    container.run(true, false, this::switchToRepository);
-                } catch (final InvocationTargetException | InterruptedException e) {
-                    throw new RuntimeException(Messages.failSwitchRepository, e);
-                }
+        if (switchRepositoryStrategy.isCreateNewProject()) {
+            try {
+                container.run(true, false,
+                        monitor -> {
+                            repositoryAccessor
+                                    .createNewRepository(bosArchiveControlSupplier.getProjectMetadata(), monitor);
+                            reparseArchive(bosArchiveControlSupplier, repositoryAccessor, monitor);
+                        });
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(Messages.failSwitchRepository, e);
             }
         }
         return Optional.ofNullable(bosArchiveControlSupplier.getArchiveModel());
@@ -217,7 +214,7 @@ public class ImportBosHandler {
             Shell activeShell,
             String repositoryName) {
         int result = -1;
-        if (switchRepositoryStrategy.isSwitchRepository()) {
+        if (switchRepositoryStrategy.isCreateNewProject()) {
             result = new BosImportStatusDialogHandler(operation.getStatus(), store,
                     NLS.bind(Messages.importWithSwitchRepositorySuccessful,
                             repositoryName),

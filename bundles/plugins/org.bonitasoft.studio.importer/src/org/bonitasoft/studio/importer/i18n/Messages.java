@@ -48,7 +48,6 @@ public class Messages extends NLS {
     public static String deploy;
     public static String targetRepository;
     public static String currentRepository;
-    public static String anExistingRepository;
     public static String aNewRepository;
     public static String currentRepositoryName;
     public static String repositoryName;

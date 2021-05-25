@@ -16,55 +16,37 @@ package org.bonitasoft.studio.importer.ui.wizard;
 
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
-import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.mandatoryValidator;
 import static org.bonitasoft.studio.common.jface.databinding.validator.ValidatorFactory.pathValidator;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.ImporterPriorityDisplayComparator;
 import org.bonitasoft.studio.importer.ImporterRegistry;
 import org.bonitasoft.studio.importer.i18n.Messages;
-import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -84,10 +66,6 @@ public class ImportFileWizardPage extends WizardPage {
         this.importFileData = importFileData;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createControl(Composite parent) {
         final DataBindingContext dbc = new DataBindingContext();
@@ -122,11 +100,13 @@ public class ImportFileWizardPage extends WizardPage {
         final List<ImporterFactory> allAvailableImports = ImporterRegistry.getInstance().getAllAvailableImports();
         importList.setInput(allAvailableImports);
 
-        final IObservableValue importerFactoryObservable = PojoObservables.observeValue(importFileData, "importerFactory");
+        final IObservableValue importerFactoryObservable = PojoProperties.value("importerFactory").observe(importFileData);
         importerFactoryObservable.setValue(importList.getElementAt(0));
 
-        dbc.bindValue(ViewersObservables.observeSingleSelection(importList), importerFactoryObservable,
-                updateValueStrategy().withValidator(mandatoryValidator(Messages.fileFormat)).create(),
+        dbc.bindValue(ViewerProperties.singleSelection().observe(importList),
+                importerFactoryObservable,
+                updateValueStrategy()
+                .withValidator(sel -> sel == null ? ValidationStatus.error(Messages.fileFormat) : ValidationStatus.ok()).create(),
                 updateValueStrategy().create());
 
         final Composite descComposite = new Composite(transfoGroup, SWT.NONE);
@@ -146,8 +126,6 @@ public class ImportFileWizardPage extends WizardPage {
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, true).create());
 
         updatePanel(importFileData.getImporterFactory(), descriptionImage, descriptionLabel);
-
-        doCreateTargetRepositorySection(mainComposite, dbc);
 
         final Label fileLabel = new Label(mainComposite, SWT.NONE);
         fileLabel.setText(Messages.selectFileToImport);
@@ -178,169 +156,14 @@ public class ImportFileWizardPage extends WizardPage {
             }
         });
 
-        importList.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                updatePanel((ImporterFactory) importerFactoryObservable.getValue(), descriptionImage, descriptionLabel);
-            }
-
-        });
-        importList.addDoubleClickListener(new IDoubleClickListener() {
-
-            @Override
-            public void doubleClick(DoubleClickEvent arg0) {
+        importList.addSelectionChangedListener(event ->
+                updatePanel((ImporterFactory) importerFactoryObservable.getValue(), descriptionImage, descriptionLabel));
+        importList.addDoubleClickListener(event -> {
                 updatePanel((ImporterFactory) importerFactoryObservable.getValue(), descriptionImage, descriptionLabel);
                 browseButton.notifyListeners(SWT.Selection, null);
-            }
-        });
+            });
 
         return mainComposite;
-    }
-
-    protected void doCreateTargetRepositorySection(Composite mainComposite, DataBindingContext dbc) {
-        final Group importInto = new Group(mainComposite, SWT.NONE);
-        importInto.setText(Messages.targetRepository);
-        importInto.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-        importInto.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, false).create());
-
-        final Composite radioGroup = new Composite(importInto, SWT.NONE);
-        radioGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).create());
-        radioGroup.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
-
-        final Button currentRepositoryButton = new Button(radioGroup, SWT.RADIO);
-        currentRepositoryButton.setText(
-                String.format(Messages.currentRepository, RepositoryManager.getInstance().getCurrentRepository().getName()));
-        currentRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final Button newRepositoryButton = new Button(radioGroup, SWT.RADIO);
-        newRepositoryButton.setText(Messages.aNewRepository);
-        newRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final Button existingRepositoryButton = new Button(radioGroup, SWT.RADIO);
-        existingRepositoryButton.setText(Messages.anExistingRepository);
-        existingRepositoryButton.setEnabled(RepositoryManager.getInstance().getAllRepositories().size() > 1);
-        existingRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final SelectObservableValue selectObservableValue = new SelectObservableValue();
-        selectObservableValue.addOption(RepositoryMode.CURRENT, SWTObservables.observeSelection(currentRepositoryButton));
-        selectObservableValue.addOption(RepositoryMode.EXISTING, SWTObservables.observeSelection(existingRepositoryButton));
-        selectObservableValue.addOption(RepositoryMode.NEW, SWTObservables.observeSelection(newRepositoryButton));
-
-        final Composite stackComposite = new Composite(importInto, SWT.NONE);
-        stackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
-        final StackLayout stackLayout = new StackLayout();
-        stackComposite.setLayout(stackLayout);
-
-        currentRepositoryButton
-                .addSelectionListener(updateStackLayout(stackComposite, stackLayout, createNameComposite(stackComposite)));
-
-        existingRepositoryButton
-                .addSelectionListener(
-                        updateStackLayout(stackComposite, stackLayout, createSelectRepositoryControl(stackComposite, dbc)));
-
-        IObservableValue<String> newRepositoryObservable = PojoProperties.<ImportFileData, String> value("newRepositoryName")
-                .observe(importFileData);
-        newRepositoryButton
-                .addSelectionListener(
-                        updateStackLayout(stackComposite, stackLayout,
-                                createNewRepositoryNameControl(stackComposite, newRepositoryObservable, dbc)));
-
-        dbc.bindValue(selectObservableValue, PojoProperties.<ImportFileData, String> value("mode")
-                .observe(importFileData));
-
-        currentRepositoryButton.notifyListeners(SWT.Selection, null);
-        dbc.addValidationStatusProvider(new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                final String value = newRepositoryObservable.getValue();
-                final RepositoryMode mode = (RepositoryMode) selectObservableValue.getValue();
-                if (RepositoryMode.NEW == mode) {
-                    return new RepositoryNameValidator(() -> true).validate(value);
-                }
-                return ValidationStatus.ok();
-            }
-        });
-    }
-
-    private Composite createNameComposite(final Composite stackComposite) {
-        final Composite nameComposite = new Composite(stackComposite, SWT.NONE);
-        nameComposite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 0, 0, 10).create());
-
-        final Label currentRepository = new Label(nameComposite, SWT.NONE);
-        currentRepository.setText(
-                NLS.bind(Messages.currentRepositoryName, RepositoryManager.getInstance().getCurrentRepository().getName()));
-        currentRepository.setLayoutData(GridDataFactory.fillDefaults().indent(20, 0).create());
-
-        return nameComposite;
-    }
-
-    private SelectionAdapter updateStackLayout(final Composite stackComposite, final StackLayout stackLayout,
-            final Composite topControl) {
-        return new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                stackLayout.topControl = topControl;
-                stackComposite.layout();
-            }
-
-        };
-    }
-
-    private Composite createNewRepositoryNameControl(final Composite stackComposite,
-            IObservableValue newRepositoryObservable, DataBindingContext dbc) {
-        final Composite repositoryNameControl = new Composite(stackComposite, SWT.NONE);
-        repositoryNameControl.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).extendedMargins(10, 10, 0, 10).create());
-
-        final Label newRepoLabel = new Label(repositoryNameControl, SWT.NONE);
-        newRepoLabel.setText(Messages.repositoryName);
-        newRepoLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-
-        final Text newRepoNameText = new Text(repositoryNameControl, SWT.BORDER);
-        newRepoNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        dbc.bindValue(WidgetProperties.text(SWT.Modify).observe(newRepoNameText), newRepositoryObservable);
-
-        return repositoryNameControl;
-    }
-
-    private Composite createSelectRepositoryControl(final Composite stackComposite, DataBindingContext dbc) {
-        final Composite parent = new Composite(stackComposite, SWT.NONE);
-        parent.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).extendedMargins(10, 10, 0, 10).create());
-
-        final Label newRepoLabel = new Label(parent, SWT.NONE);
-        newRepoLabel.setText(Messages.selectRepository);
-        newRepoLabel.setLayoutData(GridDataFactory.swtDefaults().create());
-
-        final Combo repoCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
-        repoCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        final List<String> repositoties = new ArrayList<>();
-        for (final IRepository r : RepositoryManager.getInstance().getAllRepositories()) {
-            if (!Objects.equals(r.getName(), RepositoryManager.getInstance().getCurrentRepository().getName())) {
-                repositoties.add(r.getName());
-            }
-        }
-        repoCombo.setItems(repositoties.toArray(new String[] {}));
-        repoCombo.setEnabled(!repositoties.isEmpty());
-
-        final IObservableValue selectedRepository = PojoObservables.observeValue(importFileData, "selectedRepositoryName");
-        if (!repositoties.isEmpty()) {
-            selectedRepository.setValue(repositoties.get(0));
-        }
-
-        dbc.bindValue(SWTObservables.observeText(repoCombo), selectedRepository,
-                updateValueStrategy().create(),
-                updateValueStrategy().create());
-        return parent;
     }
 
     protected void updatePanel(final ImporterFactory importerFactory, final Label descriptionImage,

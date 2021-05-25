@@ -27,9 +27,12 @@ public class JavaGetterExpressionTransformation implements ProcessModelTransform
         Expression expression = (Expression) modelObject;
         expression.setType(ExpressionConstants.SCRIPT_TYPE);
         expression.setInterpreter(ExpressionConstants.GROOVY);
-        expression.setContent(String.format("%s.%s()",
-                ((Element) expression.getReferencedElements().get(0)).getName(),
-                expression.getContent()));
+        if(!expression.getReferencedElements().isEmpty() &&  expression.getReferencedElements().get(0) instanceof Element) {
+           var name = ((Element) expression.getReferencedElements().get(0)).getName();
+           expression.setContent(String.format("%s.%s()",
+                   name,
+                   expression.getContent()));
+        }
     }
 
     @Override

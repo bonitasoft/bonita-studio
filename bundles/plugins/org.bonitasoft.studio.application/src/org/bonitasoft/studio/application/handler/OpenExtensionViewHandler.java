@@ -15,6 +15,8 @@
 package org.bonitasoft.studio.application.handler;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
@@ -27,15 +29,16 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
-import org.eclipse.ui.ide.IDE;
 
 public class OpenExtensionViewHandler {
 
     @Execute
     public void execute() {
-        try {
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (Stream.of(activePage.getEditorReferences())
+                .noneMatch(er -> Objects.equals( er.getId(), ProjectExtensionEditorPart.ID))) {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
@@ -48,10 +51,11 @@ public class OpenExtensionViewHandler {
                 MessageDialog.openError(Display.getDefault().getActiveShell(),
                         Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
             }
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            IDE.openEditor(activePage, ProjectExtensionEditorInput.getInstance(), ProjectExtensionEditorPart.ID, true);
-        } catch (WorkbenchException e) {
-            throw new RuntimeException(e);
+        }
+        try {
+            activePage.openEditor(ProjectExtensionEditorInput.getInstance(), ProjectExtensionEditorPart.ID);
+        } catch (PartInitException e) {
+            BonitaStudioLog.error(e);
         }
     }
 

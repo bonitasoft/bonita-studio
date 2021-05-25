@@ -2001,7 +2001,7 @@ public class BPMNToProc extends ToProcProcessor {
             builder.addJavaData(id, name, defaultValueContent,
                     defaultValueReturnType, defaultValueInterpreter,
                     itemDefinition.getStructureRef().getLocalPart(),
-                    isMultiple, isTransient, ExpressionConstants.JAVA_TYPE);
+                    isMultiple, isTransient, ExpressionConstants.GROOVY);
         } else {
             String defaultValueExpressionType = null;
             if ("http://groovy.codehaus.org/".equals(defaultValueInterpreter)) {

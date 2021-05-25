@@ -65,7 +65,7 @@ public class TestThrowCatchMessage implements SWTBotConstants {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestThrowCatchMessage.class.getResource("DemoMessageContentCorrelation-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();
@@ -205,7 +205,7 @@ public class TestThrowCatchMessage implements SWTBotConstants {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestThrowCatchMessage.class.getResource("TestCatchMessageSelectionTest-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

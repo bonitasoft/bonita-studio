@@ -108,5 +108,9 @@ public class Messages extends NLS {
     public static String extensionPageLabel;
     public static String validatingDiagram;
     public static String validatingDiagramWithProgess;
+    public static String anotherVersionAlreadyExists;
+    public static String dependencyUpdatedStatus;
+    public static String dependencyAddedStatus;
+    public static String conflictingDependenciesMessage;
 
 }

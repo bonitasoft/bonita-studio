@@ -117,29 +117,17 @@ public class BotImportBOSDialog extends BotWizardDialog {
         return this;
     }
 
-    public BotImportBOSDialog existingRepository(String repoName, Boolean current) {
-        String name = current ? repoName + " " + Messages.currentRepoinfo : repoName;
-        bot.waitUntil(
-                Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository)));
-        SWTBotShell activeShell = bot.activeShell();
-        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository).click();
-        activeShell.setFocus();
-        bot.shell(Messages.importBosArchiveTitle).activate();
-        bot.waitUntil(Conditions.shellIsActive(Messages.importBosArchiveTitle));
-        bot.ccomboBoxWithId(SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO).setSelection(name);
-        return this;
-    }
-
     @Override
     public void finish() {
         importArchive();
     }
 
-    public BotImportBOSDialog existingRepository() {
+    public BotImportBOSDialog currentRepository() {
         SWTBotShell activeShell = bot.activeShell();
-        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository).click();
+        bot.radio(org.bonitasoft.studio.importer.i18n.Messages.currentRepository).click();
         activeShell.setFocus();
         bot.shell(Messages.importBosArchiveTitle).activate();
         return this;
     }
+    
 }
