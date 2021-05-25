@@ -154,10 +154,9 @@ public class RepositoriesComposite extends Composite {
 
     private Profile retrieveBonitaProfile() {
         return settingsObservable.getValue().getProfiles().stream()
-                .filter(profile -> {
-                    return Objects.equals(profile.getId(), BONITA_PROFILE_ID);
-                })
-                .findFirst().orElseGet(() -> createBonitaProfile());
+                .filter(profile -> Objects.equals(profile.getId(), BONITA_PROFILE_ID))
+                .findFirst()
+                .orElseGet(this::createBonitaProfile);
     }
 
     private Profile createBonitaProfile() {
@@ -278,7 +277,7 @@ public class RepositoriesComposite extends Composite {
     private void createRepositoryListComposite(Composite parent) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(200, SWT.DEFAULT).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(250, SWT.DEFAULT).create());
 
         createToolbar(composite);
         createViewer(composite);
@@ -353,7 +352,7 @@ public class RepositoriesComposite extends Composite {
     private void createRepositoryColumn() {
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.setLabelProvider(new LabelProviderBuilder<Repository>()
-                .withTextProvider(Repository::getName)
+                .withTextProvider(Repository::getId)
                 .shouldRefreshAllLabels(viewer)
                 .createColumnLabelProvider());
     }
@@ -388,7 +387,7 @@ class CustomRepository extends Repository {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof Repository) {
+        if (obj instanceof Repository) {
             return super.equals(obj);
         }
         return false;

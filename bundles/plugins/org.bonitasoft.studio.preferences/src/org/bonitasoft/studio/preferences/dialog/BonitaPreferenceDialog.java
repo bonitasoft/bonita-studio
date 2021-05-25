@@ -47,7 +47,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -68,8 +67,6 @@ import org.eclipse.ui.themes.ColorUtil;
 
 public class BonitaPreferenceDialog extends Dialog {
 
-    private static final int SHELL_HEIGHT = 700;
-    private static final int SHELL_WIDTH = 800;
     private static final int MARGIN_RIGHT = 80;
     private static final int MARGIN_LEFT = 25;
     private static final int LABEL_WIDTH = 180;
@@ -751,14 +748,6 @@ public class BonitaPreferenceDialog extends Dialog {
     @Override
     protected void createButtonsForButtonBar(final Composite parent) {
 
-    }
-
-    /**
-     * Return the initial size of the dialog.
-     */
-    @Override
-    protected Point getInitialSize() {
-        return new Point(SHELL_WIDTH, SHELL_HEIGHT);
     }
 
     /*

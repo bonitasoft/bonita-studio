@@ -15,8 +15,7 @@
 package org.bonitasoft.studio.application.preference.provider;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Profile;
@@ -25,9 +24,8 @@ import org.apache.maven.settings.Settings;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 
-public class ServerIdContentProvider implements IStructuredContentProvider {
+public class ServerIdContentProvider {
 
     private IObservableList<Profile> profilesObservable;
     private IObservableList<Mirror> mirrorsObservable;
@@ -39,17 +37,14 @@ public class ServerIdContentProvider implements IStructuredContentProvider {
                 .observeDetail(settingsObservable);
     }
 
-    @Override
-    public Object[] getElements(Object inputElement) {
-        List<String> ids = profilesObservable.stream()
+    public String[] toArray() {
+        return Stream.concat(profilesObservable.stream()
                 .map(Profile::getRepositories)
                 .flatMap(Collection::stream)
-                .map(Repository::getId)
-                .collect(Collectors.toList());
-        mirrorsObservable.stream()
-                .map(Mirror::getId)
-                .forEach(ids::add);
-        return ids.toArray();
+                .map(Repository::getId),
+                mirrorsObservable.stream()
+                        .map(Mirror::getId))
+                .toArray(String[]::new);
     }
 
 }
