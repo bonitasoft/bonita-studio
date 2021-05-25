@@ -16,7 +16,6 @@ package org.bonitasoft.studio.importer.bos.validator;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
@@ -68,7 +67,6 @@ public class DiagramValidator implements BosImporterStatusProvider {
                 throw new ValidationException(e, "Failed to validate diagram content");
             }
         }
-        RepositoryManager.getInstance().getCurrentRepository().clearGroovySnippetCompiler();
         return statusBuilder;
     }
 }

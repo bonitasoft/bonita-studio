@@ -14,19 +14,20 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -37,6 +38,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
     private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.constraint.groovyCompilationFailure";
     private static final String GROOVY_DEF_ID = "scripting-groovy";
     private static final Object SCRIPT_PARAMETER = "script";
+    private ProcessScriptsCompiler processScriptsCompilation = new ProcessScriptsCompiler();
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
@@ -45,7 +47,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
                 && !ModelHelper.isAnExpressionCopy((Expression) eObj)
                 && ExpressionConstants.SCRIPT_TYPE.equals(((Expression) eObj).getType())
                 && ExpressionConstants.GROOVY.equals(((Expression) eObj).getInterpreter())) {
-            return evaluateExpression(context, eObj);
+            return evaluateExpression(context, (Expression) eObj);
         } else if (eObj instanceof Connector) {
             final Connector connector = (Connector) eObj;
             final String defId = connector.getDefinitionId();
@@ -54,7 +56,7 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
                     if (SCRIPT_PARAMETER.equals(parameter.getKey())) {
                         final AbstractExpression exp = parameter.getExpression();
                         if (exp instanceof Expression && !ModelHelper.isAnExpressionCopy((Expression) exp)) {
-                            return evaluateExpression(context, exp);
+                            return evaluateExpression(context, (Expression) exp);
                         }
                     }
                 }
@@ -63,25 +65,25 @@ public class GroovyCompilationOnScriptExpressionConstraint extends AbstractLiveV
         return context.createSuccessStatus();
     }
 
-    private IStatus evaluateExpression(final IValidationContext context, final EObject eObj) {
-        final Expression expression = (Expression) eObj;
+    private IStatus evaluateExpression(final IValidationContext context, final Expression expression) {
         final String scriptText = expression.getContent();
         if (scriptText == null || scriptText.isEmpty()) {
             return context.createSuccessStatus();
         }
-        var compiler = RepositoryManager.getInstance().getCurrentRepository().createGroovySnippetCompiler();
-        final CompilationResult result = compiler.compileForErrors(scriptText, null);
-        final CategorizedProblem[] problems = result.getErrors();
-        if (problems != null && problems.length > 0) {
-            final StringBuilder sb = new StringBuilder();
-            for (final CategorizedProblem problem : problems) {
-                sb.append(problem.getMessage());
-                sb.append(", ");
-            }
-            if (sb.length() > 1) {
-                sb.delete(sb.length() - 2, sb.length());
-                return context.createFailureStatus(NLS.bind(Messages.groovyCompilationProblem, expression.getName(), sb.toString()));
-            }
+        var compilationResultCache = (ProcessScriptsCompilationResult) context.getCurrentConstraintData();
+        Pool process = ModelHelper.getParentPool(expression);
+        if (compilationResultCache == null || !processScriptsCompilation.contains(process)) {
+            compilationResultCache = processScriptsCompilation.compileForErrors(process);
+            context.putCurrentConstraintData(compilationResultCache);
+        }
+        List<String> errors = compilationResultCache.getResult(expression);
+        if (errors != null && !errors.isEmpty()) {
+            MultiStatus status = new MultiStatus(GroovyCompilationOnScriptExpressionConstraint.class, 0, null);
+            errors.stream()
+                    .map(error -> context.createFailureStatus(
+                            NLS.bind(Messages.groovyCompilationProblem, expression.getName(), error)))
+                    .forEach(status::add);
+            return status;
         }
         return context.createSuccessStatus();
     }
