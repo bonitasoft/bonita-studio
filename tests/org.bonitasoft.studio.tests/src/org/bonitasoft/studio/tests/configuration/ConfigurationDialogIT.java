@@ -84,7 +84,7 @@ public class ConfigurationDialogIT {
     public void importDiagramWithCustomActorMappingAndOpenConfiguration() throws IOException {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(ConfigurationDialogIT.class.getResource("TestImport-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

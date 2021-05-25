@@ -81,7 +81,7 @@ public class ConvertActivityTypeWithBoundariesIT {
     protected MainProcess importAndConvertStep1ToServiceTask(final String resourceNameInClasspath) throws IOException {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(ConvertActivityTypeWithBoundariesIT.class.getResource(resourceNameInClasspath))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

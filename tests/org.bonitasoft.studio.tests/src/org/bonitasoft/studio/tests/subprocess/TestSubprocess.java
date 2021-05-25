@@ -74,7 +74,7 @@ public class TestSubprocess {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         store = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.2");
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3");
         addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 

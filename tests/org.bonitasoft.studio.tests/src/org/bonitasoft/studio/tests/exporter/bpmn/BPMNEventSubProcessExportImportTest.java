@@ -89,7 +89,7 @@ public class BPMNEventSubProcessExportImportTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNEventSubProcessExportImportTest.class.getResource("diagramtoTestEventSubProcess-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

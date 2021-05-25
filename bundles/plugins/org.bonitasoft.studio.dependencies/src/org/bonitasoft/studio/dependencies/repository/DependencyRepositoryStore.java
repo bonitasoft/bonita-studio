@@ -249,7 +249,9 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                         .filter(DependencyLookup::isSelected)
                         .map(dl -> {
                             try {
-                                return localDependencyStore.install(dl);
+                                localDependencyStore.install(dl);
+                                localDependencyStore.deleteBackup(dl.toMavenDependency());
+                                return dl;
                             } catch (CoreException e) {
                                 BonitaStudioLog.error(e);
                                 return null;

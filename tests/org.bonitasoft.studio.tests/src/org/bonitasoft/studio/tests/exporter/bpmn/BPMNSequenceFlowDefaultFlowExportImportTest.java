@@ -86,7 +86,7 @@ public class BPMNSequenceFlowDefaultFlowExportImportTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNConnectorExportImportTest.class.getResource("MyDiagramToTestDefaultFlowInBPMN-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

@@ -44,7 +44,7 @@ public class CallActivityMappingIT {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         CallActivityMappingIT.class.getResource("ITTest-CallActivityMapping-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

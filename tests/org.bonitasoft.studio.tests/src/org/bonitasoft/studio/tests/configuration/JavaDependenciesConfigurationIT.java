@@ -43,7 +43,7 @@ public class JavaDependenciesConfigurationIT {
     public void testImportAndRunProcessWithLotOfDependencies() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(JavaDependenciesConfigurationIT.class.getResource("DiagramWithLotOfDependencies-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();
@@ -57,7 +57,7 @@ public class JavaDependenciesConfigurationIT {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

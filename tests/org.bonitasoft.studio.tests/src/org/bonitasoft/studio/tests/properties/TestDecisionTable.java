@@ -49,7 +49,7 @@ public class TestDecisionTable {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
                         TestDecisionTable.class.getResource("TestDecisionTable-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

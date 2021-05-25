@@ -45,7 +45,7 @@ public class ImportBosArchivePageTest {
     @Test
     public void should_update_archive_model_correctly() throws Exception {
         final ImportBosArchivePage supplier = new ImportBosArchivePage(
-                getRepositoryAccessor(), new SwitchRepositoryStrategy(getRepositoryAccessor()), null, null);
+                getRepositoryAccessor(), new SwitchRepositoryStrategy(), null, null);
         final Composite parent = displayRule.createComposite();
         final IWizardContainer container = displayRule.wizardWithContainer().getContainer();
 

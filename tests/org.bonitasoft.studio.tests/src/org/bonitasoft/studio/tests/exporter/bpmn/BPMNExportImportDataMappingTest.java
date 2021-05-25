@@ -135,7 +135,7 @@ public class BPMNExportImportDataMappingTest {
         new BotApplicationWorkbenchWindow(bot)
                 .importBOSArchive()
                 .setArchive(BPMNExportImportDataMappingTest.class.getResource("testBPMNDataMapping-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

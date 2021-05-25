@@ -40,7 +40,7 @@ public class DeleteCommandTest {
     public void deleteElementsInDiagram() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(DeleteCommandTest.class.getResource("Elements2Delete-1.0.bos"))
-                .existingRepository()
+                .currentRepository()
                 .next()
                 .next()
                 .finish();

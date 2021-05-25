@@ -33,7 +33,7 @@ public class BotOrganizationEditor extends BotBase {
         this.botOrganizationOverviewEditor = new BotOrganizationOverviewEditor(bot, editor, this);
         this.botOrganizationGroupEditor = new BotOrganizationGroupEditor(bot, editor, this);
         this.botOrganizationRoleEditor = new BotOrganizationRoleEditor(bot, editor, this);
-        this.botOrganizationUserEditor = new BotOrganizationUserEditor(bot, editor, this);
+        this.botOrganizationUserEditor = new BotOrganizationUserEditor(bot, editor);
     }
 
     public BotOrganizationOverviewEditor overviewPage() {

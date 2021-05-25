@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -49,12 +50,10 @@ import org.bonitasoft.studio.importer.bos.operation.FetchRemoteBosArchiveOperati
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.importer.bos.operation.ParseBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.validator.ValidatorWrapper;
-import org.bonitasoft.studio.importer.ui.wizard.ImportFileData.RepositoryMode;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
-import org.bonitasoft.studio.ui.widget.CComboWidget;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
@@ -89,6 +88,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArchiveModel> {
 
+    public enum RepositoryMode {
+        CURRENT, NEW
+    }
+    
     private static final String BOS_EXTENSION = "*.bos";
 
     protected String filePath;
@@ -104,14 +107,12 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     private SelectObservableValue<RepositoryMode> repositoryModeObservable;
 
     private ProjectMetadata projectMetadata;
-    private String existingTargetRepo = "";
     private IObservableValue<ProjectMetadata> projectMetadataObservable;
-    private IObservableValue<String> existingRepoObservable;
     private Composite newRepositoryComposite;
     private Composite existingRepositoryComposite;
     private TextWidget newProjectNameText;
     private SwitchRepositoryStrategy switchRepositoryStrategy;
-    private RepositoryMode mode = RepositoryMode.EXISTING;
+    private RepositoryMode mode = RepositoryMode.CURRENT;
     private IObservableValue<Boolean> visibleTargetProjectObservable;
 
     private Map<String, ImportArchiveModel> parsedModels = new HashMap<>();
@@ -126,8 +127,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         this.switchRepositoryStrategy = switchRepositoryStrategy;
         projectMetadata = ProjectMetadata.defaultMetadata();
         projectMetadataObservable = PojoProperties.value("projectMetadata", ProjectMetadata.class)
-                .observe(this);
-        existingRepoObservable = PojoProperties.<ImportBosArchivePage, String> value("existingTargetRepo")
                 .observe(this);
     }
 
@@ -218,46 +217,21 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         switch (repoMode) {
             case NEW:
                 return newRepositoryComposite;
-            case EXISTING:
+            case CURRENT:
             default:
                 return existingRepositoryComposite;
         }
     }
 
     private void doCreateComposites(Composite parent, DataBindingContext ctx) {
-        doCreateExistingRepositoryComposite(parent, ctx);
+        doCreateExistingRepositoryComposite(parent);
         doCreateNewRepositoryComposite(parent, ctx);
     }
 
-    private void doCreateExistingRepositoryComposite(Composite parent, DataBindingContext ctx) {
+    private void doCreateExistingRepositoryComposite(Composite parent) {
         existingRepositoryComposite = new Composite(parent, SWT.NONE);
-        existingRepositoryComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        existingRepositoryComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-        final String[] repositories = repositoryAccessor.getAllRepositories().stream()
-                .map(repo -> {
-                    if (Objects.equals(repo.getName(), repositoryAccessor.getCurrentRepository().getName())) {
-                        return getCurrentRepoNameWithInfo();
-                    }
-                    return repo.getName();
-                })
-                .toArray(String[]::new);
-
-        existingRepoObservable.setValue(getCurrentRepoNameWithInfo());
-
-        new CComboWidget.Builder()
-                .withId(SWTBotConstants.SWTBOT_ID_BOS_IMPORT_PROJECT_COMBO)
-                .withItems(repositories)
-                .labelAbove()
-                .readOnly()
-                .widthHint(500)
-                .bindTo(existingRepoObservable)
-                .inContext(ctx)
-                .createIn(existingRepositoryComposite);
-    }
-
-    private String getCurrentRepoNameWithInfo() {
-        return repositoryAccessor.getCurrentRepository().getName() + " " + Messages.currentRepoinfo;
+        existingRepositoryComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        existingRepositoryComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 
     private void doCreateNewRepositoryComposite(Composite parent, DataBindingContext ctx) {
@@ -370,14 +344,13 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         newRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository);
         newRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        final Button existingRepositoryButton = new Button(radioGroup, SWT.RADIO);
-        existingRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.anExistingRepository);
-        existingRepositoryButton.setEnabled(!repositoryAccessor.getAllRepositories().isEmpty());
-        existingRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
+        final Button currentRepositoryButton = new Button(radioGroup, SWT.RADIO);
+        currentRepositoryButton.setText(org.bonitasoft.studio.importer.i18n.Messages.currentRepository);
+        currentRepositoryButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
         repositoryModeObservable = new SelectObservableValue<>();
-        repositoryModeObservable.addOption(RepositoryMode.EXISTING,
-                WidgetProperties.buttonSelection().observe(existingRepositoryButton));
+        repositoryModeObservable.addOption(RepositoryMode.CURRENT,
+                WidgetProperties.buttonSelection().observe(currentRepositoryButton));
         repositoryModeObservable.addOption(RepositoryMode.NEW,
                 WidgetProperties.buttonSelection().observe(newRepositoryButton));
         repositoryModeObservable.addValueChangeListener(this::repositoryModeChanged);
@@ -430,7 +403,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     public void updateTargetRepository(String targetProjectName) {
         final boolean repoChanged = !Objects.equals(switchRepositoryStrategy.getTargetRepository(), targetProjectName);
         switchRepositoryStrategy.setTargetRepository(targetProjectName);
-        if (targetProjectName != null && !targetProjectName.isEmpty() && archiveModel != null && repoChanged) {
+        if (Strings.hasText(targetProjectName) && archiveModel != null && repoChanged) {
             refreshArchiveModel(targetProjectName);
         }
     }
@@ -442,9 +415,9 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 return newProjectNameText.getStatus().isOK()
                         ? name
                         : switchRepositoryStrategy.getTargetRepository();
-            case EXISTING:
+            case CURRENT:
             default:
-                return existingTargetRepo;
+                return repositoryAccessor.getCurrentRepository().getName();
         }
     }
 
@@ -604,21 +577,6 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
-    }
-
-    public String getExistingTargetRepo() {
-        if (Objects.equals(existingTargetRepo, repositoryAccessor.getCurrentRepository().getName())) {
-            return getCurrentRepoNameWithInfo();
-        }
-        return existingTargetRepo;
-    }
-
-    public void setExistingTargetRepo(String existingTargetRepo) {
-        this.existingTargetRepo = existingTargetRepo.endsWith(Messages.currentRepoinfo)
-                ? repositoryAccessor.getCurrentRepository().getName() : existingTargetRepo;
-        if (!this.existingTargetRepo.isEmpty() && repositoryModeObservable.getValue() == RepositoryMode.EXISTING) {
-            updateTargetRepository(this.existingTargetRepo);
-        }
     }
 
     public ProjectMetadata getProjectMetadata() {

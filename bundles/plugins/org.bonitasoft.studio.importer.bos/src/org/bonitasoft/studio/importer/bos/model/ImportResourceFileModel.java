@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 public class ImportResourceFileModel extends ImportFileModel implements ImportableUnit {
 
@@ -52,15 +53,15 @@ public class ImportResourceFileModel extends ImportFileModel implements Importab
                     IFile targetFile = project.getFile(filePath);
                     if (targetFile.exists()) {
                         try(InputStream is = archive.getInputStream(zipEntry)){
-                            targetFile.setContents(is, IResource.FORCE, monitor);
+                            targetFile.setContents(is, IResource.FORCE, new NullProgressMonitor());
                         } catch (CoreException | IOException e) {
                            BonitaStudioLog.error(e);
                         }
                     } else if (!targetFile.exists()) {
                         try(InputStream is = archive.getInputStream(zipEntry)){
                             targetFile.getLocation().toFile().getParentFile().mkdirs();
-                            targetFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                            targetFile.create(is, IResource.FORCE, monitor);
+                            targetFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+                            targetFile.create(is, IResource.FORCE, new NullProgressMonitor());
                         } catch (CoreException | IOException e) {
                            BonitaStudioLog.error(e);
                         }

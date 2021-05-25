@@ -12,23 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
+import org.eclipse.e4.core.di.annotations.Creatable;
 
+@Creatable
 public class SwitchRepositoryStrategy {
 
     private String targetRepository;
-    private final RepositoryAccessor repositoryAccessor;
     private List<TargetProjectChangeListener> targetProjectChangeListerners = new ArrayList<>();
     private boolean createNewProject;
 
-    public SwitchRepositoryStrategy(RepositoryAccessor repositoryAccessor) {
-        this.repositoryAccessor = repositoryAccessor;
-    }
-
-    public boolean isSwitchRepository() {
-        return !Objects.equals(targetRepository, repositoryAccessor.getCurrentRepository().getName());
-    }
-    
     public boolean isCreateNewProject() {
         return createNewProject;
     }

@@ -60,12 +60,12 @@ public class ImportBosArchiveIT {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-        botImport.existingRepository().next().next().importArchive();
+        botImport.currentRepository().next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.existingRepository()
+        botImport.currentRepository()
              .next();
         
         final SWTBotTreeItem diagramNodeItem = botImport.tree().getTreeItem("diagrams")
@@ -81,7 +81,7 @@ public class ImportBosArchiveIT {
         botImport.back();
         botImport.newProject("new repo");
 
-        botImport.existingRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName, true);
+        botImport.currentRepository();
 
         botImport.next();
         
@@ -100,26 +100,9 @@ public class ImportBosArchiveIT {
         botApplicationWorkbenchWindowEx.importBOSArchive();
         botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
-        botImport.existingRepository().next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
+        botImport.currentRepository().next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
     }
 
-    @Test
-    public void should_switch_repo_to_manage_conflicts() throws Exception {
-        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
-        final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-        botImport.existingRepository().next().next().importArchive();
-
-        botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
-
-        botImport.newProject("repository 2").next().next().importArchive();
-
-        botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
-
-        botImport.existingRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName, false).cancel();
-    }
 
     @Test
     public void should_import_bos_archive_using_drag_and_drop() throws Exception {

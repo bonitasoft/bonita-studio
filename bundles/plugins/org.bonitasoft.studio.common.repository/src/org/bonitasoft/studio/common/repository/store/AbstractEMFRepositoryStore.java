@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +32,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
-import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -39,7 +41,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
@@ -56,7 +58,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.google.common.io.Files;
 
 /**
  * @author Romain Bioteau
@@ -242,7 +243,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
             throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
         Map<String, Object> loadOptions = new HashMap<>();
-        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+        loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
         try {
             migrator.migrateAndSave(Collections.singletonList(resourceURI),
                     release, null, AbstractRepository.NULL_PROGRESS_MONITOR, loadOptions);
@@ -257,7 +258,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
         final EditingDomain editingDomain = getEditingDomain();
         final File tmpFile = File.createTempFile("tmp", fileName,
                 ProjectUtil.getBonitaStudioWorkFolder());
-        Files.copy(originalFile, tmpFile);
+        Files.copy(originalFile.toPath(), tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         return editingDomain.getResourceSet()
                 .createResource(
                         URI.createFileURI(tmpFile.getAbsolutePath()));
@@ -271,7 +272,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore<?>>
                         .forEach(transformer -> transformer.transform(eObject)));
         getRepository()
                 .getProcessModelTransformations().stream().flatMap(t -> t.markedForRemoval().stream())
-                .forEach(toRemove -> EcoreUtil.remove(toRemove));
+                .forEach(EcoreUtil::remove);
         getRepository()
                 .getProcessModelTransformations().stream()
                 .forEach(ProcessModelTransformation::clear);

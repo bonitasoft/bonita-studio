@@ -56,9 +56,8 @@ public abstract class AbstractProjectMetadataHandler {
         List<WizardPageBuilder> pages = createPages(repositoryAccessor, metadata);
 
         createWizard(repositoryAccessor, mavenProjectHelper, exceptionDialogHandler, metadata, pages)
-                .open(activeShell, getFinishLabel());
-        
-        new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.extensions.command", Collections.emptyMap());
+                .open(activeShell, getFinishLabel())
+                .ifPresent(s ->  new CommandExecutor().executeCommand("org.bonitasoft.studio.application.show.extensions.command", Collections.emptyMap()));
     }
 
     protected WizardBuilder<IStatus> createWizard(RepositoryAccessor repositoryAccessor,
