@@ -24,7 +24,6 @@ import javax.inject.Named;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -171,8 +170,6 @@ public class DeployDiagramHandler {
                     validationOperation);
         } catch (InvocationTargetException | InterruptedException e) {
             return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
-        }finally {
-            RepositoryManager.getInstance().getCurrentRepository().clearGroovySnippetCompiler();
         }
         return validationOperation.displayConfirmationDialog()
                 ? ValidationStatus.ok()

@@ -113,7 +113,6 @@ public class ValidationViewAction extends Action {
             BonitaStudioLog.error(e);
         }
         store.resetComputedProcesses();
-        RepositoryManager.getInstance().getCurrentRepository().clearGroovySnippetCompiler();
         if (tableViewer != null) {
             tableViewer.setInput(ieditor);
         }
