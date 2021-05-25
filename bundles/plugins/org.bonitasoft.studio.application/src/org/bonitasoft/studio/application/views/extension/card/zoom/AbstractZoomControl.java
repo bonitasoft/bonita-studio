@@ -18,6 +18,7 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -73,7 +74,9 @@ public abstract class AbstractZoomControl extends Composite {
 
         var description = new Label(this, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 10).create());
-        description.setText(bonitaDep.getDescription());
+        if (Strings.hasText(bonitaDep.getDescription())) {
+            description.setText(bonitaDep.getDescription());
+        }
         description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         createDetailsSection(this);

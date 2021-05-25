@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.i18n.Messages;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -133,10 +132,10 @@ public class WizardBuilder<T> {
                             .forEach(pageChangeProvider::addPageChangedListener);
                 }
             }
-            
+
             @Override
             public boolean canFinish() {
-                if(canFinishSupplier != null) {
+                if (canFinishSupplier != null) {
                     return super.canFinish() && canFinishSupplier.canFinish((WizardDialog) this.getContainer());
                 }
                 return super.canFinish();
