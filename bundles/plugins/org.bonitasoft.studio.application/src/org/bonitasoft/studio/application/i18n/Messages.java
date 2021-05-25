@@ -314,6 +314,18 @@ public class Messages extends NLS {
     public static String path;
     public static String copyToClipboard;
     public static String editPermissionsMapping;
+    public static String usages;
+    public static String connectorUsages;
+    public static String findUsages;
+    public static String findingUsages;
+    public static String diagramNotFound;
+    public static String diagramNotFoundMessage;
+    public static String process;
+    public static String connectorUsagesDescription;
+    public static String openSelection;
+    public static String noConnectorUsagesFound;
+    public static String search;
+    public static String actorFilterUsagesDescription;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -457,4 +457,7 @@ public class PicsConstants {
     public static String back = "projectExtensions/back.png";
     public static String backHot = "projectExtensions/back_hot.png";
 
+    public static String findUsages = "projectExtensions/find_usages.png";
+    public static String findUsagesHot = "projectExtensions/find_usages_hot.png";
+
 }

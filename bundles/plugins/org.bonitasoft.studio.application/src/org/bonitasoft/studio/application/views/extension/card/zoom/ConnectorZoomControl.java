@@ -14,7 +14,13 @@
  */
 package org.bonitasoft.studio.application.views.extension.card.zoom;
 
+import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +30,31 @@ import org.bonitasoft.plugin.analyze.report.model.Implementation;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.BonitaPropertiesView;
 import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.extension.card.zoom.usage.ConnectorUsagesControlSupplier;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
+import org.bonitasoft.studio.common.views.BonitaPropertiesBrowserPage;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.ConnectableElement;
+import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.bonitasoft.studio.ui.wizard.WizardBuilder;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -41,6 +66,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.IPage;
 
 public class ConnectorZoomControl extends AbstractZoomControl {
 
@@ -111,7 +139,16 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createIdVersionStyledText(composite, extendedDefinition.getConnectorDefinitionLabel(),
-                extendedDefinition.getVersion(), JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID), 2);
+                extendedDefinition.getVersion(), JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID), 1);
+
+        new DynamicButtonWidget.Builder()
+                .withText(Messages.findUsages)
+                .withImage(Pics.getImage(PicsConstants.findUsages))
+                .withHotImage(Pics.getImage(PicsConstants.findUsagesHot))
+                .withLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create())
+                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .onClick(e -> findUsages(extendedDefinition))
+                .createIn(composite);
 
         var descriptionContainer = createComposite(composite, SWT.NONE);
         descriptionContainer.setLayoutData(GridDataFactory.fillDefaults().indent(10, 0).grab(true, true).create());
@@ -143,6 +180,101 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         implementations.forEach(impl -> createIdVersionStyledText(implementationListComposite,
                 impl.getImplementationId(),
                 impl.getImplementationVersion(), null, 1));
+    }
+
+    private void findUsages(ExtendedConnectorDefinition definition) {
+        ConnectorUsagesControlSupplier connectorUsagesPage = getUsagesControlSupplier(definition);
+        WizardBuilder.<Map<DiagramFileStore, List<Element>>> newWizard()
+                .withTitle(Messages.usages)
+                .needProgress()
+                .havingPage(newPage()
+                        .withTitle(Messages.usages)
+                        .withDescription(String.format(Messages.connectorUsages, definition.getConnectorDefinitionLabel()))
+                        .withControl(connectorUsagesPage))
+                .onFinish(container -> performFinish(connectorUsagesPage))
+                .withSize(SWT.DEFAULT, 700)
+                .withFixedInitialSize()
+                .open(getShell(), Messages.openSelection)
+                .ifPresent(dToOpen -> dToOpen.entrySet().forEach(this::open));
+    }
+
+    protected ConnectorUsagesControlSupplier getUsagesControlSupplier(ExtendedConnectorDefinition definition) {
+        return new ConnectorUsagesControlSupplier(definition);
+    }
+
+    private void openDiagram(DiagramFileStore fileStore, Element element) {
+        fileStore.open();
+        DiagramEditor editor = fileStore.getOpenedEditor();
+        if (element instanceof ConnectableElement) {
+            ModelHelper.getAllElementOfTypeIn(editor.getDiagram().getElement(), Element.class).stream()
+                    .filter(elt -> sameElement(elt, element))
+                    .findFirst()
+                    .ifPresent(elt -> selectElement(editor, elt));
+        }
+    }
+
+    protected void selectElement(DiagramEditor editor, Element element) {
+        IGraphicalEditPart findEditPart = GMFTools.findEditPart(editor.getDiagramEditPart(),
+                element);
+        if (findEditPart != null) {
+            Display.getDefault().syncExec(() -> editor.getDiagramGraphicalViewer().select(findEditPart));
+            IWorkbenchPage page = editor.getEditorSite().getPage();
+            String executionViewId = "org.bonitasoft.studio.views.properties.process.execution";
+            BonitaPropertiesView executionView = (BonitaPropertiesView) page.findView(executionViewId);
+            if (executionView != null) {
+                try {
+                    page.showView(executionViewId);
+                    IPage currentPage = executionView.getCurrentPage();
+                    if (currentPage instanceof BonitaPropertiesBrowserPage) {
+                        ((BonitaPropertiesBrowserPage) currentPage).selectionChanged(editor,
+                                editor.getDiagramGraphicalViewer().getSelection());
+                    }
+                } catch (PartInitException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+    }
+
+    private boolean sameElement(Element a1, Element a2) {
+        if (Objects.equals(a1.getName(), a2.getName())) {
+            AbstractProcess p1 = getProcess(a1);
+            AbstractProcess p2 = getProcess(a2);
+            return p1 != null && p2 != null && Objects.equals(p1.getName(), p2.getName());
+        }
+        return false;
+    }
+
+    private AbstractProcess getProcess(Element element) {
+        EObject o = element.eContainer();
+        while (o != null && !(o instanceof AbstractProcess)) {
+            o = o.eContainer();
+        }
+        return (AbstractProcess) o;
+    }
+
+    private Optional<Map<DiagramFileStore, List<Element>>> performFinish(
+            ConnectorUsagesControlSupplier connectorUsagesPage) {
+        var elementsToOpen = connectorUsagesPage.getCheckedElements();
+        Map<DiagramFileStore, List<Element>> diagramsToOpen = new HashMap();
+        elementsToOpen.forEach(element -> {
+            EObject mainProcess = element;
+            while (!(mainProcess instanceof MainProcess)) {
+                mainProcess = mainProcess.eContainer();
+            }
+            DiagramFileStore diagram = RepositoryManager.getInstance()
+                    .getRepositoryStore(DiagramRepositoryStore.class)
+                    .getDiagram(((MainProcess) mainProcess).getName(), ((MainProcess) mainProcess).getVersion());
+            if (!diagramsToOpen.containsKey(diagram)) {
+                diagramsToOpen.put(diagram, new ArrayList());
+            }
+            diagramsToOpen.get(diagram).add(element);
+        });
+        return Optional.of(diagramsToOpen);
+    }
+
+    private void open(Entry<DiagramFileStore, List<Element>> entry) {
+        openDiagram(entry.getKey(), entry.getValue().stream().findFirst().orElseThrow());
     }
 
     private void createIdVersionStyledText(Composite parent, String id, String version, Font font, int horizontalSpan) {
