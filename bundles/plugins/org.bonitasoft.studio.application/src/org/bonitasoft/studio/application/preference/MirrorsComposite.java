@@ -155,7 +155,7 @@ public class MirrorsComposite extends Composite {
     private void createMirrorListComposite(Composite parent) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(200, SWT.DEFAULT).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(250, SWT.DEFAULT).create());
 
         createToolbar(composite);
         createViewer(composite);

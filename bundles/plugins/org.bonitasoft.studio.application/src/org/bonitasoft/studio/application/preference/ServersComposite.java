@@ -58,12 +58,12 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -427,23 +427,21 @@ public class ServersComposite extends Composite {
                 .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
         controlDecoration.show();
 
-        var serverIdCombo = new ComboViewer(serverIdComposite, SWT.READ_ONLY | SWT.BORDER);
-        serverIdCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        serverIdCombo.setContentProvider(new ServerIdContentProvider(settingsObservable));
-        serverIdCombo.setInput(settingsObservable);
-        IObservableValue<Object> serverComboSelectionObservable = ViewerProperties.singleSelection()
+        var serverIdCombo = new Combo(serverIdComposite, SWT.BORDER);
+        serverIdCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        serverIdCombo.setItems(new ServerIdContentProvider(settingsObservable).toArray());
+        IObservableValue<String> serverComboSelectionObservable = WidgetProperties.text()
                 .observe(serverIdCombo);
         ctx.bindValue(serverComboSelectionObservable,
                 PojoProperties.value("id", String.class).observeDetail(selectionObservable));
 
-        selectionObservable.addValueChangeListener(e -> serverIdCombo.refresh());
         serverComboSelectionObservable.addValueChangeListener(e -> viewer.refresh());
     }
 
     private void createServerListComposite(Composite parent) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 1).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(200, SWT.DEFAULT).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(250, SWT.DEFAULT).create());
 
         createToolbar(composite);
         createViewer(composite);
@@ -476,23 +474,24 @@ public class ServersComposite extends Composite {
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SERVERS_VIEWER_ID);
 
-        ColumnViewerToolTipSupport.enableFor(viewer);
-
         viewer.setUseHashlookup(true);
-        createServerColumn(viewer);
+       
 
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
         viewer.getTable().setLayout(layout);
+        
+        createServerColumn(viewer);
 
         viewer.setContentProvider(new ObservableListContentProvider<Server>());
         viewer.setInput(serversObservable);
 
         selectionObservable = ViewerProperties.singleSelection(Server.class).observe(viewer);
+        ColumnViewerToolTipSupport.enableFor(viewer);
     }
 
     private void createServerColumn(TableViewer viewer) {
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL);
+        TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
         column.setLabelProvider(new LabelProviderBuilder<Server>()
                 .withTextProvider(Server::getId)
                 .shouldRefreshAllLabels(viewer)
