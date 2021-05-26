@@ -55,7 +55,7 @@ public class ImportBosArchiveOperationTest {
     public void setUp() throws Exception {
         operationUnserTest = spy(new ImportBosArchiveOperation(repositoryAccessor));
         doNothing().when(operationUnserTest).migrateUID(any(IProgressMonitor.class));
-        doNothing().when(operationUnserTest).doUpdateProjectDependencies(any(IProgressMonitor.class));
+        doNothing().when(operationUnserTest).doUpdateProjectDependencies(any(IProgressMonitor.class), any(ImportBosArchiveStatusBuilder.class));
         doReturn(Collections.emptySet()).when(operationUnserTest).doMigrateToMavenDependencies(any(ImportArchiveModel.class), any(IProgressMonitor.class));
         doReturn(null).when(operationUnserTest).existingMavenModel(any());
         archiveFile = new File(ImportBosArchiveOperationTest.class.getResource("/customer_support_2.0.bos").getFile());

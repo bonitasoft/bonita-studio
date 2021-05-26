@@ -88,7 +88,6 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
     private File archive;
     private AbstractRepository currentRepository;
-    private IStatus validationStatus;
     private final boolean launchValidationafterImport;
 
     private boolean validate = true;
@@ -185,12 +184,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
             dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
-                    .filter(dl -> dl.getConflictVersion() == null 
-                                        || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
+                    .filter(dl -> dl.getConflictVersion() == null
+                            || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
                     .map(dl -> installLocalDependency(dl, localDependencyStore))
                     .map(DependencyLookup::toMavenDependency)
                     .forEach(dependencies::add);
-            doUpdateProjectDependencies(monitor);
+            doUpdateProjectDependencies(monitor, statusBuilder);
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
             restoreBuildState();
@@ -209,8 +208,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
 
             repositoryStore.resetComputedProcesses();
         }
+        if(status.getSeverity() != IStatus.ERROR) {
+            status = statusBuilder.done();
+        }
         InstallBDMDependenciesEventHandler.enableProjectUpateJob();
-
     }
 
     protected Model existingMavenModel(final ImportArchiveModel importArchiveModel) {
@@ -295,13 +296,13 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return dependencyLookup;
     }
 
-    protected void doUpdateProjectDependencies(IProgressMonitor monitor) {
+    protected void doUpdateProjectDependencies(IProgressMonitor monitor, ImportBosArchiveStatusBuilder statusBuilder) {
         monitor.beginTask(Messages.updateProjectDependencies, IProgressMonitor.UNKNOWN);
         MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
         try {
             Model mavenModel = mavenProjectHelper.getMavenModel(currentRepository.getProject());
             dependencies.stream()
-                    .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper));
+                    .forEach(dep -> updateProjectModel(dep, mavenModel, mavenProjectHelper, statusBuilder));
             mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
@@ -315,19 +316,19 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private void updateProjectModel(Dependency dep, Model mavenModel, MavenProjectHelper mavenProjectHelper) {
+    private void updateProjectModel(Dependency dep, Model mavenModel, MavenProjectHelper mavenProjectHelper, ImportBosArchiveStatusBuilder statusBuilder) {
         // Only keep a unique version of the dependency
         mavenProjectHelper.findDependencyInAnyVersion(mavenModel, dep)
                 .ifPresentOrElse(d -> {
                     if (!Objects.equals(d.getVersion(), dep.getVersion())) {
                         d.setVersion(dep.getVersion());
-                        status.add(ValidationStatus.info(String.format(Messages.dependencyUpdatedStatus,
+                        statusBuilder.addStatus(ValidationStatus.info(String.format(Messages.dependencyUpdatedStatus,
                                 dep.getGroupId(), dep.getArtifactId(), dep.getVersion())));
                     }
                 },
                         () -> {
                             mavenModel.addDependency(dep);
-                            status.add(ValidationStatus.info(String.format(Messages.dependencyAddedStatus,
+                            statusBuilder.addStatus(ValidationStatus.info(String.format(Messages.dependencyAddedStatus,
                                     dep.getGroupId(), dep.getArtifactId())));
                         });
     }
@@ -449,10 +450,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 }
             }
         }
-        validationStatus = monitor.isCanceled()
-                ? ValidationStatus.warning(org.bonitasoft.studio.importer.bos.i18n.Messages.skippedValidationMessage)
-                : statusBuilder
-                        .done();
+        if (monitor.isCanceled()) {
+            statusBuilder.addStatus(ValidationStatus
+                    .warning(org.bonitasoft.studio.importer.bos.i18n.Messages.skippedValidationMessage));
+        } 
     }
 
     protected List<BosImporterStatusProvider> getValidators() {
@@ -493,10 +494,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     public IStatus getStatus() {
-        if (status != null && !status.isOK()) {
-            return status;
-        }
-        return validationStatus;
+        return status;
     }
 
     public List<IRepositoryFileStore> getFileStoresToOpen() {

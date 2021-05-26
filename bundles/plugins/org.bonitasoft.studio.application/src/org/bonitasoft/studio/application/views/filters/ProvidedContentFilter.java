@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.views.filters;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -23,6 +24,8 @@ import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
+import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -57,6 +60,9 @@ public class ProvidedContentFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
+        if( !RepositoryManager.getInstance().hasActiveRepository() || !RepositoryManager.getInstance().getCurrentRepository().isLoaded() ) {
+            return false;
+        }
         if (element instanceof IPackageFragmentRoot) {
             IResource resource = ((IPackageFragmentRoot) element).getAdapter(IResource.class);
             if (resource instanceof IResource) {
@@ -78,22 +84,23 @@ public class ProvidedContentFilter extends ViewerFilter {
         if (element instanceof IJavaElement) {
             return ((IJavaElement) element).getJavaProject().getProject().isOpen();
         }
+        
+        if (element instanceof IProject && !((IProject) element).isOpen()) {
+            return false;
+        }
 
         if (element instanceof IResource 
                 && RepositoryManager.getInstance().hasActiveRepository() 
-                && RepositoryManager.getInstance().getCurrentRepository().isLoaded() 
                 && ((IResource) element).getLocation() != null) {
             try {
-                IRepositoryFileStore fStore = RepositoryManager.getInstance().getCurrentRepository()
-                        .asRepositoryFileStore(((IResource) element).getLocation().toFile().toPath(), false);
-                if (fStore instanceof WebWidgetFileStore && fStore.getName().startsWith("pb")) { //Hide provided widgets
-                    return false;
+                var resource = (IResource) element;
+                IProject project = resource.getProject();
+                if(project.isOpen() && project.hasNature(BonitaProjectNature.NATURE_ID)) {
+                    IFolder widgetsFolder= project.getFolder(WebWidgetRepositoryStore.WEB_WIDGET_REPOSITORY_NAME);
+                    if(Objects.equals(resource.getParent(), widgetsFolder) && resource.getName().startsWith("pb")) {
+                        return false;
+                    }
                 }
-            } catch (IOException | CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            IProject project = ((IResource) element).getProject();
-            try {
                 return (project.isOpen() && !project.hasNature(BonitaProjectNature.NATURE_ID)) || (project.isOpen()
                         && !HIDDEN_RESOURCES.contains(((IResource) element).getProjectRelativePath()));
             } catch (CoreException e) {
