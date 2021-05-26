@@ -37,7 +37,7 @@ public class BosArchiveImportStatus extends MultiStatus {
     }
 
     public List<AbstractProcess> getProcessesWithErrors() {
-        final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+        final List<AbstractProcess> processes = new ArrayList<>();
         for (final IStatus child : getChildren()) {
             if (child instanceof ProcessValidationStatus && !child.isOK()) {
                 processes.add(((ProcessValidationStatus) child).getProcess());

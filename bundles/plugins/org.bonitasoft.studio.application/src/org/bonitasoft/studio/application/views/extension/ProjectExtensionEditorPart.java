@@ -189,48 +189,51 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
 
     private void createExtensionCards(Composite parent) {
         try {
-            List<Dependency> modelDependencies = mavenHelper
-                    .getMavenModel(repositoryAccessor.getCurrentRepository().getProject())
-                    .getDependencies();
-            List<Dependency> otherDependencies = new ArrayList<>();
-            modelDependencies.forEach(dep -> {
-                Optional<BonitaArtifactDependency> bonitaDependency = allDependencies.stream()
-                        .filter(bonitaDep -> sameDependency(dep, bonitaDep))
-                        .findFirst();
-                if (bonitaDependency
-                        .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
-                        .isPresent()) {
-                    createCard(parent, dep, bonitaDependency.get());
-                } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
-                    BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
-                            .toBonitaArtifactDependency(dep);
-                    if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
-                        otherDependencies.add(dep);
-                    } else {
-                        createCard(parent, dep, bonitaDep);
+            Model mavenModel = mavenHelper
+                    .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
+            if (mavenModel != null) {
+                List<Dependency> modelDependencies = mavenModel.getDependencies();
+                List<Dependency> otherDependencies = new ArrayList<>();
+                modelDependencies.forEach(dep -> {
+                    Optional<BonitaArtifactDependency> bonitaDependency = allDependencies.stream()
+                            .filter(bonitaDep -> sameDependency(dep, bonitaDep))
+                            .findFirst();
+                    if (bonitaDependency
+                            .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
+                            .isPresent()) {
+                        createCard(parent, dep, bonitaDependency.get());
+                    } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
+                        BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
+                                .toBonitaArtifactDependency(dep);
+                        if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
+                            otherDependencies.add(dep);
+                        } else {
+                            createCard(parent, dep, bonitaDep);
+                        }
                     }
-                }
-            });
+                });
 
-            if (!otherDependencies.isEmpty()) {
-                if (parent.getChildren().length > 0) {
-                    Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-                    separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+                if (!otherDependencies.isEmpty()) {
+                    if (parent.getChildren().length > 0) {
+                        Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
+                        separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+                    }
+                    new OtherExtensionsComposite(parent,
+                            otherDependencies,
+                            JFaceResources.getFont(BOLD_8_FONT_ID),
+                            removeExtensionListener,
+                            upadateExtensionListener,
+                            ctx);
                 }
-                new OtherExtensionsComposite(parent,
-                        otherDependencies,
-                        JFaceResources.getFont(BOLD_8_FONT_ID),
-                        removeExtensionListener,
-                        upadateExtensionListener,
-                        ctx);
+
+                if (cardComposite.getChildren().length == 0) {
+                    toolbarComposite.setVisible(false);
+                    createEmptyExtensionComposite(cardComposite);
+                } else {
+                    toolbarComposite.setVisible(true);
+                }
             }
 
-            if (cardComposite.getChildren().length == 0) {
-                toolbarComposite.setVisible(false);
-                createEmptyExtensionComposite(cardComposite);
-            } else {
-                toolbarComposite.setVisible(true);
-            }
         } catch (CoreException e) {
             errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
@@ -502,7 +505,8 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     }
 
     private void createFont(String id, Font initialFont, int increaseHeight, int style) {
-        if (!JFaceResources.getFontRegistry().hasValueFor(id) || JFaceResources.getFontRegistry().get(id).isDisposed()) {
+        if (!JFaceResources.getFontRegistry().hasValueFor(id)
+                || JFaceResources.getFontRegistry().get(id).isDisposed()) {
             FontDescriptor descriptor = FontDescriptor.createFrom(initialFont).setStyle(style)
                     .increaseHeight(increaseHeight);
             JFaceResources.getFontRegistry().put(id, localResourceManager.createFont(descriptor).getFontData());

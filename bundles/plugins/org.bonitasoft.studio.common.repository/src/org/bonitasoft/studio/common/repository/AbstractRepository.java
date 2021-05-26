@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.common.repository.migration.ProcessModelTransformation;
@@ -286,6 +287,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         }
         hookResourceListeners();
         updateCurrentRepositoryPreference();
+        AbstractFileStore.refreshExplorerView();
 
         return this;
     }
