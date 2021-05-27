@@ -16,14 +16,9 @@
             <unit id="org.eclipse.equinox.sdk.feature.group" version="3.22.0.v20210227-0235"/>
             <unit id="org.eclipse.egit.feature.group" version="5.11.0.202103091610-r"/>
             <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.11.0.202103091610-r"/>
-         <!--   <unit id="org.eclipse.jgit.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.http.apache.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.lfs.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.ssh.apache.feature.group" version="5.11.0.202103091610-r"/> -->
             <unit id="org.eclipse.emf.compare.egit.feature.group" version="3.3.14.202102231741"/>
             <unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.102.201911250848"/>
             <unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.14.102.201911250848"/>
-          <!--  <unit id="org.eclipse.jdt.feature.group" version="3.18.400.v20200604-0540"/> -->
             <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.21.0.v202102251419"/>
             <unit id="org.eclipse.wst.ws_ui.feature.feature.group" version="3.9.100.v202004082157"/>
             <unit id="org.eclipse.m2e.feature.feature.group" version="1.17.2.20210219-1922"/>
@@ -66,10 +61,6 @@
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-3.2.1"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
-            <!--  <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/> -->
-             <!--  <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/> -->
-             <!--  <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/> -->
-            <!-- <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/> -->
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
