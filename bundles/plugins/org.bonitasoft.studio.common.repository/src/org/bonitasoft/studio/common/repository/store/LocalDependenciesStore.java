@@ -50,7 +50,7 @@ public class LocalDependenciesStore {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
                     String.format("Cannot install %s dependency. %s is not a file.",
                             dependencyFile.getName(),
-                            dependencyLookup.getFileName())));
+                            dependencyLookup.getFile().toPath())));
         }
         if (!project.isAccessible()) {
             throw new CoreException(new Status(IStatus.ERROR, getClass(),
@@ -103,7 +103,7 @@ public class LocalDependenciesStore {
                 .resolve(dependency.getVersion());
     }
 
-    private String dependencyFileName(Dependency dependency) {
+    public static String dependencyFileName(Dependency dependency) {
         if (dependency.getClassifier() != null && !dependency.getClassifier().isBlank()) {
             return String.format("%s-%s-%s.%s", dependency.getArtifactId(),
                     dependency.getVersion(),

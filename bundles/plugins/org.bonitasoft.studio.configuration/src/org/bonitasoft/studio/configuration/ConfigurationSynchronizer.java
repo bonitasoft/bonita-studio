@@ -20,20 +20,15 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.page.JavaDependenciesConfigurationWizardPage;
-import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.Synchronizer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -51,7 +46,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -66,7 +60,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 public class ConfigurationSynchronizer implements Synchronizer {
 
     private AbstractProcess process;
-    private  Configuration configuration;
+    private Configuration configuration;
     private AdapterFactoryEditingDomain editingDomain;
     private ComposedAdapterFactory adapterFactory;
     private boolean synchronizeLocalConfiguraiton;
@@ -80,22 +74,23 @@ public class ConfigurationSynchronizer implements Synchronizer {
         this();
         this.process = process;
         this.configuration = configuration;
-        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null;
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON
+                .equals(configuration.getName()) || configuration.getName() == null;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
     }
-    
+
     public ConfigurationSynchronizer() {
         initializaSynchronizers();
         initializaWizardPages();
     }
 
-    protected void initializaSynchronizers() {
+    static void initializaSynchronizers() {
         if (synchronizers == null) {
-            synchronizers = new ArrayList<IConfigurationSynchronizer>();
+            synchronizers = new ArrayList<>();
             for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
                     .getConfigurationElements("org.bonitasoft.studio.configuration.synchronizer")) {
                 try {
-                    synchronizers.add((IConfigurationSynchronizer) elem.createExecutableExtension("class"));
+                    synchronizers.add((IConfigurationSynchronizer) elem.createExecutableExtension(CLASS_ATTRIBUTE));
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
@@ -103,13 +98,15 @@ public class ConfigurationSynchronizer implements Synchronizer {
         }
     }
 
-    protected void initializaWizardPages() {
+    static void initializaWizardPages() {
         if (wizardPages == null) {
-            wizardPages = new ArrayList<IProcessConfigurationWizardPage>();
-            final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
+            wizardPages = new ArrayList<>();
+            final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
             for (final IConfigurationElement e : elems) {
                 try {
-                    final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
+                    final IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e
+                            .createExecutableExtension(CLASS_ATTRIBUTE);
                     wizardPages.add(page);
                 } catch (final Exception e1) {
                     BonitaStudioLog.error(e1);
@@ -131,19 +128,21 @@ public class ConfigurationSynchronizer implements Synchronizer {
         final BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
+        editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<>());
+        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf",
+                new ConfigurationResourceFactoryImpl());
     }
 
     public void synchronize() {
         synchronize(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
-    
+
     @Override
     public void synchronize(Pool process, Configuration configuration) {
         this.process = process;
         this.configuration = configuration;
-        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null;
+        synchronizeLocalConfiguraiton = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON
+                .equals(configuration.getName()) || configuration.getName() == null;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process);
         synchronize();
     }
@@ -168,8 +167,10 @@ public class ConfigurationSynchronizer implements Synchronizer {
                     ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON));
         }
 
-        if (configuration.getVersion() == null || !ModelVersion.CURRENT_DIAGRAM_VERSION.equals(configuration.getVersion())) {
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_DIAGRAM_VERSION));
+        if (configuration.getVersion() == null
+                || !ModelVersion.CURRENT_DIAGRAM_VERSION.equals(configuration.getVersion())) {
+            cc.append(SetCommand.create(editingDomain, configuration,
+                    ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_DIAGRAM_VERSION));
         }
 
         synchronizeFragmentContainers(cc);
@@ -178,7 +179,8 @@ public class ConfigurationSynchronizer implements Synchronizer {
         cc = new CompoundCommand();
 
         if (!exists && !synchronizeLocalConfiguraiton) {
-            cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, configuration));
+            cc.append(AddCommand.create(editingDomain, process,
+                    ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, configuration));
         }
 
         for (final IConfigurationSynchronizer synchronier : synchronizers) {
@@ -187,11 +189,13 @@ public class ConfigurationSynchronizer implements Synchronizer {
 
         if (configuration.getUsername() == null || configuration.getUsername().isEmpty()) {
             final String defaultUserName = activeOrganizationProvider.getDefaultUser();
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__USERNAME, defaultUserName));
+            cc.append(SetCommand.create(editingDomain, configuration,
+                    ConfigurationPackage.Literals.CONFIGURATION__USERNAME, defaultUserName));
         }
         if (configuration.getPassword() == null || configuration.getPassword().isEmpty()) {
             final String defaultPassword = activeOrganizationProvider.getDefaultPassword();
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__PASSWORD, defaultPassword));
+            cc.append(SetCommand.create(editingDomain, configuration,
+                    ConfigurationPackage.Literals.CONFIGURATION__PASSWORD, defaultPassword));
         }
 
         editingDomain.getCommandStack().execute(cc);
@@ -210,11 +214,14 @@ public class ConfigurationSynchronizer implements Synchronizer {
                 synchronizeFragmentContainer(dependencyKind, containerId, cc);
             }
         }
-        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES, FragmentTypes.OTHER, cc);
-        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES, FragmentTypes.OTHER, cc);
+        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__APPLICATION_DEPENDENCIES,
+                FragmentTypes.OTHER, cc);
+        synchronizeFragmentContainer(ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES,
+                FragmentTypes.OTHER, cc);
     }
 
-    protected void synchronizeFragmentContainer(final EStructuralFeature dependencyKind, final String containerId, final CompoundCommand cc) {
+    protected void synchronizeFragmentContainer(final EStructuralFeature dependencyKind, final String containerId,
+            final CompoundCommand cc) {
         boolean containerExists = false;
         final List<FragmentContainer> containers = (List<FragmentContainer>) configuration.eGet(dependencyKind);
         for (final FragmentContainer fc : containers) {
@@ -246,5 +253,5 @@ public class ConfigurationSynchronizer implements Synchronizer {
     public Configuration getConfiguration() {
         return configuration;
     }
-    
+
 }

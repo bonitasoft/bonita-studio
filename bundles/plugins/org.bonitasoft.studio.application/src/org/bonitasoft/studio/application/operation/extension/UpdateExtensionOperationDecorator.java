@@ -65,7 +65,8 @@ public class UpdateExtensionOperationDecorator {
 
     public void preUpdate(IRunnableContext context) throws InvocationTargetException, InterruptedException {
         if (!dependenciesUpdates.isEmpty()) {
-            participants = ExtensionUpdateParticipantFactoryRegistry.getInstance().createParticipants(dependenciesUpdates);
+            participants = ExtensionUpdateParticipantFactoryRegistry.getInstance()
+                    .createParticipants(dependenciesUpdates);
             DiagramRepositoryStore diagramRepositoryStore = currentRepository
                     .getRepositoryStore(DiagramRepositoryStore.class);
             diagramRepositoryStore.resetComputedProcesses();
@@ -154,12 +155,10 @@ public class UpdateExtensionOperationDecorator {
                 .forEach(du -> {
                     try {
                         localDependencyStore.deleteBackup(du.getCurrentDependency());
-                        if (du.getUpdatedDependency() != null) {
-                            if (!Objects.equals(du.getCurrentDependency().getVersion(),
-                                    du.getUpdatedDependency().getVersion())) {
-                                // Nothing to remove if version is the same (updating a snapshot)
-                                localDependencyStore.remove(du.getCurrentDependency());
-                            }
+                        if (du.getUpdatedDependency() != null && !Objects.equals(du.getCurrentDependency().getVersion(),
+                                du.getUpdatedDependency().getVersion())) {
+                            // Nothing to remove if version is the same (updating a snapshot)
+                            localDependencyStore.remove(du.getCurrentDependency());
                         }
                     } catch (CoreException e) {
                         BonitaStudioLog.error(e);
@@ -220,7 +219,7 @@ public class UpdateExtensionOperationDecorator {
                         BonitaStudioLog.error(e);
                     }
                 });
-        
+
         //THEN Restore jar in local store if any
         dependenciesUpdates.stream()
                 .map(DependencyUpdate::getCurrentDependency)

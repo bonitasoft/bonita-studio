@@ -47,6 +47,9 @@ public class Messages extends NLS {
 	public static String dependencyExistsInRuntimeContainerWithAnotherVersion;
     public static String addingJar;
     public static String beginToAddJars;
+    public static String updateProcessConfigurations;
+    public static String updatingDependencyInConfigurations;
+    public static String removingDependencyInConfigurations;
 
 
 }

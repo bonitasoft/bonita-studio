@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.importer.bos.operation;
 
+import static java.util.function.Predicate.not;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -47,6 +49,7 @@ import org.bonitasoft.studio.common.repository.core.maven.DependencyUsageOperati
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesLookupOperation;
+import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.ConflictVersion;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
@@ -54,6 +57,9 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationCollector;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
@@ -102,28 +108,43 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     private boolean manualDependencyResolution = false;
     private Set<DependencyLookup> dependenciesLookup = new HashSet<>();
     private MavenRepositoryRegistry mavenRepositoryRegistry = new MavenRepositoryRegistry();
+    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
 
-    public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
-            ImportArchiveModel importArchiveModel, RepositoryAccessor repositoryAccessor) {
-        this(selectedFile, progressManager, importArchiveModel, true, repositoryAccessor);
+    public ImportBosArchiveOperation(File selectedFile,
+            SkippableProgressMonitorJobsDialog progressManager,
+            ImportArchiveModel importArchiveModel,
+            RepositoryAccessor repositoryAccessor,
+            ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory) {
+        this(selectedFile, progressManager, importArchiveModel, true, repositoryAccessor,
+                processConfigurationUpdateOperationFactory);
     }
 
-    public ImportBosArchiveOperation(File selectedFile, SkippableProgressMonitorJobsDialog progressManager,
-            ImportArchiveModel root, boolean launchValidationafterImport, RepositoryAccessor repositoryAccessor) {
-        this(launchValidationafterImport, repositoryAccessor);
-        progressDialog = progressManager;
-        archive = selectedFile;
-        archiveModel = Optional.ofNullable(root);
-    }
-
-    public ImportBosArchiveOperation(RepositoryAccessor repositoryAccessor) {
-        this(true, repositoryAccessor);
-    }
-
-    public ImportBosArchiveOperation(final boolean launchValidationafterImport, RepositoryAccessor repositoryAccessor) {
+    public ImportBosArchiveOperation(File selectedFile,
+            SkippableProgressMonitorJobsDialog progressManager,
+            ImportArchiveModel root,
+            boolean launchValidationafterImport,
+            RepositoryAccessor repositoryAccessor,
+            ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory) {
         this.launchValidationafterImport = launchValidationafterImport;
         this.repositoryAccessor = repositoryAccessor;
         currentRepository = repositoryAccessor.getCurrentRepository();
+        progressDialog = progressManager;
+        archive = selectedFile;
+        archiveModel = Optional.ofNullable(root);
+        this.processConfigurationUpdateOperationFactory = processConfigurationUpdateOperationFactory;
+    }
+
+    /**
+     * Constructor for tests
+     */
+    public ImportBosArchiveOperation(RepositoryAccessor repositoryAccessor) {
+        this.launchValidationafterImport = true;
+        this.repositoryAccessor = repositoryAccessor;
+        currentRepository = repositoryAccessor.getCurrentRepository();
+        processConfigurationUpdateOperationFactory = new ProcessConfigurationUpdateOperationFactory(
+                new ProcessConfigurationCollector(repositoryAccessor),
+                new ProcessConfigurationUpdater(),
+                new ProjectDependenciesResolver(repositoryAccessor));
     }
 
     public ImportBosArchiveOperation manualDependencyResolution() {
@@ -156,10 +177,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         final ImportArchiveModel importArchiveModel = archiveModel
                 .orElseGet(parseArchive(archive, currentRepository, monitor));
         monitor.worked(1);
+
+        DiagramRepositoryStore repositoryStore = repositoryAccessor
+                .getRepositoryStore(DiagramRepositoryStore.class);
         try {
             FileActionDialog.setDisablePopup(true);
             doImport(importArchiveModel, monitor);
             monitor.subTask("");
+
+            repositoryStore.computeProcesses(monitor);
+
             Model importedMavenModel = existingMavenModel(importArchiveModel);
             LocalDependenciesStore localDependencyStore = currentRepository.getLocalDependencyStore();
             if (!manualDependencyResolution && importedMavenModel == null) {
@@ -182,14 +209,31 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                         .forEach(dl -> dl.setSelected(true));
             }
 
-            dependenciesLookup.stream()
+            var dependenciesLookupToInstall = dependenciesLookup.stream()
                     .filter(DependencyLookup::isSelected)
                     .filter(dl -> dl.getConflictVersion() == null
                             || dl.getConflictVersion().getStatus() == ConflictVersion.Status.KEEP_OURS)
-                    .map(dl -> installLocalDependency(dl, localDependencyStore))
-                    .map(DependencyLookup::toMavenDependency)
-                    .forEach(dependencies::add);
+                    .collect(Collectors.toList());
+            var processConfigurationUpdateOperation = processConfigurationUpdateOperationFactory.create();
+            for (var dl : dependenciesLookupToInstall) {
+                installLocalDependency(dl, localDependencyStore);
+                dependencies.add(dl.toMavenDependency());
+                if (dl.hasFileNameChanged()) {
+                    dl.getJarNames().stream()
+                            .filter(jarName -> !Objects.equals(jarName, dl.dependencyFileName()))
+                            .forEach(jarName -> processConfigurationUpdateOperation.addJarUpdateChange(jarName,
+                                    dl.dependencyFileName()));
+                }
+            }
+
             doUpdateProjectDependencies(monitor, statusBuilder);
+
+            dependenciesLookup.stream()
+                    .filter(not(DependencyLookup::isSelected))
+                    .flatMap(dl -> dl.getJarNames().stream())
+                    .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
+
+            processConfigurationUpdateOperation.run(monitor);
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
             restoreBuildState();
@@ -200,15 +244,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
         if (launchValidationafterImport) {
-            DiagramRepositoryStore repositoryStore = repositoryAccessor
-                    .getRepositoryStore(DiagramRepositoryStore.class);
-            repositoryStore.computeProcesses(monitor);
-
             validateAllAfterImport(monitor, statusBuilder);
-
-            repositoryStore.resetComputedProcesses();
         }
-        if(status.getSeverity() != IStatus.ERROR) {
+        repositoryStore.resetComputedProcesses();
+        if (status.getSeverity() != IStatus.ERROR) {
             status = statusBuilder.done();
         }
         InstallBDMDependenciesEventHandler.enableProjectUpateJob();
@@ -316,7 +355,8 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private void updateProjectModel(Dependency dep, Model mavenModel, MavenProjectHelper mavenProjectHelper, ImportBosArchiveStatusBuilder statusBuilder) {
+    private void updateProjectModel(Dependency dep, Model mavenModel, MavenProjectHelper mavenProjectHelper,
+            ImportBosArchiveStatusBuilder statusBuilder) {
         // Only keep a unique version of the dependency
         mavenProjectHelper.findDependencyInAnyVersion(mavenModel, dep)
                 .ifPresentOrElse(d -> {
@@ -453,7 +493,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         if (monitor.isCanceled()) {
             statusBuilder.addStatus(ValidationStatus
                     .warning(org.bonitasoft.studio.importer.bos.i18n.Messages.skippedValidationMessage));
-        } 
+        }
     }
 
     protected List<BosImporterStatusProvider> getValidators() {
@@ -474,7 +514,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     public void openFilesToOpen() {
-        for (final IRepositoryFileStore f : fileStoresToOpen) {
+        for (var f : fileStoresToOpen) {
             Display.getDefault().asyncExec(f::open);
         }
     }

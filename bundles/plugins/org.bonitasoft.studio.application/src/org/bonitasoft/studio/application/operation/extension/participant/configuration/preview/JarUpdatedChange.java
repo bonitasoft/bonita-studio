@@ -22,9 +22,9 @@ import java.util.Objects;
 import org.apache.maven.artifact.Artifact;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.participant.configuration.DatabaseConnectorConfigurationChange;
-import org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.common.repository.extension.update.preview.ChangePreview;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
 import org.bonitasoft.studio.model.configuration.Configuration;
 
 public class JarUpdatedChange

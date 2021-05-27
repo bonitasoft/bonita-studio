@@ -35,10 +35,12 @@ import org.eclipse.swt.graphics.Image;
 public class MavenDependencyFileStore extends DependencyFileStore {
 
     private Artifact artifact;
+    private ProjectDependenciesResolver projectDependenciesResolver;
 
     public MavenDependencyFileStore(Artifact artifact, final DependencyRepositoryStore parentStore) {
         super(artifact.getFile().getName(), parentStore);
         this.artifact = artifact;
+        this.projectDependenciesResolver = new ProjectDependenciesResolver(getRepositoryAccessor());
     }
 
     @Override
@@ -93,8 +95,8 @@ public class MavenDependencyFileStore extends DependencyFileStore {
     @Override
     public List<File> getTransitiveDependencies() {
         try {
-            return new ProjectDependenciesResolver()
-                .getTransitiveDependencies(getRepository().getProject(), artifact, AbstractRepository.NULL_PROGRESS_MONITOR)
+            return projectDependenciesResolver
+                .getTransitiveDependencies(artifact, AbstractRepository.NULL_PROGRESS_MONITOR)
                 .stream()
                 .map(Artifact::getFile)
                 .filter(Objects::nonNull)

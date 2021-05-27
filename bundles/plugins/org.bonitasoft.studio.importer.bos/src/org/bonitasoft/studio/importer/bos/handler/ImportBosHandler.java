@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -17,6 +18,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -26,7 +28,6 @@ import org.bonitasoft.studio.importer.bos.validator.DependencyLookupConflictHand
 import org.bonitasoft.studio.importer.bos.wizard.BosArchiveContentPage;
 import org.bonitasoft.studio.importer.bos.wizard.ExtensionsPreviewPage;
 import org.bonitasoft.studio.importer.bos.wizard.ImportBosArchivePage;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
@@ -44,16 +45,28 @@ import org.eclipse.swt.widgets.Shell;
 public class ImportBosHandler {
 
     private SwitchRepositoryStrategy switchRepositoryStrategy;
-
-    @Execute
-    public void execute(Shell activeShell,
-            RepositoryAccessor repositoryAccessor,
+    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
+    private MavenRepositoryRegistry mavenRepositoryRegistry;
+    private RepositoryAccessor repositoryAccessor;
+    private ExceptionDialogHandler exceptionDialogHandler;
+    
+    @Inject
+    public ImportBosHandler( RepositoryAccessor repositoryAccessor,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             ExceptionDialogHandler exceptionDialogHandler,
             SwitchRepositoryStrategy switchRepositoryStrategy,
+            ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory) {
+        this.repositoryAccessor = repositoryAccessor;
+        this.mavenRepositoryRegistry = mavenRepositoryRegistry;
+        this.exceptionDialogHandler = exceptionDialogHandler;
+        this.switchRepositoryStrategy = switchRepositoryStrategy;
+        this.processConfigurationUpdateOperationFactory = processConfigurationUpdateOperationFactory;
+    }
+
+    @Execute
+    public void execute(Shell activeShell,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.file") String file,
             @org.eclipse.e4.core.di.annotations.Optional @Named("org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName") String projectName) {
-        this.switchRepositoryStrategy = switchRepositoryStrategy;
         IObservableList<DependencyLookup> dependenciesLookup = new WritableList<>();
         IObservableList<IRepository> mavenRepositories = new WritableList<>();
         String targetProject = switchRepositoryStrategy.getTargetRepository();
@@ -171,10 +184,6 @@ public class ImportBosHandler {
         return repositoryAccessor.getRepository(targetRepository);
     }
 
-    private void switchToRepository(IProgressMonitor monitor) {
-        TeamRepositoryUtil.switchToRepository(switchRepositoryStrategy.getTargetRepository(), monitor);
-    }
-
     protected void importArchive(Shell activeShell, ImportArchiveModel model,
             ImportBosArchivePage bosArchiveControlSupplier,
             ExtensionsPreviewPage dependenciesPreviewControlSupplier,
@@ -182,8 +191,7 @@ public class ImportBosHandler {
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         File archiveFile = new File(bosArchiveControlSupplier.getFilePath());
-        final ImportBosArchiveOperation operation = createImportOperation(model, archiveFile, progressManager,
-                repositoryAccessor);
+        final ImportBosArchiveOperation operation =  new ImportBosArchiveOperation(archiveFile, progressManager, model, repositoryAccessor, processConfigurationUpdateOperationFactory);
         if (dependenciesPreviewControlSupplier.hasRunPreview(model)) {
             operation
                     .manualDependencyResolution()
@@ -203,11 +211,6 @@ public class ImportBosHandler {
         activeShell.getDisplay().asyncExec(() -> openEndImportDialog(operation,
                 repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class), activeShell,
                 repositoryAccessor.getCurrentRepository().getName()));
-    }
-
-    protected ImportBosArchiveOperation createImportOperation(ImportArchiveModel model, File archive,
-            final SkippableProgressMonitorJobsDialog progressManager, RepositoryAccessor repositoryAccessor) {
-        return new ImportBosArchiveOperation(archive, progressManager, model, repositoryAccessor);
     }
 
     protected void openEndImportDialog(ImportBosArchiveOperation operation, DiagramRepositoryStore store,

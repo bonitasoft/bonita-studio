@@ -22,13 +22,18 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.assertj;bundle-version="1.5.0";resolution:=optional,
  org.eclipse.m2e.maven.runtime,
- org.eclipse.m2e.core;bundle-version="1.16.0"
+ org.eclipse.m2e.core;bundle-version="1.16.0",
+ org.bonitasoft.studio.diagram.custom,
+ org.eclipse.e4.core.di.annotations,
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.core.di;bundle-version="1.7.700"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.dependencies,org.bonitasoft.stud
- io.dependencies.handler,org.bonitasoft.studio.dependencies.i18n;x-fri
- ends:="org.bonitasoft.studio.connectors.test,org.bonitasoft.studio.gr
- oovy.tests",org.bonitasoft.studio.dependencies.repository,org.bonitas
- oft.studio.dependencies.ui,org.bonitasoft.studio.dependencies.ui.dial
- og
+Export-Package: org.bonitasoft.studio.dependencies,
+ org.bonitasoft.studio.dependencies.configuration,
+ org.bonitasoft.studio.dependencies.handler,
+ org.bonitasoft.studio.dependencies.i18n;x-friends:="org.bonitasoft.studio.connectors.test,org.bonitasoft.studio.groovy.tests",
+ org.bonitasoft.studio.dependencies.repository,
+ org.bonitasoft.studio.dependencies.ui,
+ org.bonitasoft.studio.dependencies.ui.dialog
 Import-Package: org.bonitasoft.engine.bpm.bar

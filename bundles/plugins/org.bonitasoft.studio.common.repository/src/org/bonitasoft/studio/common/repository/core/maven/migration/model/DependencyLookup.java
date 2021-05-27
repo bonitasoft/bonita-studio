@@ -19,9 +19,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +31,7 @@ import java.util.regex.Pattern;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 
 public class DependencyLookup {
 
@@ -46,6 +49,7 @@ public class DependencyLookup {
     private boolean isUsed;
     private InputStreamSupplier inputStreamSupplier;
     private ConflictVersion conflictVersion;
+    private Set<String> jarNames = new HashSet<>();
 
     public DependencyLookup(String fileName,
             String sha1,
@@ -60,6 +64,10 @@ public class DependencyLookup {
         if (status == Status.NOT_FOUND && fileName != null) {
             tmpFile = copy(fileName);
         }
+        if(fileName != null) {
+            this.fileName = new File(fileName).getName();
+            jarNames.add(this.fileName);
+        }
     }
 
     public DependencyLookup(InputStreamSupplier inputStreamSupplier,
@@ -67,6 +75,7 @@ public class DependencyLookup {
             GAV gav) {
         this.inputStreamSupplier = inputStreamSupplier;
         this.fileName = inputStreamSupplier.getName();
+        this.jarNames.add(fileName);
         this.status = status;
         this.gav = gav;
         tmpFile = inputStreamSupplier.toTempFile();
@@ -292,4 +301,20 @@ public class DependencyLookup {
         return getConflictVersion() != null && getConflictVersion().getStatus() == ConflictVersion.Status.CONFLICTING;
     }
 
+    public boolean hasFileNameChanged() {
+        return jarNames.stream().anyMatch(jarName -> !Objects.equals(jarName, dependencyFileName()));
+    }
+
+    public String dependencyFileName() {
+        return LocalDependenciesStore.dependencyFileName(toMavenDependency());
+    }
+
+    public void addJar(String fileName) {
+        this.jarNames.add(fileName);
+    }
+    
+    public Set<String> getJarNames() {
+        return jarNames;
+    }
+    
 }
