@@ -15,7 +15,6 @@
 package org.bonitasoft.studio.common.repository.core.maven.migration;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -94,15 +93,12 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                     .filter(d -> Objects.equals(dl.getArtifactId(), d.getArtifactId())
                             && Objects.equals(dl.getGroupId(), d.getGroupId()))
                     .findAny();
-            if (search.isPresent()) {
-                DependencyLookup existingDep = search.get();
+            search.ifPresentOrElse(existingDep -> {
                 if (!existingDep.isUsed()) {
                     result.remove(existingDep);
                     result.add(dl);
                 }
-            } else {
-                result.add(dl);
-            }
+            }, () -> result.add(dl));
         }
 
         // Remove all transitive jar from bonita artifacts
@@ -128,13 +124,32 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 if (usedDependencies.contains(jarToLookup.getName())) {
                     dependencyLookup.setUsed(true);
                 }
-                if (isLatestVersion(dependencyLookup, result)) {
-                    result.add(dependencyLookup);
-                }
-                monitor.worked(1);
+                mergeResult(dependencyLookup, result);
             }
+            monitor.worked(1);
         }
 
+    }
+
+    private void mergeResult(DependencyLookup depToMerge, Set<DependencyLookup> dependencies) {
+        dependencies.add(depToMerge);
+        List<DependencyLookup> conflictingDependencies = dependencies.stream()
+                .filter(existingDep -> Objects.equals(depToMerge.getGroupId(), existingDep.getGroupId())
+                        && Objects.equals(depToMerge.getArtifactId(), existingDep.getArtifactId())
+                        && Objects.equals(depToMerge.getGAV().getClassifier(), existingDep.getGAV().getClassifier()))
+                .sorted((d1, d2) -> new DefaultArtifactVersion(d2.getVersion())
+                        .compareTo(new DefaultArtifactVersion(d1.getVersion())))
+                .collect(Collectors.toList());
+        if (conflictingDependencies.size() > 1) {
+            DependencyLookup depToKeep = conflictingDependencies.get(0);
+            for (var dep : conflictingDependencies.subList(1, conflictingDependencies.size())) {
+                dep.getJarNames().forEach(depToKeep::addJar);
+                if(dep.isUsed()) {
+                    depToKeep.setUsed(true);
+                }
+                dependencies.remove(dep);
+            }
+        }
     }
 
     private DependencyLookup newDependencyLookup(String jarName,
@@ -147,22 +162,6 @@ public class ProjectDependenciesMigrationOperation implements IRunnableWithProgr
                 MAVEN_CENTRAL_REPOSITORY_URL);
         dependencyLookup.setUsed(isUsed);
         return dependencyLookup;
-    }
-
-    private boolean isLatestVersion(DependencyLookup depToAdd, Collection<DependencyLookup> dependencies) {
-        List<DependencyLookup> conflictingDependencies = dependencies.stream()
-                .filter(existingDep -> Objects.equals(depToAdd.getGroupId(), existingDep.getGroupId())
-                        && Objects.equals(depToAdd.getArtifactId(), existingDep.getArtifactId()))
-                .sorted((d1, d2) -> new DefaultArtifactVersion(d1.getVersion())
-                        .compareTo(new DefaultArtifactVersion(d2.getVersion())))
-                .collect(Collectors.toList());
-        if (conflictingDependencies.isEmpty()) { // No conflicting deps
-            return true;
-        } else if (conflictingDependencies.get(0).equals(depToAdd)) { // Conflicting deps found and depToAdd is the latest version
-            dependencies.removeAll(conflictingDependencies);
-            return true;
-        }
-        return false; // Conflicting deps found and depToAdd is not the latest version
     }
 
     public Set<DependencyLookup> getResult() {

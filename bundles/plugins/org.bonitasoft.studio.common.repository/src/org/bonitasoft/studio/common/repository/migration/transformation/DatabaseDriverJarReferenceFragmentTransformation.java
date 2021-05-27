@@ -41,21 +41,6 @@ public class DatabaseDriverJarReferenceFragmentTransformation implements Process
                     .filter(DatabaseDriverDependencyReplacement::isProvidedScope)
                     .isPresent())
             .forEach(toRemove::add);
-
-            fragmentContainer.getFragments()
-                    .stream()
-                    .filter(f -> FragmentTypes.JAR.equals(f.getType()))
-                    .forEach(fragment -> {
-                        BonitaJarDependencyReplacement
-                                .getDatabaseDriverDependencyReplacements().stream()
-                                .filter(bddDepReplacement -> Objects.equals(fragment.getValue(),
-                                        bddDepReplacement.getFileName()))
-                                .findFirst()
-                                .ifPresent(r -> {
-                                    fragment.setKey(r.getReplacementJarName());
-                                    fragment.setValue(r.getReplacementJarName());
-                                });
-                    });
         }
     }
 

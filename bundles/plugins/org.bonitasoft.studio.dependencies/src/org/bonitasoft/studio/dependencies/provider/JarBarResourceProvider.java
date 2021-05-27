@@ -14,9 +14,9 @@
  */
 package org.bonitasoft.studio.dependencies.provider;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -25,23 +25,15 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
-import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import com.google.common.io.Files;
-
-/**
- * @author Romain Bioteau
- */
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
@@ -50,30 +42,24 @@ public class JarBarResourceProvider implements BARResourcesProvider {
         if (configuration == null) {
             return ValidationStatus.error("No configuration selected.");
         }
-        final List<BarResource> resources = new ArrayList<>();
-        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
-            final List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT);
-            for (final Fragment fragment : fragments) {
-                if (fragment.getType().equals(FragmentTypes.JAR)) {
-                    if (fragment.isExported()) {
-                        final DependencyFileStore jarArtifact = store.getChild(fragment.getValue(), true);
-                        if (jarArtifact != null) {
-                            final File file = jarArtifact.getFile();
-                            try {
-                                resources.add(new BarResource(file.getName(), Files.toByteArray(file)));
-                            } catch (final Exception e) {
-                                BonitaStudioLog.error(e);
-                            }
-                        }
+        final DependencyRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(DependencyRepositoryStore.class);
+        configuration.getProcessDependencies().stream()
+                .flatMap(container -> ModelHelper.getAllElementOfTypeIn(container, Fragment.class).stream())
+                .filter(fragment -> fragment.getType().equals(FragmentTypes.JAR) && fragment.isExported())
+                .map(fragment -> store.getChild(fragment.getValue(), true))
+                .filter(Objects::nonNull)
+                .map(DependencyFileStore::getFile)
+                .forEach(file -> {
+                    try {
+                        builder.addClasspathResource(
+                                new BarResource(file.getName(), Files.readAllBytes(file.toPath())));
+                    } catch (IOException e) {
+                        BonitaStudioLog.error(
+                                String.format("Failed to add file '%s' to business archive", file.getAbsolutePath()),
+                                e);
                     }
-                }
-            }
-        }
-
-        for (final BarResource barResource : resources) {
-            builder.addClasspathResource(barResource);
-        }
+                });
         return Status.OK_STATUS;
     }
 

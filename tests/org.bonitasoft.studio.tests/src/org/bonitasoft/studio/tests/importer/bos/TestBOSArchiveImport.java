@@ -26,7 +26,11 @@ import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationCollector;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -44,10 +48,15 @@ import org.junit.Test;
 public class TestBOSArchiveImport {
 
     RepositoryAccessor repositoryAccessor;
+    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
 
     @Before
     public void cleanDiagrams() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
+        processConfigurationUpdateOperationFactory = new ProcessConfigurationUpdateOperationFactory(
+                new ProcessConfigurationCollector(repositoryAccessor), 
+                new ProcessConfigurationUpdater(), 
+                new ProjectDependenciesResolver(repositoryAccessor));
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);
@@ -85,10 +94,12 @@ public class TestBOSArchiveImport {
                 new NullProgressMonitor());
         archiveModel.getStores().stream()
                 .filter(store -> Objects.equals(store.getFolderName(), "diagrams"))
-                .forEach(store -> store.getFiles().stream().forEach(diagram -> diagram.setImportAction(ImportAction.KEEP)));
+                .forEach(store -> store.getFiles().stream()
+                        .forEach(diagram -> diagram.setImportAction(ImportAction.KEEP)));
 
         operation = new ImportBosArchiveOperation(conflictingFile, new SkippableProgressMonitorJobsDialog(
-                Display.getDefault().getActiveShell()), archiveModel, repositoryAccessor);
+                Display.getDefault().getActiveShell()), archiveModel, repositoryAccessor,
+                processConfigurationUpdateOperationFactory);
         operation.run(new NullProgressMonitor());
         StatusAssert.assertThat(operation.getStatus()).isOK();
 
@@ -142,7 +153,8 @@ public class TestBOSArchiveImport {
     public void testImportSeveralDiagrams() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
+                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos"))
+                        .getFile());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.run(new NullProgressMonitor());

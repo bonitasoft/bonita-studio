@@ -21,9 +21,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.graph.DependencyVisitor;
 import org.eclipse.core.resources.IProject;
@@ -35,9 +38,16 @@ import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 @Creatable
 public class ProjectDependenciesResolver {
+    
+    private RepositoryAccessor repositoryAccessor;
 
-    public List<Artifact> getCompileDependencies(IProject project, IProgressMonitor monitor) throws CoreException {
-        MavenProject mavenProject = getMavenProject(project, monitor);
+    @Inject
+    public ProjectDependenciesResolver(RepositoryAccessor repositoryAccessor) {
+        this.repositoryAccessor = repositoryAccessor;
+    }
+
+    public List<Artifact> getCompileDependencies(IProgressMonitor monitor) throws CoreException {
+        MavenProject mavenProject = getMavenProject(repositoryAccessor.getCurrentRepository().getProject(), monitor);
         if(mavenProject == null) {
             return Collections.emptyList();
         }
@@ -59,9 +69,9 @@ public class ProjectDependenciesResolver {
                         && Objects.equals(dep.getScope(), artifact.getScope()));
     }
 
-    public Optional<Artifact> findCompileDependency(String fileName, IProject project, IProgressMonitor monitor)
+    public Optional<Artifact> findCompileDependency(String fileName, IProgressMonitor monitor)
             throws CoreException {
-        MavenProject mavenProject = getMavenProject(project, monitor);
+        MavenProject mavenProject = getMavenProject(repositoryAccessor.getCurrentRepository().getProject(), monitor);
         if(mavenProject == null) {
             return Optional.empty();
         }
@@ -72,8 +82,9 @@ public class ProjectDependenciesResolver {
                 .findFirst();
     }
 
-    public List<Artifact> getTransitiveDependencies(IProject project, Artifact artifact, IProgressMonitor monitor)
+    public List<Artifact> getTransitiveDependencies(Artifact artifact, IProgressMonitor monitor)
             throws CoreException {
+        var project = repositoryAccessor.getCurrentRepository().getProject();
         MavenProject mavenProject = getMavenProject(project, monitor);
         if(mavenProject == null) {
             return Collections.emptyList();

@@ -31,7 +31,7 @@ import org.eclipse.emf.validation.IValidationContext;
 public abstract class AbstractProcessConfigurationDependenciesConstraint
         extends AbstractLiveValidationMarkerConstraint {
 
-    private ProjectDependenciesResolver dependenciesResolver = new ProjectDependenciesResolver();
+    private ProjectDependenciesResolver dependenciesResolver = new ProjectDependenciesResolver(RepositoryManager.getInstance().getAccessor());
 
     protected IStatus validateConfigurationDependencies(IValidationContext ctx, Configuration configuration,
             String processName) {
@@ -57,9 +57,8 @@ public abstract class AbstractProcessConfigurationDependenciesConstraint
     }
 
     private boolean notInClasspath(String jarName) {
-        var project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().getProject();
         try {
-            return dependenciesResolver.findCompileDependency(jarName, project, new NullProgressMonitor())
+            return dependenciesResolver.findCompileDependency(jarName, new NullProgressMonitor())
                     .isEmpty();
         } catch (CoreException e) {
             BonitaStudioLog.error(e);

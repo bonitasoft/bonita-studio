@@ -40,6 +40,9 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewM
 import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewResult;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationCollector;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -186,8 +189,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
     private Set<Artifact> transitiveDependencies(Artifact artifact) {
         try {
             return projectDependenciesResolver
-                    .getTransitiveDependencies(repository.getProject(),
-                            artifact,
+                    .getTransitiveDependencies(artifact,
                             AbstractRepository.NULL_PROGRESS_MONITOR)
                     .stream()
                     .collect(Collectors.toSet());

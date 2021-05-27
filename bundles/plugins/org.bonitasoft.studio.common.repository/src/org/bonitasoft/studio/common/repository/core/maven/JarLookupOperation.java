@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public class JarLookupOperation implements IRunnableWithProgress {
     private static final String LOOKUP_GOAL = "lookup";
     private static final String BONITA_PROJECT_PLUGIN_ARTIFACT_ID = "bonita-project-maven-plugin";
     private static final String BONITA_PROJECT_PLUGIN_GROUP_ID = "org.bonitasoft.maven";
-   static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2";
+    static final String MAVEN_CENTRAL_REPOSITORY_URL = "https://repo.maven.apache.org/maven2";
 
     private DependencyLookup result;
     private List<String> repositories = new ArrayList<>();
@@ -64,15 +65,15 @@ public class JarLookupOperation implements IRunnableWithProgress {
 
     public JarLookupOperation addRemoteRespository(String repositoryUrl) {
         this.repositories.add(repositoryUrl);
-        Collections.sort(repositories, (url1,url2) -> {
-            if(url1.equals(MAVEN_CENTRAL_REPOSITORY_URL)) {
+        Collections.sort(repositories, (url1, url2) -> {
+            if (url1.equals(MAVEN_CENTRAL_REPOSITORY_URL)) {
                 return 1;
             }
             return -1;
         });
         return this;
     }
-    
+
     public List<String> getRemoteRepositories() {
         return repositories;
     }
@@ -95,7 +96,8 @@ public class JarLookupOperation implements IRunnableWithProgress {
         Path tmpLookupOutputFolder = null;
         try {
             tmpLookupOutputFolder = Files.createTempDirectory("depLookup");
-            MavenExecutionResult runLookupPlugin = runLookupPlugin(fileToLookup.toTempFile().toPath(), tmpLookupOutputFolder);
+            MavenExecutionResult runLookupPlugin = runLookupPlugin(fileToLookup.toTempFile().toPath(),
+                    tmpLookupOutputFolder);
             BuildSummary buildSummary = runLookupPlugin.getBuildSummary(runLookupPlugin.getProject());
             if (buildSummary instanceof BuildSuccess) {
                 String line = "";
@@ -104,7 +106,12 @@ public class JarLookupOperation implements IRunnableWithProgress {
                     line = br.readLine(); // Skip header line
                     while ((line = br.readLine()) != null) {
                         String[] csvData = line.split(",");
-                        return DependencyLookup.fromCSV(csvData);
+                        var dl = DependencyLookup.fromCSV(csvData);
+                        var pomProperties = DependencyLookup.readPomProperties(fileToLookup.toTempFile());
+                        if (pomProperties.isPresent()) {
+                            return checkGAVConsistency(pomProperties.get(), dl);
+                        }
+                        return dl;
                     }
                 }
             } else if (!runLookupPlugin.getExceptions().isEmpty()) {
@@ -120,6 +127,18 @@ public class JarLookupOperation implements IRunnableWithProgress {
             }
         }
         return null;
+    }
+
+    private DependencyLookup checkGAVConsistency(Properties properties, DependencyLookup dl) {
+        var groupId = properties.get("groupId");
+        var artifactId = properties.get("artifactId");
+        var version = properties.get("version");
+        if (!Objects.equals(dl.getGroupId(), groupId) 
+                || !Objects.equals(dl.getArtifactId(), artifactId) 
+                || !Objects.equals(dl.getVersion(), version)) {
+            dl.setStatus(DependencyLookup.Status.NOT_FOUND);
+        }
+        return dl;
     }
 
     private MavenExecutionResult runLookupPlugin(Path filePath, Path outputDir)

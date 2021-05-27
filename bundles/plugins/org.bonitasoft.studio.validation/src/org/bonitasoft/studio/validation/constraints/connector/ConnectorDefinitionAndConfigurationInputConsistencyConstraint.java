@@ -26,7 +26,20 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint
         extends AbstractLiveValidationMarkerConstraint {
 
     public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency";
-    private static final Set<String> IGNORED_DEFINITIONS = Set.of("scripting-groovy-script");
+    private static final Set<String> IGNORED_DEFINITIONS = Set.of("scripting-groovy-script", 
+            "database-postgres",
+            "database-db2",
+            "database-oracle11g",
+            "database-h2",
+            "database-jdbc",
+            "database-postgresql92",
+            "database-mssqlserver",
+            "database-mysql",
+            "database-informix",
+            "database-teradata",
+            "database-hsqldb",
+            "database-ingres",
+            "database-sybase");
 
     @Override
     protected IStatus performLiveValidation(IValidationContext context) {

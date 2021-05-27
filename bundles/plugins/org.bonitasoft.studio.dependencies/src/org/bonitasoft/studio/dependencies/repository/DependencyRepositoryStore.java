@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.dependencies.repository;
 
+import static java.util.function.Predicate.not;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +31,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.IFileInputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
@@ -48,6 +50,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
@@ -57,11 +60,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 public class DependencyRepositoryStore extends AbstractRepositoryStore<DependencyFileStore> {
 
+    private static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
     public static final String STORE_NAME = "lib";
     public static final String JAR_EXT = "jar";
     private static final Set<String> extensions = new HashSet<>();
@@ -70,12 +76,17 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     private Map<String, String> runtimeDependencies;
-    private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver();
+    private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver(
+            RepositoryManager.getInstance().getAccessor());
     private MavenRepositoryRegistry mavenRepositoryRegistry = new MavenRepositoryRegistry();
+    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
 
     @Override
     public void createRepositoryStore(IRepository repository) {
         this.repository = repository;
+        var eclipseContext = EclipseContextFactory.create();
+        this.processConfigurationUpdateOperationFactory = ContextInjectionFactory
+                .make(ProcessConfigurationUpdateOperationFactory.class, eclipseContext);
     }
 
     @Override
@@ -118,8 +129,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     @Override
     public List<DependencyFileStore> getChildren() {
         try {
-            return projectDependenciesResolver.getCompileDependencies(getRepository().getProject(),
-                    AbstractRepository.NULL_PROGRESS_MONITOR)
+            return projectDependenciesResolver.getCompileDependencies(AbstractRepository.NULL_PROGRESS_MONITOR)
                     .stream()
                     .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
                     .collect(Collectors.toList());
@@ -134,8 +144,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         DependencyFileStore fileStore = super.getChild(fileName, force);
         if (fileStore == null) {
             try {
-                return projectDependenciesResolver.findCompileDependency(fileName, getRepository().getProject(),
-                        AbstractRepository.NULL_PROGRESS_MONITOR)
+                return projectDependenciesResolver
+                        .findCompileDependency(fileName, AbstractRepository.NULL_PROGRESS_MONITOR)
                         .map(artifact -> new MavenDependencyFileStore(artifact, DependencyRepositoryStore.this))
                         .orElse(null);
             } catch (CoreException e) {
@@ -200,15 +210,15 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         }
         String libVersion = "";
         boolean appendSnapshot = false;
-        if (jarName.indexOf("-SNAPSHOT") != -1) {
-            jarName = jarName.substring(0, jarName.lastIndexOf("-SNAPSHOT"));
+        if (jarName.indexOf(SNAPSHOT_SUFFIX) != -1) {
+            jarName = jarName.substring(0, jarName.lastIndexOf(SNAPSHOT_SUFFIX));
             appendSnapshot = true;
         }
         if (jarName.indexOf("-") != -1 && Character.isDigit(jarName.charAt(jarName.lastIndexOf("-") + 1))) {
             libVersion = jarName.substring(jarName.lastIndexOf("-") + 1, jarName.length());
         }
         if (appendSnapshot) {
-            libVersion = libVersion + "-SNAPSHOT";
+            libVersion = libVersion + SNAPSHOT_SUFFIX;
         }
         return libVersion;
     }
@@ -218,8 +228,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
             jarName = jarName.replace(".jar", "");
         }
         String libName = "";
-        if (jarName.indexOf("-SNAPSHOT") != -1) {
-            jarName = jarName.substring(0, jarName.lastIndexOf("-SNAPSHOT"));
+        if (jarName.indexOf(SNAPSHOT_SUFFIX) != -1) {
+            jarName = jarName.substring(0, jarName.lastIndexOf(SNAPSHOT_SUFFIX));
         }
         if (jarName.indexOf("-") != -1 && Character.isDigit(jarName.charAt(jarName.lastIndexOf("-") + 1))) {
             libName = jarName.substring(0, jarName.lastIndexOf("-"));
@@ -245,32 +255,43 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                 LocalDependenciesStore localDependencyStore = getRepository().getLocalDependencyStore();
                 MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
                 Model mavenModel = mavenProjectHelper.getMavenModel(project);
-                dependencyLookups.stream()
+                var dependenciesToInstall = dependencyLookups.stream()
                         .filter(DependencyLookup::isSelected)
-                        .map(dl -> {
-                            try {
-                                localDependencyStore.install(dl);
-                                localDependencyStore.deleteBackup(dl.toMavenDependency());
-                                return dl;
-                            } catch (CoreException e) {
-                                BonitaStudioLog.error(e);
-                                return null;
-                            }
-                        })
-                        .filter(Objects::nonNull)
-                        .map(DependencyLookup::toMavenDependency)
-                        .forEach(newDependeny -> {
-                            Optional<Dependency> dependency = mavenProjectHelper.findDependency(mavenModel,
-                                    newDependeny.getGroupId(),
-                                    newDependeny.getArtifactId());
-                            if (dependency.isPresent()) {
-                                mavenModel.removeDependency(dependency.get());
+                        .collect(Collectors.toSet());
+
+                var processConfigurationUpdateOperation = processConfigurationUpdateOperationFactory.create();
+                for (var dl : dependenciesToInstall) {
+                    try {
+                        localDependencyStore.install(dl);
+                        localDependencyStore.deleteBackup(dl.toMavenDependency());
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                    if (dl.hasFileNameChanged()) {
+                        dl.getJarNames().stream()
+                                .filter(jarName -> !Objects.equals(jarName, dl.dependencyFileName()))
+                                .forEach(jarName -> processConfigurationUpdateOperation.addJarUpdateChange(jarName,
+                                        dl.dependencyFileName()));
+                    }
+                    var newDependeny = dl.toMavenDependency();
+                    mavenProjectHelper.findDependency(mavenModel,
+                            newDependeny.getGroupId(),
+                            newDependeny.getArtifactId())
+                            .ifPresentOrElse(existingDep -> {
+                                mavenModel.removeDependency(existingDep);
                                 mavenModel.addDependency(newDependeny);
-                            } else {
-                                mavenModel.addDependency(newDependeny);
-                            }
-                        });
+                            }, () -> mavenModel.addDependency(newDependeny));
+                }
+
                 mavenProjectHelper.saveModel(project, mavenModel);
+
+                dependencyLookups.stream()
+                        .filter(not(DependencyLookup::isSelected))
+                        .flatMap(dl -> dl.getJarNames().stream())
+                        .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
+
+                processConfigurationUpdateOperation.run(monitor);
+
                 ProjectDependenciesStore projectDependenciesStore = getRepository().getProjectDependenciesStore();
                 if (projectDependenciesStore != null) {
                     projectDependenciesStore.analyze(monitor);
@@ -320,7 +341,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                 .filter(IFile.class::isInstance)
                 .map(IFile.class::cast)
                 .filter(file -> Objects.equals(file.getFileExtension(), "jar"))
-                .map(file -> new IFileInputStreamSupplier(file))
+                .map(IFileInputStreamSupplier::new)
                 .collect(Collectors.toList());
     }
 
@@ -332,7 +353,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                 .filter(IFile.class::isInstance)
                 .map(IFile.class::cast)
                 .filter(file -> Objects.equals("proc", file.getFileExtension()))
-                .map(f -> new IFileInputStreamSupplier(f))
+                .map(IFileInputStreamSupplier::new)
                 .collect(Collectors.toList());
         DefinitionUsageOperation dependencyUsageOperation = new DefinitionUsageOperation(files);
         dependencyUsageOperation.run(monitor);
@@ -353,7 +374,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                         .filter(IFile.class::isInstance)
                         .map(IFile.class::cast)
                         .filter(file -> Objects.equals("conf", file.getFileExtension())))
-                .map(f -> new IFileInputStreamSupplier(f))
+                .map(IFileInputStreamSupplier::new)
                 .collect(Collectors.toList());
         DependencyUsageOperation dependencyUsageOperation = new DependencyUsageOperation(files);
         dependencyUsageOperation.run(monitor);

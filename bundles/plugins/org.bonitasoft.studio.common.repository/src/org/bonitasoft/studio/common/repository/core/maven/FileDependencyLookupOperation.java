@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.core.maven.migration.model.Depend
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup.Status;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
@@ -54,7 +55,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
         repositories.stream()
                 .forEach(jarLookupOperation::addRemoteRespository);
         monitor.setTaskName(String.format(Messages.lookupDependencyFor, fileToLookup.getName()));
-        jarLookupOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        jarLookupOperation.run(new NullProgressMonitor());
         var status = jarLookupOperation.getStatus();
         if (status.isOK()) {
             result = jarLookupOperation.getResult();
@@ -66,7 +67,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                 repositories.stream()
                         .forEach(dependencyGetOperation::addRemoteRespository);
                 monitor.setTaskName(String.format(Messages.lookupDependencyFor, result.getGAV()));
-                dependencyGetOperation.run(monitor);
+                dependencyGetOperation.run(new NullProgressMonitor());
                 status = dependencyGetOperation.getStatus();
                 if (status.isOK() && dependencyGetOperation.getResult() != null) {
                     result = dependencyGetOperation.getResult();
@@ -82,7 +83,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                     repositories.stream()
                             .forEach(dependencyGetOperation::addRemoteRespository);
                     monitor.setTaskName(String.format(Messages.lookupDependencyFor, gav));
-                    dependencyGetOperation.run(monitor);
+                    dependencyGetOperation.run(new NullProgressMonitor());
                     status = dependencyGetOperation.getStatus();
                     if (status.isOK()) {
                         if (dependencyGetOperation.getResult() != null) {
