@@ -93,4 +93,8 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
         return super.validate(filename, inputStream);
     }
 
+    @Override
+    public int getImportOrder() {
+        return 5;
+    }
 }

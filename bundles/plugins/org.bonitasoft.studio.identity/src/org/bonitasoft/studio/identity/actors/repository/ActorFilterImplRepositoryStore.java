@@ -91,5 +91,10 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
         }
         return super.validate(filename, inputStream);
     }
+    
+    @Override
+    public int getImportOrder() {
+        return 5;
+    }
 
 }

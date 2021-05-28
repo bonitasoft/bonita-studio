@@ -62,13 +62,17 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDi
 
     void refresh();
 
-    void migrate(IProgressMonitor monitor) throws CoreException, MigrationException;
+    void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException;
     
     void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException;
 
     void close();
 
     void repositoryUpdated();
+    
+    default int getImportOrder() {
+        return 99;
+    }
 
     default IStatus validate(String filename, InputStream inputStream) {
         return ValidationStatus.ok();

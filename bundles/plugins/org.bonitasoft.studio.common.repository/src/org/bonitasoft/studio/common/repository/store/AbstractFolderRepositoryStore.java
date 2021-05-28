@@ -20,6 +20,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -73,7 +74,7 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     }
 
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
     }
 

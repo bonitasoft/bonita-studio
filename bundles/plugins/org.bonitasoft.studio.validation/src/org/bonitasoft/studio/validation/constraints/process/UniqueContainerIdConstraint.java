@@ -49,7 +49,7 @@ public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerCon
 
             final Pool p = (Pool) eObj;
             DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
-            List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcesses();
+            List<AbstractProcess> allProcesses = diagramStore.hasComputedProcesses() ? diagramStore.getComputedProcesses() : diagramStore.getAllProcessesWithoutReoload();
             for (final AbstractProcess other_p : allProcesses) {
                 if (!EcoreUtil.equals(p, other_p)
                         && !sameEObjectId(p, other_p)

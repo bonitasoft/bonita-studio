@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,7 +92,6 @@ public class Repository extends AbstractRepository {
 
     private static final long INTERVAL = 30000;
     private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
-    private static final String ENCODING = "UTF-8";
 
     private final String PRODUCTID_WORKSPACEAPI = "org.bonitasoft.studio.workspaceAPI"; // SP
     private final SharedRepositoryUpdateBackgroundJob updateJob;
@@ -534,13 +535,13 @@ public class Repository extends AbstractRepository {
         IFile gitIgnore = getProject().getFile(".gitignore");
         if (gitIgnore.exists()) {
             try (InputStream is = gitIgnore.getContents()) {
-                List<String> existingEntries = retrieveGitignoreEntries(is, ENCODING);
+                List<String> existingEntries = retrieveGitignoreEntries(is, StandardCharsets.UTF_8);
                 List<String> entriesToAdd = retrieveEntriesToAdd(existingEntries);
                 if (!entriesToAdd.isEmpty()) {
                     existingEntries.add(System.lineSeparator());
                     existingEntries.addAll(entriesToAdd);
                     String newContent = existingEntries.stream().reduce("", (s1, s2) -> s1 + System.lineSeparator() + s2);
-                    gitIgnore.setContents(new ByteArrayInputStream(newContent.getBytes(ENCODING)),
+                    gitIgnore.setContents(new ByteArrayInputStream(newContent.getBytes(StandardCharsets.UTF_8)),
                             IResource.KEEP_HISTORY | IResource.FORCE, monitor);
                 }
             } catch (IOException e) {
@@ -552,7 +553,7 @@ public class Repository extends AbstractRepository {
     private List<String> retrieveEntriesToAdd(List<String> existingEntries) throws IOException {
         URL gitignoreTemplateUrl = getGitignoreTemplateFileURL();
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(gitignoreTemplateUrl.openStream(), ENCODING))) {
+                new InputStreamReader(gitignoreTemplateUrl.openStream(), StandardCharsets.UTF_8))) {
             List<String> entries = new ArrayList<>();
             String line;
             while ((line = br.readLine()) != null) {
@@ -568,7 +569,7 @@ public class Repository extends AbstractRepository {
         return line != null && !line.isEmpty() && !line.startsWith("#");
     }
 
-    private static List<String> retrieveGitignoreEntries(InputStream is, String encoding) throws IOException {
+    private static List<String> retrieveGitignoreEntries(InputStream is, Charset encoding) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
             List<String> entries = new ArrayList<>();
             String line;

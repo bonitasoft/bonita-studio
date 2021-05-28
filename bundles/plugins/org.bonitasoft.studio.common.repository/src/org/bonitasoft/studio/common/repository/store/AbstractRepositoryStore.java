@@ -42,6 +42,7 @@ import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
@@ -55,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 
@@ -346,7 +348,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     public abstract T createRepositoryFileStore(String fileName);
 
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
         List<T> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
                 .filter(IRepositoryFileStore::canBeShared)

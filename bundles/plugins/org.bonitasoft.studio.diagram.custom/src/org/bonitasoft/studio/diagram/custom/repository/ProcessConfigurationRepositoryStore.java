@@ -165,7 +165,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
             copyIs = new CopyInputStream(is);
             final Resource r = getTmpEMFResource("beforeImport.conf",  copyIs.getFile());
             try {
-                r.load(Collections.EMPTY_MAP);
+                r.load(Collections.emptyMap());
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
@@ -180,7 +180,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
                         configuration.setVersion(ModelVersion.CURRENT_DIAGRAM_VERSION);
                     }
                     try {
-                        r.save(Collections.EMPTY_MAP);
+                        r.save(Collections.emptyMap());
                     } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.document.core.repository;
 
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -68,7 +69,7 @@ public class DocumentRepositoryStore extends AbstractRepositoryStore<DocumentFil
     }
 
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
         //DO NOTHING
     }
 }

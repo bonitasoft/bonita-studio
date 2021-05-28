@@ -182,11 +182,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 .getRepositoryStore(DiagramRepositoryStore.class);
         try {
             FileActionDialog.setDisablePopup(true);
-            doImport(importArchiveModel, monitor);
-            monitor.subTask("");
-
-            repositoryStore.computeProcesses(monitor);
-
+            
             Model importedMavenModel = existingMavenModel(importArchiveModel);
             LocalDependenciesStore localDependencyStore = currentRepository.getLocalDependencyStore();
             if (!manualDependencyResolution && importedMavenModel == null) {
@@ -227,12 +223,17 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             }
 
             doUpdateProjectDependencies(monitor, statusBuilder);
+            
+            doImport(importArchiveModel, monitor);
+            
+            monitor.subTask("");
 
             dependenciesLookup.stream()
                     .filter(not(DependencyLookup::isSelected))
                     .flatMap(dl -> dl.getJarNames().stream())
                     .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
 
+            repositoryStore.computeProcesses(monitor);
             processConfigurationUpdateOperation.run(monitor);
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
@@ -381,7 +382,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         monitor.beginTask(Messages.importBosArchive,
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
-                .sorted(srcStoresFirst())
+                .sorted(storeImportOrderComparator())
                 .flatMap(AbstractFolderModel::importableUnits)
                 .forEach(unit -> {
                     monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
@@ -391,7 +392,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         migrateUID(monitor);
     }
 
-    private Comparator<? super AbstractFolderModel> srcStoresFirst() {
+    private Comparator<? super AbstractFolderModel> storeImportOrderComparator() {
         return (f1, f2) -> {
             if (f1.getFolderName().startsWith("src")) {
                 return -1;
@@ -399,6 +400,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             if (f2.getFolderName().startsWith("src")) {
                 return 1;
             }
+            // Diagrams always last
             if (f1.getFolderName().equals("diagrams")) {
                 return 1;
             }

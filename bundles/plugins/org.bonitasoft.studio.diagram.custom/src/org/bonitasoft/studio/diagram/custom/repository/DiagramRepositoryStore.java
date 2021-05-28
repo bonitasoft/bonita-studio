@@ -389,6 +389,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                     try {
                         Configuration configuration = file.getContent();
                         synchronizer.synchronize(process, configuration);
+                        file.save(configuration);
                     } catch (ReadFileStoreException e) {
                         BonitaStudioLog.warning(file.getName() + ": " + e.getMessage(), Activator.PLUGIN_ID);
                     }
@@ -506,5 +507,13 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             throw new IllegalArgumentException("Project process list not computed yet !");
         }
         return computedProcessesList;
+    }
+
+    public List<AbstractProcess> getAllProcessesWithoutReoload() {
+        final List<AbstractProcess> processes = new ArrayList<>();
+        for (final DiagramFileStore file : getChildren()) {
+            processes.addAll(file.getProcesses(false));
+        }
+        return processes;
     }
 }

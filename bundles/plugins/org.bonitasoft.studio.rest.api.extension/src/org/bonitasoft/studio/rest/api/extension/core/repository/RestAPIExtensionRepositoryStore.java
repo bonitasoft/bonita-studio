@@ -23,6 +23,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.maven.CustomPageProjectFileStore;
 import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
@@ -36,11 +37,9 @@ import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
@@ -158,7 +157,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
-    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
         List<RestAPIExtensionFileStore> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
                 .filter(IRepositoryFileStore::canBeShared)

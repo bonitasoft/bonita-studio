@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
@@ -161,7 +162,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     }
 
     @Override
-    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
                 WorkspaceServerResource.disable();

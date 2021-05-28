@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
@@ -62,7 +63,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         super.createRepositoryStore(repository);
         resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
     }
-    
+
     @Override
     public List<ConnectorDefFileStore> getChildren() {
         List<ConnectorDefFileStore> defFileStores = super.getChildren();
@@ -94,28 +95,9 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     protected ConnectorDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
-            final DefinitionResourceProvider resourceProvider = getResourceProvider();
-            try {
-                reloadCategories(definition.getContent(), resourceProvider);
-            } catch (ReadFileStoreException e) {
-                return definition;
-            }
+            resourceProvider.loadDefinitionsCategories(null);
         }
         return definition;
-    }
-
-    private void reloadCategories(final org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,
-            final DefinitionResourceProvider messageProvider) {
-        boolean reloadCategories = false;
-        for (final Category c : definition.getCategory()) {
-            if (!messageProvider.getAllCategories().contains(c)) {
-                reloadCategories = true;
-                break;
-            }
-        }
-        if (reloadCategories) {
-            messageProvider.loadDefinitionsCategories(null);
-        }
     }
 
     @Override
@@ -154,8 +136,9 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        super.migrate(monitor);
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
+        super.migrate(postMigrationOperationCollector, monitor);
         if (PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }
@@ -172,5 +155,10 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
                                     .validate(inputStream);
         }
         return super.validate(filename, inputStream);
+    }
+    
+    @Override
+    public int getImportOrder() {
+        return 5;
     }
 }
