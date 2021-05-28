@@ -34,7 +34,9 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.DateUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -45,6 +47,7 @@ import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
 import org.bonitasoft.studio.common.repository.core.MavenProjectModelBuilder;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
@@ -59,6 +62,7 @@ import org.bonitasoft.studio.common.repository.model.IJavaContainer;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
@@ -159,8 +163,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     private ProjectDependenciesStore projectDependenciesStore;
 
     private IEventBroker eventBroker;
-
-    private GroovySnippetCompiler groovyCompiler;
+    
+    private MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
 
     public AbstractRepository(final IWorkspace workspace,
             final IProject project,
@@ -519,7 +523,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
-        } else if(project.getLocation() != null) {
+        } else if (project.getLocation() != null) {
             final File projectFile = new File(project.getLocation().toFile(), ".project");
             if (projectFile.exists()) {
                 FileInputStream fis = null;
@@ -624,8 +628,9 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     @Override
     public IRepositoryFileStore getFileStore(final IResource resource) {
         try {
-            if (resource == null 
-                    || (resource instanceof IProject && ((IProject) resource).isOpen() && ((IProject) resource).hasNature(BonitaProjectNature.NATURE_ID))
+            if (resource == null
+                    || (resource instanceof IProject && ((IProject) resource).isOpen()
+                            && ((IProject) resource).hasNature(BonitaProjectNature.NATURE_ID))
                     || (resource instanceof IProject && !((IProject) resource).isOpen())) {
                 return null;
             }
@@ -780,18 +785,35 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         if (jdtPrefs.exists()) {
             jdtPrefs.delete(true, monitor);
         }
-        if (!project.getFile(IMavenConstants.POM_FILE_NAME).exists()) {
+        var pomFile = project.getFile(IMavenConstants.POM_FILE_NAME);
+        String currentVersion = project.getDescription().getComment();
+        if(pomFile.exists() && Version.parseVersion(currentVersion).compareTo(Version.parseVersion("7.13.0")) < 0) {
+            ProjectMetadata metadata = ProjectMetadata.read(project);
+            var mavenProjectBuilder = CreateBonitaProjectOperation.newProjectBuilder(metadata);
+            CreateBonitaProjectOperation.createDefaultPomFile(project, mavenProjectBuilder);
+        }
+        if (!pomFile.exists()) {
             var metadata = ProjectMetadata.defaultMetadata();
             metadata.setName(project.getName());
             metadata.setArtifactId(ProjectMetadata.toArtifactId(project.getName()));
-            MavenProjectModelBuilder mavenProjectBuilder = CreateBonitaProjectOperation.newProjectBuilder(metadata);
+            var mavenProjectBuilder = CreateBonitaProjectOperation.newProjectBuilder(metadata);
             CreateBonitaProjectOperation.createDefaultPomFile(project, mavenProjectBuilder);
         }
 
-        for (final IRepositoryStore<?> store : getAllStores()) {
+        var orderedStores = getAllStores().stream()
+                .sorted(Comparator.comparingInt(IRepositoryStore::getImportOrder))
+                .collect(Collectors.toList());
+        var postMigrationOperationCollector = new PostMigrationOperationCollector();
+        for (var store : orderedStores) {
             store.createRepositoryStore(this);
-            store.migrate(monitor);
+            store.migrate(postMigrationOperationCollector, monitor);
         }
+        try {
+            postMigrationOperationCollector.run(monitor);
+        } catch (InvocationTargetException | InterruptedException e) {
+           throw new MigrationException(e);
+        }
+
         //Remove legacy repositories
         Version oldVersion = null;
         try {

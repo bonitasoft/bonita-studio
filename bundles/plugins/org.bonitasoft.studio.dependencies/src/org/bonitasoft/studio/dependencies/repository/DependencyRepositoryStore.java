@@ -47,6 +47,7 @@ import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesRes
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
@@ -245,7 +246,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector,IProgressMonitor monitor) throws CoreException, MigrationException {
         IProject project = getRepository().getProject();
         if (getResource().exists()) {
             try {
@@ -290,7 +291,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                         .flatMap(dl -> dl.getJarNames().stream())
                         .forEach(processConfigurationUpdateOperation::addJarRemovedChange);
 
-                processConfigurationUpdateOperation.run(monitor);
+                postMigrationOperationCollector.addPostMigrationOperation(processConfigurationUpdateOperation);
 
                 ProjectDependenciesStore projectDependenciesStore = getRepository().getProjectDependenciesStore();
                 if (projectDependenciesStore != null) {
@@ -385,6 +386,14 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return getChildren().stream()
                 .filter(dep -> Objects.equals(jarName, dep.getName()))
                 .findFirst();
+    }
+    
+    /**
+     * This store must be migrated first
+     */
+    @Override
+    public int getImportOrder() {
+        return 0;
     }
 
 }

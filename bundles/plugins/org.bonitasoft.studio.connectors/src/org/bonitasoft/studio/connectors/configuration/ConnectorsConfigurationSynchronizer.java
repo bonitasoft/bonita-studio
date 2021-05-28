@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.connectors.configuration;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import static java.util.function.Predicate.not;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -40,13 +40,11 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.studio.model.kpi.KpiPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -65,21 +63,10 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 
     @Override
     protected List<Connector> getExistingConnectors(AbstractProcess process) {
-        final List<Connector> connectors = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CONNECTOR);
-        final Set<Connector> toRemove = new HashSet<Connector>();
-        for (final Connector c : connectors) {
-            if (c instanceof ActorFilter) {
-                toRemove.add(c);
-            }
-            if (c.eContainer() instanceof Expression) {
-                final Expression exp = (Expression) c.eContainer();
-                if (!ExpressionConstants.CONNECTOR_TYPE.equals(exp.getType())) {
-                    toRemove.add(c);
-                }
-            }
-        }
-        connectors.removeAll(toRemove);
-        return connectors;
+        return ModelHelper.getAllElementOfTypeIn(process, Connector.class).stream()
+                .filter(not(ActorFilter.class::isInstance))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -29,14 +29,12 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
     private static final String BONITA_VERSION = "bonita.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
-    private static final String SLF4J_VERSION = "1.7.30";
     private static final String GROOVY_VERSION = "3.0.7";
 
     private static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(
             new BonitaCommonDependency(),
             new MavenDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}", "pom"),
-            new MavenDependency("org.codehaus.groovy", "groovy-dateutil", "${groovy.version}"),
-            new MavenDependency("org.slf4j", "slf4j-api", "${slf4j-api.version}"));
+            new MavenDependency("org.codehaus.groovy", "groovy-dateutil", "${groovy.version}"));
 
     private Properties properties = new Properties();
     private List<MavenPlugin> plugins = new ArrayList<>();
@@ -57,7 +55,6 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
         properties.setProperty(BONITA_VERSION, bonitaVersion);
         properties.setProperty("groovy.version", GROOVY_VERSION);
-        properties.setProperty("slf4j-api.version", SLF4J_VERSION);
         properties.setProperty("maven.compiler.source", JAVA_VERSION);
         properties.setProperty("maven.compiler.target", JAVA_VERSION);
         properties.setProperty("project.build.sourceEncoding", ENCODING_CHARSET);

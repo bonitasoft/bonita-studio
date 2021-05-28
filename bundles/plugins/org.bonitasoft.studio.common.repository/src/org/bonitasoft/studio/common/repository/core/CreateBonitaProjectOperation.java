@@ -86,23 +86,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         MavenProjectHelper mavenProjectHelper = new MavenProjectHelper();
         IFile pomFile = project.getFile("pom.xml");
         if (pomFile.exists()) {
-            Model model = mavenProjectHelper.getMavenModel(project);
-            mavenProjectBuilder.setGroupId(model.getGroupId());
-            mavenProjectBuilder.setArtifactId(model.getArtifactId());
-            mavenProjectBuilder.setVersion(model.getVersion());
-            if (model.getName() != null && !model.getName().isBlank()) {
-                mavenProjectBuilder.setDisplayName(model.getName());
-            }
-            if (model.getDescription() != null && !model.getDescription().isBlank()) {
-                mavenProjectBuilder.setDescription(model.getDescription());
-            }
-            String backupFileName = "pom.xml.old";
-            IFile backupFile = project.getFile(backupFileName);
-            while (backupFile.exists()) {
-                backupFileName = nextBackupFileName(backupFileName);
-                backupFile = project.getFile(nextBackupFileName(backupFileName));
-            }
-            pomFile.copy(backupFile.getProjectRelativePath(), true, new NullProgressMonitor());
+            backupExistingPomFile(project, mavenProjectBuilder, mavenProjectHelper, pomFile);
         }
         File pom = pomFile.getLocation().toFile();
         try {
@@ -116,6 +100,29 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                     new Status(IStatus.ERROR, CreateBonitaProjectOperation.class, "Failed to create pom.xml file.", e));
         }
         mavenProjectHelper.saveModel(project, mavenProjectBuilder.toMavenModel());
+    }
+
+    public static void backupExistingPomFile(IProject project,
+            MavenProjectModelBuilder mavenProjectBuilder,
+            MavenProjectHelper mavenProjectHelper, 
+            IFile pomFile) throws CoreException {
+        Model model = mavenProjectHelper.getMavenModel(project);
+        mavenProjectBuilder.setGroupId(model.getGroupId());
+        mavenProjectBuilder.setArtifactId(model.getArtifactId());
+        mavenProjectBuilder.setVersion(model.getVersion());
+        if (model.getName() != null && !model.getName().isBlank()) {
+            mavenProjectBuilder.setDisplayName(model.getName());
+        }
+        if (model.getDescription() != null && !model.getDescription().isBlank()) {
+            mavenProjectBuilder.setDescription(model.getDescription());
+        }
+        String backupFileName = "pom.xml.old";
+        IFile backupFile = project.getFile(backupFileName);
+        while (backupFile.exists()) {
+            backupFileName = nextBackupFileName(backupFileName);
+            backupFile = project.getFile(nextBackupFileName(backupFileName));
+        }
+        pomFile.copy(backupFile.getProjectRelativePath(), true, new NullProgressMonitor());
     }
 
     private static String nextBackupFileName(String backupFileName) {

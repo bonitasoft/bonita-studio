@@ -3,6 +3,7 @@ package org.bonitasoft.studio.validation.constraints.connector;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -38,8 +39,9 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
             connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
                     .getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         }
-        ConnectorDefinition def = connectorDefStore.getResourceProvider()
-                .getConnectorDefinitionRegistry()
+        var registry = connectorDefStore.getResourceProvider()
+                .getConnectorDefinitionRegistry();
+        ConnectorDefinition def = registry
                 .find(connector.getDefinitionId(), connector.getDefinitionVersion())
                 .orElse(null);
         if (def != null) {
@@ -50,7 +52,7 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
                     return context.createFailureStatus(
                             String.format(Messages.Validation_jasperConnectorRemoved, connector.getName()));
                 } else {
-                    if (otherVersionAvailable(connector, connectorDefStore)) {
+                    if (otherVersionAvailable(connector, registry)) {
                         return context.createFailureStatus(NLS.bind(Messages.Validation_ConnectorDefUpdateRequired,
                                 connector.getName(),
                                 connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
@@ -61,7 +63,7 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
                 }
 
             } else {
-                if (otherVersionAvailable(connector, connectorDefStore)) {
+                if (otherVersionAvailable(connector, registry)) {
                     return context.createFailureStatus(NLS.bind(Messages.Validation_ActorFilterDefUpdateRequired,
                             connector.getName(),
                             connector.getDefinitionId() + "--" + connector.getDefinitionVersion()));
@@ -73,8 +75,8 @@ public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerCo
         }
     }
 
-    private boolean otherVersionAvailable(Connector connector, AbstractDefinitionRepositoryStore<?> connectorDefStore) {
-        return connectorDefStore.getDefinitions().stream()
+    private boolean otherVersionAvailable(Connector connector, ConnectorDefinitionRegistry registry) {
+        return registry.getDefinitions().stream()
                 .anyMatch(def -> Objects.equals(connector.getDefinitionId(), def.getId()));
     }
 

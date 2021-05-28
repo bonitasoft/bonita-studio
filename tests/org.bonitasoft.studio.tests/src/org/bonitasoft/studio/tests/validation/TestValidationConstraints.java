@@ -100,10 +100,10 @@ public class TestValidationConstraints extends ValidationTestBase {
     @Test
     public void testConnectorExistenceConstraint() throws Exception {
         final MainProcess diagram = getDiagramFromArchive("testConnectorExistence.bos", "MyDiagram19", "1.0");
-
+        
         final Pool processWithoutError = getProcess(diagram, "Pool19", "1.0");
         final Pool processWithErrors = getProcess(diagram, "Pool20", "1.0");
-
+        
         IStatus[] status = getStatuses(batchValidator.validate(processWithErrors));
         List<IConstraintStatus> assignableStatus = getStatusForConstraint(status, ConnectorExistenceConstraint.ID);
         assertFalse(assignableStatus.isEmpty());

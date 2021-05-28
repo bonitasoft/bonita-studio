@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
@@ -61,7 +62,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         super.createRepositoryStore(repository);
         this.resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
     }
-    
+
     @Override
     public ActorFilterDefFileStore createRepositoryFileStore(final String fileName) {
         if (fileName.endsWith(DEF_EXT)) {
@@ -69,16 +70,16 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         }
         return null;
     }
-    
+
     @Override
     public List<ActorFilterDefFileStore> getChildren() {
         List<ActorFilterDefFileStore> defFileStores = super.getChildren();
 
         var projectDependenciesStore = getRepository().getProjectDependenciesStore();
-        if(projectDependenciesStore != null) {
+        if (projectDependenciesStore != null) {
             projectDependenciesStore.getActorFilterDefinitions().stream()
-            .map(t -> new DependencyActorFilterDefFileStore(t, this))
-            .forEach(defFileStores::add);
+                    .map(t -> new DependencyActorFilterDefFileStore(t, this))
+                    .forEach(defFileStores::add);
         }
 
         return defFileStores;
@@ -125,33 +126,15 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     protected ActorFilterDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
         final ActorFilterDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
-            final DefinitionResourceProvider resourceProvider = getResourceProvider();
-            try {
-                reloadCategories(definition.getContent(), resourceProvider);
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.warning(e.getMessage(), IdentityPlugin.PLUGIN_ID);
-            }
+            resourceProvider.loadDefinitionsCategories(null);
         }
         return definition;
     }
 
-    private void reloadCategories(final org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,
-            final DefinitionResourceProvider messageProvider) {
-        boolean reloadCategories = false;
-        for (final Category c : definition.getCategory()) {
-            if (!messageProvider.getAllCategories().contains(c)) {
-                reloadCategories = true;
-                break;
-            }
-        }
-        if (reloadCategories) {
-            messageProvider.loadDefinitionsCategories(null);
-        }
-    }
-
     @Override
-    public void migrate(final IProgressMonitor monitor) throws CoreException, MigrationException {
-        super.migrate(monitor);
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
+        super.migrate(postMigrationOperationCollector, monitor);
         if (PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }
@@ -162,10 +145,16 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         if (filename != null && filename.endsWith("." + DEF_EXT)) {
             return new XMLModelCompatibilityValidator(
                     new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_DEFINITION_NAMESPACE,
-                           String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                           String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))).validate(inputStream);
+                            String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                            String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                                    filename))).validate(inputStream);
         }
         return super.validate(filename, inputStream);
+    }
+    
+    @Override
+    public int getImportOrder() {
+        return 5;
     }
 
 }

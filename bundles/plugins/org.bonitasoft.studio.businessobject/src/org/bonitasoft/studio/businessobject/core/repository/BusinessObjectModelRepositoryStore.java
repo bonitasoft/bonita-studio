@@ -44,6 +44,7 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -187,8 +188,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void migrate(IProgressMonitor monitor) throws CoreException, MigrationException {
-        super.migrate(monitor);
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+        super.migrate(postMigrationOperationCollector, monitor);
         BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
                 BusinessObjectModelFileStore.ZIP_FILENAME, true);
         BusinessObjectModelConverter converter = getConverter();
