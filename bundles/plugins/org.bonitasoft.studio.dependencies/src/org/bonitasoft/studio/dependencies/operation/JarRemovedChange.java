@@ -14,21 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.dependencies.operation;
 
 import java.util.Collection;
 import java.util.Objects;
 
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
+import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationChange;
 import org.bonitasoft.studio.model.configuration.Configuration;
 
-public class JarRemovedConfigurationChange implements ProcessConfigurationChange {
+public class JarRemovedChange implements ProcessConfigurationChange, ConnectorImplementationChange {
 
     private String jar;
     private Collection<Configuration> configurations;
+    private Collection<ConnectorImplementation> implementations;
 
-    public JarRemovedConfigurationChange(String jar, Collection<Configuration> configurations) {
+    public JarRemovedChange(String jar, 
+            Collection<Configuration> configurations,
+            Collection<ConnectorImplementation> implementations) {
         this.jar = jar;
         this.configurations = configurations;
+        this.implementations = implementations;
     }
 
     @Override
@@ -36,10 +43,22 @@ public class JarRemovedConfigurationChange implements ProcessConfigurationChange
         var otherJarFragmentContainer = getOtherJarFragmentContainer(configuration);
         otherJarFragmentContainer.getFragments().removeIf(f -> Objects.equals(f.getValue(), jar));
     }
+    
+    @Override
+    public void apply(ConnectorImplementation implementation) {
+       if(implementation.getJarDependencies() != null) {
+           implementation.getJarDependencies().getJarDependency().removeIf(dep -> Objects.equals(dep, jar));
+       }
+    }
 
     @Override
     public Collection<Configuration> getConfigurations() {
         return configurations;
+    }
+
+    @Override
+    public Collection<ConnectorImplementation> getConnectorImplementations() {
+        return implementations;
     }
 
 }

@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.application.operation.extension.participant.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -28,6 +29,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
+import org.bonitasoft.studio.dependencies.DependentArtifactCollector;
+import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -36,7 +39,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
-public class ProcessConfigurationCollector {
+public class ProcessConfigurationCollector implements DependentArtifactCollector<Configuration> {
 
     private RepositoryAccessor repositoryAccessor;
 
@@ -44,8 +47,14 @@ public class ProcessConfigurationCollector {
     public ProcessConfigurationCollector(RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
     }
+    
+    @PostConstruct
+    void init(DependentArtifactCollectorRegistry registry) {
+        registry.register(Configuration.class, this);
+    }
 
-    public Collection<Configuration> findConfigurationsDependingOn(String jarName) {
+    @Override
+    public Collection<Configuration> findArtifactDependingOn(String jarName) {
         ProcessConfigurationRepositoryStore processConfigurationRepositoryStore = repositoryAccessor
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor

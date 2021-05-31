@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.dependencies.operation;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +25,10 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
+import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationUpdater;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
@@ -34,28 +38,31 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
-public class ProcessConfigurationUpdateOperation implements IRunnableWithProgress {
+public class DependenciesUpdateOperation implements IRunnableWithProgress {
 
-    private ProcessConfigurationCollector configurationCollector;
+    private DependentArtifactCollectorRegistry dependentArtifactCollectorRegistry;
     private ProcessConfigurationUpdater configurationUpdater;
     private ProjectDependenciesResolver dependencyResolver;
     private Map<String, String> updates = new HashMap<>();
     private Set<String> removed = new HashSet<>();
+    private ConnectorImplementationUpdater connectorImplementationUpdater;
 
-    public ProcessConfigurationUpdateOperation(ProcessConfigurationCollector configurationCollector,
+    public DependenciesUpdateOperation(DependentArtifactCollectorRegistry dependentArtifactCollectorRegistry,
             ProcessConfigurationUpdater configurationUpdater,
+            ConnectorImplementationUpdater connectorImplementationUpdater,
             ProjectDependenciesResolver dependencyResolver) {
-        this.configurationCollector = configurationCollector;
+        this.dependentArtifactCollectorRegistry = dependentArtifactCollectorRegistry;
         this.configurationUpdater = configurationUpdater;
+        this.connectorImplementationUpdater = connectorImplementationUpdater;
         this.dependencyResolver = dependencyResolver;
     }
 
-    public ProcessConfigurationUpdateOperation addJarUpdateChange(String oldJarName, String newJarName) {
+    public DependenciesUpdateOperation addJarUpdateChange(String oldJarName, String newJarName) {
         this.updates.put(oldJarName, newJarName);
         return this;
     }
 
-    public ProcessConfigurationUpdateOperation addJarRemovedChange(String jarName) {
+    public DependenciesUpdateOperation addJarRemovedChange(String jarName) {
         this.removed.add(jarName);
         return this;
     }
@@ -73,12 +80,17 @@ public class ProcessConfigurationUpdateOperation implements IRunnableWithProgres
         for (var entry : updates.entrySet()) {
             var jar = entry.getKey();
             monitor.subTask(String.format(Messages.updatingDependencyInConfigurations, jar));
+            var configurationCollector = dependentArtifactCollectorRegistry.get(Configuration.class);
             Collection<Configuration> configurationsToUpdate = configurationCollector
-                    .findConfigurationsDependingOn(jar);
-            if (!configurationsToUpdate.isEmpty()) {
-                var change = new JarUpdateConfigurationChange(jar, updates.get(jar),
-                        configurationsToUpdate);
+                    .findArtifactDependingOn(jar);
+            var implementationsCollector = dependentArtifactCollectorRegistry.get(ConnectorImplementation.class);
+            Collection<ConnectorImplementation> implementationsToUpdate = implementationsCollector
+                    .findArtifactDependingOn(jar);
+            if (!configurationsToUpdate.isEmpty() || !implementationsToUpdate.isEmpty()) {
+                var change = new JarUpdateChange(jar, updates.get(jar),
+                        configurationsToUpdate, implementationsToUpdate);
                 Collection<Resource> resources = configurationUpdater.update(change);
+                connectorImplementationUpdater.update(change);
                 resources.stream().forEach(resource -> {
                     try {
                         resource.save(Collections.emptyMap());
@@ -97,12 +109,18 @@ public class ProcessConfigurationUpdateOperation implements IRunnableWithProgres
                 var dependency = dependencyResolver.findCompileDependency(jar, new NullProgressMonitor());
                 if (dependency.isEmpty()) {
                     monitor.subTask(String.format(Messages.removingDependencyInConfigurations, jar));
+                    var configurationCollector = dependentArtifactCollectorRegistry.get(Configuration.class);
                     Collection<Configuration> configurationsToUpdate = configurationCollector
-                            .findConfigurationsDependingOn(jar);
+                            .findArtifactDependingOn(jar);
+                    var implementationsCollector = dependentArtifactCollectorRegistry
+                            .get(ConnectorImplementation.class);
+                    Collection<ConnectorImplementation> implementationsToUpdate = implementationsCollector
+                            .findArtifactDependingOn(jar);
                     if (!configurationsToUpdate.isEmpty()) {
-                        var change = new JarRemovedConfigurationChange(jar,
-                                configurationsToUpdate);
+                        var change = new JarRemovedChange(jar,
+                                configurationsToUpdate, implementationsToUpdate);
                         Collection<Resource> resources = configurationUpdater.update(change);
+                        connectorImplementationUpdater.update(change);
                         resources.stream().forEach(resource -> {
                             try {
                                 resource.save(Collections.emptyMap());

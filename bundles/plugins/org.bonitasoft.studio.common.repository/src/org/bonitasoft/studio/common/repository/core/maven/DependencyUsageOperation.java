@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,7 +42,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class DependencyUsageOperation implements IRunnableWithProgress {
-    
+
     private List<InputStreamSupplier> inputStreamSuppliers;
     private Set<String> usedDependencies = new HashSet<>();
 
@@ -61,7 +59,7 @@ public class DependencyUsageOperation implements IRunnableWithProgress {
                     try (InputStream is = iss.get()) {
                         Document document = asXMLDocument(is);
                         NodeList nodes = (NodeList) xPath.evaluate(
-                                "//fragments[@type='JAR' or @type='CONNECTOR' or @type='ACTOR_FILTER'][@exported='true' or not(@exported)]/@value",
+                                getXpathQueryForFile(iss.getName()),
                                 document, XPathConstants.NODESET);
                         for (int i = 0; i < nodes.getLength(); ++i) {
                             Node item = nodes.item(i);
@@ -74,7 +72,17 @@ public class DependencyUsageOperation implements IRunnableWithProgress {
                     }
                 });
     }
-    
+
+    private String getXpathQueryForFile(String filename) {
+        return searchInConfiguration(filename)
+                ? "//fragments[@type='JAR' or @type='CONNECTOR' or @type='ACTOR_FILTER'][@exported='true' or not(@exported)]/@value"
+                : "//jarDependencies/jarDependency";
+    }
+
+    private boolean searchInConfiguration(String fileName) {
+        return fileName.endsWith(".proc") || fileName.endsWith(".conf");
+    }
+
     public Set<String> getUsedDependencies() {
         return usedDependencies;
     }
