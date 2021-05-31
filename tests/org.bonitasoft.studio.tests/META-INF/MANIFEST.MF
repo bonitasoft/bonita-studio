@@ -97,7 +97,9 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.eclipse.egit.core;bundle-version="5.6.0",
  org.eclipse.egit.ui;bundle-version="5.6.0",
  org.bonitasoft.studio.rest.api.extension;bundle-version="7.12.0",
- org.eclipse.osgi.services;bundle-version="3.8.0"
+ org.eclipse.osgi.services;bundle-version="3.8.0",
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.core.di;bundle-version="1.7.700"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.actors,
  org.bonitasoft.studio.tests.api,

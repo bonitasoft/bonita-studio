@@ -103,7 +103,7 @@ public class CallActivityConstraint extends AbstractLiveValidationMarkerConstrai
         }));
         
         DiagramRepositoryStore diagramRepoStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
-        List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcessesWithoutReoload();
+        List<AbstractProcess> allProcesses = diagramRepoStore.hasComputedProcesses() ? diagramRepoStore.getComputedProcesses() : diagramRepoStore.getAllProcesses();
         return new CallActivityHelper(allProcesses, callActivitySelectionProvider);
     }
 

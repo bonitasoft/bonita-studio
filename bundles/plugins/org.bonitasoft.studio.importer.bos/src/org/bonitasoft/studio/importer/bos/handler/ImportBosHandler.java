@@ -18,7 +18,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
+import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.i18n.Messages;
 import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ImportBosHandler {
 
     private SwitchRepositoryStrategy switchRepositoryStrategy;
-    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
+    private DependenciesUpdateOperationFactory processConfigurationUpdateOperationFactory;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
     private RepositoryAccessor repositoryAccessor;
     private ExceptionDialogHandler exceptionDialogHandler;
@@ -55,7 +55,7 @@ public class ImportBosHandler {
             MavenRepositoryRegistry mavenRepositoryRegistry,
             ExceptionDialogHandler exceptionDialogHandler,
             SwitchRepositoryStrategy switchRepositoryStrategy,
-            ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory) {
+            DependenciesUpdateOperationFactory processConfigurationUpdateOperationFactory) {
         this.repositoryAccessor = repositoryAccessor;
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
         this.exceptionDialogHandler = exceptionDialogHandler;
