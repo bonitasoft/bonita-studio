@@ -81,7 +81,7 @@ public class BotImportBOSDialog extends BotWizardDialog {
 
     public void importArchive() {
         // Wait extension resolution
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 50000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.importButtonLabel)), 80000);
         bot.button(Messages.importButtonLabel).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle), 120000);
         bot.shell(org.bonitasoft.studio.importer.i18n.Messages.importResultTitle).activate();
