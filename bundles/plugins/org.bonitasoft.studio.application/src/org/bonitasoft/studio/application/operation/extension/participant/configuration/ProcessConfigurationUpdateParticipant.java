@@ -41,7 +41,6 @@ import org.bonitasoft.studio.common.repository.extension.update.preview.PreviewR
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationCollector;
 import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
@@ -105,7 +104,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                     .ifPresent(
                             updatedArtifact -> {
                                 var configurations = configurationCollector
-                                        .findConfigurationsDependingOn(artifact.getFile().getName());
+                                        .findArtifactDependingOn(artifact.getFile().getName());
                                 previewResult
                                         .addChange(createUpdateChanges(artifact, updatedArtifact, configurations));
                             });
@@ -113,7 +112,7 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                     || existsInAnotherVersion(new ArtifactKey(a), key))) {
                 // Artifact has been removed
                 var configurations = configurationCollector
-                        .findConfigurationsDependingOn(artifact.getFile().getName());
+                        .findArtifactDependingOn(artifact.getFile().getName());
                 previewResult.addChange(
                         createRemovedChange(artifact, configurations));
             }

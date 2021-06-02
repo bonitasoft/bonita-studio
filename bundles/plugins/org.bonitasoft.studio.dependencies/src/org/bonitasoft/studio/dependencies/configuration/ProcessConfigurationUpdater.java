@@ -33,7 +33,7 @@ public class ProcessConfigurationUpdater {
             change.apply(modelUpdater.getWorkingCopy());
             Resource resource = configuration.eResource();
             modelUpdater.update();
-            if(resource != null) {
+            if (resource != null) {
                 modifiedResources.add(resource);
             }
         }

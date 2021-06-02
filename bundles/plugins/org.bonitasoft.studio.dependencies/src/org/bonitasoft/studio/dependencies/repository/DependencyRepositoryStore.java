@@ -51,8 +51,8 @@ import org.bonitasoft.studio.common.repository.model.PostMigrationOperationColle
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
+import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -80,14 +80,14 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     private ProjectDependenciesResolver projectDependenciesResolver = new ProjectDependenciesResolver(
             RepositoryManager.getInstance().getAccessor());
     private MavenRepositoryRegistry mavenRepositoryRegistry = new MavenRepositoryRegistry();
-    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
+    private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
     @Override
     public void createRepositoryStore(IRepository repository) {
         this.repository = repository;
         var eclipseContext = EclipseContextFactory.create();
-        this.processConfigurationUpdateOperationFactory = ContextInjectionFactory
-                .make(ProcessConfigurationUpdateOperationFactory.class, eclipseContext);
+        this.dependenciesUpdateOperationFactory = ContextInjectionFactory
+                .make(DependenciesUpdateOperationFactory.class, eclipseContext);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                         .filter(DependencyLookup::isSelected)
                         .collect(Collectors.toSet());
 
-                var processConfigurationUpdateOperation = processConfigurationUpdateOperationFactory.create();
+                var processConfigurationUpdateOperation = dependenciesUpdateOperationFactory.create();
                 for (var dl : dependenciesToInstall) {
                     try {
                         localDependencyStore.install(dl);

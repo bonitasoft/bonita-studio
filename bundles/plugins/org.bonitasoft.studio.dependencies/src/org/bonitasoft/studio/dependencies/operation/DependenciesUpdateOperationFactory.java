@@ -12,32 +12,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.dependencies.operation;
 
 import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
+import org.bonitasoft.studio.dependencies.DependentArtifactCollectorRegistry;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
+import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationUpdater;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 @Creatable
-public class ProcessConfigurationUpdateOperationFactory {
+public class DependenciesUpdateOperationFactory {
 
-    private ProcessConfigurationCollector processConfigurationCollector;
+    private DependentArtifactCollectorRegistry dependentArtifactCollectorRegistry;
     private ProcessConfigurationUpdater processConfigurationUpdater;
+    private ConnectorImplementationUpdater connectorImplementationUpdater;
     private ProjectDependenciesResolver dependencyResolver;
 
     @Inject
-    public ProcessConfigurationUpdateOperationFactory(ProcessConfigurationCollector processConfigurationCollector,
+    public DependenciesUpdateOperationFactory(DependentArtifactCollectorRegistry dependentArtifactCollectorRegistry,
             ProcessConfigurationUpdater processConfigurationUpdater,
+            ConnectorImplementationUpdater connectorImplementationUpdater,
             ProjectDependenciesResolver dependencyResolver) {
-        this.processConfigurationCollector = processConfigurationCollector;
+        this.dependentArtifactCollectorRegistry = dependentArtifactCollectorRegistry;
         this.processConfigurationUpdater = processConfigurationUpdater;
+        this.connectorImplementationUpdater = connectorImplementationUpdater;
         this.dependencyResolver = dependencyResolver;
     }
 
-    public ProcessConfigurationUpdateOperation create() {
-        return new ProcessConfigurationUpdateOperation(processConfigurationCollector,
+    public DependenciesUpdateOperation create() {
+        return new DependenciesUpdateOperation(dependentArtifactCollectorRegistry,
                 processConfigurationUpdater,
+                connectorImplementationUpdater,
                 dependencyResolver);
     }
 

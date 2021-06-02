@@ -35,7 +35,7 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
 
     public static final String IMPL_EXT = "impl";
     
-    private static final String STORE_NAME = "filters-impl";
+    public static final String STORE_NAME = "filters-impl";
     private static final Set<String> extensions = Set.of(IMPL_EXT);
 
     @Override

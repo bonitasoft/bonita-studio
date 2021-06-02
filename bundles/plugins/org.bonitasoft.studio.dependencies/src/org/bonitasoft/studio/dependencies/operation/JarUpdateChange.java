@@ -12,24 +12,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.dependencies.configuration;
+package org.bonitasoft.studio.dependencies.operation;
 
 import java.util.Collection;
 import java.util.Objects;
 
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationChange;
+import org.bonitasoft.studio.dependencies.connector.ConnectorImplementationChange;
 import org.bonitasoft.studio.model.configuration.Configuration;
 
-public class JarUpdateConfigurationChange implements ProcessConfigurationChange {
+public class JarUpdateChange implements ProcessConfigurationChange, ConnectorImplementationChange {
 
     private String previousJarName;
     private String newJarName;
     private Collection<Configuration> configurations;
+    private Collection<ConnectorImplementation> implementations;
 
-    public JarUpdateConfigurationChange(String previousJarName, String newJarName,
-            Collection<Configuration> configurations) {
+    public JarUpdateChange(String previousJarName,
+            String newJarName,
+            Collection<Configuration> configurations,
+            Collection<ConnectorImplementation> implementations) {
         this.previousJarName = previousJarName;
         this.newJarName = newJarName;
         this.configurations = configurations;
+        this.implementations = implementations;
     }
 
     @Override
@@ -44,8 +51,25 @@ public class JarUpdateConfigurationChange implements ProcessConfigurationChange 
     }
 
     @Override
+    public void apply(ConnectorImplementation implementation) {
+        if (implementation.getJarDependencies() != null) {
+            var dependencies = implementation.getJarDependencies().getJarDependency();
+            dependencies
+                    .removeIf(dep -> Objects.equals(dep, previousJarName));
+            if (!dependencies.contains(newJarName)) {
+                dependencies.add(newJarName);
+            }
+        }
+    }
+
+    @Override
     public Collection<Configuration> getConfigurations() {
         return configurations;
+    }
+
+    @Override
+    public Collection<ConnectorImplementation> getConnectorImplementations() {
+        return implementations;
     }
 
 }

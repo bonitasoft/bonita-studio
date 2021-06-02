@@ -28,7 +28,7 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.tests.validation.ValidationTestBase;
+import org.bonitasoft.studio.tests.validation.TestValidationConstraints;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.validation.model.EvaluationMode;
@@ -82,7 +82,7 @@ public class SWTBOTTestConditions {
                 .getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final AbstractProcess process = store.findProcess(poolName, "1.0");
         assertNotNull(process);
-        final ValidationTestBase validation = new ValidationTestBase();
+        var validation = new TestValidationConstraints();
         final IBatchValidator batchValidator = ModelValidationService.getInstance().newValidator(
                 EvaluationMode.BATCH);
         batchValidator.setIncludeLiveConstraints(true);

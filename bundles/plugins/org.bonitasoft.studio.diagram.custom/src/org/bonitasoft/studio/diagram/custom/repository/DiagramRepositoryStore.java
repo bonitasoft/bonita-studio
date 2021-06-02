@@ -509,11 +509,4 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         return computedProcessesList;
     }
 
-    public List<AbstractProcess> getAllProcessesWithoutReoload() {
-        final List<AbstractProcess> processes = new ArrayList<>();
-        for (final DiagramFileStore file : getChildren()) {
-            processes.addAll(file.getProcesses(false));
-        }
-        return processes;
-    }
 }
