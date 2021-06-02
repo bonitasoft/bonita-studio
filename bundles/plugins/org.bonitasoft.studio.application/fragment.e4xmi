@@ -34,5 +34,7 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7OSHQLFyEeuykI2WNDJFjw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_Cpy2kLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.definition.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.definition.DefinitionUpdateParticipantFactory"/>
     <elements xsi:type="application:Addon" xmi:id="_hKL2wLFzEeuykI2WNDJFjw" elementId="org.bonitasoft.studio.application.configuration.participant.factory.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationUpdateParticipantFactory"/>
+    <elements xsi:type="application:Addon" xmi:id="_tZxYUMH2EeuM0_ixEIC4vQ" elementId="org.bonitasoft.studio.application.collector.implementation.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.CustomImplementationCollector"/>
+    <elements xsi:type="application:Addon" xmi:id="_i6qCMMIDEeuM0_ixEIC4vQ" elementId="org.bonitasoft.studio.application.collector.configuration.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.operation.extension.participant.configuration.ProcessConfigurationCollector"/>
   </fragments>
 </fragment:ModelFragments>

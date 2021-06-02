@@ -26,14 +26,17 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.diagram.custom,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.core.contexts,
- org.eclipse.e4.core.di;bundle-version="1.7.700"
+ org.eclipse.e4.core.di;bundle-version="1.7.700",
+ org.bonitasoft.studio.connectors.model;bundle-version="7.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.dependencies.configuration,
  org.bonitasoft.studio.dependencies.handler,
  org.bonitasoft.studio.dependencies.i18n;x-friends:="org.bonitasoft.studio.connectors.test,org.bonitasoft.studio.groovy.tests",
+ org.bonitasoft.studio.dependencies.operation,
  org.bonitasoft.studio.dependencies.repository,
  org.bonitasoft.studio.dependencies.ui,
  org.bonitasoft.studio.dependencies.ui.dialog
-Import-Package: org.bonitasoft.engine.bpm.bar
+Import-Package: javax.annotation;version="1.3.5",
+ org.bonitasoft.engine.bpm.bar

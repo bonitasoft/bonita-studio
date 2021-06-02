@@ -30,12 +30,14 @@ public class MessagePanelEventHandler implements IValueChangeListener<Boolean> {
 
     @Override
     public void handleValueChange(ValueChangeEvent<? extends Boolean> event) {
-        if (event.diff.getNewValue()) {
-            messagePanel.create(container);
-        } else {
-            messagePanel.dispose(container);
+        if (!container.isDisposed()) {
+            if (event.diff.getNewValue()) {
+                messagePanel.create(container);
+            } else {
+                messagePanel.dispose(container);
+            }
+            container.layout();
         }
-        container.layout();
     }
 
 }

@@ -26,11 +26,8 @@ import org.bonitasoft.studio.common.model.ImportAction;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationCollector;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdateOperationFactory;
-import org.bonitasoft.studio.dependencies.configuration.ProcessConfigurationUpdater;
+import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.bos.model.BosArchive;
@@ -41,6 +38,8 @@ import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.swt.widgets.Display;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,15 +47,14 @@ import org.junit.Test;
 public class TestBOSArchiveImport {
 
     RepositoryAccessor repositoryAccessor;
-    private ProcessConfigurationUpdateOperationFactory processConfigurationUpdateOperationFactory;
+    private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
 
     @Before
     public void cleanDiagrams() throws Exception {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
-        processConfigurationUpdateOperationFactory = new ProcessConfigurationUpdateOperationFactory(
-                new ProcessConfigurationCollector(repositoryAccessor), 
-                new ProcessConfigurationUpdater(), 
-                new ProjectDependenciesResolver(repositoryAccessor));
+        var eclipseContext = EclipseContextFactory.create();
+        dependenciesUpdateOperationFactory = ContextInjectionFactory
+                .make(DependenciesUpdateOperationFactory.class, eclipseContext);
         final DiagramRepositoryStore repositoryStore = repositoryAccessor.getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         repositoryStore.getChildren().stream().forEach(IRepositoryFileStore::delete);
@@ -99,7 +97,7 @@ public class TestBOSArchiveImport {
 
         operation = new ImportBosArchiveOperation(conflictingFile, new SkippableProgressMonitorJobsDialog(
                 Display.getDefault().getActiveShell()), archiveModel, repositoryAccessor,
-                processConfigurationUpdateOperationFactory);
+                dependenciesUpdateOperationFactory);
         operation.run(new NullProgressMonitor());
         StatusAssert.assertThat(operation.getStatus()).isOK();
 

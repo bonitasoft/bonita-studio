@@ -37,7 +37,7 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
 
     public static final String CONNECTOR_IMPL_EXT = "impl";
     
-    private static final String STORE_NAME = "connectors-impl";
+    public static final String STORE_NAME = "connectors-impl";
     private static final Set<String> extensions = Set.of(CONNECTOR_IMPL_EXT);
 
     @Override
