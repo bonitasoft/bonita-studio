@@ -27,8 +27,10 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecorator;
+import org.bonitasoft.studio.application.ui.control.ExtensionTypeHandler;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage;
 import org.bonitasoft.studio.application.ui.control.ImportExtensionPage.ImportMode;
+import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -57,6 +59,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ImportExtensionHandler {
 
+    public static final String EXTENSION_TYPE_PARAMETER = "extensionType";
     private MavenProjectHelper mavenProjectHelper;
     private RepositoryAccessor repositoryAccessor;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
@@ -78,6 +81,7 @@ public class ImportExtensionHandler {
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
+            @Named(EXTENSION_TYPE_PARAMETER) String extensionType,
             @org.eclipse.e4.core.di.annotations.Optional @Named("groupId") String groupId,
             @org.eclipse.e4.core.di.annotations.Optional @Named("artifactId") String artifactId,
             @org.eclipse.e4.core.di.annotations.Optional @Named("version") String version,
@@ -94,17 +98,22 @@ public class ImportExtensionHandler {
 
         Optional<Dependency> dependencytoUpdate = createDependency(groupId, artifactId, version, classifier, type);
 
+        ArtifactType artifactType = ArtifactType.valueOf(extensionType);
+        var extensionTypeHandler = new ExtensionTypeHandler(artifactType);
         ImportExtensionPage importExtensionPage = new ImportExtensionPage(mavenRepositoryRegistry,
                 mavenModel,
+                extensionTypeHandler,
                 dependencytoUpdate,
                 Optional.ofNullable(localExtension));
 
+        String titleType = extensionTypeHandler.getExtensionLabel();
+
         WizardBuilder.<Boolean> newWizard()
-                .withTitle(Messages.importExtensionTitle)
+                .withTitle(String.format(Messages.importExtensionTitle, titleType))
                 .needProgress()
                 .havingPage(newPage()
-                        .withTitle(Messages.importExtensionTitle)
-                        .withDescription(Messages.importExtension)
+                        .withTitle(String.format(Messages.importExtensionTitle, titleType))
+                        .withDescription(String.format(Messages.importExtension, titleType))
                         .withControl(importExtensionPage))
                 .onFinish(container -> performFinish(container,
                         importExtensionPage,

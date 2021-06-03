@@ -17,11 +17,13 @@ package org.bonitasoft.studio.application.views.extension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
@@ -45,6 +47,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
+import org.bonitasoft.studio.ui.widget.DropdownDynamicButtonWidget;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.resources.IResource;
@@ -199,13 +202,13 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                             .filter(bonitaDep -> sameDependency(dep, bonitaDep))
                             .findFirst();
                     if (bonitaDependency
-                            .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.UNKNOWN))
+                            .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.OTHER))
                             .isPresent()) {
                         createCard(parent, dep, bonitaDependency.get());
                     } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);
-                        if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.UNKNOWN)) {
+                        if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.OTHER)) {
                             otherDependencies.add(dep);
                         } else {
                             createCard(parent, dep, bonitaDep);
@@ -444,19 +447,33 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
     }
 
     private void createImportButton(Composite parent) {
-        new DynamicButtonWidget.Builder()
+        new DropdownDynamicButtonWidget.Builder()
                 .withText(Messages.importExtensionButtonLabel)
                 .withMaxTextWidth(150)
                 .withTooltipText(Messages.importExtension)
                 .withImage(Pics.getImage(PicsConstants.import32))
                 .withHotImage(Pics.getImage(PicsConstants.import32Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND, null))
+                .addDropdownItem(Messages.addConnector, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
+                .addDropdownItem(Messages.addActorFilter, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.ACTOR_FILTER.name())))
+                .addDropdownItem(Messages.addTheme, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
+                .addDropdownItem(Messages.addRestApiExtension, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
+                .addDropdownItem(Messages.addOther, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
                 .createIn(parent);
     }
 
     private void createImportBigButton(Composite parent) {
-        new DynamicButtonWidget.Builder()
+        new DropdownDynamicButtonWidget.Builder()
                 .withText(Messages.importExtensionButtonLabel)
                 .withMaxTextWidth(200)
                 .withTooltipText(Messages.importExtension)
@@ -464,7 +481,21 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .withHotImage(Pics.getImage(PicsConstants.import64Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .withFont(JFaceResources.getFont(NORMAL_4_FONT_ID))
-                .onClick(e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND, null))
+                .addDropdownItem(Messages.addConnector, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
+                .addDropdownItem(Messages.addActorFilter, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.ACTOR_FILTER.name())))
+                .addDropdownItem(Messages.addTheme, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
+                .addDropdownItem(Messages.addRestApiExtension, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
+                .addDropdownItem(Messages.addOther, null,
+                        e -> commandExecutor.executeCommand(IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
                 .createIn(parent);
     }
 

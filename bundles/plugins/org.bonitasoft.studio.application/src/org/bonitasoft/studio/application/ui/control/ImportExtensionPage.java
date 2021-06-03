@@ -44,7 +44,6 @@ import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
-import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.bonitasoft.studio.ui.wizard.ControlSupplier;
 import org.eclipse.core.databinding.Binding;
@@ -72,6 +71,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.m2e.core.repository.IRepository;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -117,18 +117,21 @@ public class ImportExtensionPage implements ControlSupplier {
     private Optional<Dependency> extensionToUpdate;
     private Optional<Boolean> isLocal;
     private Composite mainComposite;
+    private ExtensionTypeHandler extensionTypeHandler;
 
     public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry,
             Model mavenModel,
+            ExtensionTypeHandler extensionTypeHandler,
             Optional<Dependency> extensionToUpdate,
             Optional<Boolean> isLocal) {
         this.mavenRepositoryRegistry = mavenRepositoryRegistry;
         this.mavenModel = mavenModel;
+        this.extensionTypeHandler = extensionTypeHandler;
         this.extensionToUpdate = extensionToUpdate;
         this.isLocal = isLocal;
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.dependency = new Dependency();
-        this.dependency.setType("jar");
+        this.dependency.setType(extensionTypeHandler.getExtensionType());
 
         extensionToUpdate.ifPresent(dep -> {
             dependency = dep.clone();
@@ -201,8 +204,19 @@ public class ImportExtensionPage implements ControlSupplier {
         Link manualCoordinateLink = new Link(manualComposite, SWT.WRAP);
         manualCoordinateLink.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
                 .hint(650, SWT.DEFAULT).create());
-        manualCoordinateLink.setText(Messages.importRemoteDependencyTip);
+        manualCoordinateLink
+                .setText(String.format(Messages.importRemoteDependencyTip, extensionTypeHandler.getExtensionLabel()));
         manualCoordinateLink.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+        createHintLabel(manualComposite);
+    }
+
+    private void createHintLabel(Composite parent) {
+        extensionTypeHandler.getHintMessage().ifPresent(hint -> {
+            var hintLabel = new CLabel(parent, SWT.WRAP);
+            hintLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+            hintLabel.setText(hint);
+            hintLabel.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
+        });
     }
 
     private void createFromArchiveComposite(Composite parent, DataBindingContext ctx) {
@@ -215,10 +229,10 @@ public class ImportExtensionPage implements ControlSupplier {
                 .grab(true, false)
                 .hint(650, SWT.DEFAULT)
                 .create());
-        fromFileLabel.setText(Messages.importFromFileTip);
+        fromFileLabel.setText(String.format(Messages.importFromFileTip, extensionTypeHandler.getExtensionLabel()));
 
+        createHintLabel(archiveComposite);
         createFileBrowser(archiveComposite, ctx);
-
     }
 
     private Composite createFileBrowser(Composite parent, DataBindingContext dbc) {
@@ -232,7 +246,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .observe(this);
         filePathObserveValue.addValueChangeListener(e -> analyzeFile(e, dbc));
         filePathText = new TextWidget.Builder()
-                .withLabel(Messages.file)
+                .withLabel(String.format(Messages.file, extensionTypeHandler.getExtensionType()))
                 .grabHorizontalSpace()
                 .fill()
                 .alignMiddle()
@@ -267,8 +281,8 @@ public class ImportExtensionPage implements ControlSupplier {
     }
 
     private String openFileDialog(Shell shell) {
-        final FileDialog fd = new FileDialog(shell, SWT.OPEN | SWT.SINGLE);
-        fd.setFilterExtensions(new String[] { "*.jar;*.zip" });
+        var fd = new FileDialog(shell, SWT.OPEN | SWT.SINGLE);
+        fd.setFilterExtensions(new String[] { String.format("*.%s", extensionTypeHandler.getExtensionType()) });
         return fd.open();
     }
 
@@ -373,24 +387,12 @@ public class ImportExtensionPage implements ControlSupplier {
                 List.of(new EmptyInputValidator("Version")));
         ctx.bindValue(versionText.observeEnable(), editableDependencyObservable);
 
-        Composite subPropertiesComposite = new Composite(dependencyGroup, SWT.NONE);
-        subPropertiesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
-                .extendedMargins(0, 0, 0, 15).create());
-        subPropertiesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
         IObservableValue<String> typeObservable = PojoProperties.value("type", String.class)
                 .observeDetail(dependencyObservable);
-        ComboWidget typeCombo = createCombo(subPropertiesComposite, "Type",
-                typeObservable, ctx);
-        ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
-                .build(), typeCombo.observeEnable(),
-                updateValueStrategy().create(),
-                neverUpdateValueStrategy().create());
 
         IObservableValue<String> classifierObservable = PojoProperties.value("classifier", String.class)
                 .observeDetail(dependencyObservable);
-        TextWidget classifierText = createText(subPropertiesComposite, "Classifier",
+        TextWidget classifierText = createText(dependencyGroup, "Classifier",
                 classifierObservable,
                 ctx,
                 false,
@@ -424,7 +426,8 @@ public class ImportExtensionPage implements ControlSupplier {
     private void createDependencyAlreadyExistsComposite(Composite parent, DataBindingContext ctx) {
         var composite = new Composite(parent, SWT.NONE);
         composite.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y).create());
+                GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y)
+                        .extendedMargins(0, 0, 15, 0).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         dependencyAlreadyExistsIcon = new Label(composite, SWT.WRAP);
@@ -513,22 +516,6 @@ public class ImportExtensionPage implements ControlSupplier {
                 .inContext(ctx)
                 .fill()
                 .useNativeRender()
-                .createIn(parent);
-    }
-
-    private ComboWidget createCombo(Composite parent,
-            String label,
-            IObservableValue<String> binding,
-            DataBindingContext ctx) {
-        return new ComboWidget.Builder()
-                .withLabel(label)
-                .readOnly()
-                .withItems("jar", "zip")
-                .labelAbove()
-                .grabHorizontalSpace()
-                .bindTo(binding)
-                .inContext(ctx)
-                .fill()
                 .createIn(parent);
     }
 

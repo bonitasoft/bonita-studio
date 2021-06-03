@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecoratorFactory;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
@@ -62,7 +63,7 @@ public class UpdateExtensionListener {
         if (artifact != null && artifact.isFromMarketplace()) {
             updateMarketplaceExtension(artifact, dep);
         } else {
-            updateOtherExtension(dep);
+            updateOtherExtension(artifact, dep);
         }
     }
 
@@ -96,7 +97,7 @@ public class UpdateExtensionListener {
         }
     }
 
-    private void updateOtherExtension(Dependency dep) {
+    private void updateOtherExtension(BonitaArtifactDependency artifact, Dependency dep) {
         boolean localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore()
                 .isLocalDependency(dep);
         var parameters = new HashMap<String, Object>();
@@ -106,6 +107,7 @@ public class UpdateExtensionListener {
         parameters.put("type", dep.getType());
         parameters.put("classifier", dep.getClassifier());
         parameters.put("isLocal", String.valueOf(localExtension));
+        parameters.put(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, artifact.getArtifactType().name());
         commandExecutor.executeCommand(ProjectExtensionEditorPart.IMPORT_EXTENSION_COMMAND, parameters);
     }
 
