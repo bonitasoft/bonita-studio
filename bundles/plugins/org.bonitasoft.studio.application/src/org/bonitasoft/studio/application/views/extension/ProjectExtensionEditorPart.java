@@ -40,6 +40,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
@@ -58,6 +59,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -84,9 +86,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.osgi.service.event.EventHandler;
 
-public class ProjectExtensionEditorPart extends EditorPart implements IResourceChangeListener {
+public class ProjectExtensionEditorPart extends EditorPart implements EventHandler, IResourceChangeListener {
 
     public static final String ID = "org.bonitasoft.studio.application.extension.editor";
 
@@ -148,6 +152,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
                 .make(UpdateExtensionListener.class, eclipseContext);
         removeExtensionListener = ContextInjectionFactory
                 .make(RemoveExtensionListener.class, eclipseContext);
+
+        PlatformUI.getWorkbench().getService(IEventBroker.class)
+                .subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);
 
         allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
         setSite(site);
@@ -600,6 +607,11 @@ public class ProjectExtensionEditorPart extends EditorPart implements IResourceC
         } catch (CoreException e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    @Override
+    public void handleEvent(org.osgi.service.event.Event event) {
+        refreshContent();
     }
 
 }
