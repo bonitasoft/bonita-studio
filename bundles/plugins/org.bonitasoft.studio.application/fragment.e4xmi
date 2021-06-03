@@ -16,6 +16,7 @@
       <parameters xmi:id="_bUiGcIf8EeuMD4DgJLHr5Q" elementId="classifier" name="classifier"/>
       <parameters xmi:id="_UWTBYIieEeuMD4DgJLHr5Q" elementId="isLocal" name="isLocal"/>
       <parameters xmi:id="_c31qoJIgEeuW_ZFfWjqHyA" elementId="version" name="version"/>
+      <parameters xmi:id="_fwQj0MOlEeuHpvkjmjw91Q" elementId="extensionType" name="extensionType" optional="false"/>
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_hz1wgIGLEeuVgbtqm9bD3Q" elementId="org.bonitasoft.studio.application.edit.project.command" commandName="%editProjectMetadata"/>
     <elements xsi:type="commands:Command" xmi:id="_-TWXoIcpEeu7ZtnjXqJ_Tg" elementId="org.bonitasoft.studio.application.newproject.command" commandName="%newProject"/>

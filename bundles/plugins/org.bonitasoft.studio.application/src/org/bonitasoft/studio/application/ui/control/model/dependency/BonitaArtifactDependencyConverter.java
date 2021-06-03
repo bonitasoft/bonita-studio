@@ -68,7 +68,7 @@ public class BonitaArtifactDependencyConverter {
         bonitaDep.setVersions(Arrays.asList(version));
         ArtifactType type = findType(dep);
         bonitaDep.setArtifactType(type);
-        if (Objects.equals(type, ArtifactType.UNKNOWN)) {
+        if (Objects.equals(type, ArtifactType.OTHER)) {
             return bonitaDep;
         }
         switch (type) {
@@ -135,7 +135,7 @@ public class BonitaArtifactDependencyConverter {
         } else if (isActorFilter(dep)) {
             return ArtifactType.ACTOR_FILTER;
         }
-        return ArtifactType.UNKNOWN;
+        return ArtifactType.OTHER;
     }
 
     private boolean isActorFilter(Dependency dep) {

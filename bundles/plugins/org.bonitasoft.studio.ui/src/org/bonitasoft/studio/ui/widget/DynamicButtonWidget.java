@@ -48,89 +48,27 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class DynamicButtonWidget {
 
-    public static class Builder {
-
-        private Optional<String> text = Optional.empty();
-        private Optional<String> tooltipText = Optional.empty();
-        private Optional<Image> image = Optional.empty();
-        private Optional<Image> hotImage = Optional.empty();
-        private Optional<Consumer<Event>> onClickListener = Optional.empty();
-        private Optional<Integer> maxTextWidth = Optional.empty();
-        private Optional<String> cssClass = Optional.empty();
-        private Optional<Object> layoutData = Optional.empty();
-        private Optional<Font> font = Optional.empty();
-        private Optional<String> defaultTextColorCssId = Optional.empty();
-        private Optional<String> hoverTextColorCssId = Optional.empty();
-        private Optional<FormToolkit> toolkit = Optional.empty();
-
-        public Builder withText(String text) {
-            this.text = Optional.ofNullable(text);
-            return this;
-        }
-
-        public Builder withTooltipText(String tooltipText) {
-            this.tooltipText = Optional.ofNullable(tooltipText);
-            return this;
-        }
-
-        public Builder withImage(Image image) {
-            this.image = Optional.ofNullable(image);
-            return this;
-        }
-
-        public Builder withHotImage(Image hotImage) {
-            this.hotImage = Optional.ofNullable(hotImage);
-            return this;
-        }
+    public static class Builder extends AbstractDynamicButtonWidgetBuilder<Builder> {
 
         public Builder onClick(Consumer<Event> onClickListener) {
             this.onClickListener = Optional.ofNullable(onClickListener);
-            return this;
-        }
-
-        public Builder withMaxTextWidth(int maxTextWidth) {
-            this.maxTextWidth = Optional.ofNullable(maxTextWidth);
-            return this;
-        }
-
-        public Builder withCssclass(String cssClass) {
-            this.cssClass = Optional.ofNullable(cssClass);
-            return this;
-        }
-
-        public Builder withTextColors(String defaultTextColorCssId, String hoverTextColorCssId) {
-            this.defaultTextColorCssId = Optional.ofNullable(defaultTextColorCssId);
-            this.hoverTextColorCssId = Optional.ofNullable(hoverTextColorCssId);
-            return this;
-        }
-
-        public Builder withLayoutData(Object layoutData) {
-            this.layoutData = Optional.ofNullable(layoutData);
-            return this;
-        }
-
-        public Builder withFont(Font font) {
-            this.font = Optional.ofNullable(font);
-            return this;
-        }
-
-        public Builder withToolkit(FormToolkit toolkit) {
-            this.toolkit = Optional.ofNullable(toolkit);
-            return this;
+            return getThis();
         }
 
         public DynamicButtonWidget createIn(Composite parent) {
-            return new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
+            var widget = new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
                     cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit);
+            widget.createControl();
+            return widget;
         }
 
     }
 
     private Composite parent;
     private Optional<String> text;
-    private Optional<String> tooltipText;
-    private Optional<Image> image;
-    private Optional<Image> hotImage;
+    protected Optional<String> tooltipText;
+    protected Optional<Image> image;
+    protected Optional<Image> hotImage;
     private Optional<Consumer<Event>> onClickListener;
     private Optional<Integer> maxTextWidth;
     private Optional<String> cssClass;
@@ -139,7 +77,7 @@ public class DynamicButtonWidget {
     private Optional<FormToolkit> toolkit;
 
     private IThemeEngine engine;
-    private ToolItem toolItem;
+    protected ToolItem toolItem;
     private Cursor cursorArrow;
     private Cursor cursorHand;
     private Optional<String> defaultTextColorCssId;
@@ -177,30 +115,23 @@ public class DynamicButtonWidget {
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-
-        createControl();
     }
 
-    private void createControl() {
-        container = toolkit.map(t-> t.createComposite(parent))
-                           .orElseGet(() -> new Composite(parent, SWT.NONE));
+    protected void createControl() {
+        container = toolkit.map(t -> t.createComposite(parent))
+                .orElseGet(() -> new Composite(parent, SWT.NONE));
         container.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
                         .spacing(1, LayoutConstants.getSpacing().y).create());
         container.setLayoutData(layoutData.orElse(GridDataFactory.swtDefaults().create()));
         cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
-    
+
         ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
         cssClass.ifPresent(css -> toolbar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
         toolkit.ifPresent(t -> t.adapt(toolbar));
 
-        toolItem = new ToolItem(toolbar, SWT.PUSH);
-        image.ifPresent(img -> toolItem.setImage(img));
-        hotImage.ifPresent(hotImg -> toolItem.setHotImage(hotImg));
-        tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));
-
-        onClickListener.ifPresent(onClick -> toolItem.addListener(SWT.Selection, onClick::accept));
+        createToolItem(toolbar);
 
         if (text.isPresent()) {
             Label label = toolkit.map(t -> t.createLabel(container, text.get(), SWT.WRAP))
@@ -229,53 +160,54 @@ public class DynamicButtonWidget {
                         }
                     }
                 });
+
+                label.addMouseTrackListener(new MouseTrackAdapter() {
+
+                    @Override
+                    public void mouseExit(MouseEvent e) {
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
+                        engine.applyStyles(label, false);
+                        image.ifPresent(toolItem::setImage);
+                        label.setCursor(cursorArrow);
+                        toolbar.setCursor(cursorArrow);
+                    }
+
+                    @Override
+                    public void mouseEnter(MouseEvent e) {
+                        if (toolItem.isEnabled()) {
+                            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                    hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
+                            engine.applyStyles(label, false);
+                            hotImage.ifPresent(toolItem::setImage);
+                            label.setCursor(cursorHand);
+                            toolbar.setCursor(cursorHand);
+                        }
+                    }
+                });
+
+                toolbar.addMouseTrackListener(new MouseTrackAdapter() {
+
+                    @Override
+                    public void mouseExit(MouseEvent e) {
+                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
+                        engine.applyStyles(label, false);
+                        label.setCursor(cursorArrow);
+                    }
+
+                    @Override
+                    public void mouseEnter(MouseEvent e) {
+                        if (toolItem.isEnabled()) {
+                            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                                    hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
+                            engine.applyStyles(label, false);
+                            label.setCursor(cursorHand);
+                        }
+                    }
+                });
             }
 
-            label.addMouseTrackListener(new MouseTrackAdapter() {
-
-                @Override
-                public void mouseExit(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                            defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
-                    engine.applyStyles(label, false);
-                    image.ifPresent(toolItem::setImage);
-                    label.setCursor(cursorArrow);
-                    toolbar.setCursor(cursorArrow);
-                }
-
-                @Override
-                public void mouseEnter(MouseEvent e) {
-                    if (toolItem.isEnabled()) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
-                        engine.applyStyles(label, false);
-                        hotImage.ifPresent(toolItem::setImage);
-                        label.setCursor(cursorHand);
-                        toolbar.setCursor(cursorHand);
-                    }
-                }
-            });
-
-            toolbar.addMouseTrackListener(new MouseTrackAdapter() {
-
-                @Override
-                public void mouseExit(MouseEvent e) {
-                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                            defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
-                    engine.applyStyles(label, false);
-                    label.setCursor(cursorArrow);
-                }
-
-                @Override
-                public void mouseEnter(MouseEvent e) {
-                    if (toolItem.isEnabled()) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
-                        engine.applyStyles(label, false);
-                        label.setCursor(cursorHand);
-                    }
-                }
-            });
         }
 
         toolbar.addMouseTrackListener(new MouseTrackAdapter() {
@@ -292,6 +224,15 @@ public class DynamicButtonWidget {
                 }
             }
         });
+    }
+
+    protected void createToolItem(ToolBar toolbar) {
+        toolItem = new ToolItem(toolbar, SWT.PUSH);
+        image.ifPresent(img -> toolItem.setImage(img));
+        hotImage.ifPresent(hotImg -> toolItem.setHotImage(hotImg));
+        tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));
+
+        onClickListener.ifPresent(onClick -> toolItem.addListener(SWT.Selection, onClick::accept));
     }
 
     public IObservableValue<Boolean> observeEnable() {

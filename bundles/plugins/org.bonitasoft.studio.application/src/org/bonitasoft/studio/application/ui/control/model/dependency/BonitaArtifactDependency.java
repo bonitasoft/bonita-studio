@@ -70,7 +70,7 @@ public class BonitaArtifactDependency implements Comparable {
                 setArtifactType(ArtifactType.ACTOR_FILTER);
                 break;
             default:
-                setArtifactType(ArtifactType.UNKNOWN);
+                setArtifactType(ArtifactType.OTHER);
         }
     }
 

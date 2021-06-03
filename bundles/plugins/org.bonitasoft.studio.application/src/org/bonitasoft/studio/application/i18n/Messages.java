@@ -326,6 +326,13 @@ public class Messages extends NLS {
     public static String noConnectorUsagesFound;
     public static String search;
     public static String actorFilterUsagesDescription;
+    public static String addConnector;
+    public static String addActorFilter;
+    public static String addTheme;
+    public static String addRestApiExtension;
+    public static String addOther;
+    public static String legacyArchiveFormatHint;
+    public static String extension;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
