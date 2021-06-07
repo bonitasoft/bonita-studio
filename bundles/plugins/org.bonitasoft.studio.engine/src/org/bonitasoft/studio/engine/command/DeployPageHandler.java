@@ -28,7 +28,7 @@ import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -60,7 +60,7 @@ public class DeployPageHandler {
             if (fStore.isPresent()) {
                 DeployPageRunnable operation = new DeployPageRunnable(pageAPI,
                         new HttpClientFactory(),
-                        new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE),
+                        new RestFormBuilder(PageDesignerURLFactory.INSTANCE),
                         fStore.get());
                 if(disablePopup == null || !Boolean.valueOf(disablePopup)) {
                     PlatformUI.getWorkbench().getProgressService().run(true, false, operation);

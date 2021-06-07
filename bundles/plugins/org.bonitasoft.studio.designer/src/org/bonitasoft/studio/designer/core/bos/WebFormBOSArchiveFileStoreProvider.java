@@ -43,7 +43,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.bar.BarResourceCreationException;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilder;
+import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilderFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -72,13 +73,13 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     private final RepositoryAccessor repositoryAccessor;
 
-    private final CustomPageBarResourceFactory customPageBarResourceFactory;
+    private final CustomPageBarResourceBuilder customPageBarResourceBuilder;
 
     @Inject
     public WebFormBOSArchiveFileStoreProvider(final RepositoryAccessor repositoryAccessor,
-            final CustomPageBarResourceFactory customPageBarResourceFactory) {
+            final CustomPageBarResourceBuilderFactory customPageBarResourceFactory) {
         this.repositoryAccessor = repositoryAccessor;
-        this.customPageBarResourceFactory = customPageBarResourceFactory;
+        this.customPageBarResourceBuilder = customPageBarResourceFactory.create();
     }
 
     @Override
@@ -107,7 +108,7 @@ public class WebFormBOSArchiveFileStoreProvider implements IBOSArchiveFileStoreP
 
     protected Set<String> findFormRelatedEntries(final WebPageFileStore fStore)
             throws BarResourceCreationException, IOException {
-        final BarResource barResource = customPageBarResourceFactory.newBarResource(fStore.getName(), fStore.getId());
+        final BarResource barResource = customPageBarResourceBuilder.newBarResource(fStore.getName(), fStore.getId());
         final byte[] zipContent = barResource.getContent();
         return zipEntries(zipContent);
     }

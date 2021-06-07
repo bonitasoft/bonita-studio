@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilderFactory;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -62,17 +63,18 @@ public class WebFormBOSArchiveFileStoreProviderTest {
     @Mock
     private WebWidgetFileStore customWidgetFileStore;
 
-    private RepositoryAccessor repositoryAccessor;
-
     @Mock
     private WebFragmentFileStore fragmentFileStore;
+
+    @Mock
+    private CustomPageBarResourceBuilderFactory customPageBarResourceFactory;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        repositoryAccessor = mock(RepositoryAccessor.class, RETURNS_DEEP_STUBS);
+        var repositoryAccessor = mock(RepositoryAccessor.class, RETURNS_DEEP_STUBS);
         final WebPageRepositoryStore formRepositoryStore = mock(WebPageRepositoryStore.class);
         doReturn(formRepositoryStore).when(repositoryAccessor).getRepositoryStore(WebPageRepositoryStore.class);
         when(formRepositoryStore.getChild("process-form-id", true)).thenReturn(processFormFileStore);
@@ -87,7 +89,7 @@ public class WebFormBOSArchiveFileStoreProviderTest {
         when(widgetRepositoryStore.getChild("customTestWidget", true)).thenReturn(customWidgetFileStore);
         when(customWidgetFileStore.canBeExported()).thenReturn(true);
 
-        webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, null));
+        webFormArtifactsFileStoreProvider = spy(new WebFormBOSArchiveFileStoreProvider(repositoryAccessor, customPageBarResourceFactory));
         doReturn(newHashSet("resources/widgets/customTestWidget/customTestWidget.json")).when(webFormArtifactsFileStoreProvider)
         .findFormRelatedEntries(processFormFileStore);
         doReturn(newHashSet("resources/fragments/fragmentDep/fragmentDep.json")).when(webFormArtifactsFileStoreProvider)

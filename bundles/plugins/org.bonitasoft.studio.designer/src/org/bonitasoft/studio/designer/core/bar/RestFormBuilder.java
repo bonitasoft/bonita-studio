@@ -1,14 +1,16 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2021 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,7 +24,6 @@ import java.util.logging.Level;
 
 import javax.inject.Inject;
 
-import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -31,37 +32,22 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-/**
- * @author Romain Bioteau
- */
 @Creatable
-public class CustomPageBarResourceFactory {
-
-    private static final String BAR_CUSTOMPAGES_LOCATION = "customPages";
-
-    private final PageDesignerURLFactory pageDesignerURLFactory;
+public class RestFormBuilder implements FormBuilder {
 
     static {
         Context.getCurrentLogger().setLevel(Level.OFF);
     }
-
+    
+    private final PageDesignerURLFactory pageDesignerURLFactory;
+    
     @Inject
-    public CustomPageBarResourceFactory(final PageDesignerURLFactory pageDesignerURLFactory) {
+    public RestFormBuilder(PageDesignerURLFactory pageDesignerURLFactory) {
         this.pageDesignerURLFactory = pageDesignerURLFactory;
     }
-
-    public BarResource newBarResource(final String targetFormCustomPageId, final String formId)
-            throws BarResourceCreationException {
-        try {
-            return new BarResource(BAR_CUSTOMPAGES_LOCATION + "/" + targetFormCustomPageId + ".zip",
-                    export(formId));
-        } catch (ResourceException | PageIncompatibleException | IOException e) {
-            throw new BarResourceCreationException(
-                    String.format("Failed to create a BarResource for form %s", targetFormCustomPageId), e);
-        }
-    }
-
-    public byte[] export(final String formId) throws IOException, PageIncompatibleException {
+  
+    @Override
+    public byte[] export(String formId) throws IOException, PageIncompatibleException {
         try (final InputStream is = get(pageDesignerURLFactory.exportPage(formId).toString(), formId)) {
             if (is == null) {
                 throw new IOException(String.format("Failed to export custom page for form %s", formId));

@@ -23,14 +23,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
-import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
@@ -57,9 +54,6 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     private static final Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
-
-    @Inject
-    private WebFormBOSArchiveFileStoreProvider filseStoreProvider;
 
     static {
         extensions.add(JSON_EXTENSION);
@@ -95,11 +89,9 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
             if (webPageFileStore == null) {
                 return null;
             }
-            webPageFileStore.setWebFormBOSArchiveFileStoreProvider(filseStoreProvider);
             return webPageFileStore;
         }
         webPageFileStore = new WebPageFileStore(fileName, this);
-        webPageFileStore.setWebFormBOSArchiveFileStoreProvider(filseStoreProvider);
         return webPageFileStore;
     }
 

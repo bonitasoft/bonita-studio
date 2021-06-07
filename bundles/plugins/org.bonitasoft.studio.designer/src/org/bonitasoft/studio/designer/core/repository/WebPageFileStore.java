@@ -37,7 +37,9 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceBuilderFactory;
+import org.bonitasoft.studio.designer.core.bar.FormBuilder;
+import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.designer.core.bos.WebFormBOSArchiveFileStoreProvider;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.i18n.Messages;
@@ -62,8 +64,6 @@ import com.google.common.io.ByteSource;
 public class WebPageFileStore extends InFolderJSONFileStore
         implements IDeployable, IBuildable, WebResource, Comparable<WebPageFileStore> {
 
-    private WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider;
-
     private static final String ID_TYPE = "type";
     public static final String DISPLAY_NAME_KEY = "displayName";
     private static final String DESCRIPTION_KEY = "description";
@@ -74,16 +74,11 @@ public class WebPageFileStore extends InFolderJSONFileStore
     public static final String FORM_TYPE = "form";
     public static final String DEPLOY_PAGE_COMMAND = "org.bonitasoft.studio.engine.deploy.page.command";
 
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
+    private FormBuilder formBuilder;
 
     public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
-        customPageBarResourceFactory = new CustomPageBarResourceFactory(PageDesignerURLFactory.INSTANCE);
-    }
-
-    public void setWebFormBOSArchiveFileStoreProvider(
-            final WebFormBOSArchiveFileStoreProvider webFormBOSArchiveFileStoreProvider) {
-        this.webFormBOSArchiveFileStoreProvider = webFormBOSArchiveFileStoreProvider;
+        formBuilder = new RestFormBuilder(PageDesignerURLFactory.INSTANCE);
     }
 
     @Override
@@ -183,7 +178,7 @@ public class WebPageFileStore extends InFolderJSONFileStore
             }
         }
         monitor.subTask(String.format(Messages.buildingWebPage, getName()));
-        try (InputStream inputStream = ByteSource.wrap(customPageBarResourceFactory.export(getId()))
+        try (InputStream inputStream = ByteSource.wrap(formBuilder.export(getId()))
                 .openBufferedStream();) {
             IFile zipFile = webPageFolder.getFile(String.format("custompage_%s.zip", getCustomPageName()));
             zipFile.create(inputStream, true, new NullProgressMonitor());

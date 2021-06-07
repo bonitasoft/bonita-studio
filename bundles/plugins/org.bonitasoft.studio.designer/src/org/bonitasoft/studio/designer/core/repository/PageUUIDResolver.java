@@ -16,13 +16,12 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 @Creatable
 public class PageUUIDResolver {
@@ -32,7 +31,7 @@ public class PageUUIDResolver {
     public PageUUIDResolver(File pageFolder) {
         this.pageFolder = pageFolder;
     }
-    
+
     public static File indexFile(File pageFolder) {
         return pageFolder.toPath().resolve(".metadata").resolve(".index.json").toFile();
     }
@@ -40,12 +39,12 @@ public class PageUUIDResolver {
     public String resolveUUID(String uuid) {
         File indexFile = indexFile(pageFolder);
         if (!indexFile.exists()) {
-                return null;
+            return null;
         }
 
-        JSONObject index = loadIndex(indexFile);
+        JSONObject index = toJSONObject(indexFile.toPath());
         if (index == null || !index.has(uuid)) {
-           return null;
+            return null;
         }
         try {
             return index.getString(uuid);
@@ -54,12 +53,14 @@ public class PageUUIDResolver {
         }
     }
 
-    private JSONObject loadIndex(File indexFile) {
+    private JSONObject toJSONObject(Path file) {
         try {
-            return new org.json.JSONObject(Files.toString(indexFile, Charsets.UTF_8));
+            return new org.json.JSONObject(java.nio.file.Files.readString(file, StandardCharsets.UTF_8));
         } catch (JSONException | IOException e) {
             return null;
         }
     }
-  
+    
+    
+
 }

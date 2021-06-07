@@ -59,7 +59,7 @@ public class FormMappingBarResourceProviderTest {
     private BusinessArchiveBuilder builder;
 
     @Mock
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
+    private CustomPageBarResourceBuilder customPageBarResourceBuilder;
 
     @Mock
     private BarResource processFormCustomPage;
@@ -74,8 +74,14 @@ public class FormMappingBarResourceProviderTest {
 
     @Before
     public void setUp() throws Exception {
+        var factory = new CustomPageBarResourceBuilderFactory() {
+            @Override
+            public CustomPageBarResourceBuilder create() {
+                return customPageBarResourceBuilder;
+            }
+        };
         formMappingBarResourceProvider = spy(
-                new FormMappingBarResourceProvider(customPageBarResourceFactory, preferenceStore));
+                new FormMappingBarResourceProvider(factory, preferenceStore));
         when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true))
                 .thenReturn(false);
         doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
@@ -132,7 +138,7 @@ public class FormMappingBarResourceProviderTest {
     public void should_add_form_custom_page_as_a_bar_resource() throws Exception {
         //Given
         doReturn("step-form-id").when(formMappingBarResourceProvider).resolveUUID("step-form-id");
-        doReturn(taskFormCustomPage).when(customPageBarResourceFactory).newBarResource("custompage_StepForm",
+        doReturn(taskFormCustomPage).when(customPageBarResourceBuilder).newBarResource("custompage_StepForm",
                 "step-form-id");
 
         //When

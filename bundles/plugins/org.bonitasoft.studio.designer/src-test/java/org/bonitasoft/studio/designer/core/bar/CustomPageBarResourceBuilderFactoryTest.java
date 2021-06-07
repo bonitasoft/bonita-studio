@@ -16,16 +16,10 @@ package org.bonitasoft.studio.designer.core.bar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.doReturn;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.URL;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
-import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,44 +34,33 @@ import com.google.common.io.ByteStreams;
  * @author Romain Bioteau
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CustomPageBarResourceFactoryTest {
+public class CustomPageBarResourceBuilderFactoryTest {
 
     @Mock
-    private PageDesignerURLFactory pageDesignerURLFactory;
+    private FormBuilder formBuilder;
 
     @Spy
     @InjectMocks
-    private CustomPageBarResourceFactory customPageBarResourceFactory;
+    private CustomPageBarResourceBuilderFactory customPageBarResourceFactory;
 
-    @Mock
-    private InputStream fakesIs;
 
-    private InputStream is;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        doReturn(new URL("http://localhost:8080/page-designer/export/")).when(pageDesignerURLFactory)
-                .exportPage(notNull(String.class));
-        is = new ByteArrayInputStream(ByteStreams.toByteArray(this.getClass().getResourceAsStream("/page-Step1.zip")));
-        doReturn(is).when(customPageBarResourceFactory).get(notNull(String.class), anyString());
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        if (is != null) {
-            is.close();
-            is = null;
-        }
+       var content = ByteStreams.toByteArray(CustomPageBarResourceBuilderFactoryTest.class.getResourceAsStream("/page-Step1.zip"));
+       doReturn(formBuilder).when(customPageBarResourceFactory).newFormBuilder();
+       when(formBuilder.export(anyString())).thenReturn(content);
     }
 
     @Test
     public void should_create_bar_resource_for_custompage() throws Exception {
-        final BarResource processFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--processForm",
+        CustomPageBarResourceBuilder customPageBarResourceBuilder = customPageBarResourceFactory.create();
+        final BarResource processFormCustomPage = customPageBarResourceBuilder.newBarResource("Pool1--1.0--processForm",
                 "process-form-id");
-        final BarResource taskFormCustomPage = customPageBarResourceFactory.newBarResource("Pool1--1.0--StepForm",
+        final BarResource taskFormCustomPage = customPageBarResourceBuilder.newBarResource("Pool1--1.0--StepForm",
                 "step-form-id");
 
         assertThat(processFormCustomPage.getName()).isEqualTo("customPages/Pool1--1.0--processForm.zip");

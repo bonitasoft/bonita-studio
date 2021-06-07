@@ -22,7 +22,6 @@ import java.net.URL;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.LocaleUtil;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
