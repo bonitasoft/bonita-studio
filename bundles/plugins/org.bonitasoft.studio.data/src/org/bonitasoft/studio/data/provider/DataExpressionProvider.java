@@ -79,7 +79,7 @@ public class DataExpressionProvider implements IExpressionProvider {
                     final Data d = ExpressionHelper.dataFromIteratorExpression((MultiInstantiable) parentFlowElement,
                             iteratorExpression,
                             mainProcess(parentFlowElement));
-                    result.add(createExpression(d, ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE));
+                    result.add(createExpression(d));
                 }
             }
         }

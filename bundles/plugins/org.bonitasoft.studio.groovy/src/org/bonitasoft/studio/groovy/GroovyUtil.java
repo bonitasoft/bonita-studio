@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
@@ -42,6 +43,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
@@ -398,7 +400,17 @@ public class GroovyUtil {
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);
-            final ScriptVariable scriptVariable = createScriptVariable(data);
+            MultiInstantiable multiInstantiable = ModelHelper.getFirstContainerOfType(context, MultiInstantiable.class);
+            if(multiInstantiable != null
+                    && multiInstantiable.getIteratorExpression() != null
+                    && Objects.equals(multiInstantiable.getIteratorExpression().getName(), e.getName())
+                    && Objects.equals(multiInstantiable.getIteratorExpression().getReturnType(), e.getReturnType())) {
+                ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType(), null,
+                        Messages.multiInstanceIteratorDescription);
+                scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+                return scriptVariable;
+            }
+            ScriptVariable scriptVariable = createScriptVariable(data);
             final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
             boolean isProcessData = false;
             String type = data instanceof BusinessObjectData
