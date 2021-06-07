@@ -402,6 +402,10 @@
                   visible="true">
             </separator>
             <separator
+                  name="org.bonitasoft.studio.application.placeholder.restapi"
+                  visible="true">
+            </separator>
+            <separator
                   name="additions"
                   visible="true">
             </separator>
