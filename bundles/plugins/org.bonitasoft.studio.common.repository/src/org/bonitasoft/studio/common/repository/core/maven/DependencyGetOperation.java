@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
@@ -22,9 +23,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.maven.Maven;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.execution.BuildSuccess;
@@ -34,8 +39,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.DependencyCatalog;
+import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenArtifactParser;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,7 +59,6 @@ public class DependencyGetOperation implements IRunnableWithProgress {
 
     private static final String INTERNAL_REPOSITORY = "internal-repository";
     static final String MAVEN_CENTRAL_URL = "https://repo.maven.apache.org/maven2";
-
 
     private DependencyLookup result;
     private List<String> repositories = new ArrayList<>();
@@ -98,15 +105,18 @@ public class DependencyGetOperation implements IRunnableWithProgress {
 
     private DependencyLookup runGetDependency() {
         try {
-            runDependencyPurgePlugin();
+            ArtifactRepository internalRepository = internalRepository();
+            runDependencyPurgePlugin(internalRepository);
             for (String repository : repositories) {
                 MavenExecutionResult executionResult = runDependencyGetPlugin(repository);
                 if (executionResult.getBuildSummary(executionResult.getProject()) instanceof BuildSuccess) {
+                    Artifact artifact = getArtifact(internalRepository);
                     return new DependencyLookup(null,
                             null,
                             DependencyLookup.Status.FOUND,
                             gav,
-                            repository);
+                            repository,
+                            artifact);
                 }
             }
         } catch (CoreException e) {
@@ -115,11 +125,35 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         return null;
     }
 
-    private MavenExecutionResult runDependencyPurgePlugin() throws CoreException {
+    private Artifact getArtifact(ArtifactRepository internalRepository) throws CoreException {
+        try {
+            DependencyCatalog catalog = new DependencyCatalog(internalRepositoryPath().toFile(),
+                    new MavenArtifactParser((DefaultArtifactFactory) maven()
+                            .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class)));
+            Optional<Artifact> artifact = catalog.parseDependencies().stream()
+                    .filter(anArtifact -> Objects.equals(anArtifact.getGroupId(), gav.getGroupId()))
+                    .filter(anArtifact -> Objects.equals(anArtifact.getArtifactId(), gav.getArtifactId()))
+                    .filter(anArtifact -> Objects.equals(anArtifact.getVersion(), gav.getVersion()))
+                    .filter(anArtifact -> Objects.equals(anArtifact.getType(), gav.getType()))
+                    .filter(anArtifact -> Objects.equals(anArtifact.getClassifier(), gav.getClassifier()))
+                    .findFirst();
+            if (artifact.isPresent()) {
+                Artifact foundArtifact = internalRepository.find(artifact.get());
+                if (foundArtifact != null) {
+                    return foundArtifact;
+                }
+            }
+            throw new CoreException(ValidationStatus.error("Artifact not found in Studio internal repository"));
+        } catch (IOException e) {
+            BonitaStudioLog.error(e);
+            throw new CoreException(ValidationStatus.error(e.getMessage(), e));
+        }
+    }
+
+    private MavenExecutionResult runDependencyPurgePlugin(ArtifactRepository internalRepository) throws CoreException {
         final IMavenExecutionContext context = maven().createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
-        ArtifactRepository internalRepository = internalRepository();
-        if(internalRepository != null) {
+        if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
         request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:purge-local-repository"));
@@ -160,7 +194,7 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         final IMavenExecutionContext context = maven.createExecutionContext();
         final MavenExecutionRequest request = context.getExecutionRequest();
         ArtifactRepository internalRepository = internalRepository();
-        if(internalRepository != null) {
+        if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
         request.setUpdateSnapshots(true);

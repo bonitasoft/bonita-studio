@@ -253,7 +253,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .labelAbove()
                 .withTargetToModelStrategy(updateValueStrategy()
                         .withValidator(new MultiValidator.Builder()
-                                .havingValidators(filePathValidator()))
+                                .havingValidators(filePathValidator(), fileContentValidator()))
                         .create())
                 .bindTo(filePathObserveValue)
                 .inContext(dbc)
@@ -270,6 +270,15 @@ public class ImportExtensionPage implements ControlSupplier {
         return path -> {
             if (importModeObservable.getValue() == ImportMode.FILE && (path == null || path.isBlank())) {
                 return ValidationStatus.error("");
+            }
+            return ValidationStatus.ok();
+        };
+    }
+
+    private IValidator<String> fileContentValidator() {
+        return path -> {
+            if (importModeObservable.getValue() == ImportMode.FILE && !(path == null || path.isBlank())) {
+                return extensionTypeHandler.getExtensionValidator().validate(new File(path));
             }
             return ValidationStatus.ok();
         };

@@ -20,6 +20,10 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
+import org.bonitasoft.studio.application.validator.ActorFilterExtensionTypeValidator;
+import org.bonitasoft.studio.application.validator.ConnectorExtensionTypeValidator;
+import org.bonitasoft.studio.application.validator.RestApiExtensionExtensionTypeValidator;
+import org.bonitasoft.studio.application.validator.ThemeExtensionTypeValidator;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 
@@ -52,7 +56,18 @@ public class ExtensionTypeHandler {
     }
 
     public IValidator<File> getExtensionValidator() {
-        return f -> ValidationStatus.ok();
+        switch (type) {
+            case CONNECTOR:
+                return new ConnectorExtensionTypeValidator();
+            case ACTOR_FILTER:
+                return new ActorFilterExtensionTypeValidator();
+            case REST_API:
+                return new RestApiExtensionExtensionTypeValidator();
+            case THEME:
+                return new ThemeExtensionTypeValidator();
+            default:
+                return f -> ValidationStatus.ok();
+        }
     }
 
     public String getExtensionLabel() {
