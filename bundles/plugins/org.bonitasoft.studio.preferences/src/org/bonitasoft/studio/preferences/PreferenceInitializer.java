@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -39,6 +40,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.google.common.io.Files;
 
@@ -89,6 +91,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }
+        
+       var asciiDocEditorPrefStore = getAsciiDocEditorPreferences();
+       asciiDocEditorPrefStore.setDefault("autoCreateInitialAsciidocConfigFile", false);
     }
 
     protected IPreferenceStore getIDEPreferenceStore() {
@@ -101,6 +106,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
                 .getDefault().getBundle().getSymbolicName());
 
         node.putBoolean(IPreferenceConstants.RUN_IN_BACKGROUND, false);
+    }
+    
+    protected IPreferenceStore getAsciiDocEditorPreferences() {
+       return new ScopedPreferenceStore(InstanceScope.INSTANCE, "de.jcup.asciidoctoreditor");
     }
 
     protected IPreferenceStore getJDTPreferenceStore() {

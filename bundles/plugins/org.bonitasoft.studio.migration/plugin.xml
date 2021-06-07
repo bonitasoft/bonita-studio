@@ -2,30 +2,4 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.bonitasoft.studio.edapt.migrators" name="org.bonitasoft.studio.edapt.migrators" schema="schema/org.bonitasoft.studio.edapt.migrators.exsd"/>
-   <extension
-         point="org.eclipse.emf.ecore.generated_package">
-      <package
-            class="org.bonitasoft.studio.migration.model.report.MigrationReportPackage"
-            genModel="model/report.genmodel"
-            uri="http://www.bonitasoft.org/ns/studio/migration/report">
-      </package>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.migration.ui.view.MigrationStatusView"
-            icon="icons/Report.png"
-            id="org.bonitasoft.studio.migration.view"
-            name="%importStatusReport"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.bonitasoft.studio.migration.preferences.BarImporterPreferenceInitializer">
-      </initializer>
-   </extension>
 </plugin>

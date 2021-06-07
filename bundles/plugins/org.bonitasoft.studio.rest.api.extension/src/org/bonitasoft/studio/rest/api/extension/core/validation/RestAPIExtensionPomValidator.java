@@ -144,10 +144,10 @@ public class RestAPIExtensionPomValidator {
     protected MavenExecutionResult build(RestAPIExtensionFileStore restApiFileStore) throws CoreException {
         IMaven maven = MavenPlugin.getMaven();
         MavenProjectInfo info = restApiFileStore.getMavenProjectInfo();
-        MavenProject project = MavenPlugin.getMavenProjectRegistry().getProject(restApiFileStore.getProject())
-                .getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+        var projectFacade = MavenPlugin.getMavenProjectRegistry().getProject(restApiFileStore.getProject());
+        MavenProject project = projectFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
         IMavenExecutionContext createExecutionContext = maven.createExecutionContext();
-        MavenExecutionResult mavenResult = createExecutionContext.execute(new ICallable<MavenExecutionResult>() {
+        return createExecutionContext.execute(new ICallable<MavenExecutionResult>() {
 
             @Override
             public MavenExecutionResult call(IMavenExecutionContext context, IProgressMonitor monitor)
@@ -159,7 +159,6 @@ public class RestAPIExtensionPomValidator {
                 return maven.readMavenProject(info.getPomFile(), newProjectBuildingRequest);
             }
         }, AbstractRepository.NULL_PROGRESS_MONITOR);
-        return mavenResult;
     }
 
     private boolean isBonitaWebExtensionsDependency(Dependency dependency) {

@@ -12,16 +12,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.maven.archetype.catalog.Archetype;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.io.jdom.MavenJDOMWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
+import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -30,10 +34,14 @@ import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
+import org.bonitasoft.studio.migration.report.AsciidocMigrationReportWriter;
+import org.bonitasoft.studio.migration.report.MigrationReport;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
+import org.codehaus.plexus.util.WriterFactory;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -43,15 +51,26 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.Format.TextMode;
 
 public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepositoryStore<RestAPIExtensionFileStore> {
 
+    private static final String MIGRATION_NOTES_DOCUMENT_NAME = "MIGRATION_NOTES.adoc";
+
     public static final String STORE_NAME = "restAPIExtensions";
 
-    private static final List<MavenModelMigration> MIGRATION_STEPS = List.of(new Groovy3MigrationStep());
+    private static final List<MavenModelMigration> MIGRATION_STEPS = List.of(new Groovy3MigrationStep(),
+            new BonitaVersionMigrationStep());
 
     private MavenXpp3Reader mavenModelReader = new MavenXpp3Reader();
     private MavenXpp3Writer mavenModelWriter = new MavenXpp3Writer();
+    private MavenJDOMWriter mavenModelJDOMWriter = new MavenJDOMWriter();
+
+    private AsciidocMigrationReportWriter asciidocMigrationReportWriter = new AsciidocMigrationReportWriter();
 
     @Override
     public String getName() {
@@ -125,6 +144,21 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
+    protected RestAPIExtensionFileStore doImportArchiveData(ImportArchiveData importArchiveData,
+            IProgressMonitor monitor) throws CoreException {
+        var fileName = importArchiveData.getName().split("/", 3)[2];
+        if (fileName.endsWith("/pom.xml")) {
+            var segments = fileName.split("/");
+            var projectName = segments[segments.length - 2];
+            var file = getResource().getFolder(projectName).getFile(MIGRATION_NOTES_DOCUMENT_NAME);
+            if (file.exists()) {
+                file.delete(true, new NullProgressMonitor());
+            }
+        }
+        return super.doImportArchiveData(importArchiveData, monitor);
+    }
+
+    @Override
     protected InputStream handlePreImport(String fileName, InputStream inputStream)
             throws MigrationException, IOException {
         if (fileName.endsWith("/.settings/org.eclipse.jdt.groovy.core.prefs")
@@ -134,22 +168,52 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
             return null;
         }
         if (fileName.endsWith("/pom.xml")) {
+            var segments = fileName.split("/");
+            var projectName = segments[segments.length - 2];
             try (CopyInputStream copyInputStream = new CopyInputStream(inputStream);
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 Model model = mavenModelReader.read(copyInputStream.getCopy());
                 boolean hasBeenMigrated = false;
+                MigrationReport report = new MigrationReport();
+                report.setTitle("Migration notes");
                 for (MavenModelMigration step : MIGRATION_STEPS) {
                     if (step.appliesTo(model)) {
-                        step.migrate(model);
+                        report = step.migrate(model).merge(report);
                         hasBeenMigrated = true;
                     }
                 }
                 if (hasBeenMigrated) {
-                    mavenModelWriter.write(outputStream, model);
+                    var file = getResource().getFolder(projectName).getFile(MIGRATION_NOTES_DOCUMENT_NAME);
+                    asciidocMigrationReportWriter.write(report, file.getLocation().toFile().toPath());
+                    file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+
+                    SAXBuilder builder = new SAXBuilder();
+                    builder.setIgnoringBoundaryWhitespace(false);
+                    builder.setIgnoringElementContentWhitespace(false);
+
+                    var originalPomFile = copyInputStream.getFile();
+                    Document doc = null;
+                    try {
+                        doc = builder.build(originalPomFile);
+                    } catch (JDOMException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                    try (Writer writer = WriterFactory.newWriter(outputStream, StandardCharsets.UTF_8.name())) {
+                        if (doc != null) {
+                            mavenModelJDOMWriter.write(model,
+                                    doc,
+                                    writer,
+                                    Format.getRawFormat()
+                                            .setEncoding("UTF-8")
+                                            .setTextMode(TextMode.PRESERVE));
+                        } else {
+                            mavenModelWriter.write(writer, model);
+                        }
+                    }
                     return new ByteArrayInputStream(outputStream.toByteArray());
                 }
                 return copyInputStream.getCopy();
-            } catch (IOException | XmlPullParserException e) {
+            } catch (IOException | XmlPullParserException | CoreException e) {
                 throw new MigrationException(e);
             }
         }
@@ -157,7 +221,8 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
         List<RestAPIExtensionFileStore> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
                 .filter(IRepositoryFileStore::canBeShared)

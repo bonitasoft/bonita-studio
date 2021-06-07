@@ -86,7 +86,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.designer,
  org.json,
  org.restlet,
- org.restlet.ext.json;bundle-version="2.3.0"
+ org.restlet.ext.json;bundle-version="2.3.0",
+ org.bonitasoft.studio.migration
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.annotation;version="1.2.0",
  org.bonitasoft.engine.api,
