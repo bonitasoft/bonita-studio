@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -26,26 +27,51 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
+import org.bonitasoft.studio.migration.report.MigrationReport;
 import org.bonitasoft.studio.rest.api.extension.core.repository.MavenModelMigration;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class Groovy3MigrationStep implements MavenModelMigration {
 
+    private static final String JAVA_VERSION_PROPERTY = "java.version";
+    private static final String GROOVY_VERSION_PROPERTY = "groovy.version";
+    private static final String GROOVY_ALL_VERSION_PROPERTY = "groovy-all.version";;
+    private static final String MAVEN_SUREFIRE_PLUGIN_VERSION = "3.0.0-M5";
+    private static final String GROOVY_VERSION = "3.0.8";
+    private static final String SPOCK_VERSION = "2.0-groovy-3.0";
+    private static final String JAVA_VERSION = "11";
+    
     private static final ComparableVersion _3_0_0 = new ComparableVersion("3.0.0");
 
     @Override
-    public void migrate(Model model) {
+    public MigrationReport migrate(Model model) {
+        MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
-        properties.setProperty("groovy-all.version", "3.0.7");
+
+        properties.setProperty(GROOVY_ALL_VERSION_PROPERTY, GROOVY_VERSION);
         properties.setProperty("maven-compiler-plugin.version", "3.8.1");
-        properties.setProperty("maven-surefire-plugin.version", "3.0.0-M5");
-        properties.setProperty("java.version", "11");
+        properties.setProperty("maven-surefire-plugin.version", MAVEN_SUREFIRE_PLUGIN_VERSION);
+        
+        AtomicReference<String> existingJavaVersion = new AtomicReference<>("1.8");
+        if(properties.containsKey(JAVA_VERSION_PROPERTY)) {
+            existingJavaVersion.set(properties.getProperty(JAVA_VERSION_PROPERTY));
+        }
+        properties.setProperty(JAVA_VERSION_PROPERTY, JAVA_VERSION);
+        
+        if(properties.containsKey("maven.compiler.target")) {
+            existingJavaVersion.set(properties.getProperty("maven.compiler.target"));
+        }
+        properties.setProperty("maven.compiler.target", "${java.version}");
+        properties.setProperty("maven.compiler.source", "${java.version}");
         properties.setProperty("groovy-eclipse-compiler.version", "3.7.0");
-        properties.setProperty("groovy-eclipse-batch.version", "3.0.7-03");
-        properties.setProperty("spock.version", "2.0-M4-groovy-3.0");
+        properties.setProperty("groovy-eclipse-batch.version", "3.0.8-01");
+        properties.setProperty("spock.version", SPOCK_VERSION);
 
-        properties.remove("groovy.version");
-
+        var existingGroovyVersion = properties.getOrDefault(GROOVY_VERSION_PROPERTY, "2.4.x");
+        properties.remove(GROOVY_VERSION_PROPERTY);
+        
+        report.updated(String.format("Groovy version has been updated from `%s` to `%s`. Check the https://groovy-lang.org/releasenotes/groovy-3.0.html[release note] for more information about the breaking changes.", existingGroovyVersion, GROOVY_VERSION));
+                
         findDependency(model.getDependencies(), "org.codehaus.groovy", "groovy-all")
                 .ifPresent(dependency -> {
                     dependency.setVersion("${groovy-all.version}");
@@ -60,7 +86,18 @@ public class Groovy3MigrationStep implements MavenModelMigration {
 
         findDependency(model.getDependencies(), "org.spockframework", "spock-core")
                 .ifPresent(dependency -> {
+                    var existingSpockVersion = dependency.getVersion();
                     dependency.setVersion("${spock.version}");
+                    report.updated(String.format("`spock-core` version has been updated from `%s` to `%s`. For more information check the https://spockframework.org/spock/docs/2.0/migration_guide.html#_migration_guide_2_0[migration guide].", existingSpockVersion, SPOCK_VERSION));
+                });
+        
+        
+
+        findDependency(model.getDependencies(), "com.athaydes", "spock-reports")
+                .ifPresent(dependency -> {
+                    var existingSpockReportsVersion = dependency.getVersion();
+                    dependency.setVersion("${spock.version}");
+                    report.updated(String.format("`spock-reports` version has been updated from `%s` to `%s`.", existingSpockReportsVersion, SPOCK_VERSION));
                 });
 
         Build build = model.getBuild();
@@ -69,34 +106,61 @@ public class Groovy3MigrationStep implements MavenModelMigration {
                     .ifPresent(p -> {
                         p.setVersion("${maven-compiler-plugin.version}");
                         Xpp3Dom configuration = (Xpp3Dom) p.getConfiguration();
-                        Xpp3Dom source = configuration.getChild("source");
-                        if (source != null) {
-                            source.setValue("${java.version}");
+                        removeNode("source", configuration);
+                        var targetNode = configuration.getChild("target");
+                        if(targetNode != null) {
+                            existingJavaVersion.set(targetNode.getValue());
                         }
-                        Xpp3Dom target = configuration.getChild("target");
-                        if (target != null) {
-                            target.setValue("${java.version}");
-                        }
+                        removeNode("target", configuration);
                         findDependency(p.getDependencies(), "org.codehaus.groovy", "groovy-eclipse-compiler")
                                 .ifPresent(d -> d.setVersion("${groovy-eclipse-compiler.version}"));
                         findDependency(p.getDependencies(), "org.codehaus.groovy", "groovy-eclipse-batch")
                                 .ifPresent(d -> d.setVersion("${groovy-eclipse-batch.version}"));
                     });
+            
+            if(!JAVA_VERSION.equals(existingJavaVersion.get())) {
+                report.updated(String.format("Java version has been updated from `%s` to `%s`", existingJavaVersion.get(), JAVA_VERSION));
+            }
 
             PluginManagement pluginManagement = Optional.ofNullable(build.getPluginManagement())
                     .orElseGet(PluginManagement::new);
             findPlugin(pluginManagement.getPlugins(), "org.apache.maven.plugins",
                     "maven-surefire-plugin")
                             .ifPresentOrElse(
-                                    surefirePlugin -> surefirePlugin.setVersion("${maven-surefire-plugin.version}"),
+                                    surefirePlugin -> {
+                                        var existingVersion = surefirePlugin.getVersion();
+                                        surefirePlugin.setVersion("${maven-surefire-plugin.version}");
+                                        if(!Objects.equals(existingVersion, MAVEN_SUREFIRE_PLUGIN_VERSION)) {
+                                            report.updated(String.format("`maven-surefire-plugin` plugin has been updated from %s to %s", existingVersion, MAVEN_SUREFIRE_PLUGIN_VERSION));
+                                        }
+                                    },
                                     () -> {
                                         pluginManagement.addPlugin(newPlugin("org.apache.maven.plugins",
                                                 "maven-surefire-plugin", "${maven-surefire-plugin.version}"));
+                                        report.added("`maven-surefire-plugin` plugin has been added");
                                     });
             build.setPluginManagement(pluginManagement);
         }
 
-        model.getPluginRepositories().removeIf(repository -> "bintray".equals(repository.getId()));
+        if (model.getPluginRepositories().removeIf(repository -> "bintray".equals(repository.getId()))) {
+            report.removed("`bintray` plugin repository has been removed. All required plugins are now available on maven central.");
+        }
+
+        return report;
+    }
+
+    private void removeNode(String nodeName, Xpp3Dom configuration) {
+        int index = -1;
+        for(var i = 0; i < configuration.getChildCount(); i ++) {
+           var node = configuration.getChild(i);
+           if(nodeName.equals(node.getName())) {
+               index = i;
+               break;
+           }
+        }
+        if(index != -1) {
+            configuration.removeChild(index);
+        }
     }
 
     private Dependency newDependency(String groupId, String artifactId, String version, String scope) {
@@ -134,10 +198,15 @@ public class Groovy3MigrationStep implements MavenModelMigration {
     @Override
     public boolean appliesTo(Model model) {
         if (model.getBuild() != null) {
-            String groovyVersion = model.getProperties().getProperty("groovy.version");
+            String groovyVersion = model.getProperties().getProperty(GROOVY_VERSION_PROPERTY);
+            String groovyAllVersion = model.getProperties().getProperty(GROOVY_ALL_VERSION_PROPERTY);
             // Already using Groovy 3
             if (groovyVersion != null && !groovyVersion.isBlank()
                     && _3_0_0.compareTo(new ComparableVersion(groovyVersion)) < 0) {
+                return false;
+            }
+            if (groovyAllVersion != null && !groovyAllVersion.isBlank()
+                    && _3_0_0.compareTo(new ComparableVersion(groovyAllVersion)) < 0) {
                 return false;
             }
 

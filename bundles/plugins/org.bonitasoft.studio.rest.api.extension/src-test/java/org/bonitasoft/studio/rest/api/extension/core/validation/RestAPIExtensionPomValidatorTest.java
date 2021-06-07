@@ -20,6 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,6 @@ import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.rest.api.extension.core.repository.RestAPIExtensionFileStore;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.Document;
 import org.junit.Test;
@@ -45,7 +45,8 @@ public class RestAPIExtensionPomValidatorTest {
         final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
         final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
-                expectedResolutionResult(Collections.<Dependency> emptyList(), newArrayList(dependency("g", "a", "1.0.0"))));
+                expectedResolutionResult(Collections.<Dependency> emptyList(),
+                        newArrayList(dependency("g", "a", "1.0.0"))));
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
         doReturn(null).when(finder).currentBDMGroupId();
@@ -86,7 +87,8 @@ public class RestAPIExtensionPomValidatorTest {
         final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
         final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
-                expectedResolutionResult(newArrayList(dependency("com.bonitasoft.web", "bonita-web-extensions-sp", "7.2.0")),
+                expectedResolutionResult(
+                        newArrayList(dependency("com.bonitasoft.web", "bonita-web-extensions-sp", "7.2.0")),
                         Collections.<Dependency> emptyList()));
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
@@ -99,7 +101,7 @@ public class RestAPIExtensionPomValidatorTest {
 
         assertThat(result).extracting("severity").contains(IStatus.WARNING);
     }
-    
+
     @Test
     public void should_not_add_a_warning_status_when_web_extension_dependency_is_in_range() throws Exception {
         final RestAPIExtensionPomValidator validator = spy(new RestAPIExtensionPomValidator());
@@ -107,7 +109,8 @@ public class RestAPIExtensionPomValidatorTest {
         final RestAPIExtensionFileStore restApiFileStore = mock(RestAPIExtensionFileStore.class);
         final MavenExecutionResult mavenResult = new DefaultMavenExecutionResult();
         mavenResult.setDependencyResolutionResult(
-                expectedResolutionResult(newArrayList(dependency("com.bonitasoft.web", "bonita-web-extensions-sp", "[7.2.0,)")),
+                expectedResolutionResult(
+                        newArrayList(dependency("com.bonitasoft.web", "bonita-web-extensions-sp", "[7.2.0,)")),
                         Collections.<Dependency> emptyList()));
         mavenResult.setProject(new MavenProject());
         doReturn(mavenResult).when(validator).build(restApiFileStore);
@@ -125,40 +128,12 @@ public class RestAPIExtensionPomValidatorTest {
         return new Dependency(new DefaultArtifact(groupId, artifactId, "", version), "compile");
     }
 
-    protected DependencyResolutionResult expectedResolutionResult(final List<Dependency> resolved,
+    private DependencyResolutionResult expectedResolutionResult(final List<Dependency> resolved,
             final List<Dependency> unresolved) {
-        return new DependencyResolutionResult() {
-
-            @Override
-            public List<Dependency> getUnresolvedDependencies() {
-                return unresolved;
-            }
-
-            @Override
-            public List<Dependency> getResolvedDependencies() {
-                return resolved;
-            }
-
-            @Override
-            public List<Exception> getResolutionErrors(Dependency arg0) {
-                return null;
-            }
-
-            @Override
-            public DependencyNode getDependencyGraph() {
-                return null;
-            }
-
-            @Override
-            public List<Dependency> getDependencies() {
-                return null;
-            }
-
-            @Override
-            public List<Exception> getCollectionErrors() {
-                return null;
-            }
-        };
+        var result = mock(DependencyResolutionResult.class);
+        when(result.getResolvedDependencies()).thenReturn(resolved);
+        when(result.getUnresolvedDependencies()).thenReturn(unresolved);
+        return result;
     }
 
 }

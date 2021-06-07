@@ -121,7 +121,7 @@ public class Groovy3MigrationStepTest {
         migrationStep.migrate(model);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("groovy-all.version", "3.0.7"));
+        assertThat(model.getProperties()).contains(entry("groovy-all.version", "3.0.8"));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class Groovy3MigrationStepTest {
         migrationStep.migrate(model);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("spock.version", "2.0-M4-groovy-3.0"));
+        assertThat(model.getProperties()).contains(entry("spock.version", "2.0-groovy-3.0"));
     }
 
     @Test
@@ -187,9 +187,12 @@ public class Groovy3MigrationStepTest {
         assertThat(findPluginConfiguration(model, "org.apache.maven.plugins", "maven-compiler-plugin"))
                 .isPresent()
                 .hasValueSatisfying(c -> {
-                    assertThat(c.getChild("source").getValue()).isEqualTo("${java.version}");
-                    assertThat(c.getChild("target").getValue()).isEqualTo("${java.version}");
+                    assertThat(c.getChild("source")).isNull();
+                    assertThat(c.getChild("target")).isNull();
                 });
+        
+        assertThat(model.getProperties().get("maven.compiler.source")).isEqualTo("${java.version}");
+        assertThat(model.getProperties().get("maven.compiler.target")).isEqualTo("${java.version}");
     }
 
     @Test
@@ -244,7 +247,7 @@ public class Groovy3MigrationStepTest {
         migrationStep.migrate(model);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("groovy-eclipse-batch.version", "3.0.7-03"));
+        assertThat(model.getProperties()).contains(entry("groovy-eclipse-batch.version", "3.0.8-01"));
     }
 
     @Test

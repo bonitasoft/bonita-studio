@@ -96,7 +96,9 @@ Import-Package: javax.annotation;version="1.2.0",
  org.eclipse.e4.core.di.annotations,
  org.eclipse.e4.ui.workbench.renderers.swt,
  org.osgi.service.event;version="1.3.0"
-Export-Package: org.bonitasoft.studio.application,
+Export-Package: org.apache.maven.io.util,
+ org.apache.maven.model.io.jdom,
+ org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.actions,
  org.bonitasoft.studio.application.actions.coolbar,
  org.bonitasoft.studio.application.contribution,
@@ -112,7 +114,10 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.views,
  org.bonitasoft.studio.application.views.extension.card,
  org.bonitasoft.studio.application.views.process,
- org.bonitasoft.studio.application.views.provider
+ org.bonitasoft.studio.application.views.provider,
+ org.jdom2,
+ org.jdom2.input,
+ org.jdom2.output
 Bundle-ClassPath: .,
  lib/jdom.jar,
  lib/maven3-model-jdom-support.jar

@@ -15,10 +15,11 @@
 package org.bonitasoft.studio.rest.api.extension.core.repository;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.migration.report.MigrationReport;
 
 public interface MavenModelMigration {
 
-    void migrate(Model model);
+    MigrationReport migrate(Model model);
     
     boolean appliesTo(Model model);
     

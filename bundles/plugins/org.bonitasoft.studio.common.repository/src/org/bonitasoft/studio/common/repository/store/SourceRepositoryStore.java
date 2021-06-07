@@ -66,9 +66,10 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
         final String packageName = fileName.substring(0, fileName.lastIndexOf("/"));
         final String className = fileName.substring(packageName.length() + 1, fileName.length());
         PackageFileStore packageStore = (PackageFileStore) getChild(packageName, true);
+        IFolder packageFolder = null;
         if (packageStore == null) {
             final IFolder folder = getResource();
-            final IFolder packageFolder = folder.getFolder(packageName);
+             packageFolder = folder.getFolder(packageName);
             if (!packageFolder.exists()) {
                 try {
                     packageFolder.getLocation().toFile().mkdirs();
@@ -79,8 +80,10 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
                 }
             }
         }
+        if(packageFolder == null && packageStore != null) {
+            packageFolder = packageStore.getResource();
+        }
 
-        final IFolder packageFolder = packageStore.getResource();
         final IFile file = packageFolder.getFile(className);
         if (file.exists()) {
             if (FileActionDialog.overwriteQuestion(fileName)) {
