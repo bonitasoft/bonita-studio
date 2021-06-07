@@ -25,6 +25,10 @@
          <menu
                icon="icons/rest_api_icon7_16x16.png"
                label="%RestAPIExtensionMenuLabel">
+           <command
+                  commandId="org.bonitasoft.studio.rest.api.extension.newCommand"
+                  style="push">
+            </command>
             <command
                   commandId="org.bonitasoft.studio.rest.api.extension.openCommand"
                   style="push">
@@ -148,6 +152,36 @@
    </extension>
       <extension
             point="org.eclipse.ui.menus">
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.restapi">
+            <command
+                  commandId="org.bonitasoft.studio.rest.api.extension.newCommand"
+                  icon="icons/rest_api_icon7_16x16.png"
+                  label="%newRestAPIMenu"
+                  mnemonic="R"
+                  style="push">
+               <visibleWhen
+                  checkEnabled="false">
+                   <with
+                         variable="activeMenuSelection">
+                      <and>
+                         <count
+                               value="1">
+                         </count>
+                            <iterate>
+                               <instanceof
+                                     value="org.eclipse.core.resources.IProject">
+                               </instanceof>
+                               <test
+                                     property="org.bonitasoft.studio.application.isBonitaProject">
+                               </test>
+                            </iterate>
+                      </and>
+                   </with>
+                </visibleWhen>
+            </command>
+         </menuContribution>
          <menuContribution
                allPopups="false"
                locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=additions">
@@ -337,6 +371,25 @@
       </extension>
       <extension
             point="org.eclipse.ui.handlers">
+         <handler
+               class="org.bonitasoft.studio.rest.api.extension.ui.handler.NewRestAPIExtensionHandler"
+               commandId="org.bonitasoft.studio.application.newWithWizard">
+            <activeWhen>
+                <with
+                  variable="activeMenuSelection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           property="org.bonitasoft.studio.rest.api.extension.propertyTester.isRestApiFolder">
+                     </test>
+                  </iterate>
+               </and>
+               </with>
+            </activeWhen>
+         </handler>
          <handler
                class="org.bonitasoft.studio.rest.api.extension.ui.handler.ExportRestApiHandler"
                commandId="org.bonitasoft.studio.application.export">
