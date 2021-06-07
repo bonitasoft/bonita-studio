@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.ui.control.model.dependency;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,16 +35,18 @@ public class ArtifactDependencyLoader {
     }
 
     public List<BonitaArtifactDependency> load(Path target) {
-        try {
-            List<BonitaArtifactDependency> dependencies = objectMapper.readValue(target.toFile(), typeReference)
-                    .stream()
-                    .sorted()
-                    .peek(dep -> dep.setIconImage(marketplaceIconLoader.load(dep)))
-                    .collect(Collectors.toList());
-            return dependencies;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (target.toFile().exists()) {
+            try {
+                return objectMapper.readValue(target.toFile(), typeReference)
+                        .stream()
+                        .sorted()
+                        .peek(dep -> dep.setIconImage(marketplaceIconLoader.load(dep)))
+                        .collect(Collectors.toList());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return Collections.emptyList();
     }
 
 }
