@@ -14,7 +14,8 @@ import java.util.stream.Stream;
 import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.bar.FormBuilder;
+import org.bonitasoft.studio.designer.core.bar.RestFormBuilder;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
@@ -55,14 +56,14 @@ public class PageDependencyResolver {
         if (fStore.isPresent()) {
             return new DeployPageRunnable(pageApi,
                     new HttpClientFactory(),
-                    customPageBarResourceFactory(),
+                    formBuilder(),
                     fStore.get());
         }
         return new UnknownDeployStatus(String.format(Messages.unknownPageDeployStatus, pageId));
     }
 
-    private CustomPageBarResourceFactory customPageBarResourceFactory() {
-        return new CustomPageBarResourceFactory(new PageDesignerURLFactory(
+    private FormBuilder formBuilder() {
+        return new RestFormBuilder(new PageDesignerURLFactory(
                 InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)));
     }
 

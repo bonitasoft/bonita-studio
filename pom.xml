@@ -15,26 +15,15 @@
 		<os-jvm-flags></os-jvm-flags>
 		<branding.version>2021.2-SNAPSHOT</branding.version>
 		<bundle.version>${project.version}</bundle.version>
-		<ui.designer.version>1.13.10</ui.designer.version>
+		<ui.designer.version>1.13.11</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
 		<engine.version>${project.version}</engine.version>
-		<filters.version>7.11.5</filters.version>
 		<platform.version>${project.parent.version}</platform.version>
 		<tomcat.version>8.5.40</tomcat.version>
 		<image-overlay-plugin.version>1.1.2</image-overlay-plugin.version>
 		<bonita-project-report-model.version>0.0.1</bonita-project-report-model.version>
 		<p2MirrorUrl>http://update-site.bonitasoft.com/p2/4.10</p2MirrorUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sonar.exclusions>
-			**/org/w3/**/*,
-			**/src-gen/**/*,
-			**/xtend-gen/**/*,
-			**/org/bonitasoft/studio/actors/model/**/*,
-			**/org/bonitasoft/studio/connector/model/implementation/provider/**/*,
-			**/org/bonitasoft/studio/connector/model/definition/provider/**/*
-		</sonar.exclusions>
-		<sonar.login>51b70ff55d32a0c24e649805b14314ea7930c2de</sonar.login>
-		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
 		<tycho.localArtifacts>ignore</tycho.localArtifacts>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
@@ -52,16 +41,6 @@
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
 					<version>4.2.1</version>
-				</plugin>
-				<plugin>
-					<groupId>io.fabric8</groupId>
-					<artifactId>docker-maven-plugin</artifactId>
-					<version>0.24.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.sonarsource.scanner.maven</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>3.4.0.905</version>
 				</plugin>
 				<plugin>
 					<groupId>org.bonitasoft.maven</groupId>
@@ -193,11 +172,6 @@
 					<dependencies>
 						<dependency>
 							<groupId>org.codehaus.groovy</groupId>
-							<artifactId>groovy</artifactId>
-							<version>${groovy-maven-plugin.groovy.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.codehaus.groovy</groupId>
 							<artifactId>groovy-xml</artifactId>
 							<version>${groovy-maven-plugin.groovy.version}</version>
 						</dependency>
@@ -217,8 +191,7 @@
 						</goals>
 						<configuration>
 							<source>
-								project.properties["branding.version.short"] =
-								"${branding.version}".replaceAll('-.*', '')
+								project.properties["branding.version.short"] = "${branding.version}".replaceAll('-.*', '')
 							</source>
 						</configuration>
 					</execution>
@@ -254,6 +227,11 @@
 				<artifactId>bonita-project-report-model</artifactId>
 				<version>${bonita-project-report-model.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.bonitasoft.web</groupId>
+                <artifactId>ui-designer-artifact-builder</artifactId>
+                <version>${ui.designer.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>

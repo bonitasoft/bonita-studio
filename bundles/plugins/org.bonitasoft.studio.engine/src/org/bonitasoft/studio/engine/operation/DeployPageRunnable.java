@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bonitasoft.engine.api.PageAPI;
-import org.bonitasoft.studio.designer.core.bar.CustomPageBarResourceFactory;
+import org.bonitasoft.studio.designer.core.bar.FormBuilder;
 import org.bonitasoft.studio.designer.core.exception.PageIncompatibleException;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
@@ -32,15 +32,15 @@ import com.google.common.io.Files;
 public class DeployPageRunnable extends DeployCustomPageOperation {
 
     private final WebPageFileStore pageFileStore;
-    private final CustomPageBarResourceFactory customPageBarResourceFactory;
+    private final FormBuilder formBuilder;
 
     public DeployPageRunnable(PageAPI pageApi,
             HttpClientFactory httpClientFactory,
-            CustomPageBarResourceFactory customPageBarResourceFactory,
+            FormBuilder formBuilder,
             WebPageFileStore pageFileStore) {
         super(pageApi, httpClientFactory);
         this.pageFileStore = requireNonNull(pageFileStore);
-        this.customPageBarResourceFactory = requireNonNull(customPageBarResourceFactory);
+        this.formBuilder = requireNonNull(formBuilder);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DeployPageRunnable extends DeployCustomPageOperation {
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile(getCustomPageId(), ".zip");
-            Files.write(customPageBarResourceFactory.export(pageFileStore.getId()), tmpFile);
+            Files.write(formBuilder.export(pageFileStore.getId()), tmpFile);
             return tmpFile;
         } catch (PageIncompatibleException | IOException e) {
             if (tmpFile != null) {
