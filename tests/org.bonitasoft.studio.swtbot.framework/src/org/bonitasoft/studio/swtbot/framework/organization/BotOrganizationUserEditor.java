@@ -41,6 +41,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class BotOrganizationUserEditor extends BotBase {
@@ -78,12 +79,22 @@ public class BotOrganizationUserEditor extends BotBase {
 
     // Make sure that the correct user is selected and the correct data tab too
     public BotOrganizationUserEditor setCustomInformation(String name, String value) {
-        getCustomInfoUserTable().getTableItem(name).click(1);
-        bot.waitUntil(Conditions.waitForWidget(withId(InformationSection.CUSTOM_INFO_VALUE_TEXT_ID)));
+        try {
+            openCustomInformationCellEditor(name);
+        } catch (TimeoutException e) {
+            // On some ci machines, this operation might fail due to poor performances... We give it another try before to crash the test. 
+            bot.sleep(500);
+            openCustomInformationCellEditor(name);
+        }
         SWTBotText botText = bot.textWithId(InformationSection.CUSTOM_INFO_VALUE_TEXT_ID);
         botText.setText(value);
         botText.pressShortcut(Keystrokes.CR);
         return this;
+    }
+
+    private void openCustomInformationCellEditor(String name) {
+        getCustomInfoUserTable().getTableItem(name).click(1);
+        bot.waitUntil(Conditions.waitForWidget(withId(InformationSection.CUSTOM_INFO_VALUE_TEXT_ID)));
     }
 
     public BotOrganizationUserEditor selectProfessionalDataTab(String userDisplayName) {

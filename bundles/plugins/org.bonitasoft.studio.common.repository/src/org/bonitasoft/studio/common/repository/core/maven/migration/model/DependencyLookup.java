@@ -28,6 +28,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
@@ -50,6 +51,7 @@ public class DependencyLookup {
     private InputStreamSupplier inputStreamSupplier;
     private ConflictVersion conflictVersion;
     private Set<String> jarNames = new HashSet<>();
+    private Artifact artifact;
 
     public DependencyLookup(String fileName,
             String sha1,
@@ -64,10 +66,20 @@ public class DependencyLookup {
         if (status == Status.NOT_FOUND && fileName != null) {
             tmpFile = copy(fileName);
         }
-        if(fileName != null) {
+        if (fileName != null) {
             this.fileName = new File(fileName).getName();
             jarNames.add(this.fileName);
         }
+    }
+
+    public DependencyLookup(String fileName,
+            String sha1,
+            Status status,
+            GAV gav,
+            String repository,
+            Artifact artifact) {
+        this(fileName, sha1, status, gav, repository);
+        this.artifact = artifact;
     }
 
     public DependencyLookup(InputStreamSupplier inputStreamSupplier,
@@ -265,7 +277,7 @@ public class DependencyLookup {
         Dependency dependency = new Dependency();
         dependency.setArtifactId(gav.getArtifactId());
         dependency.setVersion(gav.getVersion());
-        if(getConflictVersion() != null) {
+        if (getConflictVersion() != null) {
             dependency.setVersion(getConflictVersion().getSelectedVersion());
         }
         dependency.setGroupId(gav.getGroupId());
@@ -296,7 +308,7 @@ public class DependencyLookup {
     public ConflictVersion getConflictVersion() {
         return conflictVersion;
     }
-    
+
     public boolean isConflicting() {
         return getConflictVersion() != null && getConflictVersion().getStatus() == ConflictVersion.Status.CONFLICTING;
     }
@@ -312,9 +324,13 @@ public class DependencyLookup {
     public void addJar(String fileName) {
         this.jarNames.add(fileName);
     }
-    
+
     public Set<String> getJarNames() {
         return jarNames;
     }
-    
+
+    public Artifact getArtifact() {
+        return artifact;
+    }
+
 }

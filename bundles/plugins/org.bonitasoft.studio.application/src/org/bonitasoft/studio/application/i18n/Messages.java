@@ -333,6 +333,10 @@ public class Messages extends NLS {
     public static String addOther;
     public static String legacyArchiveFormatHint;
     public static String extension;
+    public static String extensionIsNotAConnector;
+    public static String extensionIsNotAnActorFilter;
+    public static String extensionIsNotARestApiExtension;
+    public static String extensionIsNotAThemeExtension;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
