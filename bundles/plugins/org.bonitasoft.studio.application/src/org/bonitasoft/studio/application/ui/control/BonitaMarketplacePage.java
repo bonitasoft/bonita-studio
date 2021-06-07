@@ -316,7 +316,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private boolean matchSearch(BonitaArtifactDependency dep, String searchValue) {
         return dep.getName().toLowerCase().contains(searchValue.toLowerCase())
-                || (Strings.hasText(dep.getDescription()) && dep.getDescription().toLowerCase().contains(searchValue.toLowerCase()));
+                || (Strings.hasText(dep.getDescription())
+                        && dep.getDescription().toLowerCase().contains(searchValue.toLowerCase()));
     }
 
     private void createNoResultFoundLabel(Composite parent) {

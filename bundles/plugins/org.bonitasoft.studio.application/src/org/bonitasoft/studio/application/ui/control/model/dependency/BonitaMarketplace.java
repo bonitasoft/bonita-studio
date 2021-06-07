@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -36,15 +36,19 @@ import java.util.Properties;
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
+import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,8 +63,8 @@ public class BonitaMarketplace {
 
     private static BonitaMarketplace INSTANCE;
 
-    private static final String LATEST_RELEASE_URL = "https://api.github.com/repos/bonitasoft/bonita-marketplace/releases/latest";
-    private static final String ASSET_URL = "https://github.com/bonitasoft/bonita-marketplace/releases/download";
+    private static final String LATEST_RELEASE_URL = RedirectURLBuilder.create("725");
+    private static final String ASSET_URL = RedirectURLBuilder.create("726");
     private static final String MARKETPLACE_DESCRIPTOR_NAME = "marketplace.json";
 
     public static final String CONNECTOR_TYPE = "Connector";
@@ -89,23 +93,32 @@ public class BonitaMarketplace {
     }
 
     private void checkStoreContent(IProgressMonitor monitor) throws IOException {
-        IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
-        localStore = new File(stateLocation.toFile(), MARKETPLACE);
-        String currentVersion = readMetadata();
-        String latestVersion = getLatestTag();
-        if (currentVersion == null || currentVersion.isBlank()
-                || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
-                || !Objects.equals(currentVersion, latestVersion)) {
-            Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
-            download(createURL(String.format("%s/%s/%s-%s.zip", ASSET_URL,
-                    latestVersion,
-                    BONITA_MARKETPLACE_ARCHIVE_NAME,
-                    latestVersion)),
-                    tmpFile,
-                    monitor);
-            extract(tmpFile, stateLocation.toFile().toPath());
-            Files.delete(tmpFile);
-            updateMetadata(latestVersion);
+        try {
+            IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
+            localStore = new File(stateLocation.toFile(), MARKETPLACE);
+            String currentVersion = readMetadata();
+            String latestVersion = getLatestTag();
+            if (currentVersion == null || currentVersion.isBlank()
+                    || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
+                    || !Objects.equals(currentVersion, latestVersion)) {
+                Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
+                String assetUrl = RedirectURLBuilder.handleURLRedirection(ASSET_URL);
+                download(createURL(String.format("%s/%s/%s-%s.zip", assetUrl,
+                        latestVersion,
+                        BONITA_MARKETPLACE_ARCHIVE_NAME,
+                        latestVersion)),
+                        tmpFile,
+                        monitor);
+                extract(tmpFile, stateLocation.toFile().toPath());
+                Files.delete(tmpFile);
+                updateMetadata(latestVersion);
+            }
+        } catch (ResourceException e) {
+            BonitaStudioLog.error(e);
+            Display.getDefault()
+                    .syncExec(() -> MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+                            Messages.cannotLoadMarketplace,
+                            Messages.cannotLoadMarketplaceMessage));
         }
     }
 
@@ -160,7 +173,7 @@ public class BonitaMarketplace {
     }
 
     private void download(URL url, Path target, IProgressMonitor monitor) throws IOException {
-        URLConnection connection = url.openConnection();
+        var connection =  url.openConnection();
         double completeFileSize = connection.getContentLength();
         try (ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
                 FileOutputStream fileOutputStream = new FileOutputStream(target.toFile());
@@ -175,7 +188,7 @@ public class BonitaMarketplace {
             }
         }
     }
-
+    
     public static BonitaMarketplace getInstance(IProgressMonitor monitor) {
         if (INSTANCE == null) {
             INSTANCE = new BonitaMarketplace(monitor);
@@ -184,7 +197,7 @@ public class BonitaMarketplace {
     }
 
     public List<BonitaArtifactDependency> getDependencies() {
-        if (dependencies == null) {
+        if (dependencies == null || dependencies.isEmpty()) {
             loadDependencies();
         }
         return dependencies;
@@ -196,13 +209,30 @@ public class BonitaMarketplace {
      * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
      */
     public void loadDependencies() {
-        if (dependencies == null) {
-            ArtifactDependencyLoader loader = new ArtifactDependencyLoader(new MarketplaceIconLoader(localStore, manager, iconBackground));
+        if (dependencies == null || dependencies.isEmpty()) {
+            ArtifactDependencyLoader loader = new ArtifactDependencyLoader(
+                    new MarketplaceIconLoader(localStore, manager, iconBackground));
+            if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists()) {
+                Display.getDefault().asyncExec(() -> {
+                    try {
+                        PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                            try {
+                                checkStoreContent(monitor);
+                            } catch (IOException e) {
+                                throw new InvocationTargetException(e);
+                            }
+                        });
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
+                                e);
+                    }
+                });
+            }
             dependencies = loader.load(localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME));
         }
     }
 
-    private String getLatestTag() {
+    private String getLatestTag() throws ResourceException {
         JSONObject release = doGet(createURL(LATEST_RELEASE_URL));
         try {
             return release.getString("tag_name");
@@ -211,10 +241,10 @@ public class BonitaMarketplace {
         }
     }
 
-    private JSONObject doGet(URL url) {
+    private JSONObject doGet(URL url) throws ResourceException {
         try {
             return new JSONObject(new ClientResource(url.toURI()).get().getText());
-        } catch (ResourceException | JSONException | IOException | URISyntaxException e) {
+        } catch (JSONException | IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

@@ -337,6 +337,8 @@ public class Messages extends NLS {
     public static String extensionIsNotAnActorFilter;
     public static String extensionIsNotARestApiExtension;
     public static String extensionIsNotAThemeExtension;
+    public static String cannotLoadMarketplace;
+    public static String cannotLoadMarketplaceMessage;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
