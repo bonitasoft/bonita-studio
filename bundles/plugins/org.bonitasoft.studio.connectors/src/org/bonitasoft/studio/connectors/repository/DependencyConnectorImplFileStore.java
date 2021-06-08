@@ -16,7 +16,6 @@ package org.bonitasoft.studio.connectors.repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -36,7 +35,7 @@ public class DependencyConnectorImplFileStore extends ConnectorImplFileStore {
     public DependencyConnectorImplFileStore(ConnectorImplementation implementation,
             AbstractEMFRepositoryStore<ConnectorImplFileStore> store) {
         super(new File(implementation.getArtifact().getFile()).getName(), store);
-        this.implementation =implementation;
+        this.implementation = implementation;
     }
 
     @Override
@@ -44,7 +43,8 @@ public class DependencyConnectorImplFileStore extends ConnectorImplFileStore {
         if (implementation != null) {
             File file = new File(implementation.getArtifact().getFile());
             if (file.exists()) {
-                try (InputStream is = new JarFile(file).getInputStream(new JarEntry(implementation.getJarEntry()))) {
+                try (var jarFile = new JarFile(file);
+                        var is = jarFile.getInputStream(new JarEntry(implementation.getJarEntry()))) {
                     ConnectorImplementationXMLProcessor xmlProcessor = new ConnectorImplementationXMLProcessor();
                     return xmlProcessor.load(is, loadOptions());
                 } catch (IOException e) {
@@ -54,28 +54,27 @@ public class DependencyConnectorImplFileStore extends ConnectorImplFileStore {
         }
         return null;
     }
-    
-    
+
     @Override
     public boolean canBeDeleted() {
         return false;
     }
-    
+
     @Override
     public boolean canBeExported() {
         return false;
     }
-    
+
     @Override
     public boolean canBeShared() {
         return false;
     }
-    
+
     @Override
     public boolean isReadOnly() {
         return true;
     }
-    
+
     private static Map<String, Object> loadOptions() {
         Map<String, Object> loadOptions = new HashMap<>();
         loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);

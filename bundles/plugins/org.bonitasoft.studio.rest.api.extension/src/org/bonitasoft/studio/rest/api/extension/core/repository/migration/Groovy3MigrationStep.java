@@ -27,8 +27,8 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
-import org.bonitasoft.studio.migration.report.MigrationReport;
-import org.bonitasoft.studio.rest.api.extension.core.repository.MavenModelMigration;
+import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class Groovy3MigrationStep implements MavenModelMigration {

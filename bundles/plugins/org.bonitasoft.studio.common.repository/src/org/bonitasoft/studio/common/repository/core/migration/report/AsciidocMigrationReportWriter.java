@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.migration.report;
+package org.bonitasoft.studio.common.repository.core.migration.report;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

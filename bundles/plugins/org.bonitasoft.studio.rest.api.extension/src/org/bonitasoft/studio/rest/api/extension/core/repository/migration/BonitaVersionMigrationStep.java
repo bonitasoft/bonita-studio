@@ -19,8 +19,8 @@ import java.util.Properties;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.migration.report.MigrationReport;
-import org.bonitasoft.studio.rest.api.extension.core.repository.MavenModelMigration;
+import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 
 public class BonitaVersionMigrationStep implements MavenModelMigration {
 

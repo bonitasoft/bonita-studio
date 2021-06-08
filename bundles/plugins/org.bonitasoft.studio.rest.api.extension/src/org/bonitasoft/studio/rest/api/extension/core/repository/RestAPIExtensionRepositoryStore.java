@@ -26,6 +26,10 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.core.migration.MavenModelMigration;
+import org.bonitasoft.studio.common.repository.core.migration.report.AsciidocMigrationReportWriter;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReportWriter;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -34,8 +38,6 @@ import org.bonitasoft.studio.maven.CustomPageProjectRepositoryStore;
 import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
-import org.bonitasoft.studio.migration.report.AsciidocMigrationReportWriter;
-import org.bonitasoft.studio.migration.report.MigrationReport;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
@@ -58,8 +60,6 @@ import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 
 public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepositoryStore<RestAPIExtensionFileStore> {
-
-    private static final String MIGRATION_NOTES_DOCUMENT_NAME = "MIGRATION_NOTES.adoc";
 
     public static final String STORE_NAME = "restAPIExtensions";
 
@@ -150,7 +150,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
         if (fileName.endsWith("/pom.xml")) {
             var segments = fileName.split("/");
             var projectName = segments[segments.length - 2];
-            var file = getResource().getFolder(projectName).getFile(MIGRATION_NOTES_DOCUMENT_NAME);
+            var file = getResource().getFolder(projectName).getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
             if (file.exists()) {
                 file.delete(true, new NullProgressMonitor());
             }
@@ -175,7 +175,6 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
                 Model model = mavenModelReader.read(copyInputStream.getCopy());
                 boolean hasBeenMigrated = false;
                 MigrationReport report = new MigrationReport();
-                report.setTitle("Migration notes");
                 for (MavenModelMigration step : MIGRATION_STEPS) {
                     if (step.appliesTo(model)) {
                         report = step.migrate(model).merge(report);
@@ -183,7 +182,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
                     }
                 }
                 if (hasBeenMigrated) {
-                    var file = getResource().getFolder(projectName).getFile(MIGRATION_NOTES_DOCUMENT_NAME);
+                    var file = getResource().getFolder(projectName).getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME);
                     asciidocMigrationReportWriter.write(report, file.getLocation().toFile().toPath());
                     file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
 
