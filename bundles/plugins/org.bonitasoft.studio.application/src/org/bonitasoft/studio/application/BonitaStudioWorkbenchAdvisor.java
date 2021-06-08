@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -105,6 +106,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             UIDesignerServerManager.getInstance().stop();
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
             executePreShutdownContribution();
+            new ActiveOrganizationProvider().flush();
             if (BOSWebServerManager.getInstance().serverIsStarted() && BOSEngineManager.getInstance().isRunning()) {
                 BOSEngineManager.getInstance().stop();
             }
