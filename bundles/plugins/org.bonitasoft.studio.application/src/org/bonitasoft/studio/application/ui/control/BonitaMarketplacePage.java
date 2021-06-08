@@ -209,7 +209,7 @@ public class BonitaMarketplacePage implements ControlSupplier {
     private void createSearchComposite(Composite parent) {
         Composite searchComposite = new Composite(parent, SWT.NONE);
         searchComposite
-                .setLayout(GridLayoutFactory.fillDefaults().numColumns(extensionTypes.length > 1 ? 3 : 2).create());
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(extensionTypes.length > 1 ? 2 : 1).create());
         searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         if (extensionTypes.length > 1) {
@@ -232,24 +232,14 @@ public class BonitaMarketplacePage implements ControlSupplier {
         } else {
             typeObservableValue = new WritableValue<>(extensionTypes[0], String.class);
         }
+        typeObservableValue.addValueChangeListener(e -> applySearch());
 
         searchWidget = new SearchWidget.Builder()
                 .fill()
                 .grabVerticalSpace()
                 .grabHorizontalSpace()
                 .createIn(searchComposite);
-
-        var findButton = new Button(searchComposite, SWT.PUSH);
-        findButton.setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, true).create());
-        findButton.setText(Messages.find);
-        findButton.addListener(SWT.Selection, e -> applySearch());
-
-        searchWidget.addTraverseListener(e -> {
-            if (e.detail == SWT.TRAVERSE_RETURN) {
-                applySearch();
-            }
-        });
+        searchWidget.observeText(400, SWT.Modify).addValueChangeListener(e -> applySearch());
     }
 
     private void applySearch() {
