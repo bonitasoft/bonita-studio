@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.common.repository.core;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
@@ -29,6 +30,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 
 @Creatable
 public class ActiveOrganizationProvider {
@@ -92,5 +94,13 @@ public class ActiveOrganizationProvider {
 
     public void savePublishOrganizationState(final String state) {
         getPreferenceNode().get(OrganizationPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION, state);
+    }
+
+    public void flush() {
+        try {
+            getPreferenceNode().flush();
+        } catch (BackingStoreException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 }

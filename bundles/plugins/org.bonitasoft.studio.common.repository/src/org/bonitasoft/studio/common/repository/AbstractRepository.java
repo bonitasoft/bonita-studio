@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.core.BonitaProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
@@ -300,6 +301,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             closeAllEditors();
+            new ActiveOrganizationProvider().flush();
             if (project.isOpen()) {
                 if (stores != null) {
                     for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
