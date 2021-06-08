@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
+import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -113,7 +114,7 @@ public class BosArchive {
 
 
     private boolean isLegacyFormRepo(String segment) {
-        return AbstractRepository.LEGACY_REPOSITORIES.contains(segment);
+        return RemoveLegacyFolderStep.LEGACY_REPOSITORIES.contains(segment);
     }
 
     private void handleSegment(ImportArchiveModel archiveModel, String segment, final List<String> segments,
@@ -139,7 +140,7 @@ public class BosArchive {
                     true, 
                     archiveModel,
                     repository);
-        } else if (AbstractRepository.LEGACY_REPOSITORIES.contains(segment)) {
+        } else if (RemoveLegacyFolderStep.LEGACY_REPOSITORIES.contains(segment)) {
             archiveModel.addStore(new LegacyStoreModel(Joiner.on('/').join(parentSegments)));
         } else if(segments.size() == 2){ // Only root files should be added as RootFileModel
             archiveModel.addStore(new RootFileModel(segment, Joiner.on('/').join(parentSegments)));

@@ -246,7 +246,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector,IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
         IProject project = getRepository().getProject();
         if (getResource().exists()) {
             try {

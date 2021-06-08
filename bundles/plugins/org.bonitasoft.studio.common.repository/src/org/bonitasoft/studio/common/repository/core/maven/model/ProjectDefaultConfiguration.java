@@ -26,7 +26,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
-    private static final String BONITA_VERSION = "bonita.version";
+    public static final String BONITA_VERSION = "bonita.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
     private static final String GROOVY_VERSION = "3.0.7";

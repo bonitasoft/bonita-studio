@@ -26,6 +26,8 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
+import org.bonitasoft.studio.common.repository.core.migration.BonitaProjectMigrator;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -43,10 +45,15 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     private final ProjectMetadata metadata;
     private final Set<String> builders = new HashSet<>();
     private final List<String> natures = new ArrayList<>();
+    private boolean migrationEnabled;
+    private MigrationReport report = MigrationReport.emptyReport();
 
-    public CreateBonitaProjectOperation(final IWorkspace workspace, final ProjectMetadata metadata) {
+    public CreateBonitaProjectOperation(IWorkspace workspace,
+            ProjectMetadata metadata,
+            boolean migrationEnabled) {
         this.workspace = workspace;
         this.metadata = metadata;
+        this.migrationEnabled = migrationEnabled;
     }
 
     @Override
@@ -58,8 +65,14 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
         }
         project.create(AbstractRepository.NULL_PROGRESS_MONITOR);
         project.open(AbstractRepository.NULL_PROGRESS_MONITOR);
-        MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
-        createDefaultPomFile(project, mavenProjectBuilder);
+
+        if (migrationEnabled) {
+          report = new BonitaProjectMigrator(project).run(monitor);
+        }else{
+            MavenProjectModelBuilder mavenProjectBuilder = newProjectBuilder(metadata);
+            createDefaultPomFile(project, mavenProjectBuilder);
+        }
+
         project.setDescription(
                 new ProjectDescriptionBuilder()
                         .withProjectName(project.getName())
@@ -68,6 +81,10 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
                         .havingBuilders(builders)
                         .build(),
                 AbstractRepository.NULL_PROGRESS_MONITOR);
+    }
+    
+    public MigrationReport getReport() {
+        return report;
     }
 
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
@@ -104,7 +121,7 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
 
     public static void backupExistingPomFile(IProject project,
             MavenProjectModelBuilder mavenProjectBuilder,
-            MavenProjectHelper mavenProjectHelper, 
+            MavenProjectHelper mavenProjectHelper,
             IFile pomFile) throws CoreException {
         Model model = mavenProjectHelper.getMavenModel(project);
         mavenProjectBuilder.setGroupId(model.getGroupId());
