@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.extension.ExtensionContextInjectionFactory;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.common.repository.core.BonitaBPMProjectMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.CreateBonitaBPMProjectOperation;
 import org.bonitasoft.studio.common.repository.core.DatabaseHandler;
@@ -275,7 +276,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             BonitaStudioLog.error(e);
         }
         for (IBonitaProjectListener listener : getProjectListeners()) {
-            listener.projectOpened(this,monitor);
+            listener.projectOpened(this, monitor);
         }
 
         if (migrationEnabled()) {
@@ -312,6 +313,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             disableOpenIntroListener(); // avoid intro part flickering
             closeAllEditors();
+            new ActiveOrganizationProvider().flush();
             if (project.isOpen()) {
                 if (stores != null) {
                     for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
@@ -916,8 +918,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer,
             projectListeners.add(listener);
         }
     }
-    
-    private List<IBonitaProjectListener> getProjectListeners(){
+
+    private List<IBonitaProjectListener> getProjectListeners() {
         return Collections.unmodifiableList(projectListeners);
     }
 
