@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.coolbar;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -46,7 +47,7 @@ public class ProjectExtensionsCoolbarItem extends ContributionItem
     public void fill(ToolBar toolbar, int index, int iconSize) {
         item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.projectExtensionsTitle);
-        //        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM);
+        item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.openExtensions48));
         } else {

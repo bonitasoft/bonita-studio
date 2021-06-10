@@ -78,19 +78,19 @@ public class UpdateExtensionListener {
                     .create(List.of(new DependencyUpdate(dep, latestVersion)));
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             try {
-                updateExtensionDecorator.preUpdate(progressService);
                 progressService.run(true, false, monitor -> {
                     monitor.beginTask(Messages.upgradeExtension, IProgressMonitor.UNKNOWN);
+                    updateExtensionDecorator.preUpdate(monitor);
                     try {
                         new UpdateDependencyVersionOperation(bonitaDep.getGroupId(),
                                 bonitaDep.getArtifactId(),
                                 latestVersion)
                                         .run(AbstractRepository.NULL_PROGRESS_MONITOR);
+                        updateExtensionDecorator.postUpdate(monitor);
                     } catch (CoreException e) {
                         throw new InvocationTargetException(e);
                     }
                 });
-                updateExtensionDecorator.postUpdate(Display.getDefault().getActiveShell(), progressService);
             } catch (InvocationTargetException | InterruptedException e) {
                 errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }

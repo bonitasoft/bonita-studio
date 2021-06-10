@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework;
 
-import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
@@ -22,18 +21,29 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
  */
 public abstract class BotWizardDialog extends BotDialog {
 
-    public BotWizardDialog(final SWTGefBot bot, final String dialogTitle) {
+    private String finishButtonLabel = IDialogConstants.FINISH_LABEL;
+
+    protected BotWizardDialog(final SWTGefBot bot, final String dialogTitle) {
         super(bot, dialogTitle);
+    }
+
+    protected BotWizardDialog(final SWTGefBot bot, final String dialogTitle, String finishButtonLabel) {
+        super(bot, dialogTitle);
+        this.finishButtonLabel = finishButtonLabel;
     }
 
     /**
      * Click on finish.
      */
     public void finish() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(finishButtonLabel)));
         final SWTBotShell activeShell = bot.activeShell();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(activeShell));
+        bot.button(finishButtonLabel).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell), onFinishTimeout());
+    }
+
+    protected int onFinishTimeout() {
+        return 5000;
     }
 
     /**
@@ -44,7 +54,7 @@ public abstract class BotWizardDialog extends BotDialog {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         return this;
     }
-    
+
     /**
      * Click on back.
      */

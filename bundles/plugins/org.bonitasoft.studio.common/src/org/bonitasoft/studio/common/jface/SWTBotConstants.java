@@ -145,4 +145,34 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_NEW_PROJECT_NAME_TEXT_ID = "SWTBOT_ID_NEW_PROJECT_NAME_TEXT_ID";
 
     public static final String SWTBOT_ID_NEW_PROJECT_VERSION_TEXT_ID = "SWTBOT_ID_NEW_PROJECT_VERSION_TEXT_ID";
+
+    public static final String SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM = "SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM";
+
+    public static final String SWTBOT_ID_EDIT_PROJECT_METADATA = "SWTBOT_ID_EDIT_PROJECT_METADATA";
+
+    public static final String SWTBOT_ID_PROJECT_DETAILS_TITLE = "SWTBOT_ID_PROJECT_DETAILS_TITLE";
+    public static final String SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION = "SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION";
+    public static final String SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM = "SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM";
+    public static final String SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM = "SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM";
+    public static final String SWTBOT_ID_ADD_EXTENSION_DROPDOWN = "SWTBOT_ID_ADD_EXTENSION_DROPDOWN";
+   
+    public static String extensionCheckboxId(String artifactId) {
+        return "SWTBOT_ID_MARKETPLACE_EXTENSION_CHECKBOX_" + artifactId;
+    }
+    
+    public static String extensionCardId(String artifactId) {
+        return "SWTBOT_ID_EXTENSION_CARD_" + artifactId;
+    }
+
+    public static String removeExtensionFromCard(String artifactId) {
+        return "SWTBOT_ID_REMOVE_FROM_EXTENSION_CARD_" + artifactId;
+    }
+
+    public static String updateToLatestExtensionFromCard(String artifactId) {
+        return "SWTBOT_ID_UPDATE_TO_LATEST_FROM_EXTENSION_CARD_" + artifactId;
+    }
+
+    public static String updateExtensionFromCard(String artifactId) {
+        return "SWTBOT_ID_UPDATE_FROM_EXTENSION_CARD_" + artifactId;
+    }
 }

@@ -36,6 +36,7 @@ import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -394,6 +395,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
         // Create all the font used in the page once, using the default font from the first label created
         initFonts(title.getFont());
 
+        title.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_TITLE);
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
@@ -414,6 +416,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
         description.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).span(2, 1)
                         .create());
+        description.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION);
         description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
@@ -421,17 +424,16 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
 
     private void createEditButton(Composite parent) {
         Label editLabel = new Label(parent, SWT.NONE);
+        editLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_EDIT_PROJECT_METADATA);
         editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         editLabel.setImage(Pics.getImage(PicsConstants.editProject));
         editLabel.setFont(JFaceResources.getFont(BOLD_20_FONT_ID));
         editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
         editLabel.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseUp(MouseEvent e) {
-                Rectangle bounds = editLabel.getBounds();
-                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                if (editLabel.equals(e.widget)) {
                     commandExecutor.executeCommand(EDIT_PROJECT_COMMAND, null);
                 }
             }
@@ -456,6 +458,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
     private void createImportButton(Composite parent) {
         new DropdownDynamicButtonWidget.Builder()
                 .withText(Messages.importExtensionButtonLabel)
+                .withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
                 .withMaxTextWidth(150)
                 .withTooltipText(Messages.importExtension)
                 .withImage(Pics.getImage(PicsConstants.import32))
@@ -509,6 +512,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
     private void createMarketplaceButton(Composite parent) {
         new DynamicButtonWidget.Builder()
                 .withText(Messages.openMarketplace)
+                .withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM)
                 .withMaxTextWidth(150)
                 .withTooltipText(Messages.openMarketplaceTooltip)
                 .withImage(Pics.getImage(PicsConstants.openMarketplace))
@@ -521,6 +525,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
     private void createMarketplaceBigButton(Composite parent) {
         new DynamicButtonWidget.Builder()
                 .withText(Messages.openMarketplace)
+                .withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM)
                 .withMaxTextWidth(200)
                 .withTooltipText(Messages.openMarketplaceTooltip)
                 .withImage(Pics.getImage(PicsConstants.openMarketplace64))

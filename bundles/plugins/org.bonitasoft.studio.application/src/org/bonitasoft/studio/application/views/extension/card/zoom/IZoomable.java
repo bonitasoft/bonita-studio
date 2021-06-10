@@ -40,8 +40,7 @@ public interface IZoomable {
 
         zoomControl.addListener(SWT.MouseUp, e -> {
             if (getZoomListener() != null) {
-                Rectangle bounds = zoomControl.getBounds();
-                if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                if (zoomControl.equals(e.widget)) {
                     getZoomListener().zoom(e);
                 }
             }

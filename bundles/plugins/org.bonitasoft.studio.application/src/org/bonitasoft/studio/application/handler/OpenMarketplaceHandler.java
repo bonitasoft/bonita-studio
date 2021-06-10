@@ -99,7 +99,7 @@ public class OpenMarketplaceHandler {
     }
 
     protected String getWizardTitle() {
-        return Messages.projectExtensionsTitle;
+        return Messages.bonitaMarketplace;
     }
 
     protected BonitaMarketplacePage createBonitaMarketPlacePage(RepositoryAccessor repositoryAccessor,
@@ -116,9 +116,11 @@ public class OpenMarketplaceHandler {
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdates,
                 repositoryAccessor.getCurrentRepository(), commandExecutor);
         try {
-            updateExtensionDecorator.preUpdate(container);
-            container.run(true, false, monitor -> installDependencies(extendProjectPage, repositoryAccessor, monitor));
-            updateExtensionDecorator.postUpdate(container.getShell(), container);
+            container.run(true, false, monitor -> {
+                updateExtensionDecorator.preUpdate(monitor);
+                installDependencies(extendProjectPage, repositoryAccessor, monitor);
+                updateExtensionDecorator.postUpdate(monitor);
+            });
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getMessage());

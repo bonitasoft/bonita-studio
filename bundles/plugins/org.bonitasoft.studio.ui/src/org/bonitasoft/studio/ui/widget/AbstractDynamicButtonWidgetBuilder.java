@@ -36,9 +36,15 @@ public abstract class AbstractDynamicButtonWidgetBuilder<T> {
     protected Optional<String> defaultTextColorCssId = Optional.empty();
     protected Optional<String> hoverTextColorCssId = Optional.empty();
     protected Optional<FormToolkit> toolkit = Optional.empty();
+    protected Optional<String> id = Optional.empty();
 
     public T withText(String text) {
         this.text = Optional.ofNullable(text);
+        return getThis();
+    }
+    
+    public T withId(String id) {
+        this.id = Optional.ofNullable(id);
         return getThis();
     }
 
