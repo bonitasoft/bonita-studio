@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/Messages" targetNamespace="http://www.example.org/Messages">
+	<xsd:complexType name="tProductData">
+		<xsd:annotation>
+			<xsd:documentation>Data Type for describing a product</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ID" type="xsd:string"/>
+			<xsd:element name="Name" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="requestForQuotation">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for a Quotation Request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="quoteID" type="xsd:string"/>
+				<xsd:element name="product" type="tns:tProductData"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="quoteResponse">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for a Quotation Response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="quoteID" type="xsd:string"/>
+				<xsd:element name="price" type="xsd:decimal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="quoteFault">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for a Quotation Fault Response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="quoteID" type="xsd:string"/>
+				<xsd:element name="reason" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="tOrderItem">
+		<xsd:annotation>
+			<xsd:documentation>Data Type for describing an item of an order</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="product" type="tns:tProductData"/>
+			<xsd:element name="quantity" type="xsd:integer"/>
+			<xsd:element name="orderPrice" type="xsd:decimal"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="orderData">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for an Order</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="orderID" type="xsd:string"/>
+				<xsd:element name="item" type="tns:tOrderItem" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="customerData">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for Customer Information</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="id" type="xsd:string"/>
+				<xsd:element name="name" type="xsd:string"/>
+				<xsd:element name="address" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="orderConfirmationData">
+		<xsd:annotation>
+			<xsd:documentation>Data Structure for confirming an Order</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="orderID" type="xsd:string"/>
+				<xsd:element name="price" type="xsd:decimal"/>
+				<xsd:element name="item" type="tns:tOrderItem" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
