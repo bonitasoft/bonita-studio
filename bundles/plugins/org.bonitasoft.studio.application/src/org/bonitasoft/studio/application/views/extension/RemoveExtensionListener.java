@@ -59,16 +59,17 @@ public class RemoveExtensionListener {
             var updateExtensionDecorator = updateExtensionOperationDecoratorFactory
                     .create(List.of(new DependencyUpdate(dep, null)));
             try {
-                updateExtensionDecorator.preUpdate(progressService);
                 progressService.run(true, false, monitor -> {
                     try {
+                        updateExtensionDecorator.preUpdate(monitor);
                         repositoryAccessor.getCurrentRepository().getLocalDependencyStore().backup(dep);
                         removeDependencyOperation.run(monitor);
+                        updateExtensionDecorator.postUpdate(monitor);
                     } catch (CoreException | IOException e) {
                         throw new InvocationTargetException(e);
                     }
                 });
-                updateExtensionDecorator.postUpdate(Display.getDefault().getActiveShell(), progressService);
+               
             } catch (InvocationTargetException | InterruptedException e) {
                 errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.ui.widget;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
@@ -56,7 +57,7 @@ public class DynamicButtonWidget {
         }
 
         public DynamicButtonWidget createIn(Composite parent) {
-            var widget = new DynamicButtonWidget(parent, text, tooltipText, image, hotImage, onClickListener, maxTextWidth,
+            var widget = new DynamicButtonWidget(parent, text, id, tooltipText, image, hotImage, onClickListener, maxTextWidth,
                     cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit);
             widget.createControl();
             return widget;
@@ -66,6 +67,7 @@ public class DynamicButtonWidget {
 
     private Composite parent;
     private Optional<String> text;
+    protected Optional<String> id;
     protected Optional<String> tooltipText;
     protected Optional<Image> image;
     protected Optional<Image> hotImage;
@@ -84,9 +86,11 @@ public class DynamicButtonWidget {
     private Optional<String> hoverTextColorCssId;
 
     private Composite container;
+ 
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
+            Optional<String> id,
             Optional<String> tooltipText,
             Optional<Image> image,
             Optional<Image> hotImage,
@@ -100,6 +104,7 @@ public class DynamicButtonWidget {
             Optional<FormToolkit> toolkit) {
         this.parent = parent;
         this.text = text;
+        this.id = id;
         this.tooltipText = tooltipText;
         this.image = image;
         this.hotImage = hotImage;
@@ -228,6 +233,7 @@ public class DynamicButtonWidget {
 
     protected void createToolItem(ToolBar toolbar) {
         toolItem = new ToolItem(toolbar, SWT.PUSH);
+        id.ifPresent(id -> toolItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, id));
         image.ifPresent(img -> toolItem.setImage(img));
         hotImage.ifPresent(hotImg -> toolItem.setHotImage(hotImg));
         tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));

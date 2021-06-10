@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
@@ -45,8 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 
 public class UpdateExtensionOperationDecorator {
 
@@ -63,35 +63,31 @@ public class UpdateExtensionOperationDecorator {
         this.commandExecutor = commandExecutor;
     }
 
-    public void preUpdate(IRunnableContext context) throws InvocationTargetException, InterruptedException {
+    public void preUpdate(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         if (!dependenciesUpdates.isEmpty()) {
             participants = ExtensionUpdateParticipantFactoryRegistry.getInstance()
                     .createParticipants(dependenciesUpdates);
             DiagramRepositoryStore diagramRepositoryStore = currentRepository
                     .getRepositoryStore(DiagramRepositoryStore.class);
             diagramRepositoryStore.resetComputedProcesses();
-            context.run(true, false, monitor -> {
-                monitor.beginTask(Messages.preparingUpdate, IProgressMonitor.UNKNOWN);
-                diagramRepositoryStore.computeProcesses(new NullProgressMonitor());
-                for (ExtensionUpdateParticipant participant : participants) {
-                    participant.preUpdate(new NullProgressMonitor());
-                }
-            });
+            monitor.setTaskName(Messages.preparingUpdate);
+            diagramRepositoryStore.computeProcesses(new NullProgressMonitor());
+            for (ExtensionUpdateParticipant participant : participants) {
+                participant.preUpdate(new NullProgressMonitor());
+            }
         }
     }
 
-    public boolean postUpdate(Shell shell, IRunnableContext context)
+    public boolean postUpdate(IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         DiagramRepositoryStore diagramRepositoryStore = currentRepository
                 .getRepositoryStore(DiagramRepositoryStore.class);
         var localDependencyStore = currentRepository.getLocalDependencyStore();
         try {
-            context.run(true, false, monitor -> {
-                monitor.beginTask(Messages.computingPreview, IProgressMonitor.UNKNOWN);
-                for (var p : participants) {
-                    p.runPreview(new NullProgressMonitor());
-                }
-            });
+            monitor.setTaskName(Messages.computingPreview);
+            for (var p : participants) {
+                p.runPreview(new NullProgressMonitor());
+            }
             var previewResult = new PreviewResultImpl();
             participants.stream()
                     .map(Previewable::getPreviewResult)
@@ -103,51 +99,50 @@ public class UpdateExtensionOperationDecorator {
                     .map(ExtensionUpdateParticipant::getPreviewMessageProvider)
                     .orElse(null);
             if (previewResult.shouldOpenPreviewDialog() && messageProvider != null) {
-                int buttonId = previewResult.open(shell, messageProvider);
+                var dialogResult = new AtomicInteger();
+                Display.getDefault().syncExec(() -> dialogResult
+                        .set(previewResult.open(Display.getDefault().getActiveShell(), messageProvider)));
+                int buttonId = dialogResult.get();
                 if (buttonId == IDialogConstants.PROCEED_ID) {
-                    applyChanges(context, localDependencyStore);
+                    applyChanges(localDependencyStore, monitor);
                 } else if (buttonId == IDialogConstants.ABORT_ID) {
-                    context.run(true, false, monitor -> {
-                        monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
-                        abortDependenciesUpdate(localDependencyStore);
-                        currentRepository.getProjectDependenciesStore().analyze(monitor);
-                    });
+                    monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
+                    abortDependenciesUpdate(localDependencyStore);
+                    currentRepository.getProjectDependenciesStore().analyze(monitor);
                     return false;
                 }
             } else {
-                applyChanges(context, localDependencyStore);
+                applyChanges(localDependencyStore, monitor);
             }
             // Run a minimal process validation that only checks dependency consistency
-            commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
+            Display.getDefault().asyncExec(() -> commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
                     "dependencyConstraintsOnly", "true",
                     "checkAllModelVersion", "true",
-                    "showReport", "false"));
+                    "showReport", "false")));
         } finally {
             diagramRepositoryStore.resetComputedProcesses();
         }
         return true;
     }
 
-    private void applyChanges(IRunnableContext context, LocalDependenciesStore localDependencyStore)
+    private void applyChanges(LocalDependenciesStore localDependencyStore, IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        context.run(true, false, monitor -> {
-            monitor.beginTask(Messages.applyingChanges, IProgressMonitor.UNKNOWN);
-            Set<Resource> modifiedResources = new HashSet<>();
-            for (var p : participants) {
-                p.run(new NullProgressMonitor());
-                if (p.getModifiedResources() != null) {
-                    modifiedResources.addAll(p.getModifiedResources());
-                }
+        monitor.beginTask(Messages.applyingChanges, IProgressMonitor.UNKNOWN);
+        Set<Resource> modifiedResources = new HashSet<>();
+        for (var p : participants) {
+            p.run(new NullProgressMonitor());
+            if (p.getModifiedResources() != null) {
+                modifiedResources.addAll(p.getModifiedResources());
             }
-            for (var resource : modifiedResources) {
-                try {
-                    resource.save(Collections.emptyMap());
-                } catch (IOException e) {
-                    throw new InvocationTargetException(e);
-                }
+        }
+        for (var resource : modifiedResources) {
+            try {
+                resource.save(Collections.emptyMap());
+            } catch (IOException e) {
+                throw new InvocationTargetException(e);
             }
-            updateLocalStore(localDependencyStore);
-        });
+        }
+        updateLocalStore(localDependencyStore);
     }
 
     private void updateLocalStore(LocalDependenciesStore localDependencyStore) {

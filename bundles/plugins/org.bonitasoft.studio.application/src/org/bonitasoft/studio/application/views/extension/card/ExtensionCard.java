@@ -26,6 +26,7 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
 import org.bonitasoft.studio.application.views.extension.RemoveExtensionListener;
 import org.bonitasoft.studio.application.views.extension.UpdateExtensionListener;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
 import org.bonitasoft.studio.pics.Pics;
@@ -108,6 +109,7 @@ public class ExtensionCard extends Composite {
 
         if (isABonitaExtensionUpdatable()) {
             new DynamicButtonWidget.Builder()
+                    .withId(SWTBotConstants.updateToLatestExtensionFromCard(bonitaDep.getArtifactId()))
                     .withText(Messages.upgradeBonitaExtension)
                     .withTooltipText(Messages.upgradeBonitaExtensionTooltip)
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
@@ -119,6 +121,7 @@ public class ExtensionCard extends Composite {
                     .createIn(toolbarComposite);
         } else if (!bonitaDep.isFromMarketplace()) {
             new DynamicButtonWidget.Builder()
+                    .withId(SWTBotConstants.updateExtensionFromCard(bonitaDep.getArtifactId()))
                     .withText(Messages.upgradeExtension)
                     .withTooltipText(Messages.upgradeExtensionTooltip)
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
@@ -129,6 +132,7 @@ public class ExtensionCard extends Composite {
         }
 
         new DynamicButtonWidget.Builder()
+                .withId(SWTBotConstants.removeExtensionFromCard(bonitaDep.getArtifactId()))
                 .withText(Messages.removeExtension)
                 .withTooltipText(Messages.removeExtensionTooltip)
                 .withImage(Pics.getImage(PicsConstants.delete))
@@ -171,6 +175,7 @@ public class ExtensionCard extends Composite {
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         titleLabel = new CLabel(titleComposite, SWT.NONE);
+        titleLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCardId(bonitaDep.getArtifactId()));
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(bonitaDep.getName());
 

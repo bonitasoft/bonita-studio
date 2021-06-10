@@ -34,6 +34,7 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtif
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
@@ -503,7 +504,9 @@ public class BonitaMarketplacePage implements ControlSupplier {
 
     private Button createAddButton(BonitaArtifactDependency dep, Composite parent, boolean updatable) {
         Button button = new Button(parent, SWT.CHECK);
+        button.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCheckboxId(dep.getArtifactId()));
         button.setLayoutData(GridDataFactory.fillDefaults().create());
+        button.setSelection(updatable ? dependenciesToUpdate.contains(dep) : dependenciesToAdd.contains(dep));
         button.addListener(SWT.Selection,
                 e -> addDependency(dep, button.getSelection(), updatable ? dependenciesToUpdate : dependenciesToAdd));
         return button;

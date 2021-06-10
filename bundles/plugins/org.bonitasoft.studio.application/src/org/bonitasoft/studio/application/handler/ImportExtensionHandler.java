@@ -163,11 +163,9 @@ public class ImportExtensionHandler {
         var updateExtensionDecorator = new UpdateExtensionOperationDecorator(dependenciesUpdate,
                 currentRepository, commandExecutor);
         try {
-            updateExtensionDecorator.preUpdate(container);
             Optional<Boolean> result = doExtensionUpdate(container, importExtensionPage, currentRepository, mavenModel,
-                    extensionTypeHandler);
+                    extensionTypeHandler, updateExtensionDecorator);
             if (result.isPresent()) {
-                updateExtensionDecorator.postUpdate(container.getShell(), container);
                 container.run(true, false, monitor -> {
                     try {
                         MavenPlugin.getProjectConfigurationManager()
@@ -185,16 +183,20 @@ public class ImportExtensionHandler {
         }
     }
 
-    private Optional<Boolean> doExtensionUpdate(IWizardContainer container, ImportExtensionPage importExtensionPage,
-            org.bonitasoft.studio.common.repository.model.IRepository currentRepository, Model mavenModel,
-            ExtensionTypeHandler extensionTypeHandler) {
+    private Optional<Boolean> doExtensionUpdate(IWizardContainer container,
+            ImportExtensionPage importExtensionPage,
+            org.bonitasoft.studio.common.repository.model.IRepository currentRepository,
+            Model mavenModel,
+            ExtensionTypeHandler extensionTypeHandler,
+            UpdateExtensionOperationDecorator updateExtensionDecorator) {
         Optional<Boolean> result = Optional.empty();
         if (importExtensionPage.getImportMode() == ImportMode.MANUAL) {
             result = manualImport(container,
                     importExtensionPage.getDependency(),
                     mavenRepositoryRegistry,
                     mavenModel,
-                    extensionTypeHandler);
+                    extensionTypeHandler,
+                    updateExtensionDecorator);
         } else if (importExtensionPage.getDependencyLookup() != null) {
             result = fileImport(container,
                     importExtensionPage.getDependency(),
@@ -202,7 +204,8 @@ public class ImportExtensionHandler {
                     mavenRepositoryRegistry,
                     currentRepository.getLocalDependencyStore(),
                     mavenModel,
-                    extensionTypeHandler);
+                    extensionTypeHandler,
+                    updateExtensionDecorator);
         }
         return result;
     }
@@ -213,9 +216,11 @@ public class ImportExtensionHandler {
             MavenRepositoryRegistry mavenRepositoryRegistry,
             LocalDependenciesStore localDependenciesStore,
             Model mavenModel,
-            ExtensionTypeHandler extensionTypeHandler) {
+            ExtensionTypeHandler extensionTypeHandler,
+            UpdateExtensionOperationDecorator updateExtensionDecorator) {
         if (dependencyLookup.getStatus() == Status.FOUND) {
-            return manualImport(container, dependency, mavenRepositoryRegistry, mavenModel, extensionTypeHandler);
+            return manualImport(container, dependency, mavenRepositoryRegistry, mavenModel, extensionTypeHandler,
+                    updateExtensionDecorator);
         }
         dependencyLookup.setArtifactId(dependency.getArtifactId());
         dependencyLookup.setGroupId(dependency.getGroupId());
@@ -226,8 +231,10 @@ public class ImportExtensionHandler {
             container.run(true, false, monitor -> {
                 try {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
+                    updateExtensionDecorator.preUpdate(monitor);
                     localDependenciesStore.install(dependencyLookup);
                     addDependency(mavenModel, dependency, monitor);
+                    updateExtensionDecorator.postUpdate(monitor);
                     monitor.done();
                 } catch (CoreException e) {
                     throw new InvocationTargetException(e);
@@ -244,7 +251,8 @@ public class ImportExtensionHandler {
             Dependency dependency,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             Model mavenModel,
-            ExtensionTypeHandler extensionTypeHandler) {
+            ExtensionTypeHandler extensionTypeHandler,
+            UpdateExtensionOperationDecorator updateExtensionDecorator) {
         try {
             GAV gav = new GAV(dependency);
             DependencyGetOperation dependencyGetOperation = new DependencyGetOperation(
@@ -258,7 +266,8 @@ public class ImportExtensionHandler {
             container.run(true, false, dependencyGetOperation);
             DependencyLookup lookupResult = dependencyGetOperation.getResult();
             if (lookupResult != null) {
-                IStatus status = extensionTypeHandler.getExtensionValidator().validate(lookupResult.getArtifact().getFile());
+                IStatus status = extensionTypeHandler.getExtensionValidator()
+                        .validate(lookupResult.getArtifact().getFile());
                 if (!status.isOK()) {
                     MessageDialog.openError(container.getShell(), Messages.addDependenciesError,
                             status.getMessage());
@@ -266,7 +275,9 @@ public class ImportExtensionHandler {
                 }
                 container.run(true, false, monitor -> {
                     monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
+                    updateExtensionDecorator.preUpdate(monitor);
                     addDependency(mavenModel, dependency, monitor);
+                    updateExtensionDecorator.postUpdate(monitor);
                 });
             } else {
                 MessageDialog.openError(container.getShell(), Messages.addDependenciesError,
