@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,6 +47,7 @@ import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
@@ -138,7 +137,6 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.ElementHandlerImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.osgi.util.NLS;
-import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
@@ -224,7 +222,6 @@ public class BonitaToBPMNExporter {
     private DataScope dataScope;
     private DocumentRoot root;
     private File destBpmnFile;
-    private BPMNDiagram bpmnDiagram;
     private XMLNamespaceResolver xmlNamespaceResolver;
     private final FormalExpressionFunctionFactory formalExpressionTransformerFactory = new FormalExpressionFunctionFactory();
     private MultiStatus status;
@@ -247,7 +244,7 @@ public class BonitaToBPMNExporter {
         collaboration = ModelFactory.eINSTANCE.createTCollaboration();
         setCommonAttributes(mainProcess, collaboration);
         definitions.getRootElement().add(collaboration);
-        bpmnDiagram = DiFactory.eINSTANCE.createBPMNDiagram();
+        var bpmnDiagram = DiFactory.eINSTANCE.createBPMNDiagram();
         bpmnDiagram.setName(mainProcess.getName());
         bpmnPlane = DiFactory.eINSTANCE.createBPMNPlane();
         bpmnDiagram.setBPMNPlane(bpmnPlane);
@@ -516,11 +513,10 @@ public class BonitaToBPMNExporter {
                 processShape.getBounds(), modelSearch);
         populateWithSequenceFlow(shapeFactory, pool, bpmnProcess);
         populateWithTextAnnotation(shapeFactory, pool, bpmnProcess, processShape.getBounds());
-
     }
 
     private void populateWithTextAnnotation(final BPMNShapeFactory shapeFactory, final Pool pool,
-            final TProcess bpmnProcess, Bounds poolBounds) {
+            final TProcess bpmnProcess, Bounds processBounds) {
         bpmnProcess.getArtifact()
                 .addAll(modelSearch.getAllItemsOfType(pool, TextAnnotation.class).stream().map(source -> {
                     final TTextAnnotation annotation = ModelFactory.eINSTANCE.createTTextAnnotation();
@@ -531,13 +527,23 @@ public class BonitaToBPMNExporter {
                     final List<TextAnnotationAttachment> textAnnotationAttachments = modelSearch.getAllItemsOfType(
                             pool,
                             TextAnnotationAttachment.class);
-                    BPMNShape elementShape = shapeFactory.create(source, annotation.getId(), poolBounds);
+                    EObject eContainer = source.eContainer() instanceof SubProcessEvent ? source.eContainer().eContainer() : source.eContainer();
+                    var containerId = modelSearch.getEObjectID(eContainer);
+                    var containerBounds = bpmnPlane.getDiagramElement().stream()
+                            .filter(BPMNShape.class::isInstance)
+                            .map(BPMNShape.class::cast)
+                            .filter(shape -> Objects.equals(shape.getBpmnElement().getLocalPart(), containerId))
+                            .findFirst()
+                            .map(BPMNShape::getBounds)
+                            .orElseGet(() -> processBounds);
+
+                    BPMNShape elementShape = shapeFactory.create(source, annotation.getId(), containerBounds);
                     bpmnPlane.getDiagramElement().add(elementShape);
 
                     for (final TextAnnotationAttachment attachement : textAnnotationAttachments) {
                         if (Objects.equals(attachement.getSource(), source)) {
                             final TFlowElement tFlowElement = mapping.get(attachement.getTarget());
-                            if (tFlowElement != null && !isNullOrEmpty(tFlowElement.getId())) {
+                            if (tFlowElement != null && Strings.hasText(tFlowElement.getId())) {
                                 final TAssociation association = ModelFactory.eINSTANCE.createTAssociation();
                                 association.setId(EcoreUtil.generateUUID());
                                 association.setSourceRef(QName.valueOf(annotation.getId()));
