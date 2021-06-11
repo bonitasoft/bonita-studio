@@ -31,6 +31,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Activator;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -58,7 +59,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                         () -> allProcesses,
                         () -> definitions);
                 new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
-                        destFile);
+                        destFile, new OSGIConnectorTransformationXSLProvider());
                 builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));
             } else {
                 BonitaStudioLog.warning(

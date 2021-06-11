@@ -20,9 +20,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,16 +44,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.model.IModelSearch;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
-import org.bonitasoft.studio.exporter.Activator;
-import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.ItemDefinitionFunction;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.XMLNamespaceResolver;
@@ -120,7 +116,6 @@ import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.XORGateway;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -136,7 +131,6 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.ElementHandlerImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
-import org.eclipse.osgi.util.NLS;
 import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
@@ -209,6 +203,8 @@ import org.omg.spec.dd.dc.Bounds;
 @Creatable
 public class BonitaToBPMNExporter {
 
+    private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd/HH/mm/ss";
+    private static final String DISPLAY_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
     private static final String XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION = "bonitaConnector";
     private static final String JAVA_XMLNS = "java";
     private final List<String> errors = new ArrayList<>();
@@ -224,17 +220,20 @@ public class BonitaToBPMNExporter {
     private File destBpmnFile;
     private XMLNamespaceResolver xmlNamespaceResolver;
     private final FormalExpressionFunctionFactory formalExpressionTransformerFactory = new FormalExpressionFunctionFactory();
-    private MultiStatus status;
     private IModelSearch modelSearch;
+    private MultiStatus status;
+    private ConnectorTransformationXSLProvider connectorXSLProvider;
 
     public BonitaToBPMNExporter() {
-        errors.add(Messages.formsNotExported);
+        errors.add("Forms and other resources are not exported.");
     }
 
     public void export(final IBonitaModelExporter modelExporter,
             IModelSearch modelSearch,
-            final File destFile) {
+            final File destFile,
+            ConnectorTransformationXSLProvider connectorXSLProvider) {
         this.modelSearch = modelSearch;
+        this.connectorXSLProvider = connectorXSLProvider;
         final MainProcess mainProcess = modelExporter.getMainProcess();
 
         initializeDocumentRoot();
@@ -393,8 +392,8 @@ public class BonitaToBPMNExporter {
                     try {
                         return createTmpDefinitionFile(def);
                     } catch (IOException e) {
-                       errors.add(e.getMessage());
-                       return null;
+                        errors.add(e.getMessage());
+                        return null;
                     }
                 })
                 .findFirst();
@@ -411,7 +410,8 @@ public class BonitaToBPMNExporter {
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         options.put(XMLResource.OPTION_XML_VERSION, "1.0");
         Path tmpFile = Files.createTempFile(definition.getId(), ".def");
-        org.bonitasoft.studio.connector.model.definition.DocumentRoot root = (org.bonitasoft.studio.connector.model.definition.DocumentRoot) definition.eResource().getContents().get(0);
+        org.bonitasoft.studio.connector.model.definition.DocumentRoot root = (org.bonitasoft.studio.connector.model.definition.DocumentRoot) definition
+                .eResource().getContents().get(0);
         root.getXMLNSPrefixMap().clear();
         try (OutputStream os = Files.newOutputStream(tmpFile)) {
             definition.eResource().save(os, options);
@@ -450,20 +450,20 @@ public class BonitaToBPMNExporter {
     private static Templates xslTemplate = null;
 
     private void generateXSDForConnector(final File connectorToTransformWC)
-            throws URISyntaxException, IOException, TransformerException {
+            throws IOException, TransformerException {
         if (xslTemplate == null) {
             final TransformerFactory transFact = TransformerFactory.newInstance();
-            final URL xsltUrl = ConnectorPlugin.getDefault().getBundle().getEntry("transfo/genConnectorsXSD.xsl");
-            final File xsltFileoriginal = new File(FileLocator.toFileURL(xsltUrl).getFile());
+            final File xsltFileoriginal = connectorXSLProvider.getConnectorXSLFile();
             final Source xsltSource = new StreamSource(xsltFileoriginal);
             xslTemplate = transFact.newTemplates(xsltSource);
         }
 
         //FIXME: this is only a workaround because currently we can't serialize the xml file in a way that both EMF and xslt can handle it correctly
         // see http://java.dzone.com/articles/emf-reading-model-xml-%E2%80%93-how
-        FileUtil.replaceStringInFile(connectorToTransformWC,
-                "xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"",
+        var content = Files.readString(connectorToTransformWC.toPath(), StandardCharsets.UTF_8);
+        content = content.replaceAll("xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"",
                 "xmlns=\"http://www.bonitasoft.org/ns/connector/definition/6.0\" xmlns:definition=\"http://www.bonitasoft.org/ns/connector/definition/6.0\"");
+        Files.writeString(connectorToTransformWC.toPath(), content);
 
         final Source xmlSource = new StreamSource(connectorToTransformWC);
 
@@ -513,6 +513,7 @@ public class BonitaToBPMNExporter {
                 processShape.getBounds(), modelSearch);
         populateWithSequenceFlow(shapeFactory, pool, bpmnProcess);
         populateWithTextAnnotation(shapeFactory, pool, bpmnProcess, processShape.getBounds());
+
     }
 
     private void populateWithTextAnnotation(final BPMNShapeFactory shapeFactory, final Pool pool,
@@ -1038,15 +1039,15 @@ public class BonitaToBPMNExporter {
             final TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
             final TTimerEventDefinition eventDef = ModelFactory.eINSTANCE.createTTimerEventDefinition();
             final Expression conditionExpression = ((StartTimerEvent) child).getCondition();
-            if (conditionExpression != null) {
-                final String condition = conditionExpression.getContent();//FIXME
+            if (conditionExpression != null && conditionExpression.hasContent()) {
+                var condition = conditionExpression.getContent();
                 final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
                 expression.setId(modelSearch.getEObjectID(expression));
                 if (condition != null) {
-                    if (DateUtil.isDuration(condition)) {
+                    if (isDuration(condition)) {
                         eventDef.setTimeDuration(expression);
                         FeatureMapUtil.addText(eventDef.getTimeDuration().getMixed(), condition);
-                    } else if (DateUtil.isDate(condition)) {
+                    } else if (isDate(condition)) {
                         eventDef.setTimeDate(expression);
                         FeatureMapUtil.addText(eventDef.getTimeDate().getMixed(), condition);
                     } else {
@@ -1057,7 +1058,7 @@ public class BonitaToBPMNExporter {
             }
             eventDef.setId("event-def" + child.getName());
             bpmnStart.getEventDefinition().add(eventDef);
-            errors.add(Messages.bind(Messages.timerDefinitionNotExported, child.getName()));
+            errors.add(String.format("Timer definition for event %s not exported", child.getName()));
             res = bpmnStart;
         } else if (child instanceof StartErrorEvent) {
             final StartErrorEvent bonitaSart = (StartErrorEvent) child;
@@ -1200,7 +1201,8 @@ public class BonitaToBPMNExporter {
             bpmnEvent.getEventDefinition().add(eventDef);
             res = bpmnEvent;
         } else {
-            errors.add(NLS.bind(Messages.defaultMappingToActivity, child.getName()));
+            errors.add(String.format("Could not find a valuable replacement for %s. Put an activity instead.",
+                    child.getName()));
             final TActivity bpmnActivity = ModelFactory.eINSTANCE.createTTask();
             setCommonAttributes(child, bpmnActivity);
             res = bpmnActivity;
@@ -1380,18 +1382,16 @@ public class BonitaToBPMNExporter {
     private TTimerEventDefinition createTimerEventDef(final AbstractTimerEvent bonitaEvent) {
         final TTimerEventDefinition eventDef = ModelFactory.eINSTANCE.createTTimerEventDefinition();
         final Expression conditionExpression = bonitaEvent.getCondition();
-        if (conditionExpression != null) {
-            final String condition = conditionExpression.getContent();//FIXME
-            if (condition != null) {
-                final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
-                FeatureMapUtil.addText(expression.getMixed(), condition);
-                if (DateUtil.isDuration(condition)) {
-                    eventDef.setTimeDuration(expression);
-                } else if (DateUtil.isDate(condition)) {
-                    eventDef.setTimeDate(expression);
-                } else {
-                    eventDef.setTimeCycle(expression);
-                }
+        if (conditionExpression != null && conditionExpression.hasContent()) {
+            var condition = conditionExpression.getContent();
+            final TExpression expression = ModelFactory.eINSTANCE.createTExpression();
+            FeatureMapUtil.addText(expression.getMixed(), condition);
+            if (isDuration(condition)) {
+                eventDef.setTimeDuration(expression);
+            } else if (isDate(condition)) {
+                eventDef.setTimeDate(expression);
+            } else {
+                eventDef.setTimeCycle(expression);
             }
         }
         eventDef.setId("eventdef-" + bonitaEvent.getName());
@@ -1512,22 +1512,57 @@ public class BonitaToBPMNExporter {
     }
 
     private MultiStatus createErrorStatus(Throwable t) {
-        MultiStatus status = new MultiStatus(Activator.PLUGIN_ID, 0, null, null);
-        status.add(new Status(IStatus.ERROR, Activator.PLUGIN_ID, t.getMessage(), t));
+        MultiStatus status = new MultiStatus(BonitaToBPMNExporter.class, 0, null, null);
+        status.add(new Status(IStatus.ERROR, BonitaToBPMNExporter.class, t.getMessage(), t));
         exportLimitations().stream().forEach(status::add);
         return status;
     }
 
     private MultiStatus createOKStatus() {
-        MultiStatus status = new MultiStatus(Activator.PLUGIN_ID, 0, null, null);
+        MultiStatus status = new MultiStatus(BonitaToBPMNExporter.class, 0, null, null);
         exportLimitations().stream().forEach(status::add);
         return status;
     }
 
     private List<IStatus> exportLimitations() {
         final List<IStatus> result = new ArrayList<>();
-        errors.stream().map(message -> new Status(IStatus.INFO, Activator.PLUGIN_ID, message)).forEach(result::add);
+        errors.stream().map(message -> new Status(IStatus.INFO, BonitaToBPMNExporter.class, message))
+                .forEach(result::add);
         return result;
+    }
+
+    private static boolean isDate(String event) {
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT, java.util.Locale.US);
+        sdf.setLenient(false);
+        boolean displayDate = true;
+        boolean systemDate = true;
+
+        try {
+            sdf.parse(event);
+        } catch (Exception e) {
+            systemDate = false;
+        }
+
+        sdf = new SimpleDateFormat(DISPLAY_DATE_FORMAT, java.util.Locale.US);
+        try {
+            sdf.parse(event);
+        } catch (Exception e) {
+            displayDate = false;
+        }
+
+        return systemDate || displayDate;
+    }
+
+    private static boolean isDuration(String event) {
+        long r = -1;
+        try {
+            r = Long.parseLong(event);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return String.valueOf(r).equals(event);
     }
 
     public MultiStatus getStatus() {
