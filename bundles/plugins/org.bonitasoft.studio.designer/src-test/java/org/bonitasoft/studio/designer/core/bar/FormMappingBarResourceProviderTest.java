@@ -21,13 +21,13 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
 import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
 import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -35,13 +35,9 @@ import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
-import org.bonitasoft.studio.designer.core.preference.DesignerPreferenceConstants;
 import org.bonitasoft.studio.model.process.Pool;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -51,9 +47,6 @@ import org.mockito.runners.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class FormMappingBarResourceProviderTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     private BusinessArchiveBuilder builder;
@@ -67,23 +60,20 @@ public class FormMappingBarResourceProviderTest {
     @Mock
     private BarResource taskFormCustomPage;
 
-    @Mock
-    private IEclipsePreferences preferenceStore;
-
     private FormMappingBarResourceProvider formMappingBarResourceProvider;
 
     @Before
     public void setUp() throws Exception {
         var factory = new CustomPageBarResourceBuilderFactory() {
+
             @Override
             public CustomPageBarResourceBuilder create() {
                 return customPageBarResourceBuilder;
             }
         };
         formMappingBarResourceProvider = spy(
-                new FormMappingBarResourceProvider(factory, preferenceStore));
-        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true))
-                .thenReturn(false);
+                new FormMappingBarResourceProvider(factory));
+        doReturn(false).when(formMappingBarResourceProvider).forceMapping();
         doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
     }
 
@@ -169,12 +159,11 @@ public class FormMappingBarResourceProviderTest {
         doReturn(null).when(formMappingBarResourceProvider).resolveUUID("step-form-id");
 
         //Expect
-        expectedException.expect(InternalFormNotFoundException.class);
-
-        //When
-        formMappingBarResourceProvider.addResourcesForConfiguration(builder, aPoolAndTaskWithAllTypeOfFormMappings(),
-                aConfiguration()
-                        .build());
+        assertThrows(InternalFormNotFoundException.class,
+                () -> formMappingBarResourceProvider.addResourcesForConfiguration(builder,
+                        aPoolAndTaskWithAllTypeOfFormMappings(),
+                        aConfiguration()
+                                .build()));
     }
 
     @Test
@@ -191,12 +180,10 @@ public class FormMappingBarResourceProviderTest {
     @Test
     public void should_throw_an_InternalFormNotFoundExecption_when_creating_an_internal_mapping_without_custom_page_and_mapping_is_forced()
             throws Exception {
-        when(preferenceStore.getBoolean(DesignerPreferenceConstants.FORCE_INTERNAL_FORM_MAPPING, true))
-                .thenReturn(true);
+       doReturn(true).when(formMappingBarResourceProvider).forceMapping();
 
-        expectedException.expect(InternalFormNotFoundException.class);
-
-        formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyFormMappings());
+        assertThrows(InternalFormNotFoundException.class,
+                () -> formMappingBarResourceProvider.newFormMappingModel(builder, aPoolWithEmptyFormMappings()));
     }
 
     private Pool aPoolAndTaskWithAllTypeOfFormMappings() {

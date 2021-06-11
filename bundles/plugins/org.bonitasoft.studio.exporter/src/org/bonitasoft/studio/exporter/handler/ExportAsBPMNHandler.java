@@ -26,6 +26,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMNExporter;
+import org.bonitasoft.studio.exporter.bpmn.transfo.OSGIConnectorTransformationXSLProvider;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -79,11 +80,12 @@ public class ExportAsBPMNHandler {
                                 List<AbstractProcess> allProcesses = diagramRepoStore.getAllProcesses();
                                 IModelSearch modelSearch = new ModelSearch(
                                         () -> allProcesses,
-                                        () -> connectorDefRepoStore.getDefinitions());
+                                        connectorDefRepoStore::getDefinitions);
                                 transformer.export(
                                         new BonitaModelExporterImpl(diagram.eResource(), modelSearch),
                                         modelSearch,
-                                        destFile);
+                                        destFile,
+                                        new OSGIConnectorTransformationXSLProvider());
                             });
                             MultiStatus status = transformer.getStatus();
                             if (status.getSeverity() < IStatus.ERROR) {

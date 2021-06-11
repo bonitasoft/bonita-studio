@@ -16,17 +16,20 @@ package org.bonitasoft.studio.designer.core.repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Creatable
 public class PageUUIDResolver {
 
     private File pageFolder;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public PageUUIDResolver(File pageFolder) {
         this.pageFolder = pageFolder;
@@ -42,25 +45,21 @@ public class PageUUIDResolver {
             return null;
         }
 
-        JSONObject index = toJSONObject(indexFile.toPath());
-        if (index == null || !index.has(uuid)) {
+        Map<String, Object> index = toJSONObject(indexFile.toPath());
+        if (index == null || !index.containsKey(uuid)) {
             return null;
         }
-        try {
-            return index.getString(uuid);
-        } catch (JSONException e) {
-            return null;
-        }
+        return (String) index.get(uuid);
     }
 
-    private JSONObject toJSONObject(Path file) {
+    private Map<String, Object> toJSONObject(Path file) {
         try {
-            return new org.json.JSONObject(java.nio.file.Files.readString(file, StandardCharsets.UTF_8));
-        } catch (JSONException | IOException e) {
+            var typeRef = new TypeReference<HashMap<String, Object>>() {
+            };
+            return objectMapper.readValue(file.toFile(), typeRef);
+        } catch (IOException e) {
             return null;
         }
     }
-    
-    
 
 }

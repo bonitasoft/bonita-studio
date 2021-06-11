@@ -31,9 +31,6 @@ public class Messages extends NLS {
 
     public static String overwriteBPMNFile_title;
     public static String overwriteBPMNFile_message;
-    public static String exportLimitations_message;
-    public static String timerDefinitionNotExported;
-    public static String defaultMappingToActivity;
     public static String exportingTo;
     public static String exportSuccessfulTitle;
     public static String exportSuccessfulMessage;
@@ -42,7 +39,6 @@ public class Messages extends NLS {
     public static String ExportButtonLabel;
 	public static String autoLoginMessageMigration;
 	public static String autoLoginNameMigration;
-	public static String formsNotExported;
     public static String resolvingDiagramDependencies;
 
 }
