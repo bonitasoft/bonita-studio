@@ -79,7 +79,7 @@ import org.bonitasoft.studio.tests.exporter.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.tests.expressionEditor.TestConnectorExpression;
 import org.bonitasoft.studio.tests.expressionEditor.TestPatternExpressionViewer;
-import org.bonitasoft.studio.tests.importer.bos.ImportBosArchiveIT;
+import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.organization.OrganizationIT;
 import org.bonitasoft.studio.tests.organization.TestOrganizationPassword;
@@ -183,7 +183,7 @@ import org.junit.runners.Suite;
         TestSForceUpdateObject.class,
         AdvancedDBConnectorsTest.class,
         SearchIndexesTest.class,
-        ImportBosArchiveIT.class,
+        ImportBOSArchiveWizardIT.class,
         TestSeveralLocalRepositories.class,
         ApplicationDescriptorOverviewIT.class,
         ApplicationDescriptorIT.class,

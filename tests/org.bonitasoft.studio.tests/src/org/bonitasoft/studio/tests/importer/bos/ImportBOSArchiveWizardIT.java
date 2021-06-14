@@ -22,9 +22,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.diagram.importer.BotImportBOSDialog;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
-import org.bonitasoft.studio.team.TeamRepositoryUtil;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.widgets.Display;
@@ -36,12 +34,11 @@ import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ImportBosArchiveIT {
+public class ImportBOSArchiveWizardIT {
 
     private final SWTGefBot bot = new SWTGefBot();
 
@@ -59,11 +56,11 @@ public class ImportBosArchiveIT {
     public void should_import_resolve_conflict_before_import() throws Exception {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindowEx = new BotApplicationWorkbenchWindow(bot);
         final BotImportBOSDialog botImport = botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
+        botImport.setArchive(ImportBOSArchiveWizardIT.class.getResource("ConnectorInFormsForTests-1.0.bos"));
         botImport.currentRepository().next().next().importArchive();
 
         botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
+        botImport.setArchive(ImportBOSArchiveWizardIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
 
         botImport.currentRepository()
              .next();
@@ -95,31 +92,21 @@ public class ImportBosArchiveIT {
         botImport.keepAll();
         assertThat(diagramNode.cell(1)).isEqualTo(Messages.keepAction);
 
-        botImport.next().importArchive(); // import with keepExisting -> next step should be conflicting too. 
-
-        botApplicationWorkbenchWindowEx.importBOSArchive();
-        botImport.setArchive(ImportBosArchiveIT.class.getResource("conflictingArchive/ConnectorInFormsForTests-1.0.bos"));
-
-        botImport.currentRepository().next().next().importArchive(); // import with overwrite -> next step shouldn't be conflicting.
+        botImport.cancel();
     }
 
 
     @Test
     public void should_import_bos_archive_using_drag_and_drop() throws Exception {
-
         SWTBotTree projectExplorerTree = new ProjectExplorerBot(bot).getProjectExplorerTree();
-        DropTarget dropTarget = syncExec(new Result<DropTarget>() {
-
-            @Override
-            public DropTarget run() {
-                Tree tree = projectExplorerTree.widget;
-                return (DropTarget) tree.getData(DND.DROP_TARGET_KEY);
-            }
+        DropTarget dropTarget = syncExec((Result<DropTarget>) () -> {
+            Tree tree = projectExplorerTree.widget;
+            return (DropTarget) tree.getData(DND.DROP_TARGET_KEY);
         });
 
         Event dropEvent = createDNDEvent(projectExplorerTree.widget, projectExplorerTree.display, DND.Drop);
         String archive = new File(
-                FileLocator.toFileURL(ImportBosArchiveIT.class.getResource("ConnectorInFormsForTests-1.0.bos")).getFile())
+                FileLocator.toFileURL(ImportBOSArchiveWizardIT.class.getResource("ConnectorInFormsForTests-1.0.bos")).getFile())
                         .getAbsolutePath();
         dropEvent.data = new String[] { archive };
         asyncExec(() -> dropTarget.notifyListeners(DND.Drop, dropEvent));
@@ -142,9 +129,4 @@ public class ImportBosArchiveIT {
         }
     }
 
-    @AfterClass
-    public static void switchToDefaultRepo() {
-        TeamRepositoryUtil.switchToRepository(org.bonitasoft.studio.common.repository.Messages.defaultRepositoryName,
-                new NullProgressMonitor());
-    }
 }

@@ -14,16 +14,13 @@
  */
 package org.bonitasoft.studio.dependencies.ui.dialog;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
-import org.bonitasoft.studio.dependencies.handler.AddJarsHandler;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -35,8 +32,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -79,24 +74,6 @@ public class ManageJarDialog extends Dialog {
         return composite;
     }
 
-    protected void addImportJarButton(final Composite rightPanel) {
-        final Button addButton = new Button(rightPanel, SWT.FLAT);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().create());
-        addButton.setText(Messages.importJar);
-        addButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                try {
-                    new AddJarsHandler().execute(null);
-                } catch (final ExecutionException e1) {
-                    BonitaStudioLog.error(e1);
-                }
-                /* Refresh viewer */
-                tableViewer.setInput(libStore.getChildren());
-            }
-        });
-    }
 
     protected void createTree(final Composite composite) {
         tableViewer = new TableViewer(composite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);

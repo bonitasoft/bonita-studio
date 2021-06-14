@@ -40,7 +40,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +62,7 @@ public class ProcBuilderTests {
         final String diagramName = "testDiagram";
         final String poolName = "Pooli";
         final String description = "Simple description";
-        final List<String> categories = new ArrayList<String>(2);
+        final List<String> categories = new ArrayList<>();
         categories.add("R&D");
         categories.add("Service");
         final File diagramFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), diagamFileName);
@@ -73,7 +73,7 @@ public class ProcBuilderTests {
 
         procBuilder.done();
 
-        final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+        final TransactionalEditingDomain editingDomain = WorkspaceEditingDomainFactory.INSTANCE.createEditingDomain();
         final Resource diagramResource = editingDomain.getResourceSet().createResource(targetURI);
         diagramResource.load(new HashMap<String, String>());
         assertTrue("Import as failed", diagramResource.getContents().size() > 0);
@@ -120,9 +120,9 @@ public class ProcBuilderTests {
 
         procBuilder.done();
 
-        final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+        final TransactionalEditingDomain editingDomain = WorkspaceEditingDomainFactory.INSTANCE.createEditingDomain();
         final Resource diagramResource = editingDomain.getResourceSet().createResource(targetURI);
-        diagramResource.load(new HashMap<String, String>());
+        diagramResource.load(new HashMap<>());
         assertTrue("Import as failed", diagramResource.getContents().size() > 0);
         final MainProcess proc = (MainProcess) diagramResource.getContents().get(0);
         final Pool p = (Pool) proc.getElements().get(0);

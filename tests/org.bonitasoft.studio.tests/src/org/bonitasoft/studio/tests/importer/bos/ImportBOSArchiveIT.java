@@ -21,11 +21,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
+import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.assertions.StatusAssert;
 import org.bonitasoft.studio.common.model.ImportAction;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.operation.DependenciesUpdateOperationFactory;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -35,16 +38,18 @@ import org.bonitasoft.studio.importer.bos.model.ImportArchiveModel;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.importer.bos.operation.ImportConflictsChecker;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestBOSArchiveImport {
+public class ImportBOSArchiveIT {
 
     RepositoryAccessor repositoryAccessor;
     private DependenciesUpdateOperationFactory dependenciesUpdateOperationFactory;
@@ -64,7 +69,7 @@ public class TestBOSArchiveImport {
     public void testImportBOSArchiveLight() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
+                FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("MyDiagram_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         operation.run(new NullProgressMonitor());
@@ -140,18 +145,43 @@ public class TestBOSArchiveImport {
     public void testImportBOSArchiveFull() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
+                FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("testRepo_100912_1757.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        operation.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, operation);
         assertThat(operation.getStatus()).isNotNull();
+
+        IProject project = repositoryAccessor.getCurrentRepository().getProject();
+        var mavenProjectHelper = new MavenProjectHelper();
+        var model = mavenProjectHelper.getMavenModel(project);
+
+        // Provided dependencies
+        if(PlatformUtil.isACommunityBonitaProduct()) {
+            assertThat(mavenProjectHelper.findDependency(model, "org.bonitasoft.engine", "bonita-common")).isPresent();
+        }else {
+            assertThat(mavenProjectHelper.findDependency(model, "com.bonitasoft.engine", "bonita-common-sp")).isPresent();
+        }
+        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-all")).isPresent();
+        assertThat(mavenProjectHelper.findDependency(model, "org.codehaus.groovy", "groovy-dateutil")).isPresent();
+        // Dependencies migrated from existing jars in lib folder
+        assertThat(mavenProjectHelper.findDependency(model, dependency("org.apache.commons", "commons-exec", "1.1")))
+                .isPresent();
+    }
+
+    private Dependency dependency(String groupId, String artifactId, String version) {
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        dependency.setVersion(version);
+        dependency.setType("jar");
+        return dependency;
     }
 
     @Test
     public void testImportSeveralDiagrams() throws IOException, InvocationTargetException, InterruptedException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos"))
+                FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("severalDiagramsImportTest.bos"))
                         .getFile());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
@@ -171,7 +201,7 @@ public class TestBOSArchiveImport {
     public void testImportBOSArchiveDemoProcess() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
+                FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("FillDBForDemo_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         operation.run(new NullProgressMonitor());
@@ -186,6 +216,6 @@ public class TestBOSArchiveImport {
     }
 
     private File loadArchiveFile(String filePath) throws IOException {
-        return new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource(filePath)).getFile());
+        return new File(FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource(filePath)).getFile());
     }
 }

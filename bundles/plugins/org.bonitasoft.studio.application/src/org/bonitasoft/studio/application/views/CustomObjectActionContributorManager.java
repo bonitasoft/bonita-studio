@@ -29,7 +29,7 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
     private static final String MAVEN_FILE_ADD_DEPENDENCY_PLUGIN_ID = "org.eclipse.m2e.core.fileMenu.addDependencyPlugin";
     private static final String MAVEN_PROFILE_FROM_PROJECT_ID = "org.eclipse.m2e.profiles.ui.profiles.selectFromProject";
     private static final String MAVEN_PROFILE_FROM_POM_ID = "org.eclipse.m2e.profiles.ui.profiles.selectFromPom";
-    private static final String MAVEN_REFACTORING_ACTIONS_ID =  "org.eclipse.m2e.refactoring.*";
+    private static final String MAVEN_REFACTORING_ACTIONS_ID = "org.eclipse.m2e.refactoring.*";
     private static final String COMPARE_MENU_ID = "org.eclipse.compare.MenuGroups";
     private static final String COMPARE_ACTIONS_ID = "org.eclipse.compare.CompareAction";
     private static final String REPLACE_WITH_EDITION_ID = "org.eclipse.compare.ReplaceWithEditionAction";
@@ -77,10 +77,9 @@ public class CustomObjectActionContributorManager extends ObjectActionContributo
         if (contributor instanceof ObjectActionContributor) {
             String id = ((ObjectActionContributor) contributor).getAdapter(IConfigurationElement.class)
                     .getAttribute("id");
-            if (getIncludedActions().stream().anyMatch(include -> id.matches(include))) {
-                if (getExcludedActions().stream().noneMatch(exclude -> id.matches(exclude))) {
-                    super.registerContributor(contributor, targetType);
-                }
+            if (getIncludedActions().stream().anyMatch(id::matches)
+                    && getExcludedActions().stream().noneMatch(id::matches)) {
+                super.registerContributor(contributor, targetType);
             }
         }
     }

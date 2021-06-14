@@ -2,14 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="org.bonitasoft.studio.dependencies.handler.ManageJarsHandler"
-            id="org.bonitasoft.studio.dependencies.manageJars"
-            name="%manageJars">
-      </command>
-   </extension>
-<extension
       point="org.bonitasoft.studio.repositoryStore">
    <repositoryStore
          class="org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore">
@@ -20,21 +12,9 @@
    <menuContribution
          allPopups="false"
          locationURI="menu:org.eclipse.ui.main.menu?after=org.bonitasoft.studio.actor.organizationMenu">
-   		
         <menu
               id="org.bonitasoft.studio.development"
               label="%development">
-           <command
-                 commandId="org.bonitasoft.studio.dependencies.manageJars"
-                 disabledIcon="icons/add_remove_jar_files_disabl.png"
-                 icon="icons/add_remove_jar_files.png"
-                 style="push">
-           </command>
-           <command
-                 commandId="org.bonitasoft.studio.application.refreshconnectorcommand"
-                 icon="icons/refresh_connector_repositor.png"
-                 style="push">
-           </command>
            <visibleWhen
                  checkEnabled="true">
                  <reference
@@ -42,37 +22,6 @@
                </reference>
            </visibleWhen>
         </menu>
-   </menuContribution>
-   <menuContribution
-         allPopups="false"
-         locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.manage.dependencies">
-      <command
-            commandId="org.bonitasoft.studio.dependencies.manageJars"
-            icon="icons/add_remove_jar_files.png"
-            id="org.bonitasoft.studio.dependencies.manageDependencies.menu"
-            style="push">
-         <visibleWhen
-               checkEnabled="false">
-            <with
-                  variable="activeMenuSelection">
-               <and>
-                  <count
-                        value="1">
-                  </count>
-                  <or>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                        <test
-                              property="org.bonitasoft.studio.application.isBonitaProject">
-                        </test>
-                     </iterate>
-                  </or>
-               </and>
-            </with>
-         </visibleWhen>
-      </command>
    </menuContribution>
 </extension>
 <extension

@@ -37,7 +37,7 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.tests.importer.bos.TestBOSArchiveImport;
+import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveIT;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
@@ -64,7 +64,7 @@ public class DatabaseDriverConfigurationIT {
     public void should_migrate_database_driver_jar_references() throws Exception {
         ImportBosArchiveOperation operation = new ImportBosArchiveOperation(repositoryAccessor);
         final File file = new File(
-                FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("/DatabaseDriverMigration.bos"))
+                FileLocator.toFileURL(ImportBOSArchiveIT.class.getResource("/DatabaseDriverMigration.bos"))
                         .getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(repositoryAccessor.getCurrentRepository());

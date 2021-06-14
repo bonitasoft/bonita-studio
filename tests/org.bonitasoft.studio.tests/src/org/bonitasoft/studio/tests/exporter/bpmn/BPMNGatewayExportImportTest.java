@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.tests.exporter.bpmn;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -65,15 +66,11 @@ import org.omg.spec.bpmn.model.DocumentRoot;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class BPMNGatewayExportImportTest {
 
-    private static MainProcess mainProcessAfterReimport;
+    private MainProcess mainProcessAfterReimport;
 
-    final String ANDGatewayName = "Gate1";
-    final String INCGatewayName = "Gateway1";
-    final String XORGatewayName = "Gate3";
-
-    private static ANDGateway andGatewayAfterReimport;
-    private static InclusiveGateway incGatewayAfterReimport;
-    private static XORGateway xorGatewayAfterReimport;
+    private static final String AND_GATEWAY_NAME = "Gate1";
+    private static final String INC_GATEWAY_NAME = "Gateway1";
+    private static final String XOR_GATEWAY_NAME = "Gate3";
 
     private final SWTGefBot bot = new SWTGefBot();
 
@@ -83,18 +80,30 @@ public class BPMNGatewayExportImportTest {
     private Resource resource;
 
     @Test
-    public void testANDGateway_name() {
-        assertEquals("AND (Parallel) Gateway name not correct", ANDGatewayName, andGatewayAfterReimport.getName());
-    }
-
-    @Test
-    public void testORGateway_name() {
-        assertEquals("OR (Inclusive) Gateway name not correct", INCGatewayName, incGatewayAfterReimport.getName());
-    }
-
-    @Test
-    public void testXORGateway_name() {
-        assertEquals("XOR (Exclusive) Gateway name not correct", XORGatewayName, xorGatewayAfterReimport.getName());
+    public void shouldGatewaysHaveBeenExportedImported() {
+        final Lane lane = (Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
+        ANDGateway andGatewayAfterReimport = null;
+        InclusiveGateway incGatewayAfterReimport = null;
+        XORGateway xorGatewayAfterReimport = null;
+        for (final Element element : lane.getElements()) {
+            if (element instanceof ANDGateway) {
+                andGatewayAfterReimport = (ANDGateway) element;
+            }
+            if (element instanceof InclusiveGateway) {
+               incGatewayAfterReimport = (InclusiveGateway) element;
+            }
+            if (element instanceof XORGateway) {
+               xorGatewayAfterReimport = (XORGateway) element;
+            }
+        }
+        
+        assertThat(xorGatewayAfterReimport).isNotNull();
+        assertThat(incGatewayAfterReimport).isNotNull();
+        assertThat(andGatewayAfterReimport).isNotNull();
+        
+        assertEquals("XOR (Exclusive) Gateway name not correct", XOR_GATEWAY_NAME, xorGatewayAfterReimport.getName());
+        assertEquals("OR (Inclusive) Gateway name not correct", INC_GATEWAY_NAME, incGatewayAfterReimport.getName());
+        assertEquals("AND (Parallel) Gateway name not correct", AND_GATEWAY_NAME, andGatewayAfterReimport.getName());
     }
 
     @Before
@@ -108,14 +117,14 @@ public class BPMNGatewayExportImportTest {
                 .finish();
 
         final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        final SWTBotGefEditPart step1Part = editor1.getEditPart("Gate1").parent();
+        final SWTBotGefEditPart step1Part = editor1.getEditPart(AND_GATEWAY_NAME).parent();
         final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
 
         DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         ConnectorDefRepositoryStore connectorDefStore = RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorDefRepositoryStore.class);
         List<AbstractProcess> allProcesses = dStore.getAllProcesses();
-        IModelSearch modelSearch = new ModelSearch(() -> allProcesses, () -> connectorDefStore.getDefinitions());
+        IModelSearch modelSearch = new ModelSearch(() -> allProcesses, connectorDefStore::getDefinitions);
 
         final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped.resolveSemanticElement().eResource(),
                 modelSearch);
@@ -141,18 +150,6 @@ public class BPMNGatewayExportImportTest {
                 e.printStackTrace();
             }
         });
-        final Lane lane = (Lane) ((Pool) mainProcessAfterReimport.getElements().get(0)).getElements().get(0);
-        for (final Element element : lane.getElements()) {
-            if (element instanceof ANDGateway) {
-                andGatewayAfterReimport = (ANDGateway) element;
-            }
-            if (element instanceof InclusiveGateway) {
-                incGatewayAfterReimport = (InclusiveGateway) element;
-            }
-            if (element instanceof XORGateway) {
-                xorGatewayAfterReimport = (XORGateway) element;
-            }
-        }
     }
 
     @After
