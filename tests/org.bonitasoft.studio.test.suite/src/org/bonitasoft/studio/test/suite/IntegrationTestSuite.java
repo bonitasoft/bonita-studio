@@ -45,12 +45,11 @@ import org.bonitasoft.studio.tests.document.RefactorDocumentOperationTest;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
 import org.bonitasoft.studio.tests.engine.StudioShutdownIT;
 import org.bonitasoft.studio.tests.engine.TestSubprocessEventExport;
-import org.bonitasoft.studio.tests.engine.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.tests.exporter.bpmn.BPMNSequenceFlowConditionExportImportTest;
 import org.bonitasoft.studio.tests.importer.api.ProcBuilderTests;
-import org.bonitasoft.studio.tests.importer.bos.TestBOSArchiveImport;
+import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveIT;
 import org.bonitasoft.studio.tests.importer.bpmn2.TestImportBPMN2;
 import org.bonitasoft.studio.tests.migration.DocumentMigrationIT;
 import org.bonitasoft.studio.tests.migration.EdaptHistoryIT;
@@ -108,7 +107,7 @@ import org.junit.runners.Suite;
         DatabaseDriverConfigurationIT.class,
         TestProcessZoo.class,
         TestDatabaseConnectorResulset.class,
-        TestBOSArchiveImport.class,
+        ImportBOSArchiveIT.class,
         TestExportProcessBar.class,
         BPMNImportExportTest.class,
         BPMNDataExportImportTest.class,
@@ -116,7 +115,6 @@ import org.junit.runners.Suite;
         DataRefactorIT.class,
         TestBonitaAPI.class,
         TestNonInterruptingBoundaryTimerEvent.class,
-        TestUserFilterMatchingEngineVersion.class,
         TestDeployCommand.class,
         TestValidationConstraints.class,
         TestConnectorOperationIT.class,

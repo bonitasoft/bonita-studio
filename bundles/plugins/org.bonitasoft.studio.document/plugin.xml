@@ -133,7 +133,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.development?before=org.bonitasoft.studio.dependencies.manageJars">
+            locationURI="menu:org.bonitasoft.studio.development">
          <command
                commandId="org.bonitasoft.studio.document.manageResources.command"
                style="push">

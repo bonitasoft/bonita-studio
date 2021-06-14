@@ -17,9 +17,13 @@ package org.bonitasoft.studio.tests.project;
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -29,13 +33,18 @@ import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultCo
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -59,18 +68,18 @@ public class ProjectCompositionIT {
     private MavenProjectHelper mavenProjectHelper;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws CoreException {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         mavenProjectHelper = new MavenProjectHelper();
         removeExtensions();
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() throws CoreException {
         removeExtensions();
     }
 
-    private void removeExtensions() throws Exception {
+    private void removeExtensions() throws CoreException {
         IProject project = repositoryAccessor.getCurrentRepository().getProject();
         Model mavenModel = mavenProjectHelper.getMavenModel(project);
         var dependenciesToRemove = mavenModel.getDependencies()
@@ -164,7 +173,7 @@ public class ProjectCompositionIT {
                 .findExtensionCardByArtifactId("bonita-connector-groovy")
                 .remove();
         bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
-        
+
         bot.waitUntil(new AssertionCondition() {
 
             @Override
@@ -174,7 +183,83 @@ public class ProjectCompositionIT {
                                 .noneMatch("scripting-groovy-script"::equals);
             }
         }, 15000);
-       
+
+    }
+
+    @Test
+    public void shouldUpdateEmailConnectorDefinitions() throws IOException {
+        var worbenchBot = new BotApplicationWorkbenchWindow(bot);
+        var botImportBOSDialog = worbenchBot.importBOSArchive()
+                .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"));
+
+        assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_NAME_TEXT).getText())
+                .isEqualTo("EmailConnectorUpdate");
+        assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_VERSION_TEXT).getText())
+                .isEqualTo("1.0.0-SNAPSHOT");
+        assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_GROUPID_TEXT).getText())
+                .isEqualTo("org.bonitasoft.test");
+        assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_ARTIFACTID_TEXT).getText())
+                .isEqualTo("email-connector-update");
+        assertThat(bot.textWithId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_DESCRIPTION_TEXT).getText())
+                .isEqualTo("A test project for connector update");
+
+        botImportBOSDialog
+                .currentRepository()
+                .next()
+                .next()
+                .importArchive();
+
+        var localDepStore = repositoryAccessor.getCurrentRepository().getLocalDependencyStore();
+        assertThat(localDepStore
+                .dependencyPath(dependency("org.bonitasoft.connectors", "bonita-connector-email", "1.1.0"))).exists();
+
+        var projectDetailsBot = worbenchBot.openProjectDetails();
+        projectDetailsBot
+                .findExtensionCardByArtifactId("bonita-connector-email")
+                .updateToLatest();
+
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+
+        var updateConnectorItem = bot.tree().getAllItems()[0];
+        assertThat(updateConnectorItem.getText()).isEqualTo(
+                String.format(org.bonitasoft.studio.connector.model.i18n.Messages.definitionUpdateChangeDescription,
+                        "email",
+                        "1.0.0",
+                        "1.2.0",
+                        1));
+        updateConnectorItem.expand();
+        assertThat(updateConnectorItem.getNodes())
+                .contains("new input 'trustCertificate' added. (Default value: false)")
+                .contains("new input 'returnPath' added.");
+
+        bot.button(IDialogConstants.PROCEED_LABEL).click();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+                var process = diagramStore.findProcess("EmailConnectorUpdate", "1.0");
+                assertThat(process).isNotNull();
+                var connectors = ModelHelper.getAllElementOfTypeIn(process, Connector.class);
+                assertThat(connectors).hasSize(1);
+                var emailConnector = connectors.get(0);
+                assertThat(emailConnector.getDefinitionId())
+                        .isEqualTo("email");
+                assertThat(emailConnector.getDefinitionVersion())
+                        .isEqualTo("1.2.0");
+                assertThat(emailConnector.getConfiguration().getParameters())
+                        .extracting(ConnectorParameter::getKey)
+                        .contains("returnPath", "trustCertificate");
+            }
+        });
+    }
+
+    private Dependency dependency(String groupId, String artifactId, String version) {
+        var dep = new Dependency();
+        dep.setGroupId(groupId);
+        dep.setArtifactId(artifactId);
+        dep.setVersion(version);
+        return dep;
     }
 
 }

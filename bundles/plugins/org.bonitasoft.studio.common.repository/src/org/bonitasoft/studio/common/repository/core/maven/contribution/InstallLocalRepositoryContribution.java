@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
+import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -32,13 +33,17 @@ import org.eclipse.swt.widgets.Display;
 public class InstallLocalRepositoryContribution implements IPostStartupContribution {
 
     private static final String LOCAL_REPOSITORY_ID = "local";
-
+    
     @Override
     public void execute() {
         try {
-            MavenLocalRepositoryContributor newMavenLocalRepositoryContributor = newMavenLocalRepositoryContributor();
-            if (newMavenLocalRepositoryContributor != null) {
-                newMavenLocalRepositoryContributor.execute();
+            var localRepositoryContributor = newMavenLocalRepositoryContributor(maven().getLocalRepository());
+            if (localRepositoryContributor != null) {
+                localRepositoryContributor.execute();
+            }
+            var internalRepository = newMavenLocalRepositoryContributor(MavenRepositories.internalRepository());
+            if (internalRepository != null) {
+                internalRepository.execute();
             }
         } catch (IOException | CoreException e) {
             if (!PlatformUtil.isHeadless()) {
@@ -49,8 +54,8 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
             BonitaStudioLog.error(e);
         }
     }
-
-    protected MavenLocalRepositoryContributor newMavenLocalRepositoryContributor() throws IOException, CoreException {
+    
+    protected MavenLocalRepositoryContributor newMavenLocalRepositoryContributor(ArtifactRepository targetRepository) throws IOException, CoreException {
         final IMaven maven = maven();
         File rootFolder = getRootFolder();
         if (rootFolder == null) {
@@ -63,11 +68,11 @@ public class InstallLocalRepositoryContribution implements IPostStartupContribut
                     .findFirst()
                     .orElseThrow();
         }
-        return new MavenLocalRepositoryContributor(rootFolder, maven.getLocalRepository(),
+        return new MavenLocalRepositoryContributor(rootFolder, targetRepository,
                 new DependencyCatalog(rootFolder,
                         new MavenArtifactParser((DefaultArtifactFactory) maven
                                 .lookup(org.apache.maven.artifact.factory.ArtifactFactory.class))),
-                new MavenInstallFileOperation(maven(), internalRepository, maven.getLocalRepository()));
+                new MavenInstallFileOperation(maven(), internalRepository, targetRepository));
     }
 
     protected IMaven maven() {
