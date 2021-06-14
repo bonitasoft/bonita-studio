@@ -18,13 +18,23 @@ import org.bonitasoft.studio.common.repository.IBonitaProjectListener;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 
 public class GroovyFunctionListener implements IBonitaProjectListener {
 
     @Override
     public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
-        FunctionsRepositoryFactory.reset();
-        FunctionsRepositoryFactory.getFunctionCatgories(repository);
+        new Job("Build Groovy code proposals...") {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                FunctionsRepositoryFactory.reset();
+                FunctionsRepositoryFactory.getFunctionCatgories(repository);
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     @Override

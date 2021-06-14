@@ -48,7 +48,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugException;
@@ -295,7 +298,14 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     @Override
     public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         if (PlatformUI.isWorkbenchRunning()) {
-            start(repository, monitor);
+            new Job("Starting UID...") {
+                
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    start(repository, monitor);
+                    return Status.OK_STATUS;
+                }
+            }.schedule();
         }
     }
 

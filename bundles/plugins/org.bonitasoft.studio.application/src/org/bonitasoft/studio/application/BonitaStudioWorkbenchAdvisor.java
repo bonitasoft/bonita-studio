@@ -432,6 +432,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
+        new Job("Initialize project") {
+            
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                RepositoryManager.getInstance().getAccessor().start(monitor);
+                return Status.OK_STATUS;
+            }
+        }.schedule();
+       
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         synchroniseTheme(engine);
@@ -569,7 +578,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 .getActivePage();
         Stream.of(activePage.getViewReferences())
                 .filter(vr -> Objects.equals("org.eclipse.ui.browser.view", vr.getId()))
-                .forEach(vr -> activePage.hideView(vr));
+                .forEach(activePage::hideView);
         Job.getJobManager().cancel(StartEngineJob.FAMILY);
         final boolean returnValue = super.preShutdown();
         if (returnValue) {
@@ -588,18 +597,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
-        Display.getDefault().syncExec(() -> {
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                    RepositoryManager.getInstance().getAccessor().start(monitor);
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
-        });
-        
-
-        
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
