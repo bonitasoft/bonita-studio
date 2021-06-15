@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -27,6 +29,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -96,7 +99,11 @@ public class DropdownDynamicButtonWidget extends DynamicButtonWidget {
 
         @Override
         public void widgetSelected(final SelectionEvent event) {
-            final ToolItem item = (ToolItem) event.widget;
+            widgetSelected((ToolItem) event.widget);
+
+        }
+
+        public void widgetSelected(ToolItem item) {
             final Rectangle rect = item.getBounds();
             final Point pt = item.getParent().toDisplay(new Point(rect.x, rect.y));
             menu.setLocation(pt.x, pt.y + rect.height);
@@ -109,6 +116,7 @@ public class DropdownDynamicButtonWidget extends DynamicButtonWidget {
     }
 
     private List<DropdownItem> menuItems;
+    private DropdownSelectionListener dropdownSelectionListener;
 
     public DropdownDynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -138,7 +146,29 @@ public class DropdownDynamicButtonWidget extends DynamicButtonWidget {
         hotImage.ifPresent(hotImg -> toolItem.setHotImage(hotImg));
         tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));
 
-        toolItem.addSelectionListener(new DropdownSelectionListener(toolItem, menuItems));
+        dropdownSelectionListener = new DropdownSelectionListener(toolItem, menuItems);
+        toolItem.addSelectionListener(dropdownSelectionListener);
+    }
+
+    @Override
+    protected void addTextSelectionBehavior(Label label) {
+        label.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (toolItem.isEnabled()) {
+                    Rectangle bounds = label.getBounds();
+                    if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                        dropdownSelectionListener.widgetSelected(toolItem);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected boolean applyMouseBehavior() {
+        return true;
     }
 
 }
