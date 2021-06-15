@@ -157,6 +157,8 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM = "SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM";
     public static final String SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM = "SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM";
     public static final String SWTBOT_ID_ADD_EXTENSION_DROPDOWN = "SWTBOT_ID_ADD_EXTENSION_DROPDOWN";
+    public static final String SWTBOT_ID_MINIMIZE_CARD_BUTTON = "SWTBOT_ID_MINIMIZE_CARD_BUTTON";
+    public static final String SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE = "SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE";
    
     public static String extensionCheckboxId(String artifactId) {
         return "SWTBOT_ID_MARKETPLACE_EXTENSION_CHECKBOX_" + artifactId;
@@ -176,5 +178,9 @@ public interface SWTBotConstants {
 
     public static String updateExtensionFromCard(String artifactId) {
         return "SWTBOT_ID_UPDATE_FROM_EXTENSION_CARD_" + artifactId;
+    }
+    
+    public static String findUsageButtonId(String definitionId, String definitionVersion) {
+        return "SWTBOT_ID_FIND_USAGE_" + definitionId + "-" + definitionVersion;
     }
 }

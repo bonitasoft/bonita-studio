@@ -31,10 +31,10 @@ import org.bonitasoft.studio.swtbot.framework.connector.ConnectorDefinitionWizar
 import org.bonitasoft.studio.swtbot.framework.connector.ConnectorImplementationWizardBot;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -217,6 +217,12 @@ public class ProjectExplorerBot extends BotBase {
                         ProjectExplorerBot.this.bot.activeEditor().getTitle());
             }
         }, 10000);
+    }
+
+    public void validate() {
+        SWTBotTreeItem projectTreeItem = getProjectTreeItem();
+        bot.waitUntil(contextMenuAvailable(projectTreeItem, "Validate"));
+        projectTreeItem.contextMenu().menu("Validate").click();
     }
 
 }

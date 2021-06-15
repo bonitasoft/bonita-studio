@@ -322,7 +322,6 @@ public class Messages extends NLS {
     public static String diagramNotFoundMessage;
     public static String process;
     public static String connectorUsagesDescription;
-    public static String openSelection;
     public static String noConnectorUsagesFound;
     public static String search;
     public static String actorFilterUsagesDescription;

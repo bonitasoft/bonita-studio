@@ -22,6 +22,8 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +100,7 @@ public class DataRepositoryServerManager {
         return INSTANCE;
     }
 
-    public synchronized void start(IProgressMonitor monitor) {
+    public synchronized void start(int workspaceResourcePort, int dataRepositoryPort, IProgressMonitor monitor) {
         if (launch == null
                 || Stream.of(launch.getProcesses())
                         .findFirst()
@@ -106,19 +108,22 @@ public class DataRepositoryServerManager {
                         .orElse(false)) {
             monitor.beginTask(Messages.startingDataRepositoryService, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingDataRepositoryService, UIDesignerPlugin.PLUGIN_ID);
+            Instant start = Instant.now();
+
             final ILaunchManager manager = getLaunchManager();
             final ILaunchConfigurationType ltype = manager
                     .getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
-
+            this.port = dataRepositoryPort;
             try {
                 final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Data Repository Service");
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, dataRepositoryBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        Joiner.on(" ").join(buildCommand()));
+                        Joiner.on(" ").join(buildCommand(workspaceResourcePort)));
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 if (launch != null && launch.getProcesses().length > 0) {
                     BonitaStudioLog.info(
-                            String.format("Data Repository Service has been started on http://localhost:%s/", port),
+                            String.format("Data Repository Service has been started on http://localhost:%s/ in %ss",
+                                    port, Duration.between(start, Instant.now()).getSeconds()),
                             UIDesignerPlugin.PLUGIN_ID);
                 } else {
                     BonitaStudioLog.error(
@@ -209,18 +214,24 @@ public class DataRepositoryServerManager {
         })).findFirst();
     }
 
-    protected List<String> buildCommand() throws IOException {
-        port = getPreferenceStore().getInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, -1);
-        if (port == -1 || isPortInUse(port)) {
-            port = SocketUtil.findFreePort();
-            getPreferenceStore().putInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, port);
-        }
+    protected List<String> buildCommand(int workspaceResourcePort) throws IOException {
         return Arrays.asList(
                 withArgument(PORT_ARG, String.valueOf(port)),
                 withArgument(HEALTH_CHECK_URL_ARG, "/api/workspace/status/"),
-                withArgument(HEALTH_CHECK_PORT_ARG,
-                        String.valueOf(WorkspaceResourceServerManager.getInstance().runningPort())),
+                withArgument(HEALTH_CHECK_PORT_ARG, String.valueOf(workspaceResourcePort)),
                 withArgument(LOG_FILE_ARG, String.format("\"%s\"", logLocation())));
+    }
+
+    public int selectPort(int exclude) {
+        var selectedPort = getPreferenceStore().getInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, -1);
+        if (selectedPort == -1 || isPortInUse(selectedPort)) {
+            selectedPort = SocketUtil.findFreePort();
+            while (selectedPort == exclude) {
+                selectedPort = SocketUtil.findFreePort();
+            }
+            getPreferenceStore().putInt(BonitaPreferenceConstants.DATA_REPOSITORY_PORT, selectedPort);
+        }
+        return selectedPort;
     }
 
     private String withArgument(String key, String value) {
@@ -234,10 +245,6 @@ public class DataRepositoryServerManager {
         } catch (UnknownHostException e) {
             return org.eclipse.wst.server.core.util.SocketUtil.isPortInUse(port);
         }
-    }
-
-    public int getPort() {
-        return port;
     }
 
     protected ILaunchManager getLaunchManager() {

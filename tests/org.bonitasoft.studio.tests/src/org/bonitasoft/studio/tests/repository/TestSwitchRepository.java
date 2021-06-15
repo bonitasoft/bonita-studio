@@ -20,7 +20,7 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.team.TeamRepositoryUtil;
-import org.bonitasoft.studio.util.test.async.TestAsyncThread;
+import org.bonitasoft.studio.tests.util.TestAsyncThread;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;

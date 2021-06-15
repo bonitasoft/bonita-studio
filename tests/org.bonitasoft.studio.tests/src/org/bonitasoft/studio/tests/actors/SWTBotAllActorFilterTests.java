@@ -3,7 +3,7 @@ package org.bonitasoft.studio.tests.actors;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.util.test.BonitaSuite;
+import org.bonitasoft.studio.tests.util.BonitaSuite;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

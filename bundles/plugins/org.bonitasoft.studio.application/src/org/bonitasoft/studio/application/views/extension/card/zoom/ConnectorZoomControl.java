@@ -35,6 +35,7 @@ import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorP
 import org.bonitasoft.studio.application.views.extension.card.zoom.usage.ConnectorUsagesControlSupplier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.ConnectorDefinitionRegistry;
@@ -55,6 +56,7 @@ import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -143,6 +145,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.findUsages)
+                .withId(SWTBotConstants.findUsageButtonId(extendedDefinition.getId(), extendedDefinition.getVersion()))
                 .withImage(Pics.getImage(PicsConstants.findUsages))
                 .withHotImage(Pics.getImage(PicsConstants.findUsagesHot))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).create())
@@ -194,7 +197,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
                 .onFinish(container -> performFinish(connectorUsagesPage))
                 .withSize(SWT.DEFAULT, 700)
                 .withFixedInitialSize()
-                .open(getShell(), Messages.openSelection)
+                .open(getShell(), IDialogConstants.OPEN_LABEL)
                 .ifPresent(dToOpen -> dToOpen.entrySet().forEach(this::open));
     }
 

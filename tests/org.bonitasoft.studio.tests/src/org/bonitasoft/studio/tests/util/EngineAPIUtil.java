@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.util.test;
+package org.bonitasoft.studio.tests.util;
 
 import java.util.List;
 
@@ -41,32 +41,6 @@ public class EngineAPIUtil {
         boolean newTaskIsOld = false;
         HumanTaskInstance newTask = null;
         for (HumanTaskInstance currentTask : tasks.getResult()) {
-            newTaskIsOld = false;//reinit the value
-            for (HumanTaskInstance oldTask : previousTasks) {
-                if (currentTask.getId() == oldTask.getId()) {
-                    newTaskIsOld = true;
-                }
-            }
-            if (!newTaskIsOld && currentTask.getProcessDefinitionId() == processDefinitionUUID) {
-                newTask = currentTask;
-                break;
-            }
-        }
-        return newTask;
-    }
-
-    public static HumanTaskInstance findNewAssignedTaskForSpecifiedProcessDefAndUser(APISession session,
-            List<HumanTaskInstance> previousTasks, long processDefinitionUUID, long userID)
-            throws InvalidSessionException {
-        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        final List<HumanTaskInstance> tasks = processApi.getAssignedHumanTaskInstances(userID, 0, 10, null);
-
-        if (tasks.size() == previousTasks.size()) {
-            return null;
-        }
-        boolean newTaskIsOld = false;
-        HumanTaskInstance newTask = null;
-        for (HumanTaskInstance currentTask : tasks) {
             newTaskIsOld = false;//reinit the value
             for (HumanTaskInstance oldTask : previousTasks) {
                 if (currentTask.getId() == oldTask.getId()) {

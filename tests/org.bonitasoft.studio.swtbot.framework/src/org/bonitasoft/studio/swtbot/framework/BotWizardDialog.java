@@ -71,5 +71,16 @@ public abstract class BotWizardDialog extends BotDialog {
             return false;
         }
     }
+    
+    public void waitUntilFinishIsDisabled() {
+       bot.waitUntil(new ConditionBuilder()
+               .withTest(() -> !bot.button(finishButtonLabel).isEnabled())
+               .withFailureMessage(() -> String.format("%s button is not disabled.", finishButtonLabel))
+               .create());
+    }
+    
+    public void waitUntilFinishIsEnabled() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(finishButtonLabel)));
+    }
 
 }

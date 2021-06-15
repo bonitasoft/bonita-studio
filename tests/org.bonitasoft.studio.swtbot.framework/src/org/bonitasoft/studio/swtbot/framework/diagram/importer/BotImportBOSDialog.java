@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -33,7 +34,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 public class BotImportBOSDialog extends BotWizardDialog {
 
     public BotImportBOSDialog(final SWTGefBot bot) {
-        super(bot, Messages.importBosArchiveTitle);
+        super(bot, Messages.importBosArchiveTitle, Messages.importButtonLabel);
     }
 
     public BotImportBOSDialog setArchive(URL bosURLInClasspath) throws IOException {
@@ -47,15 +48,14 @@ public class BotImportBOSDialog extends BotWizardDialog {
         });
         return this;
     }
-    
-    
+
     @Override
     public BotImportBOSDialog next() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.buttonWithId(String.valueOf(IDialogConstants.NEXT_ID))), 5000);
         bot.buttonWithId(String.valueOf(IDialogConstants.NEXT_ID)).click();
         return this;
     }
-    
+
     @Override
     public BotImportBOSDialog back() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.buttonWithId(String.valueOf(IDialogConstants.BACK_ID))), 5000);
@@ -108,7 +108,8 @@ public class BotImportBOSDialog extends BotWizardDialog {
     }
 
     public BotImportBOSDialog newProject(String repoName) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository)));
+        bot.waitUntil(
+                Conditions.widgetIsEnabled(bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository)));
         bot.radio(org.bonitasoft.studio.importer.i18n.Messages.aNewRepository).click();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON)));
         bot.toolbarButtonWithId(SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON).click();
@@ -129,5 +130,13 @@ public class BotImportBOSDialog extends BotWizardDialog {
         bot.shell(Messages.importBosArchiveTitle).activate();
         return this;
     }
-    
+
+    public BotImportBOSDependenciesPreviewPage dependenciesPreviewPage() {
+        var descriptionLabel = bot.label(Messages.extensionsPreviewDescription);
+        if (descriptionLabel != null) {
+            return new BotImportBOSDependenciesPreviewPage(bot);
+        }
+       throw new WidgetNotFoundException("Cannot find etension preview page description label.");
+    }
+
 }

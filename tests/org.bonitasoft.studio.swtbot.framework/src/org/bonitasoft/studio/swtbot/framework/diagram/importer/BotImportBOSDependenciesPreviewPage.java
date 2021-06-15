@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
- * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2021 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,17 +12,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.test.swtbot.suite;
+package org.bonitasoft.studio.swtbot.framework.diagram.importer;
 
-import org.bonitasoft.studio.tests.git.ShareWithGitIT;
-import org.bonitasoft.studio.tests.util.BonitaSuite;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
-@RunWith(BonitaSuite.class)
-@Suite.SuiteClasses({
-        ShareWithGitIT.class
-})
-public class GitSWTBotTestSuite {
+public class BotImportBOSDependenciesPreviewPage {
+
+    private SWTGefBot bot;
+
+    public BotImportBOSDependenciesPreviewPage(SWTGefBot bot) {
+        this.bot = bot;
+    }
+
+    public SWTBotTable getDependenciesTable() {
+        return bot.tableWithId(SWTBotConstants.SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE);
+    }
 
 }

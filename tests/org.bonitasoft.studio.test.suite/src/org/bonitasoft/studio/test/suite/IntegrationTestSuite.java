@@ -71,9 +71,9 @@ import org.bonitasoft.studio.tests.searchindex.TestRunSearchIndex;
 import org.bonitasoft.studio.tests.searchindex.TestSearchIndexRefactoring;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
+import org.bonitasoft.studio.tests.util.BonitaSuite;
 import org.bonitasoft.studio.tests.validation.TestTokenDispatcher;
 import org.bonitasoft.studio.tests.validation.TestValidationConstraints;
-import org.bonitasoft.studio.util.test.BonitaSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
