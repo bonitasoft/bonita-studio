@@ -28,6 +28,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<groovy-maven-plugin.groovy.version>3.0.7</groovy-maven-plugin.groovy.version>
+        <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION --> 
 		<maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
 	</properties>
 	<modules>
