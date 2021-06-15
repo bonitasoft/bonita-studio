@@ -98,7 +98,7 @@ import org.bonitasoft.studio.tests.properties.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.repository.TestSeveralLocalRepositories;
 import org.bonitasoft.studio.tests.searchindex.SearchIndexesTest;
 import org.bonitasoft.studio.tests.timer.TestTimer;
-import org.bonitasoft.studio.util.test.BonitaSuite;
+import org.bonitasoft.studio.tests.util.BonitaSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

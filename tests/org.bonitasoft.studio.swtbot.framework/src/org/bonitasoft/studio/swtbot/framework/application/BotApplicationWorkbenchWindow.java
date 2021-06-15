@@ -257,4 +257,5 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         }, 15000);
         return new BotProjectDetailsEditor(bot);
     }
+
 }

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
@@ -97,7 +98,6 @@ public class ExtensionsPreviewPage implements ControlSupplier {
     private static final String CONFLICT_PANEL_ID = "conflict.panel";
     private static final String MAVEN_REPO_DOC_URL = "https://maven.apache.org/guides/introduction/introduction-to-repositories.html";
     private static final String MAVEN_REPO_CONFIG_DOC_URL = "https://maven.apache.org/settings.html#Repositories";
-  
 
     private IObservableList<DependencyLookup> dependenciesLookup;
     private ImportBosArchivePage archiveModelSupplier;
@@ -246,8 +246,8 @@ public class ExtensionsPreviewPage implements ControlSupplier {
             }
         };
 
-        var conflictObservable = dependencyConflictHandler.getConflictObservable(); 
-        
+        var conflictObservable = dependencyConflictHandler.getConflictObservable();
+
         localDepObservable.addValueChangeListener(createLocalDependenciesPanelEventHandler(container));
         notFoundDepObservable.addValueChangeListener(createDependenciesPanelEventHandler(container));
         conflictObservable.addValueChangeListener(createConflictingDependenciesPanelEventHandler(container));
@@ -294,6 +294,8 @@ public class ExtensionsPreviewPage implements ControlSupplier {
         dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true)
                 .create());
+        dependenciesViewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE);
         dependenciesViewer.getTable().setHeaderVisible(true);
         dependenciesViewer.setCheckStateProvider(new ICheckStateProvider() {
 
@@ -423,17 +425,19 @@ public class ExtensionsPreviewPage implements ControlSupplier {
     }
 
     private IValueChangeListener<? super Boolean> createLocalDependenciesPanelEventHandler(Composite container) {
-        MessagePanel panel = new MessagePanel(LOCAL_PANEL_ID, IStatus.WARNING, unresolvedLocalDependenciesLinkSupplier());
+        MessagePanel panel = new MessagePanel(LOCAL_PANEL_ID, IStatus.WARNING,
+                unresolvedLocalDependenciesLinkSupplier());
         return new MessagePanelEventHandler(container, panel);
     }
-    
+
     private IValueChangeListener<? super Boolean> createDependenciesPanelEventHandler(Composite container) {
         MessagePanel panel = new MessagePanel(ERROR_PANEL_ID, IStatus.ERROR, unresolvedDependenciesLinkSupplier());
         return new MessagePanelEventHandler(container, panel);
     }
-    
+
     private IValueChangeListener<? super Boolean> createConflictingDependenciesPanelEventHandler(Composite container) {
-        MessagePanel panel = new MessagePanel(CONFLICT_PANEL_ID, IStatus.WARNING, conflictingDependenciesLabelSupplier());
+        MessagePanel panel = new MessagePanel(CONFLICT_PANEL_ID, IStatus.WARNING,
+                conflictingDependenciesLabelSupplier());
         return new MessagePanelEventHandler(container, panel);
     }
 
@@ -476,7 +480,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
             return unresolvedDependenciesInfoLabel;
         };
     }
-    
+
     private MessageControlSupplier<Link> unresolvedDependenciesLinkSupplier() {
         return parent -> {
             Link unresolvedDependenciesInfoLabel = new Link(parent, SWT.WRAP);
@@ -490,7 +494,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
             return unresolvedDependenciesInfoLabel;
         };
     }
-    
+
     private String resolutionTooltip(DependencyLookup dep) {
         String tooltip = null;
         switch (dep.getStatus()) {

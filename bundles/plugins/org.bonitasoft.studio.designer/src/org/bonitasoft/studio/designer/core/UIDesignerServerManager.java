@@ -116,21 +116,16 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
             monitor.beginTask(Messages.startingUIDesigner, IProgressMonitor.UNKNOWN);
             BonitaStudioLog.info(Messages.startingUIDesigner, UIDesignerPlugin.PLUGIN_ID);
             Instant start = Instant.now();
-            try {
-                if (!WorkspaceResourceServerManager.getInstance().isRunning()) {
-                    WorkspaceResourceServerManager.getInstance().start(SocketUtil.findFreePort());
-                }
-            } catch (Exception e1) {
-                BonitaStudioLog.error(e1);
-                return;
-            }
-            try {
-                if (!DataRepositoryServerManager.getInstance().isStarted()) {
-                    DataRepositoryServerManager.getInstance().start(AbstractRepository.NULL_PROGRESS_MONITOR);
-                }
-            } catch (Exception e1) {
-                BonitaStudioLog.error(e1);
-                return;
+            int workspaceResourceServerPort = SocketUtil.findFreePort();
+            DataRepositoryServerManager dataRepositoryServerManager = DataRepositoryServerManager.getInstance();
+            int dataRepositoryPort = dataRepositoryServerManager.selectPort(workspaceResourceServerPort);
+            WorkspaceResourceServerManager workspaceResourceServerManager = WorkspaceResourceServerManager
+                    .getInstance();
+            if (!workspaceResourceServerManager.isRunning() || !dataRepositoryServerManager.isStarted()) {
+                schedule(workspaceResourceServerPort, workspaceResourceServerManager, dataRepositoryPort,
+                        dataRepositoryServerManager);
+            } else {
+                workspaceResourceServerPort = workspaceResourceServerManager.runningPort();
             }
             this.portalPort = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
                     .getInt(BonitaPreferenceConstants.CONSOLE_PORT);
@@ -141,13 +136,16 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 final ILaunchConfigurationWorkingCopy workingCopy = ltype.newInstance(null, "Standalone UI Designer");
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, javaBinaryLocation());
                 workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS,
-                        buildCommand(repository).stream().collect(Collectors.joining(" ")));
+                        buildCommand(repository, workspaceResourceServerPort, dataRepositoryPort).stream()
+                                .collect(Collectors.joining(" ")));
                 Map<String, String> env = new HashMap<>();
                 env.put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, env);
                 launch = workingCopy.launch(ILaunchManager.RUN_MODE, AbstractRepository.NULL_PROGRESS_MONITOR);
                 pageDesignerURLBuilder = new PageDesignerURLFactory(getPreferenceStore());
                 if (waitForUID(pageDesignerURLBuilder)) {
+                    schedule(workspaceResourceServerPort, workspaceResourceServerManager, dataRepositoryPort,
+                            dataRepositoryServerManager);
                     started = true;
                     BonitaStudioLog.info(
                             String.format("UI Designer has been started on http://localhost:%s/bonita in %ss", port,
@@ -158,6 +156,31 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
                 BonitaStudioLog.error("Failed to run ui designer war", e);
             }
         }
+    }
+
+    private void schedule(int workspaceResourcePort,
+            WorkspaceResourceServerManager workspaceResourceServerManager,
+            int dataRepositoryPort,
+            DataRepositoryServerManager dataRepositoryServerManager) {
+        new Job("Starting UID services...") {
+
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    workspaceResourceServerManager.start(workspaceResourcePort);
+                } catch (Exception e) {
+                    BonitaStudioLog.error(e);
+                    return new Status(IStatus.ERROR, getClass(), "Failed to start UID workspace synchronizer.", e);
+                }
+                try {
+                    dataRepositoryServerManager.start(workspaceResourcePort, dataRepositoryPort, monitor);
+                } catch (Exception e) {
+                    BonitaStudioLog.error(e);
+                    return new Status(IStatus.ERROR, getClass(), "Failed to start Data repository service.", e);
+                }
+                return Status.OK_STATUS;
+            }
+        }.schedule();
     }
 
     protected IEclipsePreferences getPreferenceStore() {
@@ -227,7 +250,9 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return javaBinaryPath.getAbsolutePath();
     }
 
-    protected List<String> buildCommand(AbstractRepository repository) throws IOException {
+    protected List<String> buildCommand(AbstractRepository repository,
+            int workspaceResourceServerPort,
+            int dataRepositoryPort) throws IOException {
         final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repository);
         port = getPreferenceStore().getInt(BonitaPreferenceConstants.UID_PORT, -1);
         if (port == -1 || isPortInUse(port)) {
@@ -237,14 +262,14 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return Arrays.asList(
                 getPreferenceStore().get(BonitaPreferenceConstants.UID_JVM_OPTS, "-Xmx256m"),
                 workspaceSystemProperties.getWorspacePathLocation(),
-                workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()),
+                workspaceSystemProperties.getRestAPIURL(workspaceResourceServerPort),
                 workspaceSystemProperties.activateSpringProfile("studio"),
                 aSystemProperty(PORTAL_BASE_URL,
                         String.format("http://%s:%s", InetAddress.getByName(null).getHostAddress(),
                                 portalPort)),
                 aSystemProperty(BONITA_DATA_REPOSITORY_ORIGIN, String.format("http://%s:%s",
                         InetAddress.getByName(null).getHostAddress(),
-                        DataRepositoryServerManager.getInstance().getPort())),
+                        dataRepositoryPort)),
                 aSystemProperty(UID_SERVER_PORT, String.valueOf(port)),
                 aSystemProperty(UID_LOGGING_FILE, String.format("\"%s\"", getLogFile().getAbsolutePath())),
                 "-jar",
@@ -298,14 +323,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     @Override
     public void projectOpened(AbstractRepository repository, IProgressMonitor monitor) {
         if (PlatformUI.isWorkbenchRunning()) {
-            new Job("Starting UID...") {
-                
-                @Override
-                protected IStatus run(IProgressMonitor monitor) {
-                    start(repository, monitor);
-                    return Status.OK_STATUS;
-                }
-            }.schedule();
+            start(repository, monitor);
         }
     }
 

@@ -39,16 +39,21 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
+import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
+import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -188,6 +193,11 @@ public class ProjectCompositionIT {
 
     @Test
     public void shouldUpdateEmailConnectorDefinitions() throws IOException {
+        var connectorDefinitionRegistry = repositoryAccessor.getCurrentRepository()
+                .getRepositoryStore(ConnectorDefRepositoryStore.class)
+                .getResourceProvider()
+                .getConnectorDefinitionRegistry();
+
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
         var botImportBOSDialog = worbenchBot.importBOSArchive()
                 .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"));
@@ -232,11 +242,25 @@ public class ProjectCompositionIT {
                 .contains("new input 'trustCertificate' added. (Default value: false)")
                 .contains("new input 'returnPath' added.");
 
+        bot.button(IDialogConstants.ABORT_LABEL).click();
+        bot.waitWhile(Conditions.shellIsActive(JFaceResources.getString("ProgressMonitorDialog.title")), 15000);
+
+        assertThat(connectorDefinitionRegistry.find("email", "1.0.0")).isPresent();
+        assertThat(connectorDefinitionRegistry.find("email", "1.2.0")).isEmpty();
+
+        projectDetailsBot
+                .findExtensionCardByArtifactId("bonita-connector-email")
+                .updateToLatest();
+
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+
         bot.button(IDialogConstants.PROCEED_LABEL).click();
         bot.waitUntil(new AssertionCondition() {
 
             @Override
             protected void makeAssert() throws Exception {
+                assertThat(connectorDefinitionRegistry.find("email", "1.0.0")).isEmpty();
+                assertThat(connectorDefinitionRegistry.find("email", "1.2.0")).isPresent();
                 var diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
                 var process = diagramStore.findProcess("EmailConnectorUpdate", "1.0");
                 assertThat(process).isNotNull();
@@ -250,6 +274,102 @@ public class ProjectCompositionIT {
                 assertThat(emailConnector.getConfiguration().getParameters())
                         .extracting(ConnectorParameter::getKey)
                         .contains("returnPath", "trustCertificate");
+            }
+        });
+
+        projectDetailsBot
+                .findExtensionCardByArtifactId("bonita-connector-email")
+                .remove();
+
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+        var removeConnectorItem = bot.tree().getAllItems()[0];
+        assertThat(removeConnectorItem.getText()).isEqualTo(
+                String.format(Messages.definitionRemovedDescription,
+                        "email",
+                        "1.2.0",
+                        1));
+        bot.button(IDialogConstants.PROCEED_LABEL).click();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                var diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+                var process = diagramStore.findProcess("EmailConnectorUpdate", "1.0");
+                assertThat(process).isNotNull();
+                var connectors = ModelHelper.getAllElementOfTypeIn(process, Connector.class);
+                assertThat(connectors).isEmpty();
+            }
+        });
+
+        worbenchBot.importBOSArchive()
+                .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"))
+                .currentRepository()
+                .next()
+                .next()
+                .importArchive();
+
+        //        assertThat(importBOSDialog.canFinish()).isFalse();
+        //        var dependenciesTree = importBOSDialog.dependenciesPreviewPage().getDependenciesTree();
+
+        IProject project = repositoryAccessor.getCurrentRepository().getProject();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(ResourceMarkerHelper.findErrors(project)).isEmpty();
+            }
+        });
+
+        projectDetailsBot = worbenchBot.openProjectDetails();
+        var extensionCardBot = projectDetailsBot
+                .findExtensionCardByArtifactId("bonita-connector-email");
+        var maximizedCard = extensionCardBot.maximize();
+
+        var findUsageBot = maximizedCard.findUsage("email", "1.0.0");
+        assertThat(findUsageBot.getTree().getAllItems()).isNotEmpty();
+        findUsageBot.cancel();
+        maximizedCard.minimize();
+
+        extensionCardBot.updateToLatest();
+        bot.waitUntil(Conditions.shellIsActive(Messages.updateProcessesTitle), 20000);
+
+        bot.button(IDialogConstants.IGNORE_LABEL).click();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(ResourceMarkerHelper.findErrors(project))
+                        .contains(NLS.bind(
+                                org.bonitasoft.studio.validation.i18n.Messages.Validation_ConnectorDefUpdateRequired,
+                                "email",
+                                "email--1.0.0"));
+            }
+        });
+
+        var importDialogBot = worbenchBot.importBOSArchive()
+                .setArchive(ImportBOSArchiveWizardIT.class.getResource("/EmailConnectorUpdate.bos"))
+                .currentRepository()
+                .next()
+                .next();
+        importDialogBot.waitUntilFinishIsDisabled();
+        var dependenciesTable = importDialogBot.dependenciesPreviewPage().getDependenciesTable();
+        SWTBotTableItem tableItem = dependenciesTable.getTableItem(0);
+        assertThat(tableItem.getText(3)).isEqualTo(org.bonitasoft.studio.common.repository.Messages.conflicting);
+        tableItem.click(3);
+        bot.ccomboBox()
+                .setSelection(String.format(org.bonitasoft.studio.common.repository.Messages.ourVersion, "1.1.0"));
+        bot.ccomboBox().pressShortcut(Keystrokes.CR);
+        importDialogBot.waitUntilFinishIsEnabled();
+        importDialogBot.importArchive();
+        
+        new ProjectExplorerBot(bot).validate();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.validation.i18n.Messages.validationTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(new AssertionCondition() {
+
+            @Override
+            protected void makeAssert() throws Exception {
+                assertThat(ResourceMarkerHelper.findErrors(project)).isEmpty();
             }
         });
     }

@@ -59,7 +59,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -432,14 +434,24 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
-        new Job("Initialize project") {
+        var initializeProjectJob = new Job("Initialize project") {
             
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
             }
-        }.schedule();
+        };
+        initializeProjectJob.addJobChangeListener(new JobChangeAdapter() {
+            @Override
+            public void done(IJobChangeEvent event) {
+                if(initializeProjectJob.equals(event.getJob())) {
+                    executePostStartupContributions();
+                }
+                super.done(event);
+            }
+        });
+        initializeProjectJob.schedule();
        
         super.postStartup();
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
@@ -600,6 +612,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (PlatformUtil.isHeadless()) {
             return;//Do not execute earlyStartup in headless mode
         }
+        preLoad();
+
+        final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
+        BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
+                ApplicationPlugin.PLUGIN_ID);
+        ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
+        if (isFirstStartup()) {
+            new OpenReleaseNoteHandler().setFocus(false).asView().openBrowser();
+        }
+        ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
+    }
+
+    private void executePostStartupContributions() {
         final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements(
                         "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
@@ -614,17 +639,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                 BonitaStudioLog.error(e);
             }
         }
-
-        preLoad();
-
-        final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
-        BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration),
-                ApplicationPlugin.PLUGIN_ID);
-        ApplicationPlugin.getDefault().getPreferenceStore().setDefault(FIRST_STARTUP, true);
-        if (isFirstStartup()) {
-            new OpenReleaseNoteHandler().setFocus(false).asView().openBrowser();
-        }
-        ApplicationPlugin.getDefault().getPreferenceStore().setValue(FIRST_STARTUP, false);
     }
 
     private boolean isFirstStartup() {

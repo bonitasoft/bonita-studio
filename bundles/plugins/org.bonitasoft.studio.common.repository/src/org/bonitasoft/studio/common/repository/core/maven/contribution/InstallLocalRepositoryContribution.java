@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -30,11 +29,10 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Display;
 
-public class InstallLocalRepositoryContribution implements IPostStartupContribution {
+public class InstallLocalRepositoryContribution {
 
     private static final String LOCAL_REPOSITORY_ID = "local";
     
-    @Override
     public void execute() {
         try {
             var localRepositoryContributor = newMavenLocalRepositoryContributor(maven().getLocalRepository());

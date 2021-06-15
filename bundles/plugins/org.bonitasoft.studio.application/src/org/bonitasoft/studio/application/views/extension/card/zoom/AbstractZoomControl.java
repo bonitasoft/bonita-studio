@@ -19,6 +19,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
 import org.bonitasoft.studio.common.Strings;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -127,6 +128,7 @@ public abstract class AbstractZoomControl extends Composite {
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.back)
+                .withId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON)
                 .withImage(Pics.getImage(PicsConstants.back))
                 .withHotImage(Pics.getImage(PicsConstants.backHot))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.END).create())

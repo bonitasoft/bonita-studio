@@ -33,19 +33,20 @@ public class MavenLocalRepositoryContributor {
     private File internalRepositoryRootFolder;
 
     public MavenLocalRepositoryContributor(final File internalRepositoryRootFolder,
-            final ArtifactRepository localRepository,
+            final ArtifactRepository targetRepository,
             final DependencyCatalog catalog,
             final MavenInstallFileOperation installCommand) {
-        this.targetRepository = localRepository;
+        this.targetRepository = targetRepository;
         this.catalog = catalog;
         this.installCommand = installCommand;
         this.internalRepositoryRootFolder = internalRepositoryRootFolder;
     }
 
     public void execute() throws IOException, CoreException {
-        BonitaStudioLog.info(String.format("Configuring %s m2 repository...", targetRepository.getId()), CommonRepositoryPlugin.PLUGIN_ID);
+        BonitaStudioLog.info(String.format("Configuring %s m2 repository...", targetRepository.getId()),
+                CommonRepositoryPlugin.PLUGIN_ID);
         Instant start = Instant.now();
-        for (final Artifact artifact :  catalog.parseDependencies()) {
+        for (final Artifact artifact : catalog.parseDependencies()) {
             final Artifact foundArtifact = targetRepository.find(artifact);
             if (foundArtifact == null || !foundArtifact.getFile().exists()) {
                 final File artifactFile = toArtifactFile(artifact);
@@ -65,18 +66,19 @@ public class MavenLocalRepositoryContributor {
                 }
             }
         }
-        BonitaStudioLog.info(String.format("Required dependencies installed in Local m2 repository in %ss", Duration.between(start, Instant.now()).getSeconds()),CommonRepositoryPlugin.PLUGIN_ID);
+        BonitaStudioLog.info(String.format("Required dependencies installed in %s m2 repository in %ss",
+                targetRepository.getId(), Duration.between(start, Instant.now()).getSeconds()),
+                CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     protected File toArtifactFile(final Artifact artifact) {
         return new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact));
     }
 
-
     protected File toPomFile(final Artifact artifact) {
         File file = new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact));
         checkState(file.exists(),
-                String.format("No file found for artifact %s in studio internal repository", artifact));
+                String.format("No file found for artifact %s in studio embedded repository", artifact));
         if (file.getName().endsWith(".pom")) {
             return file;
         }
