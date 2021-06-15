@@ -57,7 +57,8 @@ public class DynamicButtonWidget {
         }
 
         public DynamicButtonWidget createIn(Composite parent) {
-            var widget = new DynamicButtonWidget(parent, text, id, tooltipText, image, hotImage, onClickListener, maxTextWidth,
+            var widget = new DynamicButtonWidget(parent, text, id, tooltipText, image, hotImage, onClickListener,
+                    maxTextWidth,
                     cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit);
             widget.createControl();
             return widget;
@@ -78,15 +79,14 @@ public class DynamicButtonWidget {
     private Optional<Font> font;
     private Optional<FormToolkit> toolkit;
 
-    private IThemeEngine engine;
+    protected IThemeEngine engine;
     protected ToolItem toolItem;
-    private Cursor cursorArrow;
-    private Cursor cursorHand;
-    private Optional<String> defaultTextColorCssId;
-    private Optional<String> hoverTextColorCssId;
+    protected Cursor cursorArrow;
+    protected Cursor cursorHand;
+    protected Optional<String> defaultTextColorCssId;
+    protected Optional<String> hoverTextColorCssId;
 
     private Composite container;
- 
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -152,66 +152,7 @@ public class DynamicButtonWidget {
                     defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
             cssClass.ifPresent(css -> label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
-            if (onClickListener.isPresent()) {
-                label.addMouseListener(new MouseAdapter() {
-
-                    @Override
-                    public void mouseUp(MouseEvent e) {
-                        if (toolItem.isEnabled()) {
-                            Rectangle bounds = label.getBounds();
-                            if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
-                                onClickListener.get().accept(new Event());
-                            }
-                        }
-                    }
-                });
-
-                label.addMouseTrackListener(new MouseTrackAdapter() {
-
-                    @Override
-                    public void mouseExit(MouseEvent e) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
-                        engine.applyStyles(label, false);
-                        image.ifPresent(toolItem::setImage);
-                        label.setCursor(cursorArrow);
-                        toolbar.setCursor(cursorArrow);
-                    }
-
-                    @Override
-                    public void mouseEnter(MouseEvent e) {
-                        if (toolItem.isEnabled()) {
-                            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                    hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
-                            engine.applyStyles(label, false);
-                            hotImage.ifPresent(toolItem::setImage);
-                            label.setCursor(cursorHand);
-                            toolbar.setCursor(cursorHand);
-                        }
-                    }
-                });
-
-                toolbar.addMouseTrackListener(new MouseTrackAdapter() {
-
-                    @Override
-                    public void mouseExit(MouseEvent e) {
-                        label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
-                        engine.applyStyles(label, false);
-                        label.setCursor(cursorArrow);
-                    }
-
-                    @Override
-                    public void mouseEnter(MouseEvent e) {
-                        if (toolItem.isEnabled()) {
-                            label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
-                                    hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
-                            engine.applyStyles(label, false);
-                            label.setCursor(cursorHand);
-                        }
-                    }
-                });
-            }
+            addMouseBehavior(toolbar, label);
 
         }
 
@@ -226,6 +167,80 @@ public class DynamicButtonWidget {
             public void mouseEnter(MouseEvent e) {
                 if (toolItem.isEnabled()) {
                     toolbar.setCursor(cursorHand);
+                }
+            }
+        });
+    }
+
+    private void addMouseBehavior(ToolBar toolbar, Label label) {
+        if (applyMouseBehavior()) {
+            addTextSelectionBehavior(label);
+            addHoverFeedbacks(toolbar, label);
+        }
+    }
+
+    protected boolean applyMouseBehavior() {
+        return onClickListener.isPresent();
+    }
+
+    protected void addTextSelectionBehavior(Label label) {
+        label.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (toolItem.isEnabled()) {
+                    Rectangle bounds = label.getBounds();
+                    if (e.x >= 0 && e.x <= bounds.width && e.y >= 0 && e.y <= bounds.height) {
+                        onClickListener.get().accept(new Event());
+                    }
+                }
+            }
+        });
+    }
+
+    private void addHoverFeedbacks(ToolBar toolbar, Label label) {
+        label.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                        defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
+                engine.applyStyles(label, false);
+                image.ifPresent(toolItem::setImage);
+                label.setCursor(cursorArrow);
+                toolbar.setCursor(cursorArrow);
+            }
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                if (toolItem.isEnabled()) {
+                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                            hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
+                    engine.applyStyles(label, false);
+                    hotImage.ifPresent(toolItem::setImage);
+                    label.setCursor(cursorHand);
+                    toolbar.setCursor(cursorHand);
+                }
+            }
+        });
+
+        toolbar.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseExit(MouseEvent e) {
+                label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                        defaultTextColorCssId.orElse(BonitaThemeConstants.TOOLBAR_TEXT_COLOR));
+                engine.applyStyles(label, false);
+                label.setCursor(cursorArrow);
+            }
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                if (toolItem.isEnabled()) {
+                    label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME,
+                            hoverTextColorCssId.orElse(BonitaThemeConstants.TITLE_TEXT_COLOR));
+                    engine.applyStyles(label, false);
+                    label.setCursor(cursorHand);
                 }
             }
         });
