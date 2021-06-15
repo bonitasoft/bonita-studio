@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.repository.core.maven.contribution.Dependenc
 import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenArtifactParser;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
+import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
 import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
@@ -139,7 +140,9 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         if (internalRepository != null) {
             request.setLocalRepository(internalRepository);
         }
-        request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:purge-local-repository"));
+        request.setGoals(
+                List.of(String.format("org.apache.maven.plugins:maven-dependency-plugin:%s:purge-local-repository",
+                        DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION)));
         Properties userProperties = new Properties();
         userProperties.setProperty("manualInclude",
                 String.format("%s:%s:%s", gav.getGroupId(), gav.getArtifactId(), gav.getVersion()));
@@ -164,7 +167,8 @@ public class DependencyGetOperation implements IRunnableWithProgress {
             request.setLocalRepository(internalRepository);
         }
         request.setUpdateSnapshots(true);
-        request.setGoals(List.of("org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get"));
+        request.setGoals(List.of(String.format("org.apache.maven.plugins:maven-dependency-plugin:%s:get",
+                DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION)));
         request.getRemoteRepositories().forEach(r -> {
             // Force remote update
             r.getReleases().setUpdatePolicy(ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS);
