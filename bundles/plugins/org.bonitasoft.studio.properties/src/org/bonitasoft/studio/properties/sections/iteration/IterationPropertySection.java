@@ -648,14 +648,6 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         ieratorDecoration.setImage(Pics.getImage(PicsConstants.hint));
         ieratorDecoration.setMarginWidth(-3);
 
-        //        DetailObservableValueWithRefactor expressionNameObservale = EMFEditWithRefactorObservables
-        //                .observeDetailValueWithRefactor(
-        //                        Realm.getDefault(),
-        //                        iteratorObservable,
-        //                        ExpressionPackage.Literals.EXPRESSION__NAME,
-        //                        new IteratorRefactorOperationFactory(),
-        //                        progressService);
-
         IteratorRefactorOperationFactory refactorOperationFactory = new IteratorRefactorOperationFactory();
         IObservableValue<String> expressionNameObservale = CustomEMFEditObservables.observeDetailValue(
                 Realm.getDefault(),
