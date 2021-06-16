@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -25,31 +23,25 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
-public class IteratorRefactorOperationFactory implements IRefactorOperationFactory {
+public class IteratorRefactorOperationFactory {
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.refactoring.core.emf.IRefactorOperationFactory#createRefactorOperation(org.eclipse.emf.edit.domain.EditingDomain,
-     * org.eclipse.emf.ecore.EObject, java.lang.Object)
-     */
-    @Override
-    public RefactorDataOperation createRefactorOperation(
-            final TransactionalEditingDomain domain, final EObject item, final Object newValue) {
-        checkArgument(item instanceof Expression);
-        checkArgument(newValue instanceof String);
-        final MultiInstantiable parentFlowElement = ModelHelper.getFirstContainerOfType(item, MultiInstantiable.class);
+    public RefactorDataOperation createRefactorOperation(TransactionalEditingDomain domain,  
+            Expression expression,
+            String oldValue,
+            String newValue) {
+        final MultiInstantiable parentFlowElement = ModelHelper.getFirstContainerOfType(expression, MultiInstantiable.class);
         final Data oldData = ExpressionHelper.dataFromIteratorExpression(
-                parentFlowElement, (Expression) item, mainProcess(parentFlowElement));
+                parentFlowElement, expression, mainProcess(parentFlowElement));
+        oldData.setName(oldValue);
         final RefactorDataOperation refactorOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         refactorOperation.setEditingDomain(domain);
         refactorOperation.setAskConfirmation(true);
-        refactorOperation.setDataContainer(ModelHelper.getFirstContainerOfType(item, DataAware.class));
-        refactorOperation.addItemToRefactor(dataWithNewName(oldData, (String) newValue), oldData);
+        refactorOperation.setDataContainer(ModelHelper.getFirstContainerOfType(expression, DataAware.class));
+        refactorOperation.addItemToRefactor(dataWithNewName(oldData,newValue), oldData);
         return refactorOperation;
     }
 

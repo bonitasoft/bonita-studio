@@ -73,6 +73,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -92,6 +93,7 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -105,6 +107,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -148,12 +151,6 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         this.progressService = progressService;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#
-     * getSectionDescription()
-     */
     @Override
     public String getSectionDescription() {
         return Messages.loopSectionDescription;
@@ -638,11 +635,11 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         iteratorComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(3).extendedMargins(0, 10, 0, 0).create());
 
-        final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
+        final IObservableValue<Expression> iteratorObservable = CustomEMFEditObservables.observeDetailValue(
+                Realm.getDefault(),
+                ViewerProperties.singleSelection().observe(selectionProvider),
                 ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION);
 
-        
         final Label iteratorLabel = widgetFactory.createLabel(iteratorComposite, Messages.iterator + " *");
         iteratorLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
@@ -650,14 +647,13 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
         ieratorDecoration.setDescriptionText(Messages.iteratorHint);
         ieratorDecoration.setImage(Pics.getImage(PicsConstants.hint));
         ieratorDecoration.setMarginWidth(-3);
-        
-        DetailObservableValueWithRefactor expressionNameObservale = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(
+
+        IteratorRefactorOperationFactory refactorOperationFactory = new IteratorRefactorOperationFactory();
+        IObservableValue<String> expressionNameObservale = CustomEMFEditObservables.observeDetailValue(
                 Realm.getDefault(),
-                iteratorObservable,
-                ExpressionPackage.Literals.EXPRESSION__NAME,
-                new IteratorRefactorOperationFactory(),
-                progressService);
-        
+                iteratorObservable, ExpressionPackage.Literals.EXPRESSION__NAME);
+        IObservableValue<String> contentObserveValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                iteratorObservable, ExpressionPackage.Literals.EXPRESSION__CONTENT);
         new TextWidget.Builder()
                 .fill()
                 .withId(SWTBotConstants.SWTBOT_ID_ITERATOR_NAME_TEXTEDITOR)
@@ -666,25 +662,35 @@ public class IterationPropertySection extends AbstractBonitaDescriptionSection {
                 .horizontalIndent(5)
                 .grabHorizontalSpace()
                 .transactionalEdit((oldValue, newValue) -> {
-                    Expression iteratorExpression = (Expression) iteratorObservable.getValue();
-                    TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(iteratorExpression);
-                    IObservableValue contentObserveValue = EMFEditObservables.observeValue(editingDomain, (EObject) iteratorExpression,
-                            ExpressionPackage.Literals.EXPRESSION__CONTENT);
                     contentObserveValue.setValue(newValue);
+                    RefactorDataOperation refactorOperation = refactorOperationFactory
+                            .createRefactorOperation(getEditingDomain(), iteratorObservable.getValue(), oldValue, newValue);
+                    try {
+                        progressService.run(true, false, refactorOperation);
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 })
-                .withTargetToModelStrategy(UpdateStrategyFactory.convertUpdateValueStrategy())
-                .withModelToTargetStrategy(UpdateStrategyFactory.updateValueStrategy())
-                .withValidator(multiValidator()
+                .withTargetToModelStrategy(UpdateStrategyFactory.convertUpdateValueStrategy()
+                        .withValidator(multiValidator()
                                 .addValidator(mandatoryValidator(Messages.name))
                                 .addValidator(maxLengthValidator(Messages.iterator, NAME_MAX_LENGTH))
                                 .addValidator(groovyReferenceValidator(Messages.iterator).startsWithLowerCase())
-                                .addValidator(uniqueValidator().in(ModelHelper.getAccessibleData(ModelHelper.getParentPool(getEObject()))).onProperty("name"))
-                                .create())
+                                .addValidator(name -> {
+                                    if (ModelHelper.getAccessibleData(ModelHelper.getParentPool(getEObject())).stream()
+                                            .map(Data::getName)
+                                            .anyMatch(name::equals)) {
+                                        return ValidationStatus.error(NLS
+                                                .bind(org.bonitasoft.studio.common.Messages.unicityErrorMessage, name));
+                                    }
+                                    return ValidationStatus.ok();
+                                })
+                                .create()))
                 .bindTo(expressionNameObservale)
                 .inContext(context)
                 .adapt(widgetFactory)
+                .useNativeRender()
                 .createIn(iteratorComposite);
-
 
         expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(
                 Realm.getDefault(), iteratorObservable, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
