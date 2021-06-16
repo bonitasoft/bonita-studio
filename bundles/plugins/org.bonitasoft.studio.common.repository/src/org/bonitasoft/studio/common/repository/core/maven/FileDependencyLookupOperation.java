@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
@@ -44,7 +43,7 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
         this.repositories.add(repositoryUrl);
         return this;
     }
-    
+
     public List<String> getRemoteRepositories() {
         return repositories;
     }
@@ -62,7 +61,8 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
             if (result.getStatus() == Status.FOUND
                     && DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()) != null) {
                 GAV gavWithClassifier = result.getGAV();
-                gavWithClassifier.setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()));
+                gavWithClassifier
+                        .setClassifier(DependencyLookup.guessClassifier(fileToLookup.getName(), result.getGAV()));
                 var dependencyGetOperation = new DependencyGetOperation(gavWithClassifier);
                 repositories.stream()
                         .forEach(dependencyGetOperation::addRemoteRespository);
@@ -101,13 +101,14 @@ public class FileDependencyLookupOperation implements IRunnableWithProgress {
                         }
                     }
                 }
-                if(result.getStatus() == Status.NOT_FOUND && result.getFile().exists()) {
+                if (result.getStatus() == Status.NOT_FOUND
+                        && result.getFile() != null
+                        && result.getFile().exists()) {
                     result.setStatus(Status.LOCAL);
                 }
             }
         }
     }
-
 
     public DependencyLookup getResult() {
         return result;
