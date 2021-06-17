@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.identity.organization.editor.formpage.user;
 
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.identity.organization.editor.OrganizationEditor;
 import org.bonitasoft.studio.identity.organization.editor.formpage.AbstractOrganizationFormPage;
 import org.bonitasoft.studio.identity.organization.model.organization.Group;
@@ -60,6 +61,10 @@ public class UserFormPage extends AbstractOrganizationFormPage {
         if (userFormPart != null) {
             userFormPart.markStale();
         }
+    }
+
+    public boolean canCreateMembership() {
+        return Strings.hasText(getFirstRole()) && Strings.hasText(getFirstRootGroup());
     }
 
     public Membership createDefaultMembership(String username) {
