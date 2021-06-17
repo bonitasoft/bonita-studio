@@ -90,7 +90,6 @@ public class UserList {
     private IObservableList<User> input;
     private List<User> usersToFilter = new ArrayList<>();
 
-    private ToolItem addItem;
     private ToolItem deleteItem;
 
     public UserList(Composite parent, AbstractOrganizationFormPage formPage, DataBindingContext ctx) {
@@ -226,7 +225,7 @@ public class UserList {
         Image addImage = new DecorationOverlayIcon(Pics.getImage(PicsConstants.organization_user),
                 Pics.getImageDescriptor(PicsConstants.add_decorator), IDecoration.BOTTOM_RIGHT).createImage();
 
-        addItem = new ToolItem(toolBar, SWT.PUSH);
+        var addItem = new ToolItem(toolBar, SWT.PUSH);
         addItem.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, ADD_USER_BUTTON_ID);
         addItem.setImage(addImage);
         addItem.setText(Messages.addNewUser);
@@ -270,8 +269,10 @@ public class UserList {
                 user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);
             }
         }
-        organization.getMemberships().getMembership()
-                .add(((UserFormPage) formPage).createDefaultMembership(user.getUserName()));
+        if (((UserFormPage) formPage).canCreateMembership()) {
+            organization.getMemberships().getMembership()
+                    .add(((UserFormPage) formPage).createDefaultMembership(user.getUserName()));
+        }
         input.add(user);
         formPage.updateDefaultUserViewerInput();
         selectionObservable.setValue(user);
