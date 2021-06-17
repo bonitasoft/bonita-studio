@@ -339,6 +339,12 @@ public class Messages extends NLS {
     public static String cannotLoadMarketplace;
     public static String cannotLoadMarketplaceMessage;
     public static String bonitaMarketplace;
+    public static String localDependencyTooltip;
+    public static String remoteDependencyTooltip;
+    public static String marketplaceDependencyTooltip;
+    public static String editMavenCoordinates;
+    public static String editMavenCoordinatesTooltip;
+    public static String mavenPropertiesMissing;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

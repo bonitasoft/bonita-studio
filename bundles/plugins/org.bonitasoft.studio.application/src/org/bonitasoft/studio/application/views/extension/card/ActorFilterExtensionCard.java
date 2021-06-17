@@ -53,4 +53,9 @@ public class ActorFilterExtensionCard extends ExtensionCard implements IZoomable
         return zoomListener;
     }
 
+    @Override
+    protected boolean canEditMavenCoordinates(BonitaArtifactDependency bonitaDep) {
+        return false;
+    }
+
 }

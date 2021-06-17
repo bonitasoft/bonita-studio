@@ -34,21 +34,24 @@ import org.bonitasoft.plugin.analyze.report.model.Theme;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.swt.graphics.Image;
 
-
 public class BonitaArtifactDependencyConverter {
 
     private ProjectDependenciesStore dependenciesStore;
+    private LocalDependenciesStore localDependenciesStore;
     private Map<ArtifactType, Image> defaultIconsMap;
     private Object matchingArtifact;
     private MavenXpp3Reader pomReader;
 
-    public BonitaArtifactDependencyConverter(ProjectDependenciesStore dependenciesStore) {
+    public BonitaArtifactDependencyConverter(ProjectDependenciesStore dependenciesStore,
+            LocalDependenciesStore localDependenciesStore) {
         this.dependenciesStore = dependenciesStore;
+        this.localDependenciesStore = localDependenciesStore;
         this.pomReader = new MavenXpp3Reader();
 
         defaultIconsMap = new EnumMap<>(ArtifactType.class);
@@ -63,6 +66,7 @@ public class BonitaArtifactDependencyConverter {
     public BonitaArtifactDependency toBonitaArtifactDependency(Dependency dep) {
         BonitaArtifactDependency bonitaDep = new BonitaArtifactDependency();
         bonitaDep.setFromMarketplace(false);
+        bonitaDep.setLocalDependency(localDependenciesStore.isLocalDependency(dep));
         BonitaArtifactDependencyVersion version = new BonitaArtifactDependencyVersion();
         version.setVersion(dep.getVersion());
         bonitaDep.setVersions(Arrays.asList(version));

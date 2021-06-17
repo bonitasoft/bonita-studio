@@ -52,15 +52,15 @@ import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class BonitaProjectPlugin {
-    
+
     private static final String DEAULT_REPORT_OUTPUT_FILE = "target/bonita-dependencies.json";
-    
+
     private IProject project;
 
     public BonitaProjectPlugin(IProject project) {
         this.project = project;
     }
-    
+
     public IStatus execute(IProgressMonitor monitor) throws CoreException {
         monitor.beginTask(Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
         final ILaunchConfigurationType launchConfigurationType = DebugPlugin.getDefault().getLaunchManager()
@@ -75,10 +75,9 @@ public class BonitaProjectPlugin {
             return process.getExitValue() == 0 ? Status.OK_STATUS
                     : new Status(IStatus.ERROR, getClass(), "An error occured while executing bonita project plugin");
         } catch (DebugException e) {
-           return new Status(IStatus.ERROR, getClass(),"An error occured while executing bonita project plugin", e);
+            return new Status(IStatus.ERROR, getClass(), "An error occured while executing bonita project plugin", e);
         }
     }
-    
 
     private void waitForBuildProcessTermination(final ILaunch launch) {
         while (!launch.isTerminated()) {
@@ -128,7 +127,7 @@ public class BonitaProjectPlugin {
         Optional<Plugin> plugin = mavenProject.getBuildPlugins().stream()
                 .filter(this::isBonitaProjectPlugin)
                 .findFirst();
-       return plugin.map(p -> p.getExecutions().stream()
+        return plugin.map(p -> p.getExecutions().stream()
                 .filter(exec -> exec.getGoals().contains("analyze"))
                 .map(exec -> getDepenencyReportPath(exec.getConfiguration()))
                 .filter(Objects::nonNull)
@@ -136,11 +135,10 @@ public class BonitaProjectPlugin {
                 .orElseGet(() -> getDepenencyReportPath(plugin.get().getConfiguration())))
                 .orElse(DEAULT_REPORT_OUTPUT_FILE);
     }
-    
 
     private String getDepenencyReportPath(Object configuration) {
         Xpp3Dom pluginConfiguration = (Xpp3Dom) configuration;
-        if(pluginConfiguration != null && pluginConfiguration.getChild("outputFile") != null) {
+        if (pluginConfiguration != null && pluginConfiguration.getChild("outputFile") != null) {
             return pluginConfiguration.getChild("outputFile").getValue();
         }
         return DEAULT_REPORT_OUTPUT_FILE;
@@ -150,6 +148,5 @@ public class BonitaProjectPlugin {
         return DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID.equals(plugin.getGroupId())
                 && DefaultPluginVersions.BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID.equals(plugin.getArtifactId());
     }
-
 
 }

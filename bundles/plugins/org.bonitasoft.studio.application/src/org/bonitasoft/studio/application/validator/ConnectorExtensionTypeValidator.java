@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.jar.JarFile;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -29,23 +30,28 @@ public class ConnectorExtensionTypeValidator implements IValidator<File> {
 
     @Override
     public IStatus validate(File file) {
-        boolean isConnector = false;
         if (file != null && file.getName().endsWith(".jar")) {
             try (JarFile jarFile = new JarFile(file)) {
-                isConnector = jarFile.stream()
+                boolean isConnector = jarFile.stream()
                         .anyMatch((entry -> entry.getName().endsWith(".def") || entry.getName().endsWith(".impl")));
+                if (isConnector) {
+                    return validateMavenFormat(file);
+                }
             } catch (IOException e) {
                 new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
-                isConnector = false;
             }
         }
-        return createStatus(isConnector);
+        return errorStatus();
     }
 
-    protected IStatus createStatus(boolean isConnector) {
-        return isConnector
+    private IStatus validateMavenFormat(File file) {
+        return DependencyLookup.readPomProperties(file).isPresent()
                 ? ValidationStatus.ok()
-                : ValidationStatus.error(Messages.extensionIsNotAConnector);
+                : ValidationStatus.error(Messages.mavenPropertiesMissing);
+    }
+
+    protected IStatus errorStatus() {
+        return ValidationStatus.error(Messages.extensionIsNotAConnector);
     }
 
 }

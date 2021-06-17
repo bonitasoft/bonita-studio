@@ -76,4 +76,8 @@ public class ExtensionTypeHandler {
                 : type.getName();
     }
 
+    public ArtifactType getType() {
+        return type;
+    }
+
 }

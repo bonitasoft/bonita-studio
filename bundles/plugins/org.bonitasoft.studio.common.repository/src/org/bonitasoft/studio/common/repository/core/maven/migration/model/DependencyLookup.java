@@ -138,26 +138,26 @@ public class DependencyLookup {
                     Status.valueOf(enumFormat(csvData)),
                     gav,
                     csvData[6]);
-        } else { //Not found
-            String fileName = csvData[0];
-            File file = new File(fileName);
-            String name = file.getName();
-            GAV defaultGav = new GAV("com.company", name.replace(".jar", ""), "1.0.0");
-            return readPomProperties(file)
-                    .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),
-                            pomProperties.getProperty("artifactId"),
-                            pomProperties.getProperty("version")))
-                    .map(gav -> new DependencyLookup(fileName,
-                            csvData[1],
-                            Status.valueOf(enumFormat(csvData)),
-                            gav,
-                            ""))
-                    .orElseGet(() -> new DependencyLookup(fileName,
-                            csvData[1],
-                            Status.valueOf(enumFormat(csvData)),
-                            defaultGav,
-                            ""));
         }
+        //Not found
+        String fileName = csvData[0];
+        File file = new File(fileName);
+        String name = file.getName();
+        GAV defaultGav = new GAV("com.company", name.replace(".jar", ""), "1.0.0");
+        return readPomProperties(file)
+                .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),
+                        pomProperties.getProperty("artifactId"),
+                        pomProperties.getProperty("version")))
+                .map(gav -> new DependencyLookup(fileName,
+                        csvData[1],
+                        Status.valueOf(enumFormat(csvData)),
+                        gav,
+                        ""))
+                .orElseGet(() -> new DependencyLookup(fileName,
+                        csvData[1],
+                        Status.valueOf(enumFormat(csvData)),
+                        defaultGav,
+                        ""));
     }
 
     public static String guessClassifier(String fileName, GAV gav) {
@@ -200,9 +200,10 @@ public class DependencyLookup {
                     .filter(properties -> {
                         String artifactId = properties.getProperty("artifactId");
                         String version = properties.getProperty("version");
-                        return fileNameWithoutExtension.equals(String.format("%s-%s", artifactId, version))
+                        return fileNameWithoutExtension.startsWith(String.format("%s-%s", artifactId, version))
                                 || fileNameWithoutExtension.equals(artifactId);
                     }).findFirst();
+
         } catch (IOException e) {
             BonitaStudioLog.error(e);
         }

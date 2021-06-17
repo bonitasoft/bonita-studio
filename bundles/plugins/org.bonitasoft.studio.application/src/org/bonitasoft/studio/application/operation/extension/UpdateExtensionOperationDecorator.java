@@ -55,6 +55,7 @@ public class UpdateExtensionOperationDecorator {
     private IRepository currentRepository;
     private List<ExtensionUpdateParticipant> participants = List.of();
     private CommandExecutor commandExecutor;
+    private boolean shouldValidateProject;
 
     public UpdateExtensionOperationDecorator(List<DependencyUpdate> dependenciesUpdates,
             IRepository currentRepository, CommandExecutor commandExecutor) {
@@ -63,7 +64,7 @@ public class UpdateExtensionOperationDecorator {
         this.commandExecutor = commandExecutor;
     }
 
-    public void preUpdate(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public void preUpdate(IProgressMonitor monitor) {
         if (!dependenciesUpdates.isEmpty()) {
             participants = ExtensionUpdateParticipantFactoryRegistry.getInstance()
                     .createParticipants(dependenciesUpdates);
@@ -80,48 +81,42 @@ public class UpdateExtensionOperationDecorator {
 
     public boolean postUpdate(IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
-        DiagramRepositoryStore diagramRepositoryStore = currentRepository
-                .getRepositoryStore(DiagramRepositoryStore.class);
         var localDependencyStore = currentRepository.getLocalDependencyStore();
-        try {
-            monitor.setTaskName(Messages.computingPreview);
-            for (var p : participants) {
-                p.runPreview(new NullProgressMonitor());
-            }
-            var previewResult = new PreviewResultImpl();
-            participants.stream()
-                    .map(Previewable::getPreviewResult)
-                    .flatMap(r -> r.getChanges().stream())
-                    .forEach(previewResult::addChange);
-            PreviewMessageProvider messageProvider = participants.stream()
-                    .filter(participant -> !participant.getPreviewResult().getChanges().isEmpty())
-                    .findFirst()
-                    .map(ExtensionUpdateParticipant::getPreviewMessageProvider)
-                    .orElse(null);
-            if (previewResult.shouldOpenPreviewDialog() && messageProvider != null) {
-                var dialogResult = new AtomicInteger();
-                Display.getDefault().syncExec(() -> dialogResult
-                        .set(previewResult.open(Display.getDefault().getActiveShell(), messageProvider)));
-                int buttonId = dialogResult.get();
-                if (buttonId == IDialogConstants.PROCEED_ID) {
-                    applyChanges(localDependencyStore, monitor);
-                } else if (buttonId == IDialogConstants.ABORT_ID) {
-                    monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
-                    abortDependenciesUpdate(localDependencyStore);
-                    currentRepository.getProjectDependenciesStore().analyze(monitor);
-                    return false;
-                }
-            } else {
-                applyChanges(localDependencyStore, monitor);
-            }
-            // Run a minimal process validation that only checks dependency consistency
-            Display.getDefault().asyncExec(() -> commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
-                    "dependencyConstraintsOnly", "true",
-                    "checkAllModelVersion", "true",
-                    "showReport", "false")));
-        } finally {
-            diagramRepositoryStore.resetComputedProcesses();
+        monitor.setTaskName(Messages.computingPreview);
+        for (var p : participants) {
+            p.runPreview(new NullProgressMonitor());
         }
+        var previewResult = new PreviewResultImpl();
+        participants.stream()
+                .map(Previewable::getPreviewResult)
+                .flatMap(r -> r.getChanges().stream())
+                .forEach(previewResult::addChange);
+        PreviewMessageProvider messageProvider = participants.stream()
+                .filter(participant -> !participant.getPreviewResult().getChanges().isEmpty())
+                .findFirst()
+                .map(ExtensionUpdateParticipant::getPreviewMessageProvider)
+                .orElse(null);
+        if (previewResult.shouldOpenPreviewDialog() && messageProvider != null) {
+            var dialogResult = new AtomicInteger();
+            Display.getDefault().syncExec(() -> dialogResult
+                    .set(previewResult.open(Display.getDefault().getActiveShell(), messageProvider)));
+            int buttonId = dialogResult.get();
+            if (buttonId == IDialogConstants.PROCEED_ID) {
+                applyChanges(localDependencyStore, monitor);
+            } else if (buttonId == IDialogConstants.ABORT_ID) {
+                monitor.beginTask(Messages.abortingUpdate, IProgressMonitor.UNKNOWN);
+                abortDependenciesUpdate(localDependencyStore);
+                currentRepository.getProjectDependenciesStore().analyze(monitor);
+                return false;
+            }
+        } else {
+            applyChanges(localDependencyStore, monitor);
+        }
+        // No need to trigger project validation when updating Themes or Rest API Extensions
+        shouldValidateProject = dependenciesUpdates.stream()
+                    .map(DependencyUpdate::getCurrentDependency)
+                    .map(Dependency::getType)
+                    .anyMatch(type -> type == null || Objects.equals(type, "jar"));
         return true;
     }
 
@@ -150,8 +145,9 @@ public class UpdateExtensionOperationDecorator {
                 .forEach(du -> {
                     try {
                         localDependencyStore.deleteBackup(du.getCurrentDependency());
-                        if (du.getUpdatedDependency() != null && !Objects.equals(du.getCurrentDependency().getVersion(),
-                                du.getUpdatedDependency().getVersion())) {
+                        if (du.getUpdatedDependency() != null
+                                && (du.isRename() || !Objects.equals(du.getCurrentDependency().getVersion(),
+                                        du.getUpdatedDependency().getVersion()))) {
                             // Nothing to remove if version is the same (updating a snapshot)
                             localDependencyStore.remove(du.getCurrentDependency());
                         }
@@ -225,6 +221,18 @@ public class UpdateExtensionOperationDecorator {
                         BonitaStudioLog.error(e);
                     }
                 });
+    }
+
+    public boolean shouldValidateProject() {
+        return shouldValidateProject;
+    }
+
+    public void validateDependenciesConstraints() {
+        // Run a minimal process validation that only checks dependency consistency
+        Display.getDefault().asyncExec(() -> commandExecutor.executeCommand(BATCH_VALIDATION_COMMAND_ID, Map.of(
+                "dependencyConstraintsOnly", "true",
+                "checkAllModelVersion", "true",
+                "showReport", "false")));
     }
 
 }

@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.operation.extension.participant.config
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -90,16 +91,24 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
 
         previewResult = new PreviewResultImpl();
 
-        var updatedArtifacts = dependenciesUpdates.stream()
+        var updatedArtifacts = new HashSet<Artifact>();
+        var updateRename = new HashSet<Artifact>();
+
+        dependenciesUpdates.stream()
                 .filter(update -> update.getUpdatedDependency() != null)
                 .filter(update -> isJarDependency(update.getUpdatedDependency()))
-                .map(update -> toArtifact(update.getUpdatedDependency()))
-                .collect(Collectors.toSet());
+                .forEach(update -> {
+                    var artifact = toArtifact(update.getUpdatedDependency());
+                    updatedArtifacts.add(artifact);
+                    if (update.isRename()) {
+                        updateRename.add(artifact);
+                    }
+                });
 
         for (var artifact : currentArtifacts.keySet()) {
             var key = new ArtifactKey(artifact);
             updatedArtifacts.stream()
-                    .filter(a -> existsInAnotherVersion(new ArtifactKey(a), key))
+                    .filter(a -> updateRename.contains(a) || existsInAnotherVersion(new ArtifactKey(a), key))
                     .findFirst()
                     .ifPresent(
                             updatedArtifact -> {
@@ -108,7 +117,8 @@ public class ProcessConfigurationUpdateParticipant implements ExtensionUpdatePar
                                 previewResult
                                         .addChange(createUpdateChanges(artifact, updatedArtifact, configurations));
                             });
-            if (updatedArtifacts.stream().noneMatch(a -> existsInSameVersion(new ArtifactKey(a), key)
+            if (updatedArtifacts.stream().noneMatch(a -> updateRename.contains(a)
+                    || existsInSameVersion(new ArtifactKey(a), key)
                     || existsInAnotherVersion(new ArtifactKey(a), key))) {
                 // Artifact has been removed
                 var configurations = configurationCollector

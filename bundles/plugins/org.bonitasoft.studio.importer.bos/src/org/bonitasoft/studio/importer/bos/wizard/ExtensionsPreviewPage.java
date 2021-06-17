@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
@@ -321,13 +322,20 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 .withTooltipProvider(this::resolutionTooltip)
                 .createColumnLabelProvider());
 
+        Predicate<DependencyLookup> editablePredicate = dependencyLookup -> {
+            if (dependencyLookup.getStatus() == Status.LOCAL && dependencyLookup.getFile() != null) {
+                return DependencyLookup.readPomProperties(dependencyLookup.getFile()).isEmpty();
+            }
+            return false;
+        };
+
         TableViewerColumn groupIdColumn = new TableViewerColumn(dependenciesViewer, SWT.FILL);
         groupIdColumn.getColumn().setText(Messages.groupId);
         groupIdColumn.setLabelProvider(new LabelProviderBuilder<DependencyLookup>()
                 .withTextProvider(DependencyLookup::getGroupId)
                 .createColumnLabelProvider());
         groupIdColumn.setEditingSupport(new EditingSupportBuilder<DependencyLookup>(dependenciesViewer)
-                .withCanEditProvider(dep -> dep.getStatus() == Status.LOCAL)
+                .withCanEditProvider(editablePredicate)
                 .withValueProvider(DependencyLookup::getGroupId)
                 .withValueUpdater((dep, value) -> dep.setGroupId((String) value))
                 .create());
@@ -338,7 +346,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 .withTextProvider(DependencyLookup::getArtifactId)
                 .createColumnLabelProvider());
         artifactIdColumn.setEditingSupport(new EditingSupportBuilder<DependencyLookup>(dependenciesViewer)
-                .withCanEditProvider(dep -> dep.getStatus() == Status.LOCAL)
+                .withCanEditProvider(editablePredicate)
                 .withValueProvider(DependencyLookup::getArtifactId)
                 .withValueUpdater((dep, value) -> dep.setArtifactId((String) value))
                 .create());
@@ -350,7 +358,7 @@ public class ExtensionsPreviewPage implements ControlSupplier {
                 .withStatusProvider(dependencyConflictHandler::validate)
                 .createColumnLabelProvider());
         versionColumn.setEditingSupport(new EditingSupportBuilder<DependencyLookup>(dependenciesViewer)
-                .withCanEditProvider(dep -> dep.getStatus() == Status.LOCAL || dep.getConflictVersion() != null)
+                .withCanEditProvider(dep -> editablePredicate.test(dep) || dep.getConflictVersion() != null)
                 .withValueProvider(this::versionValueProvider)
                 .withValueUpdater((dep, value) -> {
                     if (dep.getConflictVersion() != null) {

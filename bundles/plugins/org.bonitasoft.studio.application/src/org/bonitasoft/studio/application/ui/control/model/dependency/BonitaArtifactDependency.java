@@ -34,6 +34,7 @@ public class BonitaArtifactDependency implements Comparable {
     private String scope;
     private List<BonitaArtifactDependencyVersion> versions = new ArrayList();
     private Image iconImage;
+    private boolean localDependency;
 
     private boolean fromMarketplace = true;
 
@@ -151,6 +152,14 @@ public class BonitaArtifactDependency implements Comparable {
 
     public String getScope() {
         return scope;
+    }
+
+    public void setLocalDependency(boolean localDependency) {
+        this.localDependency = localDependency;
+    }
+
+    public boolean isLocalDependency() {
+        return localDependency;
     }
 
     public Dependency toMavenDependency() {

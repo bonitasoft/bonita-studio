@@ -67,6 +67,17 @@ public class UpdateExtensionListener {
         }
     }
 
+    public void updateGav(BonitaArtifactDependency artifact, Dependency dep) {
+        var parameters = new HashMap<String, Object>();
+        parameters.put("groupId", dep.getGroupId());
+        parameters.put("artifactId", dep.getArtifactId());
+        parameters.put("version", dep.getVersion());
+        parameters.put("type", dep.getType());
+        parameters.put("classifier", dep.getClassifier());
+        parameters.put(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, artifact.getArtifactType().name());
+        commandExecutor.executeCommand(ProjectExtensionEditorPart.UPDATE_GAV_COMMAND, parameters);
+    }
+
     private void updateMarketplaceExtension(BonitaArtifactDependency bonitaDep, Dependency dep) {
         String latestVersion = bonitaDep.getLatestCompatibleVersion()
                 .map(BonitaArtifactDependencyVersion::getVersion)
@@ -91,6 +102,9 @@ public class UpdateExtensionListener {
                         throw new InvocationTargetException(e);
                     }
                 });
+                if(updateExtensionDecorator.shouldValidateProject()) {
+                    updateExtensionDecorator.validateDependenciesConstraints();
+                 }
             } catch (InvocationTargetException | InterruptedException e) {
                 errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
@@ -98,8 +112,7 @@ public class UpdateExtensionListener {
     }
 
     private void updateOtherExtension(BonitaArtifactDependency artifact, Dependency dep) {
-        boolean localExtension = repositoryAccessor.getCurrentRepository().getLocalDependencyStore()
-                .isLocalDependency(dep);
+        boolean localExtension = artifact.isLocalDependency();
         var parameters = new HashMap<String, Object>();
         parameters.put("groupId", dep.getGroupId());
         parameters.put("artifactId", dep.getArtifactId());

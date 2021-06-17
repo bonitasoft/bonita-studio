@@ -25,12 +25,14 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -127,9 +129,10 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
         final DatabaseConnectorPropertiesFileStore fileStore = store.getChild(
                 implementation.getDefinitionId() + "." + DatabaseConnectorPropertiesRepositoryStore.PROPERTIES_EXT,
                 true);
-       
+
         if (fileStore != null) {
-            DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+            DependencyRepositoryStore depStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(DependencyRepositoryStore.class);
             final String defaultDriver = fileStore.getDefault();
             final boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
             final Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
@@ -149,7 +152,7 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
                 }
                 if (!exists) {
                     if (jar.equals(defaultDriver)
-                            && autoAddDriver 
+                            && autoAddDriver
                             && depStore.findDependencyByName(defaultDriver).isPresent()) {
                         final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
                         depFragment.setExported(true);
@@ -162,6 +165,11 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
                 }
             }
         }
+    }
+
+    @Override
+    protected SourceRepositoryStore getSourcerepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
 
     @Override

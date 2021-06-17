@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -93,14 +94,14 @@ public class ImportExtensionPage implements ControlSupplier {
         MANUAL, FILE
     }
 
-    private Dependency dependency;
+    protected Dependency dependency;
     private SelectObservableValue<ImportMode> importModeObservable;
     private Composite manualComposite;
     private Composite archiveComposite;
     private String filePath;
     private TextWidget filePathText;
     private MavenRepositoryRegistry mavenRepositoryRegistry;
-    private IWizardContainer wizardContainer;
+    protected IWizardContainer wizardContainer;
     private IObservableValue<Dependency> dependencyObservable;
     private IObservableValue<Boolean> editableDependencyObservable;
     private IObservableValue<DependencyLookup> dependencyLookupObservable;
@@ -116,8 +117,9 @@ public class ImportExtensionPage implements ControlSupplier {
             IStatus.class);
     private Optional<Dependency> extensionToUpdate;
     private Optional<Boolean> isLocal;
-    private Composite mainComposite;
+    protected Composite mainComposite;
     private ExtensionTypeHandler extensionTypeHandler;
+    private IObservableValue<String> filePathObserveValue;
 
     public ImportExtensionPage(MavenRepositoryRegistry mavenRepositoryRegistry,
             Model mavenModel,
@@ -137,14 +139,14 @@ public class ImportExtensionPage implements ControlSupplier {
             dependency = dep.clone();
             dependency.setVersion(null);
         });
+
+        this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
+        this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
     }
 
     @Override
     public Control createControl(Composite parent, IWizardContainer wizardContainer, DataBindingContext ctx) {
         this.wizardContainer = wizardContainer;
-
-        this.dependencyObservable = PojoProperties.value("dependency", Dependency.class).observe(this);
-        this.dependencyLookupObservable = PojoProperties.value("dependencyLookup", DependencyLookup.class).observe(this);
 
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults()
@@ -167,7 +169,7 @@ public class ImportExtensionPage implements ControlSupplier {
         importModeObservable.addValueChangeListener(e -> {
             if (e.diff.getNewValue() == ImportMode.MANUAL) {
                 editableDependencyObservable.setValue(true);
-            } else if (dependencyLookup != null && dependencyLookup.getStatus() == Status.FOUND) {
+            } else if (isMavenDependency() || (dependencyLookup != null && dependencyLookup.getStatus() == Status.FOUND)) {
                 editableDependencyObservable.setValue(false);
             }
             ctx.updateModels();
@@ -241,7 +243,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         fileBrowserComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        var filePathObserveValue = PojoProperties
+        filePathObserveValue = PojoProperties
                 .value("filePath", String.class)
                 .observe(this);
         filePathObserveValue.addValueChangeListener(e -> analyzeFile(e, dbc));
@@ -300,46 +302,52 @@ public class ImportExtensionPage implements ControlSupplier {
         if (path != null) {
             File file = new File(path);
             if (file.exists()) {
-                try (InputStreamSupplier iss = new FileInputStreamSupplier(file)) {
-                    FileDependencyLookupOperation operation = new FileDependencyLookupOperation(iss);
-                    wizardContainer.run(true, false, mavenRepositoryRegistry.updateRegistry());
-                    mavenRepositoryRegistry.getGlobalRepositories().stream()
-                            .map(IRepository::getUrl)
-                            .forEach(operation::addRemoteRespository);
-                    wizardContainer.run(true, false, monitor -> {
-                        monitor.beginTask("", IProgressMonitor.UNKNOWN);
-                        operation.run(monitor);
-                    });
-                    dependencyLookup = operation.getResult();
-                    if (file.getName().endsWith(".zip")) {
-                        dependencyLookup.setType("zip");
-                    }
-                    dependencyLookupObservable.setValue(dependencyLookup);
-                    Dependency parsedDependency = dependencyLookup.toMavenDependency();
-                    if (extensionToUpdate.isEmpty()) {
-                        dependencyObservable.setValue(parsedDependency);
-                    } else { // Update mode -> Only version can be updated
-                        versionObservable.setValue(parsedDependency.getVersion());
-                    }
-                    Image image = Pics
-                            .getImageDescriptor(
-                                    dependencyLookup.getStatus() == Status.FOUND ? PicsConstants.checkmark
-                                            : PicsConstants.warning)
-                            .createImage();
-                    String message = dependencyLookup.getStatus() == Status.FOUND
-                            ? String.format(Messages.resolvedDependency, dependencyLookup.getRepository())
-                            : Messages.cannotResolveDependencyInstalledLocally;
-                    filePathText.setMessage(message, image);
-                    editableDependencyObservable.setValue(dependencyLookup.getStatus() != Status.FOUND);
-                    dbc.getBindings().forEach(Binding::validateTargetToModel);
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
+                createDependencyLookup(file);
+                Dependency parsedDependency = dependencyLookup.toMavenDependency();
+                if (extensionToUpdate.isEmpty()) {
+                    dependencyObservable.setValue(parsedDependency);
+                } else { // Update mode -> Only version can be updated 
+                    versionObservable.setValue(parsedDependency.getVersion());
                 }
+                Image image = Pics
+                        .getImageDescriptor(
+                                dependencyLookup.getStatus() == Status.FOUND ? PicsConstants.checkmark
+                                        : PicsConstants.warning)
+                        .createImage();
+                String message = dependencyLookup.getStatus() == Status.FOUND
+                        ? String.format(Messages.resolvedDependency, dependencyLookup.getRepository())
+                        : Messages.cannotResolveDependencyInstalledLocally;
+                filePathText.setMessage(message, image);
+                editableDependencyObservable
+                        .setValue(!isMavenDependency() && (dependencyLookup.getStatus() != Status.FOUND));
+                dbc.getBindings().forEach(Binding::validateTargetToModel);
+
             }
         }
     }
 
-    private void createMavenCoordinatesGroup(Composite parent, DataBindingContext ctx) {
+    protected void createDependencyLookup(File file) {
+        try (InputStreamSupplier iss = new FileInputStreamSupplier(file)) {
+            FileDependencyLookupOperation operation = new FileDependencyLookupOperation(iss);
+            wizardContainer.run(true, false, mavenRepositoryRegistry.updateRegistry());
+            mavenRepositoryRegistry.getGlobalRepositories().stream()
+                    .map(IRepository::getUrl)
+                    .forEach(operation::addRemoteRespository);
+            wizardContainer.run(true, false, monitor -> {
+                monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                operation.run(monitor);
+            });
+            dependencyLookup = operation.getResult();
+            if (file.getName().endsWith(".zip")) {
+                dependencyLookup.setType("zip");
+            }
+            dependencyLookupObservable.setValue(dependencyLookup);
+        } catch (Exception e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected void createMavenCoordinatesGroup(Composite parent, DataBindingContext ctx) {
         Group dependencyGroup = new Group(parent, SWT.NONE);
         dependencyGroup.setText(Messages.dependencyCoordinate);
         dependencyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -348,14 +356,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 .create());
 
         editableDependencyObservable = new WritableValue<>(true, Boolean.class);
-        var visibleDependencyObservable = new ComputedValue<Boolean>() {
-
-            @Override
-            protected Boolean calculate() {
-                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null;
-            }
-
-        };
+        var visibleDependencyObservable = createGavVisibleComputedValue();
 
         // We do not want to translate the maven property names, it would lead to too many confusions.
         IObservableValue<String> groupIdObservable = PojoProperties.value("groupId", String.class)
@@ -367,8 +368,9 @@ public class ImportExtensionPage implements ControlSupplier {
                 true,
                 List.of(new MavenIdValidator("Group ID")));
         groupIdText.setFocus();
+        Supplier<Boolean> gavEditableSupplier = createGavEditableSupplier();
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(gavEditableSupplier)
                 .build(), groupIdText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -382,7 +384,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 true,
                 List.of(new MavenIdValidator("Artifact ID")));
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(gavEditableSupplier)
                 .build(), artifactIdText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -407,7 +409,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 false,
                 List.of());
         ctx.bindValue(new ComputedValueBuilder<Boolean>()
-                .withSupplier(() -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue())
+                .withSupplier(gavEditableSupplier)
                 .build(), classifierText.observeEnable(),
                 updateValueStrategy().create(),
                 neverUpdateValueStrategy().create());
@@ -430,6 +432,27 @@ public class ImportExtensionPage implements ControlSupplier {
                 neverUpdateValueStrategy().create());
 
         createDependencyAlreadyExistsComposite(dependencyGroup, ctx);
+    }
+
+    protected ComputedValue<Boolean> createGavVisibleComputedValue() {
+        return new ComputedValue<>() {
+
+            @Override
+            protected Boolean calculate() {
+                return importModeObservable.getValue() == ImportMode.MANUAL || dependencyLookupObservable.getValue() != null;
+            }
+
+        };
+    }
+
+    protected Supplier<Boolean> createGavEditableSupplier() {
+        return () -> !extensionToUpdate.isPresent() && editableDependencyObservable.getValue();
+    }
+
+    private boolean isMavenDependency() {
+        return Objects.equals(importModeObservable.getValue(), ImportMode.FILE)
+                && filePathObserveValue.getValue() != null
+                && DependencyLookup.readPomProperties(new File(filePathObserveValue.getValue())).isPresent();
     }
 
     private void createDependencyAlreadyExistsComposite(Composite parent, DataBindingContext ctx) {
@@ -479,7 +502,7 @@ public class ImportExtensionPage implements ControlSupplier {
                 neverUpdateValueStrategy().create());
     }
 
-    private IStatus computeDependencyAlreadyExistsStatus() {
+    protected IStatus computeDependencyAlreadyExistsStatus() {
         if (sameExistingDependency.getValue() != null && sameExistingDependency.getValue().isPresent()) {
             String existingVersion = sameExistingDependency.getValue().get().getVersion();
             if (Objects.equals(existingVersion, versionObservable.getValue())) {
