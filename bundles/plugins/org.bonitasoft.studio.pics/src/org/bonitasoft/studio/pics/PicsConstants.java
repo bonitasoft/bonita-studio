@@ -460,4 +460,8 @@ public class PicsConstants {
     public static String findUsages = "projectExtensions/find_usages.png";
     public static String findUsagesHot = "projectExtensions/find_usages_hot.png";
 
+    public static String local = "projectExtensions/local.png";
+    public static String remote = "projectExtensions/remote.png";
+    public static String marketplace = "projectExtensions/marketplace.png";
+
 }

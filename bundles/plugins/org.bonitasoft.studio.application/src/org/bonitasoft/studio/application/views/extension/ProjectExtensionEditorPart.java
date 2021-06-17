@@ -106,6 +106,7 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
 
     public static final String OPEN_MARKETPLACE_COMMAND = "org.bonitasoft.studio.application.marketplace.command";
     public static final String IMPORT_EXTENSION_COMMAND = "org.bonitasoft.studio.application.import.extension.command";
+    public static final String UPDATE_GAV_COMMAND = "org.bonitasoft.studio.application.update.gav.command";
     private static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
     private RepositoryAccessor repositoryAccessor;
@@ -134,8 +135,9 @@ public class ProjectExtensionEditorPart extends EditorPart implements EventHandl
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
         mavenHelper = new MavenProjectHelper();
         ctx = new DataBindingContext();
+        AbstractRepository currentRepository = repositoryAccessor.getCurrentRepository();
         bonitaArtifactDependencyConverter = new BonitaArtifactDependencyConverter(
-                repositoryAccessor.getCurrentRepository().getProjectDependenciesStore());
+                currentRepository.getProjectDependenciesStore(), currentRepository.getLocalDependencyStore());
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
     }
 

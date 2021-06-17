@@ -57,7 +57,7 @@ public class RemoveExtensionListener {
             var progressService = PlatformUI.getWorkbench().getProgressService();
             RemoveDependencyOperation removeDependencyOperation = new RemoveDependencyOperation(dep);
             var updateExtensionDecorator = updateExtensionOperationDecoratorFactory
-                    .create(List.of(new DependencyUpdate(dep, null)));
+                    .create(List.of(new DependencyUpdate(dep, "")));
             try {
                 progressService.run(true, false, monitor -> {
                     try {
@@ -69,12 +69,13 @@ public class RemoveExtensionListener {
                         throw new InvocationTargetException(e);
                     }
                 });
-               
+                if (updateExtensionDecorator.shouldValidateProject()) {
+                    updateExtensionDecorator.validateDependenciesConstraints();
+                }
             } catch (InvocationTargetException | InterruptedException e) {
                 errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
             }
         }
     }
-
 
 }

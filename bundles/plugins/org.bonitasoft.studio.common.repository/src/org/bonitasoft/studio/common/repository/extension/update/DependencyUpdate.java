@@ -15,18 +15,27 @@
 package org.bonitasoft.studio.common.repository.extension.update;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.common.Strings;
 
 public class DependencyUpdate {
 
     private Dependency currentDependency;
     private Dependency updatedDependency;
+    private boolean rename;
 
     public DependencyUpdate(Dependency currentDependency, String newVersion) {
         this.currentDependency = currentDependency;
-        if (newVersion != null) {
+        if (!Strings.isNullOrEmpty(newVersion)) {
             this.updatedDependency = currentDependency.clone();
             this.updatedDependency.setVersion(newVersion);
+            this.rename = false;
         }
+    }
+
+    public DependencyUpdate(Dependency currentDependency, Dependency updatedDependency, boolean rename) {
+        this.currentDependency = currentDependency;
+        this.updatedDependency = updatedDependency;
+        this.rename = rename;
     }
 
     public Dependency getCurrentDependency() {
@@ -35,5 +44,9 @@ public class DependencyUpdate {
 
     public Dependency getUpdatedDependency() {
         return updatedDependency;
+    }
+
+    public boolean isRename() {
+        return rename;
     }
 }

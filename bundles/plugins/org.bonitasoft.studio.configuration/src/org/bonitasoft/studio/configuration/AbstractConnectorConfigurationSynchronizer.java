@@ -24,9 +24,12 @@ import java.util.Set;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -58,15 +61,19 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
     /*
      * (non-Javadoc)
-     * @see org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer#synchronize(org.eclipse.emf.common.command.CompoundCommand)
+     * @see
+     * org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer#synchronize(org.eclipse.emf.common.command.
+     * CompoundCommand)
      */
     @Override
-    public void synchronize(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc, final EditingDomain editingDomain) {
+    public void synchronize(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc,
+            final EditingDomain editingDomain) {
         addNewConnectorDefinition(configuration, process, cc, editingDomain);
         removeConnectorDefinitions(configuration, process, cc, editingDomain);
     }
 
-    protected void addNewConnectorDefinition(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc,
+    protected void addNewConnectorDefinition(final Configuration configuration, final AbstractProcess process,
+            final CompoundCommand cc,
             final EditingDomain editingDomain) {
         final List<Connector> connectors = getExistingConnectors(process);
         final List<Pair<String, String>> definitions = getDefinitions(connectors);
@@ -88,16 +95,17 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                 newAssociation.setDefinitionVersion(defVersion);
                 newAssociation.setType(getFragmentContainerId());
                 editingDomain.getCommandStack().execute(
-                        AddCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, newAssociation));
+                        AddCommand.create(editingDomain, configuration,
+                                ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, newAssociation));
                 updateAssociation(configuration, newAssociation, cc, editingDomain);
             }
         }
     }
 
     private List<Pair<String, String>> getDefinitions(final List<Connector> connectors) {
-        final List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+        final List<Pair<String, String>> result = new ArrayList<>();
         for (final Connector c : connectors) {
-            final Pair<String, String> def = new Pair<String, String>(c.getDefinitionId(), c.getDefinitionVersion());
+            final Pair<String, String> def = new Pair<>(c.getDefinitionId(), c.getDefinitionVersion());
             if (!result.contains(def)) {
                 result.add(def);
             }
@@ -107,9 +115,11 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
     protected abstract List<Connector> getExistingConnectors(AbstractProcess process);
 
-    protected void updateAssociation(final Configuration configuration, final DefinitionMapping association, final CompoundCommand cc,
+    protected void updateAssociation(final Configuration configuration, final DefinitionMapping association,
+            final CompoundCommand cc,
             final EditingDomain editingDomain) {
-        final List<ConnectorImplementation> implementations = getAllImplementations(association.getDefinitionId(), association.getDefinitionVersion());
+        final List<ConnectorImplementation> implementations = getAllImplementations(association.getDefinitionId(),
+                association.getDefinitionVersion());
         ConnectorImplementation implementation = null;
         String implID = null;
         String implVersion = null;
@@ -140,9 +150,11 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             }
         }
         editingDomain.getCommandStack().execute(
-                SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_ID, implID));
+                SetCommand.create(editingDomain, association,
+                        ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_ID, implID));
         editingDomain.getCommandStack().execute(
-                SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion));
+                SetCommand.create(editingDomain, association,
+                        ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion));
         if (implementation != null) {
             updateConnectorDependencies(configuration, association, implementation, cc, editingDomain, false);
         }
@@ -153,7 +165,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
     protected abstract DefinitionResourceProvider getDefinitionResourceProvider();
 
     public void updateConnectorDependencies(final Configuration configuration, final DefinitionMapping association,
-            final ConnectorImplementation implementation, final CompoundCommand cc, final EditingDomain editingDomain, final boolean forceDriver) {
+            final ConnectorImplementation implementation, final CompoundCommand cc, final EditingDomain editingDomain,
+            final boolean forceDriver) {
         Assert.isNotNull(implementation);
         final String id = implementation.getImplementationId();
         final String version = implementation.getImplementationVersion();
@@ -164,7 +177,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
         for (final FragmentContainer fc : container.getChildren()) {
             if (fc.getId().equals(implementationId)) {
-                final Set<Fragment> toRemove = new HashSet<Fragment>();
+                final Set<Fragment> toRemove = new HashSet<>();
                 for (final Fragment depFragment : fc.getFragments()) {
                     if (!jarDependencies(implementation).contains(depFragment.getValue())
                             && !implementationId.equals(depFragment.getValue())) {
@@ -173,7 +186,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                 }
                 if (!toRemove.isEmpty()) {
                     editingDomain.getCommandStack().execute(
-                            RemoveCommand.create(editingDomain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, toRemove));
+                            RemoveCommand.create(editingDomain, fc,
+                                    ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, toRemove));
                 }
             }
         }
@@ -189,7 +203,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             final FragmentContainer connectorContainer = ConfigurationFactory.eINSTANCE.createFragmentContainer();
             connectorContainer.setId(implementationId);
             editingDomain.getCommandStack().execute(
-                    AddCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, connectorContainer));
+                    AddCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN,
+                            connectorContainer));
             updateJarDependencies(connectorContainer, implementation, editingDomain, cc, forceDriver);
         }
 
@@ -204,7 +219,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         return null;
     }
 
-    protected void updateJarDependencies(final FragmentContainer connectorContainer, final ConnectorImplementation implementation,
+    protected void updateJarDependencies(final FragmentContainer connectorContainer,
+            final ConnectorImplementation implementation,
             final EditingDomain editingDomain, final CompoundCommand cc, final boolean forceDriver) {
         for (final String jar : jarDependencies(implementation)) {
             boolean exists = false;
@@ -217,39 +233,59 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             if (!exists) {
                 final Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment();
                 depFragment.setExported(true);
-                depFragment.setKey(implementation.getImplementationId() + " -- " + implementation.getImplementationVersion());
+                depFragment
+                        .setKey(implementation.getImplementationId() + " -- " + implementation.getImplementationVersion());
                 depFragment.setValue(jar);
                 depFragment.setType(getFragmentContainerId());
                 editingDomain.getCommandStack().execute(
-                        AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment));
+                        AddCommand.create(editingDomain, connectorContainer,
+                                ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment));
             }
         }
     }
 
     protected List<String> jarDependencies(final ConnectorImplementation implementation) {
         final AbstractConnectorImplRepositoryStore<EMFFileStore> store = getImplementationStore();
+        SourceRepositoryStore connectorSourceStore = getSourcerepositoryStore();
         final IRepositoryFileStore fileStore = store.getImplementationFileStore(implementation.getImplementationId(),
                 implementation.getImplementationVersion());
-        final List<String> dependencies = implementation.getJarDependencies() == null ? new ArrayList<String>() : newArrayList(implementation
-                .getJarDependencies()
-                .getJarDependency());
-        if (fileStore != null && fileStore.canBeShared()) {
+        final List<String> dependencies = implementation.getJarDependencies() == null ? new ArrayList<>()
+                : newArrayList(implementation
+                        .getJarDependencies()
+                        .getJarDependency());
+
+        if (fileStore != null && fileStore.canBeShared() && hasSources(connectorSourceStore, fileStore)) {
             final String implementationJar = NamingUtils.toConnectorImplementationJarName(implementation);
             if (!dependencies.contains(implementationJar)) {
                 dependencies.add(implementationJar);
             }
-
         }
         return dependencies;
     }
 
+    protected abstract SourceRepositoryStore getSourcerepositoryStore();
+
+    private boolean hasSources(SourceRepositoryStore connectorSourceStore, IRepositoryFileStore implementation) {
+        try {
+            ConnectorImplementation impl = (ConnectorImplementation) implementation.getContent();
+            final String className = impl.getImplementationClassname();
+            final String packageName = className.substring(0, className.lastIndexOf("."));
+            return connectorSourceStore.getChild(packageName, true) != null;
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
+    }
+
     protected abstract AbstractConnectorImplRepositoryStore<EMFFileStore> getImplementationStore();
 
-    private void removeConnectorDefinitions(final Configuration configuration, final AbstractProcess process, final CompoundCommand cc,
+    private void removeConnectorDefinitions(final Configuration configuration, final AbstractProcess process,
+            final CompoundCommand cc,
             final EditingDomain editingDomain) {
         final List<Connector> connectors = getExistingConnectors(process);
-        final List<DatabaseKPIBinding> kpis = ModelHelper.getAllItemsOfType(process, KpiPackage.Literals.DATABASE_KPI_BINDING);
-        final Set<DefinitionMapping> toRemove = new HashSet<DefinitionMapping>();
+        final List<DatabaseKPIBinding> kpis = ModelHelper.getAllItemsOfType(process,
+                KpiPackage.Literals.DATABASE_KPI_BINDING);
+        final Set<DefinitionMapping> toRemove = new HashSet<>();
         for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
             if (getFragmentContainerId().equals(association.getType())) {
                 final String defId = association.getDefinitionId();
@@ -269,7 +305,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
                 if (!exists) {
                     toRemove.add(association);
                     removeConnectorDependencies(configuration,
-                            NamingUtils.toConnectorImplementationFilename(association.getImplementationId(), association.getImplementationVersion(), false),
+                            NamingUtils.toConnectorImplementationFilename(association.getImplementationId(),
+                                    association.getImplementationVersion(), false),
                             cc, editingDomain);
                 }
 
@@ -277,7 +314,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         }
         if (!toRemove.isEmpty()) {
             editingDomain.getCommandStack().execute(
-                    RemoveCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, toRemove));
+                    RemoveCommand.create(editingDomain, configuration,
+                            ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, toRemove));
         }
         final FragmentContainer container = getContainer(configuration);
         FragmentContainer toRemove2 = null;
@@ -285,14 +323,16 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             boolean exists = false;
             for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
                 if (fc.getId().equals(
-                        NamingUtils.toConnectorImplementationFilename(association.getImplementationId(), association.getImplementationVersion(), false))) {
+                        NamingUtils.toConnectorImplementationFilename(association.getImplementationId(),
+                                association.getImplementationVersion(), false))) {
                     exists = true;
                 }
             }
             if (!exists) {
                 toRemove2 = fc;
                 if (toRemove2 != null) {
-                    cc.append(RemoveCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, toRemove2));
+                    cc.append(RemoveCommand.create(editingDomain, container,
+                            ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, toRemove2));
                 }
             }
 
@@ -300,7 +340,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
     }
 
-    public void removeConnectorDependencies(final Configuration configuration, final String implementationId, final CompoundCommand cc,
+    public void removeConnectorDependencies(final Configuration configuration, final String implementationId,
+            final CompoundCommand cc,
             final EditingDomain editingDomain) {
         final FragmentContainer container = getContainer(configuration);
         Assert.isNotNull(container);
@@ -313,7 +354,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         }
         if (toRemove != null) {
             editingDomain.getCommandStack().execute(
-                    RemoveCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, toRemove));
+                    RemoveCommand.create(editingDomain, container,
+                            ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, toRemove));
         }
     }
 

@@ -61,11 +61,11 @@ import org.eclipse.swt.widgets.Shell;
 public class ImportExtensionHandler {
 
     public static final String EXTENSION_TYPE_PARAMETER = "extensionType";
-    private MavenProjectHelper mavenProjectHelper;
-    private RepositoryAccessor repositoryAccessor;
-    private MavenRepositoryRegistry mavenRepositoryRegistry;
-    private ExceptionDialogHandler errorDialogHandler;
-    private CommandExecutor commandExecutor;
+    protected MavenProjectHelper mavenProjectHelper;
+    protected RepositoryAccessor repositoryAccessor;
+    protected MavenRepositoryRegistry mavenRepositoryRegistry;
+    protected ExceptionDialogHandler errorDialogHandler;
+    protected CommandExecutor commandExecutor;
 
     @Inject
     public ImportExtensionHandler(RepositoryAccessor repositoryAccessor,
@@ -124,7 +124,8 @@ public class ImportExtensionHandler {
                 .open(activeShell, org.bonitasoft.studio.ui.i18n.Messages.importLabel);
     }
 
-    private Optional<Dependency> createDependency(String groupId, String artifactId, String version, String classifier,
+    protected Optional<Dependency> createDependency(String groupId, String artifactId, String version,
+            String classifier,
             String type) {
         if (groupId == null) {
             return Optional.empty();
@@ -138,7 +139,7 @@ public class ImportExtensionHandler {
         return Optional.of(dependency);
     }
 
-    private Model loadMavenModel(MavenProjectHelper mavenProjectHelper, AbstractRepository currentRepository) {
+    protected Model loadMavenModel(MavenProjectHelper mavenProjectHelper, AbstractRepository currentRepository) {
         try {
             return mavenProjectHelper.getMavenModel(currentRepository.getProject());
         } catch (CoreException e) {
@@ -174,7 +175,9 @@ public class ImportExtensionHandler {
                         throw new InvocationTargetException(e);
                     }
                 });
-
+                if (updateExtensionDecorator.shouldValidateProject()) {
+                    updateExtensionDecorator.validateDependenciesConstraints();
+                }
             }
             return result;
         } catch (InvocationTargetException | InterruptedException e) {
@@ -183,7 +186,7 @@ public class ImportExtensionHandler {
         }
     }
 
-    private Optional<Boolean> doExtensionUpdate(IWizardContainer container,
+    protected Optional<Boolean> doExtensionUpdate(IWizardContainer container,
             ImportExtensionPage importExtensionPage,
             org.bonitasoft.studio.common.repository.model.IRepository currentRepository,
             Model mavenModel,
@@ -210,7 +213,7 @@ public class ImportExtensionHandler {
         return result;
     }
 
-    private Optional<Boolean> fileImport(IWizardContainer container,
+    protected Optional<Boolean> fileImport(IWizardContainer container,
             Dependency dependency,
             DependencyLookup dependencyLookup,
             MavenRepositoryRegistry mavenRepositoryRegistry,
@@ -279,6 +282,9 @@ public class ImportExtensionHandler {
                     addDependency(mavenModel, dependency, monitor);
                     updateExtensionDecorator.postUpdate(monitor);
                 });
+                if (updateExtensionDecorator.shouldValidateProject()) {
+                    updateExtensionDecorator.validateDependenciesConstraints();
+                }
             } else {
                 MessageDialog.openError(container.getShell(), Messages.addDependenciesError,
                         String.format(Messages.dependencyNotFoundWhenImporting, gav));

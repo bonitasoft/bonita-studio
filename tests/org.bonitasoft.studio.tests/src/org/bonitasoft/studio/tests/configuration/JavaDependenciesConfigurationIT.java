@@ -56,7 +56,7 @@ public class JavaDependenciesConfigurationIT {
     public void should_have_connector_dependencies() throws Exception {
         new BotApplicationWorkbenchWindow(bot).importBOSArchive()
                 .setArchive(
-                        JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithoutDependencies-1.0.bos"))
+                        JavaDependenciesConfigurationIT.class.getResource("CustomConnectorWithSources-1.0.bos"))
                 .currentRepository()
                 .next()
                 .next()
@@ -64,8 +64,7 @@ public class JavaDependenciesConfigurationIT {
 
         final BotConfigureDialog configureBot = new BotApplicationWorkbenchWindow(bot).configure();
         final List<String> items = configureBot.selectJavaDependencies().selectTreeView().items();
-        assertThat(items).contains(Messages.others,
-                Messages.connector);
+        assertThat(items).contains(Messages.connector, Messages.others);
         configureBot.cancel();
     }
 

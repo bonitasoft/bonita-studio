@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
+import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
@@ -31,20 +32,20 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.identity.actors.repository.ActorFilterImplRepositoryStore;
+import org.bonitasoft.studio.identity.actors.repository.ActorFilterSourceRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 
-
 /**
  * @author Romain Bioteau
- *
  */
-public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConfigurationSynchronizer implements IConfigurationSynchronizer {
+public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConfigurationSynchronizer
+        implements IConfigurationSynchronizer {
 
     @Override
     public String getFragmentContainerId() {
-        return FragmentTypes.ACTOR_FILTER ;
+        return FragmentTypes.ACTOR_FILTER;
     }
 
     @Override
@@ -53,15 +54,22 @@ public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConf
     }
 
     @Override
-    protected List<ConnectorImplementation> getAllImplementations(String defId,String defVersion) {
-        final ActorFilterImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
-        return store.getImplementations(defId,defVersion) ;
+    protected List<ConnectorImplementation> getAllImplementations(String defId, String defVersion) {
+        final ActorFilterImplRepositoryStore store = RepositoryManager.getInstance()
+                .getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        return store.getImplementations(defId, defVersion);
     }
 
     @Override
     protected DefinitionResourceProvider getDefinitionResourceProvider() {
-        final IRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
-        return DefinitionResourceProvider.getInstance(defStore, IdentityPlugin.getDefault().getBundle()) ;
+        final IRepositoryStore defStore = RepositoryManager.getInstance()
+                .getRepositoryStore(ActorFilterDefRepositoryStore.class);
+        return DefinitionResourceProvider.getInstance(defStore, IdentityPlugin.getDefault().getBundle());
+    }
+
+    @Override
+    protected SourceRepositoryStore getSourcerepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
     /*
@@ -70,7 +78,8 @@ public class ActorFiltersConfigurationSynchronizer extends AbstractConnectorConf
      */
     @Override
     protected AbstractConnectorImplRepositoryStore<EMFFileStore> getImplementationStore() {
-        return (AbstractConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        return (AbstractConnectorImplRepositoryStore) RepositoryManager.getInstance()
+                .getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 
 }

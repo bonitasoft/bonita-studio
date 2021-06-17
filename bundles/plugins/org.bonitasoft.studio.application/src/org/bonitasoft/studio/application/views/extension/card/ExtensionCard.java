@@ -28,7 +28,10 @@ import org.bonitasoft.studio.application.views.extension.RemoveExtensionListener
 import org.bonitasoft.studio.application.views.extension.UpdateExtensionListener;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.extension.ExtensionActionRegistry;
+import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -53,12 +56,15 @@ public class ExtensionCard extends Composite {
     protected BonitaArtifactDependency bonitaDep;
     protected CLabel titleLabel;
 
+    private LocalDependenciesStore localDependencyStore;
+
     public ExtensionCard(Composite parent,
             Dependency dep,
             BonitaArtifactDependency bonitaDep) {
         super(parent, SWT.BORDER);
         this.dep = dep;
         this.bonitaDep = bonitaDep;
+        localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().getLocalDependencyStore();
 
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -77,7 +83,7 @@ public class ExtensionCard extends Composite {
 
     private void createContent() {
         createTitleComposite(this);
-        createTypeLabel(this);
+        createTypeComposite(this);
         createIcon(this);
         createDescriptionLabel(this);
 
@@ -89,20 +95,25 @@ public class ExtensionCard extends Composite {
     }
 
     private void createToolbar(Composite parent) {
+        var mainToolbarComposite = new Composite(parent, SWT.NONE);
+        mainToolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        mainToolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        mainToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
         var action = ArtifactType.REST_API.equals(bonitaDep.getArtifactType())
                 ? ExtensionActionRegistry.getInstance().getAction(REST_API_EXTENSION_ACTION_ID)
                 : ExtensionActionRegistry.getInstance()
                         .getAction(String.format("%s:%s", dep.getGroupId(), dep.getArtifactId()));
         if (action != null) {
-            var leftToolbarComposite = new Composite(parent, SWT.NONE);
+            var leftToolbarComposite = new Composite(mainToolbarComposite, SWT.NONE);
             leftToolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
             leftToolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
             leftToolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
             action.fill(leftToolbarComposite);
         }
 
-        var toolbarComposite = new Composite(parent, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        var toolbarComposite = new Composite(mainToolbarComposite, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
         toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL)
                 .span(action != null ? 1 : 2, 1).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
@@ -120,6 +131,17 @@ public class ExtensionCard extends Composite {
                     .onClick(e -> updateListeners.stream().forEach(l -> l.updateExtension(bonitaDep, dep)))
                     .createIn(toolbarComposite);
         } else if (!bonitaDep.isFromMarketplace()) {
+            if (canEditMavenCoordinates(bonitaDep)) {
+                new DynamicButtonWidget.Builder()
+                        .withText(Messages.editMavenCoordinates)
+                        .withTooltipText(Messages.editMavenCoordinatesTooltip)
+                        .withImage(Pics.getImage(PicsConstants.edit_simple))
+                        .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
+                        .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                        .onClick(e -> updateListeners.stream().forEach(l -> l.updateGav(bonitaDep, dep)))
+                        .createIn(toolbarComposite);
+            }
+
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateExtensionFromCard(bonitaDep.getArtifactId()))
                     .withText(Messages.upgradeExtension)
@@ -142,6 +164,14 @@ public class ExtensionCard extends Composite {
                 .createIn(toolbarComposite);
     }
 
+    protected boolean canEditMavenCoordinates(BonitaArtifactDependency bonitaDep) {
+        if (bonitaDep.isLocalDependency()) {
+            return DependencyLookup.readPomProperties(localDependencyStore.dependencyPath(dep)
+                    .resolve(LocalDependenciesStore.dependencyFileName(dep)).toFile()).isEmpty();
+        }
+        return false;
+    }
+
     protected void createDescriptionLabel(Composite parent) {
         var description = new Label(parent, SWT.WRAP);
         description.setLayoutData(
@@ -159,12 +189,30 @@ public class ExtensionCard extends Composite {
         iconLabel.setImage(bonitaDep.getIconImage());
     }
 
-    protected void createTypeLabel(Composite parent) {
-        var type = new Label(parent, SWT.NONE);
-        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
+    protected void createTypeComposite(Composite parent) {
+        var composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().create());
+        composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        var type = new Label(composite, SWT.NONE);
+        type.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         type.setText(bonitaDep.getArtifactType().getName() + " ");
         type.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
         type.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
+
+        var icon = new Label(composite, SWT.NONE);
+        icon.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
+        if (bonitaDep.isFromMarketplace()) {
+            icon.setImage(Pics.getImage(PicsConstants.marketplace));
+            icon.setToolTipText(Messages.marketplaceDependencyTooltip);
+        } else if (bonitaDep.isLocalDependency()) {
+            icon.setImage(Pics.getImage(PicsConstants.local));
+            icon.setToolTipText(Messages.localDependencyTooltip);
+        } else {
+            icon.setImage(Pics.getImage(PicsConstants.remote));
+            icon.setToolTipText(Messages.remoteDependencyTooltip);
+        }
     }
 
     protected void createTitleComposite(Composite parent) {

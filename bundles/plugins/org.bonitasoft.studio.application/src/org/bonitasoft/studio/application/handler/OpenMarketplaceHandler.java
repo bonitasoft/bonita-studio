@@ -125,6 +125,9 @@ public class OpenMarketplaceHandler {
             BonitaStudioLog.error(e);
             MessageDialog.openError(container.getShell(), Messages.addDependenciesError, e.getMessage());
         }
+        if (updateExtensionDecorator.shouldValidateProject()) {
+            updateExtensionDecorator.validateDependenciesConstraints();
+        }
         return Optional.of(true);
     }
 

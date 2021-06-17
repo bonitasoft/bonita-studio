@@ -21,10 +21,8 @@ import org.eclipse.core.runtime.IStatus;
 public class ActorFilterExtensionTypeValidator extends ConnectorExtensionTypeValidator {
 
     @Override
-    protected IStatus createStatus(boolean isConnector) {
-        return isConnector
-                ? ValidationStatus.ok()
-                : ValidationStatus.error(Messages.extensionIsNotAnActorFilter);
+    protected IStatus errorStatus() {
+        return ValidationStatus.error(Messages.extensionIsNotAnActorFilter);
     }
 
 }
