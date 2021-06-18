@@ -20,6 +20,7 @@ import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Settings;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
@@ -103,11 +104,12 @@ public class MirrorsComposite extends Composite {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
-                .withLabel(Messages.id)
+                .withLabel(Messages.id + " *")
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("id", String.class).observeDetail(selectionObservable))
+                .withValidator(new EmptyInputValidator(Messages.id))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -126,12 +128,13 @@ public class MirrorsComposite extends Composite {
         nameObservable.addValueChangeListener(e -> refreshViewer());
 
         new TextWidget.Builder()
-                .withLabel(Messages.url)
+                .withLabel(Messages.url + " *")
                 .labelAbove()
                 .withTootltip(Messages.mirrorUrlTooltip)
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("url", String.class).observeDetail(selectionObservable))
+                .withValidator(new EmptyInputValidator(Messages.url))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);

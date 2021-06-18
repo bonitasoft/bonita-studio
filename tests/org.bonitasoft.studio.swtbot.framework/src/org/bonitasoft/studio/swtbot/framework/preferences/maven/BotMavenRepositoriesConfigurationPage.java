@@ -46,13 +46,13 @@ public class BotMavenRepositoriesConfigurationPage extends BotMavenConfiguration
 
     public BotMavenRepositoriesConfigurationPage setId(String repoName, String id) {
         getRepositoriesTable().select(repoName);
-        bot.textWithLabel(Messages.id).setText(id);
+        bot.textWithLabel(Messages.id + " *").setText(id);
         return this;
     }
 
     public BotMavenRepositoriesConfigurationPage setUrl(String repoName, String url) {
         getRepositoriesTable().select(repoName);
-        bot.textWithLabel(Messages.url).setText(url);
+        bot.textWithLabel(Messages.url + " *").setText(url);
         return this;
     }
 
