@@ -42,8 +42,7 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
     }
 
     @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewWidget, IProgressMonitor.UNKNOWN);
+    protected void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         JSONObject bodyObject = createBody();
         try {
             responseObject = createArtifact(pageDesignerURLBuilder.newWidget(), new JsonRepresentation(bodyObject));
@@ -51,6 +50,11 @@ public class CreateCustomWidgetOperation extends CreateUIDArtifactOperation {
             throw new InvocationTargetException(e, "Failed to create new widget URL.");
         }
         openArtifact(getNewArtifactId());
+    }
+    
+    @Override
+    protected String getTaskName() {
+        return Messages.creatingNewWidget;
     }
 
     @Override

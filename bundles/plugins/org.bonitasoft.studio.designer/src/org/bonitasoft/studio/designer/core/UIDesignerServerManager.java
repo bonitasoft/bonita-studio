@@ -187,7 +187,7 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
         return InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID);
     }
 
-    protected boolean waitForUID(final PageDesignerURLFactory pageDesignerURLBuilder) {
+    public boolean waitForUID(final PageDesignerURLFactory pageDesignerURLBuilder) {
         try {
             connectToURL(pageDesignerURLBuilder.openPageDesignerHome());
         } catch (ResourceException | URISyntaxException | MalformedURLException e) {

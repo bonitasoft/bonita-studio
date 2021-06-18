@@ -38,8 +38,7 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
     }
 
     @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
+    protected void doRun(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
         JSONObject jsonBody = createBody();
         try {
@@ -47,6 +46,11 @@ public class CreateFormOperation extends CreateUIDArtifactOperation {
         } catch (MalformedURLException e) {
             throw new InvocationTargetException(e, "Failed to create new form URL.");
         }
+    }
+    
+    @Override
+    protected String getTaskName() {
+        return Messages.creatingNewForm;
     }
 
     @Override

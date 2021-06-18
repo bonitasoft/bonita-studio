@@ -30,8 +30,7 @@ public class CreateFragmentOperation extends CreateUIDArtifactOperation {
     }
 
     @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewFragment, IProgressMonitor.UNKNOWN);
+    protected void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
         JSONObject bodyObject = createBody();
         try {
@@ -40,6 +39,11 @@ public class CreateFragmentOperation extends CreateUIDArtifactOperation {
             throw new InvocationTargetException(e, "Failed to create new fragment URL.");
         }
         openArtifact(getNewArtifactId());
+    }
+    
+    @Override
+    protected String getTaskName() {
+        return Messages.creatingNewFragment;
     }
 
     @Override

@@ -27,8 +27,13 @@ import java.util.Optional;
 
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
+import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
+import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.representation.Representation;
@@ -63,20 +68,36 @@ public abstract class CreateUIDArtifactOperation implements IRunnableWithProgres
     protected String artifactName = DEFAULT_PAGE_NAME;
     protected RepositoryAccessor repositoryAccessor;
 
-    public CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
+    protected CreateUIDArtifactOperation(PageDesignerURLFactory pageDesignerURLBuilder, RepositoryAccessor repositoryAccessor) {
         this.repositoryAccessor = repositoryAccessor;
         checkArgument(pageDesignerURLBuilder != null);
         this.pageDesignerURLBuilder = pageDesignerURLBuilder;
     }
     
+    @Override
+    public final void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        monitor.beginTask(getTaskName(), IProgressMonitor.UNKNOWN);
+        if(!UIDesignerServerManager.getInstance().isStarted()) {
+            monitor.subTask(NLS.bind(Messages.waitingForUIDesigner,
+                            org.bonitasoft.studio.common.Messages.uiDesignerModuleName));
+            UIDesignerServerManager.getInstance().start(repositoryAccessor.getCurrentRepository(), new NullProgressMonitor());
+            monitor.subTask("");
+        }
+        doRun(monitor);
+    }
     
+    protected abstract String getTaskName();
+
+    protected abstract void doRun(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException;
+
     protected RepositoryAccessor getRepositoryAccessor() {
         return repositoryAccessor;
     }
 
     protected String doPost(URL url, Representation entity) throws InvocationTargetException {
         try {
-            return new ClientResource(url.toURI()).post(entity).getText();
+            ClientResource resource = new ClientResource(url.toURI());
+            return resource.post(entity).getText();
         } catch (final ResourceException e) {
             throw new InvocationTargetException(e, "Failed to post request.");
         } catch (final IOException e) {
