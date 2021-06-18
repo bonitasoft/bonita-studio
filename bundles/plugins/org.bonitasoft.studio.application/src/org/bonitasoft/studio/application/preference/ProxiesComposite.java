@@ -147,11 +147,11 @@ public class ProxiesComposite extends Composite {
 
         IObservableValue<String> idObservable = PojoProperties.value("id", String.class).observeDetail(selectionObservable);
         new TextWidget.Builder()
-                .withLabel(Messages.id)
+                .withLabel(Messages.id + " *")
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
-                .bindTo(idObservable)
+                .withValidator(new EmptyInputValidator(Messages.id))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
@@ -168,7 +168,6 @@ public class ProxiesComposite extends Composite {
                 .grabHorizontalSpace()
                 .bindTo(PojoProperties.value("nonProxyHosts", String.class).observeDetail(selectionObservable))
                 .inContext(ctx)
-                .withValidator(new EmptyInputValidator(Messages.host))
                 .useNativeRender()
                 .createIn(composite);
 
@@ -291,7 +290,7 @@ public class ProxiesComposite extends Composite {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel(Messages.host)
+                .withLabel(Messages.host + " *")
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()

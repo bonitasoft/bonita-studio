@@ -29,13 +29,17 @@ import org.apache.maven.settings.io.jdom.SettingsJDOMWriter;
 import org.apache.maven.settings.io.xpp3.SettingsXpp3Writer;
 import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.validator.MavenSettingsValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
 import org.bonitasoft.studio.ui.widget.NativeTabItemWidget;
 import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -68,10 +72,6 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     private SettingsJDOMWriter settingsJDOMWriter = new SettingsJDOMWriter();
 
     private IObservableValue<String> masterPwdObservable = new WritableValue<>();
-    private RepositoriesComposite repositoriesComposite;
-    private ServersComposite serversComposite;
-    private ProxiesComposite proxiesComposite;
-    private MirrorsComposite mirrorsComposite;
 
     @Override
     public void init(IWorkbench workbench) {
@@ -118,7 +118,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     }
 
     private void createRepositoriesTabItem(NativeTabFolderWidget parent) {
-        repositoriesComposite = new RepositoriesComposite(parent.getTabFolder(), settingsObservable);
+        var repositoriesComposite = new RepositoriesComposite(parent.getTabFolder(), settingsObservable);
         repositoriesTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.repositories)
                 .withControl(repositoriesComposite)
@@ -126,7 +126,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     }
 
     private void createServersTabItem(NativeTabFolderWidget parent) {
-        serversComposite = new ServersComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
+        var serversComposite = new ServersComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
         serversTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.servers)
                 .withControl(serversComposite)
@@ -134,7 +134,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     }
 
     private void createProxiesTabItem(NativeTabFolderWidget parent) {
-        proxiesComposite = new ProxiesComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
+        var proxiesComposite = new ProxiesComposite(parent.getTabFolder(), settingsObservable, masterPwdObservable);
         proxiesTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.proxies)
                 .withControl(proxiesComposite)
@@ -142,7 +142,7 @@ public class ExtensionsPreferencePage extends PreferencePage implements
     }
 
     private void createMirrorsTabItem(NativeTabFolderWidget parent) {
-        mirrorsComposite = new MirrorsComposite(parent.getTabFolder(), settingsObservable);
+        var mirrorsComposite = new MirrorsComposite(parent.getTabFolder(), settingsObservable);
         mirrorsTabItem = new NativeTabItemWidget.Builder()
                 .withText(Messages.mirrors)
                 .withControl(mirrorsComposite)
@@ -151,6 +151,13 @@ public class ExtensionsPreferencePage extends PreferencePage implements
 
     @Override
     public boolean performOk() {
+        MultiStatus status = (MultiStatus) new MavenSettingsValidator().validate(settingsObservable.getValue());
+        if (!status.isOK()) {
+            new MultiStatusDialog(getShell(), Messages.invalidMavenConfigurationTitle,
+                    String.format(Messages.invalidMavenConfiguration, userSettingsFile.getPath()),
+                    new String[] { IDialogConstants.OK_LABEL }, status).open();
+            return false;
+        }
         try {
             SAXBuilder builder = new SAXBuilder();
             builder.setIgnoringBoundaryWhitespace(false);
@@ -192,7 +199,10 @@ public class ExtensionsPreferencePage extends PreferencePage implements
         } catch (IOException | CoreException e) {
             MessageDialog.openError(getShell(), Messages.error, e.getMessage());
             BonitaStudioLog.error(e);
+            return false;
         }
+        MessageDialog.openInformation(getShell(), Messages.mavenConfigurationUpdatedTitle,
+                String.format(Messages.mavenConfigurationUpdated, userSettingsFile.getPath()));
         return true;
     }
 

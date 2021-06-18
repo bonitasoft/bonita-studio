@@ -345,6 +345,17 @@ public class Messages extends NLS {
     public static String editMavenCoordinates;
     public static String editMavenCoordinatesTooltip;
     public static String mavenPropertiesMissing;
+    public static String repositoryIdMandatory;
+    public static String repositoryNameMandatory;
+    public static String repositoryUrlMandatory;
+    public static String invalidMavenConfigurationTitle;
+    public static String invalidMavenConfiguration;
+    public static String proxyIdMandatory;
+    public static String proxyHostMandatory;
+    public static String mirrorIdMandatory;
+    public static String mirrorUrlMandatory;
+    public static String mavenConfigurationUpdatedTitle;
+    public static String mavenConfigurationUpdated;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

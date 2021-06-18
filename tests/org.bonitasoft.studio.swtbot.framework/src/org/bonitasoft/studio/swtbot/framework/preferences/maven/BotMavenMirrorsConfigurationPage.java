@@ -33,7 +33,7 @@ public class BotMavenMirrorsConfigurationPage extends BotMavenConfigurationPage 
 
     public BotMavenMirrorsConfigurationPage setId(String name, String id) {
         getMirrorsTable().select(name);
-        bot.textWithLabel(Messages.id).setText(id);
+        bot.textWithLabel(Messages.id + " *").setText(id);
         return this;
     }
 
@@ -45,7 +45,7 @@ public class BotMavenMirrorsConfigurationPage extends BotMavenConfigurationPage 
 
     public BotMavenMirrorsConfigurationPage setUrl(String name, String url) {
         getMirrorsTable().select(name);
-        bot.textWithLabel(Messages.url).setText(url);
+        bot.textWithLabel(Messages.url + " *").setText(url);
         return this;
     }
 

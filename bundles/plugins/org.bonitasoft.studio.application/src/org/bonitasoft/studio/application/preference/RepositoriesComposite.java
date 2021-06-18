@@ -176,7 +176,7 @@ public class RepositoriesComposite extends Composite {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         new TextWidget.Builder()
-                .withLabel(Messages.id)
+                .withLabel(Messages.id + " *")
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
@@ -194,14 +194,13 @@ public class RepositoriesComposite extends Composite {
                 .fill()
                 .grabHorizontalSpace()
                 .bindTo(nameObservable)
-                .withValidator(new EmptyInputValidator(Messages.name))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
         nameObservable.addValueChangeListener(e -> refreshViewer());
 
         new TextWidget.Builder()
-                .withLabel(Messages.url)
+                .withLabel(Messages.url + " *")
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()

@@ -40,7 +40,7 @@ import org.bonitasoft.studio.common.widgets.CustomStackLayout;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
+import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.bonitasoft.studio.ui.converter.ConverterBuilder;
 import org.bonitasoft.studio.ui.databinding.ComputedValueBuilder;
 import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
@@ -87,8 +87,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class ImportExtensionPage implements ControlSupplier {
-
-    private static final String MAVEN_REPO_CONFIG_DOC_URL = "https://maven.apache.org/settings.html#Repositories";
 
     public enum ImportMode {
         MANUAL, FILE
@@ -208,7 +206,12 @@ public class ImportExtensionPage implements ControlSupplier {
                 .hint(650, SWT.DEFAULT).create());
         manualCoordinateLink
                 .setText(String.format(Messages.importRemoteDependencyTip, extensionTypeHandler.getExtensionLabel()));
-        manualCoordinateLink.addListener(SWT.Selection, new OpenSystemBrowserListener(MAVEN_REPO_CONFIG_DOC_URL));
+        manualCoordinateLink.addListener(SWT.Selection, e -> {
+            BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
+            dialog.create();
+            dialog.setSelectedPreferencePage(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID);
+            dialog.open();
+        });
         createHintLabel(manualComposite);
     }
 

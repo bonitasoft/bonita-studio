@@ -33,7 +33,7 @@ public class BotMavenProxiesConfigurationPage extends BotMavenConfigurationPage 
 
     public BotMavenProxiesConfigurationPage setId(String oldId, String newId) {
         getProxiesTable().select(oldId);
-        bot.textWithLabel(Messages.id).setText(newId);
+        bot.textWithLabel(Messages.id + " *").setText(newId);
         return this;
     }
 
@@ -45,7 +45,7 @@ public class BotMavenProxiesConfigurationPage extends BotMavenConfigurationPage 
 
     public BotMavenProxiesConfigurationPage setHost(String id, String host) {
         getProxiesTable().select(id);
-        bot.textWithLabel(Messages.host).setText(host);
+        bot.textWithLabel(Messages.host + " *").setText(host);
         return this;
     }
 
