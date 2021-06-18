@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bonitasoft.studio.bundles</groupId>
     <artifactId>features</artifactId>
-    <version>7.13.0-SNAPSHOT</version>
+    <version>7.13.0.W25</version>
   </parent>
   <groupId>org.bonitasoft.studio.bundles.features</groupId>
   <artifactId>bos-branding-feature</artifactId>
