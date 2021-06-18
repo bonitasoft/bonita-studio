@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Business Object Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.businessobject;singleton:=true
-Bundle-Version: 7.12.4.qualifier
+Bundle-Version: 7.12.5.qualifier
 Bundle-ClassPath: .,
  lib/bonita-business-data-generator.jar,
  lib/h2.jar
