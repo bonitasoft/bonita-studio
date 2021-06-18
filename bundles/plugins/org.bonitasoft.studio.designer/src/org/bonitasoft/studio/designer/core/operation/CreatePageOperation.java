@@ -37,8 +37,7 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
     }
 
     @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewPage, IProgressMonitor.UNKNOWN);
+    protected void doRun(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         setArtifactName(getNewName());
         JSONObject bodyObject = createBody();
         try {
@@ -47,6 +46,11 @@ public class CreatePageOperation extends CreateUIDArtifactOperation {
             throw new InvocationTargetException(e, "Failed to create new page URL.");
         }
         openArtifact(getNewArtifactId());
+    }
+    
+    @Override
+    protected String getTaskName() {
+        return Messages.creatingNewPage;
     }
 
     @Override

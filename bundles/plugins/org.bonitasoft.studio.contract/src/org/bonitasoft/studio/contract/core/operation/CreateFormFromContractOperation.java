@@ -75,8 +75,7 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
     }
 
     @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        monitor.beginTask(Messages.creatingNewForm, IProgressMonitor.UNKNOWN);
+    protected void doRun(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         try {
             setArtifactName(getNewName());
             URL url = pageDesignerURLBuilder.newPageFromContract(formScope, artifactName);
@@ -90,6 +89,11 @@ public class CreateFormFromContractOperation extends CreateUIDArtifactOperation 
         } catch (MalformedURLException | JsonProcessingException e) {
             throw new InvocationTargetException(e, "Failed to create new form url.");
         }
+    }
+    
+    @Override
+    protected String getTaskName() {
+        return Messages.creatingNewForm;
     }
 
     String toWebContract(ContractToBusinessDataResolver contractToBusinessDataResolver, Contract tmpContract) throws JsonProcessingException {

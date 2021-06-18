@@ -4,16 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
@@ -21,9 +21,12 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -32,10 +35,13 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -47,10 +53,51 @@ public class ExportBosArchiveIT {
     private final SWTGefBot bot = new SWTGefBot();
 
     @Rule
-    public SWTGefBotRule SWTswtGefBotRule = new SWTGefBotRule(bot);
+    public SWTGefBotRule botRule = new SWTGefBotRule(bot);
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @Before
+    @After
+    public void cleanProject() throws CoreException {
+        ProjectUtil.cleanProject();
+    }
+
+    @Test
+    public void should_export_pom_and_local_store() throws Exception {
+        var workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        workbenchBot.importBOSArchive()
+                .setArchive(ExportBosArchiveIT.class.getResource("/project-with-extensions.bos"))
+                .currentRepository()
+                .next()
+                .next()
+                .importArchive();
+
+        var exportDialog = workbenchBot.export();
+
+        assertThat(bot.tree().getAllItems()).allSatisfy(SWTBotTreeItem::isChecked);
+
+        var bosFile = temporaryFolder.newFile("exportWithExtensions.bos");
+        exportDialog
+                .setDestinationPath(bosFile.getAbsolutePath())
+                .finish();
+
+        assertThat(bosFile).exists();
+
+        RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
+        try (var zipFile = new ZipFile(bosFile)) {
+            assertThat(
+                    zipFile.getEntry(String.format("%s/pom.xml", repositoryAccessor.getCurrentRepository().getName())))
+                            .isNotNull();
+            assertThat(zipFile.getEntry(
+                    String.format("%s/.store/org/bonitasoft/theme/my-darkly-theme/1.0.0/my-darkly-theme-1.0.0.zip",
+                            repositoryAccessor.getCurrentRepository().getName()))).isNotNull();
+            assertThat(zipFile.getEntry(
+                    String.format("%s/.store/org/bonitasoft/restapi/extension/task-candidates-rest-api/1.0.1-SNAPSHOT/task-candidates-rest-api-1.0.1-SNAPSHOT.zip",
+                            repositoryAccessor.getCurrentRepository().getName()))).isNotNull();
+        }
+    }
 
     @Test
     public void should_not_export_ui_designer_metadata() throws Exception {
@@ -61,7 +108,15 @@ public class ExportBosArchiveIT {
         final CreateFormOperation createFormOperation = new CreateFormOperation(
                 new PageDesignerURLFactory(InstanceScope.INSTANCE.getNode(BonitaStudioPreferencesPlugin.PLUGIN_ID)),
                 repositoryAccessor);
-        createFormOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        var progressService = PlatformUI.getWorkbench().getProgressService();
+        Display.getDefault().syncExec(() -> {
+            try {
+                progressService.run(true, false, createFormOperation);
+            } catch (InvocationTargetException | InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        });
+
         final String pageName = createFormOperation.getNewPageName();
         final String pageId = createFormOperation.getNewArtifactId();
 
@@ -69,8 +124,9 @@ public class ExportBosArchiveIT {
         assertThat(pageId).isNotEmpty();
         assertThat(repositoryStore.getChild(pageId, true)).isNotNull();
 
-        final File bosFile = temporaryFolder.newFile("exportWithoutMetadat.bos");
-        new BotApplicationWorkbenchWindow(bot).export().selectAll().setDestinationPath(bosFile.getAbsolutePath()).finish();
+        final File bosFile = temporaryFolder.newFile("exportWithoutMetadata.bos");
+        new BotApplicationWorkbenchWindow(bot).export().selectAll().setDestinationPath(bosFile.getAbsolutePath())
+                .finish();
 
         assertThat(bosFile).exists();
         try (ZipFile zipFile = new ZipFile(bosFile);) {
@@ -125,15 +181,6 @@ public class ExportBosArchiveIT {
             assertTrue("Destination file is empty", destFile.length() > 0);
         } finally {
             destFile.delete();
-        }
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getCurrentRepository()
-                .getRepositoryStore(WebPageRepositoryStore.class);
-        for (final WebPageFileStore fs : repositoryStore.getChildren()) {
-            fs.delete();
         }
     }
 

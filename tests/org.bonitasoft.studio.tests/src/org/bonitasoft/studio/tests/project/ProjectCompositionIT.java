@@ -14,22 +14,18 @@
  */
 package org.bonitasoft.studio.tests.project;
 
-import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
-import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.provider.ExtendedConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -42,10 +38,10 @@ import org.bonitasoft.studio.swtbot.framework.conditions.AssertionCondition;
 import org.bonitasoft.studio.swtbot.framework.projectExplorer.ProjectExplorerBot;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
 import org.bonitasoft.studio.tests.importer.bos.ImportBOSArchiveWizardIT;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.bonitasoft.studio.tests.util.ResourceMarkerHelper;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
@@ -76,24 +72,12 @@ public class ProjectCompositionIT {
     public void setUp() throws CoreException {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         mavenProjectHelper = new MavenProjectHelper();
-        removeExtensions();
+        ProjectUtil.removeUserExtensions();
     }
 
     @After
     public void cleanUp() throws CoreException {
-        removeExtensions();
-    }
-
-    private void removeExtensions() throws CoreException {
-        IProject project = repositoryAccessor.getCurrentRepository().getProject();
-        Model mavenModel = mavenProjectHelper.getMavenModel(project);
-        var dependenciesToRemove = mavenModel.getDependencies()
-                .stream()
-                .filter(not(ProjectDefaultConfiguration::isInternalDependency))
-                .collect(Collectors.toList());
-        if (!dependenciesToRemove.isEmpty()) {
-            new RemoveDependencyOperation(dependenciesToRemove).run(new NullProgressMonitor());
-        }
+        ProjectUtil.removeUserExtensions();
     }
 
     @Test

@@ -16,7 +16,6 @@ package org.bonitasoft.studio.designer.core.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -34,7 +33,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.restlet.representation.Representation;
@@ -95,7 +93,7 @@ public class CreateFormOperationTest {
     public void should_run() throws Exception {
         when(pageDesignerURLFactory.newPage()).thenReturn(new URL("http://localhost:8080/anUrl"));
 
-        createFormOperation.run(monitor);
+        createFormOperation.doRun(monitor);
 
         verify(pageDesignerURLFactory).newPage();
         assertThat(createFormOperation.getNewArtifactId()).isEqualTo("page-id");
