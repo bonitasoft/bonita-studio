@@ -1503,7 +1503,7 @@
             name="Text Perspective">
       </perspective>
       <perspective
-            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionPerspective"
+            class="org.bonitasoft.studio.application.views.dashboard.ProjectDashboardPerspective"
             fixed="true"
             id="org.bonitasoft.studio.application.extension.perspective"
             name="%projectExtensionPerspective">
@@ -1603,10 +1603,10 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart"
+            class="org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart"
             default="false"
-            id="org.bonitasoft.studio.application.extension.editor"
-            name="%projectExtensionView">
+            id="org.bonitasoft.studio.application.dashboard.editor"
+            name="%projectDashboardView">
       </editor>
    </extension>
    <extension

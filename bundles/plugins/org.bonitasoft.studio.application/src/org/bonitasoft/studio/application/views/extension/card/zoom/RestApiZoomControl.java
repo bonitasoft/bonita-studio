@@ -26,7 +26,7 @@ import org.bonitasoft.plugin.analyze.report.model.RestAPIExtension;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.common.extension.properties.ExtensionPagePropertiesReader;
 import org.bonitasoft.studio.common.extension.properties.PagePropertyConstants;
 import org.bonitasoft.studio.pics.Pics;
@@ -75,7 +75,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
         sectionTitle.setText(Messages.restApiExtensions);
         sectionTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         sectionTitle.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-        sectionTitle.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_4_FONT_ID));
+        sectionTitle.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
 
         var iconLabel = new Label(titleComposite, SWT.NONE);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults()
@@ -126,7 +126,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        createStyledText(composite, extension, method, JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID));
+        createStyledText(composite, extension, method, JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID));
 
         var detailsComposite = createComposite(composite, SWT.NONE);
         // num column is voluntary higher than the real num column (2), so we can have alignement and we don't have a big white space between path and permissions
@@ -142,13 +142,13 @@ public class RestApiZoomControl extends AbstractZoomControl {
         var pathLabel = new Label(pathComposite, SWT.WRAP);
         pathLabel.setLayoutData(GridDataFactory.fillDefaults().create());
         pathLabel.setText(Messages.path);
-        pathLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID));
+        pathLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID));
         pathLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var pathValueLabel = new Label(pathComposite, SWT.WRAP);
         pathValueLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         pathValueLabel.setText(String.format("../API/extension/%s", path));
-        pathValueLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
+        pathValueLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
         pathValueLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
@@ -166,7 +166,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
         var permissionsLabel = new Label(permissionsComposite, SWT.WRAP);
         permissionsLabel.setLayoutData(GridDataFactory.fillDefaults().indent(30, 0).create());
         permissionsLabel.setText(Messages.permissions);
-        permissionsLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID));
+        permissionsLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID));
         permissionsLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var permissionListComposite = createComposite(permissionsComposite, SWT.NONE);
@@ -178,7 +178,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
             var permissionLabel = new Label(permissionListComposite, SWT.WRAP);
             permissionLabel.setLayoutData(GridDataFactory.fillDefaults().create());
             permissionLabel.setText(permission);
-            permissionLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
+            permissionLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
             permissionLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
         });
     }
@@ -212,7 +212,7 @@ public class RestApiZoomControl extends AbstractZoomControl {
             StyleRange methodStyle = new StyleRange(extensionName.length() + 1,
                     extensionMethod.length() + 2,
                     styledText.getForeground(), styledText.getBackground());
-            methodStyle.font = JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID);
+            methodStyle.font = JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID);
             styledText.setStyleRanges(new StyleRange[] { nameStyle, methodStyle });
             parent.layout();
         });

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecoratorFactory;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyVersion;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -75,7 +76,7 @@ public class UpdateExtensionListener {
         parameters.put("type", dep.getType());
         parameters.put("classifier", dep.getClassifier());
         parameters.put(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, artifact.getArtifactType().name());
-        commandExecutor.executeCommand(ProjectExtensionEditorPart.UPDATE_GAV_COMMAND, parameters);
+        commandExecutor.executeCommand(ProjectDashboardEditorPart.UPDATE_GAV_COMMAND, parameters);
     }
 
     private void updateMarketplaceExtension(BonitaArtifactDependency bonitaDep, Dependency dep) {
@@ -121,7 +122,7 @@ public class UpdateExtensionListener {
         parameters.put("classifier", dep.getClassifier());
         parameters.put("isLocal", String.valueOf(localExtension));
         parameters.put(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, artifact.getArtifactType().name());
-        commandExecutor.executeCommand(ProjectExtensionEditorPart.IMPORT_EXTENSION_COMMAND, parameters);
+        commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND, parameters);
     }
 
 }
