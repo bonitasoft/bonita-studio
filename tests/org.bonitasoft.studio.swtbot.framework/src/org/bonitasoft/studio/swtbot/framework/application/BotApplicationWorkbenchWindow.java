@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.swtbot.framework.application;
 
 import org.bonitasoft.studio.application.coolbar.PreferenceCoolbarItem;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
@@ -247,7 +247,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
             
             @Override
             public boolean test() throws Exception {
-                return BotApplicationWorkbenchWindow.this.bot.editorById(ProjectExtensionEditorPart.ID) != null;
+                return BotApplicationWorkbenchWindow.this.bot.editorById(ProjectDashboardEditorPart.ID) != null;
             }
             
             @Override

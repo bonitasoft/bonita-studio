@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.businessobject.editor.editor.ui.control.businessObject.BusinessObjectViewerComparator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -190,7 +190,7 @@ public class ConnectorUsagesControlSupplier implements ControlSupplier {
         noUsagesLabel
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.FILL).create());
         noUsagesLabel.setText(String.format(Messages.noConnectorUsagesFound, definition.getConnectorDefinitionLabel()));
-        noUsagesLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
+        noUsagesLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
     }
 
     protected void createSearchField(Composite parent) {

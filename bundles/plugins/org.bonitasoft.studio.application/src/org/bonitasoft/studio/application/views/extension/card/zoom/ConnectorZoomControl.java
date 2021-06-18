@@ -31,7 +31,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.views.BonitaPropertiesView;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.application.views.extension.card.zoom.usage.ConnectorUsagesControlSupplier;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
@@ -96,7 +96,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         sectionTitle.setText(getDetailsTitle());
         sectionTitle.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         sectionTitle.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-        sectionTitle.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_4_FONT_ID));
+        sectionTitle.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
 
         var iconLabel = new Label(titleComposite, SWT.NONE);
         iconLabel.setLayoutData(GridDataFactory.fillDefaults()
@@ -141,7 +141,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createIdVersionStyledText(composite, extendedDefinition.getConnectorDefinitionLabel(),
-                extendedDefinition.getVersion(), JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID), 1);
+                extendedDefinition.getVersion(), JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID), 1);
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.findUsages)
@@ -160,7 +160,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         var description = new Label(descriptionContainer, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         description.setText(extendedDefinition.getConnectorDefinitionDescription());
-        description.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID));
+        description.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
         description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var implementationsComposite = createComposite(composite, SWT.NONE);
@@ -170,7 +170,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
         var implementationsLabel = new Label(implementationsComposite, SWT.WRAP);
         implementationsLabel.setLayoutData(GridDataFactory.fillDefaults().indent(30, 0).create());
         implementationsLabel.setText(Messages.implementations);
-        implementationsLabel.setFont(JFaceResources.getFont(ProjectExtensionEditorPart.BOLD_0_FONT_ID));
+        implementationsLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID));
         implementationsLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var implementations = getImplementations(extendedDefinition);
@@ -296,7 +296,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
             StyleRange versionStyle = new StyleRange(id.length() + 1,
                     version.length() + 2,
                     gav.getForeground(), styledText.getBackground());
-            versionStyle.font = JFaceResources.getFont(ProjectExtensionEditorPart.ITALIC_0_FONT_ID);
+            versionStyle.font = JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID);
             styledText.setStyleRanges(new StyleRange[] { definitionStyle, versionStyle });
             parent.layout();
         });

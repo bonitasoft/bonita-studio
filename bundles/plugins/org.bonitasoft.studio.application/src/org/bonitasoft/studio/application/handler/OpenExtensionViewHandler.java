@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorInput;
-import org.bonitasoft.studio.application.views.extension.ProjectExtensionEditorPart;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorInput;
+import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -38,7 +38,7 @@ public class OpenExtensionViewHandler {
     public void execute() {
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         if (Stream.of(activePage.getEditorReferences())
-                .noneMatch(er -> Objects.equals( er.getId(), ProjectExtensionEditorPart.ID))) {
+                .noneMatch(er -> Objects.equals( er.getId(), ProjectDashboardEditorPart.ID))) {
             try {
                 PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
                     monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
@@ -53,7 +53,7 @@ public class OpenExtensionViewHandler {
             }
         }
         try {
-            activePage.openEditor(ProjectExtensionEditorInput.getInstance(), ProjectExtensionEditorPart.ID);
+            activePage.openEditor(ProjectDashboardEditorInput.getInstance(), ProjectDashboardEditorPart.ID);
         } catch (PartInitException e) {
             BonitaStudioLog.error(e);
         }

@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.extension;
+package org.bonitasoft.studio.application.views.dashboard;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -23,16 +23,16 @@ import org.eclipse.ui.IPersistableElement;
  * This class use a singleton, so the editor always has the same editor input -> doesn't open a second editor if one is
  * already opened.
  */
-public class ProjectExtensionEditorInput implements IEditorInput {
+public class ProjectDashboardEditorInput implements IEditorInput {
 
-    private static ProjectExtensionEditorInput INSTANCE;
+    private static ProjectDashboardEditorInput INSTANCE;
 
-    private ProjectExtensionEditorInput() {
+    private ProjectDashboardEditorInput() {
     }
 
-    public static ProjectExtensionEditorInput getInstance() {
+    public static ProjectDashboardEditorInput getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ProjectExtensionEditorInput();
+            INSTANCE = new ProjectDashboardEditorInput();
         }
         return INSTANCE;
     }
