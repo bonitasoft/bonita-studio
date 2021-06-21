@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,6 +28,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -37,18 +37,18 @@ import org.bonitasoft.studio.application.ApplicationPlugin;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.RedirectURLBuilder;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
-import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.eclipse.core.runtime.IPath;
+import org.bonitasoft.studio.ui.notification.BonitaNotificator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.forms.widgets.ResourceManagerManger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,60 +66,71 @@ public class BonitaMarketplace {
     private static final String LATEST_RELEASE_URL = RedirectURLBuilder.create("725");
     private static final String ASSET_URL = RedirectURLBuilder.create("726");
     private static final String MARKETPLACE_DESCRIPTOR_NAME = "marketplace.json";
+    private static final String MARKETPLACE_METADATA = "marketplace.version";
 
     public static final String CONNECTOR_TYPE = "Connector";
     public static final String ACTOR_FILTER_TYPE = "Actor filter";
     public static final String DATABASE_DRIVER_TYPE = "Database driver";
 
-    private static final String MARKETPLACE_METADATA = "marketplace.version";
+   
 
     private List<BonitaArtifactDependency> dependencies;
     private LocalResourceManager manager;
     private RGB iconBackground;
-
     private File localStore;
+    private File cacheFolder;
+    private boolean synchronizeMarketplace = true;
 
-    private BonitaMarketplace(IProgressMonitor monitor) {
+    private BonitaMarketplace() {
         manager = new ResourceManagerManger().getResourceManager(Display.getDefault());
         // Correspond to the css class wizardHighlightBackground -> we can't use css here :'(
         iconBackground = PreferenceUtil.isDarkTheme()
                 ? new RGB(47, 47, 47)
                 : new RGB(245, 245, 245);
-        try {
-            checkStoreContent(monitor);
-        } catch (IOException e) {
-            BonitaStudioLog.error(e);
-        }
+        cacheFolder = ApplicationPlugin.getDefault().getStateLocation().toFile();
+        localStore = new File(cacheFolder, MARKETPLACE);
     }
 
     private void checkStoreContent(IProgressMonitor monitor) throws IOException {
+        monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
+        String currentVersion = readMetadata();
         try {
-            IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
-            localStore = new File(stateLocation.toFile(), MARKETPLACE);
-            String currentVersion = readMetadata();
             String latestVersion = getLatestTag();
-            if (currentVersion == null || currentVersion.isBlank()
+            if (Strings.isNullOrEmpty(currentVersion)
                     || !new File(localStore, MARKETPLACE_DESCRIPTOR_NAME).exists()
                     || !Objects.equals(currentVersion, latestVersion)) {
-                Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
-                String assetUrl = RedirectURLBuilder.handleURLRedirection(ASSET_URL);
-                download(createURL(String.format("%s/%s/%s-%s.zip", assetUrl,
-                        latestVersion,
-                        BONITA_MARKETPLACE_ARCHIVE_NAME,
-                        latestVersion)),
-                        tmpFile,
-                        monitor);
-                extract(tmpFile, stateLocation.toFile().toPath());
-                Files.delete(tmpFile);
-                updateMetadata(latestVersion);
+                downloadMarketplace(latestVersion, monitor);
             }
         } catch (ResourceException e) {
             BonitaStudioLog.error(e);
-            Display.getDefault()
-                    .syncExec(() -> MessageDialog.openWarning(Display.getDefault().getActiveShell(),
-                            Messages.cannotLoadMarketplace,
-                            Messages.cannotLoadMarketplaceMessage));
+            // Do not retry to access remote marketplace
+            synchronizeMarketplace = false;
+            if (Strings.hasText(currentVersion)) {
+                BonitaNotificator.openNotification(Messages.cannotAccessMarketplace,
+                        Messages.cannotUpdateMarketplaceMessage);
+            } else {
+                Display.getDefault()
+                        .syncExec(() -> MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+                                Messages.cannotAccessMarketplace,
+                                Messages.cannotLoadMarketplaceMessage));
+            }
+
         }
+    }
+
+    private void downloadMarketplace(String latestVersion, IProgressMonitor monitor)
+            throws IOException {
+        Path tmpFile = Files.createTempFile(BONITA_MARKETPLACE_ARCHIVE_NAME, ".zip");
+        String assetUrl = RedirectURLBuilder.handleURLRedirection(ASSET_URL);
+        download(createURL(String.format("%s/%s/%s-%s.zip", assetUrl,
+                latestVersion,
+                BONITA_MARKETPLACE_ARCHIVE_NAME,
+                latestVersion)),
+                tmpFile,
+                monitor);
+        extract(tmpFile, cacheFolder.toPath());
+        Files.delete(tmpFile);
+        updateMetadata(latestVersion);
     }
 
     private void updateMetadata(String latestVersion) {
@@ -142,8 +153,7 @@ public class BonitaMarketplace {
     }
 
     public File getMetadataFile() {
-        IPath stateLocation = ApplicationPlugin.getDefault().getStateLocation();
-        return new File(stateLocation.toFile(), MARKETPLACE_METADATA);
+        return new File(cacheFolder, MARKETPLACE_METADATA);
     }
 
     private String readMetadata() {
@@ -173,7 +183,7 @@ public class BonitaMarketplace {
     }
 
     private void download(URL url, Path target, IProgressMonitor monitor) throws IOException {
-        var connection =  url.openConnection();
+        var connection = url.openConnection();
         double completeFileSize = connection.getContentLength();
         try (ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
                 FileOutputStream fileOutputStream = new FileOutputStream(target.toFile());
@@ -188,57 +198,53 @@ public class BonitaMarketplace {
             }
         }
     }
-    
-    public static BonitaMarketplace getInstance(IProgressMonitor monitor) {
+
+    public static BonitaMarketplace getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new BonitaMarketplace(monitor);
+            INSTANCE = new BonitaMarketplace();
         }
         return INSTANCE;
     }
 
     public List<BonitaArtifactDependency> getDependencies() {
         if (dependencies == null || dependencies.isEmpty()) {
-            loadDependencies();
+            loadDependencies(new NullProgressMonitor());
         }
         return dependencies;
     }
 
-    /**
-     * To test the UI with a local file, comment this method content and use the loader with the URL of the local file
-     * ex:
-     * dependencies = loader.load(new File("/Users/adrien/bonita/bonita-marketplace/build/connectors.json").toURI().toURL());
-     */
-    public void loadDependencies() {
+    public void synchronizeMarketplace() {
+        this.synchronizeMarketplace = true;
+    }
+
+    public void loadDependencies(IProgressMonitor monitor) {
         if (dependencies == null || dependencies.isEmpty()) {
             ArtifactDependencyLoader loader = new ArtifactDependencyLoader(
                     new MarketplaceIconLoader(localStore, manager, iconBackground));
-            if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists()) {
-                Display.getDefault().asyncExec(() -> {
-                    try {
-                        PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                            try {
-                                checkStoreContent(monitor);
-                            } catch (IOException e) {
-                                throw new InvocationTargetException(e);
-                            }
-                        });
-                    } catch (InvocationTargetException | InterruptedException e) {
-                        new ExceptionDialogHandler().openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(),
-                                e);
-                    }
-                });
+            if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists() && synchronizeMarketplace) {
+                try {
+                    checkStoreContent(monitor);
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            } else if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists()) {
+                dependencies = Collections.emptyList();
             }
             dependencies = loader.load(localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME));
         }
     }
 
     private String getLatestTag() throws ResourceException {
-        JSONObject release = doGet(createURL(LATEST_RELEASE_URL));
-        try {
-            return release.getString("tag_name");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        var url = createURL(LATEST_RELEASE_URL);
+        if (url != null) {
+            JSONObject release = doGet(url);
+            try {
+                return release.getString("tag_name");
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return null;
     }
 
     private JSONObject doGet(URL url) throws ResourceException {

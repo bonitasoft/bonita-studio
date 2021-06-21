@@ -195,7 +195,8 @@ public class BonitaMarketplacePage implements ControlSupplier {
         try {
             List<String> acceptedTypes = Arrays.asList(extensionTypes).stream()
                     .map(EXTENSIONS_TYPE::get).collect(Collectors.toList());
-            dependencies = BonitaMarketplace.getInstance(monitor).getDependencies().stream()
+            BonitaMarketplace.getInstance().loadDependencies(monitor);
+            dependencies = BonitaMarketplace.getInstance().getDependencies().stream()
                     .filter(dep -> acceptedTypes.contains(dep.getType()))
                     .collect(Collectors.toList());
             knownDependencies = project != null ? helper.getMavenModel(project).getDependencies()
