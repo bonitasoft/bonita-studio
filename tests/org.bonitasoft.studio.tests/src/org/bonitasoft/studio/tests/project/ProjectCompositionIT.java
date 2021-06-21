@@ -85,7 +85,7 @@ public class ProjectCompositionIT {
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
 
         var description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        var projectDetailsBot = worbenchBot.openProjectDetails();
+        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
         projectDetailsBot
                 .editProjectMetadata()
                 .setVersion("2.0.0-SNAPSHOT")
@@ -114,7 +114,7 @@ public class ProjectCompositionIT {
 
         var worbenchBot = new BotApplicationWorkbenchWindow(bot);
 
-        var projectDetailsBot = worbenchBot.openProjectDetails();
+        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
         projectDetailsBot
                 .openMarketplace()
                 .selectConnectorExtensionType()
@@ -207,7 +207,7 @@ public class ProjectCompositionIT {
         assertThat(localDepStore
                 .dependencyPath(dependency("org.bonitasoft.connectors", "bonita-connector-email", "1.1.0"))).exists();
 
-        var projectDetailsBot = worbenchBot.openProjectDetails();
+        var projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
         projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-email")
                 .updateToLatest();
@@ -304,7 +304,7 @@ public class ProjectCompositionIT {
             }
         });
 
-        projectDetailsBot = worbenchBot.openProjectDetails();
+        projectDetailsBot = worbenchBot.openProjectDetails().toExtensionView();
         var extensionCardBot = projectDetailsBot
                 .findExtensionCardByArtifactId("bonita-connector-email");
         var maximizedCard = extensionCardBot.maximize();
@@ -345,7 +345,7 @@ public class ProjectCompositionIT {
         bot.ccomboBox().pressShortcut(Keystrokes.CR);
         importDialogBot.waitUntilFinishIsEnabled();
         importDialogBot.importArchive();
-        
+
         new ProjectExplorerBot(bot).validate();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.validation.i18n.Messages.validationTitle));
         bot.button(IDialogConstants.OK_LABEL).click();

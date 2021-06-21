@@ -106,29 +106,29 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_EXPORT_TOOLITEM = "SWTBOT_ID_EXPORT_TOOLITEM";
 
-	public static final String SWTBOT_ID_BO_NAME_TEXTEDITOR = "SWTBOT_ID_BO_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_BO_NAME_TEXTEDITOR = "SWTBOT_ID_BO_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR = "SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR = "SWTBOT_ID_ATTRIBUTE_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR = "SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR = "SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR = "SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_UNIQUE_INDEX_NAME_TEXTEDITOR = "SWTBOT_ID_UNIQUE_CONSTRAINT_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_QUERY_NAME_TEXTEDITOR = "SWTBOT_ID_QUERY_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_QUERY_NAME_TEXTEDITOR = "SWTBOT_ID_QUERY_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR = "SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR = "SWTBOT_ID_QUERY_PARAM_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_MENU_NAME_TEXTEDITOR = "SWTBOT_ID_MENU_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_MENU_NAME_TEXTEDITOR = "SWTBOT_ID_MENU_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_PAGE_NAME_TEXTEDITOR = "SWTBOT_ID_PAGE_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_PAGE_NAME_TEXTEDITOR = "SWTBOT_ID_PAGE_NAME_TEXTEDITOR";
 
-	public static final String SWTBOT_ID_APPLICATION_MENU_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_MENU_COLUMN_EDITOR";
+    public static final String SWTBOT_ID_APPLICATION_MENU_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_MENU_COLUMN_EDITOR";
 
-	public static final String SWTBOT_ID_APPLICATION_PAGE_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_PAGE_COLUMN_EDITOR";
+    public static final String SWTBOT_ID_APPLICATION_PAGE_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_PAGE_COLUMN_EDITOR";
 
-	public static final String SWTBOT_ID_APPLICATION_TOKEN_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_TOKEN_COLUMN_EDITOR";
+    public static final String SWTBOT_ID_APPLICATION_TOKEN_COLUMN_EDITOR = "SWTBOT_ID_APPLICATION_TOKEN_COLUMN_EDITOR";
 
-	public static final String SWTBOT_ID_RULE_NAME_TEXTEDITOR = "SWTBOT_ID_RULE_NAME_TEXTEDITOR";
+    public static final String SWTBOT_ID_RULE_NAME_TEXTEDITOR = "SWTBOT_ID_RULE_NAME_TEXTEDITOR";
 
     public static final String SWTBOT_ID_DEPLOY_TOOLITEM = "SWTBOT_ID_DEPLOY_TOOLITEM";
 
@@ -136,7 +136,7 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_EDIT_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.editButton";
 
-    public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON =  "org.bonitasoft.studio.ui.widget.textWidget.validateEdit";
+    public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_OK_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.validateEdit";
 
     public static final String SWTBOT_ID_TRANSACTIONAL_TEXT_CANCEL_BUTTON = "org.bonitasoft.studio.ui.widget.textWidget.cancelEdit";
 
@@ -159,11 +159,13 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_ADD_EXTENSION_DROPDOWN = "SWTBOT_ID_ADD_EXTENSION_DROPDOWN";
     public static final String SWTBOT_ID_MINIMIZE_CARD_BUTTON = "SWTBOT_ID_MINIMIZE_CARD_BUTTON";
     public static final String SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE = "SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE";
-   
+    public static final String SWTBOT_ID_OPEN_EXTENSIONS_VIEW = "SWTBOT_ID_OPEN_EXTENSIONS_VIEW";
+    public static final String SWTBOT_ID_OPEN_DASHBOARD_VIEW = "SWTBOT_ID_OPEN_DASHBOARD_VIEW";
+
     public static String extensionCheckboxId(String artifactId) {
         return "SWTBOT_ID_MARKETPLACE_EXTENSION_CHECKBOX_" + artifactId;
     }
-    
+
     public static String extensionCardId(String artifactId) {
         return "SWTBOT_ID_EXTENSION_CARD_" + artifactId;
     }
@@ -179,7 +181,7 @@ public interface SWTBotConstants {
     public static String updateExtensionFromCard(String artifactId) {
         return "SWTBOT_ID_UPDATE_FROM_EXTENSION_CARD_" + artifactId;
     }
-    
+
     public static String findUsageButtonId(String definitionId, String definitionVersion) {
         return "SWTBOT_ID_FIND_USAGE_" + definitionId + "-" + definitionVersion;
     }

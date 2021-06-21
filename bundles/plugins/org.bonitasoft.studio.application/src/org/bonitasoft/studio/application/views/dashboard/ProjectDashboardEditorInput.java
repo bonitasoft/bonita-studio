@@ -54,7 +54,7 @@ public class ProjectDashboardEditorInput implements IEditorInput {
 
     @Override
     public String getName() {
-        return Messages.projectExtensions;
+        return Messages.projectDashboard;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProjectDashboardEditorInput implements IEditorInput {
 
     @Override
     public String getToolTipText() {
-        return Messages.projectExtensions;
+        return Messages.projectDashboard;
     }
 
 }

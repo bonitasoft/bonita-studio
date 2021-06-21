@@ -42,6 +42,24 @@ public class BotProjectDetailsEditor {
         return new BotEditProjectMetadataWizard(bot);
     }
 
+    public BotProjectDetailsEditor toExtensionView() {
+        var dashboardMatcher = allOf(widgetOfType(ToolItem.class),
+                withId(SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW), withStyle(SWT.PUSH, "SWT.PUSH"));
+        if (bot.getFinder().findControls(dashboardMatcher).isEmpty()) {
+            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW).click();
+        }
+        return this;
+    }
+
+    public BotProjectDetailsEditor toDashboardView() {
+        var extensionMatcher = allOf(widgetOfType(ToolItem.class),
+                withId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW), withStyle(SWT.PUSH, "SWT.PUSH"));
+        if (bot.getFinder().findControls(extensionMatcher).isEmpty()) {
+            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW).click();
+        }
+        return this;
+    }
+
     public BotMarketplaceWizard openMarketplace() {
         var smallButton = allOf(widgetOfType(ToolItem.class),
                 withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM), withStyle(SWT.PUSH, "SWT.PUSH"));

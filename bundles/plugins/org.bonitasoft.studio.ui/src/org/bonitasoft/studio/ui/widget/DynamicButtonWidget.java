@@ -87,6 +87,7 @@ public class DynamicButtonWidget {
     protected Optional<String> hoverTextColorCssId;
 
     private Composite container;
+    private Label label;
 
     public DynamicButtonWidget(Composite parent,
             Optional<String> text,
@@ -139,7 +140,7 @@ public class DynamicButtonWidget {
         createToolItem(toolbar);
 
         if (text.isPresent()) {
-            Label label = toolkit.map(t -> t.createLabel(container, text.get(), SWT.WRAP))
+            label = toolkit.map(t -> t.createLabel(container, text.get(), SWT.WRAP))
                     .orElseGet(() -> new Label(container, SWT.WRAP));
             label.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER)
                     .grab(maxTextWidth.isEmpty(), false)
@@ -254,6 +255,11 @@ public class DynamicButtonWidget {
         tooltipText.ifPresent(tooltip -> toolItem.setToolTipText(tooltip));
 
         onClickListener.ifPresent(onClick -> toolItem.addListener(SWT.Selection, onClick::accept));
+    }
+
+    public void updateText(String text, String tooltip) {
+        label.setText(text);
+        label.setToolTipText(tooltip);
     }
 
     public IObservableValue<Boolean> observeEnable() {

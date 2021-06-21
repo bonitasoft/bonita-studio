@@ -1175,7 +1175,7 @@
             toolbarPosition="0">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.ProjectExtensionsCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.ProjectDashboardCoolbarItem"
             priority="0"
             toolbarPosition="2">
       </coolbarItem>

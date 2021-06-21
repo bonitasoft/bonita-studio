@@ -417,9 +417,14 @@ public class PicsConstants {
     public static String add_decorator = "decoration/add.png";
     public static String add_subelement_decorator = "decoration/add_subelement.png";
 
-    public static String openExtensions = "projectExtensions/open_extensions.png";
-    public static String openExtensions24 = "coolbar/24/open_extensions.png";
-    public static String openExtensions48 = "coolbar/48/open_extensions.png";
+    public static String openDashboard = "projectExtensions/dashboard.png";
+    public static String openDashboard24 = "coolbar/24/dashboard.png";
+    public static String openDashboard32 = "projectExtensions/dashboard32.png";
+    public static String openDashboard32_hot = "projectExtensions/dashboard32_hot.png";
+    public static String openDashboard48 = "coolbar/48/dashboard.png";
+
+    public static String extensions32 = "projectExtensions/extensions32.png";
+    public static String extensions32_hot = "projectExtensions/extensions32_hot.png";
 
     public static String connectorDefaultIcon = "projectExtensions/connectorDefaultIcon.png";
     public static String actorfilterDefaultIcon = "projectExtensions/actorfilterDefaultIcon.png";
