@@ -39,7 +39,6 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelR
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -111,7 +110,7 @@ public class ExtensionComposite extends Composite {
         upadateExtensionListener = ContextInjectionFactory.make(UpdateExtensionListener.class, eclipseContext);
         removeExtensionListener = ContextInjectionFactory.make(RemoveExtensionListener.class, eclipseContext);
 
-        allDependencies = BonitaMarketplace.getInstance(AbstractRepository.NULL_PROGRESS_MONITOR).getDependencies();
+        allDependencies = BonitaMarketplace.getInstance().getDependencies();
     }
 
     private ScrolledComposite createExtensionSection(Composite parent) {
@@ -261,7 +260,8 @@ public class ExtensionComposite extends Composite {
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
                 .addDropdownItem(Messages.addActorFilter, null,
                         e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.ACTOR_FILTER.name())))
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
+                                        ArtifactType.ACTOR_FILTER.name())))
                 .addDropdownItem(Messages.addTheme, null,
                         e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))

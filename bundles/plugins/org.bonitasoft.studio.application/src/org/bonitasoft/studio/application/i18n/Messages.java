@@ -336,8 +336,9 @@ public class Messages extends NLS {
     public static String extensionIsNotAnActorFilter;
     public static String extensionIsNotARestApiExtension;
     public static String extensionIsNotAThemeExtension;
-    public static String cannotLoadMarketplace;
+    public static String cannotAccessMarketplace;
     public static String cannotLoadMarketplaceMessage;
+    public static String cannotUpdateMarketplaceMessage;
     public static String bonitaMarketplace;
     public static String localDependencyTooltip;
     public static String remoteDependencyTooltip;
