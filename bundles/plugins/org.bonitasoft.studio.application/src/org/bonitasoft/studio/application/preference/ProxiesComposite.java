@@ -151,6 +151,7 @@ public class ProxiesComposite extends Composite {
                 .labelAbove()
                 .fill()
                 .grabHorizontalSpace()
+                .bindTo(idObservable)
                 .withValidator(new EmptyInputValidator(Messages.id))
                 .inContext(ctx)
                 .useNativeRender()
