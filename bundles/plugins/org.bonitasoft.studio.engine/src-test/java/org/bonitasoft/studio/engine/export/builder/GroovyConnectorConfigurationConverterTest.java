@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
-import static com.google.common.collect.Iterables.find;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
 import static org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder.aConnectorConfiguration;
@@ -24,7 +23,6 @@ import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.
 import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 import static org.bonitasoft.studio.model.process.builders.StringDataTypeBuilder.aStringDataType;
 
-import org.bonitasoft.studio.engine.export.builder.GroovyConnectorConfigurationConverter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -36,33 +34,47 @@ public class GroovyConnectorConfigurationConverterTest {
 
     @Test
     public void should_remove_fake_parameter_from_configuration() throws Exception {
-        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter().convert(aGroovyConnectorConfiguration());
+        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter()
+                .convert(aGroovyConnectorConfiguration());
 
         assertThat(convertedConfig.getParameters()).extracting("key").containsExactly("script", "variables");
     }
 
     @Test
     public void should_use_script_expression_name_as_constant_expression_name() throws Exception {
-        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter().convert(aGroovyConnectorConfiguration());
+        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter()
+                .convert(aGroovyConnectorConfiguration());
 
-        ExpressionAssert.assertThat((Expression) find(convertedConfig.getParameters(), withInputName("script")).getExpression())
+        ExpressionAssert
+                .assertThat((Expression) convertedConfig.getParameters().stream().filter(withInputName("script"))
+                        .findFirst().orElseThrow().getExpression())
                 .hasName("scriptName");
     }
 
     @Test
     public void should_use_script_expression_content_as_constant_expression_content() throws Exception {
-        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter().convert(aGroovyConnectorConfiguration());
+        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter()
+                .convert(aGroovyConnectorConfiguration());
 
-        ExpressionAssert.assertThat((Expression) find(convertedConfig.getParameters(), withInputName("script")).getExpression()).hasContent("return true;");
+        ExpressionAssert
+                .assertThat((Expression) convertedConfig.getParameters().stream().filter(withInputName("script"))
+                        .findFirst().orElseThrow().getExpression())
+                .hasContent("return true;");
     }
 
     @Test
     public void should_use_script_expression_referencedElement_in_variables_input() throws Exception {
-        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter().convert(aGroovyConnectorConfiguration());
+        final ConnectorConfiguration convertedConfig = new GroovyConnectorConfigurationConverter()
+                .convert(aGroovyConnectorConfiguration());
 
-        final AbstractExpression expression = find(convertedConfig.getParameters(), withInputName("variables")).getExpression();
+        final AbstractExpression expression = convertedConfig.getParameters().stream()
+                .filter(withInputName("variables"))
+                .findFirst()
+                .orElseThrow()
+                .getExpression();
         assertThat(expression).isInstanceOf(TableExpression.class);
-        assertThat(((TableExpression) expression).getExpressions().get(0).getExpressions()).extracting("name").contains("myData");
+        assertThat(((TableExpression) expression).getExpressions().get(0).getExpressions()).extracting("name")
+                .contains("myData");
     }
 
     private ConnectorConfiguration aGroovyConnectorConfiguration() {
@@ -71,10 +83,12 @@ public class GroovyConnectorConfigurationConverterTest {
                 .havingParameters(
                         aConnectorParameter().withKey("fakeScriptExpression").havingExpression(
                                 aGroovyScriptExpression().withName("scriptName").withContent("return true;")
-                                        .havingReferencedElements(aData().withName("myData").havingDataType(aStringDataType()))),
+                                        .havingReferencedElements(
+                                                aData().withName("myData").havingDataType(aStringDataType()))),
                         aConnectorParameter().withKey("script").havingExpression(
                                 aConstantExpression().withName("").withContent("")),
                         aConnectorParameter().withKey("variables").havingExpression(
-                                aConstantExpression().withName("").withContent(""))).build();
+                                aConstantExpression().withName("").withContent("")))
+                .build();
     }
 }

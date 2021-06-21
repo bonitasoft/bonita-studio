@@ -25,6 +25,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.osgi.util.NLS;
 
 public class DocumentWithContractInputContentConstraint extends AbstractLiveValidationMarkerConstraint {
 
@@ -41,18 +42,18 @@ public class DocumentWithContractInputContentConstraint extends AbstractLiveVali
         if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.CONTRACT)) {
             final ContractInput contractInput = document.getContractInput();
             if (contractInput == null) {
-                return ctx.createFailureStatus(Messages.bind(Messages.missingFileContractInput, document.getName()));
+                return ctx.createFailureStatus(NLS.bind(Messages.missingFileContractInput, document.getName()));
             }
             if (contractInput.getType() != ContractInputType.FILE) {
                 return ctx
-                        .createFailureStatus(Messages.bind(Messages.invalidFileContractInputType, document.getName(), contractInput.getType().name()));
+                        .createFailureStatus(NLS.bind(Messages.invalidFileContractInputType, document.getName(), contractInput.getType().name()));
             }
-            final boolean hasMultipleInHierachy = withMultipleInHierarchy().apply(contractInput);
+            final boolean hasMultipleInHierachy = withMultipleInHierarchy().test(contractInput);
             if (hasMultipleInHierachy && !document.isMultiple()) {
-                return ctx.createFailureStatus(Messages.bind(Messages.invalidMultipleFileContractInput, document.getName()));
+                return ctx.createFailureStatus(NLS.bind(Messages.invalidMultipleFileContractInput, document.getName()));
             }
             if (!hasMultipleInHierachy && document.isMultiple()) {
-                return ctx.createFailureStatus(Messages.bind(Messages.invalidSingleFileContractInput, document.getName()));
+                return ctx.createFailureStatus(NLS.bind(Messages.invalidSingleFileContractInput, document.getName()));
             }
         }
         return ctx.createSuccessStatus();

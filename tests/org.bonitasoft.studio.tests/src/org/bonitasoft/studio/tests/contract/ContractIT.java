@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.tests.contract;
 
-import static com.google.common.collect.Iterables.find;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -159,5 +159,9 @@ public class ContractIT {
                 .hasType(ContractInputType.LOCALDATE)
                 .isNotMultiple()
                 .hasDescription("When the expense was done");
+    }
+
+    private ContractInput find(List<ContractInput> inputs, Predicate<ContractInput> predicate) {
+        return inputs.stream().filter(predicate).findFirst().orElseThrow();
     }
 }

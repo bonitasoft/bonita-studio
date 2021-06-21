@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import static com.google.common.collect.Iterables.tryFind;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bdm.BDMSimpleNameProvider;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -28,9 +28,6 @@ import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFactory;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 
 public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusinessObjectListInitializer {
 
@@ -65,7 +62,8 @@ public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusine
 
     @Override
     protected String inputListToIterate() {
-        return Joiner.on("?.").join(toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()));
+        return toAncestorNameList().apply((ContractInput) persistenceIdInput.eContainer()).stream()
+                .collect(Collectors.joining("?."));
     }
 
     @Override
@@ -78,7 +76,8 @@ public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusine
         final SimpleField peristenceIdField = new SimpleField();
         peristenceIdField.setType(FieldType.LONG);
         peristenceIdField.setName(Field.PERSISTENCE_ID);
-        final SimpleFieldPropertyInitializer persistenceIdInitializer = new SimpleFieldPropertyInitializer(businessObject,
+        final SimpleFieldPropertyInitializer persistenceIdInitializer = new SimpleFieldPropertyInitializer(
+                businessObject,
                 peristenceIdField, persistenceIdInput);
         scriptBuilder.append(daoName(bo));
         scriptBuilder.append(".findByPersistenceId(");
@@ -87,12 +86,14 @@ public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusine
         validateQueryResult(scriptBuilder, persistenceIdInitializer);
     }
 
-    private void validateQueryResult(StringBuilder scriptBuilder, SimpleFieldPropertyInitializer persistenceIdInitializer) {
+    private void validateQueryResult(StringBuilder scriptBuilder,
+            SimpleFieldPropertyInitializer persistenceIdInitializer) {
         String localVariableName = context.getLocalVariableName();
         scriptBuilder.append(System.lineSeparator());
         scriptBuilder.append(String.format("if(!%s) {" + System.lineSeparator(), localVariableName));
         scriptBuilder.append(String.format(
-                "throw new IllegalArgumentException(\"The aggregated reference of type `%s` with the persistence id \" + %s + \" has not been found.\")"+System.lineSeparator(),
+                "throw new IllegalArgumentException(\"The aggregated reference of type `%s` with the persistence id \" + %s + \" has not been found.\")"
+                        + System.lineSeparator(),
                 context.getField().getReference().getSimpleName(), persistenceIdInitializer.getInitialValue()));
         scriptBuilder.append("}");
     }
@@ -103,15 +104,13 @@ public class MultipleAggregationBusinessObjectQueryInitializer extends NewBusine
 
     protected ContractInput persistenceIdInput(final ContractInput contractInput) {
         if (withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME)
-                .apply(contractInput)) {
+                .test(contractInput)) {
             return contractInput;
         }
-        final Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(),
-                withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME));
-        if (persistenceIdInput.isPresent()) {
-            return persistenceIdInput.get();
-        }
-        throw new IllegalStateException(
-                String.format("persistenceId_string input not found in %s", contractInput.getName()));
+        return contractInput.getInputs().stream()
+                .filter(withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("persistenceId_string input not found in %s", contractInput.getName())));
     }
 }

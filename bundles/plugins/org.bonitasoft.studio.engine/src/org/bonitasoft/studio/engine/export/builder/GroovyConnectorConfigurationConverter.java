@@ -14,14 +14,12 @@
  */
 package org.bonitasoft.studio.engine.export.builder;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Iterables.find;
 import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -48,39 +46,51 @@ public class GroovyConnectorConfigurationConverter {
         checkConnectorConfiguration(connectorConfiguration);
         final ConnectorConfiguration configuration = EcoreUtil.copy(connectorConfiguration);
         final org.bonitasoft.studio.model.expression.Expression fakeExpression = getFakeExpression(configuration);
-        find(configuration.getParameters(), withInputName(SCRIPT_INPUT)).setExpression(createConstantScriptExpression(fakeExpression));
-        find(configuration.getParameters(), withInputName(VARIABLES_INPUT)).setExpression(createVariableExpression(fakeExpression));
-        configuration.getParameters().remove(find(configuration.getParameters(), withInputName(FAKE_SCRIPT_EXPRESSION)));
+        configuration.getParameters().stream()
+                .filter(withInputName(SCRIPT_INPUT))
+                .findFirst()
+                .ifPresent(param -> param.setExpression(createConstantScriptExpression(fakeExpression)));
+        configuration.getParameters().stream()
+                .filter(withInputName(VARIABLES_INPUT))
+                .findFirst()
+                .ifPresent(param -> param.setExpression(createVariableExpression(fakeExpression)));
+        configuration.getParameters()
+                .removeIf(withInputName(FAKE_SCRIPT_EXPRESSION));
         return configuration;
     }
 
     private org.bonitasoft.studio.model.expression.Expression createConstantScriptExpression(
             final org.bonitasoft.studio.model.expression.Expression fakeExpression) {
-        final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper.createConstantExpression(
-                fakeExpression.getContent(), String.class.getName());
+        final org.bonitasoft.studio.model.expression.Expression scriptExpression = ExpressionHelper
+                .createConstantExpression(
+                        fakeExpression.getContent(), String.class.getName());
         scriptExpression.setName(fakeExpression.getName());
         return scriptExpression;
     }
 
     private void checkConnectorConfiguration(final ConnectorConfiguration connectorConfig) {
-        checkArgument(connectorConfig != null);
-        checkArgument(connectorConfig.getDefinitionId().equals(SCRIPTING_GROOVY_SCRIPT_DEF_ID));
-        final Set<String> keys = new HashSet<String>();
-        for (final ConnectorParameter connectorParameter : connectorConfig.getParameters()) {
-            keys.add(connectorParameter.getKey());
+        Objects.requireNonNull(connectorConfig);
+        if (!connectorConfig.getDefinitionId().equals(SCRIPTING_GROOVY_SCRIPT_DEF_ID)) {
+            throw new IllegalArgumentException();
         }
-        checkState(keys.containsAll(Arrays.asList(SCRIPT_INPUT, FAKE_SCRIPT_EXPRESSION, VARIABLES_INPUT)));
+        final Set<String> keys = connectorConfig.getParameters().stream().map(ConnectorParameter::getKey)
+                .collect(Collectors.toSet());
+        if (!keys.containsAll(Arrays.asList(SCRIPT_INPUT, FAKE_SCRIPT_EXPRESSION, VARIABLES_INPUT))) {
+            throw new IllegalStateException();
+        }
     }
 
     private org.bonitasoft.studio.model.expression.TableExpression createVariableExpression(
             final org.bonitasoft.studio.model.expression.Expression fakeExpression) {
         final TableExpression variableExpression = ExpressionFactory.eINSTANCE.createTableExpression();
         for (final EObject dep : fakeExpression.getReferencedElements()) {
-            final org.bonitasoft.studio.model.expression.Expression depValueExpression = ExpressionHelper.createExpressionFromEObject(dep);
+            final org.bonitasoft.studio.model.expression.Expression depValueExpression = ExpressionHelper
+                    .createExpressionFromEObject(dep);
             if (depValueExpression != null) {
                 final ListExpression depLine = ExpressionFactory.eINSTANCE.createListExpression();
-                final org.bonitasoft.studio.model.expression.Expression depNameExpression = ExpressionHelper.createConstantExpression(
-                        depValueExpression.getName(), String.class.getName());
+                final org.bonitasoft.studio.model.expression.Expression depNameExpression = ExpressionHelper
+                        .createConstantExpression(
+                                depValueExpression.getName(), String.class.getName());
                 final EList<org.bonitasoft.studio.model.expression.Expression> expressions = depLine.getExpressions();
                 expressions.addAll(Arrays.asList(depNameExpression, depValueExpression));
                 variableExpression.getExpressions().add(depLine);
@@ -89,7 +99,8 @@ public class GroovyConnectorConfigurationConverter {
         return variableExpression;
     }
 
-    private org.bonitasoft.studio.model.expression.Expression getFakeExpression(final ConnectorConfiguration configuration) {
+    private org.bonitasoft.studio.model.expression.Expression getFakeExpression(
+            final ConnectorConfiguration configuration) {
         for (final ConnectorParameter param : configuration.getParameters()) {
             if (FAKE_SCRIPT_EXPRESSION.equals(param.getKey())) {
                 final AbstractExpression expression = param.getExpression();

@@ -15,16 +15,15 @@
 package org.bonitasoft.studio.document.ui.control;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.function.Predicate.not;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.neverUpdateValueStrategy;
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputType;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.document.i18n.Messages;
@@ -75,24 +74,29 @@ public abstract class FileContractInputSelectionComposite extends Composite {
         return contractInputComboViewer;
     }
 
-    public void bindControl(final Document document, final EObject context, final EMFDataBindingContext emfDataBindingContext) {
+    public void bindControl(final Document document, final EObject context,
+            final EMFDataBindingContext emfDataBindingContext) {
         checkArgument(document != null);
         checkArgument(context != null);
         checkArgument(emfDataBindingContext != null);
         final IObservableValue observeInput = ViewersObservables.observeInput(getContractInputComboViewer());
-        final IObservableValue multipleDocumentObervable = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE);
+        final IObservableValue multipleDocumentObervable = EMFObservables.observeValue(document,
+                ProcessPackage.Literals.DOCUMENT__MULTIPLE);
         emfDataBindingContext.bindValue(observeInput,
                 multipleDocumentObervable,
                 neverUpdateValueStrategy().create(),
                 updateValueStrategy().withConverter(toInputList(document, context)).create());
 
-        final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(getContractInputComboViewer());
+        final IViewerObservableValue observeSingleSelection = ViewersObservables
+                .observeSingleSelection(getContractInputComboViewer());
         ControlDecorationSupport.create(emfDataBindingContext.bindValue(observeSingleSelection,
                 EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__CONTRACT_INPUT)), SWT.LEFT);
-        emfDataBindingContext.addValidationStatusProvider(createContractInputParameter(document, observeInput, observeSingleSelection));
+        emfDataBindingContext.addValidationStatusProvider(
+                createContractInputParameter(document, observeInput, observeSingleSelection));
     }
 
-    protected abstract ValidationStatusProvider createContractInputParameter(Document document, IObservableValue observeInput,
+    protected abstract ValidationStatusProvider createContractInputParameter(Document document,
+            IObservableValue observeInput,
             IObservableValue observeSingleSelection);
 
     private IConverter toInputList(final Document document, final EObject context) {
@@ -100,11 +104,15 @@ public abstract class FileContractInputSelectionComposite extends Composite {
 
             @Override
             public Object convert(final Object fromObject) {
-                final List<ContractInput> result = ModelHelper.getAllElementOfTypeIn(processContract(context), ContractInput.class);
-                return document.isMultiple() ? newArrayList(filter(result,
-                        and(withContractInputType(ContractInputType.FILE), withMultipleInHierarchy()))) :
-                        newArrayList(filter(result,
-                                and(withContractInputType(ContractInputType.FILE), not(withMultipleInHierarchy()))));
+                final List<ContractInput> result = ModelHelper.getAllElementOfTypeIn(processContract(context),
+                        ContractInput.class);
+                return document.isMultiple() ? result.stream()
+                        .filter(withContractInputType(ContractInputType.FILE).and(withMultipleInHierarchy()))
+                        .collect(Collectors.toList())
+                        : result.stream()
+                                .filter(withContractInputType(ContractInputType.FILE)
+                                        .and(not(withMultipleInHierarchy())))
+                                .collect(Collectors.toList());
             }
 
         };

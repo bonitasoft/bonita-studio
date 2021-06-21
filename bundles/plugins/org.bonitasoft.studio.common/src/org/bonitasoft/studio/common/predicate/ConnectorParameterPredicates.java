@@ -15,21 +15,15 @@
 package org.bonitasoft.studio.common.predicate;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 
-import com.google.common.base.Predicate;
 
 public class ConnectorParameterPredicates {
 
     public static Predicate<ConnectorParameter> withInputName(final String name) {
-        return new Predicate<ConnectorParameter>() {
-
-            @Override
-            public boolean apply(final ConnectorParameter input) {
-                return Objects.equals(name, input.getKey());
-            }
-        };
+        return input -> Objects.equals(name, input.getKey());
     }
 
 }

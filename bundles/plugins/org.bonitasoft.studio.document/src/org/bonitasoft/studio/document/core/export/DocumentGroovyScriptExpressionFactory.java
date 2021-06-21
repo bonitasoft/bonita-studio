@@ -14,19 +14,17 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
+import static java.util.function.Predicate.not;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameList;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withMultipleInHierarchy;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.engine.bpm.contract.FileInputValue;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ContractInput;
-
-import com.google.common.base.Joiner;
 
 public class DocumentGroovyScriptExpressionFactory {
 
@@ -40,7 +38,8 @@ public class DocumentGroovyScriptExpressionFactory {
     }
 
     private void addInputDependency(final ContractInput input, final Expression groovyScriptExpression) {
-        groovyScriptExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(rootInput(input)));
+        groovyScriptExpression.getReferencedElements()
+                .add(ExpressionHelper.createDependencyFromEObject(rootInput(input)));
     }
 
     public Expression createMultipleDocumentInitialContentScriptExpression(final ContractInput input) {
@@ -53,12 +52,13 @@ public class DocumentGroovyScriptExpressionFactory {
     }
 
     private String fileContractInputAccessorScript(final ContractInput contractInput) {
-        if (not(instanceOf(ContractInput.class)).apply(contractInput.eContainer())
-                || not(withMultipleInHierarchy()).apply((ContractInput) contractInput.eContainer())) {
-            return Joiner.on(".").join(toAncestorNameList().apply(contractInput));
+        if (!(contractInput.eContainer() instanceof ContractInput)
+                || not(withMultipleInHierarchy()).test((ContractInput) contractInput.eContainer())) {
+            return toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining("."));
         }
         final ContractInput parentInput = (ContractInput) contractInput.eContainer();
-        final StringBuilder scriptBuilder = new StringBuilder(Joiner.on(".").join(toAncestorNameList().apply(parentInput)));
+        final StringBuilder scriptBuilder = new StringBuilder(
+                toAncestorNameList().apply(parentInput).stream().collect(Collectors.joining(".")));
         scriptBuilder.append(".collect{it.");
         scriptBuilder.append(contractInput.getName());
         scriptBuilder.append("}.flatten()");

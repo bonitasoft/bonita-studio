@@ -36,7 +36,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
@@ -49,7 +50,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
-import com.google.common.io.Files;
 import com.thebuzzmedia.imgscalr.Scalr;
 
 /**
@@ -60,13 +60,13 @@ import com.thebuzzmedia.imgscalr.Scalr;
  */
 public class FileUtil {
 
-    public static int bufferSize = 2 * 8192;
+    public static final int BUFFER_SIZE = 2 * 8192;
 
     public static void replaceStringInFile(File file, String match, String replacingString) {
         try {
-            final Charset utf8 = Charset.forName("UTF-8");
-            Files.write(Files.toString(file, utf8).replace(match, replacingString), file,
-                    utf8);
+            Files.writeString(file.toPath(),
+                    Files.readString(file.toPath(), StandardCharsets.UTF_8).replace(match, replacingString), 
+                    StandardCharsets.UTF_8);
         } catch (final IOException e) {
             BonitaStudioLog.error(e);
         }
@@ -160,12 +160,12 @@ public class FileUtil {
             OutputStream out,
             long byteCount)
             throws IOException {
-        final byte buffer[] = new byte[bufferSize];
-        int len = bufferSize;
+        final byte buffer[] = new byte[BUFFER_SIZE];
+        int len = BUFFER_SIZE;
 
         if (byteCount >= 0) {
             while (byteCount > 0) {
-                final int max = byteCount < bufferSize ? (int) byteCount : bufferSize;
+                final int max = byteCount < BUFFER_SIZE ? (int) byteCount : BUFFER_SIZE;
                 len = in.read(buffer, 0, max);
 
                 if (len == -1) {
@@ -177,7 +177,7 @@ public class FileUtil {
             }
         } else {
             while (true) {
-                len = in.read(buffer, 0, bufferSize);
+                len = in.read(buffer, 0, BUFFER_SIZE);
                 if (len < 0) {
                     break;
                 }

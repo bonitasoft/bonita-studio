@@ -77,8 +77,8 @@ public class FormMappingBarResourceProviderTest {
         doReturn("id").when(formMappingBarResourceProvider).resolveUUID(anyString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void should_throw_an_IllegalArgumentException_if_process_is_null() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void should_throw_a_NullPointerException_if_process_is_null() throws Exception {
         formMappingBarResourceProvider.addResourcesForConfiguration(new BusinessArchiveBuilder(), null, aConfiguration()
                 .build());
     }

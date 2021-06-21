@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
@@ -31,8 +29,12 @@ public class SingleDocumentEngineDefinitionBuilder implements IDefinitionBuildab
 
     public SingleDocumentEngineDefinitionBuilder(final Document document, final ProcessDefinitionBuilder builder,
             final DocumentGroovyScriptExpressionFactory scriptFactory) {
-        checkArgument(document != null);
-        checkArgument(!document.isMultiple());
+        if(document == null) {
+            throw new IllegalArgumentException();
+        }
+        if(document.isMultiple()) {
+            throw new IllegalArgumentException();
+        }
         this.document = document;
         this.builder = builder;
         this.scriptFactory = scriptFactory;

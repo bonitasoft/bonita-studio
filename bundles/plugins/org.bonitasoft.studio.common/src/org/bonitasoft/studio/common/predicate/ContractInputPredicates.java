@@ -15,75 +15,48 @@
 package org.bonitasoft.studio.common.predicate;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 
-import com.google.common.base.Predicate;
-
 public class ContractInputPredicates {
 
     public static Predicate<ContractInput> withContractInputName(final String name) {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                return Objects.equals(name, input.getName());
-            }
-        };
+        return input -> Objects.equals(name, input.getName());
     }
 
     public static Predicate<ContractInput> withContractInputType(final ContractInputType type) {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                return Objects.equals(type, input.getType());
-            }
-        };
+        return input -> Objects.equals(type, input.getType());
     }
 
     public static Predicate<ContractInput> multipleContractInput() {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                return input.isMultiple();
-            }
-        };
+        return ContractInput::isMultiple;
     }
 
     public static Predicate<ContractInput> withMultipleInHierarchy() {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                ContractInput current = input;
-                while (current.eContainer() instanceof ContractInput) {
-                    if (current.isMultiple()) {
-                        return true;
-                    }
-                    current = (ContractInput) current.eContainer();
+        return input -> {
+            ContractInput current = input;
+            while (current.eContainer() instanceof ContractInput) {
+                if (current.isMultiple()) {
+                    return true;
                 }
-                return current.isMultiple();
+                current = (ContractInput) current.eContainer();
             }
+            return current.isMultiple();
         };
     }
 
     public static Predicate<ContractInput> withComplexMultipleInHierarchy() {
-        return new Predicate<ContractInput>() {
-
-            @Override
-            public boolean apply(final ContractInput input) {
-                ContractInput current = input;
-                while (current.eContainer() instanceof ContractInput) {
-                    if (current.isMultiple() && current.getType() == ContractInputType.COMPLEX) {
-                        return true;
-                    }
-                    current = (ContractInput) current.eContainer();
+        return input -> {
+            ContractInput current = input;
+            while (current.eContainer() instanceof ContractInput) {
+                if (current.isMultiple() && current.getType() == ContractInputType.COMPLEX) {
+                    return true;
                 }
-                return current.isMultiple();
+                current = (ContractInput) current.eContainer();
             }
+            return current.isMultiple();
         };
     }
 }

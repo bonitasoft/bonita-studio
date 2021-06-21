@@ -99,7 +99,7 @@ public class NewBusinessObjectInitializer extends AbstractBusinessObjectInitiali
 
     private boolean shouldUseParentIterator() {
         return context.getContractInput().eContainer() != null
-                && withComplexMultipleInHierarchy().apply(context.getContractInput());
+                && withComplexMultipleInHierarchy().test(context.getContractInput());
     }
 
     /**

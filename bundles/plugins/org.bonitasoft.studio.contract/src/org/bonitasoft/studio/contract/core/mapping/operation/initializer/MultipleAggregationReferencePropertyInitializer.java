@@ -17,10 +17,10 @@ package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 import static org.bonitasoft.studio.common.functions.ContractInputFunctions.toAncestorNameListUntilMultipleComplex;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withComplexMultipleInHierarchy;
 
+import java.util.stream.Collectors;
+
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
-
-import com.google.common.base.Joiner;
 
 public class MultipleAggregationReferencePropertyInitializer extends MultipleAggregationBusinessObjectQueryInitializer {
 
@@ -51,12 +51,12 @@ public class MultipleAggregationReferencePropertyInitializer extends MultipleAgg
 
     private String buildListAccessorWithIteratorName() {
         return iteratorName(multipleParentBusinessObject) + "."
-                + Joiner.on(".").join(toAncestorNameListUntilMultipleComplex().apply(contractInput));
+                + toAncestorNameListUntilMultipleComplex().apply(contractInput).stream().collect(Collectors.joining("."));
     }
 
     private boolean shouldUseParentIterator() {
         return contractInput.eContainer() != null && multipleParentBusinessObject != null
-                && withComplexMultipleInHierarchy().apply(contractInput);
+                && withComplexMultipleInHierarchy().test(contractInput);
     }
 
 }

@@ -14,11 +14,9 @@
  */
 package org.bonitasoft.studio.designer.core.bar;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -27,6 +25,7 @@ import org.bonitasoft.engine.bpm.bar.form.model.FormMappingDefinition;
 import org.bonitasoft.engine.bpm.bar.form.model.FormMappingModel;
 import org.bonitasoft.engine.form.FormMappingTarget;
 import org.bonitasoft.engine.form.FormMappingType;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.model.ModelSearch;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -65,12 +64,13 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     @Override
     public IStatus addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process,
             final Configuration configuration) throws Exception {
-        checkArgument(process != null);
+        Objects.requireNonNull(process != null);
         builder.setFormMappings(newFormMappingModel(builder, process));
         return Status.OK_STATUS;
     }
 
-    protected FormMappingModel newFormMappingModel(final BusinessArchiveBuilder builder, final AbstractProcess process) throws BarResourceCreationException,
+    protected FormMappingModel newFormMappingModel(final BusinessArchiveBuilder builder, final AbstractProcess process)
+            throws BarResourceCreationException,
             FormMappingException {
         final List<FormMapping> allFormMappings = modelSearch.getAllItemsOfType(process, FormMapping.class);
         final FormMappingModel formMappingModel = new FormMappingModel();
@@ -80,31 +80,36 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         return formMappingModel;
     }
 
-    private void addFormMapping(final BusinessArchiveBuilder builder, final FormMappingModel formMappingModel, final FormMapping formMapping)
+    private void addFormMapping(final BusinessArchiveBuilder builder, final FormMappingModel formMappingModel,
+            final FormMapping formMapping)
             throws BarResourceCreationException, FormMappingException {
         if (shouldAddFormMapping(formMapping)) {
             final FormMappingDefinition mappingDefinition = newFormMappingDefinition(formMapping);
             formMappingModel.addFormMapping(mappingDefinition);
             if (mappingDefinition.getTarget() == FormMappingTarget.INTERNAL) {
                 String formId = formId(formMapping);
-                if(isNullOrEmpty(formId) && !isNullOrEmpty(formMapping.getTargetForm().getContent())) {
-                   throw new InternalFormNotFoundException(formMapping);
-                }else if(!isNullOrEmpty(formId)) {
-                    builder.addExternalResource(customPageBarResourceBuilder.newBarResource(mappingDefinition.getForm(), formId));
+                if (Strings.isNullOrEmpty(formId) && Strings.hasText(formMapping.getTargetForm().getContent())) {
+                    throw new InternalFormNotFoundException(formMapping);
+                } else if (Strings.hasText(formId)) {
+                    builder.addExternalResource(
+                            customPageBarResourceBuilder.newBarResource(mappingDefinition.getForm(), formId));
                 }
             }
         }
     }
 
     private FormMappingDefinition newFormMappingDefinition(final FormMapping formMapping) {
-        return isTaskMapping(formMapping) ?
-                new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), FormMappingTarget.valueOf(formMapping.getType().getName()),
+        return isTaskMapping(formMapping)
+                ? new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping),
+                        FormMappingTarget.valueOf(formMapping.getType().getName()),
                         taskName(formMapping))
-                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping), FormMappingTarget.valueOf(formMapping.getType().getName()));
+                : new FormMappingDefinition(formValue(formMapping), formMappingType(formMapping),
+                        FormMappingTarget.valueOf(formMapping.getType().getName()));
     }
 
     private FormMappingType formMappingType(final FormMapping formMapping) {
-        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature()) ? mappingScope(formMapping)
+        return ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING.equals(formMapping.eContainingFeature())
+                ? mappingScope(formMapping)
                 : FormMappingType.PROCESS_OVERVIEW;
     }
 
@@ -115,16 +120,18 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     private String formValue(final FormMapping formMapping) {
         switch (formMapping.getType()) {
             case URL:
-                return isNullOrEmpty(formMapping.getUrl()) ? null : formMapping.getUrl();
+                return Strings.isNullOrEmpty(formMapping.getUrl()) ? null : formMapping.getUrl();
             case INTERNAL:
-                return !isNullOrEmpty(formName(formMapping)) ? toPageId(formMapping) : fallbackPageId(formMapping);
+                return Strings.hasText(formName(formMapping)) ? toPageId(formMapping) : fallbackPageId(formMapping);
             default:
-                throw new IllegalStateException(String.format("Unsupported FormMappingType: %s", formMapping.getType()));
+                throw new IllegalStateException(
+                        String.format("Unsupported FormMappingType: %s", formMapping.getType()));
         }
     }
 
     private String fallbackPageId(final FormMapping formMapping) {
-        return formMappingType(formMapping) == FormMappingType.PROCESS_OVERVIEW ? AUTOGENERATED_OVERVIEW_CUSTOM_PAGE : null;
+        return formMappingType(formMapping) == FormMappingType.PROCESS_OVERVIEW ? AUTOGENERATED_OVERVIEW_CUSTOM_PAGE
+                : null;
     }
 
     private String toPageId(final FormMapping formMapping) {
@@ -136,7 +143,9 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formId(final FormMapping formMapping) {
-        checkArgument(formMapping.getType() == org.bonitasoft.studio.model.process.FormMappingType.INTERNAL, "Only internal mapping has a form uuid");
+        if(formMapping.getType() != org.bonitasoft.studio.model.process.FormMappingType.INTERNAL) {
+            throw new IllegalArgumentException("Only internal mapping has a form uuid");
+        }
         return resolveUUID(formMapping.getTargetForm().getContent());
     }
 
@@ -146,7 +155,9 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     private String taskName(final FormMapping formMapping) {
-        checkArgument(formMapping.eContainer() instanceof Element);
+        if(!(formMapping.eContainer() instanceof Element)) {
+            throw new IllegalArgumentException();
+        }
         return ((Element) formMapping.eContainer()).getName();
     }
 
@@ -158,19 +169,22 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
         switch (formMapping.getType()) {
             case INTERNAL:
                 final FormMappingType formMappingType = formMappingType(formMapping);
-                if (forceMapping() && formMappingType != FormMappingType.PROCESS_OVERVIEW && !formMapping.getTargetForm().hasName()) {
+                if (forceMapping() && formMappingType != FormMappingType.PROCESS_OVERVIEW
+                        && !formMapping.getTargetForm().hasName()) {
                     throw new InternalFormNotFoundException(formMapping);
                 }
                 return true;
             case URL:
-                if (forceMapping() && formMappingType(formMapping) != FormMappingType.PROCESS_OVERVIEW && isNullOrEmpty(formMapping.getUrl())) {
+                if (forceMapping() && formMappingType(formMapping) != FormMappingType.PROCESS_OVERVIEW
+                        && Strings.isNullOrEmpty(formMapping.getUrl())) {
                     throw new URLNotDefinedException(formMapping);
                 }
                 return true;
             case NONE:
                 return false;
             default:
-                throw new IllegalStateException(String.format("Unsupported FormMappingType: %s", formMapping.getType()));
+                throw new IllegalStateException(
+                        String.format("Unsupported FormMappingType: %s", formMapping.getType()));
         }
     }
 

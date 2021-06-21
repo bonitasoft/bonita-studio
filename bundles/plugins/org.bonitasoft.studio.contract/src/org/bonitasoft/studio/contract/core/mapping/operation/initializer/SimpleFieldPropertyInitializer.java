@@ -76,7 +76,7 @@ public class SimpleFieldPropertyInitializer implements IPropertyInitializer {
     }
 
     private String initialValueScript(String separator) {
-        return withComplexMultipleInHierarchy().apply(contractInput)
+        return withComplexMultipleInHierarchy().test(contractInput)
                 ? prefixIterator(toAncestorNameListUntilMultipleComplex().apply(contractInput).stream()
                         .collect(Collectors.joining(separator)))
                 : toAncestorNameList().apply(contractInput).stream().collect(Collectors.joining(separator));

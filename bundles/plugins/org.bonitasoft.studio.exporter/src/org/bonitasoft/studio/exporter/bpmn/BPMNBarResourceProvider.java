@@ -14,9 +14,8 @@
  */
 package org.bonitasoft.studio.exporter.bpmn;
 
-import static com.google.common.io.Files.toByteArray;
-
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
@@ -60,7 +59,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
                         () -> definitions);
                 new BonitaToBPMNExporter().export(new BonitaModelExporterImpl(eResource, modelSearch), modelSearch,
                         destFile, new OSGIConnectorTransformationXSLProvider());
-                builder.addExternalResource(new BarResource("process.bpmn", toByteArray(destFile)));
+                builder.addExternalResource(new BarResource("process.bpmn", Files.readAllBytes(destFile.toPath())));
             } else {
                 BonitaStudioLog.warning(
                         String.format(
