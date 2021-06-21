@@ -36,7 +36,6 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -157,8 +156,8 @@ public class ContractEngineDefinitionBuilderTest {
         return contractInput;
     }
 
-    @Test(expected = AssertionFailedException.class)
-    public void should_build_throw_an_AssertionFailedException_if_no_builder_is_set() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void should_build_throw_a_NullPointerException_if_no_builder_is_set() throws Exception {
         userTaskengineContractBuilder = new TaskContractEngineDefinitionBuilder();
         userTaskengineContractBuilder.build(aContract);
     }

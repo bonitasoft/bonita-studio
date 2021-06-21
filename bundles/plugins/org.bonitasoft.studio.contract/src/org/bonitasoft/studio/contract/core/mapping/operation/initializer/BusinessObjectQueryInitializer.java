@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.contract.core.mapping.operation.initializer;
 
-import static com.google.common.collect.Iterables.tryFind;
 import static org.bonitasoft.studio.common.predicate.ContractInputPredicates.withContractInputName;
 
 import java.util.Objects;
@@ -28,7 +27,6 @@ import org.bonitasoft.studio.contract.core.mapping.FieldToContractInputMappingFa
 import org.bonitasoft.studio.contract.core.mapping.operation.BusinessObjectInstantiationException;
 import org.bonitasoft.studio.model.process.ContractInput;
 
-import com.google.common.base.Optional;
 
 public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitializer implements IPropertyInitializer {
 
@@ -111,16 +109,14 @@ public class BusinessObjectQueryInitializer extends AbstractBusinessObjectInitia
 
     protected ContractInput persistenceIdInput(ContractInput contractInput) {
         if (withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME)
-                .apply(contractInput)) {
+                .test(contractInput)) {
             return contractInput;
         }
-        Optional<ContractInput> persistenceIdInput = tryFind(contractInput.getInputs(),
-                withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME));
-        if (persistenceIdInput.isPresent()) {
-            return persistenceIdInput.get();
-        }
-        throw new IllegalStateException(
-                String.format("persistenceId_string input not found in %s", contractInput.getName()));
+        return contractInput.getInputs().stream()
+                .filter(withContractInputName(FieldToContractInputMappingFactory.PERSISTENCE_ID_STRING_FIELD_NAME))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                String.format("persistenceId_string input not found in %s", contractInput.getName())));
     }
 
 }

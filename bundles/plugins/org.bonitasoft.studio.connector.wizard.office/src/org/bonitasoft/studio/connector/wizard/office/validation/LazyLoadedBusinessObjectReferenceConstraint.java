@@ -5,22 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.wizard.office.validation;
 
-import static com.google.common.collect.Iterables.find;
+import static org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates.withInputName;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.jface.databinding.validator.TypedValidator;
-import org.bonitasoft.studio.common.predicate.ConnectorParameterPredicates;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.wizard.office.templating.TableExpressionWithoutLazyLoadedRefs;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -53,7 +50,8 @@ public class LazyLoadedBusinessObjectReferenceConstraint extends AbstractLiveVal
             final ConnectorParameter replacementParameter = getReplacementConnectorParameter(configuration);
             final AbstractExpression expression = replacementParameter.getExpression();
             if (expression instanceof TableExpression) {
-                final TypedValidator<TableExpression, IStatus> validator = new TableExpressionWithoutLazyLoadedRefs(getBusinessObjectRepositoryStore(), true);
+                final TypedValidator<TableExpression, IStatus> validator = new TableExpressionWithoutLazyLoadedRefs(
+                        getBusinessObjectRepositoryStore(), true);
                 final IStatus status = validator.validate(expression);
                 return status.getSeverity() == 0 ? context.createSuccessStatus()
                         : context.createFailureStatus(status.getMessage());
@@ -80,7 +78,10 @@ public class LazyLoadedBusinessObjectReferenceConstraint extends AbstractLiveVal
     }
 
     private ConnectorParameter getReplacementConnectorParameter(final ConnectorConfiguration configuration) {
-        return find(configuration.getParameters(), ConnectorParameterPredicates.withInputName(REPLACEMENT_PARAMETER_ID), null);
+        return configuration.getParameters().stream()
+                .filter(withInputName(REPLACEMENT_PARAMETER_ID))
+                .findFirst()
+                .orElse(null);
     }
 
 }

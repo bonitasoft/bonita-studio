@@ -14,16 +14,11 @@
  */
 package org.bonitasoft.studio.common.emf.tools;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.Iterables.find;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.DataUtil;
@@ -389,23 +384,44 @@ public class ExpressionHelper {
     }
 
     static DataType getDataTypeByClassName(final MainProcess dataTypeContainer, final String returnTypeClassname) {
-        checkArgument(dataTypeContainer != null);
-        checkArgument(returnTypeClassname != null);
+        Objects.requireNonNull(dataTypeContainer);
+        Objects.requireNonNull(returnTypeClassname);
         if (returnTypeClassname.equals(Boolean.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(BooleanType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(BooleanType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         } else if (returnTypeClassname.equals(String.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), and(instanceOf(StringType.class), not(instanceOf(DateType.class))),
-                    null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(StringType.class::isInstance)
+                    .filter(Predicate.not(DateType.class::isInstance))
+                    .findFirst()
+                    .orElse(null);
         } else if (returnTypeClassname.equals(Double.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(DoubleType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(DoubleType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         } else if (returnTypeClassname.equals(Long.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(LongType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(LongType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         } else if (returnTypeClassname.equals(Integer.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(IntegerType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(IntegerType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         } else if (returnTypeClassname.equals(Date.class.getName())) {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(DateType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(DateType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         } else {
-            return find(dataTypeContainer.getDatatypes(), instanceOf(JavaType.class), null);
+            return dataTypeContainer.getDatatypes().stream()
+                    .filter(JavaType.class::isInstance)
+                    .findFirst()
+                    .orElse(null);
         }
     }
 

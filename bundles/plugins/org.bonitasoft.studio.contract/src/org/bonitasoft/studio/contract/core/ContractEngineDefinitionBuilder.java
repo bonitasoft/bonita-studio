@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.contract.core;
 
+import java.util.Objects;
+
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.InputContainerDefinitionBuilder;
@@ -23,7 +25,6 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -35,8 +36,10 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
 
     @Override
     public void build(final EObject element) throws BuildProcessDefinitionException {
-        Assert.isNotNull(builder);
-        Assert.isLegal(element instanceof Contract);
+        Objects.requireNonNull(builder);
+        if (!(element instanceof Contract)) {
+            throw new IllegalArgumentException();
+        }
         final Contract contract = (Contract) element;
 
         final ContractDefinitionBuilder contractBuilder = addContract();
@@ -62,20 +65,23 @@ public abstract class ContractEngineDefinitionBuilder<T> implements IEngineDefin
         builder = engineBuilder;
     }
 
-    private void addChildInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
+    private void addChildInput(final ContractInput input,
+            final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
         for (final ContractInput child : input.getInputs()) {
             addInput(child, contractInputDefinitionBuilder);
         }
     }
 
-    private void addInput(final ContractInput input, final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
+    private void addInput(final ContractInput input,
+            final InputContainerDefinitionBuilder contractInputDefinitionBuilder) {
         if (ContractInputType.COMPLEX == input.getType()) {
             addChildInput(input, contractInputDefinitionBuilder.addComplexInput(input.getName(),
                     input.getDescription(), input.isMultiple()));
         } else if (Type.FILE == getInputType(input)) {
             contractInputDefinitionBuilder.addFileInput(input.getName(), input.getDescription(), input.isMultiple());
         } else {
-            contractInputDefinitionBuilder.addInput(input.getName(), getInputType(input), input.getDescription(), input.isMultiple());
+            contractInputDefinitionBuilder.addInput(input.getName(), getInputType(input), input.getDescription(),
+                    input.isMultiple());
         }
     }
 

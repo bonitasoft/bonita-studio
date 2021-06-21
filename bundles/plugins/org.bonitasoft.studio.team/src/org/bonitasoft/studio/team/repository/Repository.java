@@ -48,7 +48,6 @@ import org.bonitasoft.studio.team.jobs.SharedRepositoryUpdateBackgroundJob;
 import org.bonitasoft.studio.team.operations.CommitResourcesOperation;
 import org.bonitasoft.studio.team.operations.ScanResourcesLockOperation;
 import org.bonitasoft.studio.team.operations.UpdateRepositoryResourcesOperation;
-import org.bonitasoft.studio.team.preferences.TeamPreferenceInitializer;
 import org.bonitasoft.studio.team.preferences.TeamPreferencesConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -58,7 +57,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.egit.core.GitProvider;
@@ -83,7 +81,6 @@ import org.eclipse.team.svn.core.resource.IRepositoryRoot;
 import org.eclipse.team.svn.core.svnstorage.SVNRemoteStorage;
 import org.eclipse.team.svn.core.utility.FileUtility;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -93,7 +90,6 @@ public class Repository extends AbstractRepository {
     private static final long INTERVAL = 30000;
     private static final String GITIGNORE_TEMPLATE = ".gitignore.template";
 
-    private final String PRODUCTID_WORKSPACEAPI = "org.bonitasoft.studio.workspaceAPI"; // SP
     private final SharedRepositoryUpdateBackgroundJob updateJob;
     private SVNLockManager lockManagement;
 
@@ -103,9 +99,9 @@ public class Repository extends AbstractRepository {
             IEventBroker eventBroker,
             final boolean migrationEnabled) {
         super(workspace,
-                project, 
+                project,
                 extensionContextInjectionFactory,
-                jdtTypeHierarchyManager, 
+                jdtTypeHierarchyManager,
                 eventBroker,
                 migrationEnabled);
         updateJob = new SharedRepositoryUpdateBackgroundJob("Update shared repository job", INTERVAL, this);
@@ -182,17 +178,16 @@ public class Repository extends AbstractRepository {
         }
     }
 
-
     @Override
     public boolean isShared(String providerId) {
         IProject project = getProject();
         IPath location = project.getLocation();
         if (project.isAccessible()) {
             return RepositoryProvider.getProvider(project, providerId) != null;
-        } else if(location != null){
-            if(providerId.equals("org.eclipse.egit.core.GitProvider")){
+        } else if (location != null) {
+            if (providerId.equals("org.eclipse.egit.core.GitProvider")) {
                 return location.toFile().toPath().resolve(".git").toFile().exists();
-            }else if(providerId.equals("org.eclipse.team.svn.core.svnnature")){
+            } else if (providerId.equals("org.eclipse.team.svn.core.svnnature")) {
                 return location.toFile().toPath().resolve(".svn").toFile().exists();
             }
         }
@@ -206,49 +201,30 @@ public class Repository extends AbstractRepository {
         if (PlatformUI.isWorkbenchRunning()) {
             if (importEventOnSharedRepository(event, file)
                     || file != null && file.isShared() && TeamRepositoryUtil.isRepositoryOnLine()) {
-                if (PRODUCTID_WORKSPACEAPI.equals(Platform.getProduct().getId())) {
-                    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-                    Display.getDefault().asyncExec(new Runnable() {
+                final Display display = Display.getDefault();
+                display.syncExec(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            try {
-                                progressService.busyCursorWhile(synchronizationRunnable(event, file));
-                            } catch (final InvocationTargetException e) {
-                                BonitaStudioLog
-                                        .error(String.format("Failed to synchronize resource %s", file.getName()), e);
-                            } catch (final InterruptedException e) {
-                                BonitaStudioLog
-                                        .error(String.format("Failed to synchronize resource %s", file.getName()), e);
-                            }
-                        }
-                    });
-                } else {
-                    final Display display = Display.getDefault();
-                    display.syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        BusyIndicator.showWhile(display, new Runnable() {
 
-                        @Override
-                        public void run() {
-                            BusyIndicator.showWhile(display, new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    try {
-                                        synchronizationRunnable(event, file).run(NULL_PROGRESS_MONITOR);
-                                    } catch (final InvocationTargetException e) {
-                                        BonitaStudioLog.error(
-                                                String.format("Failed to synchronize resource %s", file.getName()), e);
-                                    } catch (final InterruptedException e) {
-                                        BonitaStudioLog.error(
-                                                String.format("Failed to synchronize resource %s", file.getName()), e);
-                                    }
+                            @Override
+                            public void run() {
+                                try {
+                                    synchronizationRunnable(event, file).run(NULL_PROGRESS_MONITOR);
+                                } catch (final InvocationTargetException e) {
+                                    BonitaStudioLog.error(
+                                            String.format("Failed to synchronize resource %s", file.getName()), e);
+                                } catch (final InterruptedException e) {
+                                    BonitaStudioLog.error(
+                                            String.format("Failed to synchronize resource %s", file.getName()), e);
                                 }
-                            });
-                        }
+                            }
+                        });
+                    }
 
-                    });
+                });
 
-                }
             }
         }
     }
@@ -540,7 +516,8 @@ public class Repository extends AbstractRepository {
                 if (!entriesToAdd.isEmpty()) {
                     existingEntries.add(System.lineSeparator());
                     existingEntries.addAll(entriesToAdd);
-                    String newContent = existingEntries.stream().reduce("", (s1, s2) -> s1 + System.lineSeparator() + s2);
+                    String newContent = existingEntries.stream().reduce("",
+                            (s1, s2) -> s1 + System.lineSeparator() + s2);
                     gitIgnore.setContents(new ByteArrayInputStream(newContent.getBytes(StandardCharsets.UTF_8)),
                             IResource.KEEP_HISTORY | IResource.FORCE, monitor);
                 }

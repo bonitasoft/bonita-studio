@@ -14,10 +14,9 @@
  */
 package org.bonitasoft.studio.designer.core;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,8 +42,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
     @Inject
     public PageDesignerURLFactory(
             @Preference(nodePath = "org.bonitasoft.studio.preferences") final IEclipsePreferences preferenceStore) {
-        checkNotNull(preferenceStore);
-        this.preferenceStore = preferenceStore;
+        this.preferenceStore = Objects.requireNonNull(preferenceStore);
         INSTANCE = this;
     }
 
@@ -131,8 +129,7 @@ public class PageDesignerURLFactory implements BonitaPreferenceConstants {
 
     private String locale() {
         final String locale = preferenceStore.get(CURRENT_STUDIO_LOCALE, LocaleUtil.DEFAULT_LOCALE.getLanguage());
-        checkNotNull(locale);
-        return locale;
+        return Objects.requireNonNull(locale);
     }
 
     private String port() {

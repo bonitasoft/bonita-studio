@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.document.core.export;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
 import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
@@ -32,13 +30,11 @@ public class DocumentEngineDefinitionBuilder implements IEngineDefinitionBuilder
         scriptExpressionFactory = new DocumentGroovyScriptExpressionFactory();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder#build(org.eclipse.emf.ecore.EObject)
-     */
     @Override
     public void build(final EObject element) throws BuildProcessDefinitionException {
-        checkArgument(element instanceof Document);
+        if(!(element instanceof Document)) {
+            throw new IllegalArgumentException();
+        }
         documentBuilderDelegate((Document) element).build();
     }
 

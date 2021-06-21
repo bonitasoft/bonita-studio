@@ -23,7 +23,6 @@ Export-Package:
  org.bonitasoft.engine.api.permission;version="0.0.0",
  org.bonitasoft.engine.api.result;version="0.0.0",
  org.bonitasoft.engine.api.tcp;version="0.0.0",
- org.bonitasoft.engine.application;version="0.0.0",
  org.bonitasoft.engine.bar;version="0.0.0",
  org.bonitasoft.engine.bdm;version="0.0.0",
  org.bonitasoft.engine.bdm.dao;version="0.0.0",
