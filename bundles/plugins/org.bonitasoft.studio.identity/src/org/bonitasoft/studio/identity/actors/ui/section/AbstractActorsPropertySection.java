@@ -5,17 +5,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.identity.actors.ui.section;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +26,11 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigratorFactory;
@@ -51,6 +52,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -76,7 +78,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -84,6 +85,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -356,36 +358,50 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     protected Button createSetButton(final Composite buttonsComposite) {
         final Button setButton = getWidgetFactory().createButton(buttonsComposite, Messages.set, SWT.FLAT);
         setButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create());
-        setButton.addSelectionListener(new SelectionListener() {
+        setButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent e) {
-                final WizardDialog wizardDialog = new ActorFilterDefinitionWizardDialog(
-                        Display.getCurrent().getActiveShell(),
-                        new FilterWizard(getEObject(), getFilterFeature(), getFilterFeatureToCheckUniqueID()));
-                if (wizardDialog.open() == Dialog.OK) {
-                    final Assignable assignable = (Assignable) getEObject();
-                    if (assignable.getFilters().size() > 1) {
-                        getEditingDomain().getCommandStack().execute(RemoveCommand.create(getEditingDomain(), assignable,
-                                assignable.getFilters(), assignable.getFilters().get(0)));
-                    }
-                    if (!assignable.getFilters().isEmpty()) {
-                        final ActorFilter filter = assignable.getFilters().get(0);
-                        updateFilterTextContent(filter);
-                    }
-                    updateButtons();
+            public void widgetSelected(final SelectionEvent event) {
+                try {
+                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> Job.getJobManager()
+                            .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, monitor));
+                } catch (InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(e);
                 }
-            }
-
-            @Override
-            public void widgetDefaultSelected(final SelectionEvent e) {
-
+                var registry = repositoryAccessor.getRepositoryStore(ActorFilterDefRepositoryStore.class)
+                        .getResourceProvider().getConnectorDefinitionRegistry();
+                if (registry.getDefinitions().isEmpty()) {
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            Messages.noActorFilterInstalled,
+                            Messages.installActorFilterExtensionMsg);
+                    var parameters = new HashMap<String, Object>();
+                    parameters.put("types", Messages.actorFilterType);
+                    commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters);
+                } else {
+                    final WizardDialog wizardDialog = new ActorFilterDefinitionWizardDialog(
+                            Display.getCurrent().getActiveShell(),
+                            new FilterWizard(getEObject(), getFilterFeature(), getFilterFeatureToCheckUniqueID()));
+                    if (wizardDialog.open() == Dialog.OK) {
+                        final Assignable assignable = (Assignable) getEObject();
+                        if (assignable.getFilters().size() > 1) {
+                            getEditingDomain().getCommandStack()
+                                    .execute(RemoveCommand.create(getEditingDomain(), assignable,
+                                            assignable.getFilters(), assignable.getFilters().get(0)));
+                        }
+                        if (!assignable.getFilters().isEmpty()) {
+                            final ActorFilter filter = assignable.getFilters().get(0);
+                            updateFilterTextContent(filter);
+                        }
+                        updateButtons();
+                    }
+                }
             }
         });
         return setButton;
     }
 
-    protected abstract void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory, Composite mainComposite);
+    protected abstract void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,
+            Composite mainComposite);
 
     @Override
     public void refresh() {

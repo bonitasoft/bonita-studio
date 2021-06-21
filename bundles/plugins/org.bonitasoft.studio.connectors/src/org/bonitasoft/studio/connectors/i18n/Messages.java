@@ -226,6 +226,9 @@ public class Messages extends NLS {
     public static String selectTargetDefinitionVersionMessage;
     public static String version;
 
+    public static String installConnectorExtensionMsg;
+    public static String noConnectorInstalled;
+
     public static String getValue(final String event) {
         try {
             return (String) Messages.class.getField(event).get(null);

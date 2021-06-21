@@ -1,21 +1,22 @@
 /**
-* Copyright (C) 2012 BonitaSoft S.A.
-* Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2.0 of the License, or
-* (at your option) any later version.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.connectors.ui.property.section;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,9 +29,11 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.widgets.GTKStyleHandler;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.migration.ConnectorConfigurationMigrator;
@@ -52,6 +55,7 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -79,13 +83,14 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -188,7 +193,8 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
         tableViewer.setContentProvider(new EMFListFeatureTreeContentProvider(
                 getConnectorFeature()));
         tableViewer.setLabelProvider(
-                new StyledConnectorLabelProvider(repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)));
+                new StyledConnectorLabelProvider(
+                        repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)));
         tableViewer.addFilter(getViewerFilter());
     }
 
@@ -307,23 +313,35 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                 Messages.add, SWT.FLAT);
         addData.setLayoutData(GridDataFactory.fillDefaults()
                 .minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        addData.addSelectionListener(new SelectionListener() {
+        addData.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent e) {
-                final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
-                        Display.getCurrent().getActiveShell(),
-                        createAddConnectorWizard());
-                if (wizardDialog.open() == Dialog.OK) {
-                    tableViewer.refresh();
-
+            public void widgetSelected(final SelectionEvent event) {
+                try {
+                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> Job.getJobManager()
+                            .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, monitor));
+                } catch (InvocationTargetException | InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+                var registry = repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)
+                        .getResourceProvider().getConnectorDefinitionRegistry();
+                if (registry.getDefinitions().isEmpty()) {
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            Messages.noConnectorInstalled,
+                            Messages.installConnectorExtensionMsg);
+                    var parameters = new HashMap<String, Object>();
+                    parameters.put("types", Messages.connectorType);
+                    commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters);
+                } else {
+                    final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
+                            Display.getCurrent().getActiveShell(),
+                            createAddConnectorWizard());
+                    if (wizardDialog.open() == Window.OK) {
+                        tableViewer.refresh();
+                    }
                 }
             }
 
-            @Override
-            public void widgetDefaultSelected(final SelectionEvent e) {
-
-            }
         });
         return addData;
     }
