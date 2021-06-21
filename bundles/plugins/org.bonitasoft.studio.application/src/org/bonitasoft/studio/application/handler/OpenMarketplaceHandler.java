@@ -33,6 +33,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.operation.extension.UpdateExtensionOperationDecorator;
 import org.bonitasoft.studio.application.ui.control.BonitaMarketplacePage;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -74,6 +76,7 @@ public class OpenMarketplaceHandler {
         String[] extensionTypes = types != null
                 ? types.split(":")
                 : new String[] {};
+        BonitaMarketplace.getInstance().synchronizeMarketplace();
         BonitaMarketplacePage bonitaMarketplacePage = createBonitaMarketPlacePage(repositoryAccessor, extensionTypes);
         WizardBuilder.<Boolean> newWizard()
                 .withTitle(getWizardTitle())
