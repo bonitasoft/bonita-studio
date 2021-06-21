@@ -427,7 +427,7 @@ public class ServersComposite extends Composite {
                 .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage());
         controlDecoration.show();
 
-        var serverIdCombo = new Combo(serverIdComposite, SWT.BORDER);
+        var serverIdCombo = new Combo(serverIdComposite, SWT.BORDER | SWT.READ_ONLY);
         serverIdCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         serverIdCombo.setItems(new ServerIdContentProvider(settingsObservable).toArray());
         IObservableValue<String> serverComboSelectionObservable = WidgetProperties.text()
@@ -475,12 +475,11 @@ public class ServersComposite extends Composite {
         viewer.getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SERVERS_VIEWER_ID);
 
         viewer.setUseHashlookup(true);
-       
 
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(1, true));
         viewer.getTable().setLayout(layout);
-        
+
         createServerColumn(viewer);
 
         viewer.setContentProvider(new ObservableListContentProvider<Server>());
