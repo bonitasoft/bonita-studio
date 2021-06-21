@@ -18,7 +18,10 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.preferences.BotPreferencesDialog;
 import org.bonitasoft.studio.ui.widget.NativeTabFolderWidget;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 public class BotMavenConfigurationPage extends BotBase {
 
@@ -56,6 +59,10 @@ public class BotMavenConfigurationPage extends BotBase {
 
     public BotMavenConfigurationPage apply() {
         bot.button("Apply").click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.mavenConfigurationUpdatedTitle));
+        SWTBotShell activeShell = bot.activeShell();
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
         return this;
     }
 
