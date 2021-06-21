@@ -23,7 +23,6 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarke
 import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorInput;
 import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -40,12 +39,7 @@ public class OpenExtensionViewHandler {
         if (Stream.of(activePage.getEditorReferences())
                 .noneMatch(er -> Objects.equals( er.getId(), ProjectDashboardEditorPart.ID))) {
             try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
-                    monitor.beginTask(Messages.fetchingExtensions, IProgressMonitor.UNKNOWN);
-                    BonitaMarketplace marketplace = BonitaMarketplace.getInstance(monitor);
-                    marketplace.loadDependencies();
-                    monitor.done();
-                });
+                PlatformUI.getWorkbench().getProgressService().run(true, false, BonitaMarketplace.getInstance()::loadDependencies);
             } catch (InvocationTargetException | InterruptedException e) {
                 BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
                 MessageDialog.openError(Display.getDefault().getActiveShell(),
