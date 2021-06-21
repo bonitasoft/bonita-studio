@@ -114,7 +114,7 @@ public class ImportExtensionHandler {
                 .needProgress()
                 .havingPage(newPage()
                         .withTitle(String.format(Messages.importExtensionTitle, titleType))
-                        .withDescription(String.format(Messages.importExtension, titleType))
+                        .withDescription(Messages.importExtension)
                         .withControl(importExtensionPage))
                 .onFinish(container -> performFinish(container,
                         importExtensionPage,
