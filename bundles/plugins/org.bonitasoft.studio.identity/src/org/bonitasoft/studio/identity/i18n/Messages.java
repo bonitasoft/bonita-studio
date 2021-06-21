@@ -322,4 +322,6 @@ public class Messages extends NLS {
     public static String actorFilterType;
     public static String openMarketplace;
     public static String openMarketplaceTooltip;
+    public static String noActorFilterInstalled;
+    public static String installActorFilterExtensionMsg;
 }

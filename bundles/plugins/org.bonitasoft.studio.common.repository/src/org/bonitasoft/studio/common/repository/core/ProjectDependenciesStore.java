@@ -28,6 +28,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface ProjectDependenciesStore {
 
+    String ANALYZE_PPROJECT_DEPENDENCIES_FAMILY = "ANALYZE_PPROJECT_DEPENDENCIES_FAMILY";
+
     DependencyReport analyze(IProgressMonitor monitor);
 
     List<Definition> getConnectorDefinitions();

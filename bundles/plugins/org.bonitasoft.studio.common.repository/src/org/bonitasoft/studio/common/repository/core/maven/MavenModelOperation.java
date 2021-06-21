@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven;
 
+import java.util.Objects;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -56,6 +59,10 @@ public abstract class MavenModelOperation implements IWorkspaceRunnable {
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                 repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
                 return Status.OK_STATUS;
+            }
+            
+            public boolean belongsTo(Object family) {
+                return Objects.equals(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, family);
             }
         }.schedule();
     }
