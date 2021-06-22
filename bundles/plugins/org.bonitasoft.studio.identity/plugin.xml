@@ -530,5 +530,11 @@
          </public>
       </catalogContribution>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.dashboardContribution">
+      <dashboardContribution
+            class="org.bonitasoft.studio.identity.organization.dashboard.OrganizationDashboardContribution">
+      </dashboardContribution>
+   </extension>
 
 </plugin>

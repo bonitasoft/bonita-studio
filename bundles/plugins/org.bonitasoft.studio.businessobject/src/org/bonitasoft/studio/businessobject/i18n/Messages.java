@@ -509,6 +509,7 @@ public class Messages extends NLS {
     public static String discouragedUsageOfKnownReservedKeyword;
     public static String deployBdmHint;
     public static String groupIdCannotBeEdited;
+    public static String bdmDashboardContribution;
 
     private Messages() {
     }

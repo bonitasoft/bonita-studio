@@ -229,4 +229,10 @@
          </contentTypeBinding>
       </editor>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.dashboardContribution">
+      <dashboardContribution
+            class="org.bonitasoft.studio.la.application.ui.dashboard.ApplicationDashboardContribution">
+      </dashboardContribution>
+   </extension>
 </plugin>

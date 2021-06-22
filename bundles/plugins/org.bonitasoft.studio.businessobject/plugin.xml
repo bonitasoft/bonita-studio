@@ -384,5 +384,14 @@
          </enablement>
       </decorator>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.dashboardContribution">
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.common.dashboardContribution">
+      <dashboardContribution
+            class="org.bonitasoft.studio.businessobject.dashboard.BdmDashboardContribution">
+      </dashboardContribution>
+   </extension>
 
 </plugin>

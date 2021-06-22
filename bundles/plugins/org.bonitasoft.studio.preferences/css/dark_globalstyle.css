@@ -144,6 +144,34 @@ Table#extensionViewBackground {
     background-color: rgb(136, 138, 133);
 }
 
+.MPart .dashboardProcessCardBackground {
+    background-color: #6f9cc9;
+}
+
+.MPart .dashboardBdmCardBackground {
+    background-color: #6f81c9;
+}
+
+.MPart .dashboardOrgaCardBackground {
+    background-color: #cf9b63;
+}
+
+.MPart .dashboardProfileCardBackground {
+    background-color: #cf7c63;
+}
+
+.MPart .dashboardAccessControlCardBackground {
+    background-color: #cf6363;
+}
+
+.MPart .dashboardApplicationCardBackground {
+    background-color: #a4c78f;
+}
+
+.MPart .dashboardDocumentationCardBackground {
+    background-color: #8fc7b8;
+}
+
 
 .MPart .extensionViewBackground {
 	background-color: #1a202d;
