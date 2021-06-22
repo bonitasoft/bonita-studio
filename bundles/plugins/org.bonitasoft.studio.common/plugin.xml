@@ -7,6 +7,7 @@
    <extension-point id="startupDialog" name="Actions to hook after studio started" schema="schema/org.bonitasoft.studio.common.startup.dialog.exsd"/>
    <extension-point id="org.bonitasoft.studio.coolbarContributionItem" name="org.bonitasoft.studio.coolbarContributionItem" schema="schema/org.bonitasoft.studio.coolbarContributionItem.exsd"/>
   <extension-point id="org.bonitasoft.studio.common.introModelPageId" name="introModelPageId" schema="schema/org.bonitasoft.studio.common.exsd"/>
+  <extension-point id="dashboardContribution" name="Project dashboard contribution" schema="schema/org.bonitasoft.studio.dashboardContribution.exsd"/>
  
 <extension
           id="RestAPIExtensionNature"

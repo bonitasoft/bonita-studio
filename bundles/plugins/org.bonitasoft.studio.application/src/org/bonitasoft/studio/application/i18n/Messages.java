@@ -361,6 +361,9 @@ public class Messages extends NLS {
     public static String mirrorUrlMandatory;
     public static String mavenConfigurationUpdatedTitle;
     public static String mavenConfigurationUpdated;
+    public static String processAndData;
+    public static String users;
+    public static String project;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

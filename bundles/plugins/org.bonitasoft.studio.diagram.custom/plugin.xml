@@ -896,4 +896,10 @@
          name="Process Diagram Editor">
    </editor>
 </extension>
+<extension
+      point="org.bonitasoft.studio.common.dashboardContribution">
+   <dashboardContribution
+         class="org.bonitasoft.studio.diagram.custom.dashboard.DiagramDashboardContribution">
+   </dashboardContribution>
+</extension>
 </plugin>

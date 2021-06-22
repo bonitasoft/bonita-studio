@@ -88,4 +88,5 @@ public class Messages extends NLS {
     public static String buildingProcess;
     public static String containsLegacyFormsWarning;
     public static String loadingAllProcesses;
+    public static String dashboardDiagramDescription;
 }
