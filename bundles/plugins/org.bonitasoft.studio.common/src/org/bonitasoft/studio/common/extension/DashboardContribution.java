@@ -14,7 +14,12 @@
  */
 package org.bonitasoft.studio.common.extension;
 
+import org.bonitasoft.studio.common.CommandExecutor;
+import org.eclipse.swt.widgets.Composite;
+
 public interface DashboardContribution extends Comparable<DashboardContribution> {
+
+    public final CommandExecutor commandExecutor = new CommandExecutor();
 
     public enum Category {
         PROCESS_DATA, USERS, PROJECT
@@ -29,6 +34,10 @@ public interface DashboardContribution extends Comparable<DashboardContribution>
     public int getPriority();
 
     public String getColorCssClass();
+
+    public String getDocumentationLink();
+
+    public void contributeActions(Composite parent);
 
     @Override
     default int compareTo(DashboardContribution o) {

@@ -14,11 +14,38 @@
  */
 package org.bonitasoft.studio.identity.organization.dashboard;
 
+import java.util.List;
+
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.identity.i18n.Messages;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 public class OrganizationDashboardContribution implements DashboardContribution {
+
+    public static final String NEW_ORGA_COMMAND = "org.bonitasoft.studio.identity.organization.create.command";
+
+    private ActiveOrganizationProvider activeOrganizationProvider;
+    private OrganizationRepositoryStore repositoryStore;
+
+    public OrganizationDashboardContribution() {
+        activeOrganizationProvider = new ActiveOrganizationProvider();
+        repositoryStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+    }
 
     @Override
     public Category getCategory() {
@@ -38,6 +65,62 @@ public class OrganizationDashboardContribution implements DashboardContribution 
     @Override
     public String getColorCssClass() {
         return BonitaThemeConstants.DASHBOARD_ORGA_BACKGROUND;
+    }
+
+    @Override
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/organization-overview";
+    }
+
+    @Override
+    public void contributeActions(Composite parent) {
+        var toolbarComposite = new Composite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        createToolbarButtons(toolbarComposite);
+    }
+
+    private void createToolbarButtons(Composite parent) {
+        String activeOrganizationFileName = activeOrganizationProvider.getActiveOrganizationFileName();
+        if (Strings.hasText(activeOrganizationFileName)) {
+            new DynamicButtonWidget.Builder()
+                    .withText(org.bonitasoft.studio.common.Messages.open)
+                    .withImage(Pics.getImage(PicsConstants.open))
+                    .withHotImage(Pics.getImage(PicsConstants.openHot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> {
+                        OrganizationFileStore fileStore = repositoryStore.getChild(activeOrganizationFileName, false);
+                        if (fileStore != null) {
+                            fileStore.open();
+                        } else {
+                            MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                    Messages.organizationNotFoundTitle,
+                                    String.format(Messages.organizationNotFound, activeOrganizationFileName));
+                        }
+                    })
+                    .createIn(parent);
+        } else {
+            new DynamicButtonWidget.Builder()
+                    .withText(org.bonitasoft.studio.common.Messages.create)
+                    .withImage(Pics.getImage(PicsConstants.add_simple))
+                    .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> {
+                        commandExecutor.executeCommand(NEW_ORGA_COMMAND, null);
+                        refreshToolbar(parent);
+                    })
+                    .createIn(parent);
+        }
+    }
+
+    private void refreshToolbar(Composite toolbarComposite) {
+        Display.getDefault().asyncExec(() -> {
+            List.of(toolbarComposite.getChildren()).forEach(Control::dispose);
+            createToolbarButtons(toolbarComposite);
+            toolbarComposite.getParent().layout();
+        });
     }
 
     @Override

@@ -196,7 +196,7 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
 
         toolbarComposite = createComposite(composite, SWT.NONE);
         toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
-        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM).create());
     }
 
     private void updateToolbarContent() {

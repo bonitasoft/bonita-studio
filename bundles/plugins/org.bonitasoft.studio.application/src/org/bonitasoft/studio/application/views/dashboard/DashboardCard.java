@@ -14,9 +14,11 @@
  */
 package org.bonitasoft.studio.application.views.dashboard;
 
+import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -24,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 
 public class DashboardCard extends Composite {
 
@@ -45,9 +48,16 @@ public class DashboardCard extends Composite {
         var contentComposite = new Composite(this, SWT.NONE);
         contentComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        contentComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         createTitleComposite(contentComposite);
         createDescriptionLabel(contentComposite);
+
+        var separator = new Label(contentComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        separator.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_SEPARATOR);
+
+        contribution.contributeActions(contentComposite);
     }
 
     protected void createTitleComposite(Composite parent) {
@@ -66,10 +76,11 @@ public class DashboardCard extends Composite {
     }
 
     protected void createDescriptionLabel(Composite parent) {
-        var description = new Label(parent, SWT.WRAP);
+        var description = new Link(parent, SWT.WRAP);
         description.setLayoutData(
-                GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 50).create());
-        description.setText(contribution.getDescription());
+                GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 80).create());
+        description.setText(String.format("%s <a>%s.</a>", contribution.getDescription(), Messages.moreDetails));
+        description.addListener(SWT.Selection, new OpenSystemBrowserListener(contribution.getDocumentationLink()));
     }
 
 }

@@ -85,7 +85,7 @@ public class DashboardComposite extends Composite {
 
         var composite = createComposite(parent, SWT.NONE);
         composite.setLayout(
-                GridLayoutFactory.fillDefaults().margins(40, 20).spacing(20, 20)
+                GridLayoutFactory.fillDefaults().margins(40, 10).spacing(20, 5)
                         .numColumns(3)
                         .equalWidth(true)
                         .create());
@@ -97,6 +97,7 @@ public class DashboardComposite extends Composite {
         titleLabel.setText(sectionTitle);
         titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         contributionsToCreate.forEach(contribution -> new DashboardCard(composite, contribution));
     }

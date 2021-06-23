@@ -325,4 +325,6 @@ public class Messages extends NLS {
     public static String organizationDashboardDescription;
     public static String noActorFilterInstalled;
     public static String installActorFilterExtensionMsg;
+    public static String organizationNotFoundTitle;
+    public static String organizationNotFound;
 }

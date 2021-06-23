@@ -403,6 +403,7 @@ public class PicsConstants {
     public static String edit_simple_hot = "edit_simple_hot.png";
 
     public static String add_simple = "add_simple.png";
+    public static String add_simple_hot = "add_simple_hot.png";
 
     public static String delete = "delete_icon.png";
     public static String delete_hot = "delete_icon_hot.png";
@@ -469,4 +470,6 @@ public class PicsConstants {
     public static String remote = "projectExtensions/remote.png";
     public static String marketplace = "projectExtensions/marketplace.png";
 
+    public static String open = "projectExtensions/open.png";
+    public static String openHot = "projectExtensions/open_hot.png";
 }
