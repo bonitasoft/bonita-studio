@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<model:definitions xmlns:bonitaConnector="http://www.bonitasoft.org/studio/connector/definition/6.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di_1="http://www.omg.org/spec/DD/20100524/DI" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:model="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="BonitaSoft" exporterVersion="6.0" expressionLanguage="http://groovy.codehaus.org/" targetNamespace="http://bonitasoft.com/_sCfgAWLtEeGDoN5gtNRZoA">
+  <model:import importType="http://www.w3.org/2001/XMLSchema" location="connector-definition-descriptor.xsd" namespace="http://www.bonitasoft.org/studio/connector/definition/6.0"/>
+  <model:collaboration id="_sCfgAWLtEeGDoN5gtNRZoA">
+    <model:participant id="_zdRPgGLtEeGDoN5gtNRZoA" name="Pool2" processRef="_sLo08GLtEeGDoN5gtNRZoA"/>
+  </model:collaboration>
+  <model:itemDefinition id="bonitaConnectorInput" structureRef="bonitaConnector:ConnectorDefinition"/>
+  <model:message id="bonitaConnectorMessageInput" itemRef="bonitaConnectorInput"/>
+  <model:itemDefinition id="bonitaConnectorOutput" structureRef="bonitaConnector:Output"/>
+  <model:message id="bonitaConnectorMessageOutput" itemRef="bonitaConnectorOutput"/>
+  <model:interface id="Bonita_Connector_Interface" implementationRef="BonitaConnector">
+    <model:operation id="Execute_Bonita_Connector">
+      <model:inMessageRef>bonitaConnectorMessageInput</model:inMessageRef>
+      <model:outMessageRef>bonitaConnectorMessageOutput</model:outMessageRef>
+    </model:operation>
+  </model:interface>
+  <model:process id="_sLo08GLtEeGDoN5gtNRZoA" name="Pool2">
+    <model:userTask id="_sULF4GLtEeGDoN5gtNRZoA" name="Step1"/>
+    <model:startEvent id="_sXopkGLtEeGDoN5gtNRZoA" name="Start1"/>
+    <model:sequenceFlow id="_sZGpMGLtEeGDoN5gtNRZoA" name="" sourceRef="_sXopkGLtEeGDoN5gtNRZoA" targetRef="_sULF4GLtEeGDoN5gtNRZoA"/>
+  </model:process>
+  <di:BPMNDiagram name="MyDiagram2">
+    <di:BPMNPlane id="plane__sCfgAWLtEeGDoN5gtNRZoA" bpmnElement="_sCfgAWLtEeGDoN5gtNRZoA">
+      <di:BPMNShape id="_sRoIMGLtEeGDoN5gtNRZoA" bpmnElement="_sLo08GLtEeGDoN5gtNRZoA" isHorizontal="true">
+        <dc:Bounds height="250.0" width="1110.0" x="30.0" y="30.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_sURMgGLtEeGDoN5gtNRZoA" bpmnElement="_sULF4GLtEeGDoN5gtNRZoA">
+        <dc:Bounds height="50.0" width="100.0" x="140.0" y="85.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_sXsT8GLtEeGDoN5gtNRZoA" bpmnElement="_sXopkGLtEeGDoN5gtNRZoA">
+        <dc:Bounds height="34.0" width="30.0" x="70.0" y="95.0"/>
+      </di:BPMNShape>
+      <di:BPMNEdge id="_sZPzIGLtEeGDoN5gtNRZoA" bpmnElement="_sZGpMGLtEeGDoN5gtNRZoA">
+        <di_1:waypoint x="100.0" y="111.0"/>
+        <di_1:waypoint x="140.0" y="111.0"/>
+      </di:BPMNEdge>
+    </di:BPMNPlane>
+  </di:BPMNDiagram>
+</model:definitions>
