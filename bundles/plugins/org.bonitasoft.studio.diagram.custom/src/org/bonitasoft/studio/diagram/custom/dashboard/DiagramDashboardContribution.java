@@ -16,9 +16,18 @@ package org.bonitasoft.studio.diagram.custom.dashboard;
 
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 
 public class DiagramDashboardContribution implements DashboardContribution {
+
+    public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
 
     @Override
     public Category getCategory() {
@@ -27,7 +36,7 @@ public class DiagramDashboardContribution implements DashboardContribution {
 
     @Override
     public String getName() {
-        return Messages.diagrams;
+        return Messages.dashboardDiagramName;
     }
 
     @Override
@@ -38,6 +47,27 @@ public class DiagramDashboardContribution implements DashboardContribution {
     @Override
     public String getColorCssClass() {
         return BonitaThemeConstants.DASHBOARD_PROCESS_BACKGROUND;
+    }
+
+    @Override
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/diagram-overview";
+    }
+
+    @Override
+    public void contributeActions(Composite parent) {
+        var toolbarComposite = new Composite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        new DynamicButtonWidget.Builder()
+                .withText(org.bonitasoft.studio.common.Messages.create)
+                .withImage(Pics.getImage(PicsConstants.add_simple))
+                .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
+                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .onClick(e -> commandExecutor.executeCommand(NEW_DIAGRAM_COMMAND, null))
+                .createIn(toolbarComposite);
     }
 
     @Override

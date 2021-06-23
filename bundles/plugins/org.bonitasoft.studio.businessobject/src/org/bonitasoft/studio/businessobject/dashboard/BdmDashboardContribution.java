@@ -14,11 +14,33 @@
  */
 package org.bonitasoft.studio.businessobject.dashboard;
 
+import java.util.List;
+
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 public class BdmDashboardContribution implements DashboardContribution {
+
+    private static final String DEFINE_BDM_COMMAND = "org.bonitasoft.studio.businessobject.define";
+    private BusinessObjectModelRepositoryStore repositoryStore;
+
+    public BdmDashboardContribution() {
+        repositoryStore = RepositoryManager.getInstance()
+                .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+    }
 
     @Override
     public Category getCategory() {
@@ -38,6 +60,57 @@ public class BdmDashboardContribution implements DashboardContribution {
     @Override
     public String getColorCssClass() {
         return BonitaThemeConstants.DASHBOARD_BDM_BACKGROUND;
+    }
+
+    @Override
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/define-and-deploy-the-bdm";
+    }
+
+    @Override
+    public void contributeActions(Composite parent) {
+        var toolbarComposite = new Composite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        createToolbarButtons(toolbarComposite);
+    }
+
+    private void createToolbarButtons(Composite parent) {
+        if (bdmIsPresent()) {
+            new DynamicButtonWidget.Builder()
+                    .withText(org.bonitasoft.studio.common.Messages.open)
+                    .withImage(Pics.getImage(PicsConstants.open))
+                    .withHotImage(Pics.getImage(PicsConstants.openHot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null))
+                    .createIn(parent);
+
+        } else {
+            new DynamicButtonWidget.Builder()
+                    .withText(org.bonitasoft.studio.common.Messages.create)
+                    .withImage(Pics.getImage(PicsConstants.add_simple))
+                    .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .onClick(e -> {
+                        commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null);
+                        refreshToolbar(parent);
+                    })
+                    .createIn(parent);
+        }
+    }
+
+    private void refreshToolbar(Composite toolbarComposite) {
+        Display.getDefault().asyncExec(() -> {
+            List.of(toolbarComposite.getChildren()).forEach(Control::dispose);
+            createToolbarButtons(toolbarComposite);
+            toolbarComposite.getParent().layout();
+        });
+    }
+
+    private boolean bdmIsPresent() {
+        return repositoryStore.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null;
     }
 
     @Override

@@ -16,9 +16,18 @@ package org.bonitasoft.studio.la.application.ui.dashboard;
 
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 
 public class ApplicationDashboardContribution implements DashboardContribution {
+
+    public static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
 
     @Override
     public Category getCategory() {
@@ -38,6 +47,27 @@ public class ApplicationDashboardContribution implements DashboardContribution {
     @Override
     public String getColorCssClass() {
         return BonitaThemeConstants.DASHBOARD_APPLICATION_BACKGROUND;
+    }
+
+    @Override
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/applications";
+    }
+
+    @Override
+    public void contributeActions(Composite parent) {
+        var toolbarComposite = new Composite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+
+        new DynamicButtonWidget.Builder()
+                .withText(org.bonitasoft.studio.common.Messages.create)
+                .withImage(Pics.getImage(PicsConstants.add_simple))
+                .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
+                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .onClick(e -> commandExecutor.executeCommand(NEW_APPLICATION_COMMAND, null))
+                .createIn(toolbarComposite);
     }
 
     @Override
