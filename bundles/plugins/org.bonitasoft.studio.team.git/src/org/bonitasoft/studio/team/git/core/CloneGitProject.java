@@ -11,6 +11,7 @@ package org.bonitasoft.studio.team.git.core;
 import java.util.HashMap;
 
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.team.git.i18n.Messages;
 import org.bonitasoft.studio.team.git.ui.wizard.CustomGitCloneWizard;
@@ -21,7 +22,6 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.egit.core.GitProvider;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -38,11 +38,12 @@ public class CloneGitProject extends AbstractHandler {
         execute();
         return null;
     }
-    
+
     public void execute() {
         Shell activeShell = Display.getDefault().getActiveShell();
         CustomGitCloneWizard wizard = new CustomGitCloneWizard();
         WizardDialog dlg = new WizardDialog(activeShell, wizard) {
+
             @Override
             protected Point getInitialSize() {
                 return new Point(800, 800);
@@ -50,14 +51,18 @@ public class CloneGitProject extends AbstractHandler {
         };
         dlg.setHelpAvailable(true);
         if (dlg.open() == Window.OK && RepositoryManager.getInstance().getCurrentRepository().isShared(GitProvider.ID)) { // To prevent npe if the authentification failed
-            if(new MessageDialog(activeShell,  Messages.repositoryClonedTitle, null,  !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg,
+            PlatformUtil.openDashboardIfNoOtherEditorOpen();
+            if (new MessageDialog(activeShell, Messages.repositoryClonedTitle, null,
+                    !wizard.hasBeenMigrated() ? String.format(Messages.repositoryClonedMsg,
                             wizard.getRepositoryName())
-                            : migrationAfterCloneMessage(wizard), MessageDialog.INFORMATION, 0, org.bonitasoft.studio.importer.i18n.Messages.deploy, IDialogConstants.CLOSE_LABEL).open() == 0) {
-               executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
+                            : migrationAfterCloneMessage(wizard),
+                    MessageDialog.INFORMATION, 0, org.bonitasoft.studio.importer.i18n.Messages.deploy,
+                    IDialogConstants.CLOSE_LABEL).open() == 0) {
+                executeCommand("org.bonitasoft.studio.application.command.deployArtifacts");
             }
         }
     }
-    
+
     private void executeCommand(String command) {
         ECommandService eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
         EHandlerService eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);

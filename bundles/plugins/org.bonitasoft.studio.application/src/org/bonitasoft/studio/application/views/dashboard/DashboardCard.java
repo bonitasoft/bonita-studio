@@ -18,8 +18,11 @@ import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
+import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -63,7 +66,8 @@ public class DashboardCard extends Composite {
 
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
-        titleComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        titleComposite
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 2 : 1).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
@@ -77,6 +81,14 @@ public class DashboardCard extends Composite {
 
         if (contribution instanceof Zoomable) {
             ((Zoomable) contribution).addZoomBehavior(titleLabel);
+
+            new DynamicButtonWidget.Builder()
+                    .withImage(Pics.getImage(PicsConstants.details))
+                    .withHotImage(Pics.getImage(PicsConstants.detailsHot))
+                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create())
+                    .onClick(e -> ((Zoomable) contribution).getZoomListener().zoom(e))
+                    .createIn(titleComposite);
         }
     }
 

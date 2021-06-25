@@ -22,6 +22,7 @@ import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.application.views.CustomObjectActionContributorManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -57,8 +58,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
     }
-    
-    
+
     public BonitaStudioWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
         super(configurer);
         configurer.setShowProgressIndicator(true);
@@ -89,6 +89,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void openIntro() {
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
         PrefUtil.saveAPIPrefs();
+        PlatformUtil.openDashboardIfNoOtherEditorOpen();
     }
 
     /**
@@ -157,7 +158,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 IDEWorkbenchPlugin.getDefault().savePluginPreferences();
             }
         }
-        
+
         IWorkbenchPage activePage = PlatformUI.getWorkbench()
                 .getActiveWorkbenchWindow()
                 .getActivePage();
