@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
@@ -66,6 +67,7 @@ import org.osgi.framework.Bundle;
  */
 public class PlatformUtil {
 
+    private static final String OPEN_DASHBOARD_COMMAND = "org.bonitasoft.studio.application.show.extensions.command";
     private static final String INTROVIEW_ID = "org.eclipse.ui.internal.introview";
     private static IFileSystem fileSystem; // SINGLETON
 
@@ -153,6 +155,26 @@ public class PlatformUtil {
         }
     }
 
+    public static void openDashboardIfNoOtherEditorOpen() {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench != null) {
+            workbench.getDisplay().asyncExec(() -> Optional.ofNullable(PlatformUI.getWorkbench())
+                    .map(IWorkbench::getActiveWorkbenchWindow)
+                    .map(IWorkbenchWindow::getActivePage)
+                    .map(page -> page.getEditorReferences().length)
+                    .filter(nbEditors -> nbEditors == 0)
+                    .ifPresent(nbEditors -> {
+                        // and that we are in BOS or BOS-SP
+                        if (isABonitaProduct(Platform.getProduct().getId())) {
+                            CommandExecutor commandExecutor = new CommandExecutor();
+                            if (commandExecutor.canExecute(OPEN_DASHBOARD_COMMAND, null)) {
+                                commandExecutor.executeCommand(OPEN_DASHBOARD_COMMAND, null);
+                            }
+                        }
+                    }));
+        }
+    }
+
     public static void openIntro() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
@@ -169,10 +191,10 @@ public class PlatformUtil {
 
     public static void showIntroPart(IWorkbenchPage page) {
         IViewReference explorerView = page.findViewReference("org.bonitasoft.studio.application.project.explorer");
-        if(explorerView != null) {
+        if (explorerView != null) {
             page.activate(explorerView.getPart(true));
         }
-        
+
         final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
         //colse intro to reload content if already opened
         hideIntroPart();

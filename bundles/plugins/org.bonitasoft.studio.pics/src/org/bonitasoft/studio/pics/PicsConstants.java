@@ -474,4 +474,7 @@ public class PicsConstants {
     public static String openHot = "projectExtensions/open_hot.png";
     public static String open32 = "projectExtensions/open32.png";
     public static String open32Hot = "projectExtensions/open32_hot.png";
+
+    public static String details = "projectExtensions/details.png";
+    public static String detailsHot = "projectExtensions/details_hot.png";
 }

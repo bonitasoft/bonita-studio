@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistry;
@@ -49,9 +48,9 @@ public class ImportBosHandler {
     private MavenRepositoryRegistry mavenRepositoryRegistry;
     private RepositoryAccessor repositoryAccessor;
     private ExceptionDialogHandler exceptionDialogHandler;
-    
+
     @Inject
-    public ImportBosHandler( RepositoryAccessor repositoryAccessor,
+    public ImportBosHandler(RepositoryAccessor repositoryAccessor,
             MavenRepositoryRegistry mavenRepositoryRegistry,
             ExceptionDialogHandler exceptionDialogHandler,
             SwitchRepositoryStrategy switchRepositoryStrategy,
@@ -191,7 +190,8 @@ public class ImportBosHandler {
             RepositoryAccessor repositoryAccessor) {
         final SkippableProgressMonitorJobsDialog progressManager = new SkippableProgressMonitorJobsDialog(activeShell);
         File archiveFile = new File(bosArchiveControlSupplier.getFilePath());
-        final ImportBosArchiveOperation operation =  new ImportBosArchiveOperation(archiveFile, progressManager, model, repositoryAccessor, processConfigurationUpdateOperationFactory);
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(archiveFile, progressManager, model,
+                repositoryAccessor, processConfigurationUpdateOperationFactory);
         if (dependenciesPreviewControlSupplier.hasRunPreview(model)) {
             operation
                     .manualDependencyResolution()
@@ -228,7 +228,6 @@ public class ImportBosHandler {
         }
         if (result != IDialogConstants.PROCEED_ID) {
             operation.openFilesToOpen();
-            PlatformUtil.openIntroIfNoOtherEditorOpen();
         }
     }
 

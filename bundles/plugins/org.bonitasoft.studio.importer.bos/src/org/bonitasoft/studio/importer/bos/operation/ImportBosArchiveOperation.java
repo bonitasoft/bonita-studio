@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Dependency;
@@ -39,6 +38,7 @@ import org.bonitasoft.studio.businessobject.maven.InstallBDMDependenciesEventHan
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -309,11 +309,11 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             throws InvocationTargetException, InterruptedException {
         BosArchive bosArchive = importArchiveModel.getBosArchive();
         List<InputStreamSupplier> files = importArchiveModel.getStores().stream()
-                        .filter(store -> selectStore(store.getFolderName()))
-                        .flatMap(store -> store.getFiles().stream())
-                        .filter(f -> selectFile(f.getFileName()))
-                        .map(f -> new ArchiveInputStreamSupplier(bosArchive.getArchiveFile(), bosArchive.getEntry(f.getPath())))
-                        .collect(Collectors.toList());
+                .filter(store -> selectStore(store.getFolderName()))
+                .flatMap(store -> store.getFiles().stream())
+                .filter(f -> selectFile(f.getFileName()))
+                .map(f -> new ArchiveInputStreamSupplier(bosArchive.getArchiveFile(), bosArchive.getEntry(f.getPath())))
+                .collect(Collectors.toList());
 
         DependencyUsageOperation operation = new DependencyUsageOperation(files);
         operation.run(monitor);
@@ -524,8 +524,12 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
     }
 
     public void openFilesToOpen() {
-        for (var f : fileStoresToOpen) {
-            Display.getDefault().asyncExec(f::open);
+        if (fileStoresToOpen.isEmpty()) {
+            PlatformUtil.openDashboardIfNoOtherEditorOpen();
+        } else {
+            for (var f : fileStoresToOpen) {
+                Display.getDefault().asyncExec(f::open);
+            }
         }
     }
 

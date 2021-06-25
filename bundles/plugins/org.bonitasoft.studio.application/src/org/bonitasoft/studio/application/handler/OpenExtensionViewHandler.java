@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.bonitasoft.studio.application.i18n.Messages;
@@ -27,7 +28,8 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -35,22 +37,27 @@ public class OpenExtensionViewHandler {
 
     @Execute
     public void execute() {
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        if (Stream.of(activePage.getEditorReferences())
-                .noneMatch(er -> Objects.equals( er.getId(), ProjectDashboardEditorPart.ID))) {
-            try {
-                PlatformUI.getWorkbench().getProgressService().run(true, false, BonitaMarketplace.getInstance()::loadDependencies);
-            } catch (InvocationTargetException | InterruptedException e) {
-                BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
-                MessageDialog.openError(Display.getDefault().getActiveShell(),
-                        Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
-            }
-        }
-        try {
-            activePage.openEditor(ProjectDashboardEditorInput.getInstance(), ProjectDashboardEditorPart.ID);
-        } catch (PartInitException e) {
-            BonitaStudioLog.error(e);
-        }
+        Optional.ofNullable(PlatformUI.getWorkbench())
+                .map(IWorkbench::getActiveWorkbenchWindow)
+                .map(IWorkbenchWindow::getActivePage)
+                .ifPresent(activePage -> {
+                    if (Stream.of(activePage.getEditorReferences())
+                            .noneMatch(er -> Objects.equals(er.getId(), ProjectDashboardEditorPart.ID))) {
+                        try {
+                            PlatformUI.getWorkbench().getProgressService().run(true, false,
+                                    BonitaMarketplace.getInstance()::loadDependencies);
+                        } catch (InvocationTargetException | InterruptedException e) {
+                            BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
+                            MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                    Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
+                        }
+                    }
+                    try {
+                        activePage.openEditor(ProjectDashboardEditorInput.getInstance(), ProjectDashboardEditorPart.ID);
+                    } catch (PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                });
     }
 
     @CanExecute
