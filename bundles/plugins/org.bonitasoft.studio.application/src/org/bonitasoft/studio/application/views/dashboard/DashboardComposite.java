@@ -14,11 +14,14 @@
  */
 package org.bonitasoft.studio.application.views.dashboard;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -32,6 +35,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 
 public class DashboardComposite extends Composite {
@@ -41,6 +47,7 @@ public class DashboardComposite extends Composite {
 
     private RepositoryAccessor repositoryAccessor;
     private ScrolledComposite scrolledComposite;
+    private Composite cardComposite;
 
     public DashboardComposite(Composite parent, RepositoryAccessor repositoryAccessor) {
         super(parent, SWT.NONE);
@@ -54,7 +61,7 @@ public class DashboardComposite extends Composite {
         scrolledComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         scrolledComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        var cardComposite = createComposite(scrolledComposite, SWT.NONE);
+        cardComposite = createComposite(scrolledComposite, SWT.NONE);
         cardComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         cardComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -99,7 +106,39 @@ public class DashboardComposite extends Composite {
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
-        contributionsToCreate.forEach(contribution -> new DashboardCard(composite, contribution));
+        contributionsToCreate.forEach(contribution -> createCard(composite, contribution));
+    }
+
+    private void createCard(Composite parent, DashboardContribution contribution) {
+        new DashboardCard(parent, contribution);
+        if (contribution instanceof Zoomable) {
+            ((Zoomable) contribution).addZoomListener(new ZoomListener() {
+
+                @Override
+                public void zoom(Event e) {
+                    Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
+                    ((Zoomable) contribution).createZoomedControl(cardComposite);
+                    cardComposite.layout();
+                    scrolledComposite
+                            .setMinHeight(cardComposite.computeSize(cardComposite.getClientArea().width, SWT.DEFAULT).y);
+                }
+
+                @Override
+                public void deZoom(Event e) {
+                    refreshContent();
+                }
+
+            });
+        }
+    }
+
+    public void refreshContent() {
+        Display.getDefault().asyncExec(() -> {
+            Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
+            createCards(cardComposite);
+            cardComposite.layout();
+            scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        });
     }
 
     private List<DashboardContribution> loadContributions() {
@@ -121,7 +160,7 @@ public class DashboardComposite extends Composite {
     }
 
     private Composite createComposite(Composite parent, int style) {
-        Composite composite = new Composite(parent, style);
+        var composite = new Composite(parent, style);
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
         return composite;
     }

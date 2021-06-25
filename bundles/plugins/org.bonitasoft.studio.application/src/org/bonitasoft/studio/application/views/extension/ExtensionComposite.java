@@ -32,8 +32,8 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarke
 import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.application.views.extension.card.ExtensionCard;
 import org.bonitasoft.studio.application.views.extension.card.ExtensionCardFactory;
-import org.bonitasoft.studio.application.views.extension.card.zoom.IZoomable;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -205,13 +205,13 @@ public class ExtensionComposite extends Composite {
         ExtensionCard card = ExtensionCardFactory.createExtensionCard(parent, dep, bonitaDep);
         card.addUpdateExtensionListener(upadateExtensionListener);
         card.addRemoveExtensionListener(removeExtensionListener);
-        if (card instanceof IZoomable) {
-            ((IZoomable) card).addZoomListener(new ZoomListener() {
+        if (card instanceof Zoomable) {
+            ((Zoomable) card).addZoomListener(new ZoomListener() {
 
                 @Override
                 public void zoom(Event e) {
                     Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
-                    ((IZoomable) card).createZoomedControl(cardComposite);
+                    ((Zoomable) card).createZoomedControl(cardComposite);
                     cardComposite.layout();
                     scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
                 }

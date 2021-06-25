@@ -364,6 +364,10 @@ public class Messages extends NLS {
     public static String processAndData;
     public static String users;
     public static String project;
+    public static String projectDoesntContainsElement;
+    public static String newElementTitle;
+    public static String noDescription;
+    public static String diagramZoomHint;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

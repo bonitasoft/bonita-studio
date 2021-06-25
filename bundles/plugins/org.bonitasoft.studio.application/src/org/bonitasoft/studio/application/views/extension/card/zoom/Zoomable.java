@@ -19,13 +19,11 @@ import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 
-public interface IZoomable {
+public interface Zoomable {
 
     public Control createZoomedControl(Composite parent);
 
@@ -35,8 +33,8 @@ public interface IZoomable {
 
     public default void addZoomBehavior(Control zoomControl) {
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
-        Cursor cursorHand = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
-        Cursor cursorArrow = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
+        var cursorHand = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        var cursorArrow = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
         zoomControl.addListener(SWT.MouseUp, e -> {
             if (getZoomListener() != null) {

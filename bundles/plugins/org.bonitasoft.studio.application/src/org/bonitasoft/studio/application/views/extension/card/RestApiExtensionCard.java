@@ -16,13 +16,13 @@ package org.bonitasoft.studio.application.views.extension.card;
 
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.application.views.extension.card.zoom.IZoomable;
 import org.bonitasoft.studio.application.views.extension.card.zoom.RestApiZoomControl;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class RestApiExtensionCard extends ExtensionCard implements IZoomable {
+public class RestApiExtensionCard extends ExtensionCard implements Zoomable {
 
     private ZoomListener zoomListener;
 

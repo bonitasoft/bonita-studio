@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.views.dashboard;
 
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -73,6 +74,10 @@ public class DashboardCard extends Composite {
 
         titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+
+        if (contribution instanceof Zoomable) {
+            ((Zoomable) contribution).addZoomBehavior(titleLabel);
+        }
     }
 
     protected void createDescriptionLabel(Composite parent) {
