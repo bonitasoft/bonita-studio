@@ -1628,5 +1628,11 @@
             label="%extensionKeywords">
       </keyword>
    </extension>
+      <extension
+         point="org.bonitasoft.studio.common.dashboardContribution">
+      <dashboardContribution
+            class="org.bonitasoft.studio.application.views.dashboard.DiagramDashboardContribution">
+      </dashboardContribution>
+   </extension>
 
 </plugin>

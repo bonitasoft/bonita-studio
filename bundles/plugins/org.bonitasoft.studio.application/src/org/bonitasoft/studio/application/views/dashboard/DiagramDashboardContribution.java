@@ -12,8 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.diagram.custom.dashboard;
+package org.bonitasoft.studio.application.views.dashboard;
 
+import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -24,10 +26,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
-public class DiagramDashboardContribution implements DashboardContribution {
+public class DiagramDashboardContribution implements DashboardContribution, Zoomable {
 
     public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
+    private ZoomListener zoomListener;
 
     @Override
     public Category getCategory() {
@@ -73,6 +77,21 @@ public class DiagramDashboardContribution implements DashboardContribution {
     @Override
     public int getPriority() {
         return 0;
+    }
+
+    @Override
+    public Control createZoomedControl(Composite parent) {
+        return new DiagramZoomControl(parent, zoomListener, this);
+    }
+
+    @Override
+    public void addZoomListener(ZoomListener listener) {
+        this.zoomListener = listener;
+    }
+
+    @Override
+    public ZoomListener getZoomListener() {
+        return zoomListener;
     }
 
 }

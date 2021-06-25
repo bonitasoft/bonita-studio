@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.la.application.ui.dashboard;
 
+import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
+import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -24,10 +26,13 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
-public class ApplicationDashboardContribution implements DashboardContribution {
+public class ApplicationDashboardContribution implements DashboardContribution, Zoomable {
 
     public static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
+
+    private ZoomListener zoomListener;
 
     @Override
     public Category getCategory() {
@@ -36,7 +41,7 @@ public class ApplicationDashboardContribution implements DashboardContribution {
 
     @Override
     public String getName() {
-        return Messages.applications;
+        return Messages.application;
     }
 
     @Override
@@ -73,6 +78,21 @@ public class ApplicationDashboardContribution implements DashboardContribution {
     @Override
     public int getPriority() {
         return 0;
+    }
+
+    @Override
+    public Control createZoomedControl(Composite parent) {
+        return new ApplicationZoomControl(parent, zoomListener, this);
+    }
+
+    @Override
+    public void addZoomListener(ZoomListener listener) {
+        this.zoomListener = listener;
+    }
+
+    @Override
+    public ZoomListener getZoomListener() {
+        return zoomListener;
     }
 
 }
