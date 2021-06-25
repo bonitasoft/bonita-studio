@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
@@ -90,6 +91,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
@@ -457,7 +459,14 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         synchroniseTheme(engine);
         applyTheme(engine);
+        
+        var asciiDocEditorPrefStore = getAsciiDocEditorPreferences();
+        asciiDocEditorPrefStore.setDefault("autoCreateInitialAsciidocConfigFile", false);
     }
+    
+    protected IPreferenceStore getAsciiDocEditorPreferences() {
+        return new ScopedPreferenceStore(InstanceScope.INSTANCE, "de.jcup.asciidoctoreditor");
+     }
 
     /**
      * Synchronise active eclipse theme with the Bonita preference,
