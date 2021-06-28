@@ -91,6 +91,9 @@ public class MavenProjectModelBuilder {
         defaultConfiguration.getProperties()
                 .forEach((key, value) -> model.addProperty(key.toString(), value.toString()));
 
+        
+        model.setDependencyManagement(defaultConfiguration.getDependencyManagement());
+        
         defaultConfiguration.getDependencies().stream()
                 .map(MavenDependency::toProvidedDependency)
                 .forEach(model::addDependency);

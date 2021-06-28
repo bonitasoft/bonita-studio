@@ -28,25 +28,27 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Version;
 
-public class UpdateBonitaVersionInPomStep implements MigrationStep {
+public class UpdateBonitaRuntimeVersionInPomStep implements MigrationStep {
 
     @Override
     public MigrationReport run(IProject project, IProgressMonitor monitor) throws CoreException {
         var model = loadMavenModel(project);
         Properties properties = model.getProperties();
-        if (!properties.containsKey(ProjectDefaultConfiguration.BONITA_VERSION)) {
+        if (!properties.containsKey(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)) {
             throw new CoreException(new Status(IStatus.ERROR,
-                    UpdateBonitaVersionInPomStep.class,
+                    UpdateBonitaRuntimeVersionInPomStep.class,
                     String.format("The %s property has not been found and cannot be updated.",
-                            ProjectDefaultConfiguration.BONITA_VERSION)));
+                            ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION)));
         }
-        var oldVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_VERSION);
+        var oldVersion = properties.getProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION);
         var currentVersion = ProductVersion.mavenVersion();
         if (!Objects.equals(oldVersion, currentVersion)) {
             var report = new MigrationReport();
-            properties.setProperty(ProjectDefaultConfiguration.BONITA_VERSION, ProductVersion.mavenVersion());
+            properties.setProperty(ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, ProductVersion.mavenVersion());
             saveMavenModel(model, project);
-            report.updated(String.format("`bonita.version` has been updated from `%s` to `%s`.", oldVersion,
+            report.updated(String.format("`%s` has been updated from `%s` to `%s`.",
+                    ProjectDefaultConfiguration.BONITA_RUNTIME_VERSION, 
+                    oldVersion,
                     ProductVersion.mavenVersion()));
             return report;
         }

@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.core.migration.step.CreatePomMigrationStep;
 import org.bonitasoft.studio.common.repository.core.migration.step.RemoveLegacyFolderStep;
-import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaVersionInPomStep;
+import org.bonitasoft.studio.common.repository.core.migration.step.UpdateBonitaRuntimeVersionInPomStep;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,7 +30,7 @@ public class BonitaProjectMigrator {
     private static final List<MigrationStep> STEPS = List.of(
             new CreatePomMigrationStep(),
             new RemoveLegacyFolderStep(),
-            new UpdateBonitaVersionInPomStep());
+            new UpdateBonitaRuntimeVersionInPomStep());
 
     private IProject project;
 

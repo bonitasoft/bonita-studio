@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 public class BonitaCommonDependency extends MavenDependency {
 
     public BonitaCommonDependency() {
-        super(groupId(), artifactId(), "${bonita.version}");
+        super(groupId(), artifactId(), null);
     }
 
     private static String groupId() {

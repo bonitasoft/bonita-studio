@@ -74,7 +74,8 @@
                             <arguments>
                                 <argument>org.apache.maven.plugins:maven-dependency-plugin:${maven-dependency-plugin.version}:go-offline</argument>
                                 <argument>-Dmaven.repo.local=${repository.dir}</argument>
-                                <argument>-Dbonita.version=${engine.version}</argument>
+                                <argument>-Dbonita.runtime.version=${engine.version}</argument>
+                                <argument>-Dbonita-project-maven-plugin.version=${bonita-project-report-model.version}</argument>
                             </arguments>
                         </configuration>
                     </execution>

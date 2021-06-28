@@ -314,8 +314,8 @@ public class BosArchive {
 
     private IStatus validateArchiveCompatibility() throws IOException {
         Model mavenProject = getMavenProject();
-        if (mavenProject != null && ProjectDefaultConfiguration.getBonitaVersion(mavenProject) != null) {
-            bonitaVersion = ProjectDefaultConfiguration.getBonitaVersion(mavenProject);
+        if (mavenProject != null && ProjectDefaultConfiguration.getBonitaRuntimeVersion(mavenProject) != null) {
+            bonitaVersion = ProjectDefaultConfiguration.getBonitaRuntimeVersion(mavenProject);
         } else {
             final Properties manifest = readManifest();
             String manifestVersion = manifest.getProperty(VERSION);
