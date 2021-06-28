@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
 import org.eclipse.ui.internal.views.properties.tabbed.view.TabbedPropertyList;
@@ -48,9 +48,10 @@ public class TabbedPropertyListBot extends AbstractSWTBotControl<TabbedPropertyL
         for (final ListElement tab : tabs) {
             if (Objects.equals(text, tab.getTabItem().getText())) {
                 new ListElementBot(tab).click();
+                return this;
             }
         }
-        return this;
+       throw new WidgetNotFoundException(String.format("Properties tab '%s' not found", text));
     }
 
 }

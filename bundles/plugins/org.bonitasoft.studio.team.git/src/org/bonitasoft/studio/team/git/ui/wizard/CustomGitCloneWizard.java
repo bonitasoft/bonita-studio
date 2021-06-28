@@ -182,7 +182,7 @@ public class CustomGitCloneWizard extends GitCloneWizard {
             final IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
 
-        final RepositoryUtil util = Activator.getDefault().getRepositoryUtil();
+        final RepositoryUtil util = RepositoryUtil.getInstance();
 
         op.run(monitor);
         util.addConfiguredRepository(op.getGitDir());

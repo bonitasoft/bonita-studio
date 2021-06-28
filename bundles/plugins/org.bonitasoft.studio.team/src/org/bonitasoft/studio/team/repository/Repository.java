@@ -508,7 +508,7 @@ public class Repository extends AbstractRepository {
     }
 
     private void migrateGitIgnoreFile(IProgressMonitor monitor) throws CoreException, MigrationException {
-        IFile gitIgnore = getProject().getFile(".gitignore");
+        IFile gitIgnore = getProject().getFile(Constants.GITIGNORE_FILENAME);
         if (gitIgnore.exists()) {
             try (InputStream is = gitIgnore.getContents()) {
                 List<String> existingEntries = retrieveGitignoreEntries(is, StandardCharsets.UTF_8);

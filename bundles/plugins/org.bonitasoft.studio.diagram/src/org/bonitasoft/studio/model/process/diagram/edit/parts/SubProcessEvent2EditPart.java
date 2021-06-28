@@ -316,7 +316,7 @@ public class SubProcessEvent2EditPart extends ShapeNodeEditPart {
 			layoutThis.marginHeight = 10;
 			this.setLayoutManager(layoutThis);
 
-			this.setPreferredSize(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(50)));
+			this.setPreferredSize(new Dimension(getMapMode().DPtoLP(150), getMapMode().DPtoLP(70)));
 			this.setMinimumSize(new Dimension(getMapMode().DPtoLP(100), getMapMode().DPtoLP(50)));
 			this.setLineCap(SWT.CAP_ROUND);
 			this.setLineWidth(2);

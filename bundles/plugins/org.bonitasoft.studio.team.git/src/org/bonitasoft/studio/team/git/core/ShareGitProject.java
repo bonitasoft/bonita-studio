@@ -10,6 +10,7 @@ package org.bonitasoft.studio.team.git.core;
 
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.internal.util.ResourceUtil;
 import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
@@ -219,16 +221,19 @@ public class ShareGitProject extends AbstractHandler {
                 @Override
                 public void run(final IProgressMonitor monitor)
                         throws InvocationTargetException {
-                    try {
-                        File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),
-                                Constants.DOT_GIT);
-                        Repository repository = FileRepositoryBuilder
-                                .create(gitDir);
+                    File gitDir = new File(project.getLocation().toFile().getAbsolutePath(),
+                            Constants.DOT_GIT);
+                    try (Repository repository = FileRepositoryBuilder
+                            .create(gitDir)){
                         repository.create();
                         if (!gitDir.toString().contains("..")) //$NON-NLS-1$
                             project.refreshLocal(IResource.DEPTH_ONE,
                                     new NullProgressMonitor());
-                        Activator.getDefault().getRepositoryUtil().addConfiguredRepository(gitDir);
+                        RepositoryUtil.getInstance().addConfiguredRepository(gitDir);
+                        var gitIgnore = project.getFile(Constants.GITIGNORE_FILENAME);
+                        if(!gitIgnore.exists()) {
+                            gitIgnore.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
+                        }
                         op.execute(monitor);
                         for (IProject project : embeddedProjects) {
                             ConnectProviderOperation connectProviderOperation = new ConnectProviderOperation(project,

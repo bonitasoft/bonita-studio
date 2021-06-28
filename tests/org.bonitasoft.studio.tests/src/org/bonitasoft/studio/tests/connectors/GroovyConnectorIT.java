@@ -41,7 +41,7 @@ public class GroovyConnectorIT {
         RepositoryAccessor repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
-                .toFileURL(TestDatabaseConnectorResulset.class.getResource("GroovyConnectorTest-1.0.bos")); //$NON-NLS-1$
+                .toFileURL(GroovyConnectorIT.class.getResource("GroovyConnectorTest-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
         op.run(new NullProgressMonitor());

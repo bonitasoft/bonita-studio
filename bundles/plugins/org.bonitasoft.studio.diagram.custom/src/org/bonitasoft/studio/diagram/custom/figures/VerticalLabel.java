@@ -45,8 +45,6 @@ public class VerticalLabel extends WrappingLabel {
 
     private Color parentBackgroundColor = null;
 
-    private double cacheScale = -1;
-
     /**
      * Creates a new label.
      */
@@ -99,13 +97,9 @@ public class VerticalLabel extends WrappingLabel {
         }
     }
 
-    /**
-     * 
-     */
     @Override
     public void paint(final Graphics graphics) {
-        double scale = graphics.getAbsoluteScale();
-        if (labelImage != null && cacheScale != scale) {
+        if (labelImage != null) {
             disposeImage();
         }
         if (labelImage == null ||
@@ -126,25 +120,23 @@ public class VerticalLabel extends WrappingLabel {
                 super.paintFigure(graphics);
                 return;
             }
-            cacheScale = scale;
         }
 
-        graphics.scale(1 / scale);
         Point left = getBounds().getLeft();
 
         // Calculate the center position for the label
         float center = 0;
-        int labelSize = labelImage.getBounds().height;
-        float containerCenter = getParent().getBounds().height / 2F;
+        var imageBounds = labelImage.getBounds();
+        var parentBounds = getParent().getBounds();
+        int labelSize = imageBounds.height;
+        float containerCenter = parentBounds.height / 2F;
         center = containerCenter - labelSize / 2F;
-        float widthCenter = getParent().getBounds().width / 2F;
+        float widthCenter = parentBounds.width / 2F;
 
         if (center != 0) {
-            double x = (widthCenter * scale) - labelImage.getBounds().width / 2F;
-            left = new PrecisionPoint(x, center * scale);
-        } else {
-            left = new PrecisionPoint(left.x * scale, left.y * scale);
-        }
+            double x = widthCenter- imageBounds.width / 2F;
+            left = new PrecisionPoint(x, center );
+        } 
         graphics.drawImage(labelImage, left);
     }
 
@@ -209,7 +201,7 @@ public class VerticalLabel extends WrappingLabel {
     public Rectangle getTextBounds() {
         Rectangle rect = super.getTextBounds();
         // let's move label start to parent's left side
-        return new Rectangle(getParent().getBounds().x, rect.y,
+       return new Rectangle(getParent().getBounds().x, rect.y,
                 rect.height, rect.width);
     }
 

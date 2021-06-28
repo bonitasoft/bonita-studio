@@ -199,8 +199,8 @@ public class UIDesignerServerManager implements IBonitaProjectListener {
     private void connectToURL(final URL url) throws URISyntaxException {
         ClientResource cr = new ClientResource(url.toURI());
         cr.setRetryOnError(true);
-        cr.setRetryDelay(500);
-        cr.setRetryAttempts(120);
+        cr.setRetryDelay(1000);
+        cr.setRetryAttempts(5);
         cr.get();
     }
 

@@ -4,32 +4,27 @@
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
         <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://download.eclipse.org/technology/swtbot/releases/3.0.0"/>
-            <unit id="org.eclipse.swtbot.eclipse.feature.group" version="3.0.0.202006031738"/>
-            <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="3.0.0.202006031738"/>
-            <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="3.0.0.202006031738"/>
-            <unit id="org.eclipse.swtbot.feature.group" version="3.0.0.202006031738"/>
-            <unit id="org.eclipse.swtbot.forms.feature.group" version="3.0.0.202006031738"/>
+            <repository location="https://download.eclipse.org/technology/swtbot/releases/3.1.0/"/>
+            <unit id="org.eclipse.swtbot.eclipse.feature.group" version="3.1.0.202106041005"/>
+            <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="3.1.0.202106041005"/>
+            <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="3.1.0.202106041005"/>
+            <unit id="org.eclipse.swtbot.feature.group" version="3.1.0.202106041005"/>
+            <unit id="org.eclipse.swtbot.forms.feature.group" version="3.1.0.202106041005"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://download.eclipse.org/releases/2021-03"/>
-            <unit id="org.eclipse.equinox.sdk.feature.group" version="3.22.0.v20210227-0235"/>
-            <unit id="org.eclipse.egit.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.11.0.202103091610-r"/>
-         <!--   <unit id="org.eclipse.jgit.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.http.apache.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.lfs.feature.group" version="5.11.0.202103091610-r"/>
-            <unit id="org.eclipse.jgit.ssh.apache.feature.group" version="5.11.0.202103091610-r"/> -->
+            <repository location="https://download.eclipse.org/releases/2021-06"/>
+            <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.0.v20210611-1654"/>
+            <unit id="org.eclipse.egit.feature.group" version="5.12.0.202106070339-r"/>
+            <unit id="org.eclipse.egit.gitflow.feature.feature.group" version="5.12.0.202106070339-r"/>
             <unit id="org.eclipse.emf.compare.egit.feature.group" version="3.3.14.202102231741"/>
             <unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.102.201911250848"/>
             <unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.14.102.201911250848"/>
-          <!--  <unit id="org.eclipse.jdt.feature.group" version="3.18.400.v20200604-0540"/> -->
-            <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.21.0.v202102251419"/>
+            <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.22.0.v202105181958"/>
             <unit id="org.eclipse.wst.ws_ui.feature.feature.group" version="3.9.100.v202004082157"/>
-            <unit id="org.eclipse.m2e.feature.feature.group" version="1.17.2.20210219-1922"/>
-            <unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.4.100.v202102111918"/>
-            <unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.600.v202007170127"/>
-            <unit id="org.eclipse.wst.server_adapters.feature.feature.group" version="3.2.801.v202101040859"/>
+            <unit id="org.eclipse.m2e.feature.feature.group" version="1.18.0.20210603-1206"/>
+            <unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.4.200.v202106020138"/>
+            <unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.700.v202105161646"/>
+            <unit id="org.eclipse.wst.server_adapters.feature.feature.group" version="3.2.900.v202106111324"/>
             <unit id="org.eclipse.datatools.enablement.jdbc.feature.feature.group" version="1.14.102.201911250848"/>
             <unit id="org.eclipse.datatools.enablement.msft.feature.feature.group" version="1.14.102.201911250848"/>
             <unit id="org.eclipse.datatools.enablement.mysql.feature.feature.group" version="1.14.102.201911250848"/>
@@ -50,13 +45,13 @@
 			<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="3.3.14.202102231741"/>
             <unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="3.3.14.202102231741"/>
             <unit id="org.eclipse.emf.compare.feature.group" version="3.3.14.202102231741"/>
-            <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.11.1100.v20210227-0235"/>
-            <unit id="org.eclipse.sdk.feature.group" version="4.19.0.v20210303-1800"/>
+            <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.11.1200.v20210507-0825"/>
+            <unit id="org.eclipse.sdk.feature.group" version="4.20.0.v20210611-1636"/>
   			<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="1.4.1.202002140949"/>
   			<unit id="org.eclipse.mylyn.commons.ui" version="3.25.2.v20200813-0821"/>
-  			<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="2.3.400.v202102101628"/>
-  			<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="1.1.9.v202101100033"/>
-	  		<unit id="com.sun.jna.platform" version="5.6.0.v20200722-0209"/>
+  			<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="2.3.500.v202106021855"/>
+  			<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="1.1.10.v202103121626"/>
+	  		<unit id="com.sun.jna.platform" version="5.8.0.v20210406-1004"/>
         </location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/diffmerge/releases/0.13.0/emf-diffmerge-site/"/>
@@ -66,10 +61,6 @@
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-3.2.1"/>
             <unit id="org.eclipse.gmf.sdk.feature.group" version="3.2.1.201409171321"/>
-            <!--  <unit id="org.eclipse.gmf.tooling.codegen.xtend2.feature.group" version="3.2.1.201409171321"/> -->
-             <!--  <unit id="org.eclipse.gmf.tooling.feature.group" version="3.2.1.201409171321"/> -->
-             <!--  <unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.2.1.201409171321"/> -->
-            <!-- <unit id="org.eclipse.gmf.tooling.simplemap.feature.group" version="1.0.0.201409171321"/> -->
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.restlet.ext.json.feature.group" version="2.3.0.v20141217-1730"/>
@@ -77,8 +68,8 @@
             <repository location="https://update-site.bonitasoft.com/p2/4.16"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://download.eclipse.org/nebula/releases/2.4.3/"/>
-        	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.4.0.202011020719"/>
+            <repository location="https://download.eclipse.org/nebula/releases/2.5.0/"/>
+        	<unit id="org.eclipse.nebula.widgets.richtext.feature.feature.group" version="1.4.0.202106201019"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.team.svn.feature.group" version="4.0.5.I20170425-1700"/>
@@ -95,7 +86,7 @@
             <repository location="http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/"/>
         </location>
        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.3.0"/>
+            <unit id="de.jcup.asciidoctoreditor.feature.group" version="2.4.1"/>
             <repository location="https://de-jcup.github.io/update-site-eclipse-asciidoctor-editor/update-site/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -104,7 +95,7 @@
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="net.sourceforge.plantuml.feature.feature.group" version="1.1.24"/>
-            <repository location="http://update-site.bonitasoft.com/p2/4.16/"/>
+            <repository location="http://hallvard.github.io/plantuml/plantuml.eclipse/1.1.24"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.19.0.v20210327020002"/>
@@ -122,10 +113,10 @@
             <repository location="https://download.eclipse.org/technology/babel/update-site/R0.18.3/2021-03/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dist.springsource.org/release/GRECLIPSE/4.1.0/e4.19"/>
-            <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
-            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
-	        <unit id="org.codehaus.groovy30.feature.feature.group" version="4.1.0.v202103311613-e2103-RELEASE"/>
+            <repository location="https://dist.springsource.org/snapshot/GRECLIPSE/e4.20"/>
+            <unit id="org.codehaus.groovy.compilerless.feature.feature.group" version="0.0.0"/>
+            <unit id="org.codehaus.groovy.m2eclipse.feature.feature.group" version="0.0.0"/>
+	        <unit id="org.codehaus.groovy30.feature.feature.group" version="0.0.0"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">    			
             <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>

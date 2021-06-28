@@ -29,8 +29,8 @@ import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceSearchDescriptor;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.search.Order;
-import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
@@ -47,9 +47,8 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.tests.util.TestAsyncThread;
+import org.bonitasoft.studio.tests.util.Await;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -109,7 +108,8 @@ public class TestDeployCommand {
             domain = GMFEditingDomainFactory.getInstance().createEditingDomain();
         }
         final CompoundCommand cc = new CompoundCommand();
-        cc.append(SetCommand.create(domain, parentProcess, ProcessPackage.eINSTANCE.getElement_Name(), "ParentRenamed"));
+        cc.append(
+                SetCommand.create(domain, parentProcess, ProcessPackage.eINSTANCE.getElement_Name(), "ParentRenamed"));
         domain.getCommandStack().execute(cc);
         processEditor.doSave(AbstractRepository.NULL_PROGRESS_MONITOR);
         /* Retry to deploy */
@@ -124,7 +124,8 @@ public class TestDeployCommand {
                     ProcessDeploymentInfoCriterion.DEFAULT);
             boolean found = false;
             for (final ProcessDeploymentInfo info : infos) {
-                if (info.getName().equals(parentProcess.getName()) && info.getVersion().equals(parentProcess.getVersion())) {
+                if (info.getName().equals(parentProcess.getName())
+                        && info.getVersion().equals(parentProcess.getVersion())) {
                     found = true;
                 }
             }
@@ -148,11 +149,13 @@ public class TestDeployCommand {
         runAndStartProcess(mainProcess, "ChildTestTwiceDeployWithSubProc", "1.0");
     }
 
-    protected void runAndStartProcess(final MainProcess mainProcess, final String processName, final String processVersion)
+    protected void runAndStartProcess(final MainProcess mainProcess, final String processName,
+            final String processVersion)
             throws Exception {
         Pool toDeploy = null;
         for (final Element e : mainProcess.getElements()) {
-            if (e instanceof Pool && e.getName().equals(processName) && ((Pool) e).getVersion().equals(processVersion)) {
+            if (e instanceof Pool && e.getName().equals(processName)
+                    && ((Pool) e).getVersion().equals(processVersion)) {
                 toDeploy = (Pool) e;
             }
         }
@@ -160,22 +163,22 @@ public class TestDeployCommand {
         final RunProcessCommand runProcessCommand1 = new RunProcessCommand(true);
         runProcessCommand1.execute(ProcessSelector.createExecutionEvent(toDeploy));
 
-        final APISession session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
+        final APISession session = BOSEngineManager.getInstance()
+                .loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final long processId = processApi.getProcessDefinitionId(processName, processVersion);
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull(processDef);
         processApi.startProcess(processId);
-        new TestAsyncThread(5, 500) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-                final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10)
+        Await.waitUntil(() -> {
+            try {
+                return processApi.searchProcessInstances(new SearchOptionsBuilder(0, 10)
                         .filter(ProcessInstanceSearchDescriptor.PROCESS_DEFINITION_ID, processId)
-                        .sort(ProcessInstanceSearchDescriptor.ID, Order.ASC).done();
-                return processApi.searchProcessInstances(searchOptions).getCount() > 0;
+                        .sort(ProcessInstanceSearchDescriptor.ID, Order.ASC).done()).getCount() > 0;
+            } catch (SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate();
+        }, 10000, 200);
     }
 
     private ProcessDiagramEditor importBos(final String processResourceName)
@@ -185,7 +188,7 @@ public class TestDeployCommand {
         final URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName));
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
