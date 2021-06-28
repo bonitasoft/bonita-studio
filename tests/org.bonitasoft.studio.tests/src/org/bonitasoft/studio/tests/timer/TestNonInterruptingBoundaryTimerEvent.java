@@ -16,21 +16,19 @@ package org.bonitasoft.studio.tests.timer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
-import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
-import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
-import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -43,9 +41,8 @@ import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.tests.util.TestAsyncThread;
+import org.bonitasoft.studio.tests.util.Await;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
@@ -75,10 +72,11 @@ public class TestNonInterruptingBoundaryTimerEvent {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final ImportBosArchiveOperation op = new ImportBosArchiveOperation(repositoryAccessor);
         final URL fileURL1 = FileLocator
-                .toFileURL(TestNonInterruptingBoundaryTimerEvent.class.getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
+                .toFileURL(TestNonInterruptingBoundaryTimerEvent.class
+                        .getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
@@ -90,31 +88,27 @@ public class TestNonInterruptingBoundaryTimerEvent {
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
         final long processId = processApi.getProcessDefinitionId("TestNonInterruptingTimerEvent", "1.0");
-        final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         processApi.startProcess(processId);
-        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-                final IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
-                final SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(
-                        identityApi.getUserByUserName("walter.bates").getId(),
-                        searchOptions);
-                int cpt = 0;
-                for (final HumanTaskInstance instance : tasks.getResult()) {
-                    if (instance.getProcessDefinitionId() == processDef.getId()) {
-                        cpt++;
-                    }
-                }
-
-                return cpt == 2;
+        var identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
+        Await.waitUntil(() -> {
+            try {
+                return processApi.searchPendingTasksForUser(
+                        identityAPI.getUserByUserName("walter.bates").getId(),
+                        searchOptions)
+                        .getResult()
+                        .stream()
+                        .map(HumanTaskInstance::getProcessDefinitionId)
+                        .filter(id -> id.equals(processId))
+                        .count() == 2;
+            } catch (UserNotFoundException | SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate();
-        assertTrue("Invalid number of tasks", evaluateAsync);
+        }, 30000, 200);
     }
 
 }

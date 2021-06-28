@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.process.diagram.providers.ProcessViewProvider
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Connector;
@@ -47,6 +48,7 @@ import org.eclipse.gmf.runtime.notation.datatype.RelativeBendpoint;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 
@@ -358,7 +360,7 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
 
         final Node node = super.createSubProcessEvent_2031(domainElement, containerView, index,
                 persisted, preferencesHint);
-        ((FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle())).setFillColor(new RGB(184, 185, 218).hashCode());
+        ((FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle())).setFillColor(FigureUtilities.RGBToInteger(new RGB(235, 238, 242)));
         ((LineStyle) node.getStyle(NotationPackage.eINSTANCE.getLineStyle())).setLineColor(new RGB(44, 109, 163).hashCode());
         for (final Object child : node.getPersistedChildren()) {
             if (child instanceof DrawerStyle) {
@@ -374,7 +376,7 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
             final PreferencesHint preferencesHint) {
         final Node node = super.createSubProcessEvent_3058(domainElement, containerView, index,
                 persisted, preferencesHint);
-        ((FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle())).setFillColor(new RGB(184, 185, 218).hashCode());
+        ((FillStyle) node.getStyle(NotationPackage.eINSTANCE.getFillStyle())).setFillColor(FigureUtilities.RGBToInteger(new RGB(235, 238, 242)));
         ((LineStyle) node.getStyle(NotationPackage.eINSTANCE.getLineStyle())).setLineColor(new RGB(44, 109, 163).hashCode());
         for (final Object child : node.getPersistedChildren()) {
             if (child instanceof DrawerStyle) {

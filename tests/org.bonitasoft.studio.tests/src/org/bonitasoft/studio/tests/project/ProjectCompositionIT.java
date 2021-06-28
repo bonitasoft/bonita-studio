@@ -337,6 +337,7 @@ public class ProjectCompositionIT {
                 .next();
         importDialogBot.waitUntilFinishIsDisabled();
         var dependenciesTable = importDialogBot.dependenciesPreviewPage().getDependenciesTable();
+        bot.waitUntil(Conditions.tableHasRows(dependenciesTable, 1));
         SWTBotTableItem tableItem = dependenciesTable.getTableItem(0);
         assertThat(tableItem.getText(3)).isEqualTo(org.bonitasoft.studio.common.repository.Messages.conflicting);
         tableItem.click(3);

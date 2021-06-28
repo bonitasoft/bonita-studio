@@ -17,11 +17,10 @@ package org.bonitasoft.studio.common.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Pattern;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.LineAttributes;
 
 /**
  * @author Romain Bioteau
@@ -33,26 +32,36 @@ public class CollapsableEventSubprocessFigure extends RoundedRectangle {
 
     @Override
     protected void outlineShape(Graphics graphics) {
-        graphics.setAdvanced(false);
+        graphics.setAdvanced(true);
+        this.setLineAttributes(new LineAttributes(2, SWT.CAP_FLAT, SWT.JOIN_ROUND));
+        setLineStyle(SWT.LINE_DOT);
         super.outlineShape(graphics);
     }
 
     @Override
     protected void fillShape(Graphics graphics) {
-        if (useGradient) {
-            Rectangle r = getBounds().getCopy();
-            Point topLeft = r.getTopLeft();
-            Point bottomRight = r.getBottomRight();
-            Pattern pattern = new Pattern(Display.getCurrent(), topLeft.x + 2,
-                    topLeft.y + 2, bottomRight.x - 2, bottomRight.y - 2, gradientColor, 255, getBackgroundColor(), 90);
-            graphics.setBackgroundPattern(pattern);
-            graphics.fillRectangle(r.crop(new Insets(2, 2, 2, 2)));
-            graphics.setBackgroundPattern(null);
-            pattern.dispose();
-        } else {
+        if (!useGradient) {
             super.fillShape(graphics);
+        } else {
+            paintGradient(graphics);
         }
+    }
 
+    private void paintGradient(Graphics graphics) {
+        Rectangle rect = getClientArea();
+        if (rect == null)
+            return;
+
+        graphics.pushState();
+
+        Color from = gradientColor;
+        Color to = getBackgroundColor();
+
+        graphics.setForegroundColor(from);
+        graphics.setBackgroundColor(to);
+
+        graphics.fillGradient(rect.getCopy().shrink(new Insets(2, 2, 2, 2)), false);
+        graphics.popState();
     }
 
     public void setGradientColor(Color gradientColor) {

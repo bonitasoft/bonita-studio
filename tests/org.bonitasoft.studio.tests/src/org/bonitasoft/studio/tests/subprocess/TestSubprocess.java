@@ -20,21 +20,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
-import org.bonitasoft.engine.bpm.flownode.TaskInstance;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.ServerAPIException;
-import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.platform.LoginException;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -46,10 +41,10 @@ import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.EngineAPIUtil;
-import org.bonitasoft.studio.tests.util.TestAsyncThread;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +69,8 @@ public class TestSubprocess {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         store = RepositoryManager.getInstance()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors", "bonita-connector-groovy", "1.1.3");
+        AddDependencyOperation addDependencyOperation = new AddDependencyOperation("org.bonitasoft.connectors",
+                "bonita-connector-groovy", "1.1.3");
         addDependencyOperation.run(AbstractRepository.NULL_PROGRESS_MONITOR);
     }
 
@@ -90,13 +86,13 @@ public class TestSubprocess {
         final URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("ActivityToAdmin-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         final MainProcess diagram = store.getChild("ActivityToAdmin-1.0.proc", true).getContent();
         assertEquals("ActivityToAdmin", diagram.getName());
 
         final URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeActivityToAdmin-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         final MainProcess mainProcess = store.getChild("InvokeActivityToAdmin-1.0.proc", true).getContent();
         assertEquals("InvokeActivityToAdmin", mainProcess.getName());
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
@@ -104,7 +100,8 @@ public class TestSubprocess {
                 .getResult();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
         final long processId = processApi.getProcessDefinitionId("ActivityToAdmin", "1.0");
@@ -112,34 +109,20 @@ public class TestSubprocess {
         assertNotNull(processDef);
         processApi.startProcess(processApi.getProcessDefinitionId("InvokeActivityToAdmin", "1.0"));
 
-        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(),
+        Await.waitUntil(() -> {
+            try {
+                newTask = null;
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks,
+                        processDef.getId(),
                         session.getUserId());
-
                 return newTask != null;
+            } catch (InvalidSessionException | SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate();
-        String errorMessageDetailled = "";
-        if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0,
-                    20,
-                    ActivityInstanceCriterion.DEFAULT);
-            errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
-            for (final TaskInstance taskInstance : actualTask) {
-                errorMessageDetailled += "\n" + taskInstance.getParentProcessInstanceId();
-            }
+        }, 30000, 200);
 
-        }
-        assertTrue("Subprocess should have started a new task for admin.current task:\n" + errorMessageDetailled,
-                evaluateAsync);
         assertNotNull("Subprocess should have started a new task for admin", newTask);
         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
-
-        // ajout du test testDynamicSuprocess � la suite car d�pendant de celui-ci, difficile de le rendre ind�pendant.
 
         final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
         final List<HumanTaskInstance> previoustasks = processApi
@@ -148,24 +131,26 @@ public class TestSubprocess {
 
         final URL fileURL3 = FileLocator.toFileURL(TestSubprocess.class.getResource("DynamicSubprocess-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL3).getFile());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
 
         final MainProcess mainProcess2 = store.getChild("DynamicSubprocess-1.0.proc", true).getContent();
         assertEquals("DynamicSubprocess", mainProcess2.getName());
 
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess2.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess2.getElements().get(0)));
 
-        assertTrue(new TestAsyncThread(12, 1000) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-                final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi
-                        .searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        Await.waitUntil(() -> {
+            List<HumanTaskInstance> currentTasks;
+            try {
+                currentTasks = processApi
+                        .searchPendingTasksForUser(session.getUserId(), new SearchOptionsBuilder(0, 10).done())
+                        .getResult();
                 final int nbCurrentTasks = currentTasks.size();
                 return nbCurrentTasks != nbPreviousTasks + 1;
+            } catch (SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate());
+        }, 15000, 200);
 
     }
 
@@ -176,12 +161,12 @@ public class TestSubprocess {
         final URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("Calculator-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
 
         final URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeCalculator-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         final MainProcess mainProcess = store.getChild("InvokeCalculator-1.0.proc", true).getContent();
         assertEquals("InvokeCalculator", mainProcess.getName());
 
@@ -190,27 +175,24 @@ public class TestSubprocess {
                 .getResult();
 
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final long processId = processApi.getProcessDefinitionId("InvokeCalculator", "1.0");
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         assertNotNull(processDef);
         processApi.startProcess(processId);
 
-        boolean isANewTask = false;
-        try {
-            isANewTask = new TestAsyncThread(30, 1000) {
+        Await.waitUntil(() -> {
+            try {
+                newTask = null;
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks,
+                        processDef.getId(), session.getUserId());
+                return newTask != null;
+            } catch (InvalidSessionException | SearchException e) {
+                throw new RuntimeException(e);
+            }
+        }, 30000, 200);
 
-                @Override
-                public boolean isTestGreen() throws Exception {
-                    newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks,
-                            processDef.getId(), session.getUserId());
-                    return newTask != null;
-                }
-            }.evaluate();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        assertTrue("There is no new task", isANewTask);
         assertTrue("This task is not the expected one, name does not contain [check]",
                 newTask.getName().toLowerCase().contains("check"));
         assertEquals("Sum should be 2", 2,
@@ -231,38 +213,39 @@ public class TestSubprocess {
         final URL fileURL = FileLocator.toFileURL(TestSubprocess.class.getResource("ParentSubProcEvent-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         final MainProcess mainProcess = store.getChild("ParentSubProcEvent-1.0.proc", true).getContent();
         RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
-        assertTrue(new TestAsyncThread(12, 1000) {
 
-            @Override
-            public boolean isTestGreen() throws Exception {
-                final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi
-                        .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
-                final int nbCurrentTasks = currentTasks.size();
-                return nbCurrentTasks != nbPreviousTasks + 1;
+        Await.waitUntil(() -> {
+            try {
+                return processApi
+                        .searchPendingTasksForUser(session.getUserId(), new SearchOptionsBuilder(0, 10).done())
+                        .getCount() != nbPreviousTasks + 1;
+            } catch (SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate());
+        }, 15000, 200);
+
 
         runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser2 = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser2, urlGivenToBrowser2.contains("null"));
-        assertTrue(new TestAsyncThread(12, 1000) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-                final SearchOptions searchOptions2 = new SearchOptionsBuilder(0, 10).done();
-                final List<HumanTaskInstance> currentTasks = processApi
-                        .searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
-                final int nbCurrentTasks = currentTasks.size();
-                return nbCurrentTasks != nbPreviousTasks + 2;
+        
+        Await.waitUntil(() -> {
+            try {
+                return processApi
+                        .searchPendingTasksForUser(session.getUserId(), new SearchOptionsBuilder(0, 10).done())
+                        .getCount() != nbPreviousTasks + 2;
+            } catch (SearchException e) {
+                throw new RuntimeException(e);
             }
-        }.evaluate());
+        }, 15000, 200);
     }
 }

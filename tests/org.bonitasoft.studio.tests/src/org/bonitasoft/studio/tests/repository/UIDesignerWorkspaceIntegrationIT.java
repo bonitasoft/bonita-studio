@@ -21,20 +21,15 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.designer.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.CreateFormOperation;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebFragmentRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.designer.core.repository.WebPageRepositoryStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetFileStore;
-import org.bonitasoft.studio.designer.core.repository.WebWidgetRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -58,25 +53,8 @@ public class UIDesignerWorkspaceIntegrationIT {
 
     @Before
     @After
-    public void clean_all_web_stores() throws Exception {
-        final AbstractRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        final WebPageRepositoryStore webPageRepositoryStore = currentRepository
-                .getRepositoryStore(WebPageRepositoryStore.class);
-        for (final WebPageFileStore fStore : webPageRepositoryStore.getChildren()) {
-            fStore.delete();
-        }
-
-        final WebFragmentRepositoryStore webFragRepositoryStore = currentRepository
-                .getRepositoryStore(WebFragmentRepositoryStore.class);
-        for (final WebFragmentFileStore fStore : webFragRepositoryStore.getChildren()) {
-            fStore.delete();
-        }
-
-        final WebWidgetRepositoryStore webWidgetRepositoryStore = currentRepository
-                .getRepositoryStore(WebWidgetRepositoryStore.class);
-        for (final WebWidgetFileStore fStore : webWidgetRepositoryStore.getChildren()) {
-            fStore.delete();
-        }
+    public void clean() throws Exception {
+        ProjectUtil.cleanProject();
     }
 
     @Test

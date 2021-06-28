@@ -27,6 +27,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolic
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSnapFeedbackPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomSubProcessResizableCompartmentEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.CustomSubprocessShapeCompartmentFigure;
+import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventSubProcessCompartment2EditPart;
 import org.eclipse.draw2d.ColorConstants;
@@ -62,8 +63,12 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Shape;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author Romain Bioteau
@@ -158,9 +163,16 @@ public class CustomSubprocessEventCompartmentEditPart extends SubProcessEventSub
             figure.setUseGradient(true);
             ChangePropertyValueRequest colorReq = null;
             if (beforeExpandColor == null) {
+                Shape shape = (Shape) ((IGraphicalEditPart) getParent()).getPrimaryView();
+                Color defaultColor = FigureUtilities.integerToColor(shape.getFillColor());
+                Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
+                Color backgroundColor = defaultColor;
+                if (preferenceStore instanceof IPreferenceStore) {
+                    backgroundColor = DiagramColorProvider.getBackgroundColor((IPreferenceStore) preferenceStore,
+                            backgroundColor);
+                }
                 colorReq = new ChangePropertyValueRequest("Fill Color", Properties.ID_FILLCOLOR,
-                        ((IGraphicalEditPart) getParent())
-                                .getPreferredValue(NotationPackage.eINSTANCE.getFillStyle_FillColor()));
+                        FigureUtilities.colorToInteger(backgroundColor));
             } else {
                 colorReq = new ChangePropertyValueRequest("Fill Color", Properties.ID_FILLCOLOR, beforeExpandColor);
             }
@@ -187,7 +199,8 @@ public class CustomSubprocessEventCompartmentEditPart extends SubProcessEventSub
             if (((IGraphicalEditPart) getParent()).getFigure().getBounds().width == beforeExpandWidth
                     && beforeExpandWidth != 0) {
                 beforeCollapseWidth = getMaxWidth() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().x + 15;
-                beforeCollapseHeight = getMaxHeight() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().y + 30;
+                beforeCollapseHeight = getMaxHeight() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().y
+                        + 30;
 
             } else {
                 beforeCollapseWidth = ((IGraphicalEditPart) getParent()).getFigure().getBounds().width;
@@ -209,7 +222,8 @@ public class CustomSubprocessEventCompartmentEditPart extends SubProcessEventSub
                 beforeCollapseHeight = ((IGraphicalEditPart) getParent()).getFigure().getPreferredSize().height * 3;
             } else if (beforeCollapseWidth == 0 || beforeCollapseHeight == 0) {
                 beforeCollapseWidth = getMaxWidth() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().x + 30;
-                beforeCollapseHeight = getMaxHeight() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().y + 50;
+                beforeCollapseHeight = getMaxHeight() - ((IGraphicalEditPart) getParent()).getFigure().getBounds().y
+                        + 50;
             }
             beforeCollapseWidth = Math.round((float) (beforeCollapseWidth * zm.getZoom()));
             beforeCollapseHeight = Math.round((float) (beforeCollapseHeight * zm.getZoom()));
@@ -348,7 +362,8 @@ public class CustomSubprocessEventCompartmentEditPart extends SubProcessEventSub
 
             for (Object child : children) {
                 if (child instanceof ShapeNodeEditPart && !child.equals(getParent())) {
-                    MultipleShapesHorizontalMoveTool.setBoundsForOverlapComputation((IGraphicalEditPart) child, SINGLETON);
+                    MultipleShapesHorizontalMoveTool.setBoundsForOverlapComputation((IGraphicalEditPart) child,
+                            SINGLETON);
                     SINGLETON = SINGLETON.scale(zoom);
                     ((DiagramEditPart) getViewer().getContents()).getFigure().translateToRelative(SINGLETON);
                     if (SINGLETON.x + SINGLETON.width >= xPosition && SINGLETON.y > yPosition) {
@@ -469,7 +484,8 @@ public class CustomSubprocessEventCompartmentEditPart extends SubProcessEventSub
             // and take those that are on the right.
             for (Object child : children) {
                 if (child instanceof ShapeNodeEditPart) {
-                    MultipleShapesHorizontalMoveTool.setBoundsForOverlapComputation((IGraphicalEditPart) child, SINGLETON);
+                    MultipleShapesHorizontalMoveTool.setBoundsForOverlapComputation((IGraphicalEditPart) child,
+                            SINGLETON);
                     SINGLETON = SINGLETON.scale(zoom);
                     ((DiagramEditPart) getViewer().getContents()).getFigure().translateToRelative(SINGLETON);
                     if (SINGLETON.x > xPosition && SINGLETON.y < yPosition

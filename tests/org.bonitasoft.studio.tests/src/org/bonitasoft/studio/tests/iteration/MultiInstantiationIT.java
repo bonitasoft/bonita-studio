@@ -317,6 +317,8 @@ public class MultiInstantiationIT implements SWTBotConstants {
         addDataBot.finish();
 
         botApplicationWorkbenchWindow.save();
+        
+        drawDiagram.selectElement("Step1");
 
         // Set properties of Multi-Instance
         final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart()

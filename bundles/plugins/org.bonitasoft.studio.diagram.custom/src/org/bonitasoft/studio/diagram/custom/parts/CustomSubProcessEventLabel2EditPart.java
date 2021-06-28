@@ -16,7 +16,6 @@ package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
-import org.bonitasoft.studio.diagram.custom.providers.DiagramColorProvider;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ProcessEditPartFactory;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventLabel2EditPart;
 import org.eclipse.draw2d.PositionConstants;
@@ -24,8 +23,6 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.graphics.Color;
 
 /**
  * @author Aurelien Pupier
@@ -86,16 +83,6 @@ public class CustomSubProcessEventLabel2EditPart extends
     public void setLabelText(String text) {
         super.setLabelText(text);
         FiguresHelper.resizeActivitiesFigure((IGraphicalEditPart) getParent(), text);
-    }
-
-    @Override
-    protected void setFontColor(Color color) {
-        Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
-        if (preferenceStore instanceof IPreferenceStore) {
-            super.setFontColor(DiagramColorProvider.getFontColor((IPreferenceStore) preferenceStore, color));
-        } else {
-            super.setFontColor(color);
-        }
     }
 
 }

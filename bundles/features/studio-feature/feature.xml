@@ -190,10 +190,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.diffmerge.egit.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.babel.nls_technology.jgit_es"
          version="0.0.0"/>
 
@@ -501,13 +497,6 @@ along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <plugin
          id="org.bonitasoft.studio.migration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.servlet"
          download-size="0"
          install-size="0"
          version="0.0.0"

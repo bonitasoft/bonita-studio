@@ -17,19 +17,15 @@ package org.bonitasoft.studio.tests.conditions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
-import org.bonitasoft.engine.bpm.flownode.TaskInstance;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
@@ -42,6 +38,7 @@ import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -54,13 +51,13 @@ import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.importer.bos.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.tests.util.Await;
 import org.bonitasoft.studio.tests.util.EngineAPIUtil;
-import org.bonitasoft.studio.tests.util.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +73,8 @@ public class TestConditions {
 
     @Before
     public void setUp()
-            throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
+            throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException,
+            LoginException {
         session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
     }
@@ -95,42 +93,22 @@ public class TestConditions {
         runProcess(mainProcess);
         final ProcessDefinition processDef = startDeployedProcess(processApi);
 
-        final boolean evaluateAsync = isNewTaskCreated(tasks, processDef);
+        Await.waitUntil(() -> {
+            try {
+                newTask = null;
+                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks,
+                        processDef.getId(),
+                        session.getUserId());
+                return newTask != null;
+            } catch (InvalidSessionException | SearchException e) {
+                throw new RuntimeException(e);
+            }
 
-        final String errorMessageDetailled = computeClearErrorMessageIfNoNewTaskFound(processApi, processDef, evaluateAsync);
-        assertTrue("a new task should have started for Pool3 task:\n" + errorMessageDetailled, evaluateAsync);
+        }, 30000, 200);
+
         assertNotNull("a new task should have started", newTask);
         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
         assertEquals("the current task should be Step3", "Step3", newTask.getName());
-    }
-
-    private boolean isNewTaskCreated(final List<HumanTaskInstance> tasks, final ProcessDefinition processDef)
-            throws Exception {
-        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
-
-            @Override
-            public boolean isTestGreen() throws Exception {
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(),
-                        session.getUserId());
-                return newTask != null;
-            }
-        }.evaluate();
-        return evaluateAsync;
-    }
-
-    private String computeClearErrorMessageIfNoNewTaskFound(final ProcessAPI processApi, final ProcessDefinition processDef,
-            final boolean evaluateAsync) {
-        String errorMessageDetailled = "";
-        if (!evaluateAsync) {
-            final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(
-                    session.getUserId(), 0,
-                    20, ActivityInstanceCriterion.DEFAULT);
-            errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
-            for (final TaskInstance taskInstance : actualTask) {
-                errorMessageDetailled += "\n" + taskInstance.getParentProcessInstanceId();
-            }
-        }
-        return errorMessageDetailled;
     }
 
     private ProcessDefinition startDeployedProcess(final ProcessAPI processApi)
@@ -168,7 +146,8 @@ public class TestConditions {
 
     private void runProcess(final MainProcess mainProcess) throws ExecutionException {
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
+        runProcessCommand
+                .execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
     }
 
     private List<HumanTaskInstance> getPendingTasks(final ProcessAPI processApi) throws SearchException {
@@ -182,7 +161,7 @@ public class TestConditions {
         final URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(new NullProgressMonitor());
+        PlatformUI.getWorkbench().getProgressService().run(true, false, op);
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }

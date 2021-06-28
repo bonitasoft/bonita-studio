@@ -97,9 +97,8 @@ public class CustomSubProcessEvent2EditPart extends SubProcessEvent2EditPart {
 
     @Override
     protected NodeFigure createNodePlate() {
-        DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.ACTIVITY_WIDTH,
+        return new DefaultSizeNodeFigure(FiguresHelper.ACTIVITY_WIDTH,
                 FiguresHelper.ACTIVITY_HEIGHT);
-        return result;
     }
 
     @Override
@@ -107,24 +106,17 @@ public class CustomSubProcessEvent2EditPart extends SubProcessEvent2EditPart {
         Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
         if (preferenceStore instanceof IPreferenceStore) {
             if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
-
                 return FigureUtilities.RGBToInteger(new RGB(44, 109, 163));
-
             } else if (feature == NotationPackage.eINSTANCE
                     .getFontStyle_FontColor()) {
-
                 return FigureUtilities.RGBToInteger(PreferenceConverter
                         .getColor((IPreferenceStore) preferenceStore,
                                 IPreferenceConstants.PREF_FONT_COLOR));
-
             } else if (feature == NotationPackage.eINSTANCE
                     .getFillStyle_FillColor()) {
-
-                return FigureUtilities.RGBToInteger(new RGB(184, 185, 218));
-
+                return FigureUtilities.RGBToInteger(new RGB(235, 238, 242));
             }
         }
-
         return getStructuralFeatureValue(feature);
     }
 

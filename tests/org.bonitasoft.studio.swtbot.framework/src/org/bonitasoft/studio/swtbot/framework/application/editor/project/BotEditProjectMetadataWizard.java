@@ -33,6 +33,11 @@ public class BotEditProjectMetadataWizard extends BotWizardDialog {
         bot.textWithLabel(Messages.version + " *").setText(version);
         return this;
     }
+    
+    @Override
+    protected int onFinishTimeout() {
+        return 10000;
+    }
 
     public void modify() {
         finish();
