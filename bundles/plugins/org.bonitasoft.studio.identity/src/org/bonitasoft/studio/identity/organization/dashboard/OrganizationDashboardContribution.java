@@ -83,21 +83,22 @@ public class OrganizationDashboardContribution implements DashboardContribution 
     }
 
     private void createToolbarButtons(Composite parent) {
-        String activeOrganizationFileName = activeOrganizationProvider.getActiveOrganizationFileName();
-        if (Strings.hasText(activeOrganizationFileName)) {
+        if (Strings.hasText(activeOrganizationProvider.getActiveOrganizationFileName())) {
             new DynamicButtonWidget.Builder()
                     .withText(org.bonitasoft.studio.common.Messages.open)
                     .withImage(Pics.getImage(PicsConstants.open))
                     .withHotImage(Pics.getImage(PicsConstants.openHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .onClick(e -> {
-                        OrganizationFileStore fileStore = repositoryStore.getChild(activeOrganizationFileName, false);
+                        OrganizationFileStore fileStore = repositoryStore
+                                .getChild(activeOrganizationProvider.getActiveOrganizationFileName(), false);
                         if (fileStore != null) {
                             fileStore.open();
                         } else {
                             MessageDialog.openError(Display.getDefault().getActiveShell(),
                                     Messages.organizationNotFoundTitle,
-                                    String.format(Messages.organizationNotFound, activeOrganizationFileName));
+                                    String.format(Messages.organizationNotFound,
+                                            activeOrganizationProvider.getActiveOrganizationFileName()));
                         }
                     })
                     .createIn(parent);
