@@ -16,12 +16,12 @@ package org.bonitasoft.studio.tests.properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Objects;
 
 import org.bonitasoft.studio.common.emf.tools.EMFModelUpdater;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -38,6 +38,8 @@ import org.bonitasoft.studio.properties.sections.message.commands.UpdateMessageC
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -165,7 +167,7 @@ public class TestMessageRefactoring {
                 .stream()
                 .map(ThrowMessageEvent.class::cast)
                 .findFirst()
-                .get();
+                .orElseThrow();
     }
 
     private AbstractCatchMessageEvent getFirstCatchMessageEvent(AbstractProcess pool) {
@@ -174,18 +176,19 @@ public class TestMessageRefactoring {
                 .stream()
                 .map(AbstractCatchMessageEvent.class::cast)
                 .findFirst()
-                .get();
+                .orElseThrow();
     }
 
     private AbstractProcess getPool(MainProcess mainProcess, String poolName) {
         return ModelHelper.getAllProcesses(mainProcess).stream()
                 .filter(pool -> Objects.equals(pool.getName(), poolName))
                 .findFirst()
-                .get();
+                .orElseThrow();
     }
 
     private void openDiagrams() throws ReadFileStoreException {
-        DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramRepositoryStore diagramRepositoryStore = repositoryAccessor
+                .getRepositoryStore(DiagramRepositoryStore.class);
         DiagramFileStore diagram1 = diagramRepositoryStore.getDiagram(DIAGRAM_1_NAME, DIAGRAMS_VERSION);
         DiagramFileStore diagram2 = diagramRepositoryStore.getDiagram(DIAGRAM_2_NAME, DIAGRAMS_VERSION);
         diagram1.open();
@@ -199,7 +202,13 @@ public class TestMessageRefactoring {
                 .toFileURL(TestMessageRefactoring.class.getResource("TestRefactoringMessage.bos"));
         op.setArchiveFile(FileLocator.toFileURL(bosArchiveURL).getFile());
         op.setCurrentRepository(repositoryAccessor.getCurrentRepository());
-        op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
+        Display.getDefault().syncExec(() -> {
+            try {
+                PlatformUI.getWorkbench().getProgressService().run(true, false, op);
+            } catch (InvocationTargetException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }

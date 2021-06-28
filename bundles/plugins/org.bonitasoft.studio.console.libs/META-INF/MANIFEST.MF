@@ -4,7 +4,7 @@ Bundle-ClassPath: .,lib/bonita-client.jar,lib/jaxb-api.jar,lib/javax.act
  ivation-api.jar,lib/jaxb-runtime.jar,lib/txw2.jar,lib/istack-commons-ru
  ntime.jar,lib/stax-ex.jar,lib/FastInfoset.jar,lib/httpclient.jar,lib/ht
  tpcore.jar,lib/commons-logging.jar,lib/commons-codec.jar,lib/xstream.ja
- r,lib/xmlpull.jar,lib/xpp3_min.jar,lib/httpmime.jar,lib/bonita-common.j
+ r,lib/mxparser.jar,lib/xmlpull.jar,lib/httpmime.jar,lib/bonita-common.j
  ar,lib/jakarta.activation.jar,lib/commons-io.jar,lib/jackson-databind.j
  ar,lib/jackson-core.jar,lib/slf4j-api.jar,lib/commons-lang3.jar,lib/jac
  kson-annotations.jar

@@ -20,11 +20,13 @@ import static org.junit.Assert.assertFalse;
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
-import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.rule.SWTGefBotRule;
+import org.bonitasoft.studio.tests.util.ProjectUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -62,13 +64,9 @@ public class TestThrowCatchMessage implements SWTBotConstants {
 
     @Test
     public void testThrowCathMessage() throws IOException {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        TestThrowCatchMessage.class.getResource("DemoMessageContentCorrelation-1.0.bos"))
-                .currentRepository()
-                .next()
-                .next()
-                .finish();
+        DiagramFileStore procFile = ProjectUtil.importProcFile(TestThrowCatchMessage.class.getResource("DemoMessageContentCorrelation-1.0.proc"));
+        Display.getDefault().syncExec(procFile::open);
+        
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
@@ -202,13 +200,9 @@ public class TestThrowCatchMessage implements SWTBotConstants {
 
     @Test
     public void testCathMessageNotAllowed() throws IOException {
-        new BotApplicationWorkbenchWindow(bot).importBOSArchive()
-                .setArchive(
-                        TestThrowCatchMessage.class.getResource("TestCatchMessageSelectionTest-1.0.bos"))
-                .currentRepository()
-                .next()
-                .next()
-                .finish();
+        DiagramFileStore procFile = ProjectUtil.importProcFile(TestThrowCatchMessage.class.getResource("TestCatchMessageSelectionTest-1.0.proc"));
+        Display.getDefault().syncExec(procFile::open);
+        
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

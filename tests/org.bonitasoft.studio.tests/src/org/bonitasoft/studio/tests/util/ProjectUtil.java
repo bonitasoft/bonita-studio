@@ -16,6 +16,9 @@ package org.bonitasoft.studio.tests.util;
 
 import static java.util.function.Predicate.not;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
@@ -25,6 +28,8 @@ import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperat
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectDefaultConfiguration;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.repository.EnvironmentFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -34,7 +39,8 @@ public class ProjectUtil {
 
     /**
      * Removes all current project user artifacts and extensions
-     * @throws CoreException 
+     * 
+     * @throws CoreException
      */
     public static void cleanProject() throws CoreException {
         var project = RepositoryManager.getInstance().getAccessor().getCurrentRepository();
@@ -46,9 +52,9 @@ public class ProjectUtil {
                 .forEach(IRepositoryFileStore::delete);
         removeUserExtensions();
     }
-    
+
     public static void removeUserExtensions() throws CoreException {
-        IProject project =  RepositoryManager.getInstance().getAccessor().getCurrentRepository().getProject();
+        IProject project = RepositoryManager.getInstance().getAccessor().getCurrentRepository().getProject();
         Model mavenModel = new MavenProjectHelper().getMavenModel(project);
         var dependenciesToRemove = mavenModel.getDependencies()
                 .stream()
@@ -59,4 +65,11 @@ public class ProjectUtil {
         }
     }
 
+    public static DiagramFileStore importProcFile(URL procFileURL) throws IOException {
+        var diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        try (var is = procFileURL.openStream()) {
+            var name = new File(procFileURL.getFile()).getName();
+            return diagramStore.importInputStream(name, is);
+        }
+    }
 }
