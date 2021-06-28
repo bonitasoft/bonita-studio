@@ -58,7 +58,7 @@ public class BonitaProjectIT {
         assertThat(model.getArtifactId()).isEqualTo("my-project");
         assertThat(model.getVersion()).isEqualTo("1.0.0-SNAPSHOT");
         assertThat(model.getName()).isEqualTo("My project");
-        assertThat(model.getProperties()).contains(entry("bonita.version", ProductVersion.mavenVersion()));
+        assertThat(model.getProperties()).contains(entry("bonita.runtime.version", ProductVersion.mavenVersion()));
 
         // Validate the project natures and builders
         assertThat(project.getDescription().getNatureIds()).containsOnly(BonitaProjectNature.NATURE_ID,

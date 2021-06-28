@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.PluginExecution;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.GAV;
@@ -26,21 +27,20 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
-    public static final String BONITA_VERSION = "bonita.version";
+    public static final String BONITA_RUNTIME_VERSION = "bonita.runtime.version";
     private static final String ENCODING_CHARSET = "UTF-8";
     private static final String JAVA_VERSION = "11";
-    private static final String GROOVY_VERSION = "3.0.7";
 
     private static final List<MavenDependency> PROVIDED_DEPENDENCIES = List.of(
             new BonitaCommonDependency(),
-            new MavenDependency("org.codehaus.groovy", "groovy-all", "${groovy.version}", "pom"),
-            new MavenDependency("org.codehaus.groovy", "groovy-dateutil", "${groovy.version}"));
+            new MavenDependency("org.codehaus.groovy", "groovy-all", null, "pom"),
+            new MavenDependency("org.codehaus.groovy", "groovy-dateutil", null));
 
     private Properties properties = new Properties();
     private List<MavenPlugin> plugins = new ArrayList<>();
     private List<MavenDependency> dependencies = new ArrayList<>();
 
-    public ProjectDefaultConfiguration(String bonitaVersion) {
+    public ProjectDefaultConfiguration(String bonitaRuntimeVersion) {
 
         addPlugin(new MavenPlugin(APACHE_MAVEN_PLUGIN_GROUP_ID, MAVEN_INSTALL_PLUGIN, MAVEN_INSTALL_PLUGIN_VERSION));
         addPlugin(new MavenPlugin(BONITA_PROJECT_MAVEN_PLUGIN_GROUP_ID, BONITA_PROJECT_MAVEN_PLUGIN_ARTIFACT_ID,
@@ -53,8 +53,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
         PROVIDED_DEPENDENCIES.stream().forEach(this::addDependency);
 
-        properties.setProperty(BONITA_VERSION, bonitaVersion);
-        properties.setProperty("groovy.version", GROOVY_VERSION);
+        properties.setProperty(BONITA_RUNTIME_VERSION, bonitaRuntimeVersion);
         properties.setProperty("maven.compiler.source", JAVA_VERSION);
         properties.setProperty("maven.compiler.target", JAVA_VERSION);
         properties.setProperty("project.build.sourceEncoding", ENCODING_CHARSET);
@@ -73,6 +72,22 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
 
     public Properties getProperties() {
         return properties;
+    }
+    
+    public DependencyManagement getDependencyManagement() {
+        var dependencyManagement = new DependencyManagement();
+        dependencyManagement.addDependency(runtimeBOMImportDependency());
+        return dependencyManagement;
+    }
+
+    private Dependency runtimeBOMImportDependency() {
+        var runtimeBOM = new Dependency();
+        runtimeBOM.setGroupId(RUNTIME_BOM_GROUP_ID);
+        runtimeBOM.setArtifactId(RUNTIME_BOM_ARTIFACT_ID);
+        runtimeBOM.setVersion(String.format("${%s}", BONITA_RUNTIME_VERSION));
+        runtimeBOM.setType("pom");
+        runtimeBOM.setScope("import");
+        return runtimeBOM;
     }
 
     public List<MavenPlugin> getPlugins() {
@@ -114,9 +129,9 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         return PROVIDED_DEPENDENCIES.stream().map(MavenDependency::toGAV).anyMatch(new GAV(dependency)::equals);
     }
 
-    public static String getBonitaVersion(Model model) {
-        if (model.getProperties().containsKey(BONITA_VERSION)) {
-            return model.getProperties().getProperty(BONITA_VERSION);
+    public static String getBonitaRuntimeVersion(Model model) {
+        if (model.getProperties().containsKey(BONITA_RUNTIME_VERSION)) {
+            return model.getProperties().getProperty(BONITA_RUNTIME_VERSION);
         }
         return null;
     }
