@@ -337,4 +337,10 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         }
     }
 
+    @Override
+    public boolean canBeDeleted() {
+        var activeOrganization = activeOrganizationProvider.getActiveOrganization();
+        return !Objects.equals(activeOrganization, getDisplayName()) && super.canBeDeleted();
+    }
+
 }
