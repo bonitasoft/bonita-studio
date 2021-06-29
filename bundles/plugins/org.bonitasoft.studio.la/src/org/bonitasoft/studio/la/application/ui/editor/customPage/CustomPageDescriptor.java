@@ -14,7 +14,6 @@ public class CustomPageDescriptor {
 
     public static final String CUSTOMPAGE_PREFIX = "custompage_";
     public static final String DEFAULT_LAYOUT_ID = "custompage_layoutBonita";
-    public static final String LEGACY_DEFAULT_LAYOUT_ID = "custompage_defaultlayout";
     public static final String BONITA_THEME_ID = "custompage_themeBonita";
     public static final CustomPageDescriptor DEFAULT_LAYOUT = new CustomPageDescriptor(DEFAULT_LAYOUT_ID,
             "Bonita layout", null);
