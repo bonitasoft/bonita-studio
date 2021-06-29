@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import org.bonitasoft.engine.api.PageAPI;
 import org.bonitasoft.studio.common.core.IRunnableWithStatus;
 import org.bonitasoft.studio.engine.http.HttpClientFactory;
-import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageDescriptor;
 import org.bonitasoft.studio.la.application.ui.editor.customPage.CustomPageProvider;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.theme.ThemeFileStore;
@@ -41,9 +40,7 @@ public class ThemeDependencyResolver {
     public Stream<IRunnableWithStatus> prepareDeployOperation(Stream<String> themes) {
         return themes
                 .distinct()
-                .filter(pageId -> CustomPageProvider.DEFAULT_THEMES.stream()
-                        .map(CustomPageDescriptor::getId)
-                        .noneMatch(providedThemeId -> Objects.equals(providedThemeId, pageId)))
+                .filter(pageId -> !Objects.equals(CustomPageProvider.DEFAULT_THEME.getId(), pageId))
                 .map(this::newDeployPageOperation);
     }
 
