@@ -31,11 +31,8 @@ import org.eclipse.core.runtime.CoreException;
 
 public class CustomPageProvider implements IResourceChangeListener {
 
-    public static final List<CustomPageDescriptor> DEFAULT_THEMES = new ArrayList<>();
-    static {
-        DEFAULT_THEMES.add(CustomPageDescriptor.DEFAULT_THEME);
-        DEFAULT_THEMES.add(new CustomPageDescriptor(CustomPageDescriptor.BONITA_THEME_ID, "Bonita theme", null));
-    }
+    public static final CustomPageDescriptor DEFAULT_THEME = new CustomPageDescriptor(CustomPageDescriptor.BONITA_THEME_ID,
+            "Bonita theme", null);
 
     private final WebPageRepositoryStore webPageStore;
     private ThemeRepositoryStore themeStore;
@@ -60,7 +57,6 @@ public class CustomPageProvider implements IResourceChangeListener {
                             CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
                             fileStore.getDisplayName(), fileStore.getDescription()))
                     .forEach(layouts::add);
-            layouts.add(CustomPageDescriptor.LEGACY_DEFAULT_LAYOUT);
         }
         return layouts;
     }
@@ -97,8 +93,7 @@ public class CustomPageProvider implements IResourceChangeListener {
     }
 
     public static boolean isDefaultTheme(String themeId) {
-        return CustomPageDescriptor.DEFAULT_THEME.getId().equals(themeId)
-                || CustomPageDescriptor.BONITA_THEME_ID.equals(themeId);
+        return CustomPageDescriptor.BONITA_THEME_ID.equals(themeId);
     }
 
     public static IConverter<String, String> getCustomPageIdConverter(Collection<CustomPageDescriptor> layouts) {
@@ -153,7 +148,7 @@ public class CustomPageProvider implements IResourceChangeListener {
                             fileStore.getPageDisplayName(),
                             fileStore.getDescription()))
                     .forEach(themes::add);
-            themes.addAll(DEFAULT_THEMES);
+            themes.add(DEFAULT_THEME);
         }
         return themes;
     }
@@ -191,7 +186,7 @@ public class CustomPageProvider implements IResourceChangeListener {
             BonitaStudioLog.error(e);
         }
     }
-    
+
     public void cleanThemes() {
         this.themes = null;
     }

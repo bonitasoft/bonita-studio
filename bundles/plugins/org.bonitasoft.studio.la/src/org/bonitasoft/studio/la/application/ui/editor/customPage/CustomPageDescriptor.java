@@ -18,11 +18,6 @@ public class CustomPageDescriptor {
     public static final String BONITA_THEME_ID = "custompage_themeBonita";
     public static final CustomPageDescriptor DEFAULT_LAYOUT = new CustomPageDescriptor(DEFAULT_LAYOUT_ID,
             "Bonita layout", null);
-    public static final CustomPageDescriptor LEGACY_DEFAULT_LAYOUT = new CustomPageDescriptor(LEGACY_DEFAULT_LAYOUT_ID,
-            "Default living application layout (deprecated)", null);
-    public static final CustomPageDescriptor DEFAULT_THEME = new CustomPageDescriptor("custompage_bootstrapdefaulttheme",
-            "Bootstrap default theme",  null);
-
 
     private String id;
     private String displayName;
@@ -54,8 +49,8 @@ public class CustomPageDescriptor {
     public String toString() {
         String displayName = getDisplayName();
         String pageId = getId();
-        return displayName != null && !displayName.isEmpty() && !displayName.equals(pageId) ?
-                String.format("%s (%s)",displayName,pageId)
+        return displayName != null && !displayName.isEmpty() && !displayName.equals(pageId)
+                ? String.format("%s (%s)", displayName, pageId)
                 : pageId;
     }
 

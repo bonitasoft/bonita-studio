@@ -104,7 +104,7 @@ public class AddApplicationDescriptorListener extends HyperlinkAdapter implement
                 addDescriptorPage.getVersion()).create();
         applicationNode.setProfile(DEFAULT_PROFILE);
         applicationNode.setLayout(CustomPageDescriptor.DEFAULT_LAYOUT.getId());
-        applicationNode.setTheme(CustomPageDescriptor.DEFAULT_THEME.getId());
+        applicationNode.setTheme(CustomPageDescriptor.BONITA_THEME_ID);
         return Optional.of(applicationNode);
     }
 
