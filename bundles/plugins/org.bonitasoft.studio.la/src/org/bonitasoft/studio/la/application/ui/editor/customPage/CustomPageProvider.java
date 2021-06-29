@@ -88,8 +88,7 @@ public class CustomPageProvider implements IResourceChangeListener {
     }
 
     public static boolean isDefaultLayout(String layoutId) {
-        return CustomPageDescriptor.DEFAULT_LAYOUT_ID.equals(layoutId)
-                || CustomPageDescriptor.LEGACY_DEFAULT_LAYOUT_ID.equals(layoutId);
+        return CustomPageDescriptor.DEFAULT_LAYOUT_ID.equals(layoutId);
     }
 
     public static boolean isDefaultTheme(String themeId) {
