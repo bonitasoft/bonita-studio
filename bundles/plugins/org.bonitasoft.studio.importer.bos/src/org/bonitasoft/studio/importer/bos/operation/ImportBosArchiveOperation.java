@@ -222,7 +222,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 }
             }
 
-            doUpdateProjectDependencies(monitor, statusBuilder);
+            if (!dependencies.isEmpty()) {
+                doUpdateProjectDependencies(monitor, statusBuilder);
+            }
 
             doImport(importArchiveModel, monitor);
 
