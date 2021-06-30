@@ -80,7 +80,7 @@ public class ProjectDefaultConfiguration implements DefaultPluginVersions {
         return dependencyManagement;
     }
 
-    private Dependency runtimeBOMImportDependency() {
+    public static Dependency runtimeBOMImportDependency() {
         var runtimeBOM = new Dependency();
         runtimeBOM.setGroupId(RUNTIME_BOM_GROUP_ID);
         runtimeBOM.setArtifactId(RUNTIME_BOM_ARTIFACT_ID);

@@ -43,6 +43,8 @@ import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Java11MigrationStep;
+import org.bonitasoft.studio.rest.api.extension.core.repository.migration.RuntimeBOMMigrationStep;
 import org.codehaus.plexus.util.WriterFactory;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.core.resources.IFile;
@@ -64,7 +66,9 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     public static final String STORE_NAME = "restAPIExtensions";
 
     private static final List<MavenModelMigration> MIGRATION_STEPS = List.of(new Groovy3MigrationStep(),
-            new BonitaVersionMigrationStep());
+            new Java11MigrationStep(),
+            new BonitaVersionMigrationStep(),
+            new RuntimeBOMMigrationStep());
 
     private MavenXpp3Reader mavenModelReader = new MavenXpp3Reader();
     private MavenXpp3Writer mavenModelWriter = new MavenXpp3Writer();

@@ -23,14 +23,12 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Before;
 import org.junit.Test;
@@ -170,32 +168,6 @@ public class Groovy3MigrationStepTest {
     }
 
     @Test
-    public void should_update_maven_compiler_plugin_configuration() throws Exception {
-        // Given
-        Model model = loadModel("pom_from_1_0_5.xml");
-        assertThat(findPluginConfiguration(model, "org.apache.maven.plugins", "maven-compiler-plugin"))
-                .isPresent()
-                .hasValueSatisfying(c -> {
-                    assertThat(c.getChild("source").getValue()).isEqualTo("1.8");
-                    assertThat(c.getChild("target").getValue()).isEqualTo("1.8");
-                });
-
-        // When
-        migrationStep.migrate(model);
-
-        // Then
-        assertThat(findPluginConfiguration(model, "org.apache.maven.plugins", "maven-compiler-plugin"))
-                .isPresent()
-                .hasValueSatisfying(c -> {
-                    assertThat(c.getChild("source")).isNull();
-                    assertThat(c.getChild("target")).isNull();
-                });
-        
-        assertThat(model.getProperties().get("maven.compiler.source")).isEqualTo("${java.version}");
-        assertThat(model.getProperties().get("maven.compiler.target")).isEqualTo("${java.version}");
-    }
-
-    @Test
     public void should_update_maven_compiler_plugin_dependencies() throws Exception {
         // Given
         Model model = loadModel("pom_from_1_0_5.xml");
@@ -251,18 +223,6 @@ public class Groovy3MigrationStepTest {
     }
 
     @Test
-    public void should_add_java_version_property() throws Exception {
-        // Given
-        Model model = loadModel("pom_from_1_0_5.xml");
-
-        // When
-        migrationStep.migrate(model);
-
-        // Then
-        assertThat(model.getProperties()).contains(entry("java.version", "11"));
-    }
-
-    @Test
     public void should_add_maven_compiler_plugin_version_property() throws Exception {
         // Given
         Model model = loadModel("pom_from_1_0_5.xml");
@@ -302,7 +262,7 @@ public class Groovy3MigrationStepTest {
                 .extracting("artifactId", "version")
                 .contains(tuple("maven-surefire-plugin", "${maven-surefire-plugin.version}"));
     }
-    
+
     @Test
     public void should_add_maven_surefire_plugin_version_property() throws Exception {
         // Given
@@ -312,9 +272,9 @@ public class Groovy3MigrationStepTest {
         migrationStep.migrate(model);
 
         // Then
-        assertThat(model.getProperties()).contains(entry("maven-surefire-plugin.version", "3.0.0-M5"));
+        assertThat(model.getProperties()).contains(entry("maven-surefire-plugin.version", "2.22.2"));
     }
-    
+
     @Test
     public void should_migration_step_applies_on_groovy_project() throws Exception {
         // Given
@@ -327,7 +287,7 @@ public class Groovy3MigrationStepTest {
         assertThat(migrationStep.appliesTo(model2)).isTrue();
         assertThat(migrationStep.appliesTo(model3)).isTrue();
     }
-    
+
     @Test
     public void should_migration_step_not_applies_on_java_project() throws Exception {
         // Given
@@ -336,7 +296,7 @@ public class Groovy3MigrationStepTest {
         // Expect
         assertThat(migrationStep.appliesTo(model)).isFalse();
     }
-    
+
     @Test
     public void should_migration_step_not_applies_on_groovy3_project() throws Exception {
         // Given
@@ -346,23 +306,10 @@ public class Groovy3MigrationStepTest {
         assertThat(migrationStep.appliesTo(model)).isFalse();
     }
 
-
     private Model loadModel(String resourceName) throws IOException, XmlPullParserException {
         try (InputStream is = Groovy3MigrationStepTest.class.getResourceAsStream("/migration/" + resourceName)) {
             return modelReader.read(is);
         }
-    }
-
-    private Optional<Xpp3Dom> findPluginConfiguration(Model model, String groupId, String artifactId) {
-        if (model.getBuild() == null) {
-            return Optional.empty();
-        }
-        return model.getBuild().getPlugins().stream()
-                .filter(p -> Objects.equals(groupId, p.getGroupId()))
-                .filter(p -> Objects.equals(artifactId, p.getArtifactId()))
-                .map(Plugin::getConfiguration)
-                .map(Xpp3Dom.class::cast)
-                .findFirst();
     }
 
     private List<Dependency> findPluginDependencies(Model model, String groupId, String artifactId) {

@@ -43,9 +43,6 @@ import org.bonitasoft.studio.engine.server.StartEngineJob;
 import org.bonitasoft.studio.model.process.impl.ContractInputImpl;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferences;
-import org.codehaus.groovy.eclipse.dsl.DSLPreferencesInitializer;
-import org.codehaus.groovy.eclipse.dsl.GroovyDSLCoreActivator;
 import org.eclipse.core.internal.databinding.beans.BeanPropertyHelper;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -62,16 +59,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.gmf.runtime.lite.svg.SVGFigure;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.Display;
@@ -91,9 +84,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.osgi.framework.Bundle;
 
 import com.google.common.base.Joiner;
@@ -135,10 +125,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             for (final IConfigurationElement elem : elements) {
                 try {
                     contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+                    contrib.execute();
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
-                contrib.execute();
             }
         }
     }
@@ -412,8 +402,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100);
         disableInternalWebBrowser();
-        disableGroovyDSL();
-        initXMLandHTMLValidationPreferences();
         setSystemProperties();
 
         new InstallLocalRepositoryContribution().execute();
@@ -459,15 +447,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         IThemeEngine engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         synchroniseTheme(engine);
         applyTheme(engine);
-        
-        var asciiDocEditorPrefStore = getAsciiDocEditorPreferences();
-        asciiDocEditorPrefStore.setDefault("autoCreateInitialAsciidocConfigFile", false);
     }
     
-    protected IPreferenceStore getAsciiDocEditorPreferences() {
-        return new ScopedPreferenceStore(InstanceScope.INSTANCE, "de.jcup.asciidoctoreditor");
-     }
-
     /**
      * Synchronise active eclipse theme with the Bonita preference,
      * to ensure that specifics adjustments for Dark theme are applied.
@@ -507,27 +488,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             BonitaStudioLog.info(String.format("Applying theme %s", expectedTheme), ApplicationPlugin.PLUGIN_ID);
             engine.setTheme(expectedTheme, true);
         }
-    }
-
-    protected void initXMLandHTMLValidationPreferences() {
-        IEclipsePreferences htmlNode = DefaultScope.INSTANCE
-                .getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_VALUE, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, -1);
-        htmlNode.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, -1);
-    }
-
-    protected void disableGroovyDSL() {
-        final IPreferenceStore groovyDSLstore = GroovyDSLCoreActivator.getDefault().getPreferenceStore();
-        groovyDSLstore.setDefault(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-        groovyDSLstore.setValue(DSLPreferencesInitializer.AUTO_ADD_DSL_SUPPORT, false);
-        groovyDSLstore.setDefault(DSLPreferencesInitializer.DSLD_DISABLED, true);
-        groovyDSLstore.setValue(DSLPreferencesInitializer.DSLD_DISABLED, true);
-        groovyDSLstore.setDefault(DSLPreferences.DISABLED_SCRIPTS, false);
-        groovyDSLstore.setValue(DSLPreferences.DISABLED_SCRIPTS, false);
     }
 
     /**
