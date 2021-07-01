@@ -20,6 +20,7 @@ import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelF
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -84,6 +85,7 @@ public class BdmDashboardContribution implements DashboardContribution {
                     .withImage(Pics.getImage(PicsConstants.open))
                     .withHotImage(Pics.getImage(PicsConstants.openHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .withId(SWTBotConstants.openArtifactButtonId(BusinessObjectModelFileStore.BOM_FILENAME))
                     .onClick(e -> commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null))
                     .createIn(parent);
 
@@ -93,6 +95,7 @@ public class BdmDashboardContribution implements DashboardContribution {
                     .withImage(Pics.getImage(PicsConstants.add_simple))
                     .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .withId(SWTBotConstants.createArtifactButtonId(Messages.businessDataModel))
                     .onClick(e -> {
                         commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null);
                         refreshToolbar(parent);

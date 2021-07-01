@@ -17,6 +17,7 @@ package org.bonitasoft.studio.la.application.ui.dashboard;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -71,6 +72,7 @@ public class ApplicationDashboardContribution implements DashboardContribution, 
                 .withImage(Pics.getImage(PicsConstants.add_simple))
                 .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .withId(SWTBotConstants.createArtifactButtonId(Messages.application))
                 .onClick(e -> commandExecutor.executeCommand(NEW_APPLICATION_COMMAND, null))
                 .createIn(toolbarComposite);
     }
