@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.identity.i18n.Messages;
@@ -89,6 +90,7 @@ public class OrganizationDashboardContribution implements DashboardContribution 
                     .withImage(Pics.getImage(PicsConstants.open))
                     .withHotImage(Pics.getImage(PicsConstants.openHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                    .withId(SWTBotConstants.openArtifactButtonId(activeOrganizationProvider.getActiveOrganizationFileName()))
                     .onClick(e -> {
                         OrganizationFileStore fileStore = repositoryStore
                                 .getChild(activeOrganizationProvider.getActiveOrganizationFileName(), false);
