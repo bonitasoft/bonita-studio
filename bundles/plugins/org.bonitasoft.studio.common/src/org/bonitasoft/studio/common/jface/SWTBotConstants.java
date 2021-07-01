@@ -185,4 +185,12 @@ public interface SWTBotConstants {
     public static String findUsageButtonId(String definitionId, String definitionVersion) {
         return "SWTBOT_ID_FIND_USAGE_" + definitionId + "-" + definitionVersion;
     }
+
+    public static String createArtifactButtonId(String artifactId) {
+        return "SWTBOT_ID_CREATE_ARTIFACT_" + artifactId;
+    }
+
+    public static String openArtifactButtonId(String fileName) {
+        return "SWTBOT_ID_OPEN_ARTIFACT_" + fileName;
+    }
 }

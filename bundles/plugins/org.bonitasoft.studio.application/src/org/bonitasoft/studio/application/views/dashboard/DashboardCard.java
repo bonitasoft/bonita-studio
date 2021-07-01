@@ -68,11 +68,11 @@ public class DashboardCard extends Composite {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite
                 .setLayout(GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 2 : 1).create());
-        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        titleComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
-        titleLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCardId(contribution.getName()));
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(contribution.getName());
 
@@ -87,6 +87,7 @@ public class DashboardCard extends Composite {
                     .withHotImage(Pics.getImage(PicsConstants.detailsHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create())
+                    .withId(SWTBotConstants.extensionCardId(contribution.getName()))
                     .onClick(e -> ((Zoomable) contribution).getZoomListener().zoom(e))
                     .createIn(titleComposite);
         }

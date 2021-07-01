@@ -246,6 +246,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
                 .withHotImage(Pics.getImage(PicsConstants.open32Hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create())
+                .withId(SWTBotConstants.openArtifactButtonId(fileStore.getName()))
                 .onClick(e -> fileStore.open())
                 .createIn(titleComposite);
 
