@@ -86,6 +86,7 @@ import org.bonitasoft.studio.tests.organization.TestOrganizationPassword;
 import org.bonitasoft.studio.tests.preferences.MavenConfigurationIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.tests.project.ProjectCompositionIT;
+import org.bonitasoft.studio.tests.project.ProjectDashboardIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerBdmIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerConnectorIT;
 import org.bonitasoft.studio.tests.projectExplorer.ProjectExplorerDiagramIT;
@@ -105,6 +106,7 @@ import org.junit.runners.Suite;
 @RunWith(BonitaSuite.class)
 @Suite.SuiteClasses({
         ProjectCompositionIT.class,
+        ProjectDashboardIT.class,
         RichTextEditorIT.class,
         DiagramTests.class,
         TestDeleteDiagrams.class,

@@ -130,7 +130,8 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
         super.migrate(postMigrationOperationCollector, monitor);
         for (ApplicationFileStore fileStore : getChildren()) {
             try {
@@ -144,7 +145,8 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     }
 
     private void updateBonitaTheme(ApplicationNode application) {
-        if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")) {
+        if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")
+                || Objects.equals(application.getTheme(), "custompage_bootstrapdefaulttheme")) {
             application.setTheme("custompage_themeBonita");
         }
     }
@@ -153,7 +155,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null && filename.endsWith("." + XML_EXTENSION)) {
             return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
-                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE, 
+                    ModelVersion.CURRENT_APPLICATION_DESCRIPTOR_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
                     String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
                             .validate(inputStream);
