@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_pb0lEGtqEeWUnsGmiq8DQg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rh_AUGtqEeWUnsGmiq8DQg" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_tIr4YGtqEeWUnsGmiq8DQg" elementId="org.bonitasoft.studio.rest.api.extension.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewRestAPIExtensionHandler" command="_2OMEUGtqEeWUnsGmiq8DQg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_t6gRwH5AEeW1qcvePltJLA" elementId="org.bonitasoft.studio.rest.api.extension.openHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.OpenCustomPageProjectHandler" command="_RoRyMIF1EeWqz5DEEjiV_A"/>
+    <elements xsi:type="commands:Handler" xmi:id="_HXKToHfxEeWSb-F6KSbJOQ" elementId="org.bonitasoft.studio.rest.api.extension.buildHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.BuildRestAPIExtensionHandler" command="_Qx5IsHfxEeWSb-F6KSbJOQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_w8bhwHu7EeW2j7yIulv7KA" elementId="org.bonitasoft.studio.rest.api.extension.deployHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.DeployRestAPIExtensionHandler" command="_00IMEHu7EeW2j7yIulv7KA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_O0Vq8IF1EeWqz5DEEjiV_A" elementId="org.bonitasoft.studio.rest.api.extension.deleteHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.DeleteRestAPIExtensionHandler" command="_yW0sEH5AEeW1qcvePltJLA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_by3KMJQpEeWPtp-bXIjyLQ" elementId="org.bonitasoft.studio.rest.api.extension.editPermissionsHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.EditRestAPIExtensionPermissionsMappingHandler" command="_fFL2kJQpEeWPtp-bXIjyLQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_baR3wJduEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.rest.api.extension.quickDeployHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.QuickDeployHandler" command="__DpO0JdsEeWG2cYaYkPesQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_2J1pIJ2ZEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newGroovyClassHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewGroovyClassHandler" command="_8GbjYJ2ZEeWXpf_8Tk-zQQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_oif0QJ2aEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newPackageHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewPackageHandler" command="_rNA5wJ2aEeWXpf_8Tk-zQQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_zgvgIJ2-EeW2hadT4aUOSQ" elementId="org.bonitasoft.studio.rest.api.extension.quickBuildHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.QuickBuildHandler" command="_uHNPoJ2-EeW2hadT4aUOSQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_cYwM4FYQEemxWsao4RNazA" elementId="org.bonitasoft.studio.theme.newHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.NewThemeHandler" command="_gHtx8FYQEemxWsao4RNazA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_9em5YFt0Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deleteHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.DeleteThemeHandler" command="_6yeDQFt0Eem1IowXlZ1N2Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_M3AmwFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.buildHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.BuildThemeHandler" command="_QIqkwFt1Eem1IowXlZ1N2Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_YhJ5sFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deployHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.theme.handler.DeployThemeHandler" command="_WprasFt1Eem1IowXlZ1N2Q"/>
+    <elements xsi:type="commands:Handler" xmi:id="_yQmS4NI8EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.rest.api.extension.updatemavenprojectshandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.maven.UpdateMavenProjectsHandler" command="_qQ0Y4NI8EeqTs8GlxYwpfA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_pmsOcCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClassHandler" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.ui.handler.NewJavaClassHandler" command="_tZmfYCWZEeuku6hN8lb9Sw"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_MDSS4GtsEeWUnsGmiq8DQg" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_2OMEUGtqEeWUnsGmiq8DQg" elementId="org.bonitasoft.studio.rest.api.extension.newCommand" commandName="%newAndMore"/>
+    <elements xsi:type="commands:Command" xmi:id="_RoRyMIF1EeWqz5DEEjiV_A" elementId="org.bonitasoft.studio.rest.api.extension.openCommand" commandName="%open"/>
+    <elements xsi:type="commands:Command" xmi:id="_yW0sEH5AEeW1qcvePltJLA" elementId="org.bonitasoft.studio.rest.api.extension.deleteCommand" commandName="%delete"/>
+    <elements xsi:type="commands:Command" xmi:id="_Qx5IsHfxEeWSb-F6KSbJOQ" elementId="org.bonitasoft.studio.rest.api.extension.buildCommand" commandName="%build"/>
+    <elements xsi:type="commands:Command" xmi:id="_00IMEHu7EeW2j7yIulv7KA" elementId="org.bonitasoft.studio.rest.api.extension.deployCommand" commandName="%deploy"/>
+    <elements xsi:type="commands:Command" xmi:id="_fFL2kJQpEeWPtp-bXIjyLQ" elementId="org.bonitasoft.studio.rest.api.extension.editPermissionCommand" commandName="%editPermissionCommand"/>
+    <elements xsi:type="commands:Command" xmi:id="__DpO0JdsEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.rest.api.extension.quickDeployCommand" commandName="%quickDeploy">
+      <parameters xmi:id="_X-O78NOcEem78Y9qP5rRVg" elementId="disablePopup" name="disablePopup"/>
+      <parameters xmi:id="_zumuwNOgEemG_tvVhetXZA" elementId="projectPath" name="projectPath"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_8GbjYJ2ZEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newGroovyClass" commandName="%groovyClass"/>
+    <elements xsi:type="commands:Command" xmi:id="_rNA5wJ2aEeWXpf_8Tk-zQQ" elementId="org.bonitasoft.studio.rest.api.extension.newPackage" commandName="%newPackage"/>
+    <elements xsi:type="commands:Command" xmi:id="_uHNPoJ2-EeW2hadT4aUOSQ" elementId="org.bonitasoft.studio.rest.api.extension.quickBuildCommand" commandName="%quickBuild"/>
+    <elements xsi:type="commands:Command" xmi:id="_gjR-YMxtEeiOMvU_0otrhA" elementId="org.bonitasoft.studio.rest.api.extension.command.export" commandName="%exportRestApi"/>
+    <elements xsi:type="commands:Command" xmi:id="_96RFoONaEeiL4pBp9NVlMw" elementId="org.bonitasoft.studio.rest.api.extension.convertToProject" commandName="%convertToProject"/>
+    <elements xsi:type="commands:Command" xmi:id="_gHtx8FYQEemxWsao4RNazA" elementId="org.bonitasoft.studio.theme.newCommand" commandName="%newAndMore"/>
+    <elements xsi:type="commands:Command" xmi:id="_6yeDQFt0Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deleteCommand" commandName="%delete"/>
+    <elements xsi:type="commands:Command" xmi:id="_QIqkwFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.buildCommand" commandName="%build"/>
+    <elements xsi:type="commands:Command" xmi:id="_WprasFt1Eem1IowXlZ1N2Q" elementId="org.bonitasoft.studio.theme.deployCommand" commandName="%deploy"/>
+    <elements xsi:type="commands:Command" xmi:id="_qQ0Y4NI8EeqTs8GlxYwpfA" elementId="org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command" commandName="%updateMavenProjects"/>
+    <elements xsi:type="commands:Command" xmi:id="_tZmfYCWZEeuku6hN8lb9Sw" elementId="org.bonitasoft.studio.rest.api.extension.newJavaClass" commandName="%javaClass"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_JOq_EHZVEeW6kO-p0oSgKw" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_xmqtoOpkEemi2fumwpsySA" elementId="org.bonitasoft.studio.rest.api.extension.businessArchive.validator.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.core.validation.FormsCustomPermissionsValidator"/>
+    <elements xsi:type="application:Addon" xmi:id="_pfZQkK82Eeu4pqAhqw6O6Q" elementId="org.bonitasoft.studio.rest.api.extension.card.action.addon" contributionURI="bundleclass://org.bonitasoft.studio.rest.api.extension/org.bonitasoft.studio.rest.api.extension.extension.RestApiActionExtension"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_pna6oJdoEeWG2cYaYkPesQ" featurename="bindingTables" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:BindingTable" xmi:id="_0NI8IJdoEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.rest.api.extension.bindingtable" bindingContext="_xU4VkJdoEeWG2cYaYkPesQ">
+      <bindings xmi:id="_36HkMJdoEeWG2cYaYkPesQ" elementId="deployCommandBinding" keySequence="M1+M2+D" command="__DpO0JdsEeWG2cYaYkPesQ"/>
+      <bindings xmi:id="_3imMAJ2-EeW2hadT4aUOSQ" elementId="builCommandBinding" keySequence="M1+M2+B" command="_uHNPoJ2-EeW2hadT4aUOSQ"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_sAUEoJdoEeWG2cYaYkPesQ" featurename="bindingContexts" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:BindingContext" xmi:id="_xU4VkJdoEeWG2cYaYkPesQ" elementId="org.bonitasoft.studio.context.id" name="Bonita"/>
+  </fragments>
+</fragment:ModelFragments>
