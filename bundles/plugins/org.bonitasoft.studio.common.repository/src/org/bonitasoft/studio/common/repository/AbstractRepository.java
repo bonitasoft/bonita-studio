@@ -554,7 +554,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     @Override
     public String getDisplayName() {
-        return getName() + " [" + getVersion() + "]";
+        return getName();
     }
 
     @Override
