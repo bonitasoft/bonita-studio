@@ -15,7 +15,7 @@
 		<os-jvm-flags></os-jvm-flags>
 		<branding.version>2021.2-SNAPSHOT</branding.version>
 		<bundle.version>${project.version}</bundle.version>
-		<ui.designer.version>1.13.14</ui.designer.version>
+		<ui.designer.version>1.13.15</ui.designer.version>
 		<business.data.repository.version>${project.version}</business.data.repository.version>
 		<engine.version>${project.version}</engine.version>
 		<platform.version>${project.parent.version}</platform.version>
@@ -27,7 +27,7 @@
 		<tycho.localArtifacts>ignore</tycho.localArtifacts>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<groovy-maven-plugin.groovy.version>3.0.7</groovy-maven-plugin.groovy.version>
+		<groovy-maven-plugin.groovy.version>3.0.8</groovy-maven-plugin.groovy.version>
         <!-- Must be synched with org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions.MAVEN_DEPENDENCY_PLUGIN_VERSION --> 
 		<maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
 	</properties>

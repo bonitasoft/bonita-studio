@@ -57,6 +57,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 
 import com.google.common.collect.Maps;
@@ -96,7 +97,7 @@ public class BarExporter {
         try {
             def = procBuilder.createDefinition(process);
         } catch (final InvalidProcessDefinitionException e1) {
-            throw new BarCreationException(String.format("Failed to create process definition for %s (%s)\n\n%s",
+            throw new BarCreationException(String.format("Failed to create process definition for %s (%s)%n%n%s",
                     process.getName(), process.getVersion(), e1.getMessage()), e1);
         }
 
@@ -121,7 +122,7 @@ public class BarExporter {
                 throw new BarCreationException("Failed to add Process resources from configuration.", e);
             }
         }
-        if (!resourceConfigurationStatus.isOK()) {
+        if (resourceConfigurationStatus.getSeverity() == IStatus.ERROR) {
             throw new BarCreationException("Failed to add Process resources from configuration.",
                     resourceConfigurationStatus);
         }

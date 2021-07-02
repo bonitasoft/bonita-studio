@@ -47,7 +47,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
         try {
             Resource eResource = process.eResource();
             if (eResource != null) {
-                destFile = File.createTempFile(process.getName() + "-" + process.getVersion(), ".bpmn");
+                destFile = File.createTempFile("process", ".bpmn");
                 DiagramRepositoryStore diagramRepoStore = RepositoryManager.getInstance()
                         .getRepositoryStore(DiagramRepositoryStore.class);
                 ConnectorDefRepositoryStore connectorDefRepoStore = RepositoryManager.getInstance()
