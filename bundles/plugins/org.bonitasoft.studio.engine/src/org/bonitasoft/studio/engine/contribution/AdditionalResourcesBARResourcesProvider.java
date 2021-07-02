@@ -69,14 +69,24 @@ public class AdditionalResourcesBARResourcesProvider implements BARResourcesProv
     private void addFolderInBarResources(BusinessArchiveBuilder builder, File folder, AbstractProcess process,
             MultiStatus status) {
         Path folderPath = folder.toPath();
-        try {
-            Files.walk(folderPath).forEach(resourcePath -> {
+        try (var files = Files.walk(folderPath)) {
+            files.forEach(resourcePath -> {
                 try {
                     if (resourcePath.toFile().isFile()) {
                         Path barPath = folderPath.relativize(resourcePath);
-                        builder.addExternalResource(new BarResource(barPath.toString(), Files.readAllBytes(resourcePath)));
-                        BonitaStudioLog.debug(String.format("Resource '%s' added to %s--%s.bar.", resourcePath.toString(),
-                                process.getName(), process.getVersion()), EnginePlugin.PLUGIN_ID);
+                        byte[] content = Files.readAllBytes(resourcePath);
+                        if (content.length > 0) {
+                            builder.addExternalResource(new BarResource(barPath.toString(), content));
+                            BonitaStudioLog
+                                    .debug(String.format("Resource '%s' has been added to %s--%s.bar.", resourcePath.toString(),
+                                            process.getName(), process.getVersion()), EnginePlugin.PLUGIN_ID);
+                        } else {
+                            BonitaStudioLog
+                                    .warning(String.format(
+                                            "Resource '%s' is empty and has not been added to %s--%s.bar.",
+                                            resourcePath.toString(),
+                                            process.getName(), process.getVersion()), EnginePlugin.PLUGIN_ID);
+                        }
                     }
                 } catch (IOException e) {
                     status.add(ValidationStatus

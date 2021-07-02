@@ -55,7 +55,7 @@
 					<plugin>
 						<groupId>org.jboss.tools.tycho-plugins</groupId>
 						<artifactId>target-platform-utils</artifactId>
-						<version>1.7.0</version>
+						<version>2.2.0</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -63,7 +63,7 @@
 									<goal>mirror-target-to-repo</goal>
 								</goals>
 								<configuration>
-									<executionEnvironment>JavaSE-1.8</executionEnvironment>
+									<executionEnvironment>JavaSE-11</executionEnvironment>
 									<followStrictOnly>false</followStrictOnly>
 								</configuration>
 							</execution>
