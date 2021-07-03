@@ -16,10 +16,8 @@ package org.bonitasoft.studio.application.views.dashboard;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -31,14 +29,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 
 public class DashboardComposite extends Composite {
 
@@ -75,38 +71,17 @@ public class DashboardComposite extends Composite {
 
     private void createCards(Composite parent) {
         List<DashboardContribution> contributions = loadContributions();
-        createCards(parent, contributions, DashboardContribution.Category.PROCESS_DATA, Messages.processAndData);
-        createCards(parent, contributions, DashboardContribution.Category.USERS, Messages.users);
-        createCards(parent, contributions, DashboardContribution.Category.PROJECT,
-                Messages.project);
-    }
-
-    private void createCards(Composite parent,
-            List<DashboardContribution> contributions,
-            DashboardContribution.Category category,
-            String sectionTitle) {
-        List<DashboardContribution> contributionsToCreate = contributions.stream()
-                .filter(contribution -> Objects.equals(contribution.getCategory(), category))
-                .sorted()
-                .collect(Collectors.toList());
 
         var composite = createComposite(parent, SWT.NONE);
         composite.setLayout(
-                GridLayoutFactory.fillDefaults().margins(40, 10).spacing(20, 5)
+                GridLayoutFactory.fillDefaults().margins(40, 10).spacing(20, 20)
                         .numColumns(3)
                         .equalWidth(true)
                         .create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
-        var titleLabel = new Label(composite, SWT.WRAP);
-        titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
-        titleLabel.setText(sectionTitle);
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID));
-        titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
-        contributionsToCreate.forEach(contribution -> createCard(composite, contribution));
+        contributions.forEach(contribution -> createCard(composite, contribution));
     }
 
     private void createCard(Composite parent, DashboardContribution contribution) {
@@ -156,6 +131,7 @@ public class DashboardComposite extends Composite {
                 })
                 .filter(DashboardContribution.class::isInstance)
                 .map(DashboardContribution.class::cast)
+                .sorted()
                 .collect(Collectors.toList());
     }
 

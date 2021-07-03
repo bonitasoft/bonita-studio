@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
 import javax.xml.bind.JAXBException;
@@ -48,6 +47,7 @@ import org.bonitasoft.studio.common.repository.model.PostMigrationOperationColle
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Image;
 import org.xml.sax.SAXException;
 
@@ -112,7 +111,7 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("bdm.png", BusinessObjectPlugin.getDefault());
+        return Pics.getImage(PicsConstants.bdm);
     }
 
     @Override
@@ -188,7 +187,8 @@ public class BusinessObjectModelRepositoryStore<F extends AbstractBDMFileStore<?
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
         super.migrate(postMigrationOperationCollector, monitor);
         BusinessObjectModelFileStore fStore = (BusinessObjectModelFileStore) getChild(
                 BusinessObjectModelFileStore.ZIP_FILENAME, true);

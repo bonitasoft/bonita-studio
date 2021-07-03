@@ -96,4 +96,5 @@ public class Messages extends NLS {
     public static String actorHasNoMapping;
     public static String invalidImplementationFor;
     public static String missingInternalFormMapping;
+    public static String openEnvironmentsMenuLabel;
 }

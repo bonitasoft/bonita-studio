@@ -45,6 +45,7 @@ import org.bonitasoft.studio.identity.organization.model.organization.util.Organ
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationResourceImpl;
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
@@ -76,7 +77,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
         LEGACY_ORGA_NAMESPACES.add("http://www.bonitasoft.org/ns/organization/6.0.0-beta-016");
         LEGACY_ORGA_NAMESPACES.add(NamespaceUtil.namespaceRoot(ModelVersion.CURRENT_ORGANIZATION_NAMESPACE));
     }
-    
+
     private static final String STORE_NAME = "organizations";
     public static final String ORGANIZATION_EXT = "organization";
     private static final Set<String> extensions = new HashSet<>();
@@ -117,7 +118,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
      */
     @Override
     public Image getIcon() {
-        return Pics.getImage("organization.png", IdentityPlugin.getDefault());
+        return Pics.getImage(PicsConstants.organization);
     }
 
     /*
@@ -211,10 +212,12 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
         if (filename != null && filename.endsWith("." + ORGANIZATION_EXT) || filename.toLowerCase().endsWith(".xml")) {
-            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_ORGANIZATION_NAMESPACE,
-                    String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename),
-                    LEGACY_ORGA_NAMESPACES)).validate(inputStream);
+            return new XMLModelCompatibilityValidator(
+                    new ModelNamespaceValidator(ModelVersion.CURRENT_ORGANIZATION_NAMESPACE,
+                            String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
+                            String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility,
+                                    filename),
+                            LEGACY_ORGA_NAMESPACES)).validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

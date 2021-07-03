@@ -54,6 +54,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -124,7 +125,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("ProcessDiagramFile.gif", Activator.getDefault());
+        return Pics.getImage(PicsConstants.diagram);
     }
 
     @Override
@@ -177,7 +178,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         } else {
             // return the process with the higher version
             return findProcesses(name).stream()
-                    .max((p1,p2) -> p1.getVersion().compareTo(p2.getVersion()))
+                    .max((p1, p2) -> p1.getVersion().compareTo(p2.getVersion()))
                     .orElse(null);
         }
     }
@@ -412,8 +413,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
             }
         }
     }
-
-
 
     private boolean isFormDiagram(EObject eObject) {
         return eObject instanceof Diagram && "Form".equals(((Diagram) eObject).getType());

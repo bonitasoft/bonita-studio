@@ -34,13 +34,6 @@ public interface BonitaThemeConstants {
     public static final String EXTENSION_VIEW_BACKGROUND = "extensionViewBackground";
     public static final String CARD_BACKGROUND = "cardBackground";
     public static final String CARD_SEPARATOR = "separator";
-    public static final String DASHBOARD_PROCESS_BACKGROUND = "dashboardProcessCardBackground";
-    public static final String DASHBOARD_BDM_BACKGROUND = "dashboardBdmCardBackground";
-    public static final String DASHBOARD_ORGA_BACKGROUND = "dashboardOrgaCardBackground";
-    public static final String DASHBOARD_PROFILE_BACKGROUND = "dashboardProfileCardBackground";
-    public static final String DASHBOARD_ACCESS_CONTROL_BACKGROUND = "dashboardAccessControlCardBackground";
-    public static final String DASHBOARD_APPLICATION_BACKGROUND = "dashboardApplicationCardBackground";
-    public static final String DASHBOARD_DOCUMENTATION_BACKGROUND = "dashboardDocumentationCardBackground";
 
     // Custom css id
     public static final String EDITOR_SECTION_BAKGROUND_ID = "editorSectionBackground";

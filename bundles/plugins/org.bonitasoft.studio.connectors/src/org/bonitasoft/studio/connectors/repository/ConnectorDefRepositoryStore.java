@@ -25,13 +25,12 @@ import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -112,7 +111,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("connector.png", ConnectorPlugin.getDefault());
+        return Pics.getImage(PicsConstants.connectorDef);
     }
 
     @Override
@@ -156,7 +155,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         }
         return super.validate(filename, inputStream);
     }
-    
+
     @Override
     public int getImportOrder() {
         return 5;

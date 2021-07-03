@@ -87,11 +87,10 @@
                name="org.bonitasoft.studio.configuration.separator"
                visible="true">
          </separator>
-         <command
-               commandId="org.bonitasoft.studio.configuration.command.openEnvironment"
-               icon="icons/environment.png"
-               style="push">
-         </command>
+         <dynamic
+               class="org.bonitasoft.studio.configuration.menu.OpenEnvironmentMenuContribution"
+               id="org.bonitasoft.studio.configuration.menu.open">
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"

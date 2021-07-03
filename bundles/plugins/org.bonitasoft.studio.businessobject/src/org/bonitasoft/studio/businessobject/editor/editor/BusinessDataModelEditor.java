@@ -14,7 +14,10 @@
  */
 package org.bonitasoft.studio.businessobject.editor.editor;
 
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractMultiSourceFormEditor;
+import org.eclipse.swt.graphics.Image;
 
 public class BusinessDataModelEditor extends AbstractMultiSourceFormEditor {
 
@@ -23,6 +26,11 @@ public class BusinessDataModelEditor extends AbstractMultiSourceFormEditor {
     @Override
     public String getEditorId() {
         return EDITOR_ID;
+    }
+
+    @Override
+    public Image getTitleImage() {
+        return Pics.getImage(PicsConstants.bdm);
     }
 
 }

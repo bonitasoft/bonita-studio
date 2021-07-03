@@ -35,8 +35,9 @@ import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidat
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.la.LivingApplicationPlugin;
 import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,7 +74,7 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
      */
     @Override
     public Image getIcon() {
-        return LivingApplicationPlugin.getImage("icons/applicationStore.gif");
+        return Pics.getImage(PicsConstants.application);
     }
 
     /*

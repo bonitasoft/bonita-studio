@@ -60,6 +60,7 @@ import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -113,7 +114,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         super(fileName, store);
         commandExecutor = new CommandExecutor();
     }
-    
+
     @Override
     public BusinessObjectModel getContent() throws ReadFileStoreException {
         final IFile resource = getResource();
@@ -219,7 +220,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         return new BDMArtifactDescriptor()
                 .load(descriptor.getLocation().toFile());
     }
-    
+
     public Dependency getClientMavenDependency() throws CoreException {
         var descriptor = loadArtifactDescriptor();
         Dependency dependency = new Dependency();
@@ -247,10 +248,10 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         try {
             BDMArtifactDescriptor descriptor = loadArtifactDescriptor();
             RemoveDependencyOperation operation = new RemoveDependencyOperation(descriptor.getGroupId(),
-                    GenerateBDMOperation.BDM_CLIENT, 
+                    GenerateBDMOperation.BDM_CLIENT,
                     descriptor.getVersion());
             new WorkspaceJob("Remove Project BDM dependency") {
-                
+
                 @Override
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                     operation.run(monitor);
@@ -258,7 +259,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
                 }
             }.schedule();
         } catch (CoreException e) {
-           BonitaStudioLog.error(e);
+            BonitaStudioLog.error(e);
         }
     }
 
@@ -334,7 +335,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("bdm.png", BusinessObjectPlugin.getDefault());
+        return Pics.getImage(PicsConstants.bdm);
     }
 
     @Override
@@ -460,7 +461,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         return ValidationStatus.info(Messages.businessDataModelDeployed);
     }
-    
+
     public List<IType> allBusinessObjectDao(final IJavaProject javaProject) {
         try {
             if (daoTypes == null) {

@@ -19,72 +19,37 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
-         <menu
-               icon="icons/applicationStore.gif"
-               label="%applicationMenuLabel">
-            <command
-                  commandId="org.bonitasoft.studio.la.new.command"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.la.open.command"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.la.delete.command"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.la.separator.importExport"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.la.export.command"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.la.import.command"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.la.separator.deploy"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.la.deploy.command"
-                  style="push">
-            </command>
-         </menu>
+         <dynamic
+               class="org.bonitasoft.studio.la.application.menu.ApplicationMenuContributionItem"
+               id="org.bonitasoft.studio.la.menu">
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.application">
-         <command
-               commandId="org.bonitasoft.studio.la.new.command"
-               id="org.bonitasoft.studio.la.new.popup.menu"
-               label="%newApplicationMenu"
-               mnemonic="A"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.la.application.menu.NewApplicationMenuContribution"
+               id="org.bonitasoft.studio.la.popup.menu.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
-	                    <instanceof
-	                          value="org.eclipse.core.resources.IProject">
-	                    </instanceof>
-	                    <test
-	                          property="org.bonitasoft.studio.application.isBonitaProject">
-	                    </test>
-	                 </iterate>
-	               </and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
    </extension>
    <extension
@@ -207,13 +172,6 @@
             properties="isApplicationFolder,isApplicationFile"
             type="org.eclipse.core.runtime.IAdaptable">
       </propertyTester>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.la.new.command"
-            icon="icons/applicationStore.gif">
-      </image>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

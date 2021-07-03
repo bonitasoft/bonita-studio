@@ -15,17 +15,12 @@
 package org.bonitasoft.studio.common.extension;
 
 import org.bonitasoft.studio.common.CommandExecutor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 public interface DashboardContribution extends Comparable<DashboardContribution> {
 
     public final CommandExecutor commandExecutor = new CommandExecutor();
-
-    public enum Category {
-        PROCESS_DATA, USERS, PROJECT
-    }
-
-    public Category getCategory();
 
     public String getName();
 
@@ -33,7 +28,7 @@ public interface DashboardContribution extends Comparable<DashboardContribution>
 
     public int getPriority();
 
-    public String getColorCssClass();
+    public Image getIcon();
 
     public String getDocumentationLink();
 

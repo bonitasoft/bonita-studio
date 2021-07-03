@@ -21,18 +21,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
-import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -85,6 +83,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         return defFileStores;
     }
 
+    @Override
     public DefinitionResourceProvider getResourceProvider() {
         return resourceProvider;
     }
@@ -101,7 +100,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("actor_filter-def-new.png", IdentityPlugin.getDefault());
+        return Pics.getImage(PicsConstants.filterDef);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         }
         return super.validate(filename, inputStream);
     }
-    
+
     @Override
     public int getImportOrder() {
         return 5;

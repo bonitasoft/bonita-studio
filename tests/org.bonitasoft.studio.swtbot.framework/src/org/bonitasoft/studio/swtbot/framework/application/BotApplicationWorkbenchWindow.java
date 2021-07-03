@@ -179,25 +179,29 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public OpenApplicationWizardBot openApplication() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Application Descriptors").menu("Open...").click();
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Open...")
+                .click();
         return new OpenApplicationWizardBot(bot, Messages.openExistingApplication);
     }
 
     public void newApplicationDescriptorFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Application Descriptors").menu("New...").click();
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("New...")
+                .click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
     }
 
     public SelectApplicationToDeployWizardBot deployApplicationFile() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Application Descriptors").menu("Deploy...").click();
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Deploy...")
+                .click();
         return new SelectApplicationToDeployWizardBot(bot, Messages.deployExistingApplication);
     }
 
     public DeleteApplicationWizardBot deleteApplicationDescriptor() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Application Descriptors").menu("Delete...").click();
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("Delete...")
+                .click();
         return new DeleteApplicationWizardBot(bot, Messages.deleteExistingApplication);
     }
 
@@ -229,7 +233,8 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotApplicationEditor newApplicationContainer() {
         waitForMainShell(bot);
-        bot.menu("Development").menu("Application Descriptors").menu("New...").click();
+        bot.menu("Development").menu(org.bonitasoft.studio.application.i18n.Messages.applicationDescriptor).menu("New...")
+                .click();
         bot.waitUntil(Conditions.waitForEditor(IsInstanceOf.instanceOf(IEditorReference.class)));
         return new BotApplicationEditor(bot, bot.activeEditor());
     }
@@ -240,16 +245,16 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         bot.toolbarButtonWithId(PreferenceCoolbarItem.PREFERENCE_COOLBAR_ITEM_ID).click();
         return new BotPreferencesDialog(bot);
     }
-    
+
     public BotProjectDetailsEditor openProjectDetails() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM).click();
         bot.waitUntil(new DefaultCondition() {
-            
+
             @Override
             public boolean test() throws Exception {
                 return BotApplicationWorkbenchWindow.this.bot.editorById(ProjectDashboardEditorPart.ID) != null;
             }
-            
+
             @Override
             public String getFailureMessage() {
                 return "Failed to open the project details.";

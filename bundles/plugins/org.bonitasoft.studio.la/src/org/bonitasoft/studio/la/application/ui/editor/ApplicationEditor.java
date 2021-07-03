@@ -27,8 +27,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractEditor;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -117,6 +120,11 @@ public class ApplicationEditor extends AbstractEditor<ApplicationNodeContainer> 
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Image getTitleImage() {
+        return Pics.getImage(PicsConstants.application);
     }
 
     @Override

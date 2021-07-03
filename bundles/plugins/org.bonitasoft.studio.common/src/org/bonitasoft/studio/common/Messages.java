@@ -292,4 +292,11 @@ public class Messages extends NLS {
     public static String incompatibleModelVersion;
     public static String create;
     public static String open;
+    public static String newWithWizardMenuLabel;
+    public static String deleteWithWizardMenuLabel;
+    public static String openWithWizardMenuLabel;
+    public static String importMenuLabel;
+    public static String exportMenuLabel;
+    public static String deployWithWizardMenuLabel;
+    public static String openUid;
 }

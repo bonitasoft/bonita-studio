@@ -23,6 +23,7 @@ import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.EnvironmentWizard;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -51,7 +52,7 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
         try {
             return getContent().getName();
         } catch (ReadFileStoreException e) {
-           return getName();
+            return getName();
         }
     }
 
@@ -82,7 +83,7 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("environment.png", ConfigurationPlugin.getDefault());
+        return Pics.getImage(PicsConstants.environment);
     }
 
     private boolean isDefault() {
@@ -99,5 +100,5 @@ public class EnvironmentFileStore extends EMFFileStore<Environment> {
         }
         return styledString;
     }
-    
+
 }
