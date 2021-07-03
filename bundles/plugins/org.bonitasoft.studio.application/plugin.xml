@@ -1531,13 +1531,6 @@
       </perspectiveExtension>
    </extension>
    <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.application.command.deployArtifacts"
-            icon="icons/deploy16.png">
-      </image>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"

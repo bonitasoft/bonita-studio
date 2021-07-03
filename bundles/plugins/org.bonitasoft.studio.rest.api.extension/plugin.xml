@@ -22,42 +22,10 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
-         <menu
-               icon="icons/rest_api_icon7_16x16.png"
-               label="%RestAPIExtensionMenuLabel">
-           <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.newCommand"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.openCommand"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.deleteCommand"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.rest.api.extension.separator"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.editPermissionCommand"
-                  style="push">
-            </command>
-             <separator
-                  name="org.bonitasoft.studio.rest.api.extension.separator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.buildCommand"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.deployCommand"
-                  style="push">
-            </command>
-         </menu>
+         <dynamic
+               class="org.bonitasoft.studio.rest.api.extension.menu.RestApiExtensionMenuContribution"
+               id="org.bonitasoft.studio.rest.api.extension.menu">
+         </dynamic>
          <menu
                icon="icons/theme.png"
                label="%ThemeMenuLabel">
@@ -155,32 +123,29 @@
          <menuContribution
                allPopups="false"
                locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.restapi">
-            <command
-                  commandId="org.bonitasoft.studio.rest.api.extension.newCommand"
-                  icon="icons/rest_api_icon7_16x16.png"
-                  label="%newRestAPIMenu"
-                  mnemonic="R"
-                  style="push">
+            <dynamic
+                  class="org.bonitasoft.studio.rest.api.extension.menu.NewRestApiExtensionMenuContribution"
+                  id="org.bonitasoft.studio.rest.api.extension.pop.menu.new">
                <visibleWhen
-                  checkEnabled="false">
-                   <with
-                         variable="activeMenuSelection">
-                      <and>
-                         <count
-                               value="1">
-                         </count>
-                            <iterate>
-                               <instanceof
-                                     value="org.eclipse.core.resources.IProject">
-                               </instanceof>
-                               <test
-                                     property="org.bonitasoft.studio.application.isBonitaProject">
-                               </test>
-                            </iterate>
-                      </and>
-                   </with>
-                </visibleWhen>
-            </command>
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <and>
+                        <count
+                              value="1">
+                        </count>
+                        <iterate>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IProject">
+                           </instanceof>
+                           <test
+                                 property="org.bonitasoft.studio.application.isBonitaProject">
+                           </test>
+                        </iterate>
+                     </and>
+                  </with>
+               </visibleWhen>
+            </dynamic>
          </menuContribution>
          <menuContribution
                allPopups="false"
@@ -431,10 +396,6 @@
       </extension>
       <extension
             point="org.eclipse.ui.commandImages">
-         <image
-               commandId="org.bonitasoft.studio.rest.api.extension.newCommand"
-               icon="icons/rest_api_icon7_16x16.png">
-         </image>
          <image
                commandId="org.bonitasoft.studio.theme.newCommand"
                icon="icons/theme.png">

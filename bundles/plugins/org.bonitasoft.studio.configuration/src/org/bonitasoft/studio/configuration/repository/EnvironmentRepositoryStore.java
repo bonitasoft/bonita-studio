@@ -15,10 +15,10 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.environment.util.EnvironmentAdapterFactory;
 import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -73,7 +73,7 @@ public class EnvironmentRepositoryStore extends AbstractEMFRepositoryStore<Envir
      */
     @Override
     public Image getIcon() {
-        return Pics.getImage("environment.png", ConfigurationPlugin.getDefault());
+        return Pics.getImage(PicsConstants.environment);
     }
 
     /*

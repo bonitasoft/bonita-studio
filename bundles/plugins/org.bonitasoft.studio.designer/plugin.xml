@@ -13,22 +13,21 @@
                  style="push">
            </command>
       </menuContribution>
-      <menuContribution
+<menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.uidartifact">
-         <command
-               commandId="org.bonitasoft.studio.designer.command.create.page"
-               label="%newApplicationPage"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.designer.menu.NewPageMenuContribution"
+               id="org.bonitasoft.studio.designer.pop.menu.page.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -36,23 +35,22 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.designer.command.create.layout"
-               label="%newLayout"
-               style="push">
+         </dynamic>
+         <dynamic
+               class="org.bonitasoft.studio.designer.menu.NewLayoutMenuContribution"
+               id="org.bonitasoft.studio.designer.popup.menu.layout.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -60,23 +58,22 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.designer.command.create.widget"
-               label="%newCustomWidget"
-               style="push">
+         </dynamic>
+         <dynamic
+               class="org.bonitasoft.studio.designer.menu.NewWidgetMenuContribution"
+               id="org.bonitasoft.studio.designer.popup.menu.widget.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -84,33 +81,33 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
-         <command
-               commandId="org.bonitasoft.studio.designer.command.create.fragment"
-               style="push">
+         </dynamic>
+         <dynamic
+               class="org.bonitasoft.studio.designer.menu.NewFragmentMenuContribution"
+               id="org.bonitasoft.studio.designer.popup.menu.fragment.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                     <iterate>
-	                        <instanceof
-	                              value="org.eclipse.core.resources.IProject">
-	                        </instanceof>
-	                        <test
-	                              property="org.bonitasoft.studio.application.isBonitaProject">
-	                        </test>
-	                     </iterate>
-	               </and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.bonitasoft.studio.application.isBonitaProject">
+                        </test>
+                     </iterate>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -312,22 +309,9 @@
    </propertyTester>
 </extension>
 <extension
-      point="org.eclipse.ui.commandImages">
-   <image
-         commandId="org.bonitasoft.studio.designer.command.create.page"
-         icon="icons/page.png">
-   </image>
-   <image
-         commandId="org.bonitasoft.studio.designer.command.create.widget"
-         icon="icons/custom_widget.png">
-   </image>
-   <image
-         commandId="org.bonitasoft.studio.designer.command.create.layout"
-         icon="icons/page.png">
-   </image>
-      <image
-            commandId="org.bonitasoft.studio.designer.command.create.fragment"
-            icon="icons/fragment.png">
-      </image>
+      point="org.bonitasoft.studio.common.dashboardContribution">
+   <dashboardContribution
+         class="org.bonitasoft.studio.designer.ui.dashboard.PageAndFormDashboardContribution">
+   </dashboardContribution>
 </extension>
 </plugin>

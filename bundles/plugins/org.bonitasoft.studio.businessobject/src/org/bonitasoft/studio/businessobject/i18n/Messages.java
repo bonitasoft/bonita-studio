@@ -510,6 +510,8 @@ public class Messages extends NLS {
     public static String deployBdmHint;
     public static String groupIdCannotBeEdited;
     public static String bdmDashboardContribution;
+    public static String define;
+    public static String openH2Console;
 
     private Messages() {
     }

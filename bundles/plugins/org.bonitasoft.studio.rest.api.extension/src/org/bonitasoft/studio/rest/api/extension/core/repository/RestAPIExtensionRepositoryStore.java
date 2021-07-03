@@ -39,7 +39,7 @@ import org.bonitasoft.studio.maven.builder.validator.AbstractCustomPageValidator
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.model.RestAPIExtensionArchetype;
 import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.rest.api.extension.RestAPIExtensionActivator;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.rest.api.extension.core.builder.RestAPIBuilder;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.BonitaVersionMigrationStep;
 import org.bonitasoft.studio.rest.api.extension.core.repository.migration.Groovy3MigrationStep;
@@ -88,7 +88,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("rest_api_icon7_16x16.png", RestAPIExtensionActivator.getDefault());
+        return Pics.getImage(PicsConstants.restApi);
     }
 
     @Override

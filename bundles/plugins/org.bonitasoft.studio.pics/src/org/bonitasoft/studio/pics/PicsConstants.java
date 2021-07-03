@@ -251,8 +251,6 @@ public class PicsConstants {
 
     public static String error = "error.png";
 
-    public static String organization = "organization.png";
-
     public static String actorMapping = "actor.png";
 
     public static String error_decorator = "error_decorator.gif";
@@ -477,4 +475,30 @@ public class PicsConstants {
 
     public static String details = "projectExtensions/details.png";
     public static String detailsHot = "projectExtensions/details_hot.png";
+
+    public static String diagram = "artifacts/diagram.png";
+    public static String diagram32 = "artifacts/diagram32.png";
+    public static String bdm = "artifacts/bdm.png";
+    public static String bdm32 = "artifacts/bdm32.png";
+    public static String accessControl = "artifacts/accessControl.png";
+    public static String accessControl32 = "artifacts/accessControl32.png";
+    public static String organization = "artifacts/organization.png";
+    public static String organization32 = "artifacts/organization32.png";
+    public static String profile = "artifacts/profile.png";
+    public static String profile32 = "artifacts/profile32.png";
+    public static String application = "artifacts/application.png";
+    public static String application32 = "artifacts/application32.png";
+    public static String documentation = "artifacts/documentation.png";
+    public static String documentation32 = "artifacts/documentation32.png";
+    public static String page = "artifacts/page.png";
+    public static String page32 = "artifacts/page32.png";
+    public static String widget = "artifacts/widget.png";
+    public static String fragment = "artifacts/fragment.png";
+    public static String project = "artifacts/project.png";
+    public static String environment = "artifacts/environment.png";
+    public static String connectorDef = "artifacts/connector-def.png";
+    public static String connectorImpl = "artifacts/connector-impl.png";
+    public static String filterDef = "artifacts/filter-def.png";
+    public static String filterImpl = "artifacts/filter-impl.png";
+    public static String restApi = "artifacts/rest-api.png";
 }

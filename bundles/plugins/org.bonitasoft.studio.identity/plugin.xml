@@ -63,44 +63,17 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.connector">
-         <menu
-               label="%Filters"
-               icon="icons/actor_filter.png"
+         <dynamic
+               class="org.bonitasoft.studio.identity.actors.menu.FilterMenuContributionItem"
                id="org.bonitasoft.studio.menu.filter">
-            <command
-                  commandId="org.bonitasoft.studio.actors.editFilterDef"
-                  icon="icons/actor_filter-def-edit.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.actors.separator"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.actors.editFilterImpl"
-                  icon="icons/actor_filter-implem-edit.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.actors.separator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.actors.filter.export"
-                  icon="icons/actor_filter-export.png"
-                  style="push">
-            </command>
-         </menu>
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.organization">
-         <command
-               commandId="org.bonitasoft.studio.identity.organization.create.command"
-               id="org.bonitasoft.studio.organization.manage.popup.menu"
-               label="%newOrganizationLabel"
-               mnemonic="O"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.identity.organization.menu.NewOrganizationContributionItem"
+               id="org.bonitasoft.studio.identity.popup.menu.organization.new">
             <visibleWhen
                   checkEnabled="false">
                <with
@@ -122,7 +95,7 @@
                   </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
    </extension>
    <extension
@@ -470,21 +443,6 @@
       </propertyTester>
    </extension>
    <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.identity.organization.create.command"
-            icon="icons/organization.png">
-      </image>
-      <image
-            commandId="org.bonitasoft.studio.actors.newFilterDef"
-            icon="icons/actor_filter-def-new.png">
-      </image>
-      <image
-            commandId="org.bonitasoft.studio.actors.newFilterImpl"
-            icon="icons/actor_filter-implem-new.png">
-      </image>
-   </extension>
-   <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.bonitasoft.studio.identity.organization.editor.OrganizationPerspectiveFactory"
@@ -498,7 +456,6 @@
             class="org.bonitasoft.studio.identity.organization.editor.OrganizationEditor"
             default="false"
             extensions="organization"
-            icon="icons/organization.png"
             id="org.bonitasoft.studio.identity.organization.editor"
             name="%organizationEditor">
          <contentTypeBinding

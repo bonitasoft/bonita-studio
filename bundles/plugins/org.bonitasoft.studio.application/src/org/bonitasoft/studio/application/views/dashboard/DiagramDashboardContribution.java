@@ -26,6 +26,7 @@ import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -33,11 +34,6 @@ public class DiagramDashboardContribution implements DashboardContribution, Zoom
 
     public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ZoomListener zoomListener;
-
-    @Override
-    public Category getCategory() {
-        return Category.PROCESS_DATA;
-    }
 
     @Override
     public String getName() {
@@ -50,13 +46,13 @@ public class DiagramDashboardContribution implements DashboardContribution, Zoom
     }
 
     @Override
-    public String getColorCssClass() {
-        return BonitaThemeConstants.DASHBOARD_PROCESS_BACKGROUND;
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/diagram-overview";
     }
 
     @Override
-    public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/diagram-overview";
+    public Image getIcon() {
+        return Pics.getImage(PicsConstants.diagram32);
     }
 
     @Override

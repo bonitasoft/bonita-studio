@@ -26,6 +26,7 @@ import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -34,11 +35,6 @@ public class ApplicationDashboardContribution implements DashboardContribution, 
     public static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
 
     private ZoomListener zoomListener;
-
-    @Override
-    public Category getCategory() {
-        return Category.PROJECT;
-    }
 
     @Override
     public String getName() {
@@ -51,13 +47,13 @@ public class ApplicationDashboardContribution implements DashboardContribution, 
     }
 
     @Override
-    public String getColorCssClass() {
-        return BonitaThemeConstants.DASHBOARD_APPLICATION_BACKGROUND;
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/applications";
     }
 
     @Override
-    public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/applications";
+    public Image getIcon() {
+        return Pics.getImage(PicsConstants.application32);
     }
 
     @Override
@@ -79,7 +75,7 @@ public class ApplicationDashboardContribution implements DashboardContribution, 
 
     @Override
     public int getPriority() {
-        return 0;
+        return 3;
     }
 
     @Override

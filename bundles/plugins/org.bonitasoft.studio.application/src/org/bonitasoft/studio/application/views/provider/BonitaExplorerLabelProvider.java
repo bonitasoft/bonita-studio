@@ -21,9 +21,12 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreFinder;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.codehaus.groovy.eclipse.ui.GroovyNavigatorLabelProvider;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
@@ -73,8 +76,8 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
     }
 
     @Override
-    public Image getImage(Object element) { 
-        if(element instanceof GroovyCompilationUnit) {
+    public Image getImage(Object element) {
+        if (element instanceof GroovyCompilationUnit) {
             return groovyNavigatorLabelProvider.getImage(element);
         }
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
@@ -99,6 +102,9 @@ public class BonitaExplorerLabelProvider extends JavaNavigatorLabelProvider {
                 IRepositoryStore<? extends IRepositoryFileStore> store = repositoryStore.get();
                 return packageExplorerProblemsDecorator.decorateImage(store.getIcon(), element);
             }
+        }
+        if (element instanceof IProject) {
+            return packageExplorerProblemsDecorator.decorateImage(Pics.getImage(PicsConstants.project), element);
         }
         return super.getImage(element);
     }

@@ -40,42 +40,36 @@ public class DashboardCard extends Composite {
         super(parent, SWT.BORDER);
         this.contribution = contribution;
 
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        var typeColorComposite = new Composite(this, SWT.NONE);
-        typeColorComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        typeColorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(50, SWT.DEFAULT).create());
-        typeColorComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, contribution.getColorCssClass());
+        createTitleComposite(this);
+        createDescriptionLabel(this);
 
-        var contentComposite = new Composite(this, SWT.NONE);
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        contentComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-
-        createTitleComposite(contentComposite);
-        createDescriptionLabel(contentComposite);
-
-        var separator = new Label(contentComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         separator.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_SEPARATOR);
 
-        contribution.contributeActions(contentComposite);
+        contribution.contributeActions(this);
     }
 
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite
-                .setLayout(GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 2 : 1).create());
+                .setLayout(GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 3 : 2).create());
         titleComposite
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
+        var icon = new Label(titleComposite, SWT.NONE);
+        icon.setLayoutData(GridDataFactory.fillDefaults().create());
+        icon.setImage(contribution.getIcon());
+        icon.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(contribution.getName());
-
         titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 

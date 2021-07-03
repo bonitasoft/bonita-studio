@@ -88,6 +88,12 @@ public class Messages extends NLS {
     public static String creatingNewFragment;
     public static String migratingFragment;
     public static String migratingCustomWidget;
+    public static String pageAndFormDashboardName;
+    public static String pageAndFormDashboardDescription;
+    public static String newApplicationPageMenuLabel;
+    public static String newLayoutMenuLabel;
+    public static String newWidgetMenuLabel;
+    public static String newFragmentMenuLabel;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

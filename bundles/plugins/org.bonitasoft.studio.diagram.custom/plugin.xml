@@ -362,19 +362,18 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer.new?after=org.bonitasoft.studio.application.placeholder.diagram">
-         <command
-               commandId="org.bonitasoft.studio.diagram.command.newDiagram"
-               mnemonic="D"
-               id="org.bonitasoft.studio.diagram.command.newDiagram.popup.menu">
+         <dynamic
+               class="org.bonitasoft.studio.diagram.custom.menu.NewDiagramContributionItem"
+               id="org.bonitasoft.studio.diagram.custom.menu.new">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -382,10 +381,10 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -870,13 +869,6 @@
    </propertyTester>
 </extension>
 <extension
-      point="org.eclipse.ui.commandImages">
-   <image
-         commandId="org.bonitasoft.studio.diagram.command.newDiagram"
-         icon="icons/ProcessDiagramFile.gif">
-   </image>
-</extension>
-<extension
          id="org.bonitasoft.studio.diagram.custom.fragment"
          point="org.eclipse.e4.workbench.model">
       <fragment
@@ -890,7 +882,6 @@
          contributorClass="org.bonitasoft.studio.diagram.custom.parts.CustomProcessDiagramActionBarContributor"
          default="true"
          extensions="proc"
-         icon="icons/ProcessDiagramFile.gif"
          id="org.bonitasoft.studio.model.process.diagram.part.CustomProcessDiagramEditorID"
          matchingStrategy="org.bonitasoft.studio.model.process.diagram.part.ProcessMatchingStrategy"
          name="Process Diagram Editor">

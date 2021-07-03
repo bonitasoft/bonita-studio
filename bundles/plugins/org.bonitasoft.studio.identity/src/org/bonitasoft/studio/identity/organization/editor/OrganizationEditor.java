@@ -36,10 +36,13 @@ import org.bonitasoft.studio.identity.organization.model.organization.util.Organ
 import org.bonitasoft.studio.identity.organization.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationFileStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.editors.xmlEditors.AbstractEditor;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.swt.graphics.Image;
 
 public class OrganizationEditor extends AbstractEditor<Organization> {
 
@@ -61,6 +64,11 @@ public class OrganizationEditor extends AbstractEditor<Organization> {
         formPages.add(groupFormPage);
         formPages.add(roleFormPage);
         formPages.add(userFormPage);
+    }
+
+    @Override
+    public Image getTitleImage() {
+        return Pics.getImage(PicsConstants.organization);
     }
 
     @Override

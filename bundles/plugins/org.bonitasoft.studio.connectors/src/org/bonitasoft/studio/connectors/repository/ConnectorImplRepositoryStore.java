@@ -27,16 +27,16 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
-import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 
 public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositoryStore<ConnectorImplFileStore> {
 
     public static final String CONNECTOR_IMPL_EXT = "impl";
-    
+
     public static final String STORE_NAME = "connectors-impl";
     private static final Set<String> extensions = Set.of(CONNECTOR_IMPL_EXT);
 
@@ -57,7 +57,7 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("connector_implem-new.png", ConnectorPlugin.getDefault());
+        return Pics.getImage(PicsConstants.connectorImpl);
     }
 
     @Override
@@ -82,13 +82,15 @@ public class ConnectorImplRepositoryStore extends AbstractConnectorImplRepositor
         return RepositoryManager.getInstance()
                 .getRepositoryStore(ConnectorSourceRepositoryStore.class);
     }
-    
+
     @Override
     public IStatus validate(String filename, InputStream inputStream) {
-        if(filename != null && filename.endsWith("."+ CONNECTOR_IMPL_EXT)) {
-            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE, 
+        if (filename != null && filename.endsWith("." + CONNECTOR_IMPL_EXT)) {
+            return new XMLModelCompatibilityValidator(new ModelNamespaceValidator(
+                    ModelVersion.CURRENT_CONNECTOR_IMPLEMENTATION_NAMESPACE,
                     String.format(org.bonitasoft.studio.common.Messages.incompatibleModelVersion, filename),
-                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename))).validate(inputStream);
+                    String.format(org.bonitasoft.studio.common.Messages.migrationWillBreakRetroCompatibility, filename)))
+                            .validate(inputStream);
         }
         return super.validate(filename, inputStream);
     }

@@ -26,6 +26,7 @@
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
          <menu
                icon="icons/groovy_file.gif"
+               id="org.bonitasoft.studio.groovy.menu"
                label="%groovyScript">
             <command
                   commandId="org.bonitasoft.studio.groovy.ui.open.command"

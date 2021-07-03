@@ -229,6 +229,12 @@ public class Messages extends NLS {
     public static String installConnectorExtensionMsg;
     public static String noConnectorInstalled;
 
+    public static String editDefinitionMenuLabel;
+    public static String editImplementationMenuLabel;
+    public static String testConnectorMenuLabel;
+    public static String exportConnectorMenuLabel;
+    public static String editConnectorConfigurationMenuLabel;
+
     public static String getValue(final String event) {
         try {
             return (String) Messages.class.getField(event).get(null);

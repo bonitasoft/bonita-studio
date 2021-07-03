@@ -32,6 +32,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -49,11 +50,6 @@ public class OrganizationDashboardContribution implements DashboardContribution 
     }
 
     @Override
-    public Category getCategory() {
-        return Category.USERS;
-    }
-
-    @Override
     public String getName() {
         return Messages.organizations;
     }
@@ -64,13 +60,13 @@ public class OrganizationDashboardContribution implements DashboardContribution 
     }
 
     @Override
-    public String getColorCssClass() {
-        return BonitaThemeConstants.DASHBOARD_ORGA_BACKGROUND;
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/organization-overview";
     }
 
     @Override
-    public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/organization-overview";
+    public Image getIcon() {
+        return Pics.getImage(PicsConstants.organization32);
     }
 
     @Override
@@ -128,7 +124,7 @@ public class OrganizationDashboardContribution implements DashboardContribution 
 
     @Override
     public int getPriority() {
-        return 0;
+        return 5;
     }
 
 }

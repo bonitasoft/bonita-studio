@@ -153,4 +153,7 @@ public class Messages extends NLS {
     public static String setCompilerSource;
     public static String setCompilerTarget;
     public static String setCompilerRelease;
+    public static String newRestAPiExtMenuLabel;
+    public static String buildMenuLabel;
+    public static String editPermissionsMenuLabel;
 }

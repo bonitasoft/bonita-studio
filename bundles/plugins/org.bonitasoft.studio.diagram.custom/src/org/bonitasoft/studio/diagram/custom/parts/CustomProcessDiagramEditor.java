@@ -17,11 +17,14 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
@@ -45,7 +48,7 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
                 .getChild(input.getName(), true);
         if (fileStore != null) {
             DiagramEditor openedEditor = fileStore.getOpenedEditor();
-            if(openedEditor != null) { // Close other editors already opened for this input
+            if (openedEditor != null) { // Close other editors already opened for this input
                 fileStore.close();
             }
             try {
@@ -80,7 +83,6 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
         super.selectionChanged(part, selection);
     }
 
-
     @Override
     public void dispose() {
         repositoryAccessor.getWorkspace().removeResourceChangeListener(webPageNameResourceChangeListener);
@@ -89,6 +91,11 @@ public class CustomProcessDiagramEditor extends ProcessDiagramEditor {
 
     public static String getId() {
         return ID;
+    }
+
+    @Override
+    public Image getTitleImage() {
+        return Pics.getImage(PicsConstants.diagram);
     }
 
 }

@@ -26,13 +26,13 @@ import java.util.stream.Stream;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
-import org.bonitasoft.studio.designer.UIDesignerPlugin;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
 import org.bonitasoft.studio.designer.core.operation.MigrateUIDOperation;
 import org.bonitasoft.studio.designer.core.resources.WorkspaceServerResource;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -50,7 +50,6 @@ import com.google.common.io.Files;
  */
 public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFileStore> {
 
-    private static final String PAGE_ICON_PATH = "page.png";
     private static final Set<String> extensions = new HashSet<>();
     public static final String JSON_EXTENSION = "json";
     public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
@@ -71,7 +70,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
 
     @Override
     public Image getIcon() {
-        return Pics.getImage(PAGE_ICON_PATH, UIDesignerPlugin.getDefault());
+        return Pics.getImage(PicsConstants.page);
     }
 
     @Override
@@ -105,7 +104,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     public WebPageFileStore getChild(String uuid, boolean force) {
         IPath location = getResource().getLocation();
         if (location != null) {
-            if (!PageUUIDResolver.indexFile(location.toFile()).exists() 
+            if (!PageUUIDResolver.indexFile(location.toFile()).exists()
                     && UIDesignerServerManager.getInstance().isStarted()) {
                 try {
                     new IndexingUIDOperation().run(AbstractRepository.NULL_PROGRESS_MONITOR);
@@ -154,7 +153,8 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+            throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
                 WorkspaceServerResource.disable();
@@ -165,11 +165,10 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                 }
             } catch (InvocationTargetException | InterruptedException e) {
                 throw new MigrationException(e);
-            }finally {
+            } finally {
                 WorkspaceServerResource.enable();
             }
         }
     }
-
 
 }

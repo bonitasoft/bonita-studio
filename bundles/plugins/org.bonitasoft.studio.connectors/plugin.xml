@@ -119,58 +119,16 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.development?before=org.bonitasoft.studio.document.manageResources.command">
-         <menu
-               icon="icons/connector.png"
-               id="org.bonitasoft.studio.menu.connector"
-               label="%connectMenu_Label">
-            <command
-                  commandId="org.bonitasoft.studio.connectors.editDefinition"
-                  icon="icons/connector_def-edit.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.connectors.connectoSeparator1"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.editImplementation"
-                  icon="icons/connector_implem-edit.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.connectors.connectorSeparator4"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.testConnector"
-                  icon="icons/test.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.connectors.connectorSeparator3"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.exportConnector"
-                  icon="icons/export_connector.png"
-                  style="push">
-            </command>
-            <separator
-                  name="org.bonitasoft.studio.connectors.connectorSeparator5"
-                  visible="true">
-            </separator>
-            <command
-                  commandId="org.bonitasoft.studio.connectors.editConnectorConfiguration"
-                  icon="icons/editConfiguration.png"
-                  style="push">
-            </command>
+         <dynamic
+               class="org.bonitasoft.studio.connectors.menu.ConnectorMenuContributionItem"
+               id="org.bonitasoft.studio.menu.connector">
             <visibleWhen
                   checkEnabled="true">
                <reference
                      definitionId="isBonitaPerspectiveActive">
                </reference>
             </visibleWhen>
-         </menu>
+         </dynamic>
       </menuContribution>
    </extension>
    <extension
@@ -295,17 +253,6 @@
             </with>
          </activeWhen>
       </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.connectors.newDefinition"
-            icon="icons/connector_def-new.png">
-      </image>
-      <image
-            commandId="org.bonitasoft.studio.connectors.newImplementation"
-            icon="icons/connector_implem-new.png">
-      </image>
    </extension>
    <extension
          point="org.bonitasoft.studio.connectors.connectorWizard">

@@ -86,23 +86,13 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
-        var typeColorComposite = new Composite(this, SWT.NONE);
-        typeColorComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        typeColorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(50, SWT.DEFAULT).create());
-        typeColorComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, contribution.getColorCssClass());
-
-        var contentComposite = new Composite(this, SWT.NONE);
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        contentComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
-
-        createZoomedTitleComposite(contentComposite);
-        createDescription(contentComposite);
-        createDetailsSection(contentComposite);
+        createZoomedTitleComposite(this);
+        createDescription(this);
+        createDetailsSection(this);
     }
 
     protected abstract String getHint();

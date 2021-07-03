@@ -25,16 +25,16 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.AbstractConnectorImplRepositoryStore;
-import org.bonitasoft.studio.identity.IdentityPlugin;
 import org.bonitasoft.studio.identity.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Image;
 
 public class ActorFilterImplRepositoryStore extends AbstractConnectorImplRepositoryStore<ActorFilterImplFileStore> {
 
     public static final String IMPL_EXT = "impl";
-    
+
     public static final String STORE_NAME = "filters-impl";
     private static final Set<String> extensions = Set.of(IMPL_EXT);
 
@@ -55,7 +55,7 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("actor_filter-implem-new.png", IdentityPlugin.getDefault());
+        return Pics.getImage(PicsConstants.filterImpl);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ActorFilterImplRepositoryStore extends AbstractConnectorImplReposit
         }
         return super.validate(filename, inputStream);
     }
-    
+
     @Override
     public int getImportOrder() {
         return 5;

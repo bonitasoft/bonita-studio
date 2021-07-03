@@ -29,6 +29,7 @@ import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -44,11 +45,6 @@ public class BdmDashboardContribution implements DashboardContribution {
     }
 
     @Override
-    public Category getCategory() {
-        return Category.PROCESS_DATA;
-    }
-
-    @Override
     public String getName() {
         return Messages.businessDataModel;
     }
@@ -59,13 +55,13 @@ public class BdmDashboardContribution implements DashboardContribution {
     }
 
     @Override
-    public String getColorCssClass() {
-        return BonitaThemeConstants.DASHBOARD_BDM_BACKGROUND;
+    public String getDocumentationLink() {
+        return "https://documentation.bonitasoft.com/bonita/latest/define-and-deploy-the-bdm";
     }
 
     @Override
-    public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/define-and-deploy-the-bdm";
+    public Image getIcon() {
+        return Pics.getImage(PicsConstants.bdm32);
     }
 
     @Override
