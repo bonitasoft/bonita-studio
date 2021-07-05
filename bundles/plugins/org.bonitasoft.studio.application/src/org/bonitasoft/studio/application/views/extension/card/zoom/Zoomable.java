@@ -21,6 +21,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 
 public interface Zoomable {
@@ -28,6 +29,10 @@ public interface Zoomable {
     public Control createZoomedControl(Composite parent);
 
     public void addZoomListener(ZoomListener listener);
+
+    public default void addComputeScrollListener(Listener computeScrollListener) {
+        // Only implemented when required
+    }
 
     public ZoomListener getZoomListener();
 

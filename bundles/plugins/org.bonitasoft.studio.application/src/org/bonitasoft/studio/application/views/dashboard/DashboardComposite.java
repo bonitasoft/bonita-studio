@@ -104,6 +104,12 @@ public class DashboardComposite extends Composite {
                 }
 
             });
+
+            ((Zoomable) contribution).addComputeScrollListener(e -> {
+                cardComposite.layout();
+                scrolledComposite
+                        .setMinHeight(cardComposite.computeSize(cardComposite.getClientArea().width, SWT.DEFAULT).y);
+            });
         }
     }
 

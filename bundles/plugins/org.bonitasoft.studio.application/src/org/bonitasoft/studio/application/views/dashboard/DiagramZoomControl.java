@@ -29,11 +29,13 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 
 public class DiagramZoomControl extends AbstractDashboardZoomControl<DiagramFileStore> {
 
-    protected DiagramZoomControl(Composite parent, ZoomListener zoomListener, DiagramDashboardContribution contribution) {
-        super(parent, zoomListener, contribution);
+    protected DiagramZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
+            DiagramDashboardContribution contribution) {
+        super(parent, zoomListener, computeScrollListener, contribution);
     }
 
     @Override
