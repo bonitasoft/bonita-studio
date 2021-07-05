@@ -29,11 +29,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 
 public class DiagramDashboardContribution implements DashboardContribution, Zoomable {
 
     public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ZoomListener zoomListener;
+    private Listener computeScrollListener;
 
     @Override
     public String getName() {
@@ -79,7 +81,7 @@ public class DiagramDashboardContribution implements DashboardContribution, Zoom
 
     @Override
     public Control createZoomedControl(Composite parent) {
-        return new DiagramZoomControl(parent, zoomListener, this);
+        return new DiagramZoomControl(parent, zoomListener, computeScrollListener, this);
     }
 
     @Override
@@ -90,6 +92,11 @@ public class DiagramDashboardContribution implements DashboardContribution, Zoom
     @Override
     public ZoomListener getZoomListener() {
         return zoomListener;
+    }
+
+    @Override
+    public void addComputeScrollListener(Listener computeScrollListener) {
+        this.computeScrollListener = computeScrollListener;
     }
 
 }

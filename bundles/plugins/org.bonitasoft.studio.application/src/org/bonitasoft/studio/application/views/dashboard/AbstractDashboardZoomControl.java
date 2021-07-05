@@ -14,8 +14,10 @@
  */
 package org.bonitasoft.studio.application.views.dashboard;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
@@ -30,6 +32,8 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.browser.OpenSystemBrowserListener;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.bonitasoft.studio.ui.widget.SearchWidget;
+import org.bonitasoft.studio.ui.widget.TextWidget;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -41,9 +45,12 @@ import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 
 public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> extends Composite {
@@ -56,6 +63,10 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
     private IThemeEngine engine;
     private Cursor cursorHand;
     private Cursor cursorArrow;
+    private TextWidget searchWidget;
+    private Composite detailsComposite;
+    private List<T> fileStores;
+    private Listener computeScrollListener;
 
     protected class Element {
 
@@ -76,42 +87,97 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         }
     }
 
-    protected AbstractDashboardZoomControl(Composite parent, ZoomListener zoomListener, DashboardContribution contribution) {
-        super(parent, SWT.BORDER);
+    protected AbstractDashboardZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
+            DashboardContribution contribution) {
+        super(parent, SWT.NONE);
         this.zoomListener = zoomListener;
+        this.computeScrollListener = computeScrollListener;
         this.contribution = contribution;
         this.commandExecutor = new CommandExecutor();
         this.errorHandler = new ExceptionDialogHandler();
         this.engine = PlatformUI.getWorkbench().getService(IThemeEngine.class);
         this.cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         this.cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
+        this.fileStores = getFileStores();
 
         setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+        setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createZoomedTitleComposite(this);
-        createDescription(this);
-        createDetailsSection(this);
+
+        var searchComposite = createGlobalComposite(this, SWT.NONE);
+        searchComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        createDescription(searchComposite);
+        createSearchField(searchComposite);
+
+        var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        createDetailsComposite(this, fileStores);
+    }
+
+    private void createSearchField(Composite parent) {
+        searchWidget = new SearchWidget.Builder()
+                .withStyle(SWT.NO_FOCUS)
+                .widthHint(300)
+                .alignRight()
+                .createIn(parent);
+        searchWidget.getControl().getParent().setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        searchWidget.getControl().setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        searchWidget.observeText(400, SWT.Modify).addValueChangeListener(e -> applySearch());
+    }
+
+    private void applySearch() {
+        Display.getDefault().asyncExec(() -> {
+            String searchValue = searchWidget.getText();
+            Arrays.asList(detailsComposite.getChildren()).forEach(Control::dispose);
+            List<T> filteredFileStores = fileStores.stream()
+                    .filter(fileStore -> fileStore.getName().toLowerCase().startsWith(searchValue.toLowerCase()))
+                    .collect(Collectors.toList());
+            createDetails(filteredFileStores);
+            detailsComposite.layout();
+            computeScrollListener.handleEvent(new Event());
+        });
     }
 
     protected abstract String getHint();
 
-    private void createDetailsSection(Composite parent) {
-        var composite = createComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    private void createDetailsComposite(Composite parent, List<T> fileStores) {
+        detailsComposite = new Composite(parent, SWT.NONE);
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        detailsComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
+                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        createDetails(fileStores);
+    }
 
-        List<T> fileStores = getFileStores();
-
+    private void createDetails(List<T> filteredFileStores) {
         if (fileStores.isEmpty()) {
-            createEmptyComposite(composite,
+            createEmptyComposite(detailsComposite,
                     String.format(Messages.projectDoesntContainsElement, getElementName()),
                     String.format(Messages.newElementTitle, getElementName()),
                     e -> commandExecutor.executeCommand(getNewCommand(), null));
+        } else if (filteredFileStores.isEmpty()) {
+            createNoResultComposite(detailsComposite);
         } else {
-            createfileStoreListComposite(composite, fileStores);
+            createfileStoreListComposite(detailsComposite, filteredFileStores);
         }
+    }
+
+    private void createNoResultComposite(Composite parent) {
+        var composite = createGlobalComposite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
+
+        var emptyLabel = new Label(composite, SWT.NONE);
+        emptyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        emptyLabel.setText(Messages.noResultFound);
+        emptyLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID));
     }
 
     protected abstract String getElementName();
@@ -123,14 +189,14 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
     private void createDescription(Composite parent) {
         var description = new Link(parent, SWT.WRAP);
         description.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 10).create());
-        description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+        description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         description.setText(getHint());
         description.addListener(SWT.Selection, new OpenSystemBrowserListener(contribution.getDocumentationLink()));
     }
 
     private void createZoomedTitleComposite(Composite parent) {
-        var titleComposite = createComposite(parent, SWT.NONE);
+        var titleComposite = createGlobalComposite(parent, SWT.NONE);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -140,7 +206,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
 
         titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+        titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         titleLabel.addListener(SWT.MouseUp, e -> {
             if (zoomListener != null) {
@@ -175,7 +241,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
                 .withImage(Pics.getImage(PicsConstants.back))
                 .withHotImage(Pics.getImage(PicsConstants.backHot))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.END).create())
-                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .onClick(e -> {
                     if (zoomListener != null) {
                         zoomListener.deZoom(e);
@@ -186,7 +252,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
 
     protected void createEmptyComposite(Composite parent, String message, String buttonMessage,
             Consumer<Event> onClickListener) {
-        var composite = createComposite(parent, SWT.NONE);
+        var composite = createGlobalComposite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
 
@@ -199,7 +265,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
                 .withText(buttonMessage)
                 .withImage(Pics.getImage(PicsConstants.add_item_large))
                 .withHotImage(Pics.getImage(PicsConstants.add_item_large))
-                .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .withFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create())
                 .onClick(onClickListener)
@@ -207,24 +273,20 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
     }
 
     protected void createfileStoreListComposite(Composite parent, List<T> fileStores) {
-        var composite = createComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 40, 10).create());
+        var composite = createGlobalComposite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).spacing(20, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, true).create());
 
-        createSeparator(composite);
-        fileStores.forEach(fileStore -> {
-            createFileStoreComposite(composite, fileStore);
-            createSeparator(composite);
-        });
+        fileStores.forEach(fileStore -> createFileStoreComposite(composite, fileStore));
     }
 
     private void createFileStoreComposite(Composite parent, T fileStore) {
-        var composite = createComposite(parent, SWT.NONE);
+        var composite = createCardComposite(parent, SWT.BORDER);
         composite.setLayout(
                 GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(4).equalWidth(true).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        var titleComposite = createComposite(composite, SWT.NONE);
+        var titleComposite = createCardComposite(composite, SWT.NONE);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(4, 1).create());
 
@@ -254,7 +316,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
     protected abstract List<Element> retrieveFileStoreContent(T fileStore);
 
     protected void createElementComposite(Composite parent, Element element) {
-        var composite = createComposite(parent, SWT.NONE);
+        var composite = createCardComposite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -272,15 +334,15 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         descrptionLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 
-    private void createSeparator(Composite parent) {
-        var separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        separator.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_SEPARATOR);
-    }
-
-    protected Composite createComposite(Composite parent, int style) {
+    protected Composite createCardComposite(Composite parent, int style) {
         var composite = new Composite(parent, style);
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
+        return composite;
+    }
+
+    protected Composite createGlobalComposite(Composite parent, int style) {
+        var composite = new Composite(parent, style);
+        composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
         return composite;
     }
 

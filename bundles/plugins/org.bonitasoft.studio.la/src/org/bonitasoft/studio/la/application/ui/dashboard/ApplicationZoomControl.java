@@ -27,11 +27,13 @@ import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
 import org.bonitasoft.studio.la.application.repository.ApplicationRepositoryStore;
 import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 
 public class ApplicationZoomControl extends AbstractDashboardZoomControl<ApplicationFileStore> {
 
-    protected ApplicationZoomControl(Composite parent, ZoomListener zoomListener, DashboardContribution contribution) {
-        super(parent, zoomListener, contribution);
+    protected ApplicationZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
+            DashboardContribution contribution) {
+        super(parent, zoomListener, computeScrollListener, contribution);
     }
 
     @Override
