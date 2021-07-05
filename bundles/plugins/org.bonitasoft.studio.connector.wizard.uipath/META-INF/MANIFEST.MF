@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UiPath
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.uipath;singleton:=true
-Bundle-Version: 7.12.5.qualifier
+Bundle-Version: 7.12.6.qualifier
 Bundle-Activator: org.bonitasoft.studio.connector.wizard.uipath.UIPathPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
