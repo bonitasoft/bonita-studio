@@ -25,24 +25,32 @@ import org.bonitasoft.studio.common.repository.core.migration.report.MigrationRe
 public class BonitaVersionMigrationStep implements MavenModelMigration {
 
     private static final String BONITA_VERSION_PROPERTY = "bonita.version";
+    private static final String BONITA_RUNTIME_VERSION_PROPERTY = "bonita-runtime.version";
 
     @Override
     public MigrationReport migrate(Model model) {
         MigrationReport report = new MigrationReport();
         Properties properties = model.getProperties();
-        var existingVersion = properties.get(BONITA_VERSION_PROPERTY);
-        properties.setProperty(BONITA_VERSION_PROPERTY, ProductVersion.mavenVersion());
-        if (existingVersion != null) {
-            report.updated(String.format("`%s` property has been updated from `%s` to `%s`.",
-                    BONITA_VERSION_PROPERTY,
-                    existingVersion,
-                    ProductVersion.mavenVersion()));
-        } else {
-            report.added(String.format("`%s` property has been added with value `%s`.",
-                    BONITA_VERSION_PROPERTY,
-                    ProductVersion.mavenVersion()));
-        }
+        updateProperty(BONITA_VERSION_PROPERTY, report, properties);
+        updateProperty(BONITA_RUNTIME_VERSION_PROPERTY, report, properties);
         return report;
+    }
+
+    private void updateProperty(String property, MigrationReport report, Properties properties) {
+        if (properties.containsKey(property)) {
+            var existingVersion = properties.get(property);
+            properties.setProperty(property, ProductVersion.mavenVersion());
+            if (existingVersion != null) {
+                report.updated(String.format("`%s` property has been updated from `%s` to `%s`.",
+                        property,
+                        existingVersion,
+                        ProductVersion.mavenVersion()));
+            } else {
+                report.added(String.format("`%s` property has been added with value `%s`.",
+                        property,
+                        ProductVersion.mavenVersion()));
+            }
+        }
     }
 
     @Override
@@ -50,6 +58,9 @@ public class BonitaVersionMigrationStep implements MavenModelMigration {
         var properties = model.getProperties();
         if (properties.containsKey(BONITA_VERSION_PROPERTY)) {
             return !Objects.equals(properties.get(BONITA_VERSION_PROPERTY), ProductVersion.mavenVersion());
+        }
+        if (properties.containsKey(BONITA_RUNTIME_VERSION_PROPERTY)) {
+            return !Objects.equals(properties.get(BONITA_RUNTIME_VERSION_PROPERTY), ProductVersion.mavenVersion());
         }
         return false;
     }

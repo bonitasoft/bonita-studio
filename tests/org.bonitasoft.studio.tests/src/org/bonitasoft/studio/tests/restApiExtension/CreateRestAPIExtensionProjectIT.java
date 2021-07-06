@@ -77,7 +77,7 @@ public class CreateRestAPIExtensionProjectIT {
         assertThat(mavenModel.getArtifactId()).isEqualTo("resourceNameRestAPI");
         assertThat(mavenModel.getGroupId()).isEqualTo("com.company.rest.api");
         assertThat(mavenModel.getVersion()).isEqualTo("1.0.0-SNAPSHOT");
-        assertThat(mavenModel.getProperties()).containsKey("bonita.version");
+        assertThat(mavenModel.getProperties()).containsKey("bonita-runtime.version");
 
         //Check that there is no problems on eclipse project
         newProject.build(IncrementalProjectBuilder.FULL_BUILD, AbstractRepository.NULL_PROGRESS_MONITOR);
