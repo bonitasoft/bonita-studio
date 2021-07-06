@@ -132,7 +132,7 @@ public class DynamicButtonWidget {
         container.setLayoutData(layoutData.orElse(GridDataFactory.swtDefaults().create()));
         cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
-        ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT);
+        ToolBar toolbar = new ToolBar(container, SWT.HORIZONTAL | SWT.FLAT | SWT.NO_FOCUS);
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create());
         cssClass.ifPresent(css -> toolbar.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
         toolkit.ifPresent(t -> t.adapt(toolbar));

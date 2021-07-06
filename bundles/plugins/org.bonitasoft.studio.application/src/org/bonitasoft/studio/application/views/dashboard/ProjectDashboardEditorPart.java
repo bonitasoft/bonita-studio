@@ -36,7 +36,6 @@ import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
 import org.bonitasoft.studio.ui.widget.DropdownDynamicButtonWidget;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -92,7 +91,6 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
     public static final String EDIT_PROJECT_COMMAND = "org.bonitasoft.studio.application.edit.project.command";
 
     private RepositoryAccessor repositoryAccessor;
-    private DataBindingContext ctx;
     private LocalResourceManager localResourceManager;
     private ExceptionDialogHandler errorHandler;
     private MavenProjectHelper mavenHelper;
@@ -113,7 +111,6 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
     public ProjectDashboardEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
-        ctx = new DataBindingContext();
     }
 
     @Override
@@ -257,7 +254,8 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
                 .addDropdownItem(Messages.addActorFilter, null,
                         e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.ACTOR_FILTER.name())))
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
+                                        ArtifactType.ACTOR_FILTER.name())))
                 .addDropdownItem(Messages.addTheme, null,
                         e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
@@ -382,7 +380,8 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
         description.setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).span(2, 1)
                         .create());
-        description.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION);
+        description.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
+                SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION);
         description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
                 BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);

@@ -28,6 +28,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -57,7 +59,8 @@ public class DashboardCard extends Composite {
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite
-                .setLayout(GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 3 : 2).create());
+                .setLayout(
+                        GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 3 : 2).create());
         titleComposite
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
@@ -93,6 +96,15 @@ public class DashboardCard extends Composite {
                 GridDataFactory.fillDefaults().indent(0, 10).grab(true, false).hint(SWT.DEFAULT, 80).create());
         description.setText(String.format("%s <a>%s.</a>", contribution.getDescription(), Messages.moreDetails));
         description.addListener(SWT.Selection, new OpenSystemBrowserListener(contribution.getDocumentationLink()));
+        // Fix unclickable link in description on Windows
+        description.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseEnter(MouseEvent e) {
+                description.setFocus();
+                parent.setFocus();
+            }
+        });
     }
 
 }
