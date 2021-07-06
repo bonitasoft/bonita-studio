@@ -307,34 +307,47 @@ public class OrganizationFileStore extends EMFFileStore<Organization>
         try {
             operation.run(monitor);
             String defaultUsername = String.valueOf(options.get(DeployOptions.DEFAULT_USERNAME));
-            updateDefaultUserPreference(organization, defaultUsername);
-            return ValidationStatus.info(String.format(org.bonitasoft.studio.identity.i18n.Messages.organizationDeployed,
-                    organization.getName()));
+            updateDefaultUserPreference(defaultUsername);
+            return ValidationStatus
+                    .info(String.format(org.bonitasoft.studio.identity.i18n.Messages.organizationDeployed,
+                            organization.getName()));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
-            return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID, "An error occured while depoying the Organization",
+            return new Status(IStatus.ERROR, IdentityPlugin.PLUGIN_ID,
+                    "An error occured while depoying the Organization",
                     e);
         }
     }
 
-    protected void updateDefaultUserPreference(Organization organization,
-            String userName) {
-        if (userName == null || userName.isEmpty()) {
-            if (!organization.getUsers().getUser().isEmpty()) {
-                User user = organization.getUsers().getUser().get(0);
-                userName = user.getUserName();
-            }
+    public void updateDefaultUserPreference(String userName) {
+        Organization organization;
+        try {
+            organization = getContent();
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+            return;
+        }
+        if ((userName == null || userName.isEmpty()) && !organization.getUsers().getUser().isEmpty()) {
+            User user = organization.getUsers().getUser().get(0);
+            userName = user.getUserName();
         }
         String defaultUserName = userName;
-        activeOrganizationProvider.saveDefaultUser(userName);
-        if (organization != null) {
-            activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
-                    .filter(user -> Objects.equals(user.getUserName(), defaultUserName))
-                    .findFirst()
-                    .map(User::getPassword)
-                    .map(PasswordType::getValue)
-                    .orElse(""));
+        var oldDefaultUser = activeOrganizationProvider.getDefaultUser();
+        if (!Objects.equals(oldDefaultUser, userName)) {
+            activeOrganizationProvider.saveDefaultUser(userName);
+            if (organization != null) {
+                activeOrganizationProvider.saveDefaultPassword(organization.getUsers().getUser().stream()
+                        .filter(user -> Objects.equals(user.getUserName(), defaultUserName))
+                        .findFirst()
+                        .map(User::getPassword)
+                        .map(PasswordType::getValue)
+                        .orElse(""));
+            }
         }
+    }
+
+    public ActiveOrganizationProvider getActiveOrganizationProvider() {
+        return activeOrganizationProvider;
     }
 
     @Override

@@ -17,10 +17,7 @@ package org.bonitasoft.studio.application.handler;
 import static org.bonitasoft.studio.ui.wizard.WizardBuilder.newWizard;
 import static org.bonitasoft.studio.ui.wizard.WizardPageBuilder.newPage;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -69,6 +66,7 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.operation.GetApiSessionOperation;
+import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
 import org.bonitasoft.studio.ui.dialog.SaveBeforeDeployDialog;
@@ -124,13 +122,19 @@ public class DeployArtifactsHandler {
                 repositoryAccessor.getCurrentRepository());
         validator.addResourceMarkers();
         progressService.busyCursorWhile(validator::run);
-        boolean shouldUpdateModels = Stream.of(validator.getStatus().getChildren()).anyMatch(s -> s.matches(IStatus.WARNING));
+        boolean shouldUpdateModels = Stream.of(validator.getStatus().getChildren())
+                .anyMatch(s -> s.matches(IStatus.WARNING));
         if (validator.getStatus().matches(IStatus.ERROR) || shouldUpdateModels) {
-            int result = new MultiStatusDialog(activeShell, Messages.incompatibleModelFoundTitle, Messages.incompatibleModelFoundMsg,
-                    shouldUpdateModels ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels, IDialogConstants.ABORT_LABEL} :  new String[] {IDialogConstants.PROCEED_LABEL}, validator.getStatus())
+            int result = new MultiStatusDialog(activeShell, Messages.incompatibleModelFoundTitle,
+                    Messages.incompatibleModelFoundMsg,
+                    shouldUpdateModels
+                            ? new String[] { org.bonitasoft.studio.common.repository.Messages.updateAllModels,
+                                    IDialogConstants.ABORT_LABEL }
+                            : new String[] { IDialogConstants.PROCEED_LABEL },
+                    validator.getStatus())
                             .setLevel(IStatus.WARNING)
                             .open();
-            if(result == 1) {
+            if (result == 1) {
                 return;
             }
             if (Stream.of(validator.getStatus().getChildren()).anyMatch(s -> s.matches(IStatus.WARNING))) {
@@ -146,9 +150,9 @@ public class DeployArtifactsHandler {
         }
         DiagramRepositoryStore diagramStore = repositoryAccessor.getRepositoryStore(DiagramRepositoryStore.class);
         progressService.busyCursorWhile(monitor -> {
-                diagramStore.computeProcesses(monitor);
-                repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);}
-        );
+            diagramStore.computeProcesses(monitor);
+            repositoryModel = new RepositoryModelBuilder().create(repositoryAccessor);
+        });
         SelectArtifactToDeployPage page = new SelectArtifactToDeployPage(repositoryModel,
                 new EnvironmentProviderFactory().getEnvironmentProvider());
         if (defaultSelection != null) {
@@ -158,11 +162,17 @@ public class DeployArtifactsHandler {
                     .collect(Collectors.toSet()));
         }
         Optional<IStatus> result = createWizard(newWizard(), page,
-                repositoryAccessor,
                 Messages.selectArtifactToDeployTitle,
                 Messages.selectArtifactToDeploy)
                         .open(activeShell, Messages.deploy);
         if (result.isPresent()) {
+            var activeOrganizationProvider = new ActiveOrganizationProvider();
+            var organizationRepositoryStore = repositoryAccessor.getRepositoryStore(OrganizationRepositoryStore.class);
+            var organizationFileStore = organizationRepositoryStore
+                    .getChild(activeOrganizationProvider.getActiveOrganizationFileName(), false);
+            if (organizationFileStore != null) {
+                organizationFileStore.updateDefaultUserPreference(page.getDefaultUsername());
+            }
             openStatusDialog(activeShell, result.get(), repositoryAccessor);
         }
         diagramStore.resetComputedProcesses();
@@ -181,8 +191,7 @@ public class DeployArtifactsHandler {
         this.defaultSelection = defaultSelection;
     }
 
-    protected IStatus deployArtifacts(RepositoryAccessor repositoryAccessor,
-            Collection<Artifact> artifactsToDeploy,
+    protected IStatus deployArtifacts(Collection<Artifact> artifactsToDeploy,
             Map<String, Object> deployOptions,
             IWizardContainer container) {
         MultiStatus status = new MultiStatus(ApplicationPlugin.PLUGIN_ID, 0, null, null);
@@ -191,7 +200,7 @@ public class DeployArtifactsHandler {
         }
         try {
             container.run(true, true,
-                    performFinish(repositoryAccessor, artifactsToDeploy, deployOptions, status));
+                    performFinish(artifactsToDeploy, deployOptions, status));
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, ApplicationPlugin.PLUGIN_ID, "Deploy failed",
@@ -211,7 +220,7 @@ public class DeployArtifactsHandler {
                     .asList(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
                     .stream()
                     .map(ref -> ref.getEditor(false))
-                    .filter(editorPart -> editorPart != null)
+                    .filter(Objects::nonNull)
                     .filter(IEditorPart::isDirty)
                     .collect(Collectors.toList());
             if (!dirtyEditors.isEmpty()) {
@@ -255,8 +264,7 @@ public class DeployArtifactsHandler {
         SAVE, DONT_SAVE, CANCEL
     }
 
-    private IRunnableWithProgress performFinish(RepositoryAccessor repositoryAccessor,
-            Collection<Artifact> artifactsToDeploy,
+    private IRunnableWithProgress performFinish(Collection<Artifact> artifactsToDeploy,
             Map<String, Object> deployOptions,
             MultiStatus status) {
         return monitor -> {
@@ -278,7 +286,9 @@ public class DeployArtifactsHandler {
                     status.add(operation.getStatus());
                 }
                 if (status.getSeverity() != IStatus.ERROR) {
-                    addToMultiStatus(deploy(artifactsToDeploy, session, SubMonitor.convert(monitor, artifactsToDeploy.size())), status);
+                    addToMultiStatus(
+                            deploy(artifactsToDeploy, session, SubMonitor.convert(monitor, artifactsToDeploy.size())),
+                            status);
                 }
             } finally {
                 monitor.done();
@@ -301,7 +311,6 @@ public class DeployArtifactsHandler {
     private WizardBuilder<IStatus> createWizard(
             WizardBuilder<IStatus> builder,
             SelectArtifactToDeployPage page,
-            RepositoryAccessor repositoryAccessor,
             String title,
             String description) {
         return builder
@@ -313,8 +322,7 @@ public class DeployArtifactsHandler {
                         .withDescription(description)
                         .withControl(page))
                 .onFinish(container -> Optional
-                        .ofNullable(deployArtifacts(repositoryAccessor,
-                                page.getSelectedArtifacts(),
+                        .ofNullable(deployArtifacts(page.getSelectedArtifacts(),
                                 buildOptions(page),
                                 container)));
     }
@@ -397,7 +405,9 @@ public class DeployArtifactsHandler {
 
     private void openSuccessDialog(Shell activeShell, IStatus status)
             throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
+        APISession session = BOSEngineManager.getInstance()
+                .loginDefaultTenant(AbstractRepository.NULL_PROGRESS_MONITOR);
+
         DeployedAppContentProvider contentProvider = new DeployedAppContentProvider(status,
                 BOSEngineManager.getInstance().getApplicationAPI(session),
                 BOSEngineManager.getInstance().getProfileAPI(session),
@@ -405,11 +415,7 @@ public class DeployArtifactsHandler {
         if (contentProvider.getItems().length > 0) {
             if (IDialogConstants.OPEN_ID == DeploySuccessDialog.open(activeShell, contentProvider,
                     WorkbenchPlugin.getDefault().getDialogSettings())) {
-                try {
-                    new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
-                } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
-                    BonitaStudioLog.error(e);
-                }
+                new OpenBrowserOperation(contentProvider.getSelectedURL()).execute();
             }
         } else {
             MessageDialog.openWarning(activeShell, Messages.deployStatus, String.format(

@@ -39,7 +39,6 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
     public static final String URL_TOKEN_FIELD = "urlToken";
     public static final String DESCRIPTION_FIELD = "description";
     private static final String DISPLAY_NAME_FIELD = "displayName";
-    private static final String HIDDEN_FIELD = "isHidden";
     private static final String PROVIDED_FIELD = "isProvided";
     private static BonitaPagesRegistry INSTANCE;
 
@@ -47,10 +46,9 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
     private HttpClientFactory httpClientFactory = new HttpClientFactory();
 
     // Legacy ID, still supported for compatibility, but we do not want to display them for new users
-    public List<String> pagesToExclude = new ArrayList<>();
+    private static final List<String> PAGES_TO_EXCLUDE = List.of("processlistinguser");
 
     private BonitaPagesRegistry() {
-        pagesToExclude.add("processlistinguser");
     }
 
     public static BonitaPagesRegistry getInstance() {
@@ -75,27 +73,8 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
             }
             monitor.beginTask(Messages.retrieveBonitaPages, IProgressMonitor.UNKNOWN);
             login(httpClientFactory);
-            addBonitaPages(requestBonitaPages(httpClientFactory));
             addCustomPages(requestCustomPages(httpClientFactory));
             monitor.done();
-        }
-    }
-
-    private void addBonitaPages(String httpResponse) {
-        try {
-            JSONArray jsonArray = new JSONArray(httpResponse);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject page = (JSONObject) jsonArray.get(i);
-                if (!pagesToExclude.contains(page.get(ID_FIELD))) {
-                    pages.add(new EntryPage((String) page.get(ID_FIELD),
-                            (String) page.get(DISPLAY_NAME_FIELD),
-                            (String) page.get(DESCRIPTION_FIELD),
-                            true,
-                            false));
-                }
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException("Unable to parse bonitaPages http response", e);
         }
     }
 
@@ -104,24 +83,16 @@ public class BonitaPagesRegistry implements IRunnableWithProgress {
             JSONArray jsonArray = new JSONArray(httpResponse);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject page = (JSONObject) jsonArray.get(i);
-                if (page.getBoolean(PROVIDED_FIELD) && !pagesToExclude.contains(page.get(URL_TOKEN_FIELD))) {
+                if (page.getBoolean(PROVIDED_FIELD) && !PAGES_TO_EXCLUDE.contains(page.get(URL_TOKEN_FIELD))) {
                     pages.add(new EntryPage((String) page.get(URL_TOKEN_FIELD),
                             (String) page.get(DISPLAY_NAME_FIELD),
                             (String) page.get(DESCRIPTION_FIELD),
-                            page.getBoolean(HIDDEN_FIELD),
+                            false,
                             false));
                 }
             }
         } catch (JSONException e) {
             throw new RuntimeException("Unable to parse bonitaPages http response", e);
-        }
-    }
-
-    private String requestBonitaPages(HttpClientFactory httpClientFactory) {
-        try {
-            return httpClientFactory.newBonitaPagesRequest().execute();
-        } catch (IOException | HttpException e) {
-            throw new RuntimeException("Unable to retrieve bonita pages", e);
         }
     }
 

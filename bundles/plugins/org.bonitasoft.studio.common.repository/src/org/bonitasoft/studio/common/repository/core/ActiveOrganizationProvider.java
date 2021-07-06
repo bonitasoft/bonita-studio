@@ -18,11 +18,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.preferences.OrganizationPreferenceConstants;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -37,7 +32,7 @@ public class ActiveOrganizationProvider {
 
     private static final String PLUGIN_ID = CommonRepositoryPlugin.PLUGIN_ID;
     public static final String ACTIVE_ORGANIZATION_CHANGED = "activeOrganizationChanged";
-
+    
     public String getActiveOrganization() {
         return getPreferenceNode().get(OrganizationPreferenceConstants.DEFAULT_ORGANIZATION,
                 OrganizationPreferenceConstants.DEFAULT_ORGANIZATION_NAME);
@@ -103,4 +98,5 @@ public class ActiveOrganizationProvider {
             BonitaStudioLog.error(e);
         }
     }
+
 }

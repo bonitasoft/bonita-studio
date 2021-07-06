@@ -65,10 +65,6 @@ public class HttpClientFactory {
         return new AddCustomPageRequest(uploadedFileToken, this);
     }
 
-    public HttpRequest<String> newBonitaPagesRequest() {
-        return new BonitaPagesRequest(this);
-    }
-    
     public HttpRequest<String> newCustomPagesRequest() {
         return new CustomPagesRequest(this);
     }

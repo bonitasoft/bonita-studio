@@ -20,11 +20,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,55 +43,31 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
-import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
 import org.eclipse.core.runtime.IStatus;
 
 public class DeployedAppContentProvider {
 
-    private static final Set<String> DEFAULT_PROFILES_NAMES = new HashSet<>();
-    static {
-        DEFAULT_PROFILES_NAMES.add("User");
-        DEFAULT_PROFILES_NAMES.add("Process manager");
-        DEFAULT_PROFILES_NAMES.add("Administrator");
-    }
     private String selection;
     private List<ApplicationItem> applications;
+    private static final Set<String> BONITA_APPS_TOKENS = Set.of("adminAppBonita", "userAppBonita");
 
     public DeployedAppContentProvider(IStatus status, ApplicationAPI appAPI, ProfileAPI profileAPI,
             UserAPI userAPI) {
         this.applications = appFromStatus(status, appAPI, profileAPI, userAPI);
-        this.applications.addAll(portalApplications(profileAPI, userAPI));
+        this.applications.addAll(portalApplications(appAPI, profileAPI, userAPI));
         this.selection = applications.stream()
                 .findFirst()
                 .map(ApplicationItem::toString)
                 .orElse(null);
     }
 
-    private Collection<? extends ApplicationItem> portalApplications(ProfileAPI profileAPI, UserAPI userAPI) {
-        return getDefaultUserProfiles(profileAPI, userAPI).stream()
-                .filter(defaultProfileFilter())
-                .map(profile -> createPortalApplication(profile))
+    private Collection<? extends ApplicationItem> portalApplications(ApplicationAPI appAPI, ProfileAPI profileAPI,
+            UserAPI userAPI) {
+        return BONITA_APPS_TOKENS.stream()
+                .map(appToken -> createApplicationItem(appToken, appAPI, profileAPI, userAPI))
+                .filter(Objects::nonNull)
                 .sorted()
                 .collect(Collectors.toList());
-    }
-
-    private Predicate<? super Profile> defaultProfileFilter() {
-        return profile -> DEFAULT_PROFILES_NAMES.contains(profile.getName());
-    }
-
-    private ApplicationItem createPortalApplication(Profile profile) {
-        ApplicationItem applicationItem = new ApplicationItem();
-        applicationItem.setName(Messages.portalAppName);
-        applicationItem.setProfileName(profile.getName());
-        applicationItem.setProfileId(profile.getId());
-        try {
-            applicationItem.setURL(new PortalURLBuilder().withProfile(profile.getId()).toURL(AbstractRepository.NULL_PROGRESS_MONITOR));
-        } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
-            BonitaStudioLog.error(e);
-            return null;
-        }
-        return applicationItem;
-
     }
 
     private List<Profile> getDefaultUserProfiles(ProfileAPI profileAPI, UserAPI userAPI) {
@@ -163,7 +137,7 @@ public class DeployedAppContentProvider {
         return selection;
     }
 
-    public URL getSelectedURL() throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+    public URL getSelectedURL() {
         return getAppURL(getSelection());
     }
 
@@ -176,7 +150,7 @@ public class DeployedAppContentProvider {
                         String.format("Application not found for %s", displayName)));
     }
 
-    class ApplicationItem implements Comparable<ApplicationItem>{
+    class ApplicationItem implements Comparable<ApplicationItem> {
 
         private String name;
         private String profileName;
@@ -190,7 +164,6 @@ public class DeployedAppContentProvider {
         public void setName(String name) {
             this.name = name;
         }
-
 
         public String getProfileName() {
             return profileName;

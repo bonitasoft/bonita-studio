@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.designer.core.repository.WebPageFileStore;
@@ -31,7 +33,8 @@ import org.eclipse.core.runtime.CoreException;
 
 public class CustomPageProvider implements IResourceChangeListener {
 
-    public static final CustomPageDescriptor DEFAULT_THEME = new CustomPageDescriptor(CustomPageDescriptor.BONITA_THEME_ID,
+    public static final CustomPageDescriptor DEFAULT_THEME = new CustomPageDescriptor(
+            CustomPageDescriptor.BONITA_THEME_ID,
             "Bonita theme", null);
 
     private final WebPageRepositoryStore webPageStore;
@@ -63,17 +66,15 @@ public class CustomPageProvider implements IResourceChangeListener {
 
     public synchronized List<CustomPageDescriptor> getApplicationPages() {
         if (pages == null) {
-            pages = new ArrayList<>();
-            webPageStore.getChildren()
+            pages = Stream.concat(webPageStore.getChildren()
                     .stream()
                     .filter(webPageFileStore -> Objects.equals(webPageFileStore.getType(), WebPageFileStore.PAGE_TYPE))
                     .map(fileStore -> new CustomPageDescriptor(
                             CustomPageDescriptor.CUSTOMPAGE_PREFIX + fileStore.getCustomPageName(),
-                            fileStore.getDisplayName(), fileStore.getDescription()))
-                    .forEach(pages::add);
-            BonitaPagesRegistry.getInstance().getCustomPages().stream()
-                    .map(p -> new CustomPageDescriptor(p.getPageId(), p.getDisplayName(), p.getDescription()))
-                    .forEach(pages::add);
+                            fileStore.getDisplayName(), fileStore.getDescription())),
+                    BonitaPagesRegistry.getInstance().getCustomPages().stream()
+                            .map(p -> new CustomPageDescriptor(p.getPageId(), p.getDisplayName(), p.getDescription())))
+                    .collect(Collectors.toList());
         }
         return pages;
     }

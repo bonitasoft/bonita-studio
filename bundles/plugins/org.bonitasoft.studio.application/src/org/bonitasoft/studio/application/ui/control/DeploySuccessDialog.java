@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.ui.widget.ComboWidget;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,8 +49,8 @@ public class DeploySuccessDialog extends MessageDialog {
 
     public DeploySuccessDialog(Shell parentShell, String dialogTitle, String dialogMessage, int dialogImageType,
             DeployedAppContentProvider contentProvider, IDialogSettings dialogSettings) {
-        super(parentShell, dialogTitle, null, dialogMessage, dialogImageType, 1,
-                new String[] { IDialogConstants.CLOSE_LABEL, IDialogConstants.OPEN_LABEL });
+        super(parentShell, dialogTitle, null, dialogMessage, dialogImageType, 1, IDialogConstants.CLOSE_LABEL,
+                IDialogConstants.OPEN_LABEL);
         this.contentProvider = contentProvider;
         this.dialogSettings = dialogSettings;
     }
@@ -113,14 +113,11 @@ public class DeploySuccessDialog extends MessageDialog {
     @Override
     protected void buttonPressed(int buttonId) {
         super.buttonPressed(buttonId);
-        switch (buttonId) {
-            case 0:
-                setReturnCode(IDialogConstants.CLOSE_ID);
-                break;
-            default:
-                saveSelectedApp(dialogSettings);
-                setReturnCode(IDialogConstants.OPEN_ID);
-                break;
+        if (buttonId == 0) {
+            setReturnCode(IDialogConstants.CLOSE_ID);
+        } else {
+            saveSelectedApp(dialogSettings);
+            setReturnCode(IDialogConstants.OPEN_ID);
         }
     }
 
