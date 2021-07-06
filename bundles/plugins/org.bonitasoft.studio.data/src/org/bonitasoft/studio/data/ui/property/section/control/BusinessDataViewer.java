@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.data.ui.property.section.control;
 
-import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
@@ -29,6 +28,7 @@ import org.bonitasoft.studio.data.ui.property.section.RemoveDataHandler;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -183,7 +183,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     @Override
     protected void createToolItems(ToolBar toolBar) {
         ToolItem defineBdmToolItem = new ToolItem(toolBar, SWT.PUSH);
-        defineBdmToolItem.setImage(BusinessObjectPlugin.getImage("/icons/manage-bdm.png"));
+        defineBdmToolItem.setImage(Pics.getImage(PicsConstants.bdm));
         defineBdmToolItem.setText(org.bonitasoft.studio.businessobject.i18n.Messages.manageBusinessDataModelTitle);
         defineBdmToolItem.addListener(SWT.Selection, e -> commandExecutor.executeCommand(DEFINE_BDM_COMMAND, null));
     }
@@ -215,7 +215,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
 
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
-        if(isDisposed()) {
+        if (isDisposed()) {
             return;
         }
         updated = false;
@@ -227,7 +227,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
             throw new RuntimeException(e);
         }
     }
-    
+
     private boolean updateTopControl(IResourceDelta delta) {
         if (updated) {
             return false;
@@ -242,7 +242,7 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
     }
 
     public void updateTopControl() {
-        if(viewerComposite.isDisposed() || emptyBDMComposite.isDisposed()) {
+        if (viewerComposite.isDisposed() || emptyBDMComposite.isDisposed()) {
             return;
         }
         if (store.getChild(BusinessObjectModelFileStore.BOM_FILENAME, false) != null || poolHasBusinessData()) {
@@ -254,9 +254,9 @@ public class BusinessDataViewer extends DataViewer implements IResourceChangeLis
 
     private boolean poolHasBusinessData() {
         IObservableValue observableValue = getDataContainerObservable();
-        if(observableValue != null) {
+        if (observableValue != null) {
             final Pool pool = (Pool) observableValue.getValue();
-            if(pool != null) {
+            if (pool != null) {
                 return pool.getData().stream().anyMatch(BusinessObjectData.class::isInstance);
             }
         }
