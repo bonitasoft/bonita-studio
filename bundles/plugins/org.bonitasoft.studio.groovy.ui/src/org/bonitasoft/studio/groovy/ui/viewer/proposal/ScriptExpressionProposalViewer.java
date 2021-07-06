@@ -98,7 +98,9 @@ public class ScriptExpressionProposalViewer extends TreeViewer {
             @Override
             public void dragSetData(DragSourceEvent event) {
                 event.doit = observable.getValue() instanceof ScriptProposal;
-                event.data = ((ScriptProposal) observable.getValue()).getId();
+                if(event.doit) {
+                    event.data = ((ScriptProposal) observable.getValue()).getId();
+                }
             }
         };
     }
