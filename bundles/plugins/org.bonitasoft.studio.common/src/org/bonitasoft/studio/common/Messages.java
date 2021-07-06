@@ -299,4 +299,6 @@ public class Messages extends NLS {
     public static String exportMenuLabel;
     public static String deployWithWizardMenuLabel;
     public static String openUid;
+    public static String switchProjectMenuLabel;
+    public static String newProjectMenuLabel;
 }

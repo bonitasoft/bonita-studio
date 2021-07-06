@@ -121,7 +121,6 @@
                   label="%importLabel">
                <command
                      commandId="org.bonitasoft.studio.importer.bos.command"
-                     icon="icons/menuIcons/import.png"
                      style="push">
                </command>
                <command

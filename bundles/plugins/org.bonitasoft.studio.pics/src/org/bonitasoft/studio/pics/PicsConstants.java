@@ -501,4 +501,6 @@ public class PicsConstants {
     public static String filterDef = "artifacts/filter-def.png";
     public static String filterImpl = "artifacts/filter-impl.png";
     public static String restApi = "artifacts/rest-api.png";
+    public static String restore = "restore.png";
+    public static String switchIcon = "switch.png";
 }

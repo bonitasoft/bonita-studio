@@ -37,20 +37,18 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.import">
-         <command
-               commandId="org.bonitasoft.studio.importer.bos.command"
-               icon="icons/import.png"
-               label="%import"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.importer.bos.menu.ImportContributionMenu"
+               id="org.bonitasoft.studio.importer.bos.popup.menu">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -58,10 +56,10 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
    </extension>
 

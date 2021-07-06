@@ -4,7 +4,8 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.team.TeamPlugin;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.team.i18n.Messages;
 import org.bonitasoft.studio.team.ui.handler.SwitchRepositoriesWorkspaceHandler;
 import org.eclipse.core.commands.ExecutionException;
@@ -35,8 +36,7 @@ public class ProjectActionProvider extends CommonActionProvider {
     }
 
     protected void addSwitchProjectAction(IActionBars actionBars) {
-        Action action = new Action(Messages.switchRepository,
-                TeamPlugin.getImageDescriptor("/icons/change-repository.png")) {
+        Action action = new Action(Messages.switchRepository, Pics.getImageDescriptor(PicsConstants.switchIcon)) {
 
             @Override
             public void run() {
@@ -55,7 +55,7 @@ public class ProjectActionProvider extends CommonActionProvider {
     protected void addNewProjectAction(IActionBars actionBars) {
         String commandName = commandExecutor.getCommandName(NEW_PROJECT_COMMAND_ID);
         Action action = new Action(Messages.createNewLocalRepo,
-                TeamPlugin.getImageDescriptor("/icons/new-local-repository.png")) {
+                Pics.getImageDescriptor(PicsConstants.project)) {
 
             @Override
             public void run() {
