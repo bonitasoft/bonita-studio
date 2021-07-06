@@ -14,13 +14,11 @@
  */
 package org.bonitasoft.studio.common.repository.core.maven.model;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.model.Model;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
@@ -30,9 +28,6 @@ import org.eclipse.core.runtime.CoreException;
 public class ProjectMetadata {
 
     private static final String DEFAULT_ARTIFACT_ID = "my-project";
-    private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
-    private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-    private static final Pattern EDGESDHASHES = Pattern.compile("(^-|-$)");
     private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
     private static final String DEFAULT_GROUP_ID = "com.company";
 
@@ -141,19 +136,11 @@ public class ProjectMetadata {
     }
 
     public static String toArtifactId(String displayName) {
-        String artifactId = slugify(displayName);
+        String artifactId = Strings.slugify(displayName);
         if (!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
             return DEFAULT_ARTIFACT_ID;
         }
         return artifactId;
-    }
-
-    private static String slugify(String input) {
-        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
-        String slug = NONLATIN.matcher(normalized).replaceAll("");
-        slug = EDGESDHASHES.matcher(slug).replaceAll("");
-        return slug.toLowerCase(Locale.ENGLISH);
     }
 
     public static ProjectMetadata read(IProject project) {
@@ -196,7 +183,7 @@ public class ProjectMetadata {
                 fileName = fileName.substring(0, fileName.length() - 1);
             }
         }
-        String name = splitCamelCase(fileName);
+        String name = Strings.splitCamelCase(fileName);
         projectMetadata.setName(name);
         projectMetadata.setArtifactId(ProjectMetadata.toArtifactId(name));
         if (extractedVersion != null) {
@@ -230,17 +217,5 @@ public class ProjectMetadata {
         return null;
     }
 
-    static String splitCamelCase(String s) {
-        return s.replaceAll(
-                String.format("%s|%s|%s",
-                        "(?<=[A-Z])(?=[A-Z][a-z])",
-                        "(?<=[^A-Z])(?=[A-Z])",
-                        "(?<=[A-Za-z])(?=[^A-Za-z])"),
-                " ")
-                .replaceAll("_", " ")
-                .replaceAll("-", " ")
-                .replaceAll("  ", " ");
-              
-    }
 
 }

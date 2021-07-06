@@ -136,7 +136,7 @@ public class DeployApplicationDescriptorOperation implements IRunnableWithProgre
     }
 
     protected List<String> getProfilePages() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     protected void deployApplications(IProgressMonitor monitor) {
