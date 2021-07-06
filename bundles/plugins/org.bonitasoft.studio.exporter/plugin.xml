@@ -37,27 +37,24 @@
             locationURI="menu:org.bonitasoft.studio.fileMenu?after=org.bonitasoft.studio.menu.import">
          <command
                commandId="org.bonitasoft.studio.exportBosArchive"
-               icon="icons/export.png"
                style="push">
          </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=group.export">
-         <command
-               commandId="org.bonitasoft.studio.exportBosArchive"
-               icon="icons/export.png"
-               label="%export"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.exporter.menu.ExportContributionMenu"
+               id="org.bonitasoft.studio.exporter.popup.menu">
             <visibleWhen
                   checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <and>
-	                  <count
-	                        value="1">
-	                  </count>
-	                  <iterate>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <instanceof
                               value="org.eclipse.core.resources.IProject">
                         </instanceof>
@@ -65,10 +62,10 @@
                               property="org.bonitasoft.studio.application.isBonitaProject">
                         </test>
                      </iterate>
-	               </and>
+                  </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
    </extension>
    <extension

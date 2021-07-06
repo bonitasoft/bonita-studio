@@ -66,6 +66,7 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -564,7 +565,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         } else if (isShared()) {
             return Pics.getImage("git.png", CommonRepositoryPlugin.getDefault());
         } else {
-            return Pics.getImage("local-repository.png", CommonRepositoryPlugin.getDefault());
+            return Pics.getImage(PicsConstants.project);
         }
     }
 

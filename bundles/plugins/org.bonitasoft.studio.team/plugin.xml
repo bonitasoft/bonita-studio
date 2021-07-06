@@ -132,9 +132,9 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.bonitasoft.studio.application.project.explorer?after=additions">
-         <command
-               commandId="org.bonitasoft.studio.repository.switch"
-               style="push">
+         <dynamic
+               class="org.bonitasoft.studio.team.menu.SwitchProjectMenuContribution"
+               id="org.bonitasoft.studio.team.switch.popup.menu">
             <visibleWhen
                   checkEnabled="false">
                <with
@@ -156,7 +156,7 @@
                   </and>
                </with>
             </visibleWhen>
-         </command>
+         </dynamic>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -165,11 +165,10 @@
                name="org.bonitasoft.studio.team.separator2"
                visible="true">
          </separator>
-         <command
-               commandId="org.bonitasoft.studio.repository.switch"
-               id="org.bonitasoft.studio.repository.switch.menu"
-               style="push">
-         </command>
+         <dynamic
+               class="org.bonitasoft.studio.team.menu.SwitchProjectMenuContribution"
+               id="org.bonitasoft.studio.repository.switch.menu">
+         </dynamic>
          <separator
                name="org.bonitasoft.studio.team.separator3"
                visible="true">
@@ -178,10 +177,10 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.bonitasoft.studio.fileMenu?before=org.bonitasoft.studio.application.command.deployArtifacts">
-         <command
-               commandId="org.bonitasoft.studio.application.newproject.command"
-               style="push">
-         </command>
+         <dynamic
+               class="org.bonitasoft.studio.team.menu.NewProjectMenuContribution"
+               id="org.bonitasoft.studio.team.new.project.menu">
+         </dynamic>
          <separator
                name="org.bonitasoft.studio.team.separator1"
                visible="true">
@@ -223,17 +222,6 @@
             id="org.bonitasoft.studio.team.compare.perspective"
             name="Comapre perspective">
       </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.bonitasoft.studio.repository.switch"
-            icon="icons/change-repository.png">
-      </image>
-      <image
-            commandId="org.bonitasoft.studio.application.newproject.command"
-            icon="icons/new-local-repository.png">
-      </image>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
