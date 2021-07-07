@@ -30,6 +30,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -379,6 +380,12 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
     @Override
     public Image getTitleImage() {
         return Pics.getImage(PicsConstants.validate);
+    }
+
+    @Override
+    public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+        super.setInitializationData(cfig, propertyName, data);
+        setTitleImage(getTitleImage());
     }
 
 }
