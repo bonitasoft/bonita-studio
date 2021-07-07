@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
 import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
@@ -56,7 +57,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.widgets.Display;
 
@@ -154,17 +154,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
             }
             return null;
         } 
-//        finally {
-//            if (newIs != null) {
-//                try {
-//                    newIs.close();
-//                } catch (IOException e) {
-//                    BonitaStudioLog.error(e);
-//                }
-//            }
-//        }
-
-
     }
 
     private T createEmptyFile(final String fileName, final InputStream inputStream) {
@@ -345,10 +334,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
     }
 
     @Override
-    public abstract T createRepositoryFileStore(String fileName);
-
-    @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
         List<T> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
                 .filter(IRepositoryFileStore::canBeShared)
@@ -357,6 +343,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         for (T fStore : filesToMigrate) {
             migrate(fStore, monitor);
         }
+        
+        return MigrationReport.emptyReport();
     }
 
     @Override
@@ -406,28 +394,16 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore<?>>
         return collector.toList();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
     @Override
     public Set<String> getCompatibleExtensions() {
         return Collections.emptySet();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#repositoryUpdated()
-     */
     @Override
     public void repositoryUpdated() {
         //NOTHING TO UPDATE
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IDisplayable#getStyledString()
-     */
     @Override
     public StyledString getStyledString() {
         return new StyledString(getDisplayName());

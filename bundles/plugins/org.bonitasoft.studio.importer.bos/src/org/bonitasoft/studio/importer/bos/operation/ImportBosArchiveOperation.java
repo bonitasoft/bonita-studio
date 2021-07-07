@@ -226,7 +226,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 doUpdateProjectDependencies(monitor, statusBuilder);
             }
 
-            doImport(importArchiveModel, monitor);
+            doImport(importArchiveModel, statusBuilder, monitor);
 
             monitor.subTask("");
 
@@ -388,7 +388,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return new ImportBosArchiveStatusBuilder();
     }
 
-    private void doImport(ImportArchiveModel importArchiveModel, IProgressMonitor monitor) {
+    private void doImport(ImportArchiveModel importArchiveModel,
+            ImportBosArchiveStatusBuilder statusBuilder,
+            IProgressMonitor monitor) {
         monitor.beginTask(Messages.importBosArchive,
                 (int) importArchiveModel.getStores().stream().flatMap(AbstractFolderModel::importableUnits).count());
         importArchiveModel.getStores().stream()
@@ -396,7 +398,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
                 .flatMap(AbstractFolderModel::importableUnits)
                 .forEach(unit -> {
                     monitor.subTask(NLS.bind(Messages.importing, unit.getName()));
-                    importUnit(unit, importArchiveModel.getBosArchive(), monitor);
+                    importUnit(unit, importArchiveModel.getBosArchive(), statusBuilder, monitor);
                     monitor.worked(1);
                 });
         migrateUID(monitor);
@@ -436,8 +438,10 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         }
     }
 
-    private void importUnit(ImportableUnit unit, BosArchive bosArchive, IProgressMonitor monitor) {
-        try (ZipFile zipFile = bosArchive.getZipFile();) {
+    private void importUnit(ImportableUnit unit, BosArchive bosArchive,
+            ImportBosArchiveStatusBuilder statusBuilder,
+            IProgressMonitor monitor) {
+        try (ZipFile zipFile = bosArchive.getZipFile()) {
             IRepositoryFileStore repositoryFileStore = unit.doImport(zipFile, monitor);
             if (repositoryFileStore == null && (unit instanceof ImportFileStoreModel)
                     && ((ImportFileStoreModel) unit).isStoreResource()) {
@@ -446,6 +450,16 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             }
             if (repositoryFileStore != null && DependencyFileStore.NULL != repositoryFileStore) {
                 importedFileStores.add(repositoryFileStore);
+                var migrationReport = repositoryFileStore.getMigrationReport();
+                migrationReport.additions().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
+                migrationReport.updates().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
+                migrationReport.removals().stream()
+                        .map(ValidationStatus::info)
+                        .forEach(statusBuilder::addStatus);
             }
             if (repositoryFileStore != null && repositoryFileStore.getName().endsWith(".proc")) {
                 importedProcesses.add(repositoryFileStore);

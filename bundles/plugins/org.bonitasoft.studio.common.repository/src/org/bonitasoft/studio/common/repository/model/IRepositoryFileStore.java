@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.repository.model;
 import java.io.IOException;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -73,6 +74,10 @@ public interface IRepositoryFileStore<T> extends IDisplayable, IAdaptable {
     
     default IStatus validate() {
         return ValidationStatus.ok();
+    }
+
+    default MigrationReport getMigrationReport() {
+        return MigrationReport.emptyReport();
     }
 
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.ImportArchiveData;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -62,7 +63,7 @@ public interface IRepositoryStore<T extends IRepositoryFileStore<?>> extends IDi
 
     void refresh();
 
-    void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException;
+    MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException;
     
     void migrate(IRepositoryFileStore<?> fileStore, final IProgressMonitor monitor) throws CoreException, MigrationException;
 

@@ -46,6 +46,7 @@ import org.bonitasoft.studio.common.repository.core.maven.MavenRepositoryRegistr
 import org.bonitasoft.studio.common.repository.core.maven.ProjectDependenciesResolver;
 import org.bonitasoft.studio.common.repository.core.maven.migration.ProjectDependenciesMigrationOperation;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -246,7 +247,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
         IProject project = getRepository().getProject();
         if (getResource().exists()) {
             try {
@@ -304,6 +305,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
                 BonitaStudioLog.error(e);
             }
         }
+        return MigrationReport.emptyReport();
     }
 
     protected Set<DependencyLookup> doMigrateToMavenDependencies(IProgressMonitor monitor)

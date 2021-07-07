@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -132,18 +133,21 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     
     @Override
     protected ApplicationFileStore doImportInputStream(String fileName, InputStream inputStream) {
-        ApplicationFileStore fileStore = super.doImportInputStream(fileName, inputStream);
+        var fileStore = super.doImportInputStream(fileName, inputStream);
         if(fileStore != null) {
-            doMigrateFileStore(fileStore);
+            var report = MigrationReport.emptyReport();
+            doMigrateFileStore(fileStore, report);
+            fileStore.setMigrationReport(report);
         }
         return fileStore;
     }
 
 
-    private void doMigrateFileStore(ApplicationFileStore fileStore) {
+    private void doMigrateFileStore(ApplicationFileStore fileStore, MigrationReport report) {
         try {
-            ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
-            applicationNodeContainer.getApplications().forEach(this::updateBonitaTheme);
+            var applicationNodeContainer = fileStore.getContent();
+            applicationNodeContainer.getApplications().forEach(app -> updateBonitaTheme(app, report));
+            applicationNodeContainer.getApplications().forEach(app -> updateBonitaLayout(app, report));
             fileStore.save(applicationNodeContainer);
         } catch (ReadFileStoreException e) {
             BonitaStudioLog.error(e);
@@ -151,18 +155,27 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
             throws CoreException, MigrationException {
-        super.migrate(postMigrationOperationCollector, monitor);
+        var report = super.migrate(postMigrationOperationCollector, monitor);
         for (ApplicationFileStore fileStore : getChildren()) {
-            doMigrateFileStore(fileStore);
+            doMigrateFileStore(fileStore, report);
         }
+        return report;
     }
 
-    private void updateBonitaTheme(ApplicationNode application) {
+    private void updateBonitaTheme(ApplicationNode application, MigrationReport report) {
         if (Objects.equals(application.getTheme(), "custompage_bonitadefaulttheme")
                 || Objects.equals(application.getTheme(), "custompage_bootstrapdefaulttheme")) {
             application.setTheme("custompage_themeBonita");
+            report.updated(String.format("%s application theme has been updated to Bonita default theme.", application.getToken()));
+        }
+    }
+    
+    private void updateBonitaLayout(ApplicationNode application,  MigrationReport report) {
+        if (Objects.equals(application.getLayout(), "custompage_defaultlayout")) {
+            application.setLayout("custompage_layoutBonita");
+            report.updated(String.format("%s application layout has been updated to Bonita default layout.", application.getToken()));
         }
     }
 
