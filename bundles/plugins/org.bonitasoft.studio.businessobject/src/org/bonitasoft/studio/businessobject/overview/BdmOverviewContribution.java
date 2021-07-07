@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.businessobject.dashboard;
+package org.bonitasoft.studio.businessobject.overview;
 
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pics.Pics;
@@ -34,12 +34,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-public class BdmDashboardContribution implements DashboardContribution {
+public class BdmOverviewContribution implements OverviewContribution {
 
     private static final String DEFINE_BDM_COMMAND = "org.bonitasoft.studio.businessobject.define";
     private BusinessObjectModelRepositoryStore repositoryStore;
 
-    public BdmDashboardContribution() {
+    public BdmOverviewContribution() {
         repositoryStore = RepositoryManager.getInstance()
                 .getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
@@ -51,7 +51,7 @@ public class BdmDashboardContribution implements DashboardContribution {
 
     @Override
     public String getDescription() {
-        return Messages.bdmDashboardContribution;
+        return Messages.bdmOverviewContribution;
     }
 
     @Override

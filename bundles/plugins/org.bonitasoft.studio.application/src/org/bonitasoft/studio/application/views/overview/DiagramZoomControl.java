@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,10 +31,10 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 
-public class DiagramZoomControl extends AbstractDashboardZoomControl<DiagramFileStore> {
+public class DiagramZoomControl extends AbstractOverviewZoomControl<DiagramFileStore> {
 
     protected DiagramZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
-            DiagramDashboardContribution contribution) {
+            DiagramOverviewContribution contribution) {
         super(parent, zoomListener, computeScrollListener, contribution);
     }
 
@@ -50,7 +50,7 @@ public class DiagramZoomControl extends AbstractDashboardZoomControl<DiagramFile
 
     @Override
     protected String getNewCommand() {
-        return DiagramDashboardContribution.NEW_DIAGRAM_COMMAND;
+        return DiagramOverviewContribution.NEW_DIAGRAM_COMMAND;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class DiagramZoomControl extends AbstractDashboardZoomControl<DiagramFile
     }
 
     @Override
-    protected List<AbstractDashboardZoomControl<DiagramFileStore>.Element> retrieveFileStoreContent(
+    protected List<AbstractOverviewZoomControl<DiagramFileStore>.Element> retrieveFileStoreContent(
             DiagramFileStore fileStore) {
         return fileStore.getProcesses(false).stream()
                 .map(process -> new Element(String.format("%s (%s)", process.getName(), process.getVersion()),
@@ -74,7 +74,7 @@ public class DiagramZoomControl extends AbstractDashboardZoomControl<DiagramFile
             var titleLabel = new CLabel(titleComposite, SWT.NONE);
             titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             titleLabel.setText(String.format("%s (%s)", mainProcess.getName(), mainProcess.getVersion()));
-            titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
+            titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_4_FONT_ID));
             titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         } catch (ReadFileStoreException e) {
             errorHandler.openErrorDialog(getShell(), e.getMessage(), e);

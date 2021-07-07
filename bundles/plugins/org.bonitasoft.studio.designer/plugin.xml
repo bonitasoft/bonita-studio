@@ -311,7 +311,7 @@
 <extension
       point="org.bonitasoft.studio.common.dashboardContribution">
    <dashboardContribution
-         class="org.bonitasoft.studio.designer.ui.dashboard.PageAndFormDashboardContribution">
+         class="org.bonitasoft.studio.designer.ui.overview.PageAndFormOverviewContribution">
    </dashboardContribution>
 </extension>
 </plugin>

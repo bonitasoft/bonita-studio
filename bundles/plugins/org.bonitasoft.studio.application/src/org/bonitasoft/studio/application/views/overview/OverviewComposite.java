@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
-public class DashboardComposite extends Composite {
+public class OverviewComposite extends Composite {
 
     private static final String CLASS_EXECUTABLE_EXTENSION = "class";
     private static final String DASHBOARD_CONTRIBUTION_EXTENSION_POINT = "org.bonitasoft.studio.common.dashboardContribution";
@@ -45,7 +45,7 @@ public class DashboardComposite extends Composite {
     private ScrolledComposite scrolledComposite;
     private Composite cardComposite;
 
-    public DashboardComposite(Composite parent, RepositoryAccessor repositoryAccessor) {
+    public OverviewComposite(Composite parent, RepositoryAccessor repositoryAccessor) {
         super(parent, SWT.NONE);
         this.repositoryAccessor = repositoryAccessor;
 
@@ -70,7 +70,7 @@ public class DashboardComposite extends Composite {
     }
 
     private void createCards(Composite parent) {
-        List<DashboardContribution> contributions = loadContributions();
+        List<OverviewContribution> contributions = loadContributions();
 
         var composite = createComposite(parent, SWT.NONE);
         composite.setLayout(
@@ -84,8 +84,8 @@ public class DashboardComposite extends Composite {
         contributions.forEach(contribution -> createCard(composite, contribution));
     }
 
-    private void createCard(Composite parent, DashboardContribution contribution) {
-        new DashboardCard(parent, contribution);
+    private void createCard(Composite parent, OverviewContribution contribution) {
+        new OverviewCard(parent, contribution);
         if (contribution instanceof Zoomable) {
             ((Zoomable) contribution).addZoomListener(new ZoomListener() {
 
@@ -122,7 +122,7 @@ public class DashboardComposite extends Composite {
         });
     }
 
-    private List<DashboardContribution> loadContributions() {
+    private List<OverviewContribution> loadContributions() {
         IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements(DASHBOARD_CONTRIBUTION_EXTENSION_POINT);
 
@@ -135,8 +135,8 @@ public class DashboardComposite extends Composite {
                         return null;
                     }
                 })
-                .filter(DashboardContribution.class::isInstance)
-                .map(DashboardContribution.class::cast)
+                .filter(OverviewContribution.class::isInstance)
+                .map(OverviewContribution.class::cast)
                 .sorted()
                 .collect(Collectors.toList());
     }

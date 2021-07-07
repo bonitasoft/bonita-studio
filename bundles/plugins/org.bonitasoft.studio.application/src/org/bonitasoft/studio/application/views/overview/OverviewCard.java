@@ -12,11 +12,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -34,11 +34,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
-public class DashboardCard extends Composite {
+public class OverviewCard extends Composite {
 
-    private DashboardContribution contribution;
+    private OverviewContribution contribution;
 
-    public DashboardCard(Composite parent, DashboardContribution contribution) {
+    public OverviewCard(Composite parent, OverviewContribution contribution) {
         super(parent, SWT.BORDER);
         this.contribution = contribution;
 
@@ -73,7 +73,7 @@ public class DashboardCard extends Composite {
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(contribution.getName());
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
+        titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_4_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
         if (contribution instanceof Zoomable) {

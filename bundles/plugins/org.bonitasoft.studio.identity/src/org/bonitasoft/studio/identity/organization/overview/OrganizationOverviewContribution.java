@@ -12,12 +12,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.identity.organization.dashboard;
+package org.bonitasoft.studio.identity.organization.overview;
 
 import java.util.List;
 
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
@@ -37,14 +37,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-public class OrganizationDashboardContribution implements DashboardContribution {
+public class OrganizationOverviewContribution implements OverviewContribution {
 
     public static final String NEW_ORGA_COMMAND = "org.bonitasoft.studio.identity.organization.create.command";
 
     private ActiveOrganizationProvider activeOrganizationProvider;
     private OrganizationRepositoryStore repositoryStore;
 
-    public OrganizationDashboardContribution() {
+    public OrganizationOverviewContribution() {
         activeOrganizationProvider = new ActiveOrganizationProvider();
         repositoryStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
     }
@@ -56,7 +56,7 @@ public class OrganizationDashboardContribution implements DashboardContribution 
 
     @Override
     public String getDescription() {
-        return Messages.organizationDashboardDescription;
+        return Messages.organizationOverviewDescription;
     }
 
     @Override

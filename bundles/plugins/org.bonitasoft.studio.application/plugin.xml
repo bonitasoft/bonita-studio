@@ -1174,7 +1174,7 @@
             toolbarPosition="0">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.ProjectDashboardCoolbarItem"
+            class="org.bonitasoft.studio.application.coolbar.ProjectOverviewCoolbarItem"
             priority="0"
             toolbarPosition="2">
       </coolbarItem>
@@ -1502,7 +1502,7 @@
             name="Text Perspective">
       </perspective>
       <perspective
-            class="org.bonitasoft.studio.application.views.dashboard.ProjectDashboardPerspective"
+            class="org.bonitasoft.studio.application.views.overview.ProjectOverviewPerspective"
             fixed="true"
             id="org.bonitasoft.studio.application.extension.perspective"
             name="%projectExtensionPerspective">
@@ -1595,10 +1595,10 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart"
+            class="org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart"
             default="false"
             id="org.bonitasoft.studio.application.dashboard.editor"
-            name="%projectDashboardView">
+            name="%projectOverviewView">
       </editor>
    </extension>
    <extension
@@ -1623,7 +1623,7 @@
       <extension
          point="org.bonitasoft.studio.common.dashboardContribution">
       <dashboardContribution
-            class="org.bonitasoft.studio.application.views.dashboard.DiagramDashboardContribution">
+            class="org.bonitasoft.studio.application.views.overview.DiagramOverviewContribution">
       </dashboardContribution>
    </extension>
 

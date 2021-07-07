@@ -12,9 +12,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.designer.ui.dashboard;
+package org.bonitasoft.studio.designer.ui.overview;
 
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -26,18 +26,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-public class PageAndFormDashboardContribution implements DashboardContribution {
+public class PageAndFormOverviewContribution implements OverviewContribution {
 
     private static final String OPEN_UID_COMMAND = "org.bonitasoft.studio.pagedesigner.open.command";
 
     @Override
     public String getName() {
-        return Messages.pageAndFormDashboardName;
+        return Messages.pageAndFormOverviewName;
     }
 
     @Override
     public String getDescription() {
-        return Messages.pageAndFormDashboardDescription;
+        return Messages.pageAndFormOverviewDescription;
     }
 
     @Override

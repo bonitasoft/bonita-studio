@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-public class ProjectDashboardCoolbarItem extends ContributionItem
+public class ProjectOverviewCoolbarItem extends ContributionItem
         implements IBonitaContributionItem, ISelectionChangedListener {
 
     private ToolItem item;
@@ -46,12 +46,12 @@ public class ProjectDashboardCoolbarItem extends ContributionItem
     @Override
     public void fill(ToolBar toolbar, int index, int iconSize) {
         item = new ToolItem(toolbar, SWT.PUSH);
-        item.setToolTipText(Messages.projectDashboardTitle);
+        item.setToolTipText(Messages.projectOverviewTitle);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.openDashboard48));
+            item.setImage(Pics.getImage(PicsConstants.openOverview48));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.openDashboard24));
+            item.setImage(Pics.getImage(PicsConstants.openOverview24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
@@ -86,7 +86,7 @@ public class ProjectDashboardCoolbarItem extends ContributionItem
 
     @Override
     public String getText() {
-        return Messages.projectDashboardTitle;
+        return Messages.projectOverviewTitle;
     }
 
 }

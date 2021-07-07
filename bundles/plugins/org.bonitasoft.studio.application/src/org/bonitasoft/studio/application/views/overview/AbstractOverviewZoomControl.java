@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.Strings;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.pics.Pics;
@@ -53,10 +53,10 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 
-public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> extends Composite {
+public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> extends Composite {
 
     private ZoomListener zoomListener;
-    protected DashboardContribution contribution;
+    protected OverviewContribution contribution;
     private CommandExecutor commandExecutor;
     protected ExceptionDialogHandler errorHandler;
 
@@ -87,8 +87,8 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         }
     }
 
-    protected AbstractDashboardZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
-            DashboardContribution contribution) {
+    protected AbstractOverviewZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
+            OverviewContribution contribution) {
         super(parent, SWT.NONE);
         this.zoomListener = zoomListener;
         this.computeScrollListener = computeScrollListener;
@@ -177,7 +177,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         var emptyLabel = new Label(composite, SWT.NONE);
         emptyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         emptyLabel.setText(Messages.noResultFound);
-        emptyLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID));
+        emptyLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID));
     }
 
     protected abstract String getElementName();
@@ -197,14 +197,19 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
 
     private void createZoomedTitleComposite(Composite parent) {
         var titleComposite = createGlobalComposite(parent, SWT.NONE);
-        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        titleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        var icon = new Label(titleComposite, SWT.NONE);
+        icon.setLayoutData(GridDataFactory.fillDefaults().create());
+        icon.setImage(contribution.getIcon());
+        icon.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(contribution.getName());
 
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID));
+        titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
@@ -259,14 +264,14 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         var emptyLabel = new Label(composite, SWT.NONE);
         emptyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         emptyLabel.setText(message);
-        emptyLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID));
+        emptyLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID));
 
         new DynamicButtonWidget.Builder()
                 .withText(buttonMessage)
                 .withImage(Pics.getImage(PicsConstants.add_item_large))
                 .withHotImage(Pics.getImage(PicsConstants.add_item_large))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID))
+                .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create())
                 .onClick(onClickListener)
                 .createIn(composite);
@@ -309,7 +314,7 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(fileStore.getName());
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_4_FONT_ID));
+        titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_4_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
     }
 
@@ -323,14 +328,14 @@ public abstract class AbstractDashboardZoomControl<T extends AbstractFileStore> 
         var titleLabel = new CLabel(composite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().create());
         titleLabel.setText(element.getName());
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_0_FONT_ID));
+        titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_0_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
         String description = Strings.hasText(element.getDescription()) ? element.getDescription() : Messages.noDescription;
         var descrptionLabel = new Label(composite, SWT.WRAP);
         descrptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create());
         descrptionLabel.setText(description);
-        descrptionLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
+        descrptionLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID));
         descrptionLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
     }
 

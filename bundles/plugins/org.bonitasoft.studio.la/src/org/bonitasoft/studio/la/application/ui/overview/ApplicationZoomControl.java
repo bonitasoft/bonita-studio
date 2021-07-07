@@ -12,15 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.dashboard;
+package org.bonitasoft.studio.la.application.ui.overview;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.studio.application.views.dashboard.AbstractDashboardZoomControl;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.application.views.overview.AbstractOverviewZoomControl;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.la.application.repository.ApplicationFileStore;
@@ -29,10 +29,10 @@ import org.bonitasoft.studio.la.i18n.Messages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 
-public class ApplicationZoomControl extends AbstractDashboardZoomControl<ApplicationFileStore> {
+public class ApplicationZoomControl extends AbstractOverviewZoomControl<ApplicationFileStore> {
 
     protected ApplicationZoomControl(Composite parent, ZoomListener zoomListener, Listener computeScrollListener,
-            DashboardContribution contribution) {
+            OverviewContribution contribution) {
         super(parent, zoomListener, computeScrollListener, contribution);
     }
 
@@ -48,7 +48,7 @@ public class ApplicationZoomControl extends AbstractDashboardZoomControl<Applica
 
     @Override
     protected String getNewCommand() {
-        return ApplicationDashboardContribution.NEW_APPLICATION_COMMAND;
+        return ApplicationOverviewContribution.NEW_APPLICATION_COMMAND;
     }
 
     @Override

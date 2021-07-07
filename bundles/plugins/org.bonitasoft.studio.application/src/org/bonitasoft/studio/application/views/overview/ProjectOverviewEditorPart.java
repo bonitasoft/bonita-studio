@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import java.util.List;
 import java.util.Map;
@@ -72,7 +72,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.event.EventHandler;
 
-public class ProjectDashboardEditorPart extends EditorPart implements EventHandler, IResourceChangeListener {
+public class ProjectOverviewEditorPart extends EditorPart implements EventHandler, IResourceChangeListener {
 
     public static final String ID = "org.bonitasoft.studio.application.dashboard.editor";
 
@@ -106,9 +106,9 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
     private Cursor cursorHand;
     private Cursor cursorArrow;
 
-    private DashboardComposite dashBoardComposite;
+    private OverviewComposite dashBoardComposite;
 
-    public ProjectDashboardEditorPart() {
+    public ProjectOverviewEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
         localResourceManager = new LocalResourceManager(JFaceResources.getResources(Display.getDefault()));
     }
@@ -124,7 +124,7 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
         PlatformUI.getWorkbench().getService(IEventBroker.class)
                 .subscribe(MavenProjectDependenciesStore.PROJECT_DEPENDENCIES_ANALYZED_TOPIC, this);
 
-        if (!(input instanceof ProjectDashboardEditorInput)) {
+        if (!(input instanceof ProjectOverviewEditorInput)) {
             throw new PartInitException("Invalid Input: Must be ProjectExtensionEditorInput");
         }
         setSite(site);
@@ -147,13 +147,13 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
         Label separator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        dashBoardComposite = new DashboardComposite(mainComposite, repositoryAccessor);
+        dashBoardComposite = new OverviewComposite(mainComposite, repositoryAccessor);
         updateToolbarContent();
     }
 
     private void toDashboardView() {
         extensionComposite.dispose();
-        dashBoardComposite = new DashboardComposite(mainComposite, repositoryAccessor);
+        dashBoardComposite = new OverviewComposite(mainComposite, repositoryAccessor);
     }
 
     private void toExtensionsView() {
@@ -203,10 +203,10 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
                 createMarketplaceButton(toolbarComposite);
                 createImportButton(toolbarComposite);
                 createSwitchButton(toolbarComposite,
-                        Messages.dashboardView,
-                        Messages.dashboardViewTooltip,
-                        Pics.getImage(PicsConstants.openDashboard32),
-                        Pics.getImage(PicsConstants.openDashboard32_hot),
+                        Messages.overviewView,
+                        Messages.overviewViewTooltip,
+                        Pics.getImage(PicsConstants.openOverview32),
+                        Pics.getImage(PicsConstants.openOverview32_hot),
                         SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW);
             } else {
                 createSwitchButton(toolbarComposite,
@@ -250,20 +250,20 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
                 .withHotImage(Pics.getImage(PicsConstants.import32Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .addDropdownItem(Messages.addConnector, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
                 .addDropdownItem(Messages.addActorFilter, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
                                         ArtifactType.ACTOR_FILTER.name())))
                 .addDropdownItem(Messages.addTheme, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
                 .addDropdownItem(Messages.addRestApiExtension, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
                 .addDropdownItem(Messages.addOther, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
                 .createIn(parent);
     }
@@ -276,7 +276,7 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
                 .withImage(Pics.getImage(PicsConstants.openMarketplace))
                 .withHotImage(Pics.getImage(PicsConstants.openMarketplaceHot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.OPEN_MARKETPLACE_COMMAND, null))
+                .onClick(e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.OPEN_MARKETPLACE_COMMAND, null))
                 .createIn(parent);
     }
 
@@ -285,7 +285,7 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
         editLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_EDIT_PROJECT_METADATA);
         editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         editLabel.setImage(Pics.getImage(PicsConstants.editProject));
-        editLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_20_FONT_ID));
+        editLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_20_FONT_ID));
         editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
         editLabel.addMouseListener(new MouseAdapter() {
 
@@ -338,10 +338,10 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
                 title.setText(String.format("%s %s", name, version));
 
                 StyleRange titleStyle = new StyleRange(0, name.length(), title.getForeground(), title.getBackground());
-                titleStyle.font = JFaceResources.getFontRegistry().get(ProjectDashboardEditorPart.BOLD_20_FONT_ID);
+                titleStyle.font = JFaceResources.getFontRegistry().get(ProjectOverviewEditorPart.BOLD_20_FONT_ID);
                 StyleRange versionStyle = new StyleRange(name.length() + 1, version.length(), title.getForeground(),
                         title.getBackground());
-                versionStyle.font = JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID);
+                versionStyle.font = JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID);
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
                 if (refreshDescription(descriptionContent)) {
@@ -434,7 +434,7 @@ public class ProjectDashboardEditorPart extends EditorPart implements EventHandl
 
     @Override
     public Image getTitleImage() {
-        return Pics.getImage(PicsConstants.openDashboard);
+        return Pics.getImage(PicsConstants.openOverview);
     }
 
     @Override

@@ -325,7 +325,7 @@
    <extension
          point="org.bonitasoft.studio.common.dashboardContribution">
       <dashboardContribution
-            class="org.bonitasoft.studio.businessobject.dashboard.BdmDashboardContribution">
+            class="org.bonitasoft.studio.businessobject.overview.BdmOverviewContribution">
       </dashboardContribution>
    </extension>
 
