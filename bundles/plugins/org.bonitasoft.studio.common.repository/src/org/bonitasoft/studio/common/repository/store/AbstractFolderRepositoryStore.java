@@ -19,11 +19,11 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -50,7 +50,7 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
             try {
                 folder.refreshLocal(IResource.DEPTH_ONE, AbstractRepository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
-                 BonitaStudioLog.error(e);
+                BonitaStudioLog.error(e);
             }
         }
     }
@@ -74,8 +74,10 @@ public abstract class AbstractFolderRepositoryStore<T extends IRepositoryFileSto
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
+            final IProgressMonitor monitor) throws CoreException, MigrationException {
         //NOTHING TO MIGRATE
+        return MigrationReport.emptyReport();
     }
 
 }

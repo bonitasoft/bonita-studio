@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
@@ -182,7 +183,7 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
 
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor) throws CoreException, MigrationException {
         XSDFileStore legacyXSD = getChild("soap-encoding.xsd", true);
         if (legacyXSD != null) {
             legacyXSD.delete();
@@ -191,6 +192,7 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
         if (legacyXSD != null) {
             legacyXSD.delete();
         }
+        return MigrationReport.emptyReport();
     }
 
 }

@@ -224,7 +224,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
             throws CoreException, MigrationException {
         List<RestAPIExtensionFileStore> filesToMigrate = getChildren().stream()
                 .filter(fs -> !fs.isReadOnly())
@@ -234,6 +234,7 @@ public class RestAPIExtensionRepositoryStore extends CustomPageProjectRepository
         for (RestAPIExtensionFileStore fStore : filesToMigrate) {
             migrate(fStore, monitor);
         }
+        return MigrationReport.emptyReport();
     }
 
     @Override

@@ -85,7 +85,7 @@ public class BonitaProjectMigrationOperation implements IWorkspaceRunnable {
         for (var store : orderedStores) {
             store.createRepositoryStore(repository);
             try {
-                store.migrate(postMigrationOperationCollector, monitor);
+                store.migrate(postMigrationOperationCollector, monitor).merge(report);
             } catch (MigrationException e) {
                 throw new CoreException(new Status(IStatus.ERROR, BonitaProjectMigrationOperation.class, e.getMessage()));
             }

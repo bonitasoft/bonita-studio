@@ -148,6 +148,8 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
 
     private MigrationReportWriter reportWriter = new AsciidocMigrationReportWriter();
 
+    private MigrationReport report = MigrationReport.emptyReport();
+
     public AbstractRepository(final IWorkspace workspace,
             final IProject project,
             final ExtensionContextInjectionFactory extensionContextInjectionFactory,
@@ -179,12 +181,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                 CreateBonitaProjectOperation createBonitaProjectOperation = newProjectWorkspaceOperation(metadata,
                         workspace);
                 workspace.run(createBonitaProjectOperation, monitor);
-                MigrationReport report = createBonitaProjectOperation.getReport();
-                if (!report.isEmpty()) {
-                    reportWriter.write(report, reportPath());
-                    project.getFile(MigrationReportWriter.DEFAULT_REPORT_FILE_NAME).refreshLocal(IResource.DEPTH_ONE,
-                            new NullProgressMonitor());
-                }
+                report = createBonitaProjectOperation.getReport();
             }
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
@@ -757,7 +754,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         Assert.isNotNull(project);
         var migrationOperation = newProjectMigrationOperation();
         workspace.run(migrationOperation, monitor);
-        MigrationReport report = migrationOperation.getReport();
+        migrationOperation.getReport().merge(report);
         if (!report.isEmpty()) {
             try {
                 reportWriter.write(report, reportPath());
@@ -765,7 +762,10 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
                         new NullProgressMonitor());
             } catch (IOException e) {
                 throw new CoreException(new Status(IStatus.ERROR, AbstractRepository.class, e.getMessage(), e));
+            } finally {
+                report = MigrationReport.emptyReport();
             }
+
         }
     }
 

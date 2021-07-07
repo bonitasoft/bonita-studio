@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
@@ -69,7 +70,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
         IFolder packageFolder = null;
         if (packageStore == null) {
             final IFolder folder = getResource();
-             packageFolder = folder.getFolder(packageName);
+            packageFolder = folder.getFolder(packageName);
             if (!packageFolder.exists()) {
                 try {
                     packageFolder.getLocation().toFile().mkdirs();
@@ -80,7 +81,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
                 }
             }
         }
-        if(packageFolder == null && packageStore != null) {
+        if (packageFolder == null && packageStore != null) {
             packageFolder = packageStore.getResource();
         }
 
@@ -203,7 +204,9 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore<?>> exte
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, final IProgressMonitor monitor) throws CoreException, MigrationException {
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
+            final IProgressMonitor monitor) throws CoreException, MigrationException {
         // NOTHING TO MIGRATE
+        return MigrationReport.emptyReport();
     }
 }

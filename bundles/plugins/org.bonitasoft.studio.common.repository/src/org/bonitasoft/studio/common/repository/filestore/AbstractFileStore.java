@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IFileStoreChangeNotifier;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -82,6 +83,7 @@ public abstract class AbstractFileStore<T>
     private Map<String, Object> parameters;
     private RepositoryAccessor repositoryAccessor;
     private CommandExecutor commandExecutor = new CommandExecutor();
+    private MigrationReport report = MigrationReport.emptyReport();
 
     public AbstractFileStore(final String fileName,
             final IRepositoryStore<? extends IRepositoryFileStore<T>> parentStore) {
@@ -567,4 +569,15 @@ public abstract class AbstractFileStore<T>
         }
         return ValidationStatus.ok();
     }
+    
+
+    public void setMigrationReport(MigrationReport report) {
+        this.report = report;
+    }
+    
+    @Override
+    public MigrationReport getMigrationReport() {
+        return report;
+    }
+
 }

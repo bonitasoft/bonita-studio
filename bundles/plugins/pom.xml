@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -14,8 +16,8 @@
 
 
     <modules>
-     	<module>bonita-business-data-generator</module>
-     	<module>bonita-studio-watchdog</module>
+        <module>bonita-business-data-generator</module>
+        <module>bonita-studio-watchdog</module>
         <module>org.bonitasoft.studio-models</module>
         <module>org.bonitasoft.studio.application</module>
         <module>org.bonitasoft.studio.console.libs</module>
@@ -29,9 +31,9 @@
         <module>org.bonitasoft.studio.common.repository</module>
         <module>org.bonitasoft.studio.contract</module>
         <module>org.bonitasoft.studio.configuration</module>
-		<module>org.bonitasoft.studio.connector.wizard.office</module>
+        <module>org.bonitasoft.studio.connector.wizard.office</module>
         <module>org.bonitasoft.studio.connector.wizard.sapjco3</module>
-		<module>org.bonitasoft.studio.connector.wizard.sforce</module>
+        <module>org.bonitasoft.studio.connector.wizard.sforce</module>
         <module>org.bonitasoft.studio.connector.wizard.uipath</module>
         <module>org.bonitasoft.studio.connectors</module>
         <module>org.bonitasoft.studio.connectors.model</module>
@@ -41,8 +43,8 @@
         <module>org.bonitasoft.studio.decision.table</module>
         <module>org.bonitasoft.studio.dependencies</module>
         <module>org.bonitasoft.studio.designer</module>
-		<module>org.bonitasoft.studio.designer.linux</module>
-		<module>org.bonitasoft.studio.designer.macosx</module>
+        <module>org.bonitasoft.studio.designer.linux</module>
+        <module>org.bonitasoft.studio.designer.macosx</module>
         <module>org.bonitasoft.studio.designer.war</module>
         <module>org.bonitasoft.studio.designer.win32</module>
         <module>org.bonitasoft.studio.diagram.custom</module>
@@ -57,7 +59,6 @@
         <module>org.bonitasoft.studio.importer.bos</module>
         <module>org.bonitasoft.studio.intro</module>
         <module>org.bonitasoft.studio.la</module>
-        <module>org.bonitasoft.studio.local.repository</module>
         <module>org.bonitasoft.studio.migration</module>
         <module>org.bonitasoft.studio.model.edit.custom</module>
         <module>org.bonitasoft.studio.refactoring</module>
@@ -134,5 +135,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>local-repository</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>org.bonitasoft.studio.local.repository</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>

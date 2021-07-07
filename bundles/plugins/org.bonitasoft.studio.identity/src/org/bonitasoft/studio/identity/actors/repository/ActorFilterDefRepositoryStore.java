@@ -23,6 +23,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.model.validator.ModelNamespaceValidator;
 import org.bonitasoft.studio.common.model.validator.XMLModelCompatibilityValidator;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.common.repository.provider.DefinitionResourceProvider;
@@ -131,12 +132,13 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
             throws CoreException, MigrationException {
-        super.migrate(postMigrationOperationCollector, monitor);
+        var report = super.migrate(postMigrationOperationCollector, monitor);
         if (PlatformUI.isWorkbenchRunning()) {
             getResourceProvider().loadDefinitionsCategories(null);
         }
+        return report;
     }
 
     @Override

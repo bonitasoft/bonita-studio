@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.core.migration.report.MigrationReport;
 import org.bonitasoft.studio.common.repository.model.PostMigrationOperationCollector;
 import org.bonitasoft.studio.designer.core.UIDesignerServerManager;
 import org.bonitasoft.studio.designer.core.operation.IndexingUIDOperation;
@@ -153,7 +154,8 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
     }
 
     @Override
-    public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
+    public MigrationReport migrate(PostMigrationOperationCollector postMigrationOperationCollector,
+            IProgressMonitor monitor)
             throws CoreException, MigrationException {
         if (UIDesignerServerManager.getInstance().isStarted()) {
             try {
@@ -169,6 +171,7 @@ public class WebPageRepositoryStore extends WebArtifactRepositoryStore<WebPageFi
                 WorkspaceServerResource.enable();
             }
         }
+        return MigrationReport.emptyReport();
     }
 
 }
