@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -103,7 +104,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setEnabled(false);
         toolItem.setToolTipText(Messages.newFormTooltipForPool);
-        toolItem.setImage(Pics.getImage("new_form.png", UIDesignerPlugin.getDefault()));
+        toolItem.setImage(Pics.getImage(PicsConstants.uid24));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -123,7 +124,8 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
              */
             protected boolean shoudCreateNewForm() {
                 if (!isInternalForm()) {
-                    return MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.switchTypeOfFormQuestionTitle,
+                    return MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
+                            Messages.switchTypeOfFormQuestionTitle,
                             Messages.bind(Messages.switchTypeOfFormQuestion, getFormMappingTypeName()));
                 }
                 return true;
@@ -135,11 +137,13 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         final PageFlow pageflow = unwrap(selectionProvider.getSelection());
         if (shouldCreateNewContract(pageflow)) {
             final String newPageId = createNewFormListener.handleEvent(pageflow.getFormMapping(), null, null);
-            final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
+            final WebPageRepositoryStore repositoryStore = repositoryAccessor
+                    .getRepositoryStore(WebPageRepositoryStore.class);
             repositoryStore.refresh();
             final WebPageFileStore webPageFileStore = repositoryStore.getChild(newPageId, true);
             if (webPageFileStore != null) {
-                getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow), pageflow.getFormMapping(),
+                getEditingDomain(pageflow).getCommandStack().execute(new UpdateFormMappingCommand(getEditingDomain(pageflow),
+                        pageflow.getFormMapping(),
                         ExpressionHelper.createFormReferenceExpression(webPageFileStore.getCustomPageName(), newPageId)));
             }
         }
@@ -161,7 +165,8 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         if (!getEclipsePreferences().getBoolean(HIDE_EMPTY_CONTRACT_INFO_DIALOG, false)) {
             final MessageDialogWithPrompt messageDialog = MessageDialogWithPrompt.open(MessageDialog.QUESTION,
                     Display.getDefault().getActiveShell(), Messages.hideEmptyContractDialogTitle,
-                    Messages.hideEmptyContractDialogMessage, Messages.hideEmptyContractDialogToggleMessage, false, getPreferenceStore(),
+                    Messages.hideEmptyContractDialogMessage, Messages.hideEmptyContractDialogToggleMessage, false,
+                    getPreferenceStore(),
                     HIDE_EMPTY_CONTRACT_INFO_DIALOG, SWT.NONE);
             setEmptyContractDialogAnswerPreference(messageDialog.getReturnCode());
             return messageDialog.getReturnCode() == IDialogConstants.YES_ID;
@@ -200,12 +205,14 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         final PageFlow pageFlow = unwrap(selectionProvider.getSelection());
         final FormMapping mapping = pageFlow.getFormMapping();;
         final Expression targetForm = mapping.getTargetForm();
-        final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class).getChild(targetForm.getContent(), true);
+        final WebPageFileStore pageStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class)
+                .getChild(targetForm.getContent(), true);
         if (pageStore != null) {
             pageStore.open();
         } else {
             MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.formDoesntExistAnymoreTitle,
-                    Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()), targetForm.getName()));
+                    Messages.bind(Messages.bind(Messages.formDoesntExistAnymoreMessage, targetForm.getName()),
+                            targetForm.getName()));
         }
     }
 

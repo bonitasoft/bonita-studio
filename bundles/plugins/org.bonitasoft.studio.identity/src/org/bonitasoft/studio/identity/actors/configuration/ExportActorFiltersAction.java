@@ -39,21 +39,21 @@ import org.eclipse.jface.action.Action;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExportActorFiltersAction extends Action implements IConfigurationExportAction {
 
     private Configuration configuration;
     private String path;
-    public ExportActorFiltersAction(){
-        super() ;
-        setText(Messages.actorFilter) ;
-        setImageDescriptor(Pics.getImageDescriptor(PicsConstants.actorfilter)) ;
+
+    public ExportActorFiltersAction() {
+        super();
+        setText(Messages.actorFilter);
+        setImageDescriptor(Pics.getImageDescriptor(PicsConstants.filterDef));
     }
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration ;
+        this.configuration = configuration;
     }
 
     @Override
@@ -62,44 +62,47 @@ public class ExportActorFiltersAction extends Action implements IConfigurationEx
 
     @Override
     public void run() {
-        if(path != null){
-            final File destDir = new File(path,"actor_filters");
-            if(!destDir.exists()){
-                destDir.mkdirs() ;
+        if (path != null) {
+            final File destDir = new File(path, "actor_filters");
+            if (!destDir.exists()) {
+                destDir.mkdirs();
             }
 
-            ActorFilterImplRepositoryStore implStore = (ActorFilterImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
-            for(DefinitionMapping mapping: configuration.getDefinitionMappings()){
-                if(mapping.getType().equals(FragmentTypes.ACTOR_FILTER) && mapping.getImplementationId() != null){
-                    ExportActorFilterArchiveOperation op =  new ExportActorFilterArchiveOperation() ;
-                    op.setAddDependencies(true) ;
+            ActorFilterImplRepositoryStore implStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(ActorFilterImplRepositoryStore.class);
+            for (DefinitionMapping mapping : configuration.getDefinitionMappings()) {
+                if (mapping.getType().equals(FragmentTypes.ACTOR_FILTER) && mapping.getImplementationId() != null) {
+                    ExportActorFilterArchiveOperation op = new ExportActorFilterArchiveOperation();
+                    op.setAddDependencies(true);
 
-                    FragmentContainer container = getConnectorFragmentContainer(configuration) ;
-                    Set<String> ignoredLibs = new HashSet<String>() ;
-                    for(FragmentContainer fc : container.getChildren()){
-                        if(fc.getId().equals(mapping.getImplementationId() +"-"+ mapping.getImplementationVersion())){
-                            for(Fragment f: fc.getFragments()){
-                                if(!f.isExported()){
-                                    ignoredLibs.add(f.getValue()) ;
+                    FragmentContainer container = getConnectorFragmentContainer(configuration);
+                    Set<String> ignoredLibs = new HashSet<>();
+                    for (FragmentContainer fc : container.getChildren()) {
+                        if (fc.getId().equals(mapping.getImplementationId() + "-" + mapping.getImplementationVersion())) {
+                            for (Fragment f : fc.getFragments()) {
+                                if (!f.isExported()) {
+                                    ignoredLibs.add(f.getValue());
                                 }
                             }
                         }
                     }
-                    op.addIgnoredDependencies(ignoredLibs) ;
-                    op.setImplementation(implStore.getImplementation(mapping.getImplementationId(), mapping.getImplementationVersion())) ;
-                    String fileName = destDir.getAbsolutePath()+File.separator+mapping.getImplementationId() +"--"+ mapping.getImplementationVersion()+".zip" ;
+                    op.addIgnoredDependencies(ignoredLibs);
+                    op.setImplementation(
+                            implStore.getImplementation(mapping.getImplementationId(), mapping.getImplementationVersion()));
+                    String fileName = destDir.getAbsolutePath() + File.separator + mapping.getImplementationId() + "--"
+                            + mapping.getImplementationVersion() + ".zip";
                     File targetFile = new File(fileName);
-                    if(targetFile.exists()){
-                        if(FileActionDialog.overwriteQuestion(fileName)){
-                            targetFile.delete() ;
-                        }else{
-                            continue ;
+                    if (targetFile.exists()) {
+                        if (FileActionDialog.overwriteQuestion(fileName)) {
+                            targetFile.delete();
+                        } else {
+                            continue;
                         }
                     }
 
-                    op.setTargetPath(fileName) ;
-                    op.setIncludeSources(false) ;
-                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR) ;
+                    op.setTargetPath(fileName);
+                    op.setIncludeSources(false);
+                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             }
 
@@ -108,9 +111,9 @@ public class ExportActorFiltersAction extends Action implements IConfigurationEx
     }
 
     private FragmentContainer getConnectorFragmentContainer(Configuration configuration) {
-        for(FragmentContainer container: configuration.getProcessDependencies()){
-            if(container.getId().equals(FragmentTypes.ACTOR_FILTER)){
-                return container ;
+        for (FragmentContainer container : configuration.getProcessDependencies()) {
+            if (container.getId().equals(FragmentTypes.ACTOR_FILTER)) {
+                return container;
             }
         }
         return null;
@@ -118,7 +121,7 @@ public class ExportActorFiltersAction extends Action implements IConfigurationEx
 
     @Override
     public void setTargetPath(String path) {
-        this.path = path ;
+        this.path = path;
     }
 
 }
