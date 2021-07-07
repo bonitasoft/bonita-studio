@@ -60,7 +60,7 @@ public class InstallBDMDependenciesEventHandlerTest {
         doReturn(file).when(handler).tmpFile(any(String.class), any(byte[].class));
         doReturn(installCommand).when(handler).newInstallCommand();
         doNothing().when(handler).updateMavenProjects();
-        doNothing().when(handler).updateProjectMavenConfiguration();
+        doNothing().when(handler).buildProject();
     }
 
     @Test

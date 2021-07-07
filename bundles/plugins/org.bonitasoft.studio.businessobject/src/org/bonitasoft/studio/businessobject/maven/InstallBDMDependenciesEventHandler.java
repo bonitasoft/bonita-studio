@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -47,7 +48,7 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
     private static final String BDM_ARTIFACT_DESCRIPTOR = "artifactDescriptor";
     private static final String UPDATE_PROJECTS_COMMAND = "org.bonitasoft.studio.rest.api.extension.updatemavenprojects.command";
     private static boolean enableProjectUpdateJob = true;
-    
+
     @Override
     public void handleEvent(final Event event) {
         execute(event);
@@ -83,13 +84,13 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
                 tmpFile.delete();
             }
         }
-        
-        if(shouldRunProjectUpateJob()) {
-        updateProjectMavenConfiguration();
-        updateMavenProjects();
+
+        if (shouldRunProjectUpateJob()) {
+            buildProject();
+            updateMavenProjects();
         }
     }
-    
+
     private boolean shouldRunProjectUpateJob() {
         return enableProjectUpdateJob;
     }
@@ -102,12 +103,13 @@ public class InstallBDMDependenciesEventHandler implements EventHandler {
         enableProjectUpdateJob = false;
     }
 
-    protected void updateProjectMavenConfiguration() {
-        new WorkspaceJob("Update project") {
-            
+    protected void buildProject() {
+        new WorkspaceJob("Rebuild project") {
+
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(RepositoryManager.getInstance().getCurrentRepository().getProject(), monitor);    
+                RepositoryManager.getInstance().getCurrentRepository().getProject()
+                        .build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 return Status.OK_STATUS;
             }
         }.schedule();
