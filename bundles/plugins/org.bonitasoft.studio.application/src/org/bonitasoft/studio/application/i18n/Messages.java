@@ -120,7 +120,6 @@ public class Messages extends NLS {
     public static String appDescriptorUnknownTheme;
     public static String deploySuccessMsg;
     public static String validateProcess;
-    public static String portalAppName;
     public static String youCanOpenApp;
     public static String artifactCounter;
     public static String pagesAndLayouts;

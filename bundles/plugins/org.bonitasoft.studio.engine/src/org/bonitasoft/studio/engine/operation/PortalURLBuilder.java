@@ -20,23 +20,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class PortalURLBuilder extends AbstractBonitaURLBuilder {
 
-    private long profileId = -1;
-
     @Override
     protected String getRedirectURL(final String locale, final IProgressMonitor monitor)
             throws UnsupportedEncodingException {
-        return profileId != -1 ? "portal/homepage?_pf=" + profileId + "&" + getLocaleParameter(locale) : "portal/homepage?" + getLocaleParameter(locale) ;
+        return "apps/appDirectoryBonita/home/?" + getLocaleParameter(locale);
     }
 
     @Override
     protected String getLocaleParameter(final String locale) {
         return "_l=" + locale;
     }
-    
-    public PortalURLBuilder withProfile(long profileId) {
-        this.profileId  = profileId;
-        return this;
-    }
-    
 
 }
