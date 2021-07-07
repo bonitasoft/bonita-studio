@@ -303,7 +303,7 @@ public class Messages extends NLS {
     public static String addMembershipTooltip;
     public static String deleteMembershipTooltip;
     public static String membershipEmpty;
-    public static String informations;
+    public static String information;
     public static String manageCustomInfo;
     public static String contact;
     public static String location;
