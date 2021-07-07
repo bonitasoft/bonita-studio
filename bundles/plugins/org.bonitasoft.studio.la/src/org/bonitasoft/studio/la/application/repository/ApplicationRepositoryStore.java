@@ -129,19 +129,33 @@ public class ApplicationRepositoryStore extends AbstractRepositoryStore<Applicat
             }
         };
     }
+    
+    @Override
+    protected ApplicationFileStore doImportInputStream(String fileName, InputStream inputStream) {
+        ApplicationFileStore fileStore = super.doImportInputStream(fileName, inputStream);
+        if(fileStore != null) {
+            doMigrateFileStore(fileStore);
+        }
+        return fileStore;
+    }
+
+
+    private void doMigrateFileStore(ApplicationFileStore fileStore) {
+        try {
+            ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
+            applicationNodeContainer.getApplications().forEach(this::updateBonitaTheme);
+            fileStore.save(applicationNodeContainer);
+        } catch (ReadFileStoreException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 
     @Override
     public void migrate(PostMigrationOperationCollector postMigrationOperationCollector, IProgressMonitor monitor)
             throws CoreException, MigrationException {
         super.migrate(postMigrationOperationCollector, monitor);
         for (ApplicationFileStore fileStore : getChildren()) {
-            try {
-                ApplicationNodeContainer applicationNodeContainer = fileStore.getContent();
-                applicationNodeContainer.getApplications().forEach(this::updateBonitaTheme);
-                fileStore.save(applicationNodeContainer);
-            } catch (ReadFileStoreException e) {
-                BonitaStudioLog.error(e);
-            }
+            doMigrateFileStore(fileStore);
         }
     }
 
