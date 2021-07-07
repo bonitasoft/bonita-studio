@@ -255,10 +255,6 @@ public class PicsConstants {
 
     public static String error_decorator = "error_decorator.gif";
 
-    public static String connector = "configuration/connector.png";
-
-    public static String actorfilter = "configuration/actorfilter.png";
-
     public static String validator = "configuration/validator.png";
 
     public static String datatypes = "configuration/datatypes.png";

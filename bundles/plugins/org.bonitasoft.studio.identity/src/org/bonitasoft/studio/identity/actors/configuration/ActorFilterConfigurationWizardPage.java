@@ -36,6 +36,7 @@ import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactor
 import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -69,19 +70,20 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
 
     @Override
     protected DefinitionResourceProvider getResourceProvider() {
-        return DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) getDefinitionStore(),
+        return DefinitionResourceProvider.getInstance(
+                (IRepositoryStore<? extends IRepositoryFileStore>) getDefinitionStore(),
                 IdentityPlugin.getDefault().getBundle());
     }
 
     @Override
     protected IImplementationRepositoryStore getImplStore() {
-        return (IImplementationRepositoryStore) RepositoryManager.getInstance()
+        return RepositoryManager.getInstance()
                 .getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 
     @Override
     protected IDefinitionRepositoryStore getDefinitionStore() {
-        return (IDefinitionRepositoryStore) RepositoryManager.getInstance()
+        return RepositoryManager.getInstance()
                 .getRepositoryStore(ActorFilterDefRepositoryStore.class);
     }
 
@@ -205,7 +207,7 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
      */
     @Override
     public Image getConfigurationImage() {
-        return Pics.getImage("actor_filter.png", IdentityPlugin.getDefault());
+        return Pics.getImage(PicsConstants.filterDef);
     }
 
 }

@@ -9,7 +9,6 @@
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.businessobject.menu">
            <command
                  commandId="org.bonitasoft.studio.pagedesigner.open.command"
-                 icon="icons/ui_designer_16x16.png"
                  style="push">
            </command>
       </menuContribution>

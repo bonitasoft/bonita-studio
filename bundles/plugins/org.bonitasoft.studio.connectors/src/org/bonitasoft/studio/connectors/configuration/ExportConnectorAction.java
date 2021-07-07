@@ -39,21 +39,21 @@ import org.eclipse.jface.action.Action;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ExportConnectorAction extends Action implements IConfigurationExportAction {
 
     private Configuration configuration;
     private String path;
-    public ExportConnectorAction(){
-        super() ;
-        setText(Messages.connectors) ;
-        setImageDescriptor(Pics.getImageDescriptor(PicsConstants.connector)) ;
+
+    public ExportConnectorAction() {
+        super();
+        setText(Messages.connectors);
+        setImageDescriptor(Pics.getImageDescriptor(PicsConstants.connectorDef));
     }
 
     @Override
     public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration ;
+        this.configuration = configuration;
     }
 
     @Override
@@ -62,45 +62,48 @@ public class ExportConnectorAction extends Action implements IConfigurationExpor
 
     @Override
     public void run() {
-        if(path != null){
+        if (path != null) {
 
-            final File destDir = new File(path,"connectors");
-            if(!destDir.exists()){
-                destDir.mkdirs() ;
+            final File destDir = new File(path, "connectors");
+            if (!destDir.exists()) {
+                destDir.mkdirs();
             }
 
-            ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-            for(DefinitionMapping mapping: configuration.getDefinitionMappings()){
-                if(mapping.getType().equals(FragmentTypes.CONNECTOR) && mapping.getImplementationId() != null){
-                    ExportConnectorArchiveOperation op =  new ExportConnectorArchiveOperation() ;
-                    op.setAddDependencies(true) ;
+            ConnectorImplRepositoryStore implStore = RepositoryManager.getInstance()
+                    .getRepositoryStore(ConnectorImplRepositoryStore.class);
+            for (DefinitionMapping mapping : configuration.getDefinitionMappings()) {
+                if (mapping.getType().equals(FragmentTypes.CONNECTOR) && mapping.getImplementationId() != null) {
+                    ExportConnectorArchiveOperation op = new ExportConnectorArchiveOperation();
+                    op.setAddDependencies(true);
 
-                    FragmentContainer container = getConnectorFragmentContainer(configuration) ;
-                    Set<String> ignoredLibs = new HashSet<String>() ;
-                    for(FragmentContainer fc : container.getChildren()){
-                        if(fc.getId().equals(mapping.getImplementationId() +"-"+ mapping.getImplementationVersion())){
-                            for(Fragment f: fc.getFragments()){
-                                if(!f.isExported()){
-                                    ignoredLibs.add(f.getValue()) ;
+                    FragmentContainer container = getConnectorFragmentContainer(configuration);
+                    Set<String> ignoredLibs = new HashSet<>();
+                    for (FragmentContainer fc : container.getChildren()) {
+                        if (fc.getId().equals(mapping.getImplementationId() + "-" + mapping.getImplementationVersion())) {
+                            for (Fragment f : fc.getFragments()) {
+                                if (!f.isExported()) {
+                                    ignoredLibs.add(f.getValue());
                                 }
                             }
                         }
                     }
-                    op.addIgnoredDependencies(ignoredLibs) ;
-                    op.setImplementation(implStore.getImplementation(mapping.getImplementationId(), mapping.getImplementationVersion())) ;
-                    String fileName = destDir.getAbsolutePath()+File.separator+mapping.getImplementationId() +"--"+ mapping.getImplementationVersion()+".zip" ;
+                    op.addIgnoredDependencies(ignoredLibs);
+                    op.setImplementation(
+                            implStore.getImplementation(mapping.getImplementationId(), mapping.getImplementationVersion()));
+                    String fileName = destDir.getAbsolutePath() + File.separator + mapping.getImplementationId() + "--"
+                            + mapping.getImplementationVersion() + ".zip";
                     File targetFile = new File(fileName);
-                    if(targetFile.exists()){
-                        if(FileActionDialog.overwriteQuestion(fileName)){
-                            targetFile.delete() ;
-                        }else{
-                            continue ;
+                    if (targetFile.exists()) {
+                        if (FileActionDialog.overwriteQuestion(fileName)) {
+                            targetFile.delete();
+                        } else {
+                            continue;
                         }
                     }
 
-                    op.setTargetPath(fileName) ;
-                    op.setIncludeSources(false) ;
-                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR) ;
+                    op.setTargetPath(fileName);
+                    op.setIncludeSources(false);
+                    op.run(AbstractRepository.NULL_PROGRESS_MONITOR);
                 }
             }
 
@@ -109,9 +112,9 @@ public class ExportConnectorAction extends Action implements IConfigurationExpor
     }
 
     private FragmentContainer getConnectorFragmentContainer(Configuration configuration) {
-        for(FragmentContainer container: configuration.getProcessDependencies()){
-            if(container.getId().equals(FragmentTypes.CONNECTOR)){
-                return container ;
+        for (FragmentContainer container : configuration.getProcessDependencies()) {
+            if (container.getId().equals(FragmentTypes.CONNECTOR)) {
+                return container;
             }
         }
         return null;
@@ -119,7 +122,7 @@ public class ExportConnectorAction extends Action implements IConfigurationExpor
 
     @Override
     public void setTargetPath(String path) {
-        this.path = path ;
+        this.path = path;
     }
 
 }
