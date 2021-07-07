@@ -65,7 +65,7 @@ public class PortalURLBuilderTest {
                 .toURL(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validApplicationPath = URLEncoder.encode(
-                "portal/homepage", "UTF-8");
+                "apps/appDirectoryBonita/home", "UTF-8");
         final String validLocale = URLEncoder.encode("_l=fr", "UTF-8");
         assertThat(url.toString()).contains(validApplicationPath)
                 .contains(validLocale).startsWith(loginURL);
