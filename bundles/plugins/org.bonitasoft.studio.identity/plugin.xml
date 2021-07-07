@@ -490,7 +490,7 @@
    <extension
          point="org.bonitasoft.studio.common.dashboardContribution">
       <dashboardContribution
-            class="org.bonitasoft.studio.identity.organization.dashboard.OrganizationDashboardContribution">
+            class="org.bonitasoft.studio.identity.organization.overview.OrganizationOverviewContribution">
       </dashboardContribution>
    </extension>
 

@@ -158,10 +158,10 @@ public class Messages extends NLS {
     public static String incompatibleExtensionTitle;
     public static String dependencyUpdatable;
     public static String newVersionAvailable;
-    public static String projectDashboard;
+    public static String projectOverview;
     public static String openMarketplace;
     public static String openMarketplaceTooltip;
-    public static String projectDashboardTitle;
+    public static String projectOverviewTitle;
     public static String removeExtensionTooltip;
     public static String details;
     public static String removeExtensionConfirmationTitle;
@@ -347,8 +347,8 @@ public class Messages extends NLS {
     public static String mavenPropertiesMissing;
     public static String extensionView;
     public static String extensionViewTooltip;
-    public static String dashboardView;
-    public static String dashboardViewTooltip;
+    public static String overviewView;
+    public static String overviewViewTooltip;
     public static String repositoryIdMandatory;
     public static String repositoryNameMandatory;
     public static String repositoryUrlMandatory;

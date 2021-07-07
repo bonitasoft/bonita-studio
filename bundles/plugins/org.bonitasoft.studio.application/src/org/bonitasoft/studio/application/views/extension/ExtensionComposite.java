@@ -29,11 +29,11 @@ import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactTyp
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependencyConverter;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaMarketplace;
-import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
 import org.bonitasoft.studio.application.views.extension.card.ExtensionCard;
 import org.bonitasoft.studio.application.views.extension.card.ExtensionCardFactory;
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.CommandExecutor;
@@ -164,7 +164,7 @@ public class ExtensionComposite extends Composite {
                     }
                     new OtherExtensionsComposite(parent,
                             otherDependencies,
-                            JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID),
+                            JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID),
                             removeExtensionListener,
                             upadateExtensionListener,
                             ctx);
@@ -189,7 +189,7 @@ public class ExtensionComposite extends Composite {
         Label label = new Label(composite, SWT.WRAP | SWT.CENTER);
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).create());
         label.setText(Messages.enhanceProject);
-        label.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_10_FONT_ID));
+        label.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_10_FONT_ID));
         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
@@ -254,22 +254,22 @@ public class ExtensionComposite extends Composite {
                 .withImage(Pics.getImage(PicsConstants.import64))
                 .withHotImage(Pics.getImage(PicsConstants.import64Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID))
+                .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
                 .addDropdownItem(Messages.addConnector, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
                 .addDropdownItem(Messages.addActorFilter, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
                                         ArtifactType.ACTOR_FILTER.name())))
                 .addDropdownItem(Messages.addTheme, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
                 .addDropdownItem(Messages.addRestApiExtension, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
                 .addDropdownItem(Messages.addOther, null,
-                        e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.IMPORT_EXTENSION_COMMAND,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
                                 Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
                 .createIn(parent);
     }
@@ -283,8 +283,8 @@ public class ExtensionComposite extends Composite {
                 .withImage(Pics.getImage(PicsConstants.openMarketplace64))
                 .withHotImage(Pics.getImage(PicsConstants.openMarketplace64Hot))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(JFaceResources.getFont(ProjectDashboardEditorPart.NORMAL_4_FONT_ID))
-                .onClick(e -> commandExecutor.executeCommand(ProjectDashboardEditorPart.OPEN_MARKETPLACE_COMMAND, null))
+                .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
+                .onClick(e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.OPEN_MARKETPLACE_COMMAND, null))
                 .createIn(parent);
     }
 

@@ -17,7 +17,7 @@ package org.bonitasoft.studio.application.views.extension.card.zoom;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
-import org.bonitasoft.studio.application.views.dashboard.ProjectDashboardEditorPart;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -95,7 +95,7 @@ public abstract class AbstractZoomControl extends Composite {
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(bonitaDep.getName());
 
-        titleLabel.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.BOLD_8_FONT_ID));
+        titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         titleLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
@@ -143,7 +143,7 @@ public abstract class AbstractZoomControl extends Composite {
         gav = new CLabel(titleComposite, SWT.WRAP);
         gav.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, -5).span(2, 1).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
-        gav.setFont(JFaceResources.getFont(ProjectDashboardEditorPart.ITALIC_0_FONT_ID));
+        gav.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID));
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
         gav.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
     }

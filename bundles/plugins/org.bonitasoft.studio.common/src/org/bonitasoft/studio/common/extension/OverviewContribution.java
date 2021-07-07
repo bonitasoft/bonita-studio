@@ -18,7 +18,7 @@ import org.bonitasoft.studio.common.CommandExecutor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-public interface DashboardContribution extends Comparable<DashboardContribution> {
+public interface OverviewContribution extends Comparable<OverviewContribution> {
 
     public final CommandExecutor commandExecutor = new CommandExecutor();
 
@@ -35,7 +35,7 @@ public interface DashboardContribution extends Comparable<DashboardContribution>
     public void contributeActions(Composite parent);
 
     @Override
-    default int compareTo(DashboardContribution o) {
+    default int compareTo(OverviewContribution o) {
         return getPriority() - o.getPriority();
     }
 

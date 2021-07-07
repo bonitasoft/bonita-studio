@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -23,16 +23,16 @@ import org.eclipse.ui.IPersistableElement;
  * This class use a singleton, so the editor always has the same editor input -> doesn't open a second editor if one is
  * already opened.
  */
-public class ProjectDashboardEditorInput implements IEditorInput {
+public class ProjectOverviewEditorInput implements IEditorInput {
 
-    private static ProjectDashboardEditorInput INSTANCE;
+    private static ProjectOverviewEditorInput INSTANCE;
 
-    private ProjectDashboardEditorInput() {
+    private ProjectOverviewEditorInput() {
     }
 
-    public static ProjectDashboardEditorInput getInstance() {
+    public static ProjectOverviewEditorInput getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ProjectDashboardEditorInput();
+            INSTANCE = new ProjectOverviewEditorInput();
         }
         return INSTANCE;
     }
@@ -54,7 +54,7 @@ public class ProjectDashboardEditorInput implements IEditorInput {
 
     @Override
     public String getName() {
-        return Messages.projectDashboard;
+        return Messages.projectOverview;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProjectDashboardEditorInput implements IEditorInput {
 
     @Override
     public String getToolTipText() {
-        return Messages.projectDashboard;
+        return Messages.projectOverview;
     }
 
 }

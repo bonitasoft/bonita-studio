@@ -416,11 +416,11 @@ public class PicsConstants {
     public static String add_decorator = "decoration/add.png";
     public static String add_subelement_decorator = "decoration/add_subelement.png";
 
-    public static String openDashboard = "projectExtensions/dashboard.png";
-    public static String openDashboard24 = "coolbar/24/dashboard.png";
-    public static String openDashboard32 = "projectExtensions/dashboard32.png";
-    public static String openDashboard32_hot = "projectExtensions/dashboard32_hot.png";
-    public static String openDashboard48 = "coolbar/48/dashboard.png";
+    public static String openOverview = "projectExtensions/dashboard.png";
+    public static String openOverview24 = "coolbar/24/dashboard.png";
+    public static String openOverview32 = "projectExtensions/dashboard32.png";
+    public static String openOverview32_hot = "projectExtensions/dashboard32_hot.png";
+    public static String openOverview48 = "coolbar/48/dashboard.png";
 
     public static String extensions32 = "projectExtensions/extensions32.png";
     public static String extensions32_hot = "projectExtensions/extensions32_hot.png";

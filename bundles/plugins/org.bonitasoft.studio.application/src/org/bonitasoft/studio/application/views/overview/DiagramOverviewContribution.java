@@ -12,13 +12,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.la.application.ui.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
-import org.bonitasoft.studio.common.extension.DashboardContribution;
+import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.la.i18n.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -31,32 +31,30 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 
-public class ApplicationDashboardContribution implements DashboardContribution, Zoomable {
+public class DiagramOverviewContribution implements OverviewContribution, Zoomable {
 
-    public static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
-
+    public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
     private ZoomListener zoomListener;
-
     private Listener computeScrollListener;
 
     @Override
     public String getName() {
-        return Messages.application;
+        return Messages.dashboardDiagramName;
     }
 
     @Override
     public String getDescription() {
-        return Messages.dashboardApplicationDescription;
+        return Messages.dashboardDiagramDescription;
     }
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/applications";
+        return "https://documentation.bonitasoft.com/bonita/latest/diagram-overview";
     }
 
     @Override
     public Image getIcon() {
-        return Pics.getImage(PicsConstants.application32);
+        return Pics.getImage(PicsConstants.diagram32);
     }
 
     @Override
@@ -71,19 +69,19 @@ public class ApplicationDashboardContribution implements DashboardContribution, 
                 .withImage(Pics.getImage(PicsConstants.add_simple))
                 .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                .withId(SWTBotConstants.createArtifactButtonId(Messages.application))
-                .onClick(e -> commandExecutor.executeCommand(NEW_APPLICATION_COMMAND, null))
+                .withId(SWTBotConstants.createArtifactButtonId(Messages.dashboardDiagramName))
+                .onClick(e -> commandExecutor.executeCommand(NEW_DIAGRAM_COMMAND, null))
                 .createIn(toolbarComposite);
     }
 
     @Override
     public int getPriority() {
-        return 3;
+        return 0;
     }
 
     @Override
     public Control createZoomedControl(Composite parent) {
-        return new ApplicationZoomControl(parent, zoomListener, computeScrollListener, this);
+        return new DiagramZoomControl(parent, zoomListener, computeScrollListener, this);
     }
 
     @Override

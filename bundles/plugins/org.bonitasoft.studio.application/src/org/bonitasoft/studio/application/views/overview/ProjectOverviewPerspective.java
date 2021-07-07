@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.views.dashboard;
+package org.bonitasoft.studio.application.views.overview;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 
-public class ProjectDashboardPerspective extends AbstractPerspectiveFactory {
+public class ProjectOverviewPerspective extends AbstractPerspectiveFactory {
 
     public static final String EXTENSION_PERSPECTIVE_ID = "org.bonitasoft.studio.application.extension.perspective";
 
@@ -36,7 +36,7 @@ public class ProjectDashboardPerspective extends AbstractPerspectiveFactory {
 
     @Override
     public boolean isRelevantFor(IEditorPart part) {
-        return part instanceof ProjectDashboardEditorPart;
+        return part instanceof ProjectOverviewEditorPart;
     }
 
     @Override

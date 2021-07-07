@@ -190,7 +190,7 @@
    <extension
          point="org.bonitasoft.studio.common.dashboardContribution">
       <dashboardContribution
-            class="org.bonitasoft.studio.la.application.ui.dashboard.ApplicationDashboardContribution">
+            class="org.bonitasoft.studio.la.application.ui.overview.ApplicationOverviewContribution">
       </dashboardContribution>
    </extension>
 </plugin>

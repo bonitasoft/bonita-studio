@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ProjectDashboardIT {
+public class ProjectOverviewdIT {
 
     private final SWTGefBot bot = new SWTGefBot();
 
