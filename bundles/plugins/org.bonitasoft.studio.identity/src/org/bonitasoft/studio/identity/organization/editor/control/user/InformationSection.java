@@ -74,7 +74,7 @@ public class InformationSection {
         section = formPage.getToolkit().createSection(parent, Section.EXPANDED);
         section.setLayout(GridLayoutFactory.fillDefaults().create());
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-        section.setText(Messages.informations);
+        section.setText(Messages.information);
 
         section.setClient(createInformationsComposite());
     }
