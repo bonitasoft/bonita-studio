@@ -10,7 +10,6 @@ package org.bonitasoft.studio.rest.api.extension.ui.handler;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -35,7 +34,6 @@ public class NewRestAPIExtensionHandlerTest {
     public void should_open_a_wizard_dialog_with_new_rest_api_wizard() throws Exception {
         final RepositoryAccessor repositoryAccessor = mock(RepositoryAccessor.class);
         final NewRestAPIExtensionHandler handler = spy(new NewRestAPIExtensionHandler());
-        doNothing().when(handler).installDependencies();
         final NewRestAPIExtensionWizard wizard = mock(NewRestAPIExtensionWizard.class);
         final WidgetFactory widgetFactory = mock(WidgetFactory.class);
         final IWorkspace workspace = mock(IWorkspace.class);

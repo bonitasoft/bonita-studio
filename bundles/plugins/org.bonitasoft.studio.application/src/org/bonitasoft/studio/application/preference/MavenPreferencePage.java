@@ -57,7 +57,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 
-public class ExtensionsPreferencePage extends PreferencePage implements
+public class MavenPreferencePage extends PreferencePage implements
         IWorkbenchPreferencePage {
 
     private File userSettingsFile;

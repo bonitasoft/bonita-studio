@@ -1050,17 +1050,6 @@
       </excludeSources>
    </extension>
    <extension
-         point="org.eclipse.ui.splashHandlers">
-      <splashHandlerProductBinding
-            productId="org.bonitasoft.studio.product"
-            splashId="org.bonitasoft.studio.application.bos.splashHandler">
-      </splashHandlerProductBinding>
-      <splashHandler
-            class="org.bonitasoft.studio.application.splash.BOSSplashHandler"
-            id="org.bonitasoft.studio.application.bos.splashHandler">
-      </splashHandler>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.common.poststartup">
       <contribution
             class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
@@ -1605,9 +1594,9 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.bonitasoft.studio.preferences.pages.BPM"
-            class="org.bonitasoft.studio.application.preference.ExtensionsPreferencePage"
-            id="org.bonitasoft.studio.preferences.extension"
-            name="Extensions">
+            class="org.bonitasoft.studio.application.preference.MavenPreferencePage"
+            id="org.bonitasoft.studio.preferences.maven"
+            name="Maven">
          <keywordReference
                id="org.bonitasoft.studio.application.extension.keyword">
          </keywordReference>

@@ -209,7 +209,7 @@ public class ImportExtensionPage implements ControlSupplier {
         manualCoordinateLink.addListener(SWT.Selection, e -> {
             BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(new Shell(Display.getDefault()));
             dialog.create();
-            dialog.setSelectedPreferencePage(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID);
+            dialog.setSelectedPreferencePage(BonitaPreferenceDialog.MAVEN_PAGE_ID);
             dialog.open();
         });
         createHintLabel(manualComposite);

@@ -374,7 +374,7 @@ public class BusinessObjectList {
         Composite composite = formPage.getToolkit().createComposite(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().create());
         composite.setLayoutData(
-                GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).create());
+                GridDataFactory.fillDefaults().create());
 
         ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL | SWT.RIGHT | SWT.NO_FOCUS | SWT.FLAT);
         formPage.getToolkit().adapt(toolBar);

@@ -219,7 +219,7 @@ public class BonitaMarketplace {
 
     public void loadDependencies(IProgressMonitor monitor) {
         if (dependencies == null || dependencies.isEmpty()) {
-            ArtifactDependencyLoader loader = new ArtifactDependencyLoader(
+            var loader = new ArtifactDependencyLoader(
                     new MarketplaceIconLoader(localStore, manager, iconBackground));
             if (!localStore.toPath().resolve(MARKETPLACE_DESCRIPTOR_NAME).toFile().exists() && synchronizeMarketplace) {
                 try {

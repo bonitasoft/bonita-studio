@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.views.extension;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,6 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 public class ExtensionComposite extends Composite {
 
@@ -109,12 +111,18 @@ public class ExtensionComposite extends Composite {
         commandExecutor = ContextInjectionFactory.make(CommandExecutor.class, eclipseContext);
         upadateExtensionListener = ContextInjectionFactory.make(UpdateExtensionListener.class, eclipseContext);
         removeExtensionListener = ContextInjectionFactory.make(RemoveExtensionListener.class, eclipseContext);
-
-        allDependencies = BonitaMarketplace.getInstance().getDependencies();
     }
 
     private ScrolledComposite createExtensionSection(Composite parent) {
-        ScrolledComposite sc = new ScrolledComposite(parent, SWT.V_SCROLL);
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false,  BonitaMarketplace.getInstance()::loadDependencies);
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+        
+        allDependencies = BonitaMarketplace.getInstance().getDependencies();
+        
+        var sc = new ScrolledComposite(parent, SWT.V_SCROLL);
         sc.setLayout(GridLayoutFactory.fillDefaults().create());
         sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 

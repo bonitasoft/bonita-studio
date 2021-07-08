@@ -22,26 +22,27 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenInstallFileOperation;
-import org.bonitasoft.studio.common.repository.core.maven.repository.MavenRepositories;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.m2e.core.MavenPlugin;
 import org.eclipse.m2e.core.embedder.IMaven;
 import org.eclipse.swt.widgets.Display;
 
-public class InstallLocalRepositoryContribution {
+public class InstallBonitaMavenArtifactsOperation {
 
     private static final String LOCAL_REPOSITORY_ID = "local";
+    private ArtifactRepository targetRepository;
+    
+    
+    public InstallBonitaMavenArtifactsOperation(ArtifactRepository targetRepository) {
+        this.targetRepository = targetRepository;
+    }
     
     public void execute() {
         try {
-            var localRepositoryContributor = newMavenLocalRepositoryContributor(maven().getLocalRepository());
+            var localRepositoryContributor = newMavenLocalRepositoryContributor(targetRepository);
             if (localRepositoryContributor != null) {
                 localRepositoryContributor.execute();
-            }
-            var internalRepository = newMavenLocalRepositoryContributor(MavenRepositories.internalRepository());
-            if (internalRepository != null) {
-                internalRepository.execute();
             }
         } catch (IOException | CoreException e) {
             if (!PlatformUtil.isHeadless()) {

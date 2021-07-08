@@ -83,7 +83,7 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
     public static final String CONSTRAINTS_PAGE_ID = "org.eclipse.emf.validation.constraintsPrefs";
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
-    public static final String EXTENSIONS_PAGE_ID = "org.bonitasoft.studio.preferences.extension"; //$NON-NLS-1$
+    public static final String MAVEN_PAGE_ID = "org.bonitasoft.studio.preferences.maven"; //$NON-NLS-1$
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
     private static final String COLOR = "color";
     private static final String DARKER = "darker";
@@ -113,7 +113,7 @@ public class BonitaPreferenceDialog extends Dialog {
             CONSTRAINTS_PAGE_ID,
             ADVANCED_PAGE_ID,
             ECLIPSE_PAGE_ID,
-            EXTENSIONS_PAGE_ID };
+            MAVEN_PAGE_ID };
     private SWTResourcesRegistry swtResourcesRegistry;
 
     public BonitaPreferenceDialog(final Shell parentShell) {
@@ -395,20 +395,7 @@ public class BonitaPreferenceDialog extends Dialog {
         gl_menuComposite.marginBottom = 15;
         menuComposite.setLayout(gl_menuComposite);
 
-        createGeneralCategoryLine(menuComposite);
-        createSeparator(menuComposite);
-        createDeploymentCategoryLine(menuComposite);
-        createSeparator(menuComposite);
-        createDevelopmentCategoryLine(menuComposite);
-        createSeparator(menuComposite);
-        createWebCategoryLine(menuComposite);
-        createSeparator(menuComposite);
-        createOtherCategoryLine(menuComposite);
-
-        return menuComposite;
-    }
-
-    protected void createGeneralCategoryLine(final Composite menuComposite) {
+        
         Color color = (Color) swtResourcesRegistry.getResource(COLOR, LIGHTER);
         if (color == null) {
             RGB rgb = menuComposite.getBackground().getRGB();
@@ -416,8 +403,22 @@ public class BonitaPreferenceDialog extends Dialog {
             color = new Color(Display.getDefault(), blend);
             swtResourcesRegistry.registerResource(COLOR, DARKER, color);
         }
+        
+        createGeneralCategoryLine(menuComposite, null);
+        createSeparator(menuComposite);
+        createDeploymentCategoryLine(menuComposite, color);
+        createSeparator(menuComposite);
+        createDevelopmentCategoryLine(menuComposite, null);
+        createSeparator(menuComposite);
+        createWebCategoryLine(menuComposite,color);
+        createSeparator(menuComposite);
+        createOtherCategoryLine(menuComposite, null);
+        
+        return menuComposite;
+    }
 
-        Composite generalRow = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_general, 4);
+    protected void createGeneralCategoryLine(final Composite menuComposite, Color color) {
+        Composite generalRow = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_general, 3);
 
         final ToolItem tltmDatabase = createTool(generalRow, color, Pics.getImage(PicsConstants.preferenceDB),
                 Pics.getImage(PicsConstants.preferenceDBdisabled), DATABASE_PAGE_ID);
@@ -425,8 +426,7 @@ public class BonitaPreferenceDialog extends Dialog {
                 Pics.getImage(PicsConstants.preferenceAppearancedisabled), APPEARANCE_PAGE_ID);
         final ToolItem tltmLanguage = createTool(generalRow, color, Pics.getImage(PicsConstants.preferenceLanguage),
                 Pics.getImage(PicsConstants.preferenceLanguagedisabled), LANGUAGE_PAGE_ID);
-        final ToolItem tltmJava = createTool(generalRow, color, Pics.getImage(PicsConstants.preferenceJava),
-                Pics.getImage(PicsConstants.preferenceJavadisabled), JAVA_PAGE_ID);
+       
 
         final Label lblDatabase = createItemLabel(generalRow, color, Messages.BonitaPreferenceDialog_database);
 
@@ -442,25 +442,20 @@ public class BonitaPreferenceDialog extends Dialog {
 
         itemPerPreferenceNode.put(LANGUAGE_PAGE_ID, tltmLanguage);
         labelPerPreferenceNode.put(LANGUAGE_PAGE_ID, lblLanguage);
-
-        final Label lblJava = createItemLabel(generalRow, color, Messages.BonitaPreferenceDialog_Java);
-
-        itemPerPreferenceNode.put(JAVA_PAGE_ID, tltmJava);
-        labelPerPreferenceNode.put(JAVA_PAGE_ID, lblJava);
     }
 
-    protected void createDeploymentCategoryLine(final Composite menuComposite) {
-        final Composite deploymentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Deployment, 3);
+    protected void createDeploymentCategoryLine(final Composite menuComposite, Color color) {
+        final Composite deploymentRow = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_Deployment, 3);
 
-        final ToolItem tltmUserxpSettings = createTool(deploymentRow, null,
+        final ToolItem tltmUserxpSettings = createTool(deploymentRow, color,
                 Pics.getImage(PicsConstants.preferenceLogin), Pics.getImage(PicsConstants.preferenceLogindisabled),
                 SERVER_SETTINGS_PAGE_ID);
-        final ToolItem tltmDBConnectors = createTool(deploymentRow, null,
+        final ToolItem tltmDBConnectors = createTool(deploymentRow, color,
                 Pics.getImage(PicsConstants.preferenceAdvanced),
                 Pics.getImage(PicsConstants.preferenceAdvanceddisabled), DB_CONNECTORS_PAGE_ID);
 
         if (PreferenceUtil.findNodeMatching(REMOTE_ENGINE_PAGE_ID) != null) {
-            final ToolItem tltmRemoteEngine = createTool(deploymentRow, null,
+            final ToolItem tltmRemoteEngine = createTool(deploymentRow, color,
                     Pics.getImage(PicsConstants.preferenceRemote),
                     Pics.getImage(PicsConstants.preferenceRemotedisabled), REMOTE_ENGINE_PAGE_ID);
             itemPerPreferenceNode.put(REMOTE_ENGINE_PAGE_ID, tltmRemoteEngine);
@@ -472,19 +467,19 @@ public class BonitaPreferenceDialog extends Dialog {
             emptyToolbar.setVisible(false);
         }
 
-        final Label lblUserxpSettings = createItemLabel(deploymentRow, null,
+        final Label lblUserxpSettings = createItemLabel(deploymentRow, color,
                 Messages.BonitaPreferenceDialog_UserXP_Settings);
 
         itemPerPreferenceNode.put(SERVER_SETTINGS_PAGE_ID, tltmUserxpSettings);
         labelPerPreferenceNode.put(SERVER_SETTINGS_PAGE_ID, lblUserxpSettings);
 
-        final Label lblDbConnectors = createItemLabel(deploymentRow, null,
+        final Label lblDbConnectors = createItemLabel(deploymentRow, color,
                 Messages.BonitaPreferenceDialog_DBConnectors);
         itemPerPreferenceNode.put(DB_CONNECTORS_PAGE_ID, tltmDBConnectors);
         labelPerPreferenceNode.put(DB_CONNECTORS_PAGE_ID, lblDbConnectors);
 
         if (PreferenceUtil.findNodeMatching(REMOTE_ENGINE_PAGE_ID) != null) {
-            final Label lblRemoteEngine = createItemLabel(deploymentRow, null,
+            final Label lblRemoteEngine = createItemLabel(deploymentRow, color,
                     Messages.BonitaPreferenceDialog_Remote_Engine);
             labelPerPreferenceNode.put(REMOTE_ENGINE_PAGE_ID, lblRemoteEngine);
         } else {
@@ -492,30 +487,30 @@ public class BonitaPreferenceDialog extends Dialog {
         }
     }
 
-    private void createDevelopmentCategoryLine(Composite menuComposite) {
-        Composite developmentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Development, 1);
+    private void createDevelopmentCategoryLine(Composite menuComposite, Color color) {
+        Composite developmentRow = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_Development, 2);
 
-        ToolItem tltmExtension = createTool(developmentRow, null,
-                Pics.getImage(PicsConstants.preferenceExtension), Pics.getImage(PicsConstants.preferenceExtension),
-                EXTENSIONS_PAGE_ID);
-        itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
-        tltmExtension.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, EXTENSIONS_PAGE_ID);
+        ToolItem tltmExtension = createTool(developmentRow, color,
+                Pics.getImage(PicsConstants.maven), Pics.getImage(PicsConstants.maven),
+                MAVEN_PAGE_ID);
+        itemPerPreferenceNode.put(MAVEN_PAGE_ID, tltmExtension);
+        tltmExtension.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, MAVEN_PAGE_ID);
+        
+        final ToolItem tltmJava = createTool(developmentRow, color, Pics.getImage(PicsConstants.preferenceJava),
+                Pics.getImage(PicsConstants.preferenceJavadisabled), JAVA_PAGE_ID);
 
-        Label lblExtension = createItemLabel(developmentRow, null, Messages.extensions);
+        Label lblExtension = createItemLabel(developmentRow, color, Messages.maven);
 
-        itemPerPreferenceNode.put(EXTENSIONS_PAGE_ID, tltmExtension);
-        labelPerPreferenceNode.put(EXTENSIONS_PAGE_ID, lblExtension);
+        itemPerPreferenceNode.put(MAVEN_PAGE_ID, tltmExtension);
+        labelPerPreferenceNode.put(MAVEN_PAGE_ID, lblExtension);
+        
+        final Label lblJava = createItemLabel(developmentRow, color, Messages.BonitaPreferenceDialog_Java);
+
+        itemPerPreferenceNode.put(JAVA_PAGE_ID, tltmJava);
+        labelPerPreferenceNode.put(JAVA_PAGE_ID, lblJava);
     }
 
-    protected void createWebCategoryLine(final Composite menuComposite) {
-        Color color = (Color) swtResourcesRegistry.getResource(COLOR, LIGHTER);
-        if (color == null) {
-            RGB rgb = menuComposite.getBackground().getRGB();
-            RGB blend = ColorUtil.blend(rgb, Display.getDefault().getSystemColor(SWT.COLOR_WHITE).getRGB(), 70);
-            color = new Color(Display.getDefault(), blend);
-            swtResourcesRegistry.registerResource(COLOR, DARKER, color);
-        }
-
+    protected void createWebCategoryLine(final Composite menuComposite, Color color) {
         final Composite webRowComposite = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_Web, 2);
 
         final ToolItem tltmBrowser = createTool(webRowComposite, color, Pics.getImage(PicsConstants.preferenceWeb),
@@ -534,17 +529,17 @@ public class BonitaPreferenceDialog extends Dialog {
         labelPerPreferenceNode.put(PROXY_PAGE_ID, lblProxy);
     }
 
-    protected void createOtherCategoryLine(final Composite menuComposite) {
-        final Composite otherRowComposite = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Other, 3);
+    protected void createOtherCategoryLine(final Composite menuComposite, Color color) {
+        final Composite otherRowComposite = createRow(menuComposite, color, Messages.BonitaPreferenceDialog_Other, 3);
 
-        final ToolItem tltmValidation = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.validation),
+        final ToolItem tltmValidation = createTool(otherRowComposite, color, Pics.getImage(PicsConstants.validation),
                 Pics.getImage(PicsConstants.validationDisabled), CONSTRAINTS_PAGE_ID);
 
-        final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, null,
+        final ToolItem tltmAdvancedSettings = createTool(otherRowComposite, color,
                 Pics.getImage(PicsConstants.preferenceAdvanced),
                 Pics.getImage(PicsConstants.preferenceAdvanceddisabled), ADVANCED_PAGE_ID);
 
-        final ToolItem eclipseItem = createTool(otherRowComposite, null, Pics.getImage(PicsConstants.preferenceEclipse),
+        final ToolItem eclipseItem = createTool(otherRowComposite, color, Pics.getImage(PicsConstants.preferenceEclipse),
                 Pics.getImage(PicsConstants.preferenceEclipseDisabled), null);
         eclipseItem.addSelectionListener(new SelectionAdapter() {
 
@@ -568,9 +563,9 @@ public class BonitaPreferenceDialog extends Dialog {
             }
         });
 
-        final Label lblValidation = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Validation);
-        final Label lblAdvanced = createItemLabel(otherRowComposite, null, Messages.BonitaPreferenceDialog_Advanced);
-        final Label eclipseLabel = createItemLabel(otherRowComposite, null, Messages.EclipsePreferences);
+        final Label lblValidation = createItemLabel(otherRowComposite, color, Messages.BonitaPreferenceDialog_Validation);
+        final Label lblAdvanced = createItemLabel(otherRowComposite, color, Messages.BonitaPreferenceDialog_Advanced);
+        final Label eclipseLabel = createItemLabel(otherRowComposite, color, Messages.EclipsePreferences);
 
         putInItemPerPreferenceNode(CONSTRAINTS_PAGE_ID, tltmValidation);
         putInLabelPerPreferenceNode(CONSTRAINTS_PAGE_ID, lblValidation);

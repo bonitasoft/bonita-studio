@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -72,7 +73,7 @@ public class MavenLocalRepositoryContributorTest {
         final File file = new File("artifactFile");
         when(artifactToInstall.getFile()).thenReturn(file);
         when(artifactFile.exists()).thenReturn(true);
-        when(catalog.parseDependencies()).thenReturn(Arrays.asList(artifactToInstall));
+        when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(null);
 
         contributor.execute();
@@ -87,7 +88,7 @@ public class MavenLocalRepositoryContributorTest {
         final File file = mock(File.class);
         when(file.exists()).thenReturn(true);
         when(artifactToInstall.getFile()).thenReturn(file);
-        when(catalog.parseDependencies()).thenReturn(Arrays.asList(artifactToInstall));
+        when(catalog.parseDependencies()).thenReturn(Set.of(artifactToInstall));
         when(localRepository.find(artifactToInstall)).thenReturn(artifactToInstall);
 
         contributor.execute();

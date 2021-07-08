@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.application.views.overview;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -133,6 +134,18 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
     @Override
     public void createPartControl(Composite parent) {
+        try {
+            PlatformUI.getWorkbench().getProgressService().run(true, false, monitor -> {
+                monitor.beginTask("Loading project overview...", IProgressMonitor.UNKNOWN);
+                while (!repositoryAccessor.hasActiveRepository()
+                        && !repositoryAccessor.getCurrentRepository().isLoaded()) {
+                    Thread.sleep(100);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), "Failed to open project overview.", e);
+        }
+
         initVariables(parent);
         parent.setLayout(GridLayoutFactory.fillDefaults().create());
 
@@ -326,7 +339,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
     private void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            if (title.isDisposed()) {
+            if (title == null || title.isDisposed()) {
                 return;
             }
             try {
