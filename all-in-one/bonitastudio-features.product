@@ -7,6 +7,8 @@
    </configIni>
 
    <launcherArgs>
+      <programArgsLin>-clean
+      </programArgsLin>
       <vmArgs>-Xmx1g -Xms512m  -Dosgi.requiredJavaVersion=11 -Dfile.encoding=UTF8
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread
@@ -31,9 +33,9 @@
    </launcher>
 
    <vm>
-      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
-      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
-      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</windows>
    </vm>
 
    <license>
@@ -68,20 +70,20 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </features>
 
    <configurations>
-   	  <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <property name="product.version" value="${project.version}" />
-      <property name="eclipse.log.level" value="INFO" />
-      <property name="engine.version" value="${engine.version}" />
-      <property name="file.encoding" value="UTF-8" />
-      <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
       <property name="branding.version" value="${branding.version}" />
       <property name="osgi.nls.warnings" value="ignore" />
-      <property name="osgi.instance.area" value="@noDefault" />
+      <property name="product.version" value="${project.version}" />
       <property name="portal.version" value="${bundle.version}" />
+      <property name="engine.version" value="${engine.version}" />
+      <property name="osgi.instance.area" value="@noDefault" />
+      <property name="eclipse.buildId" value="${unqualifiedVersion}.${buildQualifier}" />
+      <property name="eclipse.log.level" value="INFO" />
+      <property name="file.encoding" value="UTF-8" />
    </configurations>
 
    <preferencesInfo>

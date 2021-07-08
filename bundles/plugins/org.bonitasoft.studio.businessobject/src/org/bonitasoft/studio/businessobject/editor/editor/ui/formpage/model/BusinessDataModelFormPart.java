@@ -82,14 +82,14 @@ public class BusinessDataModelFormPart extends AbstractFormPart {
 
         Composite leftComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         leftComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(405, SWT.DEFAULT).create());
+        leftComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
         createBusinessObjectList(leftComposite);
         createMavenArtifactPropertiesGroup(leftComposite, ctx);
 
         Composite rightComposite = formPage.getToolkit().createComposite(businessDataModelComposite);
         rightComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        rightComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(600, SWT.DEFAULT).create());
+        rightComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         createBusinessObjectEditionControl(rightComposite);
     }

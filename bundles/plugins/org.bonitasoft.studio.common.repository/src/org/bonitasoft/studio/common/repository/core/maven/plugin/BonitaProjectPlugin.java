@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Plugin;
-import org.apache.maven.project.MavenProject;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.model.DefaultPluginVersions;
@@ -49,7 +46,6 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.m2e.actions.MavenLaunchConstants;
 import org.eclipse.m2e.core.MavenPlugin;
-import org.eclipse.m2e.core.project.IMavenProjectFacade;
 
 public class BonitaProjectPlugin {
 
@@ -82,13 +78,14 @@ public class BonitaProjectPlugin {
     private void waitForBuildProcessTermination(final ILaunch launch) {
         while (!launch.isTerminated()) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(50);
             } catch (final InterruptedException e) {
             }
         }
     }
 
-    private ILaunchConfigurationWorkingCopy configureAnalyzePluginLaunchConfiguration(ILaunchConfigurationType configType)
+    private ILaunchConfigurationWorkingCopy configureAnalyzePluginLaunchConfiguration(
+            ILaunchConfigurationType configType)
             throws CoreException {
         ILaunchConfigurationWorkingCopy workingCopy = configType.newInstance(null, "Run Bonita Project Maven plugin");
         workingCopy.setAttribute(MavenLaunchConstants.ATTR_POM_DIR,
@@ -122,18 +119,21 @@ public class BonitaProjectPlugin {
     }
 
     public String getReportPath() throws CoreException {
-        IMavenProjectFacade mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
-        MavenProject mavenProject = mavenProjectFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
-        Optional<Plugin> plugin = mavenProject.getBuildPlugins().stream()
-                .filter(this::isBonitaProjectPlugin)
-                .findFirst();
-        return plugin.map(p -> p.getExecutions().stream()
-                .filter(exec -> exec.getGoals().contains("analyze"))
-                .map(exec -> getDepenencyReportPath(exec.getConfiguration()))
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElseGet(() -> getDepenencyReportPath(plugin.get().getConfiguration())))
-                .orElse(DEAULT_REPORT_OUTPUT_FILE);
+        var mavenProjectFacade = MavenPlugin.getMavenProjectRegistry().getProject(project);
+        if (mavenProjectFacade != null) {
+            var mavenProject = mavenProjectFacade.getMavenProject(AbstractRepository.NULL_PROGRESS_MONITOR);
+            Optional<Plugin> plugin = mavenProject.getBuildPlugins().stream()
+                    .filter(this::isBonitaProjectPlugin)
+                    .findFirst();
+            return plugin.map(p -> p.getExecutions().stream()
+                    .filter(exec -> exec.getGoals().contains("analyze"))
+                    .map(exec -> getDepenencyReportPath(exec.getConfiguration()))
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElseGet(() -> getDepenencyReportPath(plugin.get().getConfiguration())))
+                    .orElse(DEAULT_REPORT_OUTPUT_FILE);
+        }
+        return DEAULT_REPORT_OUTPUT_FILE;
     }
 
     private String getDepenencyReportPath(Object configuration) {

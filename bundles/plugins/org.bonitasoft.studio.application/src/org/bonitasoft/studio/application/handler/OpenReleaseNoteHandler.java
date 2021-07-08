@@ -17,39 +17,20 @@ package org.bonitasoft.studio.application.handler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 public class OpenReleaseNoteHandler {
 
-    private boolean bringPartToTop = true;
-    private boolean openAsView = false;
-
     @Execute
     public void openBrowser() {
         try {
-            new OpenBrowserOperation(new URL(String.format(
-                    "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=696&bos_redirect_product=bos&bos_redirect_major_version=%s",
-                    ProductVersion.majorVersion())))
-                            .asView(openAsView || PlatformUtil.isIntroOpen())
-                            .withInteralBrowser("org.bonitasoft.studio.browser.release.note", bringPartToTop)
-                            .withName(String.format("%s Release notes", ProductVersion.BRANDING_VERSION))
-                            .execute();
+            new OpenBrowserOperation(new URL(RedirectURLBuilder.create("696")))
+                    .execute();
         } catch (MalformedURLException e) {
             BonitaStudioLog.error(e);
         }
-    }
-
-    public OpenReleaseNoteHandler setFocus(boolean bringPartToTop) {
-        this.bringPartToTop = bringPartToTop;
-        return this;
-    }
-    
-    public OpenReleaseNoteHandler asView() {
-        this.openAsView = true;
-        return this;
     }
 }

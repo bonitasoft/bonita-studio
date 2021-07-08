@@ -364,6 +364,11 @@ public class Messages extends NLS {
     public static String newElementTitle;
     public static String noDescription;
     public static String diagramZoomHint;
+    public static String cannotReachMavenCentralRepositoryTitle;
+    public static String cannotReachMavenCentralRepositoryMessage;
+    public static String validateExistingMavenConfigurationMessage;
+    public static String configure;
+    public static String retry;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

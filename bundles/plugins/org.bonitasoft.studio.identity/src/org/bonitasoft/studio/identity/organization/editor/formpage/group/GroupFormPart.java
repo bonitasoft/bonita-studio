@@ -80,7 +80,7 @@ public class GroupFormPart extends AbstractFormPart {
     private void createGroupList(Composite parent) {
         Composite groupListComposite = formPage.getToolkit().createComposite(parent);
         groupListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(410, SWT.DEFAULT).create());
+        groupListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 
         groupList = new GroupList(groupListComposite, formPage, ctx);
         groupList.expandAll();

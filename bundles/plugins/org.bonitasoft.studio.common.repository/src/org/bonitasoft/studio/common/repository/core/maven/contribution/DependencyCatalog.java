@@ -15,8 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 
@@ -30,8 +30,8 @@ public class DependencyCatalog {
         this.rootFolder = rootFolder;
     }
     
-    public List<Artifact> parseDependencies() throws IOException {
-        List<Artifact> result = new ArrayList<>();
+    public Set<Artifact> parseDependencies() throws IOException {
+        Set<Artifact> result = new HashSet<>();
         Files.walkFileTree(rootFolder.toPath(), new SimpleFileVisitor<Path>() {
 
             @Override
@@ -44,7 +44,8 @@ public class DependencyCatalog {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
                     throws IOException {
                 if(file.getFileName().toString().endsWith(".jar") || file.getFileName().toString().endsWith(".pom")) {
-                    result.add(parser.parse(rootFolder.toPath().relativize(file)));
+                    Artifact artifact = parser.parse(rootFolder.toPath().relativize(file));
+                    result.add(artifact);
                 }
                 return FileVisitResult.CONTINUE;
             }

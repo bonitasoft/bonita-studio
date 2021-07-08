@@ -52,12 +52,12 @@ public class BonitaPreferenceDialogTest {
     public void testCreateOtherCategoryLine() throws Exception {
         final Shell shell = new Shell();
         bpd = spy(new BonitaPreferenceDialog(shell));
-        doCallRealMethod().when(bpd).createOtherCategoryLine(any(Composite.class));
+        doCallRealMethod().when(bpd).createOtherCategoryLine(any(Composite.class), eq(null));
         doReturn(toolItem).when(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), anyString());
         doReturn(composite).when(bpd).createRow(any(Composite.class), any(Color.class), anyString(), anyInt());
         doReturn(label).when(bpd).createItemLabel(any(Composite.class), any(Color.class), anyString());
 
-        bpd.createOtherCategoryLine(composite);
+        bpd.createOtherCategoryLine(composite, null);
 
         verify(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), eq(BonitaPreferenceDialog.ADVANCED_PAGE_ID));
         verify(bpd).createTool(any(Composite.class), any(Color.class), any(Image.class), any(Image.class), eq((String) null));

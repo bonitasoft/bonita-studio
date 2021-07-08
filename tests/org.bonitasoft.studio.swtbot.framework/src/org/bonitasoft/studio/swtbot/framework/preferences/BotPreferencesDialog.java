@@ -28,8 +28,8 @@ public class BotPreferencesDialog extends BotDialog {
     }
 
     public BotMavenConfigurationPage openMavenConfigurationPage() {
-        bot.waitUntil(widgetIsEnabled(bot.toolbarButtonWithId(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID)));
-        bot.toolbarButtonWithId(BonitaPreferenceDialog.EXTENSIONS_PAGE_ID).click();
+        bot.waitUntil(widgetIsEnabled(bot.toolbarButtonWithId(BonitaPreferenceDialog.MAVEN_PAGE_ID)));
+        bot.toolbarButtonWithId(BonitaPreferenceDialog.MAVEN_PAGE_ID).click();
         return new BotMavenConfigurationPage(bot);
     }
 

@@ -249,6 +249,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         try {
             connect(project);
             initRepositoryStores(NULL_PROGRESS_MONITOR);
+            AbstractFileStore.refreshExplorerView();
             MavenPlugin.getProjectConfigurationManager()
                     .updateProjectConfiguration(project, subMonitor);
         } catch (final CoreException e) {
@@ -274,8 +275,6 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         }
         hookResourceListeners();
         updateCurrentRepositoryPreference();
-        AbstractFileStore.refreshExplorerView();
-
         return this;
     }
 

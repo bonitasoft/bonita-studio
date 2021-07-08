@@ -41,17 +41,17 @@ public class OpenExtensionViewHandler {
                 .map(IWorkbench::getActiveWorkbenchWindow)
                 .map(IWorkbenchWindow::getActivePage)
                 .ifPresent(activePage -> {
-                    if (Stream.of(activePage.getEditorReferences())
-                            .noneMatch(er -> Objects.equals(er.getId(), ProjectOverviewEditorPart.ID))) {
-                        try {
-                            PlatformUI.getWorkbench().getProgressService().run(true, false,
-                                    BonitaMarketplace.getInstance()::loadDependencies);
-                        } catch (InvocationTargetException | InterruptedException e) {
-                            BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
-                            MessageDialog.openError(Display.getDefault().getActiveShell(),
-                                    Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
-                        }
-                    }
+//                    if (Stream.of(activePage.getEditorReferences())
+//                            .noneMatch(er -> Objects.equals(er.getId(), ProjectOverviewEditorPart.ID))) {
+//                        try {
+//                            PlatformUI.getWorkbench().getProgressService().run(true, false,
+//                                    BonitaMarketplace.getInstance()::loadDependencies);
+//                        } catch (InvocationTargetException | InterruptedException e) {
+//                            BonitaStudioLog.error(Messages.extensionLoadingErrorTitle, e);
+//                            MessageDialog.openError(Display.getDefault().getActiveShell(),
+//                                    Messages.extensionLoadingErrorTitle, Messages.extensionLoadingError);
+//                        }
+//                    }
                     try {
                         activePage.openEditor(ProjectOverviewEditorInput.getInstance(), ProjectOverviewEditorPart.ID);
                     } catch (PartInitException e) {

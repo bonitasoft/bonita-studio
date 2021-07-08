@@ -95,17 +95,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
     @Inject
     private RepositoryAccessor repositoryAccessor;
 
-    private JobChangeAdapter openIntroListener = new JobChangeAdapter() {
-
-        @Override
-        public void done(IJobChangeEvent event) {
-            Job job = event.getJob();
-            if (Objects.equals(job.getName(), getTitle())) {
-                PlatformUtil.openIntroIfNoOtherEditorOpen();
-            }
-        }
-    };
-
     @Override
     protected Object getInitialInput() {
         return repositoryAccessor.getWorkspace().getRoot();
@@ -139,7 +128,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
         initContextMenu();
         getCommonViewer().expandToLevel(2);
-        Job.getJobManager().addJobChangeListener(openIntroListener);
         dropBosImport(getCommonViewer().getTree());
     }
 
@@ -189,14 +177,6 @@ public class BonitaProjectExplorer extends CommonNavigator {
             }
 
         });
-    }
-
-    @Override
-    public void dispose() {
-        if (openIntroListener != null) {
-            Job.getJobManager().removeJobChangeListener(openIntroListener);
-        }
-        super.dispose();
     }
 
     private void initContextMenu() {

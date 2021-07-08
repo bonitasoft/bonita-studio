@@ -8,14 +8,11 @@
  *******************************************************************************/
 package org.bonitasoft.studio.theme.handler;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.contribution.InstallLocalRepositoryContribution;
 import org.bonitasoft.studio.maven.MavenProjectConfiguration;
 import org.bonitasoft.studio.maven.i18n.Messages;
 import org.bonitasoft.studio.maven.ui.WidgetFactory;
@@ -25,12 +22,10 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.m2e.core.MavenPlugin;
@@ -45,22 +40,10 @@ public class NewThemeHandler extends AbstractHandler {
             WidgetFactory widgetFactory,
             IWorkspace workspace)
             throws ExecutionException {
-        installDependencies();
         final NewThemeWizard wizard = newWizard(repositoryAccessor, widgetFactory, workspace);
         final int open = newWizardDialog(wizard, Messages.create).open();
         if (open == IDialogConstants.OK_ID) {
             wizard.getNewFileStore().open();
-        }
-    }
-
-    protected void installDependencies() throws ExecutionException {
-        try {
-            new ProgressMonitorDialog(Display.getDefault().getActiveShell()).run(true, false, monitor -> {
-                monitor.beginTask(Messages.installingDependencies, IProgressMonitor.UNKNOWN);
-                new InstallLocalRepositoryContribution().execute();
-            });
-        } catch (InvocationTargetException | InterruptedException e) {
-            throw new ExecutionException(e.getMessage(), e);
         }
     }
 

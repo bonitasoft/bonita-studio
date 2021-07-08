@@ -179,7 +179,8 @@ public class DependencyGetOperation implements IRunnableWithProgress {
         userProperties.setProperty("groupId", gav.getGroupId());
         userProperties.setProperty("artifactId", gav.getArtifactId());
         userProperties.setProperty("version", gav.getVersion());
-        userProperties.setProperty("packaging", "jar");
+        userProperties.setProperty("packaging", gav.getType() == null ? "jar" : gav.getType());
+        
         if (gav.getClassifier() != null) {
             userProperties.setProperty("classifier", gav.getClassifier());
         }

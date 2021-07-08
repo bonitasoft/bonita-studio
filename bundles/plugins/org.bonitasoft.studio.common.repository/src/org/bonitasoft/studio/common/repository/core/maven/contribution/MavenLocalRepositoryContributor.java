@@ -8,8 +8,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.common.repository.core.maven.contribution;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -43,10 +41,11 @@ public class MavenLocalRepositoryContributor {
     }
 
     public void execute() throws IOException, CoreException {
-        BonitaStudioLog.info(String.format("Configuring %s m2 repository...", targetRepository.getId()),
+        BonitaStudioLog.info(String.format("Configuring %s maven repository...", targetRepository.getId()),
                 CommonRepositoryPlugin.PLUGIN_ID);
         Instant start = Instant.now();
-        for (final Artifact artifact : catalog.parseDependencies()) {
+        var embeddedArtifacts = catalog.parseDependencies();
+        for (final Artifact artifact : embeddedArtifacts) {
             final Artifact foundArtifact = targetRepository.find(artifact);
             if (foundArtifact == null || !foundArtifact.getFile().exists()) {
                 final File artifactFile = toArtifactFile(artifact);
@@ -66,7 +65,7 @@ public class MavenLocalRepositoryContributor {
                 }
             }
         }
-        BonitaStudioLog.info(String.format("Required dependencies installed in %s m2 repository in %ss",
+        BonitaStudioLog.info(String.format("Required dependencies installed in %s maven repository in %ss",
                 targetRepository.getId(), Duration.between(start, Instant.now()).getSeconds()),
                 CommonRepositoryPlugin.PLUGIN_ID);
     }
@@ -77,8 +76,10 @@ public class MavenLocalRepositoryContributor {
 
     protected File toPomFile(final Artifact artifact) {
         File file = new File(internalRepositoryRootFolder, targetRepository.pathOf(artifact));
-        checkState(file.exists(),
-                String.format("No file found for artifact %s in studio embedded repository", artifact));
+        if (!file.exists()) {
+            throw new IllegalStateException(
+                    String.format("No file found for artifact %s in studio embedded repository", artifact));
+        }
         if (file.getName().endsWith(".pom")) {
             return file;
         }

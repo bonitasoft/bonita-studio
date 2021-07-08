@@ -54,6 +54,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private final IWorkbenchWindow window;
     private static final Set<String> EDITOR_TYPE_TO_CLOSE_ON_EXIT = new HashSet<>();
+    
     static {
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
@@ -87,11 +88,11 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     @Override
     public void openIntro() {
-        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
-        PrefUtil.saveAPIPrefs();
-        PlatformUtil.openDashboardIfNoOtherEditorOpen();
+//        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
+//        PrefUtil.saveAPIPrefs();
+        
     }
-
+    
     /**
      * Register to selection service to update button enablement
      * Register the Automatic Perspective switch part listener
