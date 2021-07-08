@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://www.ibm.com/bpm/Extensions" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ns5="http://www.omg.org/spec/DD/20100524/DC" exporterVersion="2.0" exporter="http://www.ibm.com/WebSphere/bpm/BlueworksLive" targetNamespace="http://www.ibm.com/WebSphere/bpm/BlueworksLive/10000c33ff81a95-20000ab400094b0" id="bpmn-71d8b162-b0bd-41db-9d73-8c69bee9e29b" xmlns:res="http://www.ibm.com/WebSphere/bpm/BlueworksLive/Resources" xmlns:bwl0="http://www.ibm.com/WebSphere/bpm/BlueworksLive/Glossaries">
+    <import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="../Glossaries.bpmn" namespace="http://www.ibm.com/WebSphere/bpm/BlueworksLive/Glossaries"/>
+    <import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="../Resources.bpmn" namespace="http://www.ibm.com/WebSphere/bpm/BlueworksLive/Resources"/>
+    <process isExecutable="false" processType="Private" name="Front office" id="bpmn-a26f6afe-2d18-4892-b670-e394549b23a3">
+        <extensionElements>
+            <ns2:bpmAttributes>
+                <ns2:milestones id="bpmn-f6f087c1-f0b2-4382-8e91-f3afa80f5fc7">
+                    <ns2:milestone name="Milestone 1" id="bpmn-73ddae3e-9de0-41c9-8e49-121ef18ba5a3">
+                        <flowNodeRef>bpmn-c45b19b4-dc26-45b8-b43f-ef669e568715</flowNodeRef>
+                        <flowNodeRef>bpmn-4deddbbb-04f6-4f9c-aa07-c9c2a506a35c</flowNodeRef>
+                        <flowNodeRef>bpmn-274504cd-999b-4b60-9051-f2032ab54df8</flowNodeRef>
+                        <flowNodeRef>bpmn-46ee3220-dc2c-4752-be78-f05ff3a43823</flowNodeRef>
+                    </ns2:milestone>
+                </ns2:milestones>
+                <ns2:properties/>
+            </ns2:bpmAttributes>
+        </extensionElements>
+        <laneSet id="bpmn-f07efb85-dbdc-4d6f-9dee-57da7af6248e"/>
+        <sequenceFlow targetRef="bpmn-4deddbbb-04f6-4f9c-aa07-c9c2a506a35c" sourceRef="bpmn-c45b19b4-dc26-45b8-b43f-ef669e568715" id="bpmn-de48050f-50fd-444a-b011-52bae01d8172"/>
+        <sequenceFlow targetRef="bpmn-274504cd-999b-4b60-9051-f2032ab54df8" sourceRef="bpmn-4deddbbb-04f6-4f9c-aa07-c9c2a506a35c" id="bpmn-a51a3424-3d43-4ba9-9cab-c2008a502425"/>
+        <sequenceFlow targetRef="bpmn-46ee3220-dc2c-4752-be78-f05ff3a43823" sourceRef="bpmn-274504cd-999b-4b60-9051-f2032ab54df8" id="bpmn-4d28f421-d2c4-474b-8b31-b5dd626184ad"/>
+        <startEvent name="Customer issue reported" id="bpmn-c45b19b4-dc26-45b8-b43f-ef669e568715">
+            <messageEventDefinition id="bpmn-d4c4e04a-499d-4031-bd4a-e72df7ff47ca"/>
+        </startEvent>
+        <task name="Get issue description" id="bpmn-4deddbbb-04f6-4f9c-aa07-c9c2a506a35c"/>
+        <task name="Provide solution" id="bpmn-274504cd-999b-4b60-9051-f2032ab54df8"/>
+        <endEvent name="Customer issue resolved" id="bpmn-46ee3220-dc2c-4752-be78-f05ff3a43823"/>
+    </process>
+</definitions>
