@@ -400,6 +400,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void preStartup() {
+        try {
+            new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
+        } catch (CoreException e) {
+           BonitaStudioLog.error(e);
+        }
         disableInternalWebBrowser();
         setSystemProperties();
     }
@@ -425,11 +430,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                try {
-                    new InstallBonitaMavenArtifactsOperation(MavenPlugin.getMaven().getLocalRepository()).execute();
-                } catch (CoreException e) {
-                    return e.getStatus();
-                }
                 RepositoryManager.getInstance().getAccessor().start(monitor);
                 return Status.OK_STATUS;
             }
