@@ -16,6 +16,7 @@ package org.bonitasoft.studio.application.views.overview;
 
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
@@ -33,7 +34,9 @@ import org.eclipse.swt.widgets.Listener;
 
 public class DiagramOverviewContribution implements OverviewContribution, Zoomable {
 
-    public static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
+    private static final String DIAGRAM_OVERVIEW_REDIRECT_ID = "731";
+    static final String NEW_DIAGRAM_COMMAND = "org.bonitasoft.studio.diagram.command.newDiagram";
+   
     private ZoomListener zoomListener;
     private Listener computeScrollListener;
 
@@ -49,7 +52,7 @@ public class DiagramOverviewContribution implements OverviewContribution, Zoomab
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/diagram-overview";
+        return RedirectURLBuilder.create(DIAGRAM_OVERVIEW_REDIRECT_ID);
     }
 
     @Override

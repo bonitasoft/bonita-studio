@@ -16,6 +16,7 @@ package org.bonitasoft.studio.identity.organization.overview;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -39,7 +40,8 @@ import org.eclipse.swt.widgets.Display;
 
 public class OrganizationOverviewContribution implements OverviewContribution {
 
-    public static final String NEW_ORGA_COMMAND = "org.bonitasoft.studio.identity.organization.create.command";
+    private static final String ORGANIZATION_OVERVIEW_REDIRECT_ID = "732";
+    private static final String NEW_ORGA_COMMAND = "org.bonitasoft.studio.identity.organization.create.command";
 
     private ActiveOrganizationProvider activeOrganizationProvider;
     private OrganizationRepositoryStore repositoryStore;
@@ -61,7 +63,7 @@ public class OrganizationOverviewContribution implements OverviewContribution {
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/organization-overview";
+        return RedirectURLBuilder.create(ORGANIZATION_OVERVIEW_REDIRECT_ID);
     }
 
     @Override

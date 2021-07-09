@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.designer.ui.overview;
 
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.designer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 public class PageAndFormOverviewContribution implements OverviewContribution {
 
     private static final String OPEN_UID_COMMAND = "org.bonitasoft.studio.pagedesigner.open.command";
+    private static final String UID_OVERVIEW_REDIRECT_ID = "729";
 
     @Override
     public String getName() {
@@ -52,7 +54,7 @@ public class PageAndFormOverviewContribution implements OverviewContribution {
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/ui-designer-overview";
+        return RedirectURLBuilder.create(UID_OVERVIEW_REDIRECT_ID);
     }
 
     @Override
