@@ -31,7 +31,9 @@ import java.util.regex.Pattern;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.InputStreamSupplier;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
 
 public class DependencyLookup {
@@ -143,7 +145,7 @@ public class DependencyLookup {
         String fileName = csvData[0];
         File file = new File(fileName);
         String name = file.getName();
-        GAV defaultGav = new GAV("com.company", name.replace(".jar", ""), "1.0.0");
+        GAV defaultGav = new GAV(defaultGroupId(), name.replace(".jar", ""), "1.0.0");
         return readPomProperties(file)
                 .map(pomProperties -> new GAV(pomProperties.getProperty("groupId"),
                         pomProperties.getProperty("artifactId"),
@@ -158,6 +160,10 @@ public class DependencyLookup {
                         Status.valueOf(enumFormat(csvData)),
                         defaultGav,
                         ""));
+    }
+
+    private static String defaultGroupId() {
+        return CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
     }
 
     public static String guessClassifier(String fileName, GAV gav) {

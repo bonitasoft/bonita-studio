@@ -423,7 +423,7 @@ public class BusinessObjectList {
         viewer.applyEditorValue();
         List<String> existingPackages = input.getValue().getPackages().stream().map(Package::getName)
                 .collect(Collectors.toList());
-        String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.DEFAULT_PACKAGE_NAME,
+        String newPackageName = StringIncrementer.getNextIncrement(PackageHelper.defaultPackageName(),
                 existingPackages);
         Package newPackage = new PackageBuilder().withName(newPackageName).create();
         input.getValue().getPackages().add(newPackage);

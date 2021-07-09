@@ -12,25 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.core.maven.contribution.MavenLocalRepositoryContributor;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.maven.i18n.Messages;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeConfiguration {
-    
+
     public static final String JAVA_LANGUAGE = "java";
     public static final String GROOVY_LANGUAGE = "groovy";
-    
+
     private String bonitaVersion;
 
     private String pathTemplate;
 
     private String httpVerb;
-    
+
     private String language;
-    
+
     private List<String> permissions = new ArrayList<>();
 
     private List<String> urlParameters = new ArrayList<>();
@@ -41,14 +43,15 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
 
     private String bdmVersion;
 
-    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(final String bdmGroupId, String bdmVersion) {
+    public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration(final String bdmGroupId,
+            String bdmVersion) {
         final RestAPIExtensionArchetypeConfiguration configuration = new RestAPIExtensionArchetypeConfiguration();
         configuration.setBonitaVersion(MavenLocalRepositoryContributor.BONITA_ARTIFACT_VERSION);
         configuration.setPageName("resourceNameRestAPI");
         configuration.setPathTemplate("resourceName");
         configuration.setPageDisplayName(Messages.defaultAPIDisplayName);
         configuration.setPageDescription(Messages.defaultAPIDisplayDescription);
-        configuration.setGroupId("com.company.rest.api");
+        configuration.setGroupId(defaultGroupId() + ".rest.api");
         configuration.setVersion("1.0.0-SNAPSHOT");
         configuration.setLanguage(GROOVY_LANGUAGE);
         configuration.setHttpVerb("GET");
@@ -60,7 +63,14 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         configuration.setEnableBDMDependencies(bdmGroupId != null);
         return configuration;
     }
-    
+
+    private static String defaultGroupId() {
+        if(CommonRepositoryPlugin.getDefault() == null) {
+            return RepositoryPreferenceConstant.DEFAULT_GROUPID_VALUE;
+        }
+        return CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
+    }
 
     public static RestAPIExtensionArchetypeConfiguration defaultArchetypeConfiguration() {
         return defaultArchetypeConfiguration(null, null);
@@ -113,7 +123,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
     public void setBdmGroupId(final String bdmGroupId) {
         this.bdmGroupId = bdmGroupId;
     }
-    
+
     public void setBdmVersion(String bdmVersion) {
         this.bdmVersion = bdmVersion;
     }
@@ -150,7 +160,7 @@ public class RestAPIExtensionArchetypeConfiguration extends CustomPageArchetypeC
         properties.setProperty("bdmGroupId",
                 !Strings.isNullOrEmpty(bdmGroupId) && isEnableBDMDependencies() ? bdmGroupId : "!");
         properties.setProperty("bdmVersion",
-                !Strings.isNullOrEmpty(bdmVersion) && isEnableBDMDependencies() ? bdmVersion: "!");
+                !Strings.isNullOrEmpty(bdmVersion) && isEnableBDMDependencies() ? bdmVersion : "!");
         properties.setProperty("wrapper", "false");
         return properties;
     }

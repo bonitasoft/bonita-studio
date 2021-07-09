@@ -23,11 +23,13 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.core.ProjectDependenciesStore;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,7 +58,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
         this.createNewProject = true;
         return this;
     }
-    
+
     public SetProjectMetadataOperation additionalDependencies(List<Dependency> dependencies) {
         this.dependencies = dependencies;
         return this;
@@ -71,6 +73,8 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
             } else {
                 editProject(monitor);
             }
+            CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                    .setValue(RepositoryPreferenceConstant.DEFAULT_GROUPID, meatadata.getGroupId());
         } catch (CoreException e) {
             status = e.getStatus();
         }
@@ -96,7 +100,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
 
     private void createNewProject(IProgressMonitor monitor) throws CoreException {
         IRepository newRepository = repositoryAccessor.createNewRepository(meatadata, monitor);
-        if(!dependencies.isEmpty()) {
+        if (!dependencies.isEmpty()) {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);
             dependencies.stream().forEach(model.getDependencies()::add);

@@ -51,6 +51,7 @@ import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.RemoveDependencyOperation;
 import org.bonitasoft.studio.common.repository.filestore.EditorFinder;
@@ -58,6 +59,7 @@ import org.bonitasoft.studio.common.repository.model.DeployOptions;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.model.ReadFileStoreException;
 import org.bonitasoft.studio.common.repository.model.smartImport.ISmartImportable;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -103,7 +105,6 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
 
     private static final String BDM_DELETED_TOPIC = "bdm/deleted";
     private static final String CLEAN_ACCESS_CONTROL_CMD = "org.bonitasoft.studio.bdm.access.control.command.clean";
-    private static final String DEFAULT_GROUP_ID = "com.company.model";
 
     private final Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<>();
     private CommandExecutor commandExecutor;
@@ -203,7 +204,7 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         IFile descriptor = getParentStore().getResource().getFile(BDM_ARTIFACT_DESCRIPTOR);
         if (!descriptor.exists()) {
             BDMArtifactDescriptor defautDescriptor = new BDMArtifactDescriptor();
-            String groupId = DEFAULT_GROUP_ID;
+            String groupId = defaultGroupId();
             try {
                 BusinessObjectModel businessObjectModel = getContent();
                 if (businessObjectModel != null && !businessObjectModel.getBusinessObjectsClassNames().isEmpty()) {
@@ -219,6 +220,12 @@ public class BusinessObjectModelFileStore extends AbstractBDMFileStore<BusinessO
         }
         return new BDMArtifactDescriptor()
                 .load(descriptor.getLocation().toFile());
+    }
+
+    String defaultGroupId() {
+        var defaultGroupId = CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
+        return defaultGroupId + ".model";
     }
 
     public Dependency getClientMavenDependency() throws CoreException {

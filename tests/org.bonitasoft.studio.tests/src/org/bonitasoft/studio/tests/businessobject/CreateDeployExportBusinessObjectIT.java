@@ -94,7 +94,7 @@ public class CreateDeployExportBusinessObjectIT {
         BotBdmEditor bdmWizardBot = workBenchBot.defineBDM();
 
         bdmWizardBot.modelPage()
-                .renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, "aPackage")
+                .renamePackage(PackageHelper.defaultPackageName(), "aPackage")
                 .renameBusinessObject("aPackage", BusinessObjectList.DEFAULT_BO_NAME, "anObject")
                 .addPackage(packageName, "Employee")
                 .removePackage("aPackage")

@@ -91,7 +91,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
     public enum RepositoryMode {
         CURRENT, NEW
     }
-    
+
     private static final String BOS_EXTENSION = "*.bos";
 
     protected String filePath;
@@ -239,8 +239,11 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
         newRepositoryComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5, 2).create());
         newRepositoryComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        IObservableValue<String> projectNameObservable = PojoProperties.value("name", String.class)
+        var projectNameObservable = PojoProperties.value("name", String.class)
                 .observeDetail(projectMetadataObservable);
+        var projectArtifactIdObservable = PojoProperties.value("artifactId", String.class)
+                .observeDetail(projectMetadataObservable);
+        
         newProjectNameText = new TextWidget.Builder()
                 .widthHint(500)
                 .labelAbove()
@@ -260,6 +263,9 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
             String newProjectName = event.diff.getNewValue();
             if (newProjectName != null && !newProjectName.isBlank() && archiveModel != null && mode == RepositoryMode.NEW) {
                 updateTargetRepository(newProjectName);
+                if(Strings.isNullOrEmpty(projectArtifactIdObservable.getValue())){
+                    projectArtifactIdObservable.setValue(ProjectMetadata.toArtifactId(newProjectName));
+                }
             }
         });
 
@@ -291,7 +297,8 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .useNativeRender()
                 .createIn(newRepositoryComposite);
 
-        new TextWidget.Builder()
+    
+            new TextWidget.Builder()
                 .widthHint(700)
                 .horizontalSpan(2)
                 .labelAbove()
@@ -299,7 +306,7 @@ public class ImportBosArchivePage implements ControlSupplier, Supplier<ImportArc
                 .fill()
                 .withLabel("Artifact ID")
                 .withId(SWTBotConstants.SWTBOT_ID_NEW_PROJECT_ARTIFACTID_TEXT)
-                .bindTo(PojoProperties.value("artifactId", String.class).observeDetail(projectMetadataObservable))
+                .bindTo(projectArtifactIdObservable)
                 .withTargetToModelStrategy(
                         updateValueStrategy().withValidator(wrap(new MavenIdValidator("Artifact ID"))))
                 .inContext(ctx)

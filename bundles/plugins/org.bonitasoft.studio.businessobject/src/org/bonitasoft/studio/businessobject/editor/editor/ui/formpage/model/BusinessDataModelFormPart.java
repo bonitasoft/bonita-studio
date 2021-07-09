@@ -65,8 +65,6 @@ import org.xml.sax.SAXException;
 
 public class BusinessDataModelFormPart extends AbstractFormPart {
 
-    public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
-
     private DataBindingContext ctx = new DataBindingContext();
     private BusinessDataModelFormPage formPage;
     private BusinessObjectList businessObjectList;

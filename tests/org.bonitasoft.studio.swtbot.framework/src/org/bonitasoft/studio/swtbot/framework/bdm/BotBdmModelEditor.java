@@ -83,7 +83,7 @@ public class BotBdmModelEditor extends BotBase {
 
     public BotBdmModelEditor addPackage(String packageName, String businessObject) {
         bot.toolbarButtonWithId(BusinessObjectList.ADD_PACKAGE_BUTTON_ID).click();
-        renamePackage(PackageHelper.DEFAULT_PACKAGE_NAME, packageName);
+        renamePackage(PackageHelper.defaultPackageName(), packageName);
         renameBusinessObject(packageName, BusinessObjectList.DEFAULT_BO_NAME, businessObject);
         return this;
     }
