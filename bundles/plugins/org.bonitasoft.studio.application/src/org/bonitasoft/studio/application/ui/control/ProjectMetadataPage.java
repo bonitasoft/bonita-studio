@@ -17,6 +17,7 @@ package org.bonitasoft.studio.application.ui.control;
 import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -35,8 +36,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -47,7 +48,7 @@ public class ProjectMetadataPage implements ControlSupplier {
 
     public ProjectMetadataPage(ProjectMetadata metadata, boolean createProject) {
         this.createProject = createProject;
-        this.metadataObservale = new WritableValue<ProjectMetadata>(metadata, ProjectMetadata.class);
+        this.metadataObservale = new WritableValue<>(metadata, ProjectMetadata.class);
     }
 
     @Override
@@ -59,10 +60,11 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .extendedMargins(0, 0, 0, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        IObservableValue<String> nameObservable = PojoProperties.value("name", String.class)
+        var nameObservable = PojoProperties.value("name", String.class)
                 .observeDetail(metadataObservale);
+        var artifactIdObservable = PojoProperties.value("artifactId", String.class).observeDetail(metadataObservale);
         new TextWidget.Builder()
-                .withLabel(Messages.name +" *")
+                .withLabel(Messages.name + " *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -76,7 +78,7 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         new TextWidget.Builder()
-                .withLabel(Messages.version+" *")
+                .withLabel(Messages.version + " *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -97,18 +99,31 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .useNativeRender()
                 .createIn(composite);
 
-        new TextWidget.Builder()
+        TextWidget textWidget = new TextWidget.Builder()
                 .withLabel("Artifact ID *")
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
-                .bindTo(PojoProperties.value("artifactId").observeDetail(metadataObservale))
+                .bindTo(artifactIdObservable)
                 .withValidator(new MavenIdValidator("Artifact ID"))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
 
-        TextWidget textArea = new TextAreaWidget.Builder()
+        textWidget.getTextControl().addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                var projectName = nameObservable.getValue();
+                if (Strings.hasText(projectName)
+                        && Strings.isNullOrEmpty(artifactIdObservable.getValue())) {
+                    artifactIdObservable.setValue(ProjectMetadata.toArtifactId(projectName));
+                }
+            }
+            
+        });
+
+        var textArea = new TextAreaWidget.Builder()
                 .withLabel(Messages.description)
                 .labelAbove()
                 .heightHint(100)
@@ -120,14 +135,11 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .horizontalSpan(2)
                 .useNativeRender()
                 .createIn(composite);
-        textArea.getTextControl().addTraverseListener(new TraverseListener() {
 
-            @Override
-            public void keyTraversed(final TraverseEvent event) {
-                if (event.detail == SWT.TRAVERSE_TAB_NEXT
-                        || event.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-                    event.doit = true;
-                }
+        textArea.getTextControl().addTraverseListener(event -> {
+            if (event.detail == SWT.TRAVERSE_TAB_NEXT
+                    || event.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+                event.doit = true;
             }
         });
 

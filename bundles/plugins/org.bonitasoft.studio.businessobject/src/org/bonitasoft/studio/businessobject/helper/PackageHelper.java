@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
 import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.ui.util.StringIncrementer;
 
 public class PackageHelper {
-
-    public static final String DEFAULT_PACKAGE_NAME = "com.company.model";
 
     private PackageHelper() {
 
@@ -48,13 +48,21 @@ public class PackageHelper {
 
     public static String getNextPackageName(BusinessObjectModel model) {
         List<String> allPackages = getAllPackages(model);
-        return StringIncrementer.getNextIncrement(DEFAULT_PACKAGE_NAME, allPackages);
+        return StringIncrementer.getNextIncrement(defaultPackageName(), allPackages);
     }
 
     public static List<BusinessObject> getAllBusinessObjects(BusinessObjectModel model, String packageName) {
         return model.getBusinessObjects().stream()
                 .filter(bo -> Objects.equals(getPackageName(bo), packageName))
                 .collect(Collectors.toList());
+    }
+
+    public static String defaultPackageName() {
+        if (CommonRepositoryPlugin.getDefault() == null) {
+            return RepositoryPreferenceConstant.DEFAULT_GROUPID_VALUE + ".model";
+        }
+        return CommonRepositoryPlugin.getDefault().getPreferenceStore()
+                .getString(RepositoryPreferenceConstant.DEFAULT_GROUPID) + ".model";
     }
 
 }

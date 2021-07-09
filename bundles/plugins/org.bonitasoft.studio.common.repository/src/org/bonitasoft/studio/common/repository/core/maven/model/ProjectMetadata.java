@@ -20,8 +20,10 @@ import java.util.regex.Pattern;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
+import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
@@ -29,7 +31,6 @@ public class ProjectMetadata {
 
     private static final String DEFAULT_ARTIFACT_ID = "my-project";
     private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
-    private static final String DEFAULT_GROUP_ID = "com.company";
 
     private String name;
     private String description;
@@ -130,9 +131,16 @@ public class ProjectMetadata {
         ProjectMetadata metadata = new ProjectMetadata();
         metadata.setName(Messages.defaultRepositoryName);
         metadata.setArtifactId(toArtifactId(Messages.defaultRepositoryName));
-        metadata.setGroupId(DEFAULT_GROUP_ID);
+        metadata.setGroupId(defaultGroupId());
         metadata.setVersion(DEFAULT_VERSION);
         return metadata;
+    }
+
+    private static String defaultGroupId() {
+        if(CommonRepositoryPlugin.getDefault() == null) {
+            return RepositoryPreferenceConstant.DEFAULT_GROUPID_VALUE;
+        }
+        return CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.DEFAULT_GROUPID);
     }
 
     public static String toArtifactId(String displayName) {
