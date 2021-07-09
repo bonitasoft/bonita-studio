@@ -76,7 +76,7 @@ public class UserFormPart extends AbstractFormPart {
     private void createUserList(Composite parent) {
         Composite userListComposite = formPage.getToolkit().createComposite(parent);
         userListComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-        userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        userListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(400, SWT.DEFAULT).create());
 
         userList = new UserList(userListComposite, formPage, ctx);
     }
