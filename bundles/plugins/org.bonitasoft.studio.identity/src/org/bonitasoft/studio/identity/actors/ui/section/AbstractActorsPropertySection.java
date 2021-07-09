@@ -15,9 +15,9 @@
 package org.bonitasoft.studio.identity.actors.ui.section;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,6 +52,8 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -165,9 +167,6 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     }
 
     private void createMarketplaceButton(Composite parent) {
-        var parameters = new HashMap<String, Object>();
-        parameters.put("types", Messages.actorFilterType);
-
         new DynamicButtonWidget.Builder()
                 .withText(Messages.openMarketplace)
                 .withTooltipText(Messages.openMarketplaceTooltip)
@@ -176,7 +175,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
                 .withLayoutData(
                         GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create())
                 .withToolkit(getWidgetFactory())
-                .onClick(e -> commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters))
+                .onClick(e -> openMarketplace())
                 .createIn(parent);
     }
 
@@ -362,42 +361,55 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-                try {
-                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> Job.getJobManager()
-                            .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, monitor));
-                } catch (InvocationTargetException | InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
+
                 var registry = repositoryAccessor.getRepositoryStore(ActorFilterDefRepositoryStore.class)
                         .getResourceProvider().getConnectorDefinitionRegistry();
                 if (registry.getDefinitions().isEmpty()) {
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(),
                             Messages.noActorFilterInstalled,
                             Messages.installActorFilterExtensionMsg);
-                    var parameters = new HashMap<String, Object>();
-                    parameters.put("types", Messages.actorFilterType);
-                    commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters);
+                    openMarketplace();
                 } else {
-                    final WizardDialog wizardDialog = new ActorFilterDefinitionWizardDialog(
-                            Display.getCurrent().getActiveShell(),
-                            new FilterWizard(getEObject(), getFilterFeature(), getFilterFeatureToCheckUniqueID()));
-                    if (wizardDialog.open() == Dialog.OK) {
-                        final Assignable assignable = (Assignable) getEObject();
-                        if (assignable.getFilters().size() > 1) {
-                            getEditingDomain().getCommandStack()
-                                    .execute(RemoveCommand.create(getEditingDomain(), assignable,
-                                            assignable.getFilters(), assignable.getFilters().get(0)));
-                        }
-                        if (!assignable.getFilters().isEmpty()) {
-                            final ActorFilter filter = assignable.getFilters().get(0);
-                            updateFilterTextContent(filter);
-                        }
-                        updateButtons();
-                    }
+                    openActorFilterWizard();
                 }
             }
+
         });
         return setButton;
+    }
+
+    private void openActorFilterWizard() {
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+                monitor.beginTask(org.bonitasoft.studio.common.repository.Messages.analyzeProjectDependencies,
+                        IProgressMonitor.UNKNOWN);
+                Job.getJobManager()
+                        .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, new NullProgressMonitor());
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+        final WizardDialog wizardDialog = new ActorFilterDefinitionWizardDialog(
+                Display.getCurrent().getActiveShell(),
+                new FilterWizard(getEObject(), getFilterFeature(), getFilterFeatureToCheckUniqueID()));
+        if (wizardDialog.open() == Dialog.OK) {
+            final Assignable assignable = (Assignable) getEObject();
+            if (assignable.getFilters().size() > 1) {
+                getEditingDomain().getCommandStack()
+                        .execute(RemoveCommand.create(getEditingDomain(), assignable,
+                                assignable.getFilters(), assignable.getFilters().get(0)));
+            }
+            if (!assignable.getFilters().isEmpty()) {
+                final ActorFilter filter = assignable.getFilters().get(0);
+                updateFilterTextContent(filter);
+            }
+            updateButtons();
+        }
+    }
+
+    private void openMarketplace() {
+        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, Map.of("types", Messages.actorFilterType));
+        openActorFilterWizard();
     }
 
     protected abstract void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,
