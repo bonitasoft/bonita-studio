@@ -17,9 +17,9 @@ package org.bonitasoft.studio.connectors.ui.property.section;
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,6 +55,8 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -137,9 +139,6 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
     }
 
     private void createToolbar(Composite parent) {
-        var parameters = new HashMap<String, Object>();
-        parameters.put("types", Messages.connectorType);
-
         new DynamicButtonWidget.Builder()
                 .withText(Messages.openMarketplace)
                 .withTooltipText(Messages.openMarketplaceTooltip)
@@ -148,8 +147,13 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
                 .withLayoutData(
                         GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).span(2, 1).create())
                 .withToolkit(getWidgetFactory())
-                .onClick(e -> commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters))
+                .onClick(e -> openMarketplace())
                 .createIn(parent);
+    }
+
+    private void openMarketplace() {
+        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, Map.of("types", Messages.connectorType));
+        openConnectorWizard();
     }
 
     private void createConnectorComposite(final Composite parent) {
@@ -317,33 +321,38 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-                try {
-                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> Job.getJobManager()
-                            .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, monitor));
-                } catch (InvocationTargetException | InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
                 var registry = repositoryAccessor.getRepositoryStore(ConnectorDefRepositoryStore.class)
                         .getResourceProvider().getConnectorDefinitionRegistry();
                 if (registry.getDefinitions().isEmpty()) {
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(),
                             Messages.noConnectorInstalled,
                             Messages.installConnectorExtensionMsg);
-                    var parameters = new HashMap<String, Object>();
-                    parameters.put("types", Messages.connectorType);
-                    commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, parameters);
+                    openMarketplace();
                 } else {
-                    final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
-                            Display.getCurrent().getActiveShell(),
-                            createAddConnectorWizard());
-                    if (wizardDialog.open() == Window.OK) {
-                        tableViewer.refresh();
-                    }
+                    openConnectorWizard();
                 }
             }
 
         });
         return addData;
+    }
+
+    private void openConnectorWizard() {
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(monitor -> {
+                monitor.beginTask(org.bonitasoft.studio.common.repository.Messages.analyzeProjectDependencies, IProgressMonitor.UNKNOWN);
+                Job.getJobManager()
+                        .join(ProjectDependenciesStore.ANALYZE_PPROJECT_DEPENDENCIES_FAMILY, new NullProgressMonitor());
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+        final WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(
+                Display.getCurrent().getActiveShell(),
+                createAddConnectorWizard());
+        if (wizardDialog.open() == Window.OK) {
+            tableViewer.refresh();
+        }
     }
 
     protected ConnectorWizard createAddConnectorWizard() {
