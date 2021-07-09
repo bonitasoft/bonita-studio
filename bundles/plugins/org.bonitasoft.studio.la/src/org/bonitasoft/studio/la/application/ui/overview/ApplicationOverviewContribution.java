@@ -16,6 +16,7 @@ package org.bonitasoft.studio.la.application.ui.overview;
 
 import org.bonitasoft.studio.application.views.extension.card.zoom.ZoomListener;
 import org.bonitasoft.studio.application.views.extension.card.zoom.Zoomable;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.la.i18n.Messages;
@@ -33,7 +34,8 @@ import org.eclipse.swt.widgets.Listener;
 
 public class ApplicationOverviewContribution implements OverviewContribution, Zoomable {
 
-    public static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
+    static final String NEW_APPLICATION_COMMAND = "org.bonitasoft.studio.la.new.command";
+    private static final String APPLICATIONS_REDIRECT_ID = "730";
 
     private ZoomListener zoomListener;
 
@@ -51,7 +53,7 @@ public class ApplicationOverviewContribution implements OverviewContribution, Zo
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/applications";
+        return RedirectURLBuilder.create(APPLICATIONS_REDIRECT_ID);
     }
 
     @Override

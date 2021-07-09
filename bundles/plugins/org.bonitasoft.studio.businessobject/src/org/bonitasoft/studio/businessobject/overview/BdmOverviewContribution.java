@@ -19,9 +19,11 @@ import java.util.List;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
+import org.bonitasoft.studio.common.RedirectURLBuilder;
 import org.bonitasoft.studio.common.extension.OverviewContribution;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
@@ -36,8 +38,9 @@ import org.eclipse.swt.widgets.Display;
 
 public class BdmOverviewContribution implements OverviewContribution {
 
+    private static final String DEFINE_BDM_REDIRECT_ID = "717";
     private static final String DEFINE_BDM_COMMAND = "org.bonitasoft.studio.businessobject.define";
-    private BusinessObjectModelRepositoryStore repositoryStore;
+    private IRepositoryStore<?> repositoryStore;
 
     public BdmOverviewContribution() {
         repositoryStore = RepositoryManager.getInstance()
@@ -56,7 +59,7 @@ public class BdmOverviewContribution implements OverviewContribution {
 
     @Override
     public String getDocumentationLink() {
-        return "https://documentation.bonitasoft.com/bonita/latest/define-and-deploy-the-bdm";
+        return RedirectURLBuilder.create(DEFINE_BDM_REDIRECT_ID);
     }
 
     @Override
