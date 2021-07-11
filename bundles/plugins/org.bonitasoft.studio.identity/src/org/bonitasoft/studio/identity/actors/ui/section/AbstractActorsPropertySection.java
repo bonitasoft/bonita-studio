@@ -408,7 +408,8 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     }
 
     private void openMarketplace() {
-        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, Map.of("types", Messages.actorFilterType));
+        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND,
+                Map.of("types", Messages.actorFilterType, "analyzeInWizard", "true"));
         openActorFilterWizard();
     }
 

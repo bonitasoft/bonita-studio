@@ -152,7 +152,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
     }
 
     private void openMarketplace() {
-        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, Map.of("types", Messages.connectorType));
+        commandExecutor.executeCommand(OPEN_MARKETPLACE_COMMAND, Map.of("types", Messages.connectorType, "analyzeInWizard", "true"));
         openConnectorWizard();
     }
 

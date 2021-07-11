@@ -45,7 +45,7 @@ import org.bonitasoft.studio.common.repository.extension.update.DependencyUpdate
 import org.bonitasoft.studio.ui.wizard.WizardBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -72,7 +72,8 @@ public class OpenMarketplaceHandler {
 
     @Execute
     public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell,
-            @org.eclipse.e4.core.di.annotations.Optional @Named("types") String types) {
+            @org.eclipse.e4.core.di.annotations.Optional @Named("types") String types,
+            @org.eclipse.e4.core.di.annotations.Optional @Named("analyzeInWizard") String forceAnalyzaeInWizard) {
         String[] extensionTypes = types != null
                 ? types.split(":")
                 : new String[] {};
@@ -85,7 +86,7 @@ public class OpenMarketplaceHandler {
                         .withTitle(getWizardTitle())
                         .withDescription(getPageDescription())
                         .withControl(bonitaMarketplacePage))
-                .onFinish(container -> performFinish(container, bonitaMarketplacePage))
+                .onFinish(container -> performFinish(container, bonitaMarketplacePage, Boolean.valueOf(forceAnalyzaeInWizard)))
                 .withSize(800, 800)
                 .withFixedInitialSize()
                 .open(activeShell, Messages.install);
@@ -112,7 +113,7 @@ public class OpenMarketplaceHandler {
                 : new BonitaMarketplacePage(repositoryAccessor.getCurrentRepository().getProject(), types);
     }
 
-    private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage) {
+    private Optional<Boolean> performFinish(IWizardContainer container, BonitaMarketplacePage extendProjectPage, boolean forceAnalyzeInWizard) {
         List<DependencyUpdate> dependenciesUpdates = extendProjectPage.getDependenciesToUpdate().stream()
                 .map(bad -> new DependencyUpdate(findCurrentDependency(bad), bad.getBestVersion()))
                 .collect(Collectors.toList());
@@ -121,7 +122,7 @@ public class OpenMarketplaceHandler {
         try {
             container.run(true, false, monitor -> {
                 updateExtensionDecorator.preUpdate(monitor);
-                installDependencies(extendProjectPage, repositoryAccessor, monitor);
+                installDependencies(extendProjectPage, repositoryAccessor, forceAnalyzeInWizard, monitor);
                 updateExtensionDecorator.postUpdate(monitor);
             });
         } catch (InvocationTargetException | InterruptedException e) {
@@ -134,16 +135,18 @@ public class OpenMarketplaceHandler {
         return Optional.of(true);
     }
 
-    protected void installDependencies(BonitaMarketplacePage extendProjectPage, RepositoryAccessor repositoryAccessor,
+    protected void installDependencies(BonitaMarketplacePage extendProjectPage, 
+            RepositoryAccessor repositoryAccessor,
+            boolean forceAnalyzeInWizard,
             IProgressMonitor monitor)
             throws InvocationTargetException {
         monitor.beginTask(Messages.installingExtensions, IProgressMonitor.UNKNOWN);
         updateDependency(extendProjectPage.getDependenciesToUpdate(), monitor);
         addDependency(extendProjectPage.getDependenciesToAdd(), monitor);
-        if (extendProjectPage.getDependenciesToUpdate().isEmpty()) {
+        if (extendProjectPage.getDependenciesToUpdate().isEmpty() && !forceAnalyzeInWizard) {
             MavenModelOperation.scheduleAnalyzeProjectDependenciesJob(repositoryAccessor);
         } else {
-            repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(monitor);
+            repositoryAccessor.getCurrentRepository().getProjectDependenciesStore().analyze(SubMonitor.convert(monitor));
         }
     }
 

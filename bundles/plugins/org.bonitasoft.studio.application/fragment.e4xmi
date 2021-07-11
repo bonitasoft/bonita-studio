@@ -7,6 +7,7 @@
     <elements xsi:type="commands:Command" xmi:id="_4djs4AYDEeq5-uUHHFYRTg" elementId="org.bonitasoft.studio.application.newFolder.command" commandName="%newFolder"/>
     <elements xsi:type="commands:Command" xmi:id="_Cv2RMGIUEeuoz-OKLL5EHA" elementId="org.bonitasoft.studio.application.marketplace.command" commandName="%openMarketplace">
       <parameters xmi:id="_RXxrgIrzEeuz4LM5CxiSwg" elementId="types" name="types"/>
+      <parameters xmi:id="_DvHJ4ODIEeuQAoA-5RTi0g" elementId="analyzeInWizard" name="analyzeInWizard"/>
     </elements>
     <elements xsi:type="commands:Command" xmi:id="_RH3msGrHEeuYIIt6RJgX4w" elementId="org.bonitasoft.studio.application.show.extensions.command" commandName="%showExtensions"/>
     <elements xsi:type="commands:Command" xmi:id="_Dh48wHwsEeuY1OE6mEePfw" elementId="org.bonitasoft.studio.application.import.extension.command" commandName="%importExtension">
