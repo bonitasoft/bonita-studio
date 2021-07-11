@@ -29,7 +29,7 @@ public interface IJavaContainer {
 
     void disableBuild();
 
-    void enableBuild();
+    void enableBuild(IProgressMonitor monitor);
 
     IJavaProject getJavaProject();
 

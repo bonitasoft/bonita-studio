@@ -70,9 +70,11 @@ public class AddDatabaseDriverHandler extends OpenMarketplaceHandler {
     }
 
     @Override
-    protected void installDependencies(BonitaMarketplacePage extendProjectPage, RepositoryAccessor repositoryAccessor,
+    protected void installDependencies(BonitaMarketplacePage extendProjectPage, 
+            RepositoryAccessor repositoryAccessor,
+            boolean forceAnalyzeInWizard,
             IProgressMonitor monitor) throws InvocationTargetException {
-        super.installDependencies(extendProjectPage, repositoryAccessor, monitor);
+        super.installDependencies(extendProjectPage, repositoryAccessor,forceAnalyzeInWizard,  monitor);
 
         DatabaseConnectorPropertiesRepositoryStore databaseConnectorPropertiesRepositoryStore = repositoryAccessor
                 .getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);

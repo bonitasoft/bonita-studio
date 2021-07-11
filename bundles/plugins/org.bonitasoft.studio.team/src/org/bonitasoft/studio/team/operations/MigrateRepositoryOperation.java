@@ -110,7 +110,7 @@ public class MigrateRepositoryOperation implements IRunnableWithProgress {
                 status = new Status(IStatus.ERROR, TeamPlugin.PLUGIN_ID, e.getMessage(), e);
                 return;
             } finally {
-                currentRepository.enableBuild();
+                currentRepository.enableBuild(monitor);
             }
 
             TeamRepositoryUtil.updateLastRestore(timesatmp);

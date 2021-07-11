@@ -260,7 +260,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
         this.projectDependenciesStore
                 .analyze(subMonitor);
 
-        enableBuild();
+        enableBuild(subMonitor);
         for (IBonitaProjectListener listener : getProjectListeners()) {
             listener.projectOpened(this, monitor);
         }
@@ -402,7 +402,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     }
 
     @Override
-    public void enableBuild() {
+    public void enableBuild(IProgressMonitor monitor) {
         Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
         final IWorkspaceDescription desc = workspace.getDescription();
         if (desc != null && !desc.isAutoBuilding()) {
@@ -416,7 +416,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
             RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,
                     enableAutobuild);
             try {
-                project.build(IncrementalProjectBuilder.AUTO_BUILD, NULL_PROGRESS_MONITOR);
+                project.build(IncrementalProjectBuilder.AUTO_BUILD, monitor);
             } catch (CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
@@ -486,7 +486,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (!isLoaded()) {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
-            enableBuild();
+            enableBuild(new NullProgressMonitor());
         }
         return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
@@ -529,7 +529,7 @@ public abstract class AbstractRepository implements IRepository, IJavaContainer 
     public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
             initRepositoryStores(NULL_PROGRESS_MONITOR);
-            enableBuild();
+            enableBuild(new NullProgressMonitor());
         }
         return stores.values().stream()
                 .distinct()

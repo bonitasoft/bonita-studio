@@ -77,6 +77,7 @@ import org.bonitasoft.studio.importer.bos.validator.BosImporterStatusProvider;
 import org.bonitasoft.studio.importer.bos.validator.ValidationException;
 import org.bonitasoft.studio.ui.dialog.SkippableProgressMonitorJobsDialog;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -239,10 +240,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             dependenciesUpdateOperation.run(monitor);
         } finally {
             FileActionDialog.setDisablePopup(disablePopup);
-            restoreBuildState();
+            restoreBuildState(monitor);
         }
 
-        currentRepository.build(monitor);
         monitor.subTask("");
         currentRepository.handleFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 
@@ -356,6 +356,7 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
             mavenProjectHelper.saveModel(currentRepository.getProject(), mavenModel);
             ProjectDependenciesStore projectDependenciesStore = currentRepository.getProjectDependenciesStore();
             if (projectDependenciesStore != null) {
+                currentRepository.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 projectDependenciesStore.analyze(monitor);
             }
         } catch (CoreException e) {
@@ -490,9 +491,9 @@ public class ImportBosArchiveOperation implements IRunnableWithProgress {
         return new ParseBosArchiveOperation(archive, repository);
     }
 
-    protected void restoreBuildState() {
+    protected void restoreBuildState(IProgressMonitor monitor) {
         if (!currentRepository.isBuildEnable()) {
-            currentRepository.enableBuild();
+            currentRepository.enableBuild(monitor);
         }
     }
 
