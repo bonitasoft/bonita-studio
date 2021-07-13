@@ -92,7 +92,6 @@ public class ExtensionCard extends Composite {
         createTypeComposite(contentComposite);
         createIcon(contentComposite);
         createDescriptionLabel(contentComposite);
-        createDetailsButton(contentComposite);
 
         var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(
@@ -105,11 +104,12 @@ public class ExtensionCard extends Composite {
     private void createDetailsButton(Composite parent) {
         if (this instanceof Zoomable) {
             new DynamicButtonWidget.Builder()
+                    .withTooltipText(org.bonitasoft.studio.common.Messages.moreDetails)
                     .withImage(Pics.getImage(PicsConstants.details))
                     .withHotImage(Pics.getImage(PicsConstants.detailsHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .withLayoutData(
-                            GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).span(2, 1).create())
+                            GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.BOTTOM).create())
                     .onClick(e -> ((Zoomable) this).getZoomListener().zoom(e))
                     .createIn(parent);
         }
@@ -240,6 +240,7 @@ public class ExtensionCard extends Composite {
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults()
+                .numColumns(2)
                 .spacing(LayoutConstants.getSpacing().x, 1)
                 .create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
@@ -247,14 +248,16 @@ public class ExtensionCard extends Composite {
 
         titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.extensionCardId(bonitaDep.getArtifactId()));
-        titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        titleLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
         titleLabel.setText(bonitaDep.getName());
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
+        createDetailsButton(titleComposite);
+
         var gav = new CLabel(titleComposite, SWT.WRAP);
         gav.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
+                GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
         gav.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID));
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);
