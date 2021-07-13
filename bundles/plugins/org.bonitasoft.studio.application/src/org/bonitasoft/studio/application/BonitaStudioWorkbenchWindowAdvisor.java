@@ -22,7 +22,6 @@ import org.bonitasoft.studio.application.dialog.ExitDialog;
 import org.bonitasoft.studio.application.views.CustomObjectActionContributorManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -45,7 +43,6 @@ import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.MarkerTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -54,10 +51,11 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private final IWorkbenchWindow window;
     private static final Set<String> EDITOR_TYPE_TO_CLOSE_ON_EXIT = new HashSet<>();
-    
+
     static {
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.customProfile.editor");
         EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.la.editor");
+        EDITOR_TYPE_TO_CLOSE_ON_EXIT.add("org.bonitasoft.studio.application.dashboard.editor");
     }
 
     public BonitaStudioWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
@@ -88,11 +86,11 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     @Override
     public void openIntro() {
-//        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
-//        PrefUtil.saveAPIPrefs();
-        
+        //        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
+        //        PrefUtil.saveAPIPrefs();
+
     }
-    
+
     /**
      * Register to selection service to update button enablement
      * Register the Automatic Perspective switch part listener
