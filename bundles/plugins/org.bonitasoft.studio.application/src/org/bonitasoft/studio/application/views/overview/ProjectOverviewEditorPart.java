@@ -357,9 +357,8 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 versionStyle.font = JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID);
                 title.setStyleRanges(new StyleRange[] { titleStyle, versionStyle });
 
-                if (refreshDescription(descriptionContent)) {
-                    mainComposite.layout();
-                }
+                refreshDescription(descriptionContent);
+                mainComposite.layout();
 
                 if (extensionComposite != null && !extensionComposite.isDisposed()) {
                     extensionComposite.refreshContent();
