@@ -19,6 +19,9 @@ import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
@@ -30,6 +33,8 @@ public class CustomToolItem {
     private static final int ICON_SIZE = 24;
     private ToolItem toolItem;
     private Label text;
+    protected Cursor cursorArrow;
+    protected Cursor cursorHand;
 
     public CustomToolItem(IBonitaContributionItem contributionItem) {
         this.contributionItem = contributionItem;
@@ -49,6 +54,8 @@ public class CustomToolItem {
     }
 
     public void createControl(Composite parent, CoolbarSize size) {
+        cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
+        cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
         if (contributionItem instanceof SeparatorCoolbarItem) {
             Label separator = new Label(parent, SWT.SEPARATOR);
             separator.setLayoutData(GridDataFactory.fillDefaults()
@@ -67,6 +74,22 @@ public class CustomToolItem {
                 text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
                 text.setText(contributionItem.getText());
             }
+
+            tb.addMouseTrackListener(new MouseTrackAdapter() {
+
+                @Override
+                public void mouseExit(MouseEvent e) {
+                    tb.setCursor(cursorArrow);
+                }
+
+                @Override
+                public void mouseEnter(MouseEvent e) {
+                    if (toolItem.isEnabled()) {
+                        tb.setCursor(cursorHand);
+                    }
+                }
+            });
+
             update();
         }
     }

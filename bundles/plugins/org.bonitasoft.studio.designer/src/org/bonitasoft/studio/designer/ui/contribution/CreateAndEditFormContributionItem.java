@@ -104,7 +104,7 @@ public class CreateAndEditFormContributionItem extends ContributionItem {
         toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setEnabled(false);
         toolItem.setToolTipText(Messages.newFormTooltipForPool);
-        toolItem.setImage(Pics.getImage(PicsConstants.uid24));
+        toolItem.setImage(Pics.getImage(PicsConstants.coolbar_uid_24));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
             @Override

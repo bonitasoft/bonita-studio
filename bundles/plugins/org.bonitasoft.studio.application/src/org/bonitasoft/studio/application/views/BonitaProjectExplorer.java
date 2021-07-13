@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +29,6 @@ import javax.inject.Inject;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.views.provider.UIDArtifactFilters;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -41,9 +39,6 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -102,7 +97,7 @@ public class BonitaProjectExplorer extends CommonNavigator {
 
     @Override
     public Image getTitleImage() {
-        return Pics.getImage(PicsConstants.coolbar_welcome_16);
+        return Pics.getImage(PicsConstants.coolbar_welcome_24);
     }
 
     public BonitaProjectExplorer() {

@@ -60,9 +60,11 @@ public class DeployCoolbarItem extends ContributionItem
         item.setToolTipText(Messages.DeployButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_DEPLOY_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.deploy48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_deploy_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_deploy_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.deploy24));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_deploy_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_deploy_hot_24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {

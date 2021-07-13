@@ -194,11 +194,13 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
         item.setToolTipText(Messages.ConfigureButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_configure_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_configure_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_configure_hot_32));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_configure_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_configure_24));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_configure_disabled_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_configure_hot_24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
@@ -225,6 +227,5 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
         });
 
     }
-    
 
 }

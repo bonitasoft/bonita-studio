@@ -32,7 +32,6 @@ import org.eclipse.ui.PlatformUI;
 
 public class ImportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
-
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.import";
@@ -49,21 +48,21 @@ public class ImportBarCoolbarItem extends ContributionItem implements IBonitaCon
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_IMPORT_TOOLITEM);
         item.setToolTipText(Messages.ImportProcessButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_import_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_import_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_import_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_import_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_import_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_import_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_import_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_import_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                    ECommandService eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
-                    EHandlerService eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
-                    ParameterizedCommand importCommand = ParameterizedCommand.generateCommand(
-                            eCommandService.getCommand("org.bonitasoft.studio.importer.bos.command"), null);
-                    eHandlerService.executeHandler(importCommand);
+                ECommandService eCommandService = PlatformUI.getWorkbench().getService(ECommandService.class);
+                EHandlerService eHandlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
+                ParameterizedCommand importCommand = ParameterizedCommand.generateCommand(
+                        eCommandService.getCommand("org.bonitasoft.studio.importer.bos.command"), null);
+                eHandlerService.executeHandler(importCommand);
             }
         });
 

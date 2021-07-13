@@ -49,11 +49,11 @@ public class HelpCoolbarItem extends ContributionItem implements IBonitaContribu
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.HelpButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_help_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_help_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_help_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_help_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_help_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_help_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_help_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_help_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 
@@ -70,7 +70,7 @@ public class HelpCoolbarItem extends ContributionItem implements IBonitaContribu
     }
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.application.showHelp");
     }
 

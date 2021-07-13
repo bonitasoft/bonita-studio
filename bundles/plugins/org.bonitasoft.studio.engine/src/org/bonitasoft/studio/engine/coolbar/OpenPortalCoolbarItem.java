@@ -30,14 +30,12 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-
 public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.application.openConsole");
     }
-
 
     @Override
     public String getId() {
@@ -54,11 +52,11 @@ public class OpenPortalCoolbarItem extends ContributionItem implements IBonitaCo
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.OpenUserXPButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_portal_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_portal_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_app_directory_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_app_directory_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_portal_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_portal_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_app_directory_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_app_directory_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 

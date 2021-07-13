@@ -49,9 +49,11 @@ public class ProjectOverviewCoolbarItem extends ContributionItem
         item.setToolTipText(Messages.projectOverviewTitle);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_OPEN_PROJECT_DETAILS_TOOLITEM);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.openOverview48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_overview_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_overview_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.openOverview24));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_overview_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_overview_hot_24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {

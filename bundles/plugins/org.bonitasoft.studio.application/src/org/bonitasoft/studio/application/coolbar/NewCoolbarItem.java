@@ -119,11 +119,11 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
         final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.NewButtonTooltip);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_new_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_new_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_new_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_new_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_new_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_new_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_new_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_new_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 
