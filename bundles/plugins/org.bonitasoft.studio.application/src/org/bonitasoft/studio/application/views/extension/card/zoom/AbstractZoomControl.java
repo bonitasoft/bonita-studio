@@ -94,6 +94,7 @@ public abstract class AbstractZoomControl extends Composite {
         CLabel titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(bonitaDep.getName());
+        titleLabel.setToolTipText(Messages.returnToExtensionView);
 
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
@@ -128,6 +129,7 @@ public abstract class AbstractZoomControl extends Composite {
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.back)
+                .withTooltipText(Messages.returnToExtensionView)
                 .withId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON)
                 .withImage(Pics.getImage(PicsConstants.back))
                 .withHotImage(Pics.getImage(PicsConstants.backHot))

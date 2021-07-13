@@ -369,6 +369,8 @@ public class Messages extends NLS {
     public static String validateExistingMavenConfigurationMessage;
     public static String configure;
     public static String retry;
+    public static String returnToElementsView;
+    public static String returnToExtensionView;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

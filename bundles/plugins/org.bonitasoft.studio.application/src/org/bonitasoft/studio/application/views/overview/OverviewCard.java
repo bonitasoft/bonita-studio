@@ -80,6 +80,7 @@ public class OverviewCard extends Composite {
             ((Zoomable) contribution).addZoomBehavior(titleLabel);
 
             new DynamicButtonWidget.Builder()
+                    .withTooltipText(Messages.moreDetails)
                     .withImage(Pics.getImage(PicsConstants.details))
                     .withHotImage(Pics.getImage(PicsConstants.detailsHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

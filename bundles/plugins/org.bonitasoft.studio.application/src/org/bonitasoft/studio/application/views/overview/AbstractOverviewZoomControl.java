@@ -209,6 +209,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleLabel.setText(contribution.getName());
+        titleLabel.setToolTipText(Messages.returnToElementsView);
 
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
@@ -243,6 +244,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
 
         new DynamicButtonWidget.Builder()
                 .withText(Messages.back)
+                .withTooltipText(Messages.returnToElementsView)
                 .withId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON)
                 .withImage(Pics.getImage(PicsConstants.back))
                 .withHotImage(Pics.getImage(PicsConstants.backHot))
