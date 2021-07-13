@@ -122,6 +122,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
     private void createSearchField(Composite parent) {
         searchWidget = new SearchWidget.Builder()
                 .withStyle(SWT.NO_FOCUS)
+                .withPlaceholder(Messages.search)
                 .widthHint(300)
                 .alignRight()
                 .createIn(parent);
@@ -137,7 +138,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
             String searchValue = searchWidget.getText();
             Arrays.asList(detailsComposite.getChildren()).forEach(Control::dispose);
             List<T> filteredFileStores = fileStores.stream()
-                    .filter(fileStore -> fileStore.getName().toLowerCase().startsWith(searchValue.toLowerCase()))
+                    .filter(fileStore -> fileStore.getName().toLowerCase().contains(searchValue.toLowerCase()))
                     .collect(Collectors.toList());
             createDetails(filteredFileStores);
             detailsComposite.layout();
