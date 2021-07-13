@@ -49,10 +49,9 @@ public class SaveCoolbarItem extends ContributionItem
     private DirtyStateTracker dirtyStateTracker;
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.eclipse.ui.file.save");
     }
-
 
     @Override
     public String getId() {
@@ -71,11 +70,13 @@ public class SaveCoolbarItem extends ContributionItem
         item.setToolTipText(Messages.SaveProcessButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_SAVE_EDITOR);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_save_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_save_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_32));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_save_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_save_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_save_hot_24));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
@@ -86,7 +87,7 @@ public class SaveCoolbarItem extends ContributionItem
                         .getActiveEditor();
                 if (editor != null) {
                     if (editor instanceof DiagramEditor) {
-                        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+                        final IHandlerService handlerService = PlatformUI.getWorkbench()
                                 .getService(IHandlerService.class);
                         final Command command = getCommand();
                         final ExecutionEvent executionEvent = new ExecutionEvent(command, Collections.EMPTY_MAP, null,

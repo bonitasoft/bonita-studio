@@ -63,7 +63,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         initDefaultLocalesPreference(store);
 
-        store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.SMALL);
+        store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
         store.setDefault(APLLICATION_DEPLOYMENT_MODE, ALL_IN_BAR);
         store.setDefault(ASK_RENAME_ON_FIRST_SAVE, true);
         store.setDefault(ALWAYS_USE_SCRIPTING_MODE, false);
@@ -102,7 +102,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
         node.putBoolean(IPreferenceConstants.RUN_IN_BACKGROUND, false);
     }
-    
+
     protected IPreferenceStore getJDTPreferenceStore() {
         return PreferenceConstants.getPreferenceStore();
     }

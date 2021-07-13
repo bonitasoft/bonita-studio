@@ -64,7 +64,6 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         return service.getCommand("org.bonitasoft.studio.engine.runCommand");
     }
 
-
     @Override
     public String getText() {
         return Messages.RunButtonLabel;
@@ -85,7 +84,6 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         }
         return false;
     }
-    
 
     class DropdownSelectionListener extends SelectionAdapter {
 
@@ -189,11 +187,13 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
         item.setToolTipText(Messages.RunButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_run_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_run_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_32));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_run_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_run_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_run_hot_24));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_run_disabled_24));
         }
         item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
@@ -221,19 +221,16 @@ public class RunCoolbarItem extends ContributionItem implements IBonitaContribut
         });
 
     }
-    
+
     @Override
     public String getId() {
         return "org.bonitasoft.studio.coolbar.run";
     }
-
 
     @Override
     public boolean isEnabled() {
         final Command cmd = getCommand();
         return cmd.isEnabled() && isSelectionRunnable();
     }
-
- 
 
 }

@@ -37,10 +37,9 @@ import org.eclipse.ui.commands.ICommandService;
 public class ExportBarCoolbarItem extends ContributionItem implements IBonitaContributionItem {
 
     private Command getCommand() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         return service.getCommand("org.bonitasoft.studio.exportBosArchive");
     }
-
 
     @Override
     public String getId() {
@@ -58,11 +57,11 @@ public class ExportBarCoolbarItem extends ContributionItem implements IBonitaCon
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_EXPORT_TOOLITEM);
         item.setToolTipText(Messages.ExportButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_export_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_export_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_export_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_export_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_export_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_export_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_export_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_export_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 

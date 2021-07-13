@@ -49,9 +49,11 @@ public class OpenUIDesignerCoolBarItem extends ContributionItem implements IBoni
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
         item.setToolTipText(Messages.openUIDesigner);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.uid48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_uid_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_uid_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.uid24));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_uid_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_uid_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 

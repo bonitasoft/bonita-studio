@@ -269,10 +269,12 @@ public class PicsConstants {
 
     public static String customUserInfo = "actors_mapping.png";
 
-    public static String coolbar_configure_48 = "coolbar/48/configure.png";
-    public static String coolbar_configure_disabled_48 = "coolbar/48/configure_disabled.png";
-    public static String coolbar_configure_16 = "coolbar/24/configure.png";
-    public static String coolbar_configure_disabled_16 = "coolbar/24/configure_disabled.png";
+    public static String coolbar_configure_32 = "coolbar/32/configure.png";
+    public static String coolbar_configure_hot_32 = "coolbar/32/configure_hot.png";
+    public static String coolbar_configure_disabled_32 = "coolbar/32/configure_disabled.png";
+    public static String coolbar_configure_24 = "coolbar/24/configure.png";
+    public static String coolbar_configure_hot_24 = "coolbar/24/configure_hot.png";
+    public static String coolbar_configure_disabled_24 = "coolbar/24/configure_disabled.png";
 
     public static String coolbar_copy_48 = "coolbar/48/copy.png";
     public static String coolbar_copy_disabled_48 = "coolbar/48/copy_disabled.png";
@@ -284,30 +286,45 @@ public class PicsConstants {
     public static String coolbar_debug_16 = "coolbar/24/debug.png";
     public static String coolbar_debug_disabled_16 = "coolbar/24/debug_disabled.png";
 
-    public static String coolbar_export_48 = "coolbar/48/export.png";
-    public static String coolbar_export_disabled_48 = "coolbar/48/export_disabled.png";
-    public static String coolbar_export_16 = "coolbar/24/export.png";
-    public static String coolbar_export_disabled_16 = "coolbar/24/export_disabled.png";
-
     public static String coolbar_guidance_48 = "coolbar/48/guidance.png";
     public static String coolbar_guidance_disabled_48 = "coolbar/48/guidance_disabled.png";
     public static String coolbar_guidance_16 = "coolbar/24/guidance.png";
     public static String coolbar_guidance_disabled_16 = "coolbar/24/guidance_disabled.png";
 
-    public static String coolbar_help_48 = "coolbar/48/help.png";
-    public static String coolbar_help_disabled_48 = "coolbar/48/help_disabled.png";
-    public static String coolbar_help_16 = "coolbar/24/help.png";
-    public static String coolbar_help_disabled_16 = "coolbar/24/help_disabled.png";
+    public static String coolbar_help_32 = "coolbar/32/help.png";
+    public static String coolbar_help_hot_32 = "coolbar/32/help_hot.png";
+    public static String coolbar_help_24 = "coolbar/24/help.png";
+    public static String coolbar_help_hot_24 = "coolbar/24/help_hot.png";
 
-    public static String coolbar_import_48 = "coolbar/48/import.png";
-    public static String coolbar_import_disabled_48 = "coolbar/48/import_disabled.png";
-    public static String coolbar_import_16 = "coolbar/24/import.png";
-    public static String coolbar_import_disabled_16 = "coolbar/24/import_disabled.png";
+    public static String coolbar_new_32 = "coolbar/32/new.png";
+    public static String coolbar_new_hot_32 = "coolbar/32/new_hot.png";
+    public static String coolbar_new_24 = "coolbar/24/new.png";
+    public static String coolbar_new_hot_24 = "coolbar/24/new_hot.png";
 
-    public static String coolbar_new_48 = "coolbar/48/new.png";
-    public static String coolbar_new_disabled_48 = "coolbar/48/new_disabled.png";
-    public static String coolbar_new_16 = "coolbar/24/new.png";
-    public static String coolbar_new_disabled_16 = "coolbar/24/new_disabled.png";
+    public static String coolbar_deploy_32 = "coolbar/32/deploy.png";
+    public static String coolbar_deploy_hot_32 = "coolbar/32/deploy_hot.png";
+    public static String coolbar_deploy_24 = "coolbar/24/deploy.png";
+    public static String coolbar_deploy_hot_24 = "coolbar/24/deploy_hot.png";
+
+    public static String coolbar_import_32 = "coolbar/32/import.png";
+    public static String coolbar_import_hot_32 = "coolbar/32/import_hot.png";
+    public static String coolbar_import_24 = "coolbar/24/import.png";
+    public static String coolbar_import_hot_24 = "coolbar/24/import_hot.png";
+
+    public static String coolbar_export_32 = "coolbar/32/export.png";
+    public static String coolbar_export_hot_32 = "coolbar/32/export_hot.png";
+    public static String coolbar_export_24 = "coolbar/24/export.png";
+    public static String coolbar_export_hot_24 = "coolbar/24/export_hot.png";
+
+    public static String coolbar_uid_32 = "coolbar/32/uid.png";
+    public static String coolbar_uid_hot_32 = "coolbar/32/uid_hot.png";
+    public static String coolbar_uid_24 = "coolbar/24/uid.png";
+    public static String coolbar_uid_hot_24 = "coolbar/24/uid_hot.png";
+
+    public static String coolbar_overview_32 = "coolbar/32/overview.png";
+    public static String coolbar_overview_hot_32 = "coolbar/32/overview_hot.png";
+    public static String coolbar_overview_24 = "coolbar/24/overview.png";
+    public static String coolbar_overview_hot_24 = "coolbar/24/overview_hot.png";
 
     public static String coolbar_open_48 = "coolbar/48/open.png";
     public static String coolbar_open_disabled_48 = "coolbar/48/open_disabled.png";
@@ -319,15 +336,15 @@ public class PicsConstants {
     public static String coolbar_paste_16 = "coolbar/24/paste.png";
     public static String coolbar_paste_disabled_16 = "coolbar/24/paste_disabled.png";
 
-    public static String coolbar_portal_48 = "coolbar/48/portal.png";
-    public static String coolbar_portal_disabled_48 = "coolbar/48/portal_disabled.png";
-    public static String coolbar_portal_16 = "coolbar/24/portal.png";
-    public static String coolbar_portal_disabled_16 = "coolbar/24/portal_disabled.png";
+    public static String coolbar_app_directory_32 = "coolbar/32/app-directory.png";
+    public static String coolbar_app_directory_hot_32 = "coolbar/32/app-directory_hot.png";
+    public static String coolbar_app_directory_24 = "coolbar/24/app-directory.png";
+    public static String coolbar_app_directory_hot_24 = "coolbar/24/app-directory_hot.png";
 
-    public static String coolbar_preferences_48 = "coolbar/48/preferences.png";
-    public static String coolbar_preferences_disabled_48 = "coolbar/48/preferences_disabled.png";
-    public static String coolbar_preferences_16 = "coolbar/24/preferences.png";
-    public static String coolbar_preferences_disabled_16 = "coolbar/24/preferences_disabled.png";
+    public static String coolbar_preferences_32 = "coolbar/32/preferences.png";
+    public static String coolbar_preferences_hot_32 = "coolbar/32/preferences_hot.png";
+    public static String coolbar_preferences_24 = "coolbar/24/preferences.png";
+    public static String coolbar_preferences_hot_24 = "coolbar/24/preferences_hot.png";
 
     public static String coolbar_preview_48 = "coolbar/48/preview.png";
     public static String coolbar_preview_disabled_48 = "coolbar/48/preview_disabled.png";
@@ -344,20 +361,24 @@ public class PicsConstants {
     public static String coolbar_profile_16 = "coolbar/24/profile.png";
     public static String coolbar_profile_disabled_16 = "coolbar/24/profile_disabled.png";
 
-    public static String coolbar_run_48 = "coolbar/48/run.png";
-    public static String coolbar_run_disabled_48 = "coolbar/48/run_disabled.png";
-    public static String coolbar_run_16 = "coolbar/24/run.png";
-    public static String coolbar_run_disabled_16 = "coolbar/24/run_disabled.png";
+    public static String coolbar_run_32 = "coolbar/32/run.png";
+    public static String coolbar_run_disabled_32 = "coolbar/32/run_disabled.png";
+    public static String coolbar_run_hot_32 = "coolbar/32/run_hot.png";
+    public static String coolbar_run_24 = "coolbar/24/run.png";
+    public static String coolbar_run_disabled_24 = "coolbar/24/run_disabled.png";
+    public static String coolbar_run_hot_24 = "coolbar/24/run_hot.png";
 
-    public static String coolbar_save_48 = "coolbar/48/save.png";
-    public static String coolbar_save_disabled_48 = "coolbar/48/save_disabled.png";
-    public static String coolbar_save_16 = "coolbar/24/save.png";
-    public static String coolbar_save_disabled_16 = "coolbar/24/save_disabled.png";
+    public static String coolbar_save_32 = "coolbar/32/save.png";
+    public static String coolbar_save_hot_32 = "coolbar/32/save_hot.png";
+    public static String coolbar_save_disabled_32 = "coolbar/32/save_disabled.png";
+    public static String coolbar_save_24 = "coolbar/24/save.png";
+    public static String coolbar_save_hot_24 = "coolbar/24/save_hot.png";
+    public static String coolbar_save_disabled_24 = "coolbar/24/save_disabled.png";
 
-    public static String coolbar_welcome_48 = "coolbar/48/welcome.png";
-    public static String coolbar_welcome_disabled_48 = "coolbar/48/welcome_disabled.png";
-    public static String coolbar_welcome_16 = "coolbar/24/welcome.png";
-    public static String coolbar_welcome_disabled_16 = "coolbar/24/welcome_disabled.png";
+    public static String coolbar_welcome_32 = "coolbar/32/welcome.png";
+    public static String coolbar_welcome_hot_32 = "coolbar/32/welcome_hot.png";
+    public static String coolbar_welcome_24 = "coolbar/24/welcome.png";
+    public static String coolbar_welcome_hot_24 = "coolbar/24/welcome_hot.png";
 
     public static String processDiagrammeWithGreyLock = "editor/processDiagrammeWithGreyLock.png";
     public static String processDiagrammeWithRedLock = "editor/processDiagrammeWithRedLock.png";
@@ -413,10 +434,8 @@ public class PicsConstants {
     public static String add_subelement_decorator = "decoration/add_subelement.png";
 
     public static String openOverview = "projectExtensions/dashboard.png";
-    public static String openOverview24 = "coolbar/24/dashboard.png";
     public static String openOverview32 = "projectExtensions/dashboard32.png";
     public static String openOverview32_hot = "projectExtensions/dashboard32_hot.png";
-    public static String openOverview48 = "coolbar/48/dashboard.png";
 
     public static String extensions32 = "projectExtensions/extensions32.png";
     public static String extensions32_hot = "projectExtensions/extensions32_hot.png";
@@ -431,9 +450,6 @@ public class PicsConstants {
     public static String openMarketplaceHot = "projectExtensions/open_marketplace_hot.png";
     public static String openMarketplace64 = "projectExtensions/open_marketplace_64.png";
     public static String openMarketplace64Hot = "projectExtensions/open_marketplace_64_hot.png";
-
-    public static String deploy24 = "coolbar/24/deploy.png";
-    public static String deploy48 = "coolbar/48/deploy.png";
 
     public static String import32 = "projectExtensions/import_32.png";
     public static String import32Hot = "projectExtensions/import_32_hot.png";
@@ -450,9 +466,6 @@ public class PicsConstants {
     public static String updateDependencyHot = "projectExtensions/update_hot.png";
 
     public static String key = "key.png";
-
-    public static String uid24 = "coolbar/24/uid.png";
-    public static String uid48 = "coolbar/48/uid.png";
 
     public static String back = "projectExtensions/back.png";
     public static String backHot = "projectExtensions/back_hot.png";

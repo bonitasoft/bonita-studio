@@ -59,11 +59,11 @@ public class WelcomeCoolbarItem extends ContributionItem implements IBonitaContr
         final ToolItem item = new ToolItem(toolbar, SWT.PUSH | SWT.RIGHT);
         item.setToolTipText(Messages.WelcomeButtonLabel);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_welcome_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_welcome_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_welcome_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_welcome_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_welcome_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_welcome_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_welcome_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_welcome_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 

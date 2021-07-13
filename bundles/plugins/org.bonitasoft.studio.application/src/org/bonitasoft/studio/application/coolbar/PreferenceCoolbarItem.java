@@ -53,11 +53,11 @@ public class PreferenceCoolbarItem extends ContributionItem implements IBonitaCo
         item.setToolTipText(Messages.PreferencesButtonLabel);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, PREFERENCE_COOLBAR_ITEM_ID);
         if (iconSize < 0) {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_48));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preferences_disabled_48));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_32));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_preferences_hot_32));
         } else {
-            item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_16));
-            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preferences_disabled_16));
+            item.setImage(Pics.getImage(PicsConstants.coolbar_preferences_24));
+            item.setHotImage(Pics.getImage(PicsConstants.coolbar_preferences_hot_24));
         }
         item.addSelectionListener(new SelectionAdapter() {
 
