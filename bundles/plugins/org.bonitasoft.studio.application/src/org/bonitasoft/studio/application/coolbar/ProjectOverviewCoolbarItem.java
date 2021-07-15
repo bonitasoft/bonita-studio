@@ -40,7 +40,7 @@ public class ProjectOverviewCoolbarItem extends ContributionItem
 
     private Command getCommand() {
         final ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
-        return service.getCommand("org.bonitasoft.studio.application.show.extensions.command");
+        return service.getCommand("org.bonitasoft.studio.application.show.overview.command");
     }
 
     @Override

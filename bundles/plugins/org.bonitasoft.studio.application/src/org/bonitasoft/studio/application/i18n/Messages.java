@@ -371,6 +371,7 @@ public class Messages extends NLS {
     public static String retry;
     public static String returnToElementsView;
     public static String returnToExtensionView;
+    public static String addExtensionMenuLabel;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

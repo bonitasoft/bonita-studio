@@ -67,7 +67,7 @@ import org.osgi.framework.Bundle;
  */
 public class PlatformUtil {
 
-    private static final String OPEN_DASHBOARD_COMMAND = "org.bonitasoft.studio.application.show.extensions.command";
+    private static final String OPEN_DASHBOARD_COMMAND = "org.bonitasoft.studio.application.show.overview.command";
     private static final String INTROVIEW_ID = "org.eclipse.ui.internal.introview";
     private static IFileSystem fileSystem; // SINGLETON
 
