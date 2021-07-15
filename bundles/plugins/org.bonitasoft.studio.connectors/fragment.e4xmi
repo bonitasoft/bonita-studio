@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_50kiwIAkEeuOw8R5CBfKdQ">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_-eLLIIAkEeuOw8R5CBfKdQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_FFvVAIAlEeuOw8R5CBfKdQ" elementId="org.bonitasoft.studio.connectors.database.driver.settings.handler" contributionURI="bundleclass://org.bonitasoft.studio.connectors/org.bonitasoft.studio.connectors.handler.ConfigureDatabaseDriverHandler" command="_O7bAsIAlEeuOw8R5CBfKdQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_pFYhIIGvEeu-eY5X9yx65g" elementId="org.bonitasoft.studio.connectors.database.driver.add.handler" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.handler.AddDatabaseDriverHandler" command="_HrJ_MIDBEeuZfuztA5HyxA"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_MRNdMIAlEeuOw8R5CBfKdQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_O7bAsIAlEeuOw8R5CBfKdQ" elementId="org.bonitasoft.studio.connectors.database.driver.settings.command" commandName="%driversSettings"/>
+    <elements xsi:type="commands:Command" xmi:id="_HrJ_MIDBEeuZfuztA5HyxA" elementId="org.bonitasoft.studio.connectors.database.driver.add.command" commandName="%addDriver"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_41EMkIAvEeuOw8R5CBfKdQ" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_68nu8IAvEeuOw8R5CBfKdQ" elementId="org.bonitasoft.studio.connectors.database.driver.extension.action.addon" contributionURI="bundleclass://org.bonitasoft.studio.connectors/org.bonitasoft.studio.connectors.extension.DatabaseConnectorActionExtension"/>
+  </fragments>
+</fragment:ModelFragments>
