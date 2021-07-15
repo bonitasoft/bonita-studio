@@ -437,6 +437,7 @@ public class PicsConstants {
     public static String openOverview32 = "projectExtensions/dashboard32.png";
     public static String openOverview32_hot = "projectExtensions/dashboard32_hot.png";
 
+    public static String extensions = "projectExtensions/extensions.png";
     public static String extensions32 = "projectExtensions/extensions32.png";
     public static String extensions32_hot = "projectExtensions/extensions32_hot.png";
 

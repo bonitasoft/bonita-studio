@@ -254,6 +254,16 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                 .createIn(parent);
     }
 
+    public void openExtensionsView() {
+        if (extensionComposite == null || extensionComposite.isDisposed()) {
+            Display.getDefault().asyncExec(() -> {
+                toExtensionsView();
+                updateToolbarContent();
+                mainComposite.layout();
+            });
+        }
+    }
+
     private void createImportButton(Composite parent) {
         new DropdownDynamicButtonWidget.Builder()
                 .withText(Messages.importExtensionButtonLabel)

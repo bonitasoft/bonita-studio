@@ -21,13 +21,12 @@ import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPar
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-public class OpenExtensionViewHandler {
+public class OpenOverviewViewHandler {
 
     @Execute
     public void execute() {
@@ -36,11 +35,7 @@ public class OpenExtensionViewHandler {
                 .map(IWorkbenchWindow::getActivePage)
                 .ifPresent(activePage -> {
                     try {
-                        IEditorPart editor = activePage.openEditor(ProjectOverviewEditorInput.getInstance(),
-                                ProjectOverviewEditorPart.ID);
-                        if (editor instanceof ProjectOverviewEditorPart) {
-                            ((ProjectOverviewEditorPart) editor).openExtensionsView();
-                        }
+                        activePage.openEditor(ProjectOverviewEditorInput.getInstance(), ProjectOverviewEditorPart.ID);
                     } catch (PartInitException e) {
                         BonitaStudioLog.error(e);
                     }

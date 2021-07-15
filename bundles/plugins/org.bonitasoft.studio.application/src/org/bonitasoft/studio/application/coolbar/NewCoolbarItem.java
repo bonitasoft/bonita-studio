@@ -170,10 +170,11 @@ public class NewCoolbarItem extends ContributionItem implements IBonitaContribut
                             Pics.getImage(PicsConstants.widget));
                     listener.add("org.bonitasoft.studio.designer.command.create.fragment", Messages.fragment,
                             Pics.getImage(PicsConstants.fragment));
-                    if (listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension,
-                            Pics.getImage(PicsConstants.restApi))) {
-                        listener.addSeparator();
-                    }
+                    listener.add("org.bonitasoft.studio.rest.api.extension.newCommand", Messages.restAPIExtension,
+                            Pics.getImage(PicsConstants.restApi));
+                    listener.addSeparator();
+                    listener.add("org.bonitasoft.studio.application.show.extension.command", Messages.addExtensionMenuLabel,
+                            Pics.getImage(PicsConstants.extensions));
                     listener.widgetSelected(e);
                 }
             }
