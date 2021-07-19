@@ -25,7 +25,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-
+import org.eclipse.osgi.util.NLS;
 
 public class ExpressionDependenciesConstraint extends AbstractLiveValidationMarkerConstraint {
 
@@ -38,6 +38,7 @@ public class ExpressionDependenciesConstraint extends AbstractLiveValidationMark
         supportedTypes = new HashSet<String>();
         supportedTypes.add(ExpressionConstants.VARIABLE_TYPE);
         supportedTypes.add(ExpressionConstants.PARAMETER_TYPE);
+        supportedTypes.add(ExpressionConstants.PATTERN_TYPE);
     }
 
     public ExpressionDependenciesConstraint() {
@@ -70,8 +71,20 @@ public class ExpressionDependenciesConstraint extends AbstractLiveValidationMark
     private IStatus evaluateExpression(final IValidationContext context, final EObject eObj) {
         final Expression expression = (Expression) eObj;
         final String type = expression.getType();
-        if (expression.getReferencedElements().isEmpty()) {
-            return context.createFailureStatus(Messages.bind(Messages.unresolvedDependenciesFor, expression.getName(),
+        if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
+            for (EObject dep : expression.getReferencedElements()) {
+                if (dep instanceof Expression && ((Expression) dep).getReferencedElements().stream()
+                        .filter(Expression.class::isInstance)
+                        .map(Expression.class::cast)
+                        .anyMatch(exp -> !exp.hasContent() || !exp.hasName())) {
+                    return context.createFailureStatus(NLS.bind(Messages.unresolvedDependenciesFor,
+                            expression.getContent().replace("\n", "\\n").replace("\r", "\\r"),
+                            expressionTypeLabelProvider.getText(type)));
+                }
+            }
+        } else if (expression.getReferencedElements().isEmpty()) {
+            return context.createFailureStatus(NLS.bind(Messages.unresolvedDependenciesFor,
+                    expression.getName(),
                     expressionTypeLabelProvider.getText(type)));
         }
         return context.createSuccessStatus();
