@@ -103,6 +103,9 @@ public final class Messages extends NLS {
     public static String updateAllModels;
     public static String prepareExport;
 
+    public static String confirmMigratonTitle;
+    public static String confirmMigraton;
+
     private Messages() {
         // Do not instantiate
     }
