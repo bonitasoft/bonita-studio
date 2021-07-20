@@ -67,7 +67,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.ui,
  org.eclipse.e4.ui.model.workbench;bundle-version="2.1.600.v20191106-1503",
  org.eclipse.e4.core.di.annotations,
- javax.inject
+ javax.inject,
+ org.bonitasoft.studio.validation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.mockito
