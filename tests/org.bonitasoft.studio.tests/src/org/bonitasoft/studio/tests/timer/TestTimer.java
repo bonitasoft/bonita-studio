@@ -67,6 +67,9 @@ public class TestTimer implements SWTBotConstants {
                 .setArchive(
                         TestTimer.class.getResource("TestTimer_1_0.bos"))
                 .finish();
+        
+        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        workbenchBot.open().selectDiagram("TestTimer", "1.0").open();
 
         final SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
         /* Select step on which there is the connector to test */
