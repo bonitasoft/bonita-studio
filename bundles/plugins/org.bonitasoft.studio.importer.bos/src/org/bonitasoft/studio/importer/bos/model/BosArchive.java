@@ -54,7 +54,6 @@ public class BosArchive {
         FALLBACK_PROPERTIES.put(VERSION, "6.0.0");
     }
 
-    private boolean openAll = false;
     private final File archiveFile;
 
     public BosArchive(File archiveFile) {
@@ -129,7 +128,7 @@ public class BosArchive {
             String filePath = Joiner.on('/').join(concat(parentSegments, segments));
             ImportFileStoreModel file = createImportModelFileStore(store, segments.get(0), filePath);
             if (!isALegacyProfile(store, file) && !isLegacySoapXSD(store, file)) {
-                file.setToOpen(openAll || resourcesToOpen.contains(file.getFileName()));
+                file.setToOpen(resourcesToOpen.contains(file.getFileName()));
                 file.getParentRepositoryStore().ifPresent(repositoryStore -> {
                     IStatus validationStatus = validateFile(file, repositoryStore);
                     if (isDiagram(file)) {
@@ -317,7 +316,6 @@ public class BosArchive {
         if (toOpen != null) {
             return newHashSet(Splitter.on(",").split(toOpen));
         }
-        openAll = true;
         return Collections.emptySet();
     }
 

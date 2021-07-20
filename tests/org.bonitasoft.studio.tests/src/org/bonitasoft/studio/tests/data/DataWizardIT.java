@@ -107,8 +107,9 @@ public class DataWizardIT {
                 .setArchive(
                         DataWizardIT.class.getResource("ProcessWithData_1_0.bos"))
                 .finish();
-
-        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
+        
+        final BotApplicationWorkbenchWindow workbenchBot = new BotApplicationWorkbenchWindow(bot);
+        BotProcessDiagramPerspective botProcessDiagramPerspective = workbenchBot.open().selectDiagram("ProcessWithData", "1.0").open();
         final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective
                 .getDiagramPropertiesPart();
         final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective
