@@ -49,7 +49,7 @@ public class DatabaseConnectorActionExtension implements ExtensionAction {
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
-                .withText(commandExecutor.getCommandName(DATABASE_ADD_DRIVER_COMMAND_ID))
+                .withLabel(commandExecutor.getCommandName(DATABASE_ADD_DRIVER_COMMAND_ID))
                 .withImage(Pics.getImage("database_driver_add.png", ConnectorPlugin.getDefault()))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                 .onClick(e -> commandExecutor
@@ -57,7 +57,7 @@ public class DatabaseConnectorActionExtension implements ExtensionAction {
                 .createIn(composite);
 
         new DynamicButtonWidget.Builder()
-                .withText(commandExecutor.getCommandName(DATABASE_DRIVER_SETTINGS_COMMAND_ID))
+                .withLabel(commandExecutor.getCommandName(DATABASE_DRIVER_SETTINGS_COMMAND_ID))
                 .withImage(Pics.getImage("database_driver_settings.png", ConnectorPlugin.getDefault()))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                 .onClick(e -> commandExecutor

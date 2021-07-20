@@ -51,20 +51,12 @@ public class BotProjectDetailsEditor {
     }
 
     public BotProjectDetailsEditor toExtensionView() {
-        var dashboardMatcher = allOf(widgetOfType(ToolItem.class),
-                withId(SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW), withStyle(SWT.PUSH, "SWT.PUSH"));
-        if (bot.getFinder().findControls(dashboardMatcher).isEmpty()) {
-            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW).click();
-        }
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW).click();
         return this;
     }
 
     public BotProjectDetailsEditor toDashboardView() {
-        var extensionMatcher = allOf(widgetOfType(ToolItem.class),
-                withId(SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW), withStyle(SWT.PUSH, "SWT.PUSH"));
-        if (bot.getFinder().findControls(extensionMatcher).isEmpty()) {
-            bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW).click();
-        }
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_OPEN_ELEMENT_VIEW).click();
         return this;
     }
 

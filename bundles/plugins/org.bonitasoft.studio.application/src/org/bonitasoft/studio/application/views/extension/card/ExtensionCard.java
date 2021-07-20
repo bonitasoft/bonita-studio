@@ -92,6 +92,7 @@ public class ExtensionCard extends Composite {
         createTypeComposite(contentComposite);
         createIcon(contentComposite);
         createDescriptionLabel(contentComposite);
+        createDetailsButton(contentComposite);
 
         var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(
@@ -104,12 +105,12 @@ public class ExtensionCard extends Composite {
     private void createDetailsButton(Composite parent) {
         if (this instanceof Zoomable) {
             new DynamicButtonWidget.Builder()
-                    .withTooltipText(org.bonitasoft.studio.common.Messages.moreDetails)
+                    .withTooltipText(Messages.showMore)
                     .withImage(Pics.getImage(PicsConstants.details))
                     .withHotImage(Pics.getImage(PicsConstants.detailsHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .withLayoutData(
-                            GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.BOTTOM).create())
+                            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).align(SWT.END, SWT.FILL).create())
                     .onClick(e -> ((Zoomable) this).getZoomListener().zoom(e))
                     .createIn(parent);
         }
@@ -140,10 +141,12 @@ public class ExtensionCard extends Composite {
                 .span(action != null ? 1 : 2, 1).create());
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
+        int columnUsed = 0;
+
         if (isABonitaExtensionUpdatable()) {
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateToLatestExtensionFromCard(bonitaDep.getArtifactId()))
-                    .withText(Messages.upgradeBonitaExtension)
+                    .withLabel(Messages.upgradeBonitaExtension)
                     .withTooltipText(Messages.upgradeBonitaExtensionTooltip)
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
                     .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
@@ -152,36 +155,40 @@ public class ExtensionCard extends Composite {
                             BonitaThemeConstants.SUCCESS_HOVER_TEXT_COLOR)
                     .onClick(e -> updateListeners.stream().forEach(l -> l.updateExtension(bonitaDep, dep)))
                     .createIn(toolbarComposite);
+            columnUsed++;
         } else if (!bonitaDep.isFromMarketplace()) {
             if (canEditMavenCoordinates(bonitaDep)) {
                 new DynamicButtonWidget.Builder()
-                        .withText(Messages.editMavenCoordinates)
+                        .withLabel(Messages.editMavenCoordinates)
                         .withTooltipText(Messages.editMavenCoordinatesTooltip)
                         .withImage(Pics.getImage(PicsConstants.edit_simple))
                         .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
                         .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                         .onClick(e -> updateListeners.stream().forEach(l -> l.updateGav(bonitaDep, dep)))
                         .createIn(toolbarComposite);
+                columnUsed++;
             }
 
             new DynamicButtonWidget.Builder()
                     .withId(SWTBotConstants.updateExtensionFromCard(bonitaDep.getArtifactId()))
-                    .withText(Messages.upgradeExtension)
+                    .withLabel(Messages.upgradeExtension)
                     .withTooltipText(Messages.upgradeExtensionTooltip)
                     .withImage(Pics.getImage(PicsConstants.updateDependency))
                     .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
                     .onClick(e -> updateListeners.stream().forEach(l -> l.updateExtension(bonitaDep, dep)))
                     .createIn(toolbarComposite);
+            columnUsed++;
         }
 
         new DynamicButtonWidget.Builder()
                 .withId(SWTBotConstants.removeExtensionFromCard(bonitaDep.getArtifactId()))
-                .withText(Messages.removeExtension)
+                .withLabel(Messages.removeExtension)
                 .withTooltipText(Messages.removeExtensionTooltip)
                 .withImage(Pics.getImage(PicsConstants.delete))
                 .withHotImage(Pics.getImage(PicsConstants.delete_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                .withLayoutData(GridDataFactory.swtDefaults().span(3 - columnUsed, 1).create())
                 .onClick(e -> removeListeners.stream().forEach(l -> l.removeExtension(dep)))
                 .createIn(toolbarComposite);
     }
@@ -240,7 +247,6 @@ public class ExtensionCard extends Composite {
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
         titleComposite.setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(2)
                 .spacing(LayoutConstants.getSpacing().x, 1)
                 .create());
         titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(1, 2).create());
@@ -253,11 +259,9 @@ public class ExtensionCard extends Composite {
         titleLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         titleLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
 
-        createDetailsButton(titleComposite);
-
         var gav = new CLabel(titleComposite, SWT.WRAP);
         gav.setLayoutData(
-                GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(5, 0).create());
+                GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
         gav.setText(String.format("%s:%s:%s", dep.getGroupId(), dep.getArtifactId(), dep.getVersion()));
         gav.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.ITALIC_0_FONT_ID));
         gav.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.GAV_TEXT_COLOR);

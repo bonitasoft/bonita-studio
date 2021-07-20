@@ -50,7 +50,8 @@ public class DropdownDynamicButtonWidget extends DynamicButtonWidget {
 
         public DropdownDynamicButtonWidget createIn(Composite parent) {
             var widget = new DropdownDynamicButtonWidget(parent, text, id, tooltipText, image, hotImage, maxTextWidth,
-                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit, dropDownItems);
+                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit, labelBelow,
+                    dropDownItems);
             widget.createControl();
             return widget;
         }
@@ -131,10 +132,10 @@ public class DropdownDynamicButtonWidget extends DynamicButtonWidget {
             Optional<String> defaultTextColorCssId,
             Optional<String> hoverTextColorCssId,
             Optional<FormToolkit> toolkit,
+            boolean labelBelow,
             List<DropdownItem> menuItems) {
         super(parent, text, id, tooltipText, image, hotImage, Optional.empty(), maxTextWidth, cssClass, layoutData,
-                font,
-                defaultTextColorCssId, hoverTextColorCssId, toolkit);
+                font, defaultTextColorCssId, hoverTextColorCssId, toolkit, labelBelow);
         this.menuItems = menuItems;
     }
 

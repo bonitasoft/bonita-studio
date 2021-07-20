@@ -56,6 +56,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -74,16 +75,30 @@ public class ExtensionComposite extends Composite {
     private CommandExecutor commandExecutor;
     private UpdateExtensionListener upadateExtensionListener;
     private RemoveExtensionListener removeExtensionListener;
-
     private MavenProjectHelper mavenHelper;
-
     private DataBindingContext ctx;
-
-    private Composite cardComposite;
-
+    private Composite contentComposite;
     private ScrolledComposite scrolledComposite;
-
     private List<BonitaArtifactDependency> allDependencies;
+
+    class BonitaDependencyTuple {
+
+        Dependency dep;
+        BonitaArtifactDependency bonitaDep;
+
+        public BonitaDependencyTuple(Dependency dep, BonitaArtifactDependency bonitaDep) {
+            this.dep = dep;
+            this.bonitaDep = bonitaDep;
+        }
+
+        public Dependency getDep() {
+            return dep;
+        }
+
+        public BonitaArtifactDependency getBonitaDep() {
+            return bonitaDep;
+        }
+    }
 
     public ExtensionComposite(Composite parent, RepositoryAccessor repositoryAccessor) {
         super(parent, SWT.NONE);
@@ -91,7 +106,7 @@ public class ExtensionComposite extends Composite {
         initVariables();
 
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-        setLayout(GridLayoutFactory.fillDefaults().create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(20, 20).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         scrolledComposite = createExtensionSection(this);
@@ -113,39 +128,115 @@ public class ExtensionComposite extends Composite {
         removeExtensionListener = ContextInjectionFactory.make(RemoveExtensionListener.class, eclipseContext);
     }
 
+    private void createToolbar(Composite parent) {
+        var toolbarComposite = createComposite(parent, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite
+                .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+
+        createMarketplaceButton(toolbarComposite);
+        createImportButton(toolbarComposite);
+    }
+
+    private void createImportButton(Composite parent) {
+        new DropdownDynamicButtonWidget.Builder()
+                .withLabel(Messages.importExtensionButtonLabel)
+                .withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
+                .withTooltipText(Messages.importExtension)
+                .withImage(Pics.getImage(PicsConstants.add_item_32))
+                .withHotImage(Pics.getImage(PicsConstants.add_item_32_hot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .addDropdownItem(Messages.addConnector, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
+                .addDropdownItem(Messages.addActorFilter, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
+                                        ArtifactType.ACTOR_FILTER.name())))
+                .addDropdownItem(Messages.addTheme, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
+                .addDropdownItem(Messages.addRestApiExtension, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
+                .addDropdownItem(Messages.addOther, null,
+                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
+                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
+                .createIn(parent);
+    }
+
+    private void createMarketplaceButton(Composite parent) {
+        new DynamicButtonWidget.Builder()
+                .withLabel(Messages.openMarketplace)
+                .withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM)
+                .withTooltipText(Messages.openMarketplaceTooltip)
+                .withImage(Pics.getImage(PicsConstants.openMarketplace))
+                .withHotImage(Pics.getImage(PicsConstants.openMarketplaceHot))
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .onClick(e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.OPEN_MARKETPLACE_COMMAND, null))
+                .createIn(parent);
+    }
+
     private ScrolledComposite createExtensionSection(Composite parent) {
         try {
-            PlatformUI.getWorkbench().getProgressService().run(true, false,  BonitaMarketplace.getInstance()::loadDependencies);
+            PlatformUI.getWorkbench().getProgressService().run(true, false,
+                    BonitaMarketplace.getInstance()::loadDependencies);
         } catch (InvocationTargetException | InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-        
+
         allDependencies = BonitaMarketplace.getInstance().getDependencies();
-        
+
         var sc = new ScrolledComposite(parent, SWT.V_SCROLL);
         sc.setLayout(GridLayoutFactory.fillDefaults().create());
         sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        cardComposite = createComposite(sc, SWT.NONE);
-        cardComposite.setLayout(GridLayoutFactory.fillDefaults().margins(40, 20)
-                .spacing(20, 20).numColumns(2).equalWidth(true).create());
-        cardComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createExtensionCards(cardComposite);
+        contentComposite = createComposite(sc, SWT.NONE);
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().spacing(20, 20).create());
+        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        sc.setContent(cardComposite);
+        createExtensionTitleComposite(contentComposite);
+        createContent();
+
+        sc.setContent(contentComposite);
         sc.setExpandVertical(true);
         sc.setExpandHorizontal(true);
-        sc.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+        sc.setMinHeight(contentComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         return sc;
     }
 
-    private void createExtensionCards(Composite parent) {
+    private void createContent() {
+        List<BonitaDependencyTuple> bonitaDependencies = new ArrayList<>();
+        List<Dependency> otherDependencies = new ArrayList<>();
+        computeDependencies(bonitaDependencies, otherDependencies);
+
+        if (!bonitaDependencies.isEmpty() || !otherDependencies.isEmpty()) {
+            var cardsComposite = createComposite(contentComposite, SWT.NONE);
+            cardsComposite.setLayout(GridLayoutFactory.fillDefaults()
+                    .margins(20, 10).spacing(20, 20).numColumns(2).equalWidth(true).create());
+            cardsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+            bonitaDependencies.forEach(tuple -> createCard(cardsComposite, tuple.getDep(), tuple.getBonitaDep()));
+
+            if (!otherDependencies.isEmpty()) {
+                new OtherExtensionsComposite(contentComposite,
+                        otherDependencies,
+                        removeExtensionListener,
+                        upadateExtensionListener,
+                        ctx);
+            }
+        } else {
+            createEmptyExtensionComposite(contentComposite);
+        }
+    }
+
+    private void computeDependencies(List<BonitaDependencyTuple> bonitaDependencies,
+            List<Dependency> otherDependencies) {
         try {
             Model mavenModel = mavenHelper
                     .getMavenModel(repositoryAccessor.getCurrentRepository().getProject());
             if (mavenModel != null) {
                 List<Dependency> modelDependencies = mavenModel.getDependencies();
-                List<Dependency> otherDependencies = new ArrayList<>();
                 modelDependencies.forEach(dep -> {
                     Optional<BonitaArtifactDependency> bonitaDependency = allDependencies.stream()
                             .filter(bonitaDep -> sameDependency(dep, bonitaDep))
@@ -153,39 +244,44 @@ public class ExtensionComposite extends Composite {
                     if (bonitaDependency
                             .filter(d -> !Objects.equals(d.getArtifactType(), ArtifactType.OTHER))
                             .isPresent()) {
-                        createCard(parent, dep, bonitaDependency.get());
+                        bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDependency.get()));
                     } else if (!ProjectDefaultConfiguration.isInternalDependency(dep) && !isBDMDependency(dep)) {
                         BonitaArtifactDependency bonitaDep = bonitaArtifactDependencyConverter
                                 .toBonitaArtifactDependency(dep);
                         if (Objects.equals(bonitaDep.getArtifactType(), ArtifactType.OTHER)) {
                             otherDependencies.add(dep);
                         } else {
-                            createCard(parent, dep, bonitaDep);
+                            bonitaDependencies.add(new BonitaDependencyTuple(dep, bonitaDep));
                         }
                     }
                 });
-
-                if (!otherDependencies.isEmpty()) {
-                    if (parent.getChildren().length > 0) {
-                        Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-                        separator.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
-                    }
-                    new OtherExtensionsComposite(parent,
-                            otherDependencies,
-                            JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID),
-                            removeExtensionListener,
-                            upadateExtensionListener,
-                            ctx);
-                }
-
-                if (cardComposite.getChildren().length == 0) {
-                    createEmptyExtensionComposite(cardComposite);
-                }
             }
-
         } catch (CoreException e) {
             errorHandler.openErrorDialog(Display.getDefault().getActiveShell(), e.getMessage(), e);
         }
+    }
+
+    private void createExtensionTitleComposite(Composite parent) {
+        var titleComposite = createComposite(parent, SWT.NONE);
+        titleComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(3).spacing(20, LayoutConstants.getSpacing().y).create());
+        titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+
+        var extensionLabel = new Label(titleComposite, SWT.NONE);
+        extensionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
+        extensionLabel.setText(Messages.bonitaExtensions);
+        extensionLabel.setToolTipText(Messages.bonitaExtensionTooltip);
+        extensionLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
+        extensionLabel.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        extensionLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+
+        var vseparator = new Label(titleComposite, SWT.SEPARATOR | SWT.VERTICAL);
+        vseparator.setLayoutData(GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 10).create());
+
+        createToolbar(titleComposite);
+
+        var separator = new Label(titleComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
     }
 
     private void createEmptyExtensionComposite(Composite parent) {
@@ -200,13 +296,6 @@ public class ExtensionComposite extends Composite {
         label.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_10_FONT_ID));
         label.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         label.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
-
-        Composite buttonComposite = createComposite(composite, SWT.NONE);
-        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).create());
-
-        createMarketplaceBigButton(buttonComposite);
-        createImportBigButton(buttonComposite);
     }
 
     private void createCard(Composite parent, Dependency dep, BonitaArtifactDependency bonitaDep) {
@@ -218,10 +307,10 @@ public class ExtensionComposite extends Composite {
 
                 @Override
                 public void zoom(Event e) {
-                    Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
-                    ((Zoomable) card).createZoomedControl(cardComposite);
-                    cardComposite.layout();
-                    scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+                    Arrays.asList(contentComposite.getChildren()).forEach(Control::dispose);
+                    ((Zoomable) card).createZoomedControl(contentComposite);
+                    contentComposite.layout();
+                    scrolledComposite.setMinHeight(contentComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
                 }
 
                 @Override
@@ -254,54 +343,13 @@ public class ExtensionComposite extends Composite {
                 && Objects.equals(dep.getArtifactId(), bonitaDep.getArtifactId());
     }
 
-    private void createImportBigButton(Composite parent) {
-        new DropdownDynamicButtonWidget.Builder()
-                .withText(Messages.importExtensionButtonLabel)
-                .withMaxTextWidth(200)
-                .withTooltipText(Messages.importExtension)
-                .withImage(Pics.getImage(PicsConstants.import64))
-                .withHotImage(Pics.getImage(PicsConstants.import64Hot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
-                .addDropdownItem(Messages.addConnector, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
-                .addDropdownItem(Messages.addActorFilter, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
-                                        ArtifactType.ACTOR_FILTER.name())))
-                .addDropdownItem(Messages.addTheme, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
-                .addDropdownItem(Messages.addRestApiExtension, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
-                .addDropdownItem(Messages.addOther, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
-                .createIn(parent);
-    }
-
-    private void createMarketplaceBigButton(Composite parent) {
-        new DynamicButtonWidget.Builder()
-                .withText(Messages.openMarketplace)
-                .withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_BIG_TOOLITEM)
-                .withMaxTextWidth(200)
-                .withTooltipText(Messages.openMarketplaceTooltip)
-                .withImage(Pics.getImage(PicsConstants.openMarketplace64))
-                .withHotImage(Pics.getImage(PicsConstants.openMarketplace64Hot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
-                .onClick(e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.OPEN_MARKETPLACE_COMMAND, null))
-                .createIn(parent);
-    }
-
     public void refreshContent() {
         Display.getDefault().asyncExec(() -> {
-            Arrays.asList(cardComposite.getChildren()).forEach(Control::dispose);
-            createExtensionCards(cardComposite);
-            cardComposite.layout();
-            scrolledComposite.setMinHeight(cardComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+            Arrays.asList(contentComposite.getChildren()).forEach(Control::dispose);
+            createExtensionTitleComposite(contentComposite);
+            createContent();
+            contentComposite.layout();
+            scrolledComposite.setMinHeight(contentComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
         });
     }
 

@@ -115,7 +115,7 @@ public class ApplicationFormPart extends AbstractFormPart {
                 formPage.getRepositoryAccessor());
 
         final ImageHyperlink imageHyperlink = toolkit.createImageHyperlink(composite, SWT.NO_FOCUS);
-        imageHyperlink.setImage(Pics.getImage(PicsConstants.add_item_large));
+        imageHyperlink.setImage(Pics.getImage(PicsConstants.add_item_64));
         imageHyperlink.addHyperlinkListener(listener);
         imageHyperlink.setLayoutData(GridDataFactory.fillDefaults().create());
         Link labelLink = new Link(composite, SWT.NO_FOCUS);

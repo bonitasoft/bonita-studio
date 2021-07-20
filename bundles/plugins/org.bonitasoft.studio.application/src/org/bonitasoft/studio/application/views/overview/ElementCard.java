@@ -34,11 +34,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
-public class OverviewCard extends Composite {
+public class ElementCard extends Composite {
 
     private OverviewContribution contribution;
 
-    public OverviewCard(Composite parent, OverviewContribution contribution) {
+    public ElementCard(Composite parent, OverviewContribution contribution) {
         super(parent, SWT.BORDER);
         this.contribution = contribution;
 
@@ -58,9 +58,8 @@ public class OverviewCard extends Composite {
 
     protected void createTitleComposite(Composite parent) {
         var titleComposite = new Composite(parent, SWT.NONE);
-        titleComposite
-                .setLayout(
-                        GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 3 : 2).create());
+        titleComposite.setLayout(
+                GridLayoutFactory.fillDefaults().numColumns(contribution instanceof Zoomable ? 3 : 2).create());
         titleComposite
                 .setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
@@ -79,15 +78,17 @@ public class OverviewCard extends Composite {
         if (contribution instanceof Zoomable) {
             ((Zoomable) contribution).addZoomBehavior(titleLabel);
 
-            new DynamicButtonWidget.Builder()
-                    .withTooltipText(Messages.moreDetails)
-                    .withImage(Pics.getImage(PicsConstants.details))
-                    .withHotImage(Pics.getImage(PicsConstants.detailsHot))
-                    .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
-                    .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create())
-                    .withId(SWTBotConstants.extensionCardId(contribution.getName()))
-                    .onClick(e -> ((Zoomable) contribution).getZoomListener().zoom(e))
-                    .createIn(titleComposite);
+            if (contribution instanceof Zoomable) {
+                new DynamicButtonWidget.Builder()
+                        .withTooltipText(org.bonitasoft.studio.application.i18n.Messages.showMore)
+                        .withImage(Pics.getImage(PicsConstants.details))
+                        .withHotImage(Pics.getImage(PicsConstants.detailsHot))
+                        .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
+                        .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).create())
+                        .withId(SWTBotConstants.extensionCardId(contribution.getName()))
+                        .onClick(e -> ((Zoomable) contribution).getZoomListener().zoom(e))
+                        .createIn(titleComposite);
+            }
         }
     }
 

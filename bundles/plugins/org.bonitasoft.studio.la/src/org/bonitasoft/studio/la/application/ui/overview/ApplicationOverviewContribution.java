@@ -69,7 +69,7 @@ public class ApplicationOverviewContribution implements OverviewContribution, Zo
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
-                .withText(org.bonitasoft.studio.common.Messages.create)
+                .withLabel(org.bonitasoft.studio.common.Messages.create)
                 .withImage(Pics.getImage(PicsConstants.add_simple))
                 .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

@@ -15,14 +15,11 @@
 package org.bonitasoft.studio.application.views.overview;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.apache.maven.model.Model;
-import org.bonitasoft.studio.application.handler.ImportExtensionHandler;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.views.extension.ExtensionComposite;
 import org.bonitasoft.studio.common.CommandExecutor;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -35,7 +32,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.bonitasoft.studio.ui.dialog.ExceptionDialogHandler;
-import org.bonitasoft.studio.ui.widget.DropdownDynamicButtonWidget;
 import org.bonitasoft.studio.ui.widget.DynamicButtonWidget;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -63,8 +59,8 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -78,6 +74,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     public static final String ID = "org.bonitasoft.studio.application.dashboard.editor";
 
     public static final String BOLD_20_FONT_ID = "bold20_bonita";
+    public static final String BOLD_12_FONT_ID = "bold12_bonita";
     public static final String BOLD_8_FONT_ID = "bold8_bonita";
     public static final String BOLD_4_FONT_ID = "bold4_bonita";
     public static final String BOLD_0_FONT_ID = "bold0_bonita";
@@ -107,7 +104,9 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
     private Cursor cursorHand;
     private Cursor cursorArrow;
 
-    private OverviewComposite dashBoardComposite;
+    private ElementComposite elementComposite;
+    private DynamicButtonWidget toElementViewButton;
+    private DynamicButtonWidget toExtensionViewButton;
 
     public ProjectOverviewEditorPart() {
         repositoryAccessor = RepositoryManager.getInstance().getAccessor();
@@ -151,45 +150,53 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
 
         mainComposite = createComposite(parent, SWT.NONE);
         mainComposite.setLayout(
-                GridLayoutFactory.fillDefaults().margins(10, 10).spacing(LayoutConstants.getSpacing().x, 20).create());
+                GridLayoutFactory.fillDefaults().spacing(LayoutConstants.getSpacing().x, 0).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         initFonts(mainComposite.getFont());
 
         createTitleAndToolbar(mainComposite);
 
-        Label separator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
-        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        dashBoardComposite = new OverviewComposite(mainComposite, repositoryAccessor);
-        updateToolbarContent();
+        elementComposite = new ElementComposite(mainComposite);
     }
 
-    private void toDashboardView() {
-        extensionComposite.dispose();
-        dashBoardComposite = new OverviewComposite(mainComposite, repositoryAccessor);
+    private void toElementsView() {
+        if (extensionComposite != null && !extensionComposite.isDisposed()) {
+            extensionComposite.dispose();
+            elementComposite = new ElementComposite(mainComposite);
+            toElementViewButton.updateImage(Pics.getImage(PicsConstants.openOverview32_hot));
+            toExtensionViewButton.updateImage(Pics.getImage(PicsConstants.extensions32));
+            mainComposite.layout();
+        }
     }
 
     private void toExtensionsView() {
-        dashBoardComposite.dispose();
-        extensionComposite = new ExtensionComposite(mainComposite, repositoryAccessor);
+        if (elementComposite != null && !elementComposite.isDisposed()) {
+            elementComposite.dispose();
+            extensionComposite = new ExtensionComposite(mainComposite, repositoryAccessor);
+            toElementViewButton.updateImage(Pics.getImage(PicsConstants.openOverview32));
+            toExtensionViewButton.updateImage(Pics.getImage(PicsConstants.extensions32_hot));
+            mainComposite.layout();
+        }
     }
 
     private void createTitleAndToolbar(Composite parent) {
-        Composite composite = createComposite(parent, SWT.NONE);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 20, 20).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 
-        titleComposite = createComposite(composite, SWT.NONE);
+        titleComposite = new Composite(composite, SWT.NONE);
         titleComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(LayoutConstants.getSpacing().x, 3).create());
-        titleComposite
-                .setLayoutData(
-                        GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.FILL).create());
+        titleComposite.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, false).align(SWT.BEGINNING, SWT.FILL).create());
+        titleComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 
-        Composite labelComposite = createComposite(titleComposite, SWT.NONE);
+        Composite labelComposite = new Composite(titleComposite, SWT.NONE);
         labelComposite.setLayout(
                 GridLayoutFactory.fillDefaults().numColumns(2).spacing(2, LayoutConstants.getSpacing().y).create());
         labelComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
+        labelComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 
         title = new StyledText(labelComposite, SWT.NONE);
         title.setEditable(false);
@@ -197,109 +204,51 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         title.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.END).create());
 
         title.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_TITLE);
-        title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
-        title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.HEADER_TEXT_COLOR);
+        title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
 
         createEditButton(titleComposite);
 
         refreshContent();
 
-        toolbarComposite = createComposite(composite, SWT.NONE);
-        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+        toolbarComposite = new Composite(composite, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BOTTOM).create());
+        toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
+
+        toElementViewButton = createSwitchButton(toolbarComposite,
+                Messages.elementView,
+                Messages.elementViewTooltip,
+                Pics.getImage(PicsConstants.openOverview32_hot),
+                Pics.getImage(PicsConstants.openOverview32_hot),
+                SWTBotConstants.SWTBOT_ID_OPEN_ELEMENT_VIEW,
+                e -> Display.getDefault().asyncExec(() -> toElementsView()));
+
+        toExtensionViewButton = createSwitchButton(toolbarComposite,
+                Messages.extensionView,
+                Messages.extensionViewTooltip,
+                Pics.getImage(PicsConstants.extensions32),
+                Pics.getImage(PicsConstants.extensions32_hot),
+                SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW,
+                e -> Display.getDefault().asyncExec(() -> toExtensionsView()));
     }
 
-    private void updateToolbarContent() {
+    public void openExtensionsView() {
         Display.getDefault().asyncExec(() -> {
-            List.of(toolbarComposite.getChildren()).forEach(Control::dispose);
-            if (extensionComposite != null && !extensionComposite.isDisposed()) {
-                createMarketplaceButton(toolbarComposite);
-                createImportButton(toolbarComposite);
-                createSwitchButton(toolbarComposite,
-                        Messages.overviewView,
-                        Messages.overviewViewTooltip,
-                        Pics.getImage(PicsConstants.openOverview32),
-                        Pics.getImage(PicsConstants.openOverview32_hot),
-                        SWTBotConstants.SWTBOT_ID_OPEN_DASHBOARD_VIEW);
-            } else {
-                createSwitchButton(toolbarComposite,
-                        Messages.extensionView,
-                        Messages.extensionViewTooltip,
-                        Pics.getImage(PicsConstants.extensions32),
-                        Pics.getImage(PicsConstants.extensions32_hot),
-                        SWTBotConstants.SWTBOT_ID_OPEN_EXTENSIONS_VIEW);
-            }
-            toolbarComposite.getParent().layout();
+            toExtensionsView();
         });
     }
 
-    private void createSwitchButton(Composite parent, String text, String tooltip, Image image, Image hotImage,
-            String swtbotId) {
-        new DynamicButtonWidget.Builder()
-                .withText(text)
+    private DynamicButtonWidget createSwitchButton(Composite parent, String text, String tooltip, Image image,
+            Image hotImage, String swtbotId, Consumer<Event> onClickListener) {
+        return new DynamicButtonWidget.Builder()
+                .withLabel(text)
                 .withTooltipText(tooltip)
                 .withId(swtbotId)
                 .withImage(image)
                 .withHotImage(hotImage)
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> Display.getDefault().asyncExec(() -> {
-                    if (dashBoardComposite == null || dashBoardComposite.isDisposed()) {
-                        toDashboardView();
-                    } else {
-                        toExtensionsView();
-                    }
-                    updateToolbarContent();
-                    mainComposite.layout();
-                }))
-                .createIn(parent);
-    }
-
-    public void openExtensionsView() {
-        if (extensionComposite == null || extensionComposite.isDisposed()) {
-            Display.getDefault().asyncExec(() -> {
-                toExtensionsView();
-                updateToolbarContent();
-                mainComposite.layout();
-            });
-        }
-    }
-
-    private void createImportButton(Composite parent) {
-        new DropdownDynamicButtonWidget.Builder()
-                .withText(Messages.importExtensionButtonLabel)
-                .withId(SWTBotConstants.SWTBOT_ID_ADD_EXTENSION_DROPDOWN)
-                .withTooltipText(Messages.importExtension)
-                .withImage(Pics.getImage(PicsConstants.import32))
-                .withHotImage(Pics.getImage(PicsConstants.import32Hot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .addDropdownItem(Messages.addConnector, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.CONNECTOR.name())))
-                .addDropdownItem(Messages.addActorFilter, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER,
-                                        ArtifactType.ACTOR_FILTER.name())))
-                .addDropdownItem(Messages.addTheme, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.THEME.name())))
-                .addDropdownItem(Messages.addRestApiExtension, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.REST_API.name())))
-                .addDropdownItem(Messages.addOther, null,
-                        e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.IMPORT_EXTENSION_COMMAND,
-                                Map.of(ImportExtensionHandler.EXTENSION_TYPE_PARAMETER, ArtifactType.OTHER.name())))
-                .createIn(parent);
-    }
-
-    private void createMarketplaceButton(Composite parent) {
-        new DynamicButtonWidget.Builder()
-                .withText(Messages.openMarketplace)
-                .withId(SWTBotConstants.SWTBOT_ID_OPEN_MARKETPLACE_TOOLITEM)
-                .withTooltipText(Messages.openMarketplaceTooltip)
-                .withImage(Pics.getImage(PicsConstants.openMarketplace))
-                .withHotImage(Pics.getImage(PicsConstants.openMarketplaceHot))
-                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
-                .onClick(e -> commandExecutor.executeCommand(ProjectOverviewEditorPart.OPEN_MARKETPLACE_COMMAND, null))
+                .withCssclass(BonitaThemeConstants.HEADER_BACKGROUND)
+                .onClick(onClickListener::accept)
                 .createIn(parent);
     }
 
@@ -309,7 +258,7 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
         editLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.FILL).create());
         editLabel.setImage(Pics.getImage(PicsConstants.editProject));
         editLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_20_FONT_ID));
-        editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+        editLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.HEADER_BACKGROUND);
         editLabel.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -404,13 +353,14 @@ public class ProjectOverviewEditorPart extends EditorPart implements EventHandle
                         .create());
         description.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,
                 SWTBotConstants.SWTBOT_ID_PROJECT_DETAILS_DESCRIPTION);
-        description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        description.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.HEADER_TEXT_COLOR);
         description.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
-                BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
+                BonitaThemeConstants.HEADER_BACKGROUND);
     }
 
     private void initFonts(Font defaultFont) {
         createFont(BOLD_20_FONT_ID, defaultFont, 20, SWT.BOLD);
+        createFont(BOLD_12_FONT_ID, defaultFont, 12, SWT.BOLD);
         createFont(BOLD_8_FONT_ID, defaultFont, 8, SWT.BOLD);
         createFont(BOLD_4_FONT_ID, defaultFont, 4, SWT.BOLD);
         createFont(BOLD_0_FONT_ID, defaultFont, 0, SWT.BOLD);

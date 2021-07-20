@@ -37,12 +37,13 @@ public abstract class AbstractDynamicButtonWidgetBuilder<T> {
     protected Optional<String> hoverTextColorCssId = Optional.empty();
     protected Optional<FormToolkit> toolkit = Optional.empty();
     protected Optional<String> id = Optional.empty();
+    protected boolean labelBelow = false;
 
-    public T withText(String text) {
+    public T withLabel(String text) {
         this.text = Optional.ofNullable(text);
         return getThis();
     }
-    
+
     public T withId(String id) {
         this.id = Optional.ofNullable(id);
         return getThis();
@@ -91,6 +92,11 @@ public abstract class AbstractDynamicButtonWidgetBuilder<T> {
 
     public T withToolkit(FormToolkit toolkit) {
         this.toolkit = Optional.ofNullable(toolkit);
+        return getThis();
+    }
+
+    public T labelBelow() {
+        this.labelBelow = true;
         return getThis();
     }
 

@@ -160,7 +160,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_MINIMIZE_CARD_BUTTON = "SWTBOT_ID_MINIMIZE_CARD_BUTTON";
     public static final String SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE = "SWTBOT_ID_DEPENDENCIES_PREVIEW_TABLE";
     public static final String SWTBOT_ID_OPEN_EXTENSIONS_VIEW = "SWTBOT_ID_OPEN_EXTENSIONS_VIEW";
-    public static final String SWTBOT_ID_OPEN_DASHBOARD_VIEW = "SWTBOT_ID_OPEN_DASHBOARD_VIEW";
+    public static final String SWTBOT_ID_OPEN_ELEMENT_VIEW = "SWTBOT_ID_OPEN_DASHBOARD_VIEW";
 
     public static String extensionCheckboxId(String artifactId) {
         return "SWTBOT_ID_MARKETPLACE_EXTENSION_CHECKBOX_" + artifactId;
