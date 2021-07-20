@@ -140,7 +140,7 @@ public abstract class ConnectorSection extends AbstractBonitaDescriptionSection
 
     private void createToolbar(Composite parent) {
         new DynamicButtonWidget.Builder()
-                .withText(Messages.openMarketplace)
+                .withLabel(Messages.openMarketplace)
                 .withTooltipText(Messages.openMarketplaceTooltip)
                 .withImage(Pics.getImage(PicsConstants.openMarketplace))
                 .withHotImage(Pics.getImage(PicsConstants.openMarketplaceHot))

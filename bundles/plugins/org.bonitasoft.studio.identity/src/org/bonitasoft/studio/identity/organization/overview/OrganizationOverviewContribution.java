@@ -84,7 +84,7 @@ public class OrganizationOverviewContribution implements OverviewContribution {
     private void createToolbarButtons(Composite parent) {
         if (Strings.hasText(activeOrganizationProvider.getActiveOrganizationFileName())) {
             new DynamicButtonWidget.Builder()
-                    .withText(org.bonitasoft.studio.common.Messages.open)
+                    .withLabel(org.bonitasoft.studio.common.Messages.open)
                     .withImage(Pics.getImage(PicsConstants.open))
                     .withHotImage(Pics.getImage(PicsConstants.openHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
@@ -104,7 +104,7 @@ public class OrganizationOverviewContribution implements OverviewContribution {
                     .createIn(parent);
         } else {
             new DynamicButtonWidget.Builder()
-                    .withText(org.bonitasoft.studio.common.Messages.create)
+                    .withLabel(org.bonitasoft.studio.common.Messages.create)
                     .withImage(Pics.getImage(PicsConstants.add_simple))
                     .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

@@ -54,7 +54,7 @@ public class RestApiActionExtension implements ExtensionAction {
         composite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
-                .withText(commandExecutor.getCommandName(EDIT_PERMISSION_COMMAND))
+                .withLabel(commandExecutor.getCommandName(EDIT_PERMISSION_COMMAND))
                 .withImage(Pics.getImage(PicsConstants.edit_simple))
                 .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

@@ -80,7 +80,7 @@ public class BdmOverviewContribution implements OverviewContribution {
     private void createToolbarButtons(Composite parent) {
         if (bdmIsPresent()) {
             new DynamicButtonWidget.Builder()
-                    .withText(org.bonitasoft.studio.common.Messages.open)
+                    .withLabel(org.bonitasoft.studio.common.Messages.open)
                     .withImage(Pics.getImage(PicsConstants.open))
                     .withHotImage(Pics.getImage(PicsConstants.openHot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)
@@ -90,7 +90,7 @@ public class BdmOverviewContribution implements OverviewContribution {
 
         } else {
             new DynamicButtonWidget.Builder()
-                    .withText(org.bonitasoft.studio.common.Messages.create)
+                    .withLabel(org.bonitasoft.studio.common.Messages.create)
                     .withImage(Pics.getImage(PicsConstants.add_simple))
                     .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
                     .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

@@ -204,7 +204,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
         var icon = new Label(titleComposite, SWT.NONE);
         icon.setLayoutData(GridDataFactory.fillDefaults().create());
         icon.setImage(contribution.getIcon());
-        icon.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
+        icon.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         var titleLabel = new CLabel(titleComposite, SWT.NONE);
         titleLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -243,7 +243,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
         });
 
         new DynamicButtonWidget.Builder()
-                .withText(Messages.back)
+                .withLabel(Messages.back)
                 .withTooltipText(Messages.returnToElementsView)
                 .withId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON)
                 .withImage(Pics.getImage(PicsConstants.back))
@@ -268,11 +268,12 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
         emptyLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         emptyLabel.setText(message);
         emptyLabel.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID));
+        emptyLabel.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
-                .withText(buttonMessage)
-                .withImage(Pics.getImage(PicsConstants.add_item_large))
-                .withHotImage(Pics.getImage(PicsConstants.add_item_large))
+                .withLabel(buttonMessage)
+                .withImage(Pics.getImage(PicsConstants.add_item_64))
+                .withHotImage(Pics.getImage(PicsConstants.add_item_64))
                 .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
                 .withFont(JFaceResources.getFont(ProjectOverviewEditorPart.NORMAL_4_FONT_ID))
                 .withLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).create())
@@ -301,7 +302,7 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
         createFileStoreTitleLabel(fileStore, titleComposite);
 
         new DynamicButtonWidget.Builder()
-                .withText(org.bonitasoft.studio.common.Messages.open)
+                .withLabel(org.bonitasoft.studio.common.Messages.open)
                 .withImage(Pics.getImage(PicsConstants.open32))
                 .withHotImage(Pics.getImage(PicsConstants.open32Hot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

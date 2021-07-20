@@ -113,6 +113,12 @@ StyledText#titleTextColor {
 	color: #b4bec8;
 }
 
+Label#headerTextColor,
+CLabel#headerTextColor,
+StyledText#headerTextColor {
+    color: #ccd8e3;
+}
+
 Label#toolbarTextColor,
 CLabel#toolbarTextColor { 
 	color: #757575;
@@ -146,6 +152,10 @@ Table#extensionViewBackground {
 
 .MPart .extensionViewBackground {
 	background-color: #1a202d;
+}
+
+.MPart .headerBackground {
+    background-color: #11161f;
 }
 
 .wizardHighlightBackground {

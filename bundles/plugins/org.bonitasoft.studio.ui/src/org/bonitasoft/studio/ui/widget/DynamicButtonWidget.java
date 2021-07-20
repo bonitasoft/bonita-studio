@@ -24,7 +24,6 @@ import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -58,8 +57,8 @@ public class DynamicButtonWidget {
 
         public DynamicButtonWidget createIn(Composite parent) {
             var widget = new DynamicButtonWidget(parent, text, id, tooltipText, image, hotImage, onClickListener,
-                    maxTextWidth,
-                    cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit);
+                    maxTextWidth, cssClass, layoutData, font, defaultTextColorCssId, hoverTextColorCssId, toolkit,
+                    labelBelow);
             widget.createControl();
             return widget;
         }
@@ -78,6 +77,7 @@ public class DynamicButtonWidget {
     private Optional<Object> layoutData;
     private Optional<Font> font;
     private Optional<FormToolkit> toolkit;
+    private boolean labelBelow;
 
     protected IThemeEngine engine;
     protected ToolItem toolItem;
@@ -102,7 +102,8 @@ public class DynamicButtonWidget {
             Optional<Font> font,
             Optional<String> defaultTextColorCssId,
             Optional<String> hoverTextColorCssId,
-            Optional<FormToolkit> toolkit) {
+            Optional<FormToolkit> toolkit,
+            boolean labelBelow) {
         this.parent = parent;
         this.text = text;
         this.id = id;
@@ -117,6 +118,7 @@ public class DynamicButtonWidget {
         this.defaultTextColorCssId = defaultTextColorCssId;
         this.hoverTextColorCssId = hoverTextColorCssId;
         this.toolkit = toolkit;
+        this.labelBelow = labelBelow;
 
         cursorHand = parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         cursorArrow = parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
@@ -127,8 +129,8 @@ public class DynamicButtonWidget {
         container = toolkit.map(t -> t.createComposite(parent))
                 .orElseGet(() -> new Composite(parent, SWT.NONE));
         container.setLayout(
-                GridLayoutFactory.fillDefaults().numColumns(text.isPresent() ? 2 : 1)
-                        .spacing(1, LayoutConstants.getSpacing().y).create());
+                GridLayoutFactory.fillDefaults().numColumns(text.isPresent() && !labelBelow ? 2 : 1)
+                        .spacing(1, 1).create());
         container.setLayoutData(layoutData.orElse(GridDataFactory.swtDefaults().create()));
         cssClass.ifPresent(css -> container.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, css));
 
@@ -260,6 +262,16 @@ public class DynamicButtonWidget {
     public void updateText(String text, String tooltip) {
         label.setText(text);
         label.setToolTipText(tooltip);
+    }
+
+    public void updateImage(Image image) {
+        toolItem.setImage(image);
+        this.image = Optional.ofNullable(image);
+    }
+
+    public void updateHotImage(Image hotImage) {
+        toolItem.setHotImage(hotImage);
+        this.hotImage = Optional.ofNullable(hotImage);
     }
 
     public IObservableValue<Boolean> observeEnable() {

@@ -92,6 +92,12 @@ StyledText#titleTextColor {
     color: #2e405c;
 }
 
+Label#headerTextColor,
+CLabel#headerTextColor,
+StyledText#headerTextColor {
+    color: #2e405c;
+}
+
 Label#toolbarTextColor,
 CLabel#toolbarTextColor {
     color: #3b3b3b;
@@ -124,6 +130,10 @@ CLabel#cardHighlightTitleColor {
 
 .MPart .extensionViewBackground {
     background-color: #f7f7f7;
+}
+
+.MPart .headerBackground {
+    background-color: #ebebeb; 
 }
 
 .wizardHighlightBackground {

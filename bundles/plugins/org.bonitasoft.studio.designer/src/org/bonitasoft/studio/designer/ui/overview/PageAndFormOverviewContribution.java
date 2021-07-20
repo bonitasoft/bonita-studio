@@ -65,7 +65,7 @@ public class PageAndFormOverviewContribution implements OverviewContribution {
         toolbarComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.CARD_BACKGROUND);
 
         new DynamicButtonWidget.Builder()
-                .withText(org.bonitasoft.studio.common.Messages.openUid)
+                .withLabel(org.bonitasoft.studio.common.Messages.openUid)
                 .withImage(Pics.getImage(PicsConstants.open))
                 .withHotImage(Pics.getImage(PicsConstants.openHot))
                 .withCssclass(BonitaThemeConstants.CARD_BACKGROUND)

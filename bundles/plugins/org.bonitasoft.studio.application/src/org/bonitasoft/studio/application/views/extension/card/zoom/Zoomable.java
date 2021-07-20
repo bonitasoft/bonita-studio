@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.application.views.extension.card.zoom;
 
-import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaThemeConstants;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.swt.SWT;
@@ -42,7 +42,7 @@ public interface Zoomable {
         var cursorHand = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_HAND);
         var cursorArrow = zoomControl.getDisplay().getSystemCursor(SWT.CURSOR_ARROW);
 
-        zoomControl.setToolTipText(Messages.moreDetails);
+        zoomControl.setToolTipText(Messages.showMore);
 
         zoomControl.addListener(SWT.MouseUp, e -> {
             if (getZoomListener() != null) {

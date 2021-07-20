@@ -347,8 +347,8 @@ public class Messages extends NLS {
     public static String mavenPropertiesMissing;
     public static String extensionView;
     public static String extensionViewTooltip;
-    public static String overviewView;
-    public static String overviewViewTooltip;
+    public static String elementView;
+    public static String elementViewTooltip;
     public static String repositoryIdMandatory;
     public static String repositoryNameMandatory;
     public static String repositoryUrlMandatory;
@@ -372,6 +372,12 @@ public class Messages extends NLS {
     public static String returnToElementsView;
     public static String returnToExtensionView;
     public static String addExtensionMenuLabel;
+    public static String projectElements;
+    public static String bonitaExtensions;
+    public static String otherExtensionsTooltip;
+    public static String bonitaExtensionTooltip;
+    public static String projectElementsTooltip;
+    public static String showMore;
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

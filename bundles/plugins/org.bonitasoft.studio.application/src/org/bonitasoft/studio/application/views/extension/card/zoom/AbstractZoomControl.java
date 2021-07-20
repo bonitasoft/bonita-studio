@@ -128,7 +128,7 @@ public abstract class AbstractZoomControl extends Composite {
         });
 
         new DynamicButtonWidget.Builder()
-                .withText(Messages.back)
+                .withLabel(Messages.back)
                 .withTooltipText(Messages.returnToExtensionView)
                 .withId(SWTBotConstants.SWTBOT_ID_MINIMIZE_CARD_BUTTON)
                 .withImage(Pics.getImage(PicsConstants.back))

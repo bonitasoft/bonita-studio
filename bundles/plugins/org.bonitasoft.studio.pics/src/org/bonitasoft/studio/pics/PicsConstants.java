@@ -406,7 +406,9 @@ public class PicsConstants {
     public static String explore_16_dark = "explore_16_dark.png";
 
     public static String add_item = "add_item.png";
-    public static String add_item_large = "add_item_large.png";
+    public static String add_item_32 = "projectExtensions/add.png";
+    public static String add_item_32_hot = "projectExtensions/add_hot.png";
+    public static String add_item_64 = "add_item_large.png";
 
     public static String duplicate_16 = "duplicate_16.png";
     public static String duplicate_16_dark = "duplicate_16_dark.png";

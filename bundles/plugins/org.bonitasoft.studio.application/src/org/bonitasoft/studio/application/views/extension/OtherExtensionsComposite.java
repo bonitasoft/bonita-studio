@@ -22,6 +22,7 @@ import org.apache.maven.model.Dependency;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.ui.control.model.dependency.ArtifactType;
 import org.bonitasoft.studio.application.ui.control.model.dependency.BonitaArtifactDependency;
+import org.bonitasoft.studio.application.views.overview.ProjectOverviewEditorPart;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.bonitasoft.studio.common.repository.store.LocalDependenciesStore;
@@ -38,6 +39,7 @@ import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -45,14 +47,12 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class OtherExtensionsComposite extends Composite {
 
-    private Font subtitleFont;
     private IObservableValue<Dependency> selectionObservable;
     private DataBindingContext ctx;
     private DynamicButtonWidget deleteButton;
@@ -63,23 +63,25 @@ public class OtherExtensionsComposite extends Composite {
 
     public OtherExtensionsComposite(Composite parent,
             List<Dependency> otherDependencies,
-            Font subtitleFont,
             RemoveExtensionListener removeListener,
             UpdateExtensionListener updateListener,
             DataBindingContext ctx) {
         super(parent, SWT.NONE);
-        this.subtitleFont = subtitleFont;
         this.ctx = ctx;
         localDependencyStore = RepositoryManager.getInstance().getCurrentRepository().getLocalDependencyStore();
         localDependencies = otherDependencies.stream()
                 .filter(localDependencyStore::isLocalDependency)
                 .collect(Collectors.toList());
 
-        setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        setLayout(GridLayoutFactory.fillDefaults().margins(0, 10).create());
         setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
 
         createTitle(this);
+
+        Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
         createOtherExtensionViewer(this, otherDependencies, updateListener, removeListener);
     }
 
@@ -87,7 +89,7 @@ public class OtherExtensionsComposite extends Composite {
             List<Dependency> otherDependencies,
             UpdateExtensionListener updateListener, RemoveExtensionListener removeListener) {
         var viewerComposite = new Composite(parent, SWT.NONE);
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 10, 0)
+        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(20, 20, 10, 0)
                 .spacing(LayoutConstants.getSpacing().x, 1).create());
         viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME,
@@ -181,7 +183,7 @@ public class OtherExtensionsComposite extends Composite {
         bonitaDep.setFromMarketplace(false);
 
         editMavenCoordinatesButton = new DynamicButtonWidget.Builder()
-                .withText(Messages.editMavenCoordinates)
+                .withLabel(Messages.editMavenCoordinates)
                 .withTooltipText(Messages.editMavenCoordinatesTooltip)
                 .withImage(Pics.getImage(PicsConstants.edit_simple))
                 .withHotImage(Pics.getImage(PicsConstants.edit_simple_hot))
@@ -190,7 +192,7 @@ public class OtherExtensionsComposite extends Composite {
                 .createIn(composite);
 
         upgradeButton = new DynamicButtonWidget.Builder()
-                .withText(Messages.upgradeExtension)
+                .withLabel(Messages.upgradeExtension)
                 .withTooltipText(Messages.upgradeExtensionTooltip)
                 .withImage(Pics.getImage(PicsConstants.updateDependency))
                 .withHotImage(Pics.getImage(PicsConstants.updateDependencyHot))
@@ -199,7 +201,7 @@ public class OtherExtensionsComposite extends Composite {
                 .createIn(composite);
 
         deleteButton = new DynamicButtonWidget.Builder()
-                .withText(Messages.delete)
+                .withLabel(Messages.delete)
                 .withTooltipText(Messages.deleteUnknownTooltip)
                 .withImage(Pics.getImage(PicsConstants.delete))
                 .withHotImage(Pics.getImage(PicsConstants.delete_hot))
@@ -212,7 +214,8 @@ public class OtherExtensionsComposite extends Composite {
         var title = new Label(parent, SWT.WRAP);
         title.setLayoutData(GridDataFactory.fillDefaults().create());
         title.setText(Messages.unknownExtensionsTitle);
-        title.setFont(subtitleFont);
+        title.setToolTipText(Messages.otherExtensionsTooltip);
+        title.setFont(JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_8_FONT_ID));
         title.setData(BonitaThemeConstants.CSS_ID_PROPERTY_NAME, BonitaThemeConstants.TITLE_TEXT_COLOR);
         title.setData(BonitaThemeConstants.CSS_CLASS_PROPERTY_NAME, BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND);
     }

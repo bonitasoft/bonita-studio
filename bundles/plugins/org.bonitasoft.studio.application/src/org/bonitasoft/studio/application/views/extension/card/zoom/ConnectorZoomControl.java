@@ -144,7 +144,7 @@ public class ConnectorZoomControl extends AbstractZoomControl {
                 extendedDefinition.getVersion(), JFaceResources.getFont(ProjectOverviewEditorPart.BOLD_0_FONT_ID), 1);
 
         new DynamicButtonWidget.Builder()
-                .withText(Messages.findUsages)
+                .withLabel(Messages.findUsages)
                 .withId(SWTBotConstants.findUsageButtonId(extendedDefinition.getId(), extendedDefinition.getVersion()))
                 .withImage(Pics.getImage(PicsConstants.findUsages))
                 .withHotImage(Pics.getImage(PicsConstants.findUsagesHot))
