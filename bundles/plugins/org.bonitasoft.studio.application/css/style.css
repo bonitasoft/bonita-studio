@@ -1,0 +1,20 @@
+CTabItem, Label, Tree, Text {
+	 font-family: "Arial";
+}
+	 
+Shell {
+	 font-size: 12;
+}
+	 
+CTabItem, ToolBar, Button, CBanner, CoolBar {
+	font-size: 9;
+	background-color: white;
+}
+
+CTabFolder, CTabItem {
+	 background-color: #F0F1F7;
+}
+
+Composite {
+	background-color: blue;
+}
