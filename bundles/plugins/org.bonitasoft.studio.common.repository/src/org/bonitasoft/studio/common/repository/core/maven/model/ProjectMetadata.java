@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 public class ProjectMetadata {
 
     private static final String DEFAULT_ARTIFACT_ID = "my-project";
-    private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
+    private static final String DEFAULT_VERSION = "0.0.1";
 
     private String name;
     private String description;
@@ -144,6 +144,9 @@ public class ProjectMetadata {
     }
 
     public static String toArtifactId(String displayName) {
+        if(Strings.isNullOrEmpty(displayName)) {
+            return displayName;
+        }
         String artifactId = Strings.slugify(displayName);
         if (!artifactId.matches("[A-Za-z0-9_\\-.]+")) { // not a valid artifact id
             return DEFAULT_ARTIFACT_ID;

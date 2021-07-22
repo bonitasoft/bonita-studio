@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.BonitaProjectNature;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.identity.organization.repository.OrganizationRepositoryStore;
 import org.eclipse.core.resources.ICommand;
@@ -53,11 +54,12 @@ public class BonitaProjectIT {
             BonitaStudioLog.warning(m.toString(), "org.bonitasoft.studio.tests");
         }
 
+        ProjectMetadata defaultMetadata = ProjectMetadata.defaultMetadata();
         Model model = reader.read(project.getFile("pom.xml").getContents());
-        assertThat(model.getGroupId()).isEqualTo("com.company");
-        assertThat(model.getArtifactId()).isEqualTo("my-project");
-        assertThat(model.getVersion()).isEqualTo("1.0.0-SNAPSHOT");
-        assertThat(model.getName()).isEqualTo("My project");
+        assertThat(model.getGroupId()).isEqualTo(defaultMetadata.getGroupId());
+        assertThat(model.getArtifactId()).isEqualTo(defaultMetadata.getArtifactId());
+        assertThat(model.getVersion()).isEqualTo(defaultMetadata.getVersion());
+        assertThat(model.getName()).isEqualTo(defaultMetadata.getName());
         assertThat(model.getProperties()).contains(entry("bonita.runtime.version", ProductVersion.mavenVersion()));
 
         // Validate the project natures and builders

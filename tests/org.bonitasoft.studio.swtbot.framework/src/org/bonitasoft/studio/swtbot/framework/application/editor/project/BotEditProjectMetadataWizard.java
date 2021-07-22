@@ -21,7 +21,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 public class BotEditProjectMetadataWizard extends BotWizardDialog {
 
     public BotEditProjectMetadataWizard(SWTGefBot bot) {
-        super(bot,  Messages.editProjectMetadata, Messages.modify);
+        super(bot, Messages.editProjectMetadata, Messages.modify);
     }
 
     public BotEditProjectMetadataWizard setDescription(String description) {

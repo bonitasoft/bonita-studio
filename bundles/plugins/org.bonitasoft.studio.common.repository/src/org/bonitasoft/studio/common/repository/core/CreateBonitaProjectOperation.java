@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.MavenProjectHelper;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
@@ -90,7 +91,11 @@ public class CreateBonitaProjectOperation implements IWorkspaceRunnable {
     public static MavenProjectModelBuilder newProjectBuilder(ProjectMetadata metadata) {
         MavenProjectModelBuilder mavenProjectBuilder = new MavenProjectModelBuilder();
         mavenProjectBuilder.setDisplayName(metadata.getName());
-        mavenProjectBuilder.setArtifactId(metadata.getArtifactId());
+        String artifactId = metadata.getArtifactId();
+        if(Strings.isNullOrEmpty(artifactId)) {
+            artifactId = ProjectMetadata.toArtifactId(metadata.getName());
+        }
+        mavenProjectBuilder.setArtifactId(artifactId);
         mavenProjectBuilder.setGroupId(metadata.getGroupId());
         mavenProjectBuilder.setBonitaVersion(ProductVersion.mavenVersion());
         mavenProjectBuilder.setVersion(metadata.getVersion());
