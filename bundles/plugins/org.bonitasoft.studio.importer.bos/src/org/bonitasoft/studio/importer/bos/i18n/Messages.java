@@ -25,17 +25,12 @@ public class Messages extends NLS {
         NLS.initializeMessages("messages", Messages.class);
     }
 
-    public static String processesWithErrorAfterImport;
-    public static String openDiagramWithErrors;
     public static String skippedValidationMessage;
     public static String importButtonLabel;
     public static String errorWhileImporting_message;
-    public static String errorWhileImporting_title;
-    public static String importFileTitle;
     public static String importFileDescription;
     public static String selectLocation;
     public static String browseButton_label;
-    public static String invalidFilePath;
     public static String importProcessTitle;
     public static String importDetails;
     public static String overwriteAll;
@@ -54,27 +49,7 @@ public class Messages extends NLS {
     public static String skipped;
     public static String alreadyPresent;
     public static String errorOccuredWhileParsingBosArchive;
-    public static String importWorkspaceTitle;
-    public static String importWorkspaceDescription;
-    public static String selectABonitaStudioWorkspace;
-    public static String cannotImportWorkspaceWithVersion;
-    public static String scanningWorkspace;
-    public static String cannotImportWorkspaceWithEdition;
-    public static String noRepositoryFoundAtLocation;
-    public static String validRepository;
-    public static String validRepositoryOverwritten;
-    public static String noValidRepositoryFoundAtLocation;
-    public static String importingWorkspace;
-    public static String repositoryImported;
-    public static String exportingWorkspace;
-    public static String workspaceTips;
-    public static String importWorkspaceOverwriteBehavior;
-    public static String moreInfo;
     public static String bdmImportedInfo;
-    public static String legacyFormsNotImported;
-    public static String formsRemovedFromStudio;
-    public static String legacyFormsNotImportedFromWorkspace;
-    public static String projectConnectorToVCS;
     public static String occurrences;
     public static String downloadingRemoteBosArchive;
     public static String cannotImportRemoteArchive;

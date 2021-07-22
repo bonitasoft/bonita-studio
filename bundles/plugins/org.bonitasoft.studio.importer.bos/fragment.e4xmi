@@ -5,10 +5,8 @@
       <parameters xmi:id="_IHZ8wHMeEemzZOLXgtIFrw" elementId="org.bonitasoft.studio.importer.bos.commandparameter.file" name="file"/>
       <parameters xmi:id="_d3-tAOnWEemm8d2CZqPvKg" elementId="org.bonitasoft.studio.importer.bos.commandparameter.targetProjectName" name="Target project name"/>
     </elements>
-    <elements xsi:type="commands:Command" xmi:id="_r91rAFAyEeefQ_E99kZKIw" elementId="org.bonitasoft.studio.importer.workspace.command" commandName="%importWorkspaceCommandLabel"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_uNoJoNQuEeafpJHNDSpq0Q" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_2pLZoNQuEeafpJHNDSpq0Q" elementId="org.bonitasoft.studio.importer.bos.handler" contributionURI="bundleclass://org.bonitasoft.studio.importer.bos/org.bonitasoft.studio.importer.bos.handler.ImportBosHandler" command="_onx7cNQuEeafpJHNDSpq0Q"/>
-    <elements xsi:type="commands:Handler" xmi:id="_yzabsFAyEeefQ_E99kZKIw" elementId="org.bonitasoft.studio.importer.workspace.handler" contributionURI="bundleclass://org.bonitasoft.studio.importer.bos/org.bonitasoft.studio.importer.bos.handler.ImportWorkspaceHandler" command="_r91rAFAyEeefQ_E99kZKIw"/>
   </fragments>
 </fragment:ModelFragments>
