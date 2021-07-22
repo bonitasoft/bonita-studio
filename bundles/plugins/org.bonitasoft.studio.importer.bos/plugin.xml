@@ -20,19 +20,6 @@
       </fragment>
    </extension>
    <extension
-         id="ImportWorkspaceApplication"
-         name="ImportWorkspaceApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            thread="main"
-            visible="true">
-         <run
-               class="org.bonitasoft.studio.importer.bos.operation.ImportWorkspaceApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
