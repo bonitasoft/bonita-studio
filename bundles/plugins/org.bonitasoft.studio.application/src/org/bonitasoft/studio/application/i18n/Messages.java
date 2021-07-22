@@ -372,6 +372,8 @@ public class Messages extends NLS {
     public static String returnToElementsView;
     public static String returnToExtensionView;
     public static String addExtensionMenuLabel;
+    public static String artifactIdTootltip;
+    public static String groupIdTootltip;
     public static String projectElements;
     public static String bonitaExtensions;
     public static String otherExtensionsTooltip;

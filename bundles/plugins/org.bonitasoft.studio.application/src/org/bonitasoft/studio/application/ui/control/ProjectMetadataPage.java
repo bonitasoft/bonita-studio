@@ -17,11 +17,12 @@ package org.bonitasoft.studio.application.ui.control;
 import java.util.Objects;
 
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.repository.RepositoryNameValidator;
 import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.common.repository.ui.validator.MavenIdValidator;
+import org.bonitasoft.studio.ui.converter.ConverterBuilder;
+import org.bonitasoft.studio.ui.databinding.UpdateStrategyFactory;
 import org.bonitasoft.studio.ui.validator.MultiValidator;
 import org.bonitasoft.studio.ui.widget.TextAreaWidget;
 import org.bonitasoft.studio.ui.widget.TextWidget;
@@ -32,12 +33,11 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -90,6 +90,7 @@ public class ProjectMetadataPage implements ControlSupplier {
 
         new TextWidget.Builder()
                 .withLabel("Group ID *")
+                .withTootltip(Messages.groupIdTootltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
@@ -100,28 +101,27 @@ public class ProjectMetadataPage implements ControlSupplier {
                 .createIn(composite);
 
         TextWidget textWidget = new TextWidget.Builder()
-                .withLabel("Artifact ID *")
+                .withLabel("Artifact ID")
+                .withTootltip(Messages.artifactIdTootltip)
                 .labelAbove()
                 .grabHorizontalSpace()
                 .fill()
                 .bindTo(artifactIdObservable)
-                .withValidator(new MavenIdValidator("Artifact ID"))
+                .withValidator(new MavenIdValidator("Artifact ID", false))
                 .inContext(ctx)
                 .useNativeRender()
                 .createIn(composite);
 
-        textWidget.getTextControl().addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                var projectName = nameObservable.getValue();
-                if (Strings.hasText(projectName)
-                        && Strings.isNullOrEmpty(artifactIdObservable.getValue())) {
-                    artifactIdObservable.setValue(ProjectMetadata.toArtifactId(projectName));
-                }
-            }
-            
-        });
+        ctx.bindValue(WidgetProperties.message().observe(textWidget.getTextControl()),
+                nameObservable,
+                UpdateStrategyFactory.neverUpdateValueStrategy().create(),
+                UpdateStrategyFactory.updateValueStrategy()
+                        .withConverter(ConverterBuilder.<String, String> newConverter()
+                                .fromType(String.class)
+                                .toType(String.class)
+                                .withConvertFunction(ProjectMetadata::toArtifactId)
+                                .create())
+                        .create());
 
         var textArea = new TextAreaWidget.Builder()
                 .withLabel(Messages.description)

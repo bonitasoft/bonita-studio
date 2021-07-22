@@ -12,7 +12,6 @@ import java.util.Objects;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.core.maven.model.ProjectMetadata;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.swtbot.framework.ConditionBuilder;
 import org.bonitasoft.studio.swtbot.framework.SWTBotTestUtil;
@@ -65,7 +64,6 @@ public class TestSeveralLocalRepositories {
         /* Test creation of a new local repository */
         final String testRepoName = "test a new repo name";
         bot.textWithLabel(Messages.name+ " *").setText(testRepoName);
-        bot.textWithLabel("Artifact ID *").setText(ProjectMetadata.toArtifactId(testRepoName));
         bot.button(Messages.create).click();
 
         ICondition condition = new ConditionBuilder()

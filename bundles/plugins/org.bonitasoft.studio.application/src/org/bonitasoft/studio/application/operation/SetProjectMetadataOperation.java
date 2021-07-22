@@ -22,6 +22,7 @@ import java.util.Objects;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
@@ -43,13 +44,13 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     private IStatus status = Status.OK_STATUS;
     private boolean createNewProject = false;
     private RepositoryAccessor repositoryAccessor;
-    private ProjectMetadata meatadata;
+    private ProjectMetadata metadata;
     private List<Dependency> dependencies = new ArrayList<>();
 
-    public SetProjectMetadataOperation(ProjectMetadata meatadata,
+    public SetProjectMetadataOperation(ProjectMetadata metadata,
             RepositoryAccessor repositoryAccessor,
             MavenProjectHelper mavenProjectHelper) {
-        this.meatadata = meatadata;
+        this.metadata = metadata;
         this.repositoryAccessor = repositoryAccessor;
         this.mavenProjectHelper = mavenProjectHelper;
     }
@@ -74,7 +75,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
                 editProject(monitor);
             }
             CommonRepositoryPlugin.getDefault().getPreferenceStore()
-                    .setValue(RepositoryPreferenceConstant.DEFAULT_GROUPID, meatadata.getGroupId());
+                    .setValue(RepositoryPreferenceConstant.DEFAULT_GROUPID, metadata.getGroupId());
         } catch (CoreException e) {
             status = e.getStatus();
         }
@@ -86,12 +87,16 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
         AbstractRepository repository = repositoryAccessor.getCurrentRepository();
         IProject project = repository.getProject();
         Model model = mavenProjectHelper.getMavenModel(project);
-        boolean nameChanged = !Objects.equals(model.getName(), meatadata.getName());
-        model.setName(meatadata.getName());
-        model.setDescription(meatadata.getDescription());
-        model.setGroupId(meatadata.getGroupId());
-        model.setArtifactId(meatadata.getArtifactId());
-        model.setVersion(meatadata.getVersion());
+        boolean nameChanged = !Objects.equals(model.getName(), metadata.getName());
+        model.setName(metadata.getName());
+        model.setDescription(metadata.getDescription());
+        model.setGroupId(metadata.getGroupId());
+        String artifactId = metadata.getArtifactId();
+        if(Strings.isNullOrEmpty(artifactId)) {
+            artifactId = ProjectMetadata.toArtifactId(metadata.getName());
+        }
+        model.setArtifactId(artifactId);
+        model.setVersion(metadata.getVersion());
         mavenProjectHelper.saveModel(project, model);
         if (nameChanged) {
             repository.rename(model.getName(), monitor);
@@ -99,7 +104,7 @@ public class SetProjectMetadataOperation implements IRunnableWithProgress {
     }
 
     private void createNewProject(IProgressMonitor monitor) throws CoreException {
-        IRepository newRepository = repositoryAccessor.createNewRepository(meatadata, monitor);
+        IRepository newRepository = repositoryAccessor.createNewRepository(metadata, monitor);
         if (!dependencies.isEmpty()) {
             IProject project = newRepository.getProject();
             Model model = mavenProjectHelper.getMavenModel(project);

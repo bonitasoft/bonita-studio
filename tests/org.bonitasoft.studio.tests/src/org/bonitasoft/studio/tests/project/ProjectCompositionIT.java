@@ -292,9 +292,6 @@ public class ProjectCompositionIT {
                 .next()
                 .importArchive();
 
-        //        assertThat(importBOSDialog.canFinish()).isFalse();
-        //        var dependenciesTree = importBOSDialog.dependenciesPreviewPage().getDependenciesTree();
-
         IProject project = repositoryAccessor.getCurrentRepository().getProject();
         bot.waitUntil(new AssertionCondition() {
 
