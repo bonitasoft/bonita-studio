@@ -32,7 +32,7 @@ public class RestApiExtensionMenuContribution extends ContributionItem {
     private static final String EDIT_PERMISSIONS_COMMAND = "org.bonitasoft.studio.rest.api.extension.editPermissionCommand";
 
     private static final String BUILD_COMMAND = "org.bonitasoft.studio.rest.api.extension.buildCommand";
-    private static final String DEPLOY_COMMAND = "org.bonitasoft.studio.businessobject.deployCommand";
+    private static final String DEPLOY_COMMAND = "org.bonitasoft.studio.rest.api.extension.deployCommand";
 
     private CommandExecutor commandExecutor;
 
