@@ -17,7 +17,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
-import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
+import org.bonitasoft.studio.engine.operation.DirectoryAppURLBuilder;
 
 public class LoginRequest extends HttpRequest<String> {
 
@@ -29,7 +29,7 @@ public class LoginRequest extends HttpRequest<String> {
     protected String doExecute(final HttpClient httpClient) throws IOException, HttpException {
         HttpGet loginRequest;
         try {
-            loginRequest = new HttpGet(new PortalURLBuilder().toTechnicalUserLoginURL(AbstractRepository.NULL_PROGRESS_MONITOR).toURI());
+            loginRequest = new HttpGet(new DirectoryAppURLBuilder().toTechnicalUserLoginURL(AbstractRepository.NULL_PROGRESS_MONITOR).toURI());
         } catch (final URISyntaxException e) {
             throw new HttpException("Failed to create login request", e);
         }

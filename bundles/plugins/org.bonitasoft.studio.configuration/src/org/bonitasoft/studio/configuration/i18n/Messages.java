@@ -43,6 +43,7 @@ public class Messages extends NLS {
     public static String runConfigurationTitle;
     public static String runConfigurationDesc;
     public static String ConfigureButtonLabel;
+    public static String configureButtonTooltip;
     public static String username;
     public static String password;
     public static String runLoginMessage;

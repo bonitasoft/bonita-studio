@@ -22,6 +22,8 @@ import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.repository.core.ActiveOrganizationProvider;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,8 +35,6 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected abstract String getRedirectURL(final String locale, final IProgressMonitor monitor)
             throws UnsupportedEncodingException;
-
-    protected abstract String getLocaleParameter(final String locale);
 
     protected String encodeForPathURL(final String toEncode) throws UnsupportedEncodingException {
         return URLEncoder.encode(toEncode, ENCODING_UTF8).replaceAll("\\+", "%20").replaceAll("%2F", "/");
@@ -62,6 +62,13 @@ public abstract class AbstractBonitaURLBuilder {
 
     protected String getDefaultUsername() {
         return getActiveOrganizationProvider().getDefaultUser();
+    }
+
+    protected String userAppToken() {
+        if(EnginePlugin.getDefault() == null) {
+            return EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN;
+        }
+        return EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.USER_APP_TOKEN);
     }
 
     public URL toURL(final IProgressMonitor monitor)

@@ -235,7 +235,6 @@ public class Messages extends NLS {
     public static String bosProductName;
     public static String bosSPProductName;
     public static String bonitaStudioModuleName;
-    public static String bonitaPortalModuleName;
     public static String bonitaBPMCommunity;
     public static String corporateName;
     public static String nameMustStartWithLowerCase;

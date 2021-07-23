@@ -18,20 +18,12 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bonitasoft.engine.api.ProfileAPI;
-import org.bonitasoft.engine.profile.Profile;
-import org.bonitasoft.engine.profile.ProfileSearchDescriptor;
-import org.bonitasoft.engine.search.SearchOptions;
-import org.bonitasoft.engine.search.SearchOptionsBuilder;
-import org.bonitasoft.engine.search.SearchResult;
-import org.bonitasoft.engine.session.APISession;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class CaseDetailURLBuilder extends AbstractProcessRelatedURLBuilder {
 
+    private static final String CASE_DETAIL_URL_TEMPLATE = "apps/%s/case-details/?id=%s&_l=%s";
     private final Long caseId;
 
     public CaseDetailURLBuilder(final AbstractProcess process, final String configurationId, final Long caseId) {
@@ -41,29 +33,10 @@ public class CaseDetailURLBuilder extends AbstractProcessRelatedURLBuilder {
 
     @Override
     protected String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException {
-        return "portal/homepage#?"
-                + "id=" + caseId
-                + "&_p=casemoredetails"
-                + "&_pf=" + getUserProfileId(monitor)
-                + "&" + getLocaleParameter(locale);
-    }
-
-    protected long getUserProfileId(final IProgressMonitor monitor) {
-        try {
-            final APISession session = BOSEngineManager.getInstance().createSession(process, configurationId, monitor);
-            final ProfileAPI profileAPI = BOSEngineManager.getInstance().getProfileAPI(session);
-            final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).filter(ProfileSearchDescriptor.NAME, "User").done();
-            final SearchResult<Profile> profiles = profileAPI.searchProfiles(searchOptions);
-            return profiles.getResult().get(0).getId();
-        } catch (final Exception e) {
-            BonitaStudioLog.error("Cannot retrieve Profile id for User.", e);
-            return 1;//default value for User profile observed
-        }
-    }
-
-    @Override
-    protected String getLocaleParameter(final String locale) {
-        return "_l=" + locale;
+        return String.format(CASE_DETAIL_URL_TEMPLATE,
+                userAppToken(),
+                caseId,
+                locale);
     }
 
 }

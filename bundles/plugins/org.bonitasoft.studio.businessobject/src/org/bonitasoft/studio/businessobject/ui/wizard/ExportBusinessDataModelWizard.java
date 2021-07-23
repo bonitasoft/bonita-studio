@@ -62,8 +62,7 @@ public class ExportBusinessDataModelWizard extends Wizard {
     protected ExportBusinessDataModelWizardPage createExportBusinessObjectWizardPage() {
         ExportBusinessDataModelWizardPage wizardPage = new ExportBusinessDataModelWizardPage(getStore());
         wizardPage.setTitle(Messages.exportBusinessDataModelTitle);
-        wizardPage.setDescription(Messages.bind(Messages.exportBusinessDataModelDescription,
-                org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+        wizardPage.setDescription(Messages.exportBusinessDataModelDescription);
         return wizardPage;
     }
 

@@ -94,6 +94,13 @@ public class ServerPreferencePage extends AbstractBonitaPreferencePage implement
 
         createTitleBar(Messages.BonitaPreferenceDialog_UserXP_Settings, Pics.getImage(PicsConstants.preferenceLogin),
                 false);
+        
+       var userAppTokenField = new StringFieldEditor(EnginePreferenceConstants.USER_APP_TOKEN,
+                Messages.userAppToken,
+                getFieldEditorParent());
+       getContributedEditors().put(userAppTokenField, EnginePlugin.getDefault().getPreferenceStore());
+       userAppTokenField.setEmptyStringAllowed(false);
+       addField(userAppTokenField);    
 
         BooleanFieldEditor lazyEditor = new BooleanFieldEditor(EnginePreferenceConstants.LAZYLOAD_ENGINE,
                 Messages.engineLazyLoad,

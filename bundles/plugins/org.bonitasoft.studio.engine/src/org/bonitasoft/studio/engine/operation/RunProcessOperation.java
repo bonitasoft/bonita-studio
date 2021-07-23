@@ -14,10 +14,18 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.bonitasoft.engine.api.ApplicationAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.business.application.ApplicationNotFoundException;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -35,19 +43,17 @@ import org.bonitasoft.studio.model.process.FormMappingType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.bonitasoft.studio.ui.dialog.MultiStatusDialog;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 /**
  * @author Romain Bioteau
@@ -115,10 +121,18 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         processToRun = processSelector.getSelectedProcess();
         if (processToRun != null) {
             openBrowserForSelectedProcess(monitor, deployOperation, configurationId);
-        } else {
-            if (!executionContext.synchronousExecution()) {
-                status = openConsole();
-            }
+        }
+    }
+
+    private boolean isUserAppDeployed(APISession session) {
+        String appToken = EnginePlugin.getDefault().getPreferenceStore()
+                .getString(EnginePreferenceConstants.USER_APP_TOKEN);
+        try {
+            ApplicationAPI applicationAPI = BOSEngineManager.getInstance().getApplicationAPI(session);
+            return applicationAPI.getApplicationByToken(appToken) != null;
+        } catch (BonitaHomeNotSetException | ServerAPIException | UnknownAPITypeException
+                | ApplicationNotFoundException e) {
+            return false;
         }
     }
 
@@ -127,31 +141,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         final boolean hasInitiator = hasInitiator(processToRun);
         try {
             if (!executionContext.synchronousExecution()) {
-                BOSWebServerManager.getInstance().startServer(RepositoryManager.getInstance().getCurrentRepository(),
-                        monitor);
-                if (hasInitiator) {
-                    if (hasInstanciationForm(processToRun)) {
-                        url = deployOperation.getUrlFor(processToRun, monitor);
-                        new OpenBrowserOperation(url).execute();
-                    } else {
-                        if (hasContractOnInstanciation((Pool) processToRun)) {
-                            url = deployOperation.getUrlFor(processToRun, monitor);
-                            redirectToPortalTaskListWhenContractAndNoFormAndInitiator();
-                        } else {
-                            final APISession session = BOSEngineManager.getInstance().createSession(processToRun,
-                                    configurationId,
-                                    monitor);
-                            final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-                            final Long caseId = processApi.startProcess(deployOperation.getProcessDefId(processToRun))
-                                    .getId();
-                            url = new CaseDetailURLBuilder(processToRun, configurationId, caseId).toURL(monitor);
-                            new OpenBrowserOperation(url).execute();
-                        }
-                    }
-                } else {
-                    url = deployOperation.getUrlFor(processToRun, monitor);
-                    redirectToPortalTaskListWhenNoInitiator();
-                }
+                openBrowser(monitor, deployOperation, configurationId, hasInitiator);
             } else {
                 //TODO: remove this use case which is used only in tests
                 url = deployOperation.getUrlFor(processToRun, monitor);
@@ -162,65 +152,97 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         }
     }
 
+    private void openBrowser(final IProgressMonitor monitor, final DeployProcessOperation deployOperation,
+            final String configurationId, final boolean hasInitiator) throws Exception {
+        BOSWebServerManager.getInstance().startServer(RepositoryManager.getInstance().getCurrentRepository(),
+                monitor);
+        final APISession session = BOSEngineManager.getInstance()
+                .createSession(processToRun, configurationId, monitor);
+        boolean userAppDeployed = isUserAppDeployed(session);
+        if (hasInitiator) {
+            if (hasInstanciationForm(processToRun)) {
+                url = deployOperation.getUrlFor(processToRun, monitor);
+            } else {
+                if (hasContractOnInstanciation((Pool) processToRun)) {
+                    url = redirectToTaskListWhenContractAndNoFormAndInitiator();
+                } else {
+                    final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+                    final Long caseId = processApi.startProcess(deployOperation.getProcessDefId(processToRun))
+                            .getId();
+                    url = new CaseDetailURLBuilder(processToRun, configurationId, caseId).toURL(monitor);
+                }
+            }
+        } else {
+            url = redirectToTaskListWhenNoInitiator();
+        }
+        if (userAppDeployed) {
+            new OpenBrowserOperation(url).execute();
+        } else {
+            openProcessDeployedDialog();
+        }
+    }
+
+    private void openProcessDeployedDialog() {
+        Display.getDefault().syncExec(() -> {
+            if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                    Messages.processDeployedTitle,
+                    String.format(Messages.processDeployedButNoUserAppFound, 
+                            processToRun.getName(),
+                            processToRun.getVersion()))) {
+                try {
+                    new OpenBrowserOperation(new DirectoryAppURLBuilder().toURL(null)).execute();
+                } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        });
+    }
+
     private boolean hasContractOnInstanciation(final Pool processToRun) {
         final Contract contract = processToRun.getContract();
         return contract != null && !contract.getInputs().isEmpty();
     }
 
-    protected void redirectToPortalTaskListWhenContractAndNoFormAndInitiator() {
-        redirectToPortalTaskList(
+    private URL redirectToTaskListWhenContractAndNoFormAndInitiator() {
+        return redirectToTaskList(
                 EnginePreferenceConstants.TOGGLE_STATE_FOR_CONTRACT_AND_NOFORM_AND_INITIATOR,
                 Messages.contractButNoFormTitle,
-                Messages.bind(Messages.contractButNoFormMessage, processToRun.getName(),
-                        org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+                NLS.bind(Messages.contractButNoFormMessage, processToRun.getName(), processToRun.getVersion()));
     }
 
-    protected void redirectToPortalTaskListWhenNoInitiator() {
-        redirectToPortalTaskList(
+    private URL redirectToTaskListWhenNoInitiator() {
+        return redirectToTaskList(
                 EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR,
                 Messages.noInitiatorDefinedTitle,
-                Messages.bind(Messages.noInitiatorDefinedMessage, processToRun.getName(),
-                        org.bonitasoft.studio.common.Messages.bonitaPortalModuleName));
+                NLS.bind(Messages.noInitiatorDefinedMessage, processToRun.getName()));
     }
 
-    private void redirectToPortalTaskList(final String togglePreference, final String shellTitle,
+    private URL redirectToTaskList(final String togglePreference, final String shellTitle,
             final String message) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-                final String pref = preferenceStore.getString(togglePreference);
-                if (MessageDialogWithToggle.NEVER.equals(pref)) {
-                    MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(),
-                            shellTitle,
-                            message,
-                            Messages.dontaskagain,
-                            false,
-                            preferenceStore,
-                            togglePreference);
-                }
-
+        Display.getDefault().syncExec(() -> {
+            final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+            final String pref = preferenceStore.getString(togglePreference);
+            if (MessageDialogWithToggle.NEVER.equals(pref)) {
+                MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(),
+                        shellTitle,
+                        message,
+                        Messages.dontaskagain,
+                        false,
+                        preferenceStore,
+                        togglePreference);
             }
-        });
 
-        status = openConsole();
+        });
+        try {
+            return new TaskListURLBuilder(processToRun, executionContext.getConfigurationId()).toURL(null);
+        } catch (MalformedURLException | UnsupportedEncodingException | URISyntaxException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
     }
 
     private boolean hasInstanciationForm(final AbstractProcess processToRun) {
         return !FormMappingType.NONE.equals(processToRun.getFormMapping().getType());
-    }
-
-    private IStatus openConsole() {
-        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        final Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole");
-        try {
-            cmd.executeWithChecks(new ExecutionEvent());
-        } catch (final Exception ex) {
-            status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, ex.getMessage(), ex);
-            BonitaStudioLog.error(ex);
-        }
-        return Status.OK_STATUS;
     }
 
     private boolean hasInitiator(final AbstractProcess p) {

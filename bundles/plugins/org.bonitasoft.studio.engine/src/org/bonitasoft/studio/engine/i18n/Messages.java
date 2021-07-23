@@ -199,6 +199,10 @@ public class Messages extends NLS {
     public static String none;
     public static String configuration;
     public static String invalidConfigurationForEnv;
+    public static String processDeployedTitle;
+    public static String processDeployedButNoUserAppFound;
+    public static String runButtonTooltip;
+    public static String userAppToken;
 
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

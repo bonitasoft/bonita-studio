@@ -44,7 +44,8 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         store.setDefault(EnginePreferenceConstants.LAZYLOAD_ENGINE, false);
         store.setDefault(EnginePreferenceConstants.TOMCAT_XMX_OPTION, 1024);
         store.setDefault(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS, getDefaultOr(EnginePreferenceConstants.TOMCAT_EXTRA_PARAMS,"-DnoCacheCustomPage=true"));
-
+        store.setDefault(EnginePreferenceConstants.USER_APP_TOKEN, EnginePreferenceConstants.DEFAULT_USER_APP_TOKEN);
+        
         if (PlatformUI.isWorkbenchRunning()) {
             DebugUITools.getPreferenceStore().setValue(
                     org.eclipse.debug.internal.ui.IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH,

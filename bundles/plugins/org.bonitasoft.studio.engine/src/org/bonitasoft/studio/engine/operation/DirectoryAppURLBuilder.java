@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Bonitasoft S.A.
+ * Copyright (C) 2012-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class LoginUrlBuilder extends AbstractBonitaURLBuilder {
+public class DirectoryAppURLBuilder extends AbstractBonitaURLBuilder {
 
     @Override
     protected String getRedirectURL(final String locale, final IProgressMonitor monitor)
             throws UnsupportedEncodingException {
-        return "";
+        return "apps/appDirectoryBonita/home/?_l=" + locale;
     }
 
 }

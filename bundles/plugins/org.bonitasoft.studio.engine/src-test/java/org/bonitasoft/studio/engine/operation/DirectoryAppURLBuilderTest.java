@@ -31,9 +31,9 @@ import org.junit.Test;
 /**
  * @author Romain Bioteau
  */
-public class PortalURLBuilderTest {
+public class DirectoryAppURLBuilderTest {
 
-    private PortalURLBuilder portalURLBuilder;
+    private DirectoryAppURLBuilder portalURLBuilder;
 
     private String loginURL;
 
@@ -45,7 +45,7 @@ public class PortalURLBuilderTest {
         final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
         process.setName("testPool");
         process.setVersion("1.0");
-        portalURLBuilder = spy(new PortalURLBuilder());
+        portalURLBuilder = spy(new DirectoryAppURLBuilder());
         doReturn("fr").when(portalURLBuilder).getWebLocale();
         doReturn("william.jobs").when(portalURLBuilder).getDefaultUsername();
         doReturn("bpm").when(portalURLBuilder).getDefaultPassword();
