@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Bonitasoft S.A.
+ * Copyright (C) 2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,23 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class PortalURLBuilder extends AbstractBonitaURLBuilder {
+public class TaskListURLBuilder extends AbstractProcessRelatedURLBuilder {
+
+    private static final String TASKLIST_URL_TEMPLATE = "apps/%s/task-list/?_l=%s";
+
+    public TaskListURLBuilder(final AbstractProcess process, final String configurationId) {
+        super(process, configurationId);
+    }
 
     @Override
     protected String getRedirectURL(final String locale, final IProgressMonitor monitor)
             throws UnsupportedEncodingException {
-        return "apps/appDirectoryBonita/home/?" + getLocaleParameter(locale);
-    }
-
-    @Override
-    protected String getLocaleParameter(final String locale) {
-        return "_l=" + locale;
+        return String.format(TASKLIST_URL_TEMPLATE,
+                userAppToken(),
+                locale);
     }
 
 }

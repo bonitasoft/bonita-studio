@@ -101,7 +101,7 @@ public class DeployProcessOperation {
                 pId = processIdsMap.get(p);
             }
         }
-        return new ProcessInstantiationFormURLBuilder(process, configurationId, pId).toURL(monitor);
+        return new ProcessInstantiationFormURLBuilder(process, configurationId).toURL(monitor);
     }
 
     public IStatus run(final IProgressMonitor monitor) {

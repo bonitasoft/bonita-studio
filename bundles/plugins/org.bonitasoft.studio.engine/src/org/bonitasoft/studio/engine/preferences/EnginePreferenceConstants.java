@@ -46,5 +46,6 @@ public class EnginePreferenceConstants {
     public static final String LAZYLOAD_ENGINE = "LAZYLOAD_ENGINE";
     public static final String TOMCAT_XMX_OPTION = "TOMCAT_XMX_OPTION";
     public static final String TOMCAT_EXTRA_PARAMS = "tomcat.extra.params";
-
+    public static final String USER_APP_TOKEN = "userAppToken";
+    public static final String DEFAULT_USER_APP_TOKEN = "userAppBonita";
 }

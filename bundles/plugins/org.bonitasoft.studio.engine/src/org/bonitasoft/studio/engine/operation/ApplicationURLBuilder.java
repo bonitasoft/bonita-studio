@@ -16,10 +16,9 @@ package org.bonitasoft.studio.engine.operation;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class ApplicationURLBuilder extends PortalURLBuilder {
+public class ApplicationURLBuilder extends DirectoryAppURLBuilder {
 
     private final String appToken;
 
@@ -27,12 +26,8 @@ public class ApplicationURLBuilder extends PortalURLBuilder {
         this.appToken = appToken;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.engine.operation.PortalURLBuilder#getRedirectURL(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     protected String getRedirectURL(String locale, IProgressMonitor monitor) throws UnsupportedEncodingException {
-        return String.format("apps/%s?%s", appToken, getLocaleParameter(locale));
+        return String.format("apps/%s?locale=%s", appToken, locale);
     }
 }

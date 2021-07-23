@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.engine.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -32,7 +31,6 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,14 +52,10 @@ public class CaseDetailURLBuilderTest {
         doReturn("fr").when(caseDetailURLBuilder).getWebLocale();
         doReturn("william.jobs").when(caseDetailURLBuilder).getDefaultUsername();
         doReturn("bpm").when(caseDetailURLBuilder).getDefaultPassword();
-        doReturn(45L).when(caseDetailURLBuilder).getUserProfileId(any(IProgressMonitor.class));
         loginURL = "http://fakeLoginURL";
         doReturn(loginURL).when(caseDetailURLBuilder).buildLoginUrl(anyString(), anyString());
     }
-
-    /**
-     * Test method for {@link org.bonitasoft.studio.engine.operation.ProcessInstantiationFormURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
-     */
+    
     @Test
     public void shouldToURL_RetursAValidURL() throws Exception {
         final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
@@ -70,14 +64,10 @@ public class CaseDetailURLBuilderTest {
         final URL url = caseDetailURLBuilder.toURL(AbstractRepository.NULL_PROGRESS_MONITOR);
         assertThat(url).isNotNull();
         final String validLocale = URLEncoder.encode("_l=fr", "UTF-8");
-        final String appliPath = URLEncoder.encode("portal/homepage#?", "UTF-8");
-        final String pageCaseMoreDetails = URLEncoder.encode("_p=casemoredetails", "UTF-8");
-        final String profileID = URLEncoder.encode("_pf=45", "UTF-8");
+        final String appliPath = URLEncoder.encode("apps/userAppBonita/case-details/?id=12", "UTF-8");
         assertThat(url.toString())
                 .contains(appliPath)
-                .contains(pageCaseMoreDetails)
                 .contains(validLocale)
-                .contains(profileID)
                 .startsWith(loginURL);
         verify(caseDetailURLBuilder).buildLoginUrl("william.jobs", "bpm");
     }

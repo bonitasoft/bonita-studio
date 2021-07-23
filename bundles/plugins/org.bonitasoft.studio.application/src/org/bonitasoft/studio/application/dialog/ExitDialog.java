@@ -41,9 +41,10 @@ public class ExitDialog extends MessageDialogWithToggle {
     public static MessageDialogWithToggle openExitDialog(final Shell parentShell) {
         MessageDialogWithToggle dialog = null;
         if (deleteTenantOnExit()) {
-            dialog = new ExitDialog(parentShell, IDEWorkbenchMessages.PromptOnExitDialog_shellTitle, null, null, WARNING, new String[] {
-                    IDialogConstants.OK_LABEL,
-                    IDialogConstants.CANCEL_LABEL },
+            dialog = new ExitDialog(parentShell, IDEWorkbenchMessages.PromptOnExitDialog_shellTitle, null, null,
+                    WARNING, new String[] {
+                            IDialogConstants.OK_LABEL,
+                            IDialogConstants.CANCEL_LABEL },
                     0, IDEWorkbenchMessages.PromptOnExitDialog_choice, false);
             dialog.open();
         } else {
@@ -58,7 +59,8 @@ public class ExitDialog extends MessageDialogWithToggle {
     }
 
     private static boolean deleteTenantOnExit() {
-        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT);
+        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT);
     }
 
     protected static String exitMessage() {
@@ -78,10 +80,12 @@ public class ExitDialog extends MessageDialogWithToggle {
         return message;
     }
 
-    public ExitDialog(final Shell parentShell, final String dialogTitle, final Image image, final String message, final int dialogImageType,
+    public ExitDialog(final Shell parentShell, final String dialogTitle, final Image image, final String message,
+            final int dialogImageType,
             final String[] dialogButtonLabels, final int defaultIndex,
             final String toggleMessage, final boolean toggleState) {
-        super(parentShell, dialogTitle, image, message, dialogImageType, dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
+        super(parentShell, dialogTitle, image, message, dialogImageType, dialogButtonLabels, defaultIndex,
+                toggleMessage, toggleState);
     }
 
     /*
@@ -99,8 +103,9 @@ public class ExitDialog extends MessageDialogWithToggle {
                     .applyTo(imageLabel);
         }
         final Link messageLabel = new Link(composite, getMessageLabelStyle());
-        messageLabel.setText(NLS.bind(Messages.exitWarningMessage, new String[] { org.bonitasoft.studio.common.Messages.bonitaStudioModuleName,
-                org.bonitasoft.studio.common.Messages.bonitaPortalModuleName, org.bonitasoft.studio.common.Messages.uiDesignerModuleName }));
+        messageLabel.setText(NLS.bind(Messages.exitWarningMessage,
+                new String[] { org.bonitasoft.studio.common.Messages.bonitaStudioModuleName,
+                        org.bonitasoft.studio.common.Messages.uiDesignerModuleName }));
         messageLabel.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -121,7 +126,8 @@ public class ExitDialog extends MessageDialogWithToggle {
                 .grab(true, false)
                 .hint(
                         convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
-                        SWT.DEFAULT).applyTo(messageLabel);
+                        SWT.DEFAULT)
+                .applyTo(messageLabel);
         return composite;
     }
 

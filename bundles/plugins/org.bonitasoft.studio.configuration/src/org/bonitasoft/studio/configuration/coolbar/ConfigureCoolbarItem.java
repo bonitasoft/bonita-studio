@@ -191,7 +191,7 @@ public class ConfigureCoolbarItem extends ContributionItem implements IBonitaCon
     @Override
     public void fill(final ToolBar toolbar, final int index, final int iconSize) {
         final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
-        item.setToolTipText(Messages.ConfigureButtonLabel);
+        item.setToolTipText(Messages.configureButtonTooltip);
         item.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONFIGURE_TOOLITEM);
         if (iconSize < 0) {
             item.setImage(Pics.getImage(PicsConstants.coolbar_configure_32));

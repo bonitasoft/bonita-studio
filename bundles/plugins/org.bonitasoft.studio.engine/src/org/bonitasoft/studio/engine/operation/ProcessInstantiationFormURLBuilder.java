@@ -22,29 +22,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class ProcessInstantiationFormURLBuilder extends AbstractProcessRelatedURLBuilder {
 
-    private static final String APPLI_PATH = "portal/resource"; //$NON-NLS-1$
+    private static final String APPLI_PATH_TEMPLATE = "apps/%s/process-list/?processName=%s&processVersion=%s&redirect=%s&locale=%s";
 
-    private final long procDefId;
-
-    public ProcessInstantiationFormURLBuilder(final AbstractProcess process, final String configurationId, final long procDefId) {
+    public ProcessInstantiationFormURLBuilder(final AbstractProcess process, final String configurationId) {
         super(process, configurationId);
-        this.procDefId = procDefId;
     }
 
     @Override
     protected String getRedirectURL(final String locale, final IProgressMonitor monitor) throws UnsupportedEncodingException {
-            return APPLI_PATH
-                    + "/process"
-                    + "/" + encodeForPathURL(process.getName())
-                    + "/" + encodeForPathURL(process.getVersion())
-                    + "/content/?id=" + procDefId
-                    + "&" + getLocaleParameter(locale)
-                    + "&mode=app";
+            return String.format(APPLI_PATH_TEMPLATE, userAppToken(), 
+                    encodeForPathURL(process.getName()),
+                    encodeForPathURL(process.getVersion()),
+                    redirectToken(),
+                    locale);
     }
 
-    @Override
-    protected String getLocaleParameter(final String locale) {
-        return "locale=" + locale;
+    private String redirectToken() {
+        return "task-list";
     }
 
 }

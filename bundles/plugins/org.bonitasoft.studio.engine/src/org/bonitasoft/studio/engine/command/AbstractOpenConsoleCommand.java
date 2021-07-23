@@ -24,7 +24,7 @@ import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
+import org.bonitasoft.studio.engine.operation.DirectoryAppURLBuilder;
 import org.bonitasoft.studio.preferences.browser.OpenBrowserOperation;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -94,8 +94,8 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
         return Status.OK_STATUS;
     }
 
-    protected PortalURLBuilder getURLBuilder() {
-        return new PortalURLBuilder();
+    protected DirectoryAppURLBuilder getURLBuilder() {
+        return new DirectoryAppURLBuilder();
     }
 
     public URL getURL() {

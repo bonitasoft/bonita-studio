@@ -38,7 +38,7 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
 
     private CommandExecutor commandExecutor = new CommandExecutor();
 
-    public AbstractProcessRelatedURLBuilder(final AbstractProcess process, final String configurationId) {
+    protected AbstractProcessRelatedURLBuilder(final AbstractProcess process, final String configurationId) {
         this.process = process;
         this.configurationId = configurationId;
     }
@@ -55,10 +55,6 @@ public abstract class AbstractProcessRelatedURLBuilder extends AbstractBonitaURL
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.engine.operation.AbstractBonitaURLBuilder#buildLoginUrl()
-     */
     @Override
     protected String buildLoginUrl() {
         String userName = getDefaultUsername();
