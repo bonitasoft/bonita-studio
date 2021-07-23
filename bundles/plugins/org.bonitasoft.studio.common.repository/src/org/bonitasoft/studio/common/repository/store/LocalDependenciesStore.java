@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import org.apache.maven.model.Dependency;
+import org.bonitasoft.studio.common.Strings;
 import org.bonitasoft.studio.common.repository.AbstractRepository;
 import org.bonitasoft.studio.common.repository.core.maven.migration.model.DependencyLookup;
 import org.eclipse.core.resources.IProject;
@@ -181,6 +182,9 @@ public class LocalDependenciesStore {
     }
 
     public boolean isLocalDependency(Dependency dependency) {
+        if(Strings.isNullOrEmpty(dependency.getVersion())){
+            return false;
+        }
         return dependencyPath(dependency).resolve(dependencyFileName(dependency)).toFile().exists();
     }
 
