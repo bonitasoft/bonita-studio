@@ -43,7 +43,7 @@ public class ApplicationOverviewContribution implements OverviewContribution, Zo
 
     @Override
     public String getName() {
-        return Messages.application;
+        return Messages.applicationDescriptorCardTitle;
     }
 
     @Override

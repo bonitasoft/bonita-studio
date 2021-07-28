@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.projectExplorer;
 
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -81,7 +82,7 @@ public class DiagramProjectExplorerBot extends ProjectExplorerBot {
     }
 
     private SWTBotTreeItem getDiagramFolderTreeItem() {
-        return getTreeItem(getProjectTreeItem(), "Diagrams");
+        return getTreeItem(getProjectTreeItem(), Messages.diagrams);
     }
 
     public SWTBotTreeItem getDiagramTreeItem(String diagramName, String version) {

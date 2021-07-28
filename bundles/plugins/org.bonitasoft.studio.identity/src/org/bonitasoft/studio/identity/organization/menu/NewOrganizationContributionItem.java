@@ -36,7 +36,7 @@ public class NewOrganizationContributionItem extends ContributionItem {
     @Override
     public void fill(Menu parent, int index) {
         var item = new MenuItem(parent, SWT.NONE, index);
-        item.setText(Messages.organizations);
+        item.setText(Messages.defaultOrganizationName);
         item.addListener(SWT.Selection, e -> commandExecutor.executeCommand(NEW_COMMAND, null));
         item.setEnabled(true);
         item.setImage(Pics.getImage(PicsConstants.organization));
