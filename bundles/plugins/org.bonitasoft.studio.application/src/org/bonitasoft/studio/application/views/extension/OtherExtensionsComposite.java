@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.application.views.extension;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,10 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableColumn;
 
 public class OtherExtensionsComposite extends Composite {
 
@@ -107,11 +111,41 @@ public class OtherExtensionsComposite extends Composite {
 
         viewer.setUseHashlookup(true);
 
-        createColumn(viewer, "Group ID", Dependency::getGroupId, this::getTooltip, this::getIcon);
-        createColumn(viewer, "Artifact ID", Dependency::getArtifactId, null, null);
+        var groupIdColumn = createColumn(viewer, "Group ID", Dependency::getGroupId, this::getTooltip, this::getIcon);
+        var artifactIdColumn = createColumn(viewer, "Artifact ID", Dependency::getArtifactId, null, null);
         createColumn(viewer, "Version", Dependency::getVersion, null, null);
         createColumn(viewer, "Type", Dependency::getType, null, null);
         createColumn(viewer, "Classifier", Dependency::getClassifier, null, null);
+
+        Listener sortListener = new Listener() {
+
+            @Override
+            public void handleEvent(Event e) {
+                var column = (TableColumn) e.widget;
+                var currentSortColumn = viewer.getTable().getSortColumn();
+                if (Objects.equals(currentSortColumn, column)) {
+                    viewer.getTable().setSortDirection(Objects.equals(viewer.getTable().getSortDirection(), SWT.UP)
+                            ? SWT.DOWN
+                            : SWT.UP);
+                }
+                int sortDirection = viewer.getTable().getSortDirection();
+                if (Objects.equals(column, groupIdColumn.getColumn())) {
+                    otherDependencies.sort((dep1, dep2) -> Objects.equals(SWT.UP, sortDirection)
+                            ? dep1.getGroupId().compareTo(dep2.getGroupId())
+                            : dep2.getGroupId().compareTo(dep1.getGroupId()));
+                } else if (Objects.equals(column, artifactIdColumn.getColumn())) {
+                    otherDependencies.sort((dep1, dep2) -> Objects.equals(SWT.UP, sortDirection)
+                            ? dep1.getArtifactId().compareTo(dep2.getArtifactId())
+                            : dep2.getArtifactId().compareTo(dep1.getArtifactId()));
+                }
+
+                viewer.getTable().setSortColumn(column);
+                viewer.refresh();
+            }
+        };
+
+        groupIdColumn.getColumn().addListener(SWT.Selection, sortListener);
+        artifactIdColumn.getColumn().addListener(SWT.Selection, sortListener);
 
         var layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(3, true));
@@ -158,7 +192,7 @@ public class OtherExtensionsComposite extends Composite {
                 : Messages.remoteDependencyTooltip;
     }
 
-    private void createColumn(TableViewer viewer, String title, Function<Dependency, String> textProvider,
+    private TableViewerColumn createColumn(TableViewer viewer, String title, Function<Dependency, String> textProvider,
             Function<Dependency, String> tooltipProvider, Function<Dependency, Image> imageProvider) {
         var column = new TableViewerColumn(viewer, SWT.NONE);
         column.getColumn().setText(title);
@@ -167,6 +201,7 @@ public class OtherExtensionsComposite extends Composite {
                 .withTooltipProvider(tooltipProvider)
                 .withImageProvider(imageProvider)
                 .createColumnLabelProvider());
+        return column;
     }
 
     protected void createToolbar(Composite parent,
