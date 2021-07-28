@@ -106,17 +106,34 @@ public abstract class AbstractOverviewZoomControl<T extends AbstractFileStore> e
 
         createZoomedTitleComposite(this);
 
-        var searchComposite = createGlobalComposite(this, SWT.NONE);
-        searchComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        searchComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        var descriptionComposite = createGlobalComposite(this, SWT.NONE);
+        descriptionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        createDescription(searchComposite);
-        createSearchField(searchComposite);
+        createDescription(descriptionComposite);
+
+        var toolbarComposite = createGlobalComposite(descriptionComposite, SWT.NONE);
+        toolbarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        toolbarComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        createAddButton(toolbarComposite);
+        createSearchField(toolbarComposite);
 
         var separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         createDetailsComposite(this, fileStores);
+    }
+
+    private void createAddButton(Composite toolbarComposite) {
+        new DynamicButtonWidget.Builder()
+                .withLabel(org.bonitasoft.studio.common.Messages.create)
+                .withImage(Pics.getImage(PicsConstants.add_simple))
+                .withHotImage(Pics.getImage(PicsConstants.add_simple_hot))
+                .withLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create())
+                .withCssclass(BonitaThemeConstants.EXTENSION_VIEW_BACKGROUND)
+                .onClick(e -> commandExecutor.executeCommand(getNewCommand(), null))
+                .createIn(toolbarComposite);
     }
 
     private void createSearchField(Composite parent) {
